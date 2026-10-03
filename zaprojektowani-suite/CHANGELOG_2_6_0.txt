@@ -1,0 +1,51 @@
+ZAPROJEKTOWANI SUITE 2.6.0
+
+Plan SEO, część 4: trzecia paczka treści, czyli 5 nowych artykułów o marce i stronach internetowych, linki do nich z podstron usług i starszych wpisów oraz poprawki mega menu i menu mobilnego. Wygląd strony bez zmian poza elementami wymienionymi niżej.
+
+5 nowych artykułów (szablon wpisów zpArticleNew):
+- /logo-branding/archetypy-marki/,
+- /logo-branding/jak-wymyslic-nazwe-firmy/,
+- /logo-branding/strategia-marki/,
+- /strony-internetowe/rodzaje-stron-internetowych/,
+- /strony-internetowe/makieta-strony-internetowej/,
+- publikują się razem przy pierwszym wejściu na stronę, tak samo jak artykuły z 2.5.0: kopia układu Elementora z istniejącego wpisu tej samej kategorii, nowa treść, kategoria, zajawka, tytuł/opis/fraza w Rank Math, obrazek wyróżniający,
+- gdy wpisu-wzoru z Elementorem nie ma, artykuł zapisuje się jako szkic.
+
+Zdjęcia (assets/img/wpisy/, 14 plików):
+- 5 okładek i 9 zdjęć w treści, wszystkie z naszych realizacji (Kancelaria Siemianowski, Pracownia Urody, Eat Tasty, Wonder, Gravia, Krawiec z dojazdem, Apartament Piękna) i ze zdjęć zespołu, które strona już ma; bez stocków,
+- plansze w tym samym układzie co zdjęcia artykułów z 2.5.0,
+- w artykule o makiecie drugie miejsce na zdjęcie (makieta w trzech etapach) zostaje puste, bo nie mamy zdjęć prawdziwych makiet.
+
+Linki do nowych artykułów (każdy pojawia się dopiero, gdy artykuł jest opublikowany):
+- /identyfikacja-wizualna/: nowe pytanie w FAQ „Od czego zaczyna się projekt identyfikacji wizualnej?” z linkami do strategii marki i archetypów,
+- /tworzenie-stron-internetowych/: po jednym zdaniu w dwóch odpowiedziach FAQ (rodzaje stron internetowych, makieta strony internetowej),
+- /strona-wizytowka/: jedno zdanie w poradniku pod tabelą (typy stron internetowych),
+- bloki „Powiązane usługi i poradniki” w 8 wpisach: branding od podstaw, kolory i typografia marki, projekt logo od czego zacząć, brief do logo, strona dla firmy co powinna zawierać, proces tworzenia stron, brief do projektowania strony, zastrzeżenie logo.
+
+Mega menu (komputer), tylko polska strona przy włączonym planie SEO; wygląd menu bez zmian poza tym, co niżej:
+- pozycje, które prowadziły pod ten sam adres co inna pozycja, prowadzą teraz do własnych podstron:
+  - „Brandbook” → „Identyfikacja wizualna” (/identyfikacja-wizualna/, wcześniej Brandbook i Rebranding prowadziły tam obie),
+  - „Rebranding” → /logo-branding/rebranding-firmy/ (poradnik pod frazę „rebranding”),
+  - „Rozbudowa strony” (/kontakt/) → „Przebudowa strony” → /strony-www/kiedy-warto-przebudowac-strone-internetowa-firmy/,
+  - „Lejki sprzedażowe” (/kontakt/) → „Audyt strony” → /strony-www/audyt-strony-internetowej-firmy-przed-reklamami-i-seo/,
+  - dopóki dany wpis nie jest opublikowany, pozycja zostaje taka jak w 2.5.0,
+- karta „Najczęściej wybierane” losuje jedną z trzech wersji przy każdym wejściu na stronę i przy każdym ponownym otwarciu menu:
+  - Logo już od 999 zł (jak dotąd),
+  - Strona internetowa już od 3 999 zł, zdjęcie realizacji Krawiec z dojazdem,
+  - Sklep internetowy już od 6 499 zł, zdjęcie realizacji Proscarves,
+  - bez JavaScriptu zostaje karta z logo,
+- Mateusz bez tła, z gestem „wybierz”, stoi na dolnej belce pod kolumną „Start marki”, obok dymek „Wybierz, od czego zaczynamy.”; na ekranach węższych niż 1240 px się nie pokazuje, na niskich laptopach jest mniejszy.
+
+Menu mobilne:
+- „Strony dla branż” (kancelarie, lekarze, deweloperzy) to teraz osobna rozwijana pozycja zaraz pod „Usługi”, widoczna od razu po otwarciu menu (w 2.5.0 była na samym dole listy „Usługi”),
+- w „Usługi” doszła „Identyfikacja wizualna”, a opis „Logo & branding” to teraz „Projekt logo i znaku”.
+
+Nowe pliki: assets/img/menu/ (zdjęcia do karty i Mateusz), style i skrypt w includes/seo-plan/menu.php.
+
+Widoczne zmiany na stronie:
+- stopka „Ostatnie wpisy na blogu” pokazuje nowe artykuły (zawsze pokazuje najnowsze),
+- /identyfikacja-wizualna/: jedno pytanie więcej w FAQ,
+- /strona-wizytowka/: jedno zdanie więcej w poradniku,
+- mega menu i menu mobilne jak wyżej.
+
+Panel: Narzędzia → Plan SEO 2.6.0 — dziennik zmian, ponowne uruchomienie, wstrzymanie oraz cofnięcie zmian w bazie. Cofnięcie przenosi nowe artykuły do szkiców.

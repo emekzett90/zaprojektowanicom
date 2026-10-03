@@ -30,3 +30,49 @@ add_action('wp_head', function () {
     . '}'
     . '</style>' . "\n";
 }, 40);
+
+/**
+ * Suite 2.6.0: the promo card shows logo, website or shop at random, and Mateusz stands on the
+ * mega menu's bottom bar with a short "choose" bubble.
+ *
+ * All three promo cards are in the page (the page cache keeps one copy of the HTML), the other
+ * two carry `hidden`. A small script picks one when the page loads and a different one each time
+ * the menu is opened again. Without JavaScript the logo card stays, as before.
+ *
+ * Mateusz is a cut-out photo whose lower edge fades into the bar. He stands in the empty space
+ * under the "Start marki" column, the shortest one, and gestures towards the bubble. Below 1240px
+ * width that space is too narrow, so he is not shown there; on short laptop screens he is smaller.
+ */
+add_action('wp_head', function () {
+  if (!zp_seo_plan_active() || zp_seo_plan_is_en() || is_admin()) { return; }
+  echo '<style id="zp-seo-plan-menu-260">'
+    . 'html body .zpNewNav__mega .zpNewNav__promoCard.zpNewNav__promoCard[hidden]{display:none!important}'
+    . 'html body .zpNewNav__mega .zpNewNav__promoCard--strona .zpNewNav__promoTitle,html body .zpNewNav__mega .zpNewNav__promoCard--sklep .zpNewNav__promoTitle{font-size:30px!important;line-height:1.04!important}'
+    . 'html body .zpNewNav__mega .zpNewNav__promoCard--strona .zpNewNav__promoMedia::after,html body .zpNewNav__mega .zpNewNav__promoCard--sklep .zpNewNav__promoMedia::after{background:linear-gradient(180deg,rgba(4,10,20,.12) 0%,rgba(4,10,20,.55) 30%,rgba(2,6,13,.93) 56%,rgba(2,6,13,.97) 100%)!important}'
+    . 'html body .zpNewNav__mega .zpNewNav__promoCard--strona .zpNewNav__promoMedia img,html body .zpNewNav__mega .zpNewNav__promoCard--sklep .zpNewNav__promoMedia img{object-position:center top!important}'
+    . '.zpNewNav__megaGuide{display:none}'
+    . '@media (min-width:1240px){'
+    . 'html body .zpNewNav__mega .zpNewNav__megaBottomInner{position:relative!important}'
+    . 'html body .zpNewNav__mega .zpNewNav__megaGuide{display:block;position:absolute;right:calc(75% + 16px);bottom:calc(100% - 14px);height:170px;z-index:1;pointer-events:none;transition:opacity .45s ease .22s,transform .55s cubic-bezier(.16,1,.3,1) .22s}'
+    . 'html body .zpNewNav__mega--portal:not(.is-portal-open) .zpNewNav__megaGuide{opacity:0;transform:translateY(14px)}'
+    . 'html body .zpNewNav__mega .zpNewNav__megaGuideImg{display:block!important;height:100%!important;width:auto!important;max-width:none!important;margin:0!important;border-radius:0!important;box-shadow:none!important}'
+    . 'html body .zpNewNav__mega .zpNewNav__megaGuideBubble{position:absolute;right:66%;bottom:54%;width:max-content;max-width:150px;padding:9px 13px;border-radius:16px 16px 4px 16px;background:#102a4f;border:1px solid rgba(142,200,247,.28);color:#fff;font-size:13px;font-weight:700;line-height:1.35;letter-spacing:0;text-align:left;box-shadow:0 14px 34px rgba(2,6,12,.35)}'
+    . 'html body .zpNewNav__mega.is-light-menu .zpNewNav__megaGuideBubble{background:#f4f7fb;border-color:rgba(7,20,38,.1);color:#071426;box-shadow:0 12px 28px rgba(7,20,38,.1)}'
+    . '}'
+    . '@media (min-width:1240px) and (max-width:1399px){html body .zpNewNav__mega .zpNewNav__megaGuide{height:140px}}'
+    . '@media (min-width:1240px) and (max-height:860px){html body .zpNewNav__mega .zpNewNav__megaGuide{height:128px}html body .zpNewNav__mega .zpNewNav__megaGuideBubble{font-size:12.5px;padding:8px 12px}}'
+    . '@media (prefers-reduced-motion:reduce){html body .zpNewNav__mega .zpNewNav__megaGuide{transition:none;opacity:1;transform:none}}'
+    . '</style>' . "\n";
+}, 41);
+
+add_action('wp_footer', function () {
+  if (!zp_seo_plan_active() || zp_seo_plan_is_en() || is_admin()) { return; }
+  echo '<script id="zp-seo-plan-menu-260-js">(function(){'
+    . 'var cards=[].slice.call(document.querySelectorAll(".zpNewNav__promoCard[data-zp-promo]"));if(cards.length<2)return;'
+    . 'var cur=-1;function show(i){cards.forEach(function(c,k){if(k===i){c.removeAttribute("hidden")}else{c.setAttribute("hidden","")}});cur=i}'
+    . 'function pick(){var i=Math.floor(Math.random()*cards.length);if(i===cur){i=(i+1)%cards.length}show(i)}'
+    . 'pick();var mega=cards[0].closest(".zpNewNav__mega");if(!mega||!window.MutationObserver)return;'
+    . 'function isOpen(){return !mega.hasAttribute("hidden")&&(mega.classList.contains("is-portal-open")||!mega.classList.contains("zpNewNav__mega--portal"))}'
+    . 'var open=isOpen(),seen=open;new MutationObserver(function(){var o=isOpen();if(o&&!open){if(seen){pick()}seen=true}open=o}).observe(mega,{attributes:true,attributeFilter:["class","hidden"]});'
+    . '})();</script>' . "\n";
+}, 40);

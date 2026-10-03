@@ -15,11 +15,13 @@ if (!defined('ABSPATH')) { exit; }
  * 2.4.0 adds the website pages from the content thread (content-pages.php, data/pages.php),
  * /kampanie-reklamowe/ as a Rank Math page, one project count (stats.php) and post authors
  * from the team (authors.php).
+ * 2.5.0 adds the guide sections, menu items, content batch 2 and new articles (articles.php);
+ * 2.6.0 adds content batch 3 (5 more articles, links to them once they are live).
  *
  * Narzędzia → Plan SEO shows the migration log and can undo the database changes.
  */
 
-define('ZP_SEO_PLAN_VERSION', '2.5.0');
+define('ZP_SEO_PLAN_VERSION', '2.6.0');
 
 /** The plan is on unless an administrator paused it (Narzędzia → Plan SEO). */
 function zp_seo_plan_active(): bool {

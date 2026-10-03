@@ -32,8 +32,15 @@ function zp_seo_content_markers(): array {
   ];
 }
 
-/** Site-relative links in the content point to this site. */
+/**
+ * Site-relative links in the content point to this site. A <span data-zp-live> holds a
+ * sentence that links to an article published by the plan: it shows once that article is
+ * live and is left out until then (2.6.0).
+ */
 function zp_seo_content_urls(string $html): string {
+  $html = (string) preg_replace_callback('~<span data-zp-live>(.*?)</span>~s', static function ($m) {
+    return preg_match('~href="(/[^"]*)"~', $m[1], $href) && zp_seo_plan_link_is_live($href[1]) ? $m[1] : '';
+  }, $html);
   return (string) preg_replace_callback('~href="(/[^"]*)"~', static function ($m) {
     return 'href="' . esc_url(home_url($m[1])) . '"';
   }, $html);
