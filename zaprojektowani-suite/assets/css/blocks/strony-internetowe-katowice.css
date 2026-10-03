@@ -4806,10 +4806,11 @@
 @media(max-width:680px){#zp-strony-internetowe-katowice .package-list--preview::before{font-size:14px}#zp-strony-internetowe-katowice .package-list--preview.package-list--icons li{font-size:15.6px!important}}
 
 /* 2.6.1 — H1 w hero (prośba Mata): na telefonie 2 px mniejszy, na komputerze trochę większa interlinia.
+   2.6.3: interlinia z 2.6.1 okazała się za duża, więc wraca mniej więcej do połowy tej zmiany
+   (1,035 → 1,08; wyróżniona fraza zostaje przy wspólnym 1,14 z service-hero-global.css).
    Dotyczy wszystkich stron na tym szablonie (Katowice, ogólnopolska i podstrony o stronach www). */
 @media (min-width:1101px){
-  html body #zp-strony-internetowe-katowice .hero h1{line-height:1.15}
-  html body #zp-strony-internetowe-katowice .hero h1 .gradient-text{line-height:1.19!important}
+  html body #zp-strony-internetowe-katowice .hero h1{line-height:1.08}
 }
 @media (max-width:680px){
   html body #zp-strony-internetowe-katowice .hero h1{font-size:clamp(40px,calc(12.4vw - 2px),56px)}

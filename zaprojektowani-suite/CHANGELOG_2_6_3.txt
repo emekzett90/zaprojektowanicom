@@ -1,0 +1,20 @@
+ZAPROJEKTOWANI SUITE 2.6.3
+
+Poprawka: indeks map witryny i interlinia H1 w hero.
+
+Indeks map (sitemap_index.xml):
+- na żywej stronie indeks wypisywał pl-sitemap.xml i en-sitemap.xml, a obie zwracają 410 (to mapy poprzedniej wtyczki językowej, 410 jest celowe od 2.3.0),
+- dopisuje je inna wtyczka jako własne źródło map w Rank Math, dlatego filtr z 2.6.1 ich nie łapał,
+- teraz wtyczka filtruje gotowy indeks w całości, więc te dwa wpisy znikają niezależnie od tego, co je dodaje (sprawdzone lokalnie z symulacją takiego źródła: w 2.6.2 indeks miał 6 map, w 2.6.3 ma 4 i poprawny XML),
+- w indeksie zostają: post-sitemap.xml, page-sitemap.xml, author-sitemap.xml (jeśli włączona w Rank Math) i sitemap-en.xml.
+
+H1 w hero (szablon „Strony internetowe Katowice”, komputer od 1101 px):
+- interlinia z 2.6.1 okazała się za duża, szczególnie na /tworzenie-stron-internetowych/, gdzie nagłówek ma 5 linii,
+- wraca mniej więcej do połowy tej zmiany: 1,15 → 1,08 (oryginał 1,035), a wyróżniona fraza zostaje przy wspólnym 1,14 z arkusza hero (w 2.6.1 była 1,19),
+- przy 1440 px odstęp między liniami na /tworzenie-stron-internetowych/: oryginał ok. 83–88 px, 2.6.1 ok. 92–95 px, 2.6.3 ok. 86–91 px,
+- telefon bez zmian (H1 dalej 2 px mniejszy niż przed 2.6.1),
+- dotyczy tych samych 10 stron co w 2.6.1.
+
+Po wgraniu: LiteSpeed Cache → Purge All oraz Rank Math → Mapa witryny → Zapisz zmiany.
+
+Zawiera też 2.6.1 i 2.6.2.
