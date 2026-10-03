@@ -1,0 +1,5 @@
+Zaprojektowani Suite 2.2.751
+- O nas: dodany gradient navy na wyróżnionej części hero headingu.
+- O nas: poprawiona sekcja Studio Awards — zdjęcie ekipy przeniesione do bardziej uporządkowanego modułu i mniej koliduje z treścią.
+- O nas: trustindex logo otrzymało ciemne tło dla poprawnej czytelności białego znaku.
+- O nas: karty zespołu mają niżej ustawione zdjęcia, żeby nie nachodziły na heading sekcji.

@@ -1,0 +1,871 @@
+<?php
+if (!defined('ABSPATH')) { exit; }
+/* Generated from mapa-fraz.json (phase 1), audyt/polaczenia-wpisow.csv and editorial.json — 2.3.0. */
+return [
+  '/' => [
+    'kind' => 'page',
+    'focus' => 'strony internetowe, agencja interaktywna, agencja kreatywna',
+    'title' => 'Strony internetowe, sklepy i logo dla firm | Zaprojektowani',
+    'description' => 'Projektujemy strony internetowe, sklepy WooCommerce, logo i identyfikację wizualną dla firm z całej Polski. Zobacz realizacje i opisz swój projekt.',
+    'h1' => 'Strony internetowe, sklepy WooCommerce i branding dla firm z całej Polski',
+    'editorial_title' => '',
+    'editorial_description' => '',
+    'links' => [
+      [
+        'text' => 'tworzenie stron internetowych',
+        'path' => '/tworzenie-stron-internetowych/',
+      ],
+      [
+        'text' => 'tworzenie sklepów internetowych',
+        'path' => '/tworzenie-sklepow-internetowych/',
+      ],
+      [
+        'text' => 'projektowanie logo',
+        'path' => '/projektowanie-logo/',
+      ],
+      [
+        'text' => 'identyfikacja wizualna',
+        'path' => '/identyfikacja-wizualna/',
+      ],
+      [
+        'text' => 'strony internetowe Katowice',
+        'path' => '/strony-internetowe-katowice/',
+      ],
+    ],
+  ],
+  '/tworzenie-stron-internetowych/' => [
+    'kind' => 'page',
+    'focus' => 'tworzenie stron internetowych, projektowanie stron internetowych, tworzenie stron www, projektowanie stron www, tworzenie strony internetowej',
+    'title' => 'Tworzenie stron internetowych dla firm | Zaprojektowani',
+    'description' => 'Projektujemy i tworzymy strony internetowe dla firm z całej Polski: strategia, UX, treści, WordPress i SEO na start. Zobacz realizacje i sprawdź ceny.',
+    'h1' => 'Tworzenie i projektowanie stron internetowych dla firm',
+    'editorial_title' => '',
+    'editorial_description' => '',
+    'links' => [
+      [
+        'text' => 'ile kosztuje strona internetowa',
+        'path' => '/strony-www/ile-kosztuje-stworzenie-strony-internetowej-dla-firmy/',
+      ],
+      [
+        'text' => 'wycena strony internetowej',
+        'path' => '/studio-wyceny/',
+      ],
+      [
+        'text' => 'etapy tworzenia strony internetowej',
+        'path' => '/strony-internetowe/tworzenie-stron-internetowych-profesjonalny-proces-od-strategii-do-wdrozenia/',
+      ],
+      [
+        'text' => 'realizacje',
+        'path' => '/realizacje/',
+      ],
+      [
+        'text' => 'strony internetowe w Katowicach',
+        'path' => '/strony-internetowe-katowice/',
+      ],
+    ],
+  ],
+  '/tworzenie-sklepow-internetowych/' => [
+    'kind' => 'page',
+    'focus' => 'tworzenie sklepów internetowych, tworzenie sklepu internetowego, stworzenie sklepu internetowego, budowa sklepu internetowego, agencja ecommerce',
+    'title' => 'Tworzenie sklepów internetowych WooCommerce | Zaprojektowani',
+    'description' => 'Tworzymy sklepy internetowe WooCommerce dla firm z całej Polski: projekt UX, karty produktów, płatności, dostawy, integracje i SEO. Sprawdź realizacje.',
+    'h1' => 'Tworzenie sklepów internetowych na WooCommerce',
+    'editorial_title' => '',
+    'editorial_description' => '',
+    'links' => [
+      [
+        'text' => 'ile kosztuje sklep internetowy',
+        'path' => '/seo-i-konwersja/ile-kosztuje-sklep-internetowy-woocommerce-w-2026-roku/',
+      ],
+      [
+        'text' => 'karta produktu',
+        'path' => '/sklepy-internetowe/karta-produktu-w-sklepie-internetowym/',
+      ],
+      [
+        'text' => 'migracja sklepu internetowego',
+        'path' => '/strony-internetowe/migracja-sklepu-na-woocommerce/',
+      ],
+      [
+        'text' => 'WooCommerce czy Shopify',
+        'path' => '/strony-internetowe/woocommerce-czy-shopify/',
+      ],
+      [
+        'text' => 'wycena sklepu internetowego',
+        'path' => '/studio-wyceny/',
+      ],
+      [
+        'text' => 'sklepy internetowe w Katowicach',
+        'path' => '/sklepy-internetowe-katowice/',
+      ],
+    ],
+  ],
+  '/projektowanie-logo/' => [
+    'kind' => 'page',
+    'focus' => 'projektowanie logo, projektowanie logotypu, projekt logotypu, logo firmy, projektowanie logotypów',
+    'title' => 'Projektowanie logo i logotypów dla firm | Zaprojektowani',
+    'description' => 'Projektujemy logo i logotypy dla firm z całej Polski: strategia, koncepcje, warianty i komplet plików do druku i internetu. Zobacz projekty i ceny logo.',
+    'h1' => 'Projektowanie logo i logotypów dla firm',
+    'editorial_title' => '',
+    'editorial_description' => '',
+    'links' => [
+      [
+        'text' => 'ile kosztuje logo',
+        'path' => '/logo-branding/ile-kosztuje-logo-dla-firmy-i-co-obejmuje-cena/',
+      ],
+      [
+        'text' => 'jak zaprojektować logo',
+        'path' => '/logo-branding/projektowanie-logo-jak-powstaje-znak-ktory-dziala-w-internecie-druku-i-sprzedazy/',
+      ],
+      [
+        'text' => 'identyfikacja wizualna',
+        'path' => '/identyfikacja-wizualna/',
+      ],
+      [
+        'text' => 'projektowanie logo w Katowicach',
+        'path' => '/logo-branding-katowice/',
+      ],
+    ],
+  ],
+  '/identyfikacja-wizualna/' => [
+    'kind' => 'page',
+    'focus' => 'identyfikacja wizualna, agencje brandingowe, agencja brandingowa, system identyfikacji wizualnej, identyfikacja wizualna marki',
+    'title' => 'Identyfikacja wizualna i branding dla firm | Zaprojektowani',
+    'description' => 'Projektujemy identyfikację wizualną firm: logo, kolory, typografię, księgę znaku i materiały firmowe. Branding dla firm z całej Polski. Zobacz realizacje.',
+    'h1' => 'Identyfikacja wizualna i branding dla firm',
+    'editorial_title' => '',
+    'editorial_description' => '',
+    'links' => [
+      [
+        'text' => 'księga znaku',
+        'path' => '/logo-branding/ksiega-znaku-co-to-jest-co-zawiera-i-kiedy-firma-jej-potrzebuje/',
+      ],
+      [
+        'text' => 'rebranding',
+        'path' => '/logo-branding/rebranding-firmy/',
+      ],
+      [
+        'text' => 'projektowanie logo',
+        'path' => '/projektowanie-logo/',
+      ],
+      [
+        'text' => 'identyfikacja wizualna firmy: co zawiera',
+        'path' => '/logo-branding/identyfikacja-wizualna-firmy/',
+      ],
+      [
+        'text' => 'branding w Katowicach',
+        'path' => '/logo-branding-katowice/',
+      ],
+    ],
+  ],
+  '/strony-internetowe-katowice/' => [
+    'kind' => 'page',
+    'focus' => 'strony internetowe katowice, agencja interaktywna katowice, tworzenie stron internetowych katowice, projektowanie stron internetowych katowice, strony internetowe śląsk',
+    'title' => 'Strony internetowe Katowice i Śląsk | Zaprojektowani',
+    'description' => 'Studio z Katowic, ul. Modelarska 18/2. Projektujemy strony internetowe dla firm ze Śląska: spotkanie w biurze, lokalne realizacje i opinie z Google.',
+    'h1' => 'Strony internetowe w Katowicach i na Śląsku',
+    'editorial_title' => '',
+    'editorial_description' => '',
+    'links' => [
+      [
+        'text' => 'tworzenie stron internetowych',
+        'path' => '/tworzenie-stron-internetowych/',
+      ],
+      [
+        'text' => 'kontakt',
+        'path' => '/kontakt/',
+      ],
+    ],
+  ],
+  '/sklepy-internetowe-katowice/' => [
+    'kind' => 'page',
+    'focus' => 'sklepy internetowe katowice, tworzenie sklepów internetowych katowice, projektowanie sklepów internetowych katowice, sklep woocommerce katowice, sklepy internetowe śląsk',
+    'title' => 'Sklepy internetowe Katowice – WooCommerce | Zaprojektowani',
+    'description' => 'Sklepy internetowe WooCommerce dla firm z Katowic i Śląska. Spotkanie w naszym biurze, lokalne realizacje i wsparcie po starcie. Sprawdź ofertę.',
+    'h1' => 'Sklepy internetowe w Katowicach i na Śląsku',
+    'editorial_title' => '',
+    'editorial_description' => '',
+    'links' => [
+      [
+        'text' => 'tworzenie sklepów internetowych',
+        'path' => '/tworzenie-sklepow-internetowych/',
+      ],
+    ],
+  ],
+  '/logo-branding-katowice/' => [
+    'kind' => 'page',
+    'focus' => 'projektowanie logo katowice, projekt logo katowice, studio graficzne katowice, logo katowice, grafik katowice',
+    'title' => 'Projektowanie logo Katowice i branding | Zaprojektowani',
+    'description' => 'Projektowanie logo i identyfikacji wizualnej dla firm z Katowic i Śląska. Warsztat marki w naszym biurze i lokalne realizacje. Zobacz projekty.',
+    'h1' => 'Projektowanie logo i branding w Katowicach',
+    'editorial_title' => '',
+    'editorial_description' => '',
+    'links' => [
+      [
+        'text' => 'projektowanie logo',
+        'path' => '/projektowanie-logo/',
+      ],
+      [
+        'text' => 'identyfikacja wizualna',
+        'path' => '/identyfikacja-wizualna/',
+      ],
+    ],
+  ],
+  '/strony-www/ile-kosztuje-stworzenie-strony-internetowej-dla-firmy/' => [
+    'kind' => 'post',
+    'focus' => 'ile kosztuje strona internetowa, strony internetowe cena, strona internetowa cena, ile kosztuje zrobienie strony internetowej, ile kosztuje stworzenie strony internetowej',
+    'title' => 'Ile kosztuje strona internetowa w 2026? Ceny i przykłady',
+    'description' => 'Ile kosztuje strona internetowa w 2026? Widełki cen strony wizytówki, firmowej i rozbudowanej, od czego zależy koszt i ile kosztuje utrzymanie.',
+    'h1' => 'Ile kosztuje strona internetowa dla firmy w 2026 roku?',
+    'editorial_title' => 'Ile kosztuje strona internetowa? Ceny i zakres w 2026',
+    'editorial_description' => 'Sprawdź, ile kosztuje strona internetowa i co obejmuje wycena. Porównaj zakres projektu, wdrożenia, treści oraz późniejsze koszty utrzymania strony.',
+    'links' => [
+      [
+        'text' => 'tworzenie stron internetowych',
+        'path' => '/tworzenie-stron-internetowych/',
+      ],
+      [
+        'text' => 'wycena strony internetowej',
+        'path' => '/studio-wyceny/',
+      ],
+      [
+        'text' => 'ile kosztuje utrzymanie strony internetowej',
+        'path' => '/seo-i-konwersja/ile-kosztuje-utrzymanie-strony-internetowej/',
+      ],
+    ],
+  ],
+  '/studio-wyceny/' => [
+    'kind' => 'page',
+    'focus' => 'wycena strony internetowej, strona internetowa cennik, strony internetowe cennik, tworzenie stron internetowych cennik, wyceny stron internetowych',
+    'title' => 'Cennik i wycena strony internetowej | Zaprojektowani',
+    'description' => 'Cennik stron wizytówek, stron firmowych, sklepów WooCommerce, logo i brandingu. Odpowiedz na kilka pytań i otrzymaj wycenę swojego projektu.',
+    'h1' => 'Cennik i wycena strony internetowej, sklepu i logo',
+    'editorial_title' => '',
+    'editorial_description' => '',
+    'links' => [
+      [
+        'text' => 'ile kosztuje strona internetowa',
+        'path' => '/strony-www/ile-kosztuje-stworzenie-strony-internetowej-dla-firmy/',
+      ],
+      [
+        'text' => 'ile kosztuje sklep internetowy',
+        'path' => '/seo-i-konwersja/ile-kosztuje-sklep-internetowy-woocommerce-w-2026-roku/',
+      ],
+      [
+        'text' => 'ile kosztuje logo',
+        'path' => '/logo-branding/ile-kosztuje-logo-dla-firmy-i-co-obejmuje-cena/',
+      ],
+    ],
+  ],
+  '/logo-branding/ile-kosztuje-logo-dla-firmy-i-co-obejmuje-cena/' => [
+    'kind' => 'post',
+    'focus' => 'projekt logo ceny, logo ceny, projektowanie logo cena, projekt logo cena, logo cena',
+    'title' => 'Ile kosztuje logo? Ceny projektu logo w 2026',
+    'description' => 'Ile kosztuje projekt logo w 2026? Widełki cen logo, mini brandingu i pełnej identyfikacji wizualnej oraz to, co obejmuje cena. Zobacz przykłady.',
+    'h1' => 'Ile kosztuje logo dla firmy? Ceny logo i identyfikacji wizualnej',
+    'editorial_title' => 'Projekt logo — ceny, zakres i co obejmuje wycena',
+    'editorial_description' => 'Porównaj ceny projektu logo i sprawdź, co obejmuje wycena: koncepcje, poprawki, pliki oraz księgę znaku. Wybierz zakres dopasowany do swojej firmy.',
+    'links' => [
+      [
+        'text' => 'projektowanie logo',
+        'path' => '/projektowanie-logo/',
+      ],
+      [
+        'text' => 'identyfikacja wizualna',
+        'path' => '/identyfikacja-wizualna/',
+      ],
+      [
+        'text' => 'wycena logo',
+        'path' => '/studio-wyceny/',
+      ],
+    ],
+  ],
+  '/seo-i-konwersja/ile-kosztuje-sklep-internetowy-woocommerce-w-2026-roku/' => [
+    'kind' => 'post',
+    'focus' => 'ile kosztuje sklep internetowy, sklep internetowy cena, ile kosztuje założenie sklepu internetowego, koszt sklepu internetowego, sklep woocommerce cena',
+    'title' => 'Ile kosztuje sklep internetowy w 2026? Ceny WooCommerce',
+    'description' => 'Ile kosztuje sklep internetowy w 2026? Widełki cen sklepu WooCommerce, koszty startu i utrzymania oraz od czego zależy cena. Zobacz przykłady.',
+    'h1' => 'Ile kosztuje sklep internetowy na WooCommerce w 2026 roku?',
+    'editorial_title' => 'Ile kosztuje sklep internetowy? Budżet i zakres w 2026',
+    'editorial_description' => 'Sprawdź, ile kosztuje sklep internetowy: projekt, WooCommerce, produkty, płatności i integracje. Porównaj koszt startu oraz późniejszego utrzymania.',
+    'links' => [
+      [
+        'text' => 'tworzenie sklepów internetowych',
+        'path' => '/tworzenie-sklepow-internetowych/',
+      ],
+      [
+        'text' => 'wycena sklepu internetowego',
+        'path' => '/studio-wyceny/',
+      ],
+    ],
+  ],
+  '/seo-i-konwersja/ile-kosztuje-utrzymanie-strony-internetowej/' => [
+    'kind' => 'post',
+    'focus' => 'ile kosztuje utrzymanie strony internetowej, miesięczny koszt strony internetowej, koszty utrzymania strony internetowej, utrzymanie strony internetowej',
+    'title' => 'Ile kosztuje utrzymanie strony internetowej? Koszty 2026',
+    'description' => 'Ile kosztuje utrzymanie strony internetowej? Hosting, domena, aktualizacje, kopie zapasowe i opieka techniczna: koszty miesięczne i roczne w 2026.',
+    'h1' => 'Ile kosztuje utrzymanie strony internetowej miesięcznie?',
+    'editorial_title' => 'Ile kosztuje utrzymanie strony internetowej? Koszty roczne',
+    'editorial_description' => 'Policz koszt utrzymania strony internetowej: domenę, hosting, licencje, aktualizacje i opiekę. Oddziel niezbędne opłaty od wydatków na rozwój serwisu.',
+    'links' => [
+      [
+        'text' => 'ile kosztuje strona internetowa',
+        'path' => '/strony-www/ile-kosztuje-stworzenie-strony-internetowej-dla-firmy/',
+      ],
+    ],
+  ],
+  '/strony-internetowe/tworzenie-stron-internetowych-profesjonalny-proces-od-strategii-do-wdrozenia/' => [
+    'kind' => 'post',
+    'focus' => 'etapy tworzenia strony internetowej, etapy projektowania strony internetowej, jak tworzyć strony internetowe, tworzenie strony internetowej krok po kroku, proces tworzenia strony internetowej',
+    'title' => 'Etapy tworzenia strony internetowej krok po kroku',
+    'description' => 'Poznaj proces tworzenia stron internetowych: brief, strukturę, projekt, wdrożenie i testy. Sprawdź zadania klienta oraz kryteria odbioru gotowej strony.',
+    'h1' => 'Tworzenie stron internetowych — etapy, terminy i odbiór projektu',
+    'editorial_title' => 'Tworzenie stron internetowych — etapy od briefu do startu',
+    'editorial_description' => 'Poznaj proces tworzenia stron internetowych: brief, strukturę, projekt, wdrożenie i testy. Sprawdź zadania klienta oraz kryteria odbioru gotowej strony.',
+    'links' => [
+      [
+        'text' => 'tworzenie stron internetowych',
+        'path' => '/tworzenie-stron-internetowych/',
+      ],
+    ],
+  ],
+  '/strony-internetowe/projektowanie-stron-internetowych-co-decyduje-o-zapytaniach/' => [
+    'kind' => 'post',
+    'focus' => 'zasady tworzenia stron internetowych, jak zaprojektować stronę internetową, projekt graficzny strony internetowej',
+    'title' => 'Zasady tworzenia stron internetowych, które dają zapytania',
+    'description' => 'Zobacz, jak projektowanie stron internetowych łączy układ, treści i UX. Poznaj sekcje, które pomagają zrozumieć ofertę i przejść do wysłania zapytania.',
+    'h1' => 'Projektowanie stron internetowych — układ, UX i treści na przykładach',
+    'editorial_title' => 'Projektowanie stron internetowych — UX, treści i przykłady',
+    'editorial_description' => 'Zobacz, jak projektowanie stron internetowych łączy układ, treści i UX. Poznaj sekcje, które pomagają zrozumieć ofertę i przejść do wysłania zapytania.',
+    'links' => [
+      [
+        'text' => 'projektowanie stron internetowych',
+        'path' => '/tworzenie-stron-internetowych/',
+      ],
+    ],
+  ],
+  '/logo-branding/projektowanie-logo-jak-powstaje-znak-ktory-dziala-w-internecie-druku-i-sprzedazy/' => [
+    'kind' => 'post',
+    'focus' => 'jak zaprojektować logo, proces projektowania logo, jak zaprojektować logo firmy, zasady projektowania logo, techniki projektowania logo',
+    'title' => 'Jak zaprojektować logo? Proces projektowania krok po kroku',
+    'description' => '',
+    'h1' => '',
+    'editorial_title' => '',
+    'editorial_description' => '',
+    'links' => [
+      [
+        'text' => 'projektowanie logo',
+        'path' => '/projektowanie-logo/',
+      ],
+    ],
+  ],
+  '/logo-branding/identyfikacja-wizualna-firmy/' => [
+    'kind' => 'post',
+    'focus' => 'identyfikacja wizualna firmy, identyfikacja wizualna co to, elementy identyfikacji wizualnej, identyfikacja wizualna marki przykłady, czym jest identyfikacja wizualna',
+    'title' => 'Identyfikacja wizualna firmy – co to jest i co zawiera',
+    'description' => 'Poznaj elementy identyfikacji wizualnej: logo, kolory, typografię i materiały firmowe. Zobacz przykłady oraz plan wdrożenia spójnego systemu marki.',
+    'h1' => 'Identyfikacja wizualna — elementy, przykłady i plan wdrożenia',
+    'editorial_title' => 'Identyfikacja wizualna — elementy i przykłady dla firmy',
+    'editorial_description' => 'Poznaj elementy identyfikacji wizualnej: logo, kolory, typografię i materiały firmowe. Zobacz przykłady oraz plan wdrożenia spójnego systemu marki.',
+    'links' => [
+      [
+        'text' => 'projektowanie identyfikacji wizualnej',
+        'path' => '/identyfikacja-wizualna/',
+      ],
+    ],
+  ],
+  '/strony-internetowe/landing-page-co-to/' => [
+    'kind' => 'post',
+    'focus' => 'landing page, landing page co to, co to jest landing page, strona sprzedażowa',
+    'title' => 'Landing page – co to jest i kiedy go potrzebujesz',
+    'description' => 'Dowiedz się, czym jest landing page, kiedy go wybrać i jakie sekcje powinien zawierać. Zaplanuj ofertę, formularz oraz pomiar zapytań z kampanii.',
+    'h1' => 'Landing page — co to jest i jak zaplanować stronę pod kampanię?',
+    'editorial_title' => 'Landing page — co to jest i jak zaplanować skuteczną stronę',
+    'editorial_description' => 'Dowiedz się, czym jest landing page, kiedy go wybrać i jakie sekcje powinien zawierać. Zaplanuj ofertę, formularz oraz pomiar zapytań z kampanii.',
+    'links' => [
+      [
+        'text' => 'tworzenie stron internetowych',
+        'path' => '/tworzenie-stron-internetowych/',
+      ],
+    ],
+  ],
+  '/seo-i-konwersja/landing-page-przyklady/' => [
+    'kind' => 'post',
+    'focus' => 'landing page przykłady, landing page przykład, przykłady landing page',
+    'title' => 'Landing page: przykłady skutecznych stron i co z nich wziąć',
+    'description' => 'Zobacz przykłady landing page i analizę ich sekcji: oferty, dowodów zaufania, CTA oraz formularza. Wykorzystaj wnioski przy planowaniu własnej strony.',
+    'h1' => '',
+    'editorial_title' => 'Landing page — przykłady i omówienie sekcji krok po kroku',
+    'editorial_description' => 'Zobacz przykłady landing page i analizę ich sekcji: oferty, dowodów zaufania, CTA oraz formularza. Wykorzystaj wnioski przy planowaniu własnej strony.',
+    'links' => [],
+  ],
+  '/logo-branding/ksiega-znaku-co-to-jest-co-zawiera-i-kiedy-firma-jej-potrzebuje/' => [
+    'kind' => 'post',
+    'focus' => 'księga znaku, księga znaku przykład, księga identyfikacji wizualnej, księga znaku przykłady, księga znaku logo',
+    'title' => 'Księga znaku – co to jest, co zawiera + przykłady',
+    'description' => 'Sprawdź, co zawiera księga znaku: wersje logo, kolory, pole ochronne i zasady użycia. Zobacz przykłady oraz checklistę do odbioru dokumentacji marki.',
+    'h1' => 'Księga znaku — co zawiera? Przykłady i checklista dla firmy',
+    'editorial_title' => 'Księga znaku — co zawiera? Przykłady i checklista',
+    'editorial_description' => 'Sprawdź, co zawiera księga znaku: wersje logo, kolory, pole ochronne i zasady użycia. Zobacz przykłady oraz checklistę do odbioru dokumentacji marki.',
+    'links' => [
+      [
+        'text' => 'identyfikacja wizualna',
+        'path' => '/identyfikacja-wizualna/',
+      ],
+    ],
+  ],
+  '/logo-branding/ksiega-znaku-mini-brandbook-pelna-identyfikacja-wizualna-co-wybrac/' => [
+    'kind' => 'post',
+    'focus' => 'mini księga znaku, mini brandbook',
+    'title' => 'Mini księga znaku czy pełny brandbook – co wybrać?',
+    'description' => '',
+    'h1' => '',
+    'editorial_title' => '',
+    'editorial_description' => '',
+    'links' => [
+      [
+        'text' => 'identyfikacja wizualna',
+        'path' => '/identyfikacja-wizualna/',
+      ],
+    ],
+  ],
+  '/logo-branding/brandbook-co-powinien-zawierac-i-jak-go-czytac/' => [
+    'kind' => 'post',
+    'focus' => 'brandbook, brandbook co to, brandbook dla firmy, projektowanie brandbook, brandbook przykład',
+    'title' => 'Brandbook – co to jest i co powinien zawierać',
+    'description' => '',
+    'h1' => '',
+    'editorial_title' => '',
+    'editorial_description' => '',
+    'links' => [
+      [
+        'text' => 'identyfikacja wizualna',
+        'path' => '/identyfikacja-wizualna/',
+      ],
+    ],
+  ],
+  '/logo-branding/rebranding-firmy/' => [
+    'kind' => 'post',
+    'focus' => 'rebranding, rebranding co to, rebranding marki, rebranding firmy, ile kosztuje rebranding',
+    'title' => 'Rebranding – co to jest i jak go przeprowadzić w firmie',
+    'description' => 'Sprawdź, czym jest rebranding, kiedy warto zmienić markę i jak zaplanować proces. Poznaj etapy, ryzyka oraz różnice między liftingiem logo a pełną zmianą.',
+    'h1' => 'Rebranding — co to jest, kiedy ma sens i jak zaplanować zmianę?',
+    'editorial_title' => 'Rebranding — co to jest? Etapy i przykłady zmiany marki',
+    'editorial_description' => 'Sprawdź, czym jest rebranding, kiedy warto zmienić markę i jak zaplanować proces. Poznaj etapy, ryzyka oraz różnice między liftingiem logo a pełną zmianą.',
+    'links' => [
+      [
+        'text' => 'identyfikacja wizualna',
+        'path' => '/identyfikacja-wizualna/',
+      ],
+    ],
+  ],
+  '/logo-branding/branding-firmy-od-podstaw/' => [
+    'kind' => 'post',
+    'focus' => 'branding co to, co to jest branding, budowanie marki, tworzenie marki, budowanie marki firmy',
+    'title' => 'Branding – co to jest i jak zbudować markę od podstaw',
+    'description' => '',
+    'h1' => '',
+    'editorial_title' => '',
+    'editorial_description' => '',
+    'links' => [
+      [
+        'text' => 'identyfikacja wizualna',
+        'path' => '/identyfikacja-wizualna/',
+      ],
+    ],
+  ],
+  '/seo-i-konwersja/jak-zalozyc-sklep-internetowy/' => [
+    'kind' => 'post',
+    'focus' => 'jak założyć sklep internetowy, jak otworzyć sklep internetowy, własny sklep internetowy, jak stworzyć sklep internetowy, jak zrobić sklep internetowy',
+    'title' => 'Jak założyć sklep internetowy? Poradnik krok po kroku',
+    'description' => 'Zobacz, jak założyć sklep internetowy: wybierz model sprzedaży, przygotuj produkty, płatności i dostawy. Skorzystaj z checklisty przed uruchomieniem.',
+    'h1' => '',
+    'editorial_title' => 'Jak założyć sklep internetowy? Plan startu krok po kroku',
+    'editorial_description' => 'Zobacz, jak założyć sklep internetowy: wybierz model sprzedaży, przygotuj produkty, płatności i dostawy. Skorzystaj z checklisty przed uruchomieniem.',
+    'links' => [
+      [
+        'text' => 'tworzenie sklepów internetowych',
+        'path' => '/tworzenie-sklepow-internetowych/',
+      ],
+    ],
+  ],
+  '/logo-branding/projekt-logo-firmy-od-czego-zaczac-i-czego-unikac/' => [
+    'kind' => 'post',
+    'focus' => 'jak zrobić logo firmy, jak stworzyć logo firmy, jak zrobić logo, jak stworzyć logo',
+    'title' => 'Jak zrobić logo firmy? Od czego zacząć i czego unikać',
+    'description' => '',
+    'h1' => '',
+    'editorial_title' => '',
+    'editorial_description' => '',
+    'links' => [
+      [
+        'text' => 'projektowanie logo',
+        'path' => '/projektowanie-logo/',
+      ],
+    ],
+  ],
+  '/logo-branding/logo-ai-czy-projektant/' => [
+    'kind' => 'post',
+    'focus' => 'logo ai, generator logo ai, ai logo, logo z ai',
+    'title' => 'Logo AI czy projektant? Kiedy generator logo wystarczy',
+    'description' => '',
+    'h1' => '',
+    'editorial_title' => '',
+    'editorial_description' => '',
+    'links' => [
+      [
+        'text' => 'projektowanie logo',
+        'path' => '/projektowanie-logo/',
+      ],
+    ],
+  ],
+  '/strony-www/audyt-strony-internetowej-firmy-przed-reklamami-i-seo/' => [
+    'kind' => 'post',
+    'focus' => 'audyt strony internetowej, audyt ux, analiza strony internetowej, sprawdzenie strony internetowej, jak sprawdzić stronę internetową',
+    'title' => 'Audyt strony internetowej – co sprawdzić przed reklamą i SEO',
+    'description' => '',
+    'h1' => '',
+    'editorial_title' => '',
+    'editorial_description' => '',
+    'links' => [
+      [
+        'text' => 'tworzenie stron internetowych',
+        'path' => '/tworzenie-stron-internetowych/',
+      ],
+    ],
+  ],
+  '/ux-cro-analityka/formularz-kontaktowy-na-stronie-firmowej-jak-zwiekszyc-liczbe-zapytan/' => [
+    'kind' => 'post',
+    'focus' => 'formularz kontaktowy, formularz kontaktowy wordpress, formularz kontaktowy na stronie',
+    'title' => 'Formularz kontaktowy, który zwiększa liczbę zapytań',
+    'description' => '',
+    'h1' => '',
+    'editorial_title' => '',
+    'editorial_description' => '',
+    'links' => [
+      [
+        'text' => 'tworzenie stron internetowych',
+        'path' => '/tworzenie-stron-internetowych/',
+      ],
+    ],
+  ],
+  '/sklepy-internetowe/karta-produktu-w-sklepie-internetowym/' => [
+    'kind' => 'post',
+    'focus' => 'karta produktu, karta produktu w sklepie internetowym, opis produktu w sklepie internetowym',
+    'title' => 'Karta produktu w sklepie internetowym – co musi zawierać',
+    'description' => '',
+    'h1' => '',
+    'editorial_title' => '',
+    'editorial_description' => '',
+    'links' => [
+      [
+        'text' => 'tworzenie sklepów internetowych',
+        'path' => '/tworzenie-sklepow-internetowych/',
+      ],
+    ],
+  ],
+  '/sklepy-internetowe/koszyk-w-sklepie-internetowym-jak-ograniczyc-porzucone-zakupy/' => [
+    'kind' => 'post',
+    'focus' => 'porzucone koszyki, porzucony koszyk, porzucone koszyki woocommerce',
+    'title' => 'Porzucone koszyki – jak je ograniczyć w sklepie internetowym',
+    'description' => '',
+    'h1' => '',
+    'editorial_title' => '',
+    'editorial_description' => '',
+    'links' => [
+      [
+        'text' => 'tworzenie sklepów internetowych',
+        'path' => '/tworzenie-sklepow-internetowych/',
+      ],
+    ],
+  ],
+  '/ux-cro-analityka/strona-internetowa-a-konwersja/' => [
+    'kind' => 'post',
+    'focus' => 'optymalizacja konwersji, konwersja na stronie internetowej, jak zwiększyć konwersję na stronie',
+    'title' => 'Optymalizacja konwersji strony – od czego zacząć',
+    'description' => '',
+    'h1' => '',
+    'editorial_title' => '',
+    'editorial_description' => '',
+    'links' => [
+      [
+        'text' => 'tworzenie stron internetowych',
+        'path' => '/tworzenie-stron-internetowych/',
+      ],
+    ],
+  ],
+  '/logo-branding/kolory-i-typografia-marki/' => [
+    'kind' => 'post',
+    'focus' => 'czcionka do logo, kolory logo, kolory w logo, psychologia kolorów logo, brandbook i typografia marki',
+    'title' => 'Czcionka i kolory logo – jak dobrać typografię marki',
+    'description' => '',
+    'h1' => '',
+    'editorial_title' => '',
+    'editorial_description' => '',
+    'links' => [
+      [
+        'text' => 'projektowanie logo',
+        'path' => '/projektowanie-logo/',
+      ],
+    ],
+  ],
+  '/logo-branding/brief-do-logo-i-identyfikacji-wizualnej/' => [
+    'kind' => 'post',
+    'focus' => 'brief logo, brief projektowy, brief do logo, brief graficzny',
+    'title' => 'Brief do logo i identyfikacji wizualnej – co przygotować',
+    'description' => '',
+    'h1' => '',
+    'editorial_title' => '',
+    'editorial_description' => '',
+    'links' => [
+      [
+        'text' => 'projektowanie logo',
+        'path' => '/projektowanie-logo/',
+      ],
+    ],
+  ],
+  '/strony-www/jak-przygotowac-brief-do-projektowania-strony-internetowej/' => [
+    'kind' => 'post',
+    'focus' => 'brief strony internetowej, brief do strony internetowej',
+    'title' => 'Brief strony internetowej – co przygotować przed projektem',
+    'description' => '',
+    'h1' => '',
+    'editorial_title' => '',
+    'editorial_description' => '',
+    'links' => [
+      [
+        'text' => 'tworzenie stron internetowych',
+        'path' => '/tworzenie-stron-internetowych/',
+      ],
+    ],
+  ],
+  '/strony-internetowe/wordpress-wix-czy-webflow/' => [
+    'kind' => 'post',
+    'focus' => 'webflow czy wordpress, wix czy wordpress, wordpress czy wix',
+    'title' => '',
+    'description' => '',
+    'h1' => '',
+    'editorial_title' => '',
+    'editorial_description' => '',
+    'links' => [],
+  ],
+  '/strony-internetowe/woocommerce-czy-prestashop/' => [
+    'kind' => 'post',
+    'focus' => 'woocommerce czy prestashop, woocommerce vs prestashop, prestashop czy woocommerce',
+    'title' => '',
+    'description' => '',
+    'h1' => '',
+    'editorial_title' => '',
+    'editorial_description' => '',
+    'links' => [
+      [
+        'text' => 'tworzenie sklepów internetowych',
+        'path' => '/tworzenie-sklepow-internetowych/',
+      ],
+    ],
+  ],
+  '/strony-internetowe/woocommerce-czy-shopify/' => [
+    'kind' => 'post',
+    'focus' => 'shopify czy woocommerce, shopify vs woocommerce, woocommerce czy shopify',
+    'title' => '',
+    'description' => '',
+    'h1' => '',
+    'editorial_title' => '',
+    'editorial_description' => '',
+    'links' => [
+      [
+        'text' => 'tworzenie sklepów internetowych',
+        'path' => '/tworzenie-sklepow-internetowych/',
+      ],
+    ],
+  ],
+  '/strony-internetowe/przebudowa-strony-bez-utraty-widocznosci-w-google/' => [
+    'kind' => 'post',
+    'focus' => 'migracja strony internetowej, przebudowa strony a seo',
+    'title' => '',
+    'description' => '',
+    'h1' => '',
+    'editorial_title' => '',
+    'editorial_description' => '',
+    'links' => [
+      [
+        'text' => 'tworzenie stron internetowych',
+        'path' => '/tworzenie-stron-internetowych/',
+      ],
+    ],
+  ],
+  '/strony-internetowe/migracja-sklepu-na-woocommerce/' => [
+    'kind' => 'post',
+    'focus' => 'migracja sklepu internetowego, migracja sklepu na woocommerce, przeniesienie sklepu na woocommerce',
+    'title' => '',
+    'description' => '',
+    'h1' => '',
+    'editorial_title' => '',
+    'editorial_description' => '',
+    'links' => [
+      [
+        'text' => 'tworzenie sklepów internetowych',
+        'path' => '/tworzenie-sklepow-internetowych/',
+      ],
+    ],
+  ],
+  '/strony-www/kiedy-warto-przebudowac-strone-internetowa-firmy/' => [
+    'kind' => 'post',
+    'focus' => 'przebudowa strony internetowej, modernizacja strony internetowej, redesign strony internetowej, odświeżenie strony internetowej, przebudowa strony www',
+    'title' => 'Przebudowa strony internetowej – kiedy warto ją zrobić',
+    'description' => '',
+    'h1' => '',
+    'editorial_title' => '',
+    'editorial_description' => '',
+    'links' => [
+      [
+        'text' => 'tworzenie stron internetowych',
+        'path' => '/tworzenie-stron-internetowych/',
+      ],
+    ],
+  ],
+  '/strony-internetowe/strona-internetowa-dla-firmy-co-powinna-zawierac/' => [
+    'kind' => 'post',
+    'focus' => 'co powinna zawierać strona internetowa, co powinna zawierać strona internetowa firmy, elementy strony internetowej, elementy strony firmowej',
+    'title' => 'Co powinna zawierać strona internetowa firmy?',
+    'description' => '',
+    'h1' => '',
+    'editorial_title' => '',
+    'editorial_description' => '',
+    'links' => [
+      [
+        'text' => 'strona internetowa dla firmy',
+        'path' => '/tworzenie-stron-internetowych/',
+      ],
+    ],
+  ],
+  '/strony-internetowe/szablon-czy-projekt-indywidualny-strony/' => [
+    'kind' => 'post',
+    'focus' => 'strona internetowa szablon, gotowy szablon strony internetowej, szablon czy indywidualny projekt strony',
+    'title' => '',
+    'description' => '',
+    'h1' => '',
+    'editorial_title' => '',
+    'editorial_description' => '',
+    'links' => [
+      [
+        'text' => 'tworzenie stron internetowych',
+        'path' => '/tworzenie-stron-internetowych/',
+      ],
+    ],
+  ],
+  '/strony-internetowe/strona-na-abonament-czy-na-wlasnosc/' => [
+    'kind' => 'post',
+    'focus' => 'strona internetowa w abonamencie, strona na abonament, strona www w abonamencie, strona internetowa na abonament',
+    'title' => '',
+    'description' => '',
+    'h1' => '',
+    'editorial_title' => '',
+    'editorial_description' => '',
+    'links' => [
+      [
+        'text' => 'tworzenie stron internetowych',
+        'path' => '/tworzenie-stron-internetowych/',
+      ],
+    ],
+  ],
+  '/strony-internetowe/wordpress-czy-strona-dedykowana/' => [
+    'kind' => 'post',
+    'focus' => 'dedykowana strona internetowa, strona dedykowana, strona internetowa dedykowana, wordpress czy strona dedykowana',
+    'title' => '',
+    'description' => '',
+    'h1' => '',
+    'editorial_title' => '',
+    'editorial_description' => '',
+    'links' => [],
+  ],
+  '/sklepy-internetowe/ile-trwa-stworzenie-strony-internetowej/' => [
+    'kind' => 'post',
+    'focus' => 'ile trwa stworzenie strony internetowej, ile trwa zrobienie strony internetowej, ile trwa tworzenie strony internetowej, ile trwa wykonanie strony internetowej',
+    'title' => '',
+    'description' => '',
+    'h1' => '',
+    'editorial_title' => '',
+    'editorial_description' => '',
+    'links' => [
+      [
+        'text' => 'tworzenie stron internetowych',
+        'path' => '/tworzenie-stron-internetowych/',
+      ],
+    ],
+  ],
+  '/logo-branding/jakie-cechy-powinno-miec-dobre-logo-firmowe/' => [
+    'kind' => 'post',
+    'focus' => 'cechy dobrego logo, dobre logo, jak powinno wyglądać logo, jakie powinno być logo firmy, jakie cechy powinno mieć profesjonalne logo',
+    'title' => '',
+    'description' => '',
+    'h1' => '',
+    'editorial_title' => '',
+    'editorial_description' => '',
+    'links' => [
+      [
+        'text' => 'projektowanie logo',
+        'path' => '/projektowanie-logo/',
+      ],
+    ],
+  ],
+  '/strony-www/strona-internetowa-dla-malej-firmy/' => [
+    'kind' => 'post',
+    'focus' => 'strona www dla małej firmy, strona internetowa dla małej firmy, strony internetowe dla małych firm, strony www dla małych firm, strona dla małej firmy',
+    'title' => '',
+    'description' => '',
+    'h1' => '',
+    'editorial_title' => '',
+    'editorial_description' => '',
+    'links' => [
+      [
+        'text' => 'tworzenie stron internetowych',
+        'path' => '/tworzenie-stron-internetowych/',
+      ],
+    ],
+  ],
+  '/sklepy-internetowe/sklep-internetowy-na-zamowienie/' => [
+    'kind' => 'post',
+    'focus' => 'dedykowany sklep internetowy, sklep internetowy na zamówienie, indywidualny sklep internetowy, sklep internetowy na zamówienie cena',
+    'title' => '',
+    'description' => '',
+    'h1' => '',
+    'editorial_title' => '',
+    'editorial_description' => '',
+    'links' => [
+      [
+        'text' => 'tworzenie sklepów internetowych',
+        'path' => '/tworzenie-sklepow-internetowych/',
+      ],
+    ],
+  ],
+  '/strony-internetowe/agencja-czy-freelancer-do-stworzenia-strony/' => [
+    'kind' => 'post',
+    'focus' => 'freelancer strony internetowe, strona internetowa freelancer, agencja czy freelancer, freelancer czy agencja',
+    'title' => '',
+    'description' => '',
+    'h1' => '',
+    'editorial_title' => '',
+    'editorial_description' => '',
+    'links' => [
+      [
+        'text' => 'tworzenie stron internetowych',
+        'path' => '/tworzenie-stron-internetowych/',
+      ],
+    ],
+  ],
+  '/strony-www/jak-sprawdzic-czy-strona-internetowa-dziala-skutecznie/' => [
+    'kind' => 'post',
+    'focus' => 'skuteczna strona internetowa, skuteczna strona www, skuteczność strony internetowej',
+    'title' => '',
+    'description' => '',
+    'h1' => '',
+    'editorial_title' => '',
+    'editorial_description' => '',
+    'links' => [
+      [
+        'text' => 'tworzenie stron internetowych',
+        'path' => '/tworzenie-stron-internetowych/',
+      ],
+    ],
+  ],
+];

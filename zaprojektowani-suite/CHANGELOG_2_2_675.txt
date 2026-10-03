@@ -1,0 +1,9 @@
+Zaprojektowani Suite 2.2.675
+
+- /realizacje: mobile top spacing matched to the actual FAQ production values (142 px tablet, 126 px phone).
+- /realizacje: desktop widget moved another 100 px upward (150 px total).
+- Realizacje modal raised above the fixed header by removing the local stacking context and using a higher z-index.
+- Mobile modal rebuilt as a full-viewport scrollable sheet.
+- Close control remains fixed and visible at the top.
+- Added a fixed mobile action bar with previous, close, next and live/quote buttons.
+- Reduced mobile modal image height so project details appear sooner.

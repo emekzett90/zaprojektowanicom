@@ -1,0 +1,6 @@
+Zaprojektowani Suite 2.2.769
+
+- Studio Wyceny: pierwsza linia nagłówka „Od czego zaczynamy” ma lżejszą grubość (500).
+- „Twój projekt?” pozostaje pogrubione (700).
+- Na desktopie napis „To zajmie około 2 minuty” wraz ze strzałką przesunięto ok. 300 px w lewo względem poprzedniej pozycji.
+- Mobile pozostawiono bez zmian.

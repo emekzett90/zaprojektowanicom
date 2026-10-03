@@ -1,0 +1,39 @@
+ZAPROJEKTOWANI SUITE 2.2.696
+
+Poprawki po review v2.2.695 (kampanie / strony / logo-branding):
+
+Kampanie reklamowe:
+- naprawiono NIEWIDOCZNE przyciski CTA (regresja z 695): reguła
+  `a{color:inherit}` przebijała własny kolor buttonów — hero „Dobierz zakres",
+  pakiety Starter/Premium Growth i „Następny krok" były biały-na-białym /
+  ciemny-na-ciemnym. Teraz scope tylko na zwykłe linki `a:not([class])`,
+- nagłówki kolumn mega menu naprawdę zmniejszone: winna była globalna reguła
+  front-fix `html body > .mega--portal .megaHead{24px}` (swoistość 0,3,2);
+  nasza reguła ma teraz wyższą swoistość (0,4,2) i wygrywa,
+- wykres „Przychód tydzień po tygodniu" powiększony z ZACHOWANIEM proporcji
+  (usunięto preserveAspectRatio=none, height:auto + max-height) — koniec
+  rozciągania tekstu i linii,
+- logo Google Ads w hero przesunięte 100px w prawo na szerokim desktopie,
+- liczby count-up mają zawsze twardy separator tysięcy (355100 -> „355 100"),
+- nagłówek manifestu „Nie kupujemy ruchu…" wyrównany do góry, na równi ze
+  zdjęciem (align-items:start), bez zwisania na dole,
+- zdjęcie zespołu w „Jeden zespół • pełny obraz" obniżone o 100px na desktopie
+  (głowy nieucięte), nota „Model współpracy" jedzie razem z nim.
+
+Strony internetowe Katowice:
+- wykres w „Technika bez kompromisów" — proporcje zachowane (bez rozciągania),
+  czytelny na mobile,
+- nagłówek manifestu „Nie stawiamy wizytówek…" wyrównany do góry ze zdjęciem,
+- głowy zespołu w „Jeden zespół • pełny obraz" już nie ucięte — winna była
+  sekcja pakietów nad nią (z-index:3 + kryjące białe tło) zasłaniająca
+  wystające głowy; podniesiono z-index sekcji i dopasowano jej wysokość.
+
+Logo & Branding Katowice:
+- usunięto ogromną pustą przestrzeń na desktopie między nagłówkiem
+  „Najpierw charakter. Potem znak." a kartami logiki (kolumna nagłówka była
+  rozciągana do wysokości sylwetki) — karty wracają tuż pod nagłówek,
+- przyciski w portfolio („Zobacz wszystkie realizacje" / „Chcę podobny poziom")
+  widoczne na mobile: sekcja ma białe tło, a bazowy `-webkit-text-fill-color`
+  robił biały tekst — wymuszono kontrast pasujący do jasnego tła.
+
+Podbito wersję wtyczki do 2.2.696 (cache assetów busty przez filemtime).

@@ -1,0 +1,23 @@
+Zaprojektowani Suite 2.2.790 — płynne wejście hero na telefonach i kolejność bannera
+
+Baza: przekazany ZIP zaprojektowani-suite-2.2.788-hero-letters.zip.
+
+Desktop
+- Zachowana kaskada liter i jej wygląd z przekazanej wersji.
+- H1 nie czeka już na zamknięcie bannera i nie zaczyna animacji od nowa po jego pokazaniu.
+- Banner jest wizualnie odsłaniany po zakończeniu wejścia H1. Cookiebot i blokowanie skryptów przed zgodą działają przez cały czas.
+- Ograniczenie oczekiwania do 5 sekund oraz natychmiastowe odsłonięcie przy interakcji użytkownika, zmianie widoczności lub wyjściu ze strony.
+- Obserwator zmiany języka obejmuje tylko przełączniki języka.
+
+Telefony i tablety do 1100 px
+- H1 pozostaje zwykłym tekstem: bez dzielenia liter, duplikowania rozmytych warstw i wymuszania podziałów linii.
+- Przywrócony wyraźny błękitno-biały gradient z jednym subtelnym przejściem światła.
+- Krótkie wejście od góry sekcji: etykieta, H1, usługi, opis, CTA, karty opinii.
+- Karty poza ekranem rozpoczynają wejście przy przewinięciu do nich.
+- Zamiast kosztownego rozmycia tła kart: ciemny gradient, delikatne obramowanie i światło na górnej krawędzi.
+- Zachowane kolory i działanie CTA, zabezpieczenia przed pozostawaniem przycisku w stanie wciśniętym oraz treść/liczby/linki opinii.
+- Nagłówek ma stabilny układ, a zmiana szerokości lub języka kończy wejście bez pozostawiania ukrytych elementów.
+
+Zakres: includes/front-fixes-308.php, nowe front-fixes-309.php i front-fixes-310.php, numer wersji i ich podłączenie w zaprojektowani-suite.php. Pozostałe pliki zachowane z dostarczonego ZIP-a.
+
+Instalacja: aktualizacja całej wtyczki przez ZIP, następnie wyczyszczenie cache strony / optymalizatora / CDN. Systemowe ograniczenie ruchu jest respektowane. Testy lokalne nie zastępują kontroli na fizycznym telefonie po instalacji.

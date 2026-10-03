@@ -1,0 +1,15 @@
+ZAPROJEKTOWANI SUITE 2.2.827
+
+Meta Pixel / zdarzenia z kodu (nowy moduł includes/meta-events.php):
+- ViewContent: wejście na strony usług (strony-internetowe-katowice, sklepy-internetowe-katowice, logo-branding-katowice), raz na odsłonę,
+- InitiateCheckout: pierwsza interakcja z konfiguratorem Studio Wyceny, raz na sesję (zamiast każdego kliknięcia),
+- Lead: strona podziękowania po wysłaniu Studio Wyceny (raz na zamówienie, eventID z numerem zamówienia) oraz udane wysłanie formularzy kontaktowych,
+- Contact: kliknięcie telefonu, e-maila, WhatsApp lub Messengera, raz na kanał na odsłonę,
+- moduł nie ładuje piksela i nie wysyła niczego bez zgody marketingowej Cookiebot; korzysta z piksela uruchamianego przez GTM po zgodzie, zdarzenia czekają w kolejce maks. 3 minuty,
+- skrypt ma id zp-suite-*, więc moduł językowy (Cookiebot) i bufor opóźnień optimizera go nie ruszają.
+
+Google Consent Mode:
+- skrypt gtag('consent','default') nie jest już opóźniany przez timer optimizera — wykonuje się od razu, przed Cookiebotem i GTM (zgodnie z dokumentacją Google i Cookiebot); brak żądań sieciowych, bez wpływu na PageSpeed.
+
+Po wgraniu:
+- w Menedżerze zdarzeń Meta trzeba wyłączyć stare reguły narzędzia konfiguracji zdarzeń (Event Setup Tool) dla piksela 1911959386061443, inaczej zdarzenia będą liczone podwójnie.

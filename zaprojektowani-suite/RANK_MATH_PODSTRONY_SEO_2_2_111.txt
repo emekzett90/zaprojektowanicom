@@ -1,0 +1,76 @@
+ZAPROJEKTOWANI.COM — RANK MATH / PODSTRONY SEO v2.2.111
+
+1) /sklepy-internetowe-katowice/
+Focus keyword: sklepy internetowe Katowice
+Dodatkowe frazy: tworzenie sklepów internetowych; sklep WooCommerce; projektowanie sklepów internetowych; sklepy WooCommerce Katowice
+SEO title: Sklepy internetowe Katowice | WooCommerce i e-commerce — Zaprojektowani
+Meta description: Tworzymy sklepy internetowe WooCommerce dla firm z Katowic i całej Polski. UX/UI, płatności, dostawy, SEO sklepu, analityka i sprzedażowy checkout.
+Canonical: https://zaprojektowani.com/sklepy-internetowe-katowice/
+Schema: Service
+Service headline: Sklepy internetowe Katowice — WooCommerce i e-commerce
+Service description: Zaprojektowani.com projektuje sklepy internetowe WooCommerce dla firm z Katowic, Śląska i całej Polski: UX/UI, kategorie, produkty, koszyk, płatności, dostawy, SEO techniczne, analityka i przygotowanie pod kampanie reklamowe.
+Service type: Tworzenie sklepów internetowych, sklepy WooCommerce, UX e-commerce, SEO sklepu i konfiguracja sprzedaży online
+Provider: Zaprojektowani.com
+Area served: Katowice, Śląsk, Polska
+Obrazek alt: Sklepy internetowe Katowice — projekt sklepu WooCommerce Zaprojektowani.com
+
+2) /logo-branding-katowice/
+Focus keyword: projektowanie logo Katowice
+Dodatkowe frazy: logo dla firmy Katowice; agencja brandingowa Katowice; identyfikacja wizualna Katowice; branding Katowice
+SEO title: Projektowanie Logo Katowice | Logo i Branding — Zaprojektowani
+Meta description: Projektujemy logo, branding i identyfikację wizualną dla firm z Katowic i całej Polski. Profesjonalne znaki, brandbooki i systemy marki.
+Canonical: https://zaprojektowani.com/logo-branding-katowice/
+Schema: Service
+Service headline: Projektowanie logo Katowice — logo, branding i identyfikacja wizualna
+Service description: Zaprojektowani.com projektuje logo, branding, identyfikację wizualną, brandbooki i kompletne systemy marki dla firm z Katowic, Śląska i całej Polski.
+Service type: Projektowanie logo, branding, identyfikacja wizualna, brandbook i system marki
+Provider: Zaprojektowani.com
+Area served: Katowice, Śląsk, Polska
+Obrazek alt: Projektowanie logo Katowice — logo i branding Zaprojektowani.com
+
+3) /realizacje/
+Focus keyword: realizacje stron internetowych
+Dodatkowe frazy: portfolio stron internetowych; realizacje sklepów internetowych; portfolio logo i branding; projekty stron internetowych
+SEO title: Realizacje stron, sklepów i brandingu | Zaprojektowani.com
+Meta description: Zobacz realizacje Zaprojektowani.com: strony internetowe WordPress, sklepy WooCommerce, logo, branding, identyfikacja wizualna, SEO i projekty pod konwersję.
+Canonical: https://zaprojektowani.com/realizacje/
+Schema: CollectionPage
+Obrazek alt: Realizacje stron internetowych, sklepów WooCommerce i brandingu — Zaprojektowani.com
+
+4) /faq/
+Focus keyword: FAQ strony internetowe
+Dodatkowe frazy: pytania o strony internetowe; FAQ sklepy internetowe; pytania o branding; pytania o Meta Ads
+SEO title: FAQ — strony internetowe, sklepy i branding | Zaprojektowani.com
+Meta description: Odpowiedzi na pytania o projektowanie stron internetowych, sklepy WooCommerce, logo, branding, SEO, kampanie Meta Ads i współpracę z Zaprojektowani.com.
+Canonical: https://zaprojektowani.com/faq/
+Schema: FAQPage
+Obrazek alt: FAQ Zaprojektowani — strony internetowe, sklepy, branding i kampanie Meta Ads
+
+5) /kontakt/
+Focus keyword: kontakt Zaprojektowani
+Dodatkowe frazy: wycena strony internetowej; wycena sklepu internetowego; wycena logo; agencja kreatywna Katowice kontakt
+SEO title: Kontakt | Wycena strony, sklepu lub brandingu — Zaprojektowani.com
+Meta description: Skontaktuj się z Zaprojektowani.com i wyceń stronę internetową, sklep WooCommerce, logo, branding, SEO albo kampanię Meta Ads.
+Canonical: https://zaprojektowani.com/kontakt/
+Schema: ContactPage
+Obrazek alt: Kontakt Zaprojektowani — wycena strony internetowej, sklepu, logo lub kampanii
+
+6) /wiedza/
+Focus keyword: wiedza o stronach internetowych
+Dodatkowe frazy: poradniki SEO; blog WooCommerce; poradniki branding; kampanie Meta Ads poradnik
+SEO title: Wiedza o stronach, sklepach, SEO i brandingu | Zaprojektowani.com
+Meta description: Poradniki Zaprojektowani.com o stronach internetowych, sklepach WooCommerce, SEO, UX, logo, brandingu i kampaniach Meta Ads dla firm.
+Canonical: https://zaprojektowani.com/wiedza/
+Schema: CollectionPage
+Obrazek alt: Wiedza o stronach internetowych, sklepach WooCommerce, SEO i brandingu
+
+7) /studio-wyceny/
+Focus keyword: studio wyceny
+Dodatkowe frazy: wycena strony internetowej; wycena sklepu WooCommerce; wycena logo; wycena kampanii Meta Ads
+SEO title: Studio wyceny | Strona, sklep, logo lub kampania — Zaprojektowani.com
+Meta description: Skorzystaj ze Studia Wyceny Zaprojektowani.com i określ zakres strony internetowej, sklepu WooCommerce, logo, brandingu lub kampanii Meta Ads.
+Canonical: https://zaprojektowani.com/studio-wyceny/
+Schema: WebPage albo Service (jeśli chcesz traktować jako usługę wyceny)
+Obrazek alt: Studio wyceny stron internetowych, sklepów, logo i kampanii — Zaprojektowani.com
+
+Robots dla wszystkich stron: Index, bez Noindex, bez Nofollow, Max snippet -1, Max image preview: Duże.

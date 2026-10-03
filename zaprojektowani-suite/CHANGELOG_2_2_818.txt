@@ -1,0 +1,6 @@
+Zaprojektowani Suite 2.2.818
+
+- /strony-internetowe-katowice/: karty pakietów nie przycinają już sylwetek Marty, Stanisława i Mateusza.
+- Zdjęcia mogą swobodnie wychodzić ponad górną krawędź kart, dzięki czemu głowy pozostają w całości widoczne.
+- Zachowano poprawioną warstwę panelu „Zobacz pełny zakres” — otwarty panel nadal wyświetla się ponad sylwetką.
+- Cache-bust i wersja wtyczki: 2.2.818.

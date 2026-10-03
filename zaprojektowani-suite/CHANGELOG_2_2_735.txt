@@ -1,0 +1,5 @@
+Zaprojektowani Suite 2.2.735
+
+- Naprawiono kolor tytułów Mini Branding i Standard Performance w polecanych pakietach na stronie głównej.
+- Jasne karty wymuszają ciemnogranatowy tytuł, a karta ciemna zachowuje biały tytuł.
+- Usunięto z hero pill „05 / rozwiązania indywidualne”.

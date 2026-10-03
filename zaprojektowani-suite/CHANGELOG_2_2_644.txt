@@ -1,0 +1,8 @@
+Zaprojektowani Suite v2.2.644
+
+Studio Wyceny — karty usług:
+- na desktopie mockupy powiększone bardzo mocno (około +100% wizualnie),
+- na tablecie mockupy również znacząco większe,
+- ikonka kafelka przeniesiona z lewej strony na prawą dla tablet/desktop,
+- poprawione pozycjonowanie strzałki w prawym górnym rogu,
+- mobile pozostawiony bez zmian.

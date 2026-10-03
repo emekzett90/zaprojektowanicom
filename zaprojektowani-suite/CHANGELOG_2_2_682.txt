@@ -1,0 +1,6 @@
+Zaprojektowani Suite 2.2.682
+
+- Naprawiono ERR_TOO_MANY_REDIRECTS dla /kampanie-reklamowe/.
+- Nowa podstrona jest renderowana przed canonical redirect, kategoriami, wtyczkami SEO i menedżerami przekierowań.
+- Zablokowano wszystkie przekierowania WordPressa wychodzące z dokładnego adresu /kampanie-reklamowe/.
+- Zachowano przekierowanie starego adresu /kampanie-meta-ads/ do nowej podstrony.

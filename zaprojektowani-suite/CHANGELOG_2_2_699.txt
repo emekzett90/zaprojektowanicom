@@ -1,0 +1,18 @@
+ZAPROJEKTOWANI SUITE 2.2.699
+
+1. Strona główna — sekcja „Zakres usług”
+- całe karty są teraz klikalne,
+- Logo i branding prowadzi do /logo-branding-katowice/,
+- Strony internetowe prowadzą do /strony-internetowe-katowice/,
+- Sklepy internetowe prowadzą do /sklepy-internetowe-katowice/,
+- SEO i treści prowadzi do Studia Wyceny z właściwym kontekstem,
+- Kampanie Meta Ads prowadzą do /kampanie-reklamowe/,
+- dodano dostępny focus klawiatury bez zmiany layoutu kart.
+
+2. Strona główna — portfolio / „Szczegóły”
+- opisy projektów są automatycznie pobierane z zatwierdzonej treści sekcji /realizacje/,
+- synchronizacja obejmuje projekty stron, sklepów, systemów oraz logo i brandingu,
+- popup pokazuje bogatszy case study: cel projektu, kierunek rozwiązania, efekt dla marki, zakres prac i najważniejsze rezultaty,
+- mobilny przycisk „Szczegóły” rozwija opis i zakres bez opuszczania strony głównej.
+
+3. Podbito wersję wtyczki do 2.2.699.

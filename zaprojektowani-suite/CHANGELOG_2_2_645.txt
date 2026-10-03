@@ -1,0 +1,8 @@
+Zaprojektowani Suite v2.2.645
+
+Naprawa desktopowego widoku Studio Wyceny:
+- poprawka przeniesiona do końcowego pliku front-fixes-298.php, który wcześniej nadpisywał zmiany,
+- mockupy na desktopie rzeczywiście powiększone około 2x,
+- ikonka usługi przeniesiona w całości na prawą stronę karty,
+- dodane responsywne skalowanie dla mniejszych desktopów,
+- mobile pozostaje bez zmian.

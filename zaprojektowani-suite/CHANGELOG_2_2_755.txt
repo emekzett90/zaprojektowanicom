@@ -1,0 +1,6 @@
+Zaprojektowani Suite 2.2.755
+- O nas: usunięto dołożoną sekcję z ogromnymi zdjęciami zespołu.
+- Studio Awards: usunięto miniaturowy box ze zdjęciem i przebudowano zdjęcie zespołu jako duży, pełnoszeroki visual nad headingiem z miękkim fade od dołu.
+- O nas: zachowano scroll timeline i reveal.
+- Jak pracujemy: dodano tylko jedno, kompaktowe zdjęcie team_kontakt jako wspierający element treści, bez kolejnego billboardu.
+- Zachowano wcześniejsze poprawki Trustindex, gradientu headingu, kart zespołu i SEO.

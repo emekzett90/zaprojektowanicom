@@ -1,0 +1,14 @@
+<?php
+/**
+ * v2.2.473 — Logo branding mobile hero final position polish.
+ * Fixes System card shape/position, removes duplicate BRANDING watermark,
+ * pulls the visual stack slightly up and trims excess empty space before breadcrumbs.
+ */
+if (!defined('ABSPATH')) { exit; }
+
+add_action('wp_head', function () {
+  if (is_admin()) { return; }
+  ?>
+  <style id="zp-suite-282-logo-mobile-card-watermark-polish">@media (max-width:760px){html body #zpBrandHeroMobileKat .zpWebHeroKat__visual{margin-top:0!important;height:535px!important;min-height:535px!important;overflow:visible!important;background:transparent!important}html body #zpBrandHeroMobileKat .zpWebHeroKat__visualStage{height:500px!important;min-height:500px!important;overflow:visible!important}html body #zpBrandHeroMobileKat .zpBrandHeroMobileKat__mock,html body #zpBrandHeroMobileKat img.zpBrandHeroMobileKat__mock{top:26px!important;width:134vw!important;min-width:134vw!important;max-width:none!important;transform:translate3d(-50%,0,0)!important;object-fit:contain!important;object-position:center top!important;clip-path:none!important;border-radius:0!important}html body #zpBrandHeroMobileKat .zpBrandHeroMobileKat__floatPill--print{top:142px!important}html body #zpBrandHeroMobileKat .zpBrandHeroMobileKat__floatPill--seo{top:90px!important}html body #zpBrandHeroMobileKat .zpBrandHeroMobileKat__floatPill--book{top:206px!important}html body #zpBrandHeroMobileKat .zpBrandHeroMobileKat__floatPill--brand{top:180px!important}html body #zpBrandHeroMobileKat .zpBrandHeroMobileKat__miniCard{top:332px!important;left:22px!important;width:286px!important;max-width:calc(100vw - 58px)!important;min-height:206px!important;height:206px!important;padding:16px!important;border-radius:23px!important;overflow:hidden!important;transform:perspective(900px) rotateY(-8deg) rotateZ(1.5deg)!important;transform-origin:center center!important;box-shadow:none!important}html body #zpBrandHeroMobileKat .zpBrandHeroMobileKat__miniCard strong{font-size:18px!important;line-height:1.08!important}html body #zpBrandHeroMobileKat .zpBrandHeroMobileKat__miniCard p{font-size:11.5px!important;line-height:1.42!important}html body #zpBrandHeroMobileKat .zpWebHeroKat__visual::after{content:none!important;display:none!important}html body #zpBrandHeroMobileKat .zpBrandHeroMobileKat__miniCard::after{content:none!important;display:none!important}html body #zpBrandHeroMobileKat .zpWebHeroKat__watermark{display:block!important;left:-22px!important;right:auto!important;bottom:42px!important;z-index:1!important;font-size:clamp(86px,25vw,136px)!important;line-height:.78!important;font-weight:900!important;letter-spacing:-.085em!important;color:rgba(255,255,255,.04)!important;text-transform:uppercase!important;pointer-events:none!important}html body #zpBrandHeroMobileKat .zpWebHeroKat__breadcrumbs--mobile{bottom:10px!important;padding-top:10px!important;z-index:8!important}}</style>
+  <?php
+}, PHP_INT_MAX);

@@ -1,0 +1,8 @@
+2.2.758 — Studio Wyceny / CSS isolation + typography fix
+
+- pełna izolacja klas pierwszego ekranu Studio Wyceny do namespace zpv19-*
+- usunięcie kolizji .zp-card / .zp-grid / .zp-wrap z istniejącymi stylami strony i konfiguratora
+- jawny system typografii: Samsung Sharp tylko H1 i nazwy usług, Plus Jakarta Sans dla treści, opisów, chipów i elementów pomocniczych
+- mocniejszy reset przycisków kart przeciw stylom Elementora / motywu
+- unikalne nazwy animacji, aby nie kolidowały z innymi modułami
+- zachowane wszystkie funkcje v19: wybór usług, animowana łapka, mobile, Trustindex, przejście do briefu

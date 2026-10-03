@@ -1,0 +1,216 @@
+<!-- =========================================================
+ZAPROJEKTOWANI — LOGO & BRANDING TRUST / REVIEWS DARK CERTIFICATE v1.3 FAST ENTRANCE
+Elementor HTML Widget
+
+FIX v1.3:
+- usunięty IntersectionObserver — treść nie czeka na scroll / dojazd do końca widgetu
+- animacja wejścia jest natychmiastowa i oparta o CSS, bez IntersectionObserver i bez ciężkiego blur
+- usunięty ciężki blur z wejścia opinii / certyfikatów / footera
+- treść wchodzi szybko: opacity + lekki slide/scale + clip reveal, potem zostaje subtelny float
+- treści dopasowane do Logo & Branding / identyfikacji wizualnej
+- lokalny Lucide: /wp-content/web-font/lucide.min.js
+========================================================= -->
+
+<section class="zpTrustCert zpTrustCert--fastIn" id="zpTrustCert" aria-labelledby="zpTrustCertTitle" data-zp-lb-reveal="1">
+<div class="zpTrustCert__bleed" aria-hidden="true"></div>
+  <div class="zpTrustCert__watermark zpTrustCert__watermark--top" aria-hidden="true">branding</div>
+  <div class="zpTrustCert__watermark zpTrustCert__watermark--bottom" aria-hidden="true">zaprojektowani</div>
+
+  <div class="zpTrustCert__inner">
+
+    <header class="zpTrustCert__hero">
+      <div class="zpTrustCert__copy">
+        <h2 id="zpTrustCertTitle">
+          Agencja brandingowa Katowice — logo i identyfikacja wizualna ze strategią, spójnością i realnym zastosowaniem.
+        </h2>
+
+        <p>
+          Logo to nie tylko ładny znak. To pierwszy element, po którym klient ocenia poziom Twojej marki, strony internetowej, social mediów, opakowań i materiałów sprzedażowych. Dlatego przy projektach logo & branding łączymy estetykę premium, strategię, funkcjonalność, czytelny proces i komplet plików gotowych do użycia w internecie, druku, social mediach i sprzedaży.
+        </p>
+
+        <div class="zpTrustCert__chips" aria-label="Elementy budujące zaufanie przy projektowaniu logo i brandingu">
+          <span>Projektowanie logo</span>
+          <span>Logo i branding</span>
+          <span>Identyfikacja wizualna</span>
+          <span>Brandbook</span>
+          <span>Materiały do druku</span>
+          <span>Logo do social media</span>
+          <span>Rebranding</span>
+          <span>Estetyka premium</span>
+        </div>
+      </div>
+
+      <div class="zpTrustCert__certZone" aria-label="Certyfikaty i oceny">
+        <a class="zpTrustCert__score zpTrustCert__score--trust" href="https://www.trustindex.io/" target="_blank" rel="noopener nofollow" aria-label="Zobacz opinie Zaprojektowani w Trustindex">
+          <span class="zpTrustCert__scoreGlow" aria-hidden="true"></span>
+
+          <span class="zpTrustCert__scoreLogo">
+            <img src="https://server432994.nazwa.pl/zaprojektowani2/wp-content/uploads/2026/05/TRUST_INDEX.webp" alt="Trustindex" loading="lazy" decoding="async">
+          </span>
+
+          <span class="zpTrustCert__scoreLabel">Certyfikat opinii</span>
+
+          <span class="zpTrustCert__scoreRating">
+            <strong>5.0</strong>
+            <span>★★★★★</span>
+          </span>
+
+          <span class="zpTrustCert__scoreMeta">
+            <b>54 opinie klientów</b>
+            <em>średnia ocena za projekty i obsługę</em>
+          </span>
+
+          <span class="zpTrustCert__scoreClick">
+            <span>Kliknij i zobacz profil</span>
+            <i data-lucide="arrow-up-right"></i>
+          </span>
+        </a>
+
+        <a class="zpTrustCert__score zpTrustCert__score--facebook" href="https://www.facebook.com/zaprojektowanicom" target="_blank" rel="noopener nofollow" aria-label="Zobacz profil Zaprojektowani na Facebooku">
+          <span class="zpTrustCert__scoreGlow" aria-hidden="true"></span>
+
+          <span class="zpTrustCert__scoreLogo zpTrustCert__scoreLogo--fb">
+            <img src="https://server432994.nazwa.pl/zaprojektowani2/wp-content/uploads/2026/05/fb_logo-scaled.webp" alt="Facebook" loading="lazy" decoding="async">
+          </span>
+
+          <span class="zpTrustCert__scoreLabel">Facebook</span>
+
+          <span class="zpTrustCert__scoreRating">
+            <strong>5.0</strong>
+            <span>★★★★★</span>
+          </span>
+
+          <span class="zpTrustCert__scoreMeta">
+            <b>Ocena klientów</b>
+            <em>opinie, realizacje i kontakt z marką</em>
+          </span>
+
+          <span class="zpTrustCert__scoreClick">
+            <span>Przejdź do profilu</span>
+            <i data-lucide="arrow-up-right"></i>
+          </span>
+        </a>
+      </div>
+    </header>
+
+    <div class="zpTrustCert__reviewIntro">
+      <span>Co klienci cenią w brandingu</span>
+      <p>
+        W projektach logo klienci najczęściej doceniają konkret: kilka mocnych kierunków, dopracowanie detali, spójne zastosowania znaku i finalne pliki, które można od razu wykorzystać na stronie, wizytówce, opakowaniu lub w social mediach.
+      </p>
+    </div>
+
+    <div class="zpTrustCert__socialProofStage">
+      <div class="zpTrustCert__branding" aria-label="Wybrane opinie klientów o logo i brandingu">
+
+        <article class="zpTrustCert__review zpTrustCert__review--a">
+          <span class="zpTrustCert__quoteMark" aria-hidden="true">“</span>
+          <div class="zpTrustCert__reviewTop">
+            <span class="zpTrustCert__avatar">M</span>
+            <div>
+              <strong>Magdalena Kasińska</strong>
+              <small>5.0/5 · Google</small>
+            </div>
+            <span class="zpTrustCert__googleLogo" aria-label="Google">
+              <svg viewBox="0 0 48 48" aria-hidden="true"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.3 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.1 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.4-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.1 6.1 29.3 4 24 4 16.3 4 9.6 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.5-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-7.8l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.3-2.3 4.2-4 5.6l6.2 5.2C36.9 39.3 44 34 44 24c0-1.3-.1-2.4-.4-3.5z"/></svg>
+            </span>
+          </div>
+          <div class="zpTrustCert__stars">★★★★★</div>
+          <p>Najbardziej doceniam to, że logo nie było robione „na szybko”. Dostaliśmy przemyślane kierunki, jasne uzasadnienie i finalny znak, który wygląda świetnie na stronie, wizytówkach i materiałach firmowych.</p>
+        </article>
+
+        <article class="zpTrustCert__review zpTrustCert__review--b">
+          <span class="zpTrustCert__quoteMark" aria-hidden="true">“</span>
+          <div class="zpTrustCert__reviewTop">
+            <span class="zpTrustCert__avatar">A</span>
+            <div>
+              <strong>Aneta Waszkiewicz</strong>
+              <small>5.0/5 · Google · 2 miesiące temu</small>
+            </div>
+            <span class="zpTrustCert__googleLogo" aria-label="Google">
+              <svg viewBox="0 0 48 48" aria-hidden="true"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.3 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.1 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.4-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.1 6.1 29.3 4 24 4 16.3 4 9.6 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.5-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-7.8l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.3-2.3 4.2-4 5.6l6.2 5.2C36.9 39.3 44 34 44 24c0-1.3-.1-2.4-.4-3.5z"/></svg>
+            </span>
+          </div>
+          <div class="zpTrustCert__stars">★★★★★</div>
+          <p>Profesjonalne podejście do całej identyfikacji. Logo, kolory, typografia i materiały pasują do naszej branży, a nie wyglądają jak gotowy szablon. Efekt końcowy naprawdę robi wrażenie.</p>
+        </article>
+
+        <article class="zpTrustCert__review zpTrustCert__review--c">
+          <span class="zpTrustCert__quoteMark" aria-hidden="true">“</span>
+          <div class="zpTrustCert__reviewTop">
+            <span class="zpTrustCert__avatar">D</span>
+            <div>
+              <strong>Dana Studniarek</strong>
+              <small>5.0/5 · Google · 4 miesiące temu</small>
+            </div>
+            <span class="zpTrustCert__googleLogo" aria-label="Google">
+              <svg viewBox="0 0 48 48" aria-hidden="true"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.3 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.1 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.4-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.1 6.1 29.3 4 24 4 16.3 4 9.6 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.5-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-7.8l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.3-2.3 4.2-4 5.6l6.2 5.2C36.9 39.3 44 34 44 24c0-1.3-.1-2.4-.4-3.5z"/></svg>
+            </span>
+          </div>
+          <div class="zpTrustCert__stars">★★★★★</div>
+          <p>Największy plus: proces. Od briefu po finalne pliki wszystko było poukładane krok po kroku. Wiedzieliśmy, dlaczego dany kierunek działa i jak później używać logo bez chaosu.</p>
+        </article>
+
+        <article class="zpTrustCert__review zpTrustCert__review--d">
+          <span class="zpTrustCert__quoteMark" aria-hidden="true">“</span>
+          <div class="zpTrustCert__reviewTop">
+            <span class="zpTrustCert__avatar">K</span>
+            <div>
+              <strong>Krzysztof Motylski</strong>
+              <small>5.0/5 · Google</small>
+            </div>
+            <span class="zpTrustCert__googleLogo" aria-label="Google">
+              <svg viewBox="0 0 48 48" aria-hidden="true"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.3 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.1 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.4-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.1 6.1 29.3 4 24 4 16.3 4 9.6 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.5-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-7.8l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.3-2.3 4.2-4 5.6l6.2 5.2C36.9 39.3 44 34 44 24c0-1.3-.1-2.4-.4-3.5z"/></svg>
+            </span>
+          </div>
+          <div class="zpTrustCert__stars">★★★★★</div>
+          <p>Polecam z całego serca! Odświeżenie logo i materiałów firmowych całkowicie zmieniło odbiór naszej marki. Wszystko jest spójne, eleganckie i w końcu na poziomie tego, co robimy na co dzień.</p>
+        </article>
+
+        <article class="zpTrustCert__review zpTrustCert__review--e">
+          <span class="zpTrustCert__quoteMark" aria-hidden="true">“</span>
+          <div class="zpTrustCert__reviewTop">
+            <span class="zpTrustCert__avatar">S</span>
+            <div>
+              <strong>Sylwia Gasentzer</strong>
+              <small>5.0/5 · Google</small>
+            </div>
+            <span class="zpTrustCert__googleLogo" aria-label="Google">
+              <svg viewBox="0 0 48 48" aria-hidden="true"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.3 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.1 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.4-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.1 6.1 29.3 4 24 4 16.3 4 9.6 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.5-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-7.8l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.3-2.3 4.2-4 5.6l6.2 5.2C36.9 39.3 44 34 44 24c0-1.3-.1-2.4-.4-3.5z"/></svg>
+            </span>
+          </div>
+          <div class="zpTrustCert__stars">★★★★★</div>
+          <p>Jestem bardzo zadowolona ze współpracy. Potrzebowałam delikatnego, kobiecego logo do salonu beauty — wyszło nowocześnie, lekko i bez przesadzonego efektu glamour.</p>
+        </article>
+
+      </div>
+    </div>
+
+    <footer class="zpTrustCert__footer">
+      <div class="zpTrustCert__brand">
+        <img src="https://zaprojektowani.com/wp-content/uploads/2026/05/zp_sygnet_jasny-scaled.webp" alt="Zaprojektowani.com" loading="lazy" decoding="async">
+      </div>
+
+      <div class="zpTrustCert__footerCopy">
+        <span>Logo, rebranding albo pełna identyfikacja?</span>
+        <strong>Zaprojektujmy znak i system wizualny, który będzie wyglądał dobrze nie tylko na mockupie, ale też w realnym użyciu.</strong>
+      </div>
+
+      <a class="zpTrustCert__btn" href="/kontakt/">
+        <span>Zamów logo dla firmy</span>
+        <i data-lucide="arrow-right"></i>
+      </a>
+    </footer>
+
+  </div>
+</section>
+
+
+
+
+
+
+
+<!-- =========================================================
+/ZAPROJEKTOWANI — LOGO & BRANDING TRUST / REVIEWS DARK CERTIFICATE v1.3 FAST ENTRANCE
+========================================================= -->

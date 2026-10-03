@@ -1,0 +1,276 @@
+<!-- =========================================================
+ZAPROJEKTOWANI — ECOMMERCE VALUE / LIGHT WHY US v1.2.4 FINAL CTA + MOBILE CLEAN
+Elementor HTML Widget
+
+Cel:
+- jasny widget bezpośrednio pod ciemne hero "Sklepy internetowe Katowice"
+- sekcja: dlaczego warto zamówić sklep internetowy u nas
+- wykorzystuje mockup sklepu EL-FUEGO
+- dodane zdjęcie Mateusza nad laptopem z pełnym sterowaniem pozycją i mocniejszym wtopieniem od dołu
+- FIX v1.2.3:
+  1) Mateusz ukryty całkowicie na mobile
+  2) CTA „Otrzymaj wycenę” prowadzi do /studio-wyceny/
+  3) głowa Mateusza może wychodzić poza kontener na desktopie
+  4) sama karta Checkout podniesiona o 90px
+  5) sterowanie kartami i pillami działa przez left/top/right/bottom
+
+SZYBKIE STEROWANIE:
+1) MOCKUP: szukaj "CONTROL / MOCKUP EL-FUEGO"
+2) MATEUSZ: szukaj "CONTROL / MATEUSZ PHOTO"
+3) FLOATING CARDS + PILLS: szukaj "CONTROL / FLOATING CARDS + PILLS"
+4) BENEFIT CARDS: szukaj "CONTROL / BENEFIT CARDS"
+5) CTA: szukaj "CONTROL / CTA"
+6) PRAWA SEKCJA: szukaj "CONTROL / PRAWA SEKCJA VISUAL"
+========================================================= -->
+
+<section class="zpShopWhyLight" id="zpShopWhyLight" aria-labelledby="zpShopWhyLightTitle" data-ready="0">
+  <div class="zpShopWhyLight__watermark" aria-hidden="true">WOOCOMMERCE</div>
+  <script src="/wp-content/web-font/lucide.min.js"></script>
+
+  <style>@font-face{font-family:"Plus Jakarta Sans Local";src:url("/wp-content/web-font/jakarta/plus-jakarta-sans-v12-latin_latin-ext-regular.woff2") format("woff2");font-weight:400;font-style:normal;font-display:swap;}@font-face{font-family:"Plus Jakarta Sans Local";src:url("/wp-content/web-font/jakarta/plus-jakarta-sans-v12-latin_latin-ext-500.woff2") format("woff2");font-weight:500;font-style:normal;font-display:swap;}@font-face{font-family:"Plus Jakarta Sans Local";src:url("/wp-content/web-font/jakarta/plus-jakarta-sans-v12-latin_latin-ext-600.woff2") format("woff2");font-weight:600;font-style:normal;font-display:swap;}@font-face{font-family:"Plus Jakarta Sans Local";src:url("/wp-content/web-font/jakarta/plus-jakarta-sans-v12-latin_latin-ext-700.woff2") format("woff2");font-weight:700;font-style:normal;font-display:swap;}@font-face{font-family:"Plus Jakarta Sans Local";src:url("/wp-content/web-font/jakarta/plus-jakarta-sans-v12-latin_latin-ext-800.woff2") format("woff2");font-weight:800;font-style:normal;font-display:swap;}#zpShopWhyLight,#zpShopWhyLight *,#zpShopWhyLight *::before,#zpShopWhyLight *::after{box-sizing:border-box}#zpShopWhyLight{--font:"Plus Jakarta Sans Local","Plus Jakarta Sans",system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;--ink:#07111f;--muted:#536075;--soft:#7a8495;--line:rgba(7,17,31,.105);--line2:rgba(7,17,31,.075);--panel:#ffffff;--panel2:#f7f9fc;--navy:#071426;--navy2:#0b1830;--navy3:#102a4f;--blue:#1c477a;--buttonGrad:linear-gradient(90deg,#05070b,#0b1830,#102a4f,#1c477a);--ease:cubic-bezier(.16,1,.3,1);--mockW:clamp(460px,47vw,840px);--mockX:34px;--mockY:-100px;--mockRotate:-3.2deg;--mockScale:1;--mockMobileW:112vw;--mockMobileX:-4%;--mockMobileY:-34px;--mockMobileRotate:-3deg;--mockMobileScale:1;--mateuszW:clamp(250px,22vw,430px);--mateuszX:170px;--mateuszY:-630px;--mateuszScale:1.10;--mateuszFade:56%;--mateuszMobileW:70vw;--mateuszMobileX:-28px;--mateuszMobileY:-230px;--mateuszMobileScale:.92;--mateuszMobileFade:58%;--floatCardsX:0px;--floatCardsY:-50px;--checkoutCardX:0px;--checkoutCardY:-340px;--chipsX:0px;--chipsY:-50px;--floatCardsXMobile:0px;--floatCardsYMobile:0px;--checkoutCardXMobile:0px;--checkoutCardYMobile:0px;--chipsXMobile:0px;--chipsYMobile:0px;--cardRadius:26px;--cardPad:22px;--ctaRadius:999px;position:relative;isolation:isolate;overflow:visible;width:100%;max-width:100%;padding:clamp(72px,7.4vw,128px) 0 clamp(70px,7vw,118px);color:var(--ink);background:#fff;font-family:var(--font);-webkit-font-smoothing:antialiased;text-rendering:geometricPrecision;font-synthesis:none}#zpShopWhyLight::before{content:"";position:absolute;inset:0 calc(50% - 50vw);z-index:-3;pointer-events:none;background:#fff}#zpShopWhyLight::after{content:"";position:absolute;left:0;right:0;top:0;z-index:-2;height:1px;background:linear-gradient(90deg,transparent,rgba(7,17,31,.16),transparent)}.zpShopWhyLight__watermark{position:absolute;left:50%;right:auto;bottom:-.22em;z-index:0;width:max-content;max-width:none;transform:translateX(-50%);color:#050505;opacity:.043;font-size:clamp(118px,15.8vw,306px);line-height:.78;letter-spacing:-.105em;font-weight:760;text-transform:uppercase;white-space:nowrap;user-select:none;pointer-events:none;-webkit-mask-image: linear-gradient(90deg,transparent 0%,#000 12%,#000 88%,transparent 100%),linear-gradient(to bottom,#000 0%,#000 48%,rgba(0,0,0,.60) 68%,transparent 100%);mask-image: linear-gradient(90deg,transparent 0%,#000 12%,#000 88%,transparent 100%),linear-gradient(to bottom,#000 0%,#000 48%,rgba(0,0,0,.60) 68%,transparent 100%)}.zpShopWhyLight__inner{width:min(1840px,100%);margin:0 auto;padding:0 clamp(22px,6vw,110px);position:relative;z-index:2;overflow:visible}.zpShopWhyLight__head{display:grid;grid-template-columns:minmax(0,1fr);gap:clamp(26px,4vw,74px);align-items:end;margin:0 0 clamp(34px,4.6vw,72px)}.zpShopWhyLight__kicker{display:inline-flex;align-items:center;gap:10px;margin:0 0 14px;color:#738096;font-size:10px;line-height:1;font-weight:800;letter-spacing:.13em;text-transform:uppercase}.zpShopWhyLight__kicker::before{content:"";width:24px;height:1px;background:linear-gradient(90deg,var(--navy3),rgba(8,40,71,.18))}.zpShopWhyLight h2{max-width:1120px;margin:0;color:var(--ink);font-size:clamp(34px,4.45vw,62px);line-height:1.02;letter-spacing:-.042em;font-weight:650;text-wrap:balance}.zpShopWhyLight h2 em{font-style:normal;color:var(--navy3)}.zpShopWhyLight__lead{margin:0;color:var(--muted);font-size:clamp(14px,1.05vw,16px);line-height:1.7;letter-spacing:-.006em;font-weight:400}.zpShopWhyLight__layout{display:grid;grid-template-columns:minmax(0,.98fr) minmax(520px,1.02fr);gap:clamp(34px,5.4vw,98px);align-items:center}.zpShopWhyLight__copy{position:relative;z-index:3;min-width:0}.zpShopWhyLight__introCard{position:relative;overflow:hidden;border-radius:32px;padding:clamp(24px,2.4vw,36px);background: linear-gradient(145deg,#02060c 0%,#050b16 48%,#071426 100%);color:#fff;box-shadow:0 28px 90px rgba(7,20,38,.18)}.zpShopWhyLight__introCard::before{content:"";position:absolute;inset:0;pointer-events:none;background: radial-gradient(circle at 10% 12%,rgba(255,255,255,.11),transparent 30%),radial-gradient(circle at 86% 8%,rgba(255,255,255,.08),transparent 32%);opacity:.75}.zpShopWhyLight__introCard > *{position:relative;z-index:2}.zpShopWhyLight__introTop{display:flex;align-items:center;justify-content:space-between;gap:18px;margin:0 0 clamp(28px,3vw,44px)}.zpShopWhyLight__introTop span{color:rgba(255,255,255,.62);font-size:10px;line-height:1;font-weight:800;letter-spacing:.14em;text-transform:uppercase}.zpShopWhyLight__introIcon{display:flex;align-items:center;justify-content:center;width:48px;height:48px;border-radius:999px;background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.16);color:#fff}.zpShopWhyLight__introIcon svg{width:21px;height:21px}.zpShopWhyLight__introCard h3{max-width:640px;margin:0;color:#fff;font-size:clamp(26px,2.7vw,42px);line-height:1.03;letter-spacing:-.04em;font-weight:650;text-wrap:balance}.zpShopWhyLight__introCard p{max-width:660px;margin:18px 0 0;color:rgba(255,255,255,.72);font-size:14px;line-height:1.68;letter-spacing:-.004em}.zpShopWhyLight__miniStats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:clamp(24px,3vw,42px) 0 0}.zpShopWhyLight__miniStat{min-width:0;padding:16px 14px;border-radius:20px;background:rgba(255,255,255,.075);border:1px solid rgba(255,255,255,.12)}.zpShopWhyLight__miniStat strong{display:block;color:#fff;font-size:clamp(22px,2vw,30px);line-height:1;letter-spacing:-.045em;font-weight:800}.zpShopWhyLight__miniStat span{display:block;margin-top:8px;color:rgba(255,255,255,.60);font-size:10px;line-height:1.22;font-weight:800;letter-spacing:-.006em}.zpShopWhyLight__benefits{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin:16px 0 0}.zpShopWhyLight__benefit{position:relative;min-width:0;overflow:hidden;border-radius:var(--cardRadius);padding:var(--cardPad);background:#fff;border:1px solid var(--line);box-shadow:0 18px 54px rgba(7,17,31,.06);transition:transform .34s var(--ease),box-shadow .34s var(--ease),border-color .34s var(--ease)}.zpShopWhyLight__benefit::before{content:"";position:absolute;inset:auto 18px 0;height:2px;border-radius:999px;background:var(--buttonGrad);opacity:.0;transform:scaleX(.4);transform-origin:left;transition:opacity .34s ease,transform .34s var(--ease)}.zpShopWhyLight__benefit:hover{transform:translateY(-5px);border-color:rgba(16,42,79,.22);box-shadow:0 28px 76px rgba(7,17,31,.10)}.zpShopWhyLight__benefit:hover::before{opacity:1;transform:scaleX(1)}.zpShopWhyLight__benefitIcon{display:flex;align-items:center;justify-content:center;width:42px;height:42px;border-radius:16px;color:#fff;background:var(--buttonGrad);box-shadow:0 16px 34px rgba(7,20,38,.16);margin:0 0 18px}.zpShopWhyLight__benefitIcon svg{width:19px;height:19px}.zpShopWhyLight__benefit h3{margin:0;color:var(--ink);font-size:clamp(17px,1.25vw,22px);line-height:1.16;letter-spacing:-.026em;font-weight:720}.zpShopWhyLight__benefit p{margin:11px 0 0;color:var(--muted);font-size:13px;line-height:1.58;letter-spacing:-.004em}.zpShopWhyLight__visual{position:relative;min-height:clamp(540px,43vw,760px);isolation:isolate;overflow:visible}.zpShopWhyLight__glow{position:absolute;left:48%;top:50%;z-index:-2;width:78%;height:62%;transform:translate(-50%,-50%);border-radius:999px;background: radial-gradient(circle at 48% 52%,rgba(7,17,31,.055),transparent 58%),radial-gradient(circle at 76% 20%,rgba(7,17,31,.035),transparent 45%);filter: none;opacity:.55;pointer-events:none}.zpShopWhyLight__mateusz{position:absolute;left:50%;top:50%;z-index:4;width:var(--mateuszW);pointer-events:none;transform: translate(calc(-50% + var(--mateuszX)),calc(-50% + var(--mateuszY))) scale(var(--mateuszScale));transform-origin:center bottom;animation:zpShopWhyMateuszFloat 7.2s ease-in-out infinite;background:transparent!important;isolation:auto}.zpShopWhyLight__mateusz::after{content:none!important;display:none!important}.zpShopWhyLight__mateusz img{position:relative;z-index:1;display:block;width:100%;height:auto;object-fit:contain;background:transparent!important;mix-blend-mode:multiply;filter:saturate(.98) contrast(1.02);-webkit-mask-image: linear-gradient( to bottom,#000 0%,#000 calc(100% - var(--mateuszFade)),rgba(0,0,0,.88) calc(100% - (var(--mateuszFade) * .76)),rgba(0,0,0,.55) calc(100% - (var(--mateuszFade) * .48)),rgba(0,0,0,.18) calc(100% - (var(--mateuszFade) * .20)),transparent 100% );mask-image: linear-gradient( to bottom,#000 0%,#000 calc(100% - var(--mateuszFade)),rgba(0,0,0,.88) calc(100% - (var(--mateuszFade) * .76)),rgba(0,0,0,.55) calc(100% - (var(--mateuszFade) * .48)),rgba(0,0,0,.18) calc(100% - (var(--mateuszFade) * .20)),transparent 100% );-webkit-mask-size:100% 100%;mask-size:100% 100%;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat}@keyframes zpShopWhyMateuszFloat{0%,100%{transform: translate(calc(-50% + var(--mateuszX)),calc(-50% + var(--mateuszY))) scale(var(--mateuszScale))}50%{transform: translate(calc(-50% + var(--mateuszX) + 8px),calc(-50% + var(--mateuszY) - 12px)) scale(calc(var(--mateuszScale) + .008))}}.zpShopWhyLight__mockWrap{position:absolute;left:50%;top:50%;z-index:3;width:var(--mockW);transform: translate(calc(-50% + var(--mockX)),calc(-50% + var(--mockY))) rotate(var(--mockRotate)) scale(var(--mockScale));transform-origin:center;animation:zpShopWhyMockFloat 7.6s ease-in-out infinite}.zpShopWhyLight__mockWrap::after{content:"";position:absolute;left:10%;right:10%;bottom:3%;z-index:-1;height:12%;border-radius:999px;background:rgba(7,17,31,.20);filter: none;transform:translateY(40px) scaleX(.82);opacity:.65}.zpShopWhyLight__mock{display:block;width:100%;height:auto;object-fit:contain;filter: drop-shadow(0 34px 76px rgba(7,17,31,.22)) saturate(.98) contrast(1.02)}@keyframes zpShopWhyMockFloat{0%,100%{transform: translate(calc(-50% + var(--mockX)),calc(-50% + var(--mockY))) rotate(var(--mockRotate)) scale(var(--mockScale))}50%{transform: translate(calc(-50% + var(--mockX) + 10px),calc(-50% + var(--mockY) - 16px)) rotate(calc(var(--mockRotate) + .8deg)) scale(calc(var(--mockScale) + .01))}}.zpShopWhyLight__floatCard{position:absolute;z-index:5;border-radius:24px;border:1px solid rgba(7,17,31,.10);background:rgba(255,255,255,.78);box-shadow:0 24px 72px rgba(7,17,31,.12);backdrop-filter: none !important;-webkit-backdrop-filter: none !important}.zpShopWhyLight__floatCard--a{left:calc(0px + var(--floatCardsX) + var(--checkoutCardX));top:calc(14% + var(--floatCardsY) + var(--checkoutCardY));width:214px;padding:18px;animation:zpShopWhyFloatA 6.8s ease-in-out infinite}.zpShopWhyLight__floatCard--b{right:calc(4% - var(--floatCardsX));bottom:calc(14% - var(--floatCardsY));width:270px;padding:18px;animation:zpShopWhyFloatB 7.2s ease-in-out infinite}.zpShopWhyLight__floatTop{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 14px}.zpShopWhyLight__floatTop span{color:#778196;font-size:10px;line-height:1;font-weight:800;letter-spacing:.13em;text-transform:uppercase}.zpShopWhyLight__floatTop i{display:flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:999px;color:#fff;background:var(--buttonGrad)}.zpShopWhyLight__floatTop svg{width:15px;height:15px}.zpShopWhyLight__floatCard strong{display:block;color:var(--ink);font-size:clamp(22px,2vw,30px);line-height:1;letter-spacing:-.05em;font-weight:800}.zpShopWhyLight__floatCard p{margin:9px 0 0;color:var(--muted);font-size:12px;line-height:1.44;font-weight:650;letter-spacing:-.004em}.zpShopWhyLight__bars{display:grid;gap:7px;margin-top:14px}.zpShopWhyLight__bar{height:8px;border-radius:999px;background:rgba(7,17,31,.08);overflow:hidden}.zpShopWhyLight__bar span{display:block;height:100%;border-radius:inherit;background:var(--buttonGrad)}.zpShopWhyLight__bar:nth-child(1) span{width:86%}.zpShopWhyLight__bar:nth-child(2) span{width:64%;opacity:.72}.zpShopWhyLight__bar:nth-child(3) span{width:78%;opacity:.58}.zpShopWhyLight__chips{position:absolute;left:calc(6% + var(--chipsX));bottom:calc(6% - var(--chipsY));z-index:6;display:flex;flex-wrap:wrap;gap:8px;max-width:390px}.zpShopWhyLight__chip{display:inline-flex;align-items:center;gap:7px;min-height:34px;padding:0 12px;border-radius:999px;background:#fff;border:1px solid rgba(7,17,31,.095);box-shadow:0 14px 38px rgba(7,17,31,.07);color:#39465a;font-size:11px;line-height:1;font-weight:800;letter-spacing:-.006em;white-space:nowrap}.zpShopWhyLight__chip svg{width:13px;height:13px;color:var(--navy3);stroke-width:2.35}@keyframes zpShopWhyFloatA{0%,100%{transform:rotate(-2deg)}50%{transform:translate3d(8px,-14px,0) rotate(1deg)}}@keyframes zpShopWhyFloatB{0%,100%{transform:rotate(2deg)}50%{transform:translate3d(-10px,-12px,0) rotate(-1deg)}}.zpShopWhyLight__cta{display:flex;align-items:center;flex-wrap:wrap;gap:12px;margin:clamp(24px,3vw,42px) 0 0}.zpShopWhyLight__btn{position:relative;isolation:isolate;overflow:hidden;display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:54px;padding:0 22px;border-radius:var(--ctaRadius);border:1px solid rgba(7,17,31,.14);color:var(--ink)!important;background:#fff;text-decoration:none!important;font-size:13px;line-height:1;font-weight:800;letter-spacing:-.008em;box-shadow:0 16px 42px rgba(7,17,31,.06);transition:color .28s ease,border-color .28s ease,transform .28s var(--ease)}.zpShopWhyLight__btn::before{content:"";position:absolute;inset:0;z-index:1;background:var(--buttonGrad);transform:scaleX(0);transform-origin:left;transition:transform .36s var(--ease)}.zpShopWhyLight__btn span,.zpShopWhyLight__btn svg{position:relative;z-index:2}.zpShopWhyLight__btn svg{width:16px;height:16px;transition:transform .22s ease}.zpShopWhyLight__btn:hover,.zpShopWhyLight__btn:focus-visible{color:#fff!important;border-color:rgba(7,17,31,.22);transform:translateY(-1px)}.zpShopWhyLight__btn:hover::before,.zpShopWhyLight__btn:focus-visible::before{transform:scaleX(1)}.zpShopWhyLight__btn:hover svg,.zpShopWhyLight__btn:focus-visible svg{transform:translate(3px,-3px)}.zpShopWhyLight__btn--dark{color:#fff!important;background:var(--buttonGrad);border-color:transparent}.zpShopWhyLight__btn--dark::before{background:#fff}.zpShopWhyLight__btn--dark:hover,.zpShopWhyLight__btn--dark:focus-visible{color:var(--ink)!important;border-color:rgba(7,17,31,.12)}.zpShopWhyLight__note{display:inline-flex;align-items:center;gap:8px;color:#7a8495;font-size:12px;line-height:1.35;font-weight:750;letter-spacing:-.004em}.zpShopWhyLight__note svg{width:15px;height:15px;color:var(--navy3)}#zpShopWhyLight[data-ready="0"] .zpShopWhyLight__kicker,#zpShopWhyLight[data-ready="0"] h2,#zpShopWhyLight[data-ready="0"] .zpShopWhyLight__lead,#zpShopWhyLight[data-ready="0"] .zpShopWhyLight__introCard,#zpShopWhyLight[data-ready="0"] .zpShopWhyLight__benefit,#zpShopWhyLight[data-ready="0"] .zpShopWhyLight__visual > *{opacity:0;filter: none;transform:translate3d(0,24px,0)}#zpShopWhyLight[data-ready="1"] .zpShopWhyLight__kicker,#zpShopWhyLight[data-ready="1"] h2,#zpShopWhyLight[data-ready="1"] .zpShopWhyLight__lead,#zpShopWhyLight[data-ready="1"] .zpShopWhyLight__introCard,#zpShopWhyLight[data-ready="1"] .zpShopWhyLight__benefit,#zpShopWhyLight[data-ready="1"] .zpShopWhyLight__visual > *{opacity:1;filter: none;transform:translateZ(0);transition:opacity .78s var(--ease),transform .84s var(--ease),filter .78s ease}#zpShopWhyLight[data-ready="1"] .zpShopWhyLight__kicker{transition-delay:.04s}#zpShopWhyLight[data-ready="1"] h2{transition-delay:.10s}#zpShopWhyLight[data-ready="1"] .zpShopWhyLight__lead{transition-delay:.16s}#zpShopWhyLight[data-ready="1"] .zpShopWhyLight__introCard{transition-delay:.22s}#zpShopWhyLight[data-ready="1"] .zpShopWhyLight__benefit:nth-child(1){transition-delay:.30s}#zpShopWhyLight[data-ready="1"] .zpShopWhyLight__benefit:nth-child(2){transition-delay:.36s}#zpShopWhyLight[data-ready="1"] .zpShopWhyLight__benefit:nth-child(3){transition-delay:.42s}#zpShopWhyLight[data-ready="1"] .zpShopWhyLight__benefit:nth-child(4){transition-delay:.48s}#zpShopWhyLight[data-ready="1"] .zpShopWhyLight__visual > *{transition-delay:.34s}@media (max-width:1180px){.zpShopWhyLight__head,.zpShopWhyLight__layout{grid-template-columns:1fr}.zpShopWhyLight__lead{max-width:820px}.zpShopWhyLight__visual{min-height:650px}#zpShopWhyLight{--mockW:min(840px,86vw);--mockX:0px;--mateuszW:clamp(250px,34vw,420px);--mateuszX:-145px;--mateuszY:-330px}}@media (max-width:760px){#zpShopWhyLight{padding:56px 0 64px;--mockW:var(--mockMobileW);--mockX:var(--mockMobileX);--mockY:var(--mockMobileY);--mockRotate:var(--mockMobileRotate);--mockScale:var(--mockMobileScale);--mateuszW:var(--mateuszMobileW);--mateuszX:var(--mateuszMobileX);--mateuszY:var(--mateuszMobileY);--mateuszScale:var(--mateuszMobileScale);--mateuszFade:var(--mateuszMobileFade);--floatCardsX:var(--floatCardsXMobile);--floatCardsY:var(--floatCardsYMobile);--checkoutCardX:var(--checkoutCardXMobile);--checkoutCardY:var(--checkoutCardYMobile);--chipsX:var(--chipsXMobile);--chipsY:var(--chipsYMobile)}.zpShopWhyLight__inner{padding:0 14px}.zpShopWhyLight__head{gap:18px;margin-bottom:28px}.zpShopWhyLight__kicker{font-size:9px;letter-spacing:.12em;margin-bottom:13px}.zpShopWhyLight__kicker::before{width:22px}.zpShopWhyLight h2{font-size:clamp(31px,11vw,38px);line-height:1.03;letter-spacing:-.034em}.zpShopWhyLight__lead{font-size:14px;line-height:1.62}.zpShopWhyLight__introCard{border-radius:26px;padding:22px}.zpShopWhyLight__introTop{margin-bottom:24px}.zpShopWhyLight__introIcon{width:44px;height:44px}.zpShopWhyLight__introCard h3{font-size:26px}.zpShopWhyLight__introCard p{font-size:13px;line-height:1.6}.zpShopWhyLight__miniStats{grid-template-columns:1fr;gap:8px}.zpShopWhyLight__miniStat{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:14px}.zpShopWhyLight__miniStat span{margin-top:0;text-align:right}.zpShopWhyLight__benefits{grid-template-columns:1fr}.zpShopWhyLight__benefit{border-radius:22px;padding:20px}.zpShopWhyLight__visual{min-height:520px;margin-top:10px}.zpShopWhyLight__mateusz{display:none!important}.zpShopWhyLight__mockWrap{top:48%}.zpShopWhyLight__floatCard--a{left:calc(2px + var(--floatCardsX) + var(--checkoutCardX));top:calc(5% + var(--floatCardsY) + var(--checkoutCardY));width:184px;padding:15px}.zpShopWhyLight__floatCard--b{right:calc(0px - var(--floatCardsX));bottom:calc(10% - var(--floatCardsY));width:230px;padding:15px}.zpShopWhyLight__floatCard strong{font-size:22px}.zpShopWhyLight__floatCard p{font-size:11px}.zpShopWhyLight__chips{left:calc(0px + var(--chipsX));bottom:calc(0px - var(--chipsY));max-width:100%}.zpShopWhyLight__chip{min-height:31px;padding:0 10px;font-size:10px}.zpShopWhyLight__chip:nth-child(n+4){display:none}.zpShopWhyLight__cta{display:grid;grid-template-columns:1fr;gap:10px}.zpShopWhyLight__btn{width:100%;min-height:56px}.zpShopWhyLight__note{justify-content:center;text-align:center;margin-top:2px}.zpShopWhyLight__watermark{font-size:clamp(86px,26vw,142px);bottom:.04em}}@media (max-width:430px){.zpShopWhyLight__visual{min-height:485px}#zpShopWhyLight{--mockMobileW:125vw;--mockMobileX:-2%;--mockMobileY:-22px;--mateuszMobileW:78vw;--mateuszMobileX:-20px;--mateuszMobileY:-228px}.zpShopWhyLight__floatCard--a,.zpShopWhyLight__floatCard--b{transform-origin:center center}}@media (prefers-reduced-motion:reduce){#zpShopWhyLight *,#zpShopWhyLight *::before,#zpShopWhyLight *::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important;scroll-behavior:auto!important}#zpShopWhyLight[data-ready="0"] .zpShopWhyLight__kicker,#zpShopWhyLight[data-ready="0"] h2,#zpShopWhyLight[data-ready="0"] .zpShopWhyLight__lead,#zpShopWhyLight[data-ready="0"] .zpShopWhyLight__introCard,#zpShopWhyLight[data-ready="0"] .zpShopWhyLight__benefit,#zpShopWhyLight[data-ready="0"] .zpShopWhyLight__visual > *{opacity:1!important;filter:none!important;transform:none!important}}#zpShopWhyLight{--visualMoveX:0px;--visualMoveY:200px;--visualScale:1.20;--visualMoveXMobile:0px;--visualMoveYMobile:0px;--visualScaleMobile:1}#zpShopWhyLight .zpShopWhyLight__visual{transform: translate3d(var(--visualMoveX),var(--visualMoveY),0) scale(var(--visualScale)) !important;transform-origin:center center !important}@media (max-width:760px){#zpShopWhyLight .zpShopWhyLight__visual{transform: translate3d(var(--visualMoveXMobile),var(--visualMoveYMobile),0) scale(var(--visualScaleMobile)) !important;transform-origin:center center !important}}</style>
+
+
+  <div class="zpShopWhyLight__inner">
+
+    <header class="zpShopWhyLight__head">
+      <div class="zpShopWhyLight__headCopy">
+        <span class="zpShopWhyLight__kicker">Dlaczego sklep u nas?</span>
+
+        <h2 id="zpShopWhyLightTitle">
+          Tworzenie sklepów internetowych Katowice — WooCommerce, który porządkuje ofertę i prowadzi klienta do zakupu.
+        </h2>
+      </div>
+    </header>
+
+    <div class="zpShopWhyLight__layout">
+
+      <div class="zpShopWhyLight__copy">
+
+        <article class="zpShopWhyLight__introCard">
+          <div class="zpShopWhyLight__introTop">
+            <span>E-commerce jako system</span>
+            <div class="zpShopWhyLight__introIcon" aria-hidden="true">
+              <i data-lucide="shopping-cart"></i>
+            </div>
+          </div>
+
+          <h3>Budujemy sklep internetowy tak, żeby klient od razu rozumiał ofertę, ufał marce i szybko przechodził od produktu do zamówienia.</h3>
+
+          <p>
+            Dobry sklep WooCommerce nie kończy się na dodaniu produktów. Ważne jest to, jak użytkownik znajduje produkt,
+            jak porównuje warianty, jak przechodzi przez koszyk, jak widzi dostawę, płatność i komunikaty zaufania.
+          </p>
+
+          <div class="zpShopWhyLight__miniStats" aria-label="Najważniejsze filary sklepu">
+            <div class="zpShopWhyLight__miniStat">
+              <strong>UX</strong>
+              <span>czytelna ścieżka zakupu</span>
+            </div>
+            <div class="zpShopWhyLight__miniStat">
+              <strong>SEO</strong>
+              <span>kategorie i produkty pod Google</span>
+            </div>
+            <div class="zpShopWhyLight__miniStat">
+              <strong>Ads</strong>
+              <span>gotowość pod kampanie</span>
+            </div>
+          </div>
+        </article>
+
+        <div class="zpShopWhyLight__benefits" aria-label="Dlaczego warto zamówić sklep w Zaprojektowani">
+
+          <article class="zpShopWhyLight__benefit">
+            <div class="zpShopWhyLight__benefitIcon" aria-hidden="true">
+              <i data-lucide="route"></i>
+            </div>
+            <h3>Projektujemy ścieżkę zakupu, nie tylko widok strony sklepu.</h3>
+            <p>
+              Układamy drogę od wejścia na sklep, przez kategorię, filtry, kartę produktu i koszyk, aż po checkout, płatność, mail po zakupie i dalszy remarketing.
+            </p>
+          </article>
+
+          <article class="zpShopWhyLight__benefit">
+            <div class="zpShopWhyLight__benefitIcon" aria-hidden="true">
+              <i data-lucide="search-check"></i>
+            </div>
+            <h3>Myślimy o SEO e-commerce już przy strukturze sklepu.</h3>
+            <p>
+              Kategorie, filtry, opisy produktów, nagłówki H1/H2, linkowanie wewnętrzne i adresy URL planujemy tak, żeby sklep miał fundament pod widoczność w Google oraz kampanie produktowe.
+            </p>
+          </article>
+
+          <article class="zpShopWhyLight__benefit">
+            <div class="zpShopWhyLight__benefitIcon" aria-hidden="true">
+              <i data-lucide="credit-card"></i>
+            </div>
+            <h3>Wdrażamy płatności, dostawy i logikę sprzedaży WooCommerce.</h3>
+            <p>
+              Pomagamy poukładać metody płatności, wysyłkę, kupony, warianty, stany magazynowe i komunikaty przy zakupie.
+            </p>
+          </article>
+
+          <article class="zpShopWhyLight__benefit">
+            <div class="zpShopWhyLight__benefitIcon" aria-hidden="true">
+              <i data-lucide="bar-chart-3"></i>
+            </div>
+            <h3>Przygotowujemy sklep pod analitykę, remarketing i kampanie Meta Ads.</h3>
+            <p>
+              Sklep może być gotowy pod mierzenie konwersji, remarketing, Meta Ads, Google Ads i dalszą optymalizację sprzedaży.
+            </p>
+          </article>
+
+        </div>
+
+        <div class="zpShopWhyLight__cta" aria-label="Działania">
+          <a class="zpShopWhyLight__btn zpShopWhyLight__btn--dark" href="/studio-wyceny/">
+            <span>Otrzymaj wycenę</span>
+            <i data-lucide="arrow-up-right"></i>
+          </a>
+
+          <a class="zpShopWhyLight__btn" href="#oferta-sklepow">
+            <span>Zobacz zakres sklepu</span>
+            <i data-lucide="arrow-down-right"></i>
+          </a>
+
+          <span class="zpShopWhyLight__note">
+            <i data-lucide="map-pin"></i>
+            Katowice / Śląsk / cała Polska
+          </span>
+        </div>
+
+      </div>
+
+      <div class="zpShopWhyLight__visual" aria-hidden="true">
+        <span class="zpShopWhyLight__glow"></span>
+
+        <figure class="zpShopWhyLight__mateusz">
+          <img
+            src="https://zaprojektowani.com/wp-content/uploads/2026/05/mateusz_pointing_down2.webp"
+            alt="Tworzenie sklepu internetowego WooCommerce — Zaprojektowani.com"
+            loading="lazy"
+            decoding="async"
+          >
+        </figure>
+
+        <div class="zpShopWhyLight__mockWrap">
+          <img
+            class="zpShopWhyLight__mock"
+            src="https://zaprojektowani.com/wp-content/uploads/2026/05/EL-FUEGO-2.webp"
+            alt="Sklep internetowy WooCommerce — projekt UX, karta produktu i checkout"
+            loading="lazy"
+            decoding="async"
+          >
+        </div>
+
+        <article class="zpShopWhyLight__floatCard zpShopWhyLight__floatCard--a">
+          <div class="zpShopWhyLight__floatTop">
+            <span>Checkout</span>
+            <i data-lucide="shield-check"></i>
+          </div>
+          <strong>prosty zakup</strong>
+          <p>czytelny koszyk, płatności, dostawy i komunikaty zaufania</p>
+        </article>
+
+        <article class="zpShopWhyLight__floatCard zpShopWhyLight__floatCard--b">
+          <div class="zpShopWhyLight__floatTop">
+            <span>Sprzedaż</span>
+            <i data-lucide="trending-up"></i>
+          </div>
+          <strong>SEO + Ads</strong>
+          <p>sklep przygotowany pod widoczność, kampanie i dalszą optymalizację</p>
+
+          <div class="zpShopWhyLight__bars">
+            <div class="zpShopWhyLight__bar"><span></span></div>
+            <div class="zpShopWhyLight__bar"><span></span></div>
+            <div class="zpShopWhyLight__bar"><span></span></div>
+          </div>
+        </article>
+
+        <div class="zpShopWhyLight__chips">
+          <span class="zpShopWhyLight__chip"><i data-lucide="package-check"></i> dostawy</span>
+          <span class="zpShopWhyLight__chip"><i data-lucide="tags"></i> kategorie</span>
+          <span class="zpShopWhyLight__chip"><i data-lucide="repeat"></i> remarketing</span>
+          <span class="zpShopWhyLight__chip"><i data-lucide="boxes"></i> magazyn</span>
+          <span class="zpShopWhyLight__chip"><i data-lucide="mouse-pointer-click"></i> UX zakupowy</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    (function(){
+      'use strict';
+
+      function init(){
+        var root = document.getElementById('zpShopWhyLight');
+        if(!root || root.dataset.initialized === '1'){
+          return;
+        }
+
+        root.dataset.initialized = '1';
+
+        if(window.lucide && typeof window.lucide.createIcons === 'function'){
+          try{
+            window.lucide.createIcons({
+              attrs:{
+                'stroke-width':2,
+                'stroke-linecap':'round',
+                'stroke-linejoin':'round',
+                'aria-hidden':'true'
+              }
+            });
+          }catch(e){}
+        }
+
+        root.querySelectorAll('a[href^="#"]').forEach(function(link){
+          link.addEventListener('click', function(e){
+            var id = link.getAttribute('href');
+            if(!id || id === '#'){
+              return;
+            }
+
+            var target = document.querySelector(id);
+            if(!target){
+              return;
+            }
+
+            e.preventDefault();
+
+            window.scrollTo({
+              top: target.getBoundingClientRect().top + window.pageYOffset - 92,
+              behavior:'smooth'
+            });
+          });
+        });
+
+        var reveal = function(){
+          root.setAttribute('data-ready','1');
+        };
+
+        if('IntersectionObserver' in window){
+          var io = new IntersectionObserver(function(entries){
+            entries.forEach(function(entry){
+              if(entry.isIntersecting){
+                reveal();
+                io.disconnect();
+              }
+            });
+          }, {threshold:.16});
+          io.observe(root);
+        }else{
+          setTimeout(reveal, 80);
+        }
+      }
+
+      if(document.readyState === 'loading'){
+        document.addEventListener('DOMContentLoaded', init, {once:true});
+      }else{
+        init();
+      }
+
+      window.addEventListener('load', init, {once:true});
+    })();
+  </script>
+</section>
+<!-- /ZAPROJEKTOWANI — ECOMMERCE VALUE / LIGHT WHY US v1.2.4 FINAL CTA + MOBILE CLEAN -->

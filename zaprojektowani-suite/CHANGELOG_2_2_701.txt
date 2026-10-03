@@ -1,0 +1,7 @@
+ZAPROJEKTOWANI SUITE 2.2.701
+
+1. Podstrona /logo-branding-katowice/: w sekcji „Nie projektujemy znaczka” przesunięto wyłącznie zdjęcie Stanisława o 100 px niżej na desktopie.
+2. Nagłówek „Najpierw charakter. Potem znak.” oraz karty procesu zachowują dotychczasową pozycję.
+3. Wyłączono przycinanie przepełnienia w sekcji, siatce i kontenerze zdjęcia, dzięki czemu głowa może swobodnie wychodzić ponad kontener.
+4. Zmiana dotyczy wyłącznie desktopu od 1101 px; układ tablet/mobile pozostał bez zmian.
+5. Podbito wersję wtyczki oraz klucz odświeżania assetów do 2.2.701.

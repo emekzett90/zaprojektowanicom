@@ -1,0 +1,9 @@
+Zaprojektowani Suite 2.2.636
+
+- Zachowano zmiany Studio Wyceny z wersji 2.2.632–2.2.635.
+- Na mobile mockupy usług Studio Wyceny mogą wychodzić ponad karty bez przycinania.
+- Sekcje strony głównej i ciężki kontroler portfolio są uruchamiane po pierwszym scrollu albo po spokojnym okresie po załadowaniu.
+- Pierwsze otwarcie i zamknięcie menu nie uruchamia już portfolio, logotypów, usług, showcase ani Motion Lite.
+- Arkusze stylów dalszych sekcji nie przełączają się w trakcie otwartego menu.
+- Zachowano wcześniejsze optymalizacje ikon, obrazów, hero i wersji mobilnej menu.
+- Aktualizacja nie nadpisuje zapisanych treści strony głównej ani SEO.

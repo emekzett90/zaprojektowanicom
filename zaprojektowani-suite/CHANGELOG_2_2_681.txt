@@ -1,0 +1,9 @@
+Zaprojektowani Suite 2.2.681
+
+- Naprawiono błąd 404 pod adresem /kampanie-reklamowe/.
+- Dodano niezależną regułę routingu o najwyższym priorytecie, odporną na konflikt ze slugiem kategorii blogowej.
+- Trasa wymusza kod 200 i własny szablon również wtedy, gdy WordPress rozpozna kategorię lub błędnie ustawi 404.
+- Automatycznie odświeżane są reguły bezpośrednich odnośników po aktualizacji.
+- Usunięto błędne przekierowania prowadzące z adresu na ten sam adres.
+- Menedżer przekierowań ignoruje od teraz wszystkie przekierowania typu URL → ten sam URL.
+- Zaktualizowano pozostałe selektory menu ze starego slugu /kampanie-meta-ads/.

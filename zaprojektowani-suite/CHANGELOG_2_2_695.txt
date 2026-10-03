@@ -1,0 +1,39 @@
+ZAPROJEKTOWANI SUITE 2.2.695
+
+Kampanie reklamowe — poprawki po review:
+- naprawiono ucięte logo w headerze i stopce (desktop + mobile) — trasa
+  /kampanie-reklamowe/ renderuje sie na parse_request i pomijala bufor
+  optymalizatora obrazow; sygnet 150x150 podmieniany jest teraz na pelny plik,
+- usunieto pływajacy widget „Zostaw numer" (callback) — numer telefonu zostaje
+  w hero, CTA i stopce,
+- pierwsza sekcja pod hero (manifest) 1:1 jak na Strony/Logo & Branding:
+  karty logiki z ikonami i opisem + sylwetka Stanislawa nad akapitem,
+- wykres „Przychod przypisany tydzien po tygodniu" na cala szerokosc kokpitu
+  (osobny wiersz), lejek + udzial kanalow pod nim; dopasowany na mobile,
+- tabela wynikow w case studies z ikonami i wyroznionym kaflem przychodu,
+- mockupy realizacji floatuja poza karta (nie sa juz zclipowane),
+- dekoracyjne zdjecie zespolu nie przechwytuje juz klikniec przycisku „Przejdz
+  do Studia Wyceny" (pointer-events:none) i schodzi nizej na desktopie,
+- dodano pytania FAQ pod SEO (koszty, roznica Google/Meta, e-commerce,
+  raportowanie, czas efektow),
+- usunieto rozowe wykonczenie przyciskow stopki/sticky (reset.css) na tej trasie,
+- nagłowki kolumn mega menu zmniejszone do wersji editorial (12,5px) jak na
+  pozostalych podstronach,
+- w sekcji „Proces kampanii" dodano siedzacego Mateusza (chowa sie przy scrollu).
+
+Strony internetowe Katowice — poprawki po review:
+- pigulka w hero na mobile bez zargonu (LCP/CLS -> „Laduje sie w 1,1 s");
+  desktop pozostaje techniczny,
+- wykres w „Technika bez kompromisow" wypelnia karte i jest czytelny na mobile
+  (preserveAspectRatio=none), animacja rysowania bez zmian,
+- plakietka „Najczestszy wybor" jako zakladka NAD karta — nie zakrywa numeru
+  ani nazwy pakietu,
+- głowy zespolu w „Jeden zespol • pelny obraz" wystaja poza sekcje zamiast byc
+  uciete,
+- w sekcji „Jak projektujemy strony" dodano siedzacego Mateusza,
+- CTA „Poznajmy Twoj cel" prowadzi do /kontakt/.
+
+Logo & Branding Katowice:
+- CTA „Porozmawiajmy o marce" i „Przejdz do formularza" prowadza do /kontakt/.
+
+Podbito wersje wtyczki do 2.2.695 (cache assetow busty przez filemtime).

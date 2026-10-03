@@ -1,0 +1,6 @@
+Zaprojektowani Suite 2.2.742
+
+- /kampanie-reklamowe/: pakiety przeniesione zaraz po sekcji manifesto, aby oferta i CTA były widoczne znacznie wcześniej.
+- Dodano sylwetki zespołu nad 3 pakietami: Marta — Starter Ads, Stanisław — Standard Performance, Mateusz — Premium Growth Ads.
+- Sylwetki wychodzą ponad karty, mają miękkie wtopienie od dołu i osobny reveal/lift na scrollu.
+- RWD zabezpiecza odstępy między kartami na tabletach i mobile.

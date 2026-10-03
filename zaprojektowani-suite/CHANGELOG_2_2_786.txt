@@ -1,0 +1,20 @@
+Zaprojektowani Suite 2.2.786 — Cookiebot mobile performance
+
+Cel
+- Przywrócić szybki first paint/LCP po wdrożeniu Cookiebot, bez usuwania bannera i bez zmiany jego wyglądu.
+
+Zmiany
+- Cookiebot przełączony po stronie finalnego HTML z automatic blocking na manual blocking.
+- Usuwane jest data-blockingmode="auto", a uc.js otrzymuje async. Dzięki temu Cookiebot nie blokuje parsera/renderowania strony.
+- Google Analytics/gtag są ręcznie oznaczane jako data-cookieconsent="statistics" + type="text/plain" do czasu właściwej zgody.
+- Google Tag Manager / Google Ads / DoubleClick / Meta Pixel są oznaczane jako data-cookieconsent="marketing" + type="text/plain" do czasu właściwej zgody.
+- Obsłużono również stare znaczniki Suite data-zp-delay-thirdparty: źródło jest przywracane jako src, ale pozostaje nieaktywne do zgody Cookiebot.
+- Dodano zabezpieczenie dla popularnych zewnętrznych iframe/pikseli (YouTube/Vimeo/Facebook/Google Maps/DoubleClick) przez data-cookieblock-src.
+- Cloudflare Turnstile i skrypty niezbędne pozostają nietknięte.
+- Język Cookiebot nadal jest wymuszany zgodnie z URL: PL na polskich URL-ach, EN na /en/.
+- data/en.css nie jest już ładowany jako render-blocking CSS na polskiej wersji strony; jest enqueue tylko na /en/.
+- Link „Ustawienia cookies” w stopce z wersji 2.2.785 pozostaje bez zmian.
+
+Uwagi
+- To jest optymalizacja dla prawdziwych użytkowników, nie wyjątek dla Lighthouse/PageSpeed.
+- Po instalacji należy wyczyścić cache strony/CDN i wykonać test w nowym incognito bez zapisanej zgody.

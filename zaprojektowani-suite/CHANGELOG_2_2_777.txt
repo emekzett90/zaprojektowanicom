@@ -1,0 +1,6 @@
+Zaprojektowani Suite 2.2.777
+
+- Strona główna, karta „Logo i branding”: nowe zdjęcie brandingu Zgórecki Nieruchomości (uploads/2026/09/zgorecki_bez_tla-2.webp) zamiast mockupu Siemianowski; skala i położenie dopasowane do nowego kadru (desktop i mobile).
+- Logo i branding Katowice, sekcja „Case study”: to samo nowe zdjęcie; na desktopie po prawej obok tekstu, na tablecie i telefonie pod tekstem. Usunięty biały znak „Siemianowski” w tle tej sekcji.
+- Optymalizator: nowe zdjęcie ma na mobile to samo leniwe ładowanie (niski priorytet) co poprzednie.
+- Zawiera zmiany z 2.2.776 (logo pod cytatem zespołu, niżej zdjęcie zespołu na mobile).

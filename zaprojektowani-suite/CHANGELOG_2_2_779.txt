@@ -1,0 +1,6 @@
+Zaprojektowani Suite 2.2.779
+
+- Wersja angielska strony wbudowana w Suite (moduł Zaprojektowani Languages 1.0.7 w folderze zaprojektowani-languages/): adresy /en/, tłumaczenia, przełącznik PL/EN bez przeładowania, flagi w menu mobilnym, hreflang, mapa witryny EN. Ustawienia: Ustawienia → Języki PL/EN.
+- Studio Wyceny po angielsku: karty pakietów równo (2×2 jak w PL) — etykieta „Choose a package ↓” tylko na telefonie.
+- Jeśli osobna wtyczka „Zaprojektowani Languages (PL/EN)” jest włączona, Suite wyłącza ją automatycznie (dwie warstwy językowe nie mogą działać naraz). Ustawienia i poprawki tłumaczeń zostają.
+- Zawiera zmiany z 2.2.776–2.2.778 (logo w karcie kontaktowej, zdjęcie zespołu na telefonie, zdjęcie Zgórecki +15%).

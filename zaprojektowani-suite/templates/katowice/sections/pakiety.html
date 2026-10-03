@@ -1,0 +1,207 @@
+<!-- =========================================================
+ZAPROJEKTOWANI — WWW PACKAGES / CONFIGURATOR GATE v1.3 FIXED PULSE + HOVER LIFT
+Elementor HTML Widget
+
+v1.3:
+- naprawiony hover kart: działa także po dodaniu klasy .is-inview
+- karta na hover wysuwa się do przodu, podnosi i dostaje głębię
+- usunięty stały cień/glow w rogu kart przy dużych numerach
+- glow przy numerach pojawia się dopiero na hover
+- karta Premium ma widoczną animację pulsowania: ring + glow + delikatny oddech
+- ciemne tło karty Premium w klimacie hero "Strony internetowe Katowice"
+- biały widget, bez kratek/patternu w tle
+- lokalny Lucide: /wp-content/web-font/lucide.min.js
+========================================================= -->
+
+<section class="zpConfigGate" id="zpConfigGate" aria-labelledby="zpConfigGateTitle">
+  
+
+  <div class="zpConfigGate__bleed" aria-hidden="true"></div>
+  <div class="zpConfigGate__watermark" aria-hidden="true">wybierz start</div>
+
+  <div class="zpConfigGate__inner">
+
+    <header class="zpConfigGate__head">
+      <div class="zpConfigGate__copy">
+        <span class="zpConfigGate__kicker">Konfigurator projektu</span>
+
+        <h2 id="zpConfigGateTitle">
+          Wybierz zakres strony internetowej w Katowicach — od landing page’a po serwis premium.
+        </h2>
+      </div>
+
+      <p class="zpConfigGate__lead">
+        Tworzymy strony internetowe dla firm z Katowic, Śląska i całej Polski. Ten wybór pomoże szybko określić,
+        czy potrzebujesz landing page’a, strony firmowej Starter, strony firmowej Premium czy indywidualnego projektu
+        z dodatkowymi funkcjami, SEO, sklepem lub integracjami.
+      </p>
+    </header>
+
+    <div class="zpConfigGate__cards" aria-label="Wstępne pakiety stron internetowych">
+
+      <article class="zpConfigGate__card zpConfigGate__card--landing" data-zp-config-card>
+        <div class="zpConfigGate__hoverAura" aria-hidden="true"></div>
+        <span class="zpConfigGate__num">01</span>
+
+        <div class="zpConfigGate__icon" aria-hidden="true">
+          <i data-lucide="mouse-pointer-click"></i>
+        </div>
+
+        <div class="zpConfigGate__cardContent">
+          <span class="zpConfigGate__tag">Szybka kampania / jedna oferta</span>
+          <h3>Landing Page</h3>
+
+          <p>
+            Dla firm, które chcą wypromować konkretną usługę, produkt, lokalną kampanię albo ofertę sezonową
+            i potrzebują jednej mocnej strony prowadzącej do kontaktu, zapytania lub rezerwacji.
+          </p>
+
+          <div class="zpConfigGate__best">
+            <i data-lucide="sparkles"></i>
+            <span>Najlepszy, gdy liczy się szybki start, jeden cel i wysoka konwersja.</span>
+          </div>
+
+          <ul>
+            <li><i data-lucide="check"></i><span>jedna długa strona sprzedażowa</span></li>
+            <li><i data-lucide="check"></i><span>sekcje oferty, korzyści, procesu i CTA</span></li>
+            <li><i data-lucide="check"></i><span>formularz kontaktowy lub zapytanie ofertowe</span></li>
+            <li><i data-lucide="check"></i><span>wersja mobilna, podstawowe SEO i analityka</span></li>
+          </ul>
+        </div>
+
+        <a class="zpConfigGate__cardCta" href="/konfigurator-strony/?typ=landing-page">
+          <span>Wybierz Landing Page</span>
+          <i data-lucide="arrow-right"></i>
+        </a>
+      </article>
+
+      <article class="zpConfigGate__card zpConfigGate__card--starter" data-zp-config-card>
+        <div class="zpConfigGate__hoverAura" aria-hidden="true"></div>
+        <span class="zpConfigGate__num">02</span>
+
+        <div class="zpConfigGate__icon" aria-hidden="true">
+          <i data-lucide="layout-template"></i>
+        </div>
+
+        <div class="zpConfigGate__cardContent">
+          <span class="zpConfigGate__tag">Mała firma / czytelna obecność online</span>
+          <h3>Strona firmowa Starter</h3>
+
+          <p>
+            Dla lokalnych firm, specjalistów i usługodawców, którzy potrzebują profesjonalnej strony internetowej
+            z jasną ofertą, zaufaniem, podstawowym SEO i prostą drogą do kontaktu.
+          </p>
+
+          <div class="zpConfigGate__best">
+            <i data-lucide="badge-check"></i>
+            <span>Najlepszy, gdy chcesz wyglądać profesjonalnie i mieć solidną bazę pod SEO.</span>
+          </div>
+
+          <ul>
+            <li><i data-lucide="check"></i><span>strona główna + podstawowe podstrony</span></li>
+            <li><i data-lucide="check"></i><span>oferta, o firmie, realizacje/opinie, kontakt</span></li>
+            <li><i data-lucide="check"></i><span>responsywny projekt dopasowany do marki</span></li>
+            <li><i data-lucide="check"></i><span>podstawowa struktura SEO i szybkie ładowanie</span></li>
+          </ul>
+        </div>
+
+        <a class="zpConfigGate__cardCta" href="/konfigurator-strony/?typ=strona-firmowa-starter">
+          <span>Wybierz Starter</span>
+          <i data-lucide="arrow-right"></i>
+        </a>
+      </article>
+
+      <article class="zpConfigGate__card zpConfigGate__card--premium is-featured" data-zp-config-card>
+        <div class="zpConfigGate__premiumPulse" aria-hidden="true"></div>
+        <div class="zpConfigGate__ribbon">Najczęstszy wybór</div>
+        <div class="zpConfigGate__hoverAura" aria-hidden="true"></div>
+        <span class="zpConfigGate__num">03</span>
+
+        <div class="zpConfigGate__icon" aria-hidden="true">
+          <i data-lucide="gem"></i>
+        </div>
+
+        <div class="zpConfigGate__cardContent">
+          <span class="zpConfigGate__tag">Marka premium / mocniejsza sprzedaż</span>
+          <h3>Strona firmowa Premium</h3>
+
+          <p>
+            Dla firm, które chcą mocniej wejść w Google, lepiej pokazać ofertę, zbudować zaufanie
+            i przygotować stronę pod SEO, kampanie Meta Ads oraz regularne pozyskiwanie zapytań.
+          </p>
+
+          <div class="zpConfigGate__best">
+            <i data-lucide="rocket"></i>
+            <span>Najlepszy, gdy strona ma pozycjonować markę, sprzedawać ofertę i pracować długofalowo.</span>
+          </div>
+
+          <ul>
+            <li><i data-lucide="check"></i><span>rozbudowana struktura pod strony internetowe Katowice / Śląsk</span></li>
+            <li><i data-lucide="check"></i><span>mocny hero, oferta, branże, proces, FAQ i mocne CTA</span></li>
+            <li><i data-lucide="check"></i><span>copywriting, UX/UI i układ pod zapytania z Google oraz reklam</span></li>
+            <li><i data-lucide="check"></i><span>SEO techniczne, szybkość, mobile, analityka i przygotowanie pod kampanie</span></li>
+          </ul>
+        </div>
+
+        <a class="zpConfigGate__cardCta" href="/konfigurator-strony/?typ=strona-firmowa-premium">
+          <span>Wybierz Premium</span>
+          <i data-lucide="arrow-right"></i>
+        </a>
+      </article>
+
+      <article class="zpConfigGate__card zpConfigGate__card--custom" data-zp-config-card>
+        <div class="zpConfigGate__hoverAura" aria-hidden="true"></div>
+        <span class="zpConfigGate__num">04</span>
+
+        <div class="zpConfigGate__icon" aria-hidden="true">
+          <i data-lucide="wand-sparkles"></i>
+        </div>
+
+        <div class="zpConfigGate__cardContent">
+          <span class="zpConfigGate__tag">Nietypowy zakres / dedykowana wycena</span>
+          <h3>Projekt indywidualny</h3>
+
+          <p>
+            Dla projektów, które wymagają osobnego podejścia: większy serwis firmowy, sklep internetowy,
+            konfigurator, wiele usług, integracje, nietypowe formularze, automatyzacje lub rozbudowana architektura SEO.
+          </p>
+
+          <div class="zpConfigGate__best">
+            <i data-lucide="messages-square"></i>
+            <span>Najlepszy, gdy zakres wykracza poza standardową stronę firmową.</span>
+          </div>
+
+          <ul>
+            <li><i data-lucide="check"></i><span>indywidualna analiza potrzeb i struktury</span></li>
+            <li><i data-lucide="check"></i><span>sklep WooCommerce, landing pages lub serwis wielostronicowy</span></li>
+            <li><i data-lucide="check"></i><span>formularze, integracje, automatyzacje, konfiguratory</span></li>
+            <li><i data-lucide="check"></i><span>osobna wycena po opisie projektu</span></li>
+          </ul>
+        </div>
+
+        <a class="zpConfigGate__cardCta" href="/konfigurator-strony/?typ=projekt-indywidualny">
+          <span>Opisz projekt</span>
+          <i data-lucide="arrow-right"></i>
+        </a>
+      </article>
+
+    </div>
+
+    <div class="zpConfigGate__bottom">
+      <div class="zpConfigGate__bottomText">
+        <span>Konfigurator poprowadzi Cię dalej</span>
+        <strong>W konfiguratorze doprecyzujesz branżę, lokalizację, zakres, liczbę podstron, funkcje, materiały, SEO i główny cel strony.</strong>
+      </div>
+
+      <a class="zpConfigGate__mainCta" href="/studio-wyceny/">
+        <span>Dobierz zakres strony</span>
+        <i data-lucide="arrow-up-right"></i>
+      </a>
+    </div>
+
+  </div>
+</section>
+
+<!-- =========================================================
+/ZAPROJEKTOWANI — WWW PACKAGES / CONFIGURATOR GATE v1.3 FIXED PULSE + HOVER LIFT
+========================================================= -->

@@ -1,0 +1,7 @@
+Zaprojektowani Suite 2.2.760
+
+- Studio Wyceny: pełny ekran wyboru korzysta teraz z Plus Jakarta Sans zamiast Samsung Sharp.
+- Studio Wyceny: naprawiona animacja hand_pointer.webp wewnątrz izolowanego iframe na desktopie i mobile.
+- Pointer nie znika po samym hoverze; zatrzymuje się dopiero po wyborze usługi.
+- Cały pierwszy widget Studio Wyceny przesunięty 150 px niżej względem miejsca osadzenia.
+- Zachowana pełna izolacja iframe od CSS motywu i Elementora.

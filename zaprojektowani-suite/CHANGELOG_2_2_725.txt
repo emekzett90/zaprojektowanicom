@@ -1,0 +1,8 @@
+Zaprojektowani Suite 2.2.725
+
+Realizacje hero:
+- usunięto duplikat napisu tła "realizacje";
+- pozostawiono jedno słowo za zdjęciem, osadzone nisko i delikatnie wtopione;
+- zmniejszono zdjęcie zespołu o ok. 15%;
+- dopracowano subtelne wtopienie dolnej części zdjęcia;
+- zmniejszono overlap nad kaflami kategorii.

@@ -1,0 +1,8 @@
+ZAPROJEKTOWANI SUITE 2.2.812
+
+Logo & Branding — subtelne ikony zakresu na kartach:
+- Skrócone listy na froncie Logo Startowe, Mini Branding i Branding Premium dostały dopasowane ikony Lucide.
+- Ikony są semantyczne (np. projekty, poprawki, warianty, pliki, kolorystyka, księga, materiały, prawa) i mają lekki, nienachalny styl.
+- Wyróżniony Mini Branding ma osobną jasnoniebieską wersję ikon dopasowaną do ciemnej karty.
+- Pełny zakres po rozwinięciu pozostaje przy prostych tickach dla maksymalnej czytelności.
+- Układ ikon jest responsywny i zachowuje czytelność na mobile.

@@ -1,0 +1,8 @@
+Zaprojektowani Suite 2.2.741
+
+/logo-branding-katowice/
+- Sekcja pakietów przeniesiona dużo wyżej: po manifesto „Najpierw charakter. Potem znak.” i przed case study/portfolio.
+- Zdjęcia Stanisława, Marty i Mateusza podniesione o ok. 50–60 px, żeby nie zasłaniały nazw i cen pakietów.
+- Zachowane duże sylwetki, miękkie wtopienie i reveal.
+- Zmniejszony pionowy padding sekcji pakietów, żeby ceny i CTA były widoczne szybciej.
+- RWD skorygowane osobno dla desktop/tablet/mobile.

@@ -1,0 +1,7 @@
+Zaprojektowani Suite 2.2.723
+
+Sekcja Realizacje — poprawki hero:
+- usunięto kwadratową/boxową otoczkę wokół zdjęcia zespołu,
+- zwiększono zdjęcie po prawej stronie hero,
+- dodano efekt lekkiego wyjścia zdjęcia poza dolną linię hero w stronę kart poniżej,
+- dopracowano proporcje i spacing na desktopie, tablecie i mobile.

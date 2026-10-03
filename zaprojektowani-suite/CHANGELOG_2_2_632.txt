@@ -1,0 +1,6 @@
+Zaprojektowani Suite 2.2.632
+
+- Studio Wyceny: grafiki w każdej karcie wyboru usługi delikatnie unoszą się (float).
+- Grafiki korzystają z object-fit: contain i bezpiecznych wewnętrznych odstępów, dzięki czemu nie są ucinane od góry ani od dołu.
+- Osobne dopasowanie rozmiaru i odstępów dla urządzeń mobilnych.
+- Obsługa prefers-reduced-motion.

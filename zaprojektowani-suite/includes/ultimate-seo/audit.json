@@ -1,0 +1,302 @@
+{
+  "domain": "zaprojektowani.com",
+  "audit_date": "2026-09-13",
+  "routes": [
+    {
+      "source": "/wiedza/strona-internetowa-a-konwersja-co-naprawde-ma-znaczenie/",
+      "target": "/ux-cro-analityka/strona-internetowa-a-konwersja/",
+      "reason": "Odpowiednik artykułu / kategorii ustalony z publicznego WordPress REST API."
+    },
+    {
+      "source": "/wiedza/strona-internetowa-czy-lokalna-agencja-ma-znaczenie/",
+      "target": "/strony-www/lokalna-agencja-strony-internetowe/",
+      "reason": "Odpowiednik artykułu / kategorii ustalony z publicznego WordPress REST API."
+    },
+    {
+      "source": "/wiedza/ile-kosztuje-reklama-na-facebooku-dla-firmy-widelki/",
+      "target": "/meta-ads/ile-kosztuje-reklama-na-facebooku/",
+      "reason": "Odpowiednik artykułu / kategorii ustalony z publicznego WordPress REST API."
+    },
+    {
+      "source": "/wiedza/reklama-na-instagramie-a-facebook-ads-roznice/",
+      "target": "/meta-ads/reklama-na-instagramie-a-facebook-ads/",
+      "reason": "Odpowiednik artykułu / kategorii ustalony z publicznego WordPress REST API."
+    },
+    {
+      "source": "/wiedza/branding-firmy-od-podstaw-kiedy-jest-potrzebny-sygnaly/",
+      "target": "/logo-branding/branding-firmy-od-podstaw/",
+      "reason": "Odpowiednik artykułu / kategorii ustalony z publicznego WordPress REST API."
+    },
+    {
+      "source": "/wiedza/strona-internetowa-dla-malej-firmy-elementy-konieczne/",
+      "target": "/strony-www/strona-internetowa-dla-malej-firmy/",
+      "reason": "Odpowiednik artykułu / kategorii ustalony z publicznego WordPress REST API."
+    },
+    {
+      "source": "/wiedza/identyfikacja-wizualna-firmy-co-powinna-zawierac/",
+      "target": "/logo-branding/identyfikacja-wizualna-firmy/",
+      "reason": "Odpowiednik artykułu / kategorii ustalony z publicznego WordPress REST API."
+    },
+    {
+      "source": "/wiedza/projekt-sklepu-internetowego-a-doswiadczenie-klienta-ux/",
+      "target": "/ux-cro-analityka/projektowanie-sklepu-internetowego-a-doswiadczenie-klienta/",
+      "reason": "Odpowiednik artykułu / kategorii ustalony z publicznego WordPress REST API."
+    },
+    {
+      "source": "/wiedza/rebranding-firmy-sygnaly-ze-logo-wymaga-zmiany/",
+      "target": "/logo-branding/rebranding-firmy/",
+      "reason": "Odpowiednik artykułu / kategorii ustalony z publicznego WordPress REST API."
+    },
+    {
+      "source": "/wiedza/jak-przygotowac-strone-pod-reklamy-facebook-instagram/",
+      "target": "/kampanie-reklamowe-meta-ads/jak-przygotowac-strone-pod-reklamy-facebook-i-instagram/",
+      "reason": "Odpowiednik artykułu / kategorii ustalony z publicznego WordPress REST API."
+    },
+    {
+      "source": "/wiedza/logo-a-branding-czym-roznia-sie-w-praktyce/",
+      "target": "/logo-branding/czym-rozni-sie-logo-od-brandingu/",
+      "reason": "Odpowiednik artykułu / kategorii ustalony z publicznego WordPress REST API."
+    },
+    {
+      "source": "/strony-internetowe-dla-salonow-beauty/",
+      "target": "",
+      "reason": "Brak potwierdzonej strony docelowej. Wskaż istniejącą stronę lub odtwórz brakującą treść."
+    },
+    {
+      "source": "/wiedza/kampanie-reklamowe-fb-i-instagram-najczestsze-bledy/",
+      "target": "/meta-ads/ampanie-reklamowe-facebook-i-instagram-najczestsze-bledy/",
+      "reason": "Odpowiednik artykułu / kategorii ustalony z publicznego WordPress REST API."
+    },
+    {
+      "source": "/wiedza/jak-przygotowac-strone-pod-reklany/",
+      "target": "/kampanie-reklamowe-meta-ads/jak-przygotowac-strone-pod-reklamy-facebook-i-instagram/",
+      "reason": "Odpowiednik artykułu / kategorii ustalony z publicznego WordPress REST API."
+    },
+    {
+      "source": "/wiedza/projektowanie-logo-a-wspolpraca-zdalna-proces-i-zasady/",
+      "target": "/logo-branding/projektowanie-logo-a-wspolpraca-zdalna/",
+      "reason": "Odpowiednik artykułu / kategorii ustalony z publicznego WordPress REST API."
+    },
+    {
+      "source": "/wiedza/kiedy-warto-zalozyc-sklep-woocommerce/",
+      "target": "/sklepy-internetowe/wiedza-kiedy-warto-zalozyc-sklep-woocommerce/",
+      "reason": "Odpowiednik artykułu / kategorii ustalony z publicznego WordPress REST API."
+    },
+    {
+      "source": "/logo-branding/logo-a-branding-czym-roznia-sie-w-praktyce/",
+      "target": "/logo-branding/czym-rozni-sie-logo-od-brandingu/",
+      "reason": "Odpowiednik artykułu / kategorii ustalony z publicznego WordPress REST API."
+    },
+    {
+      "source": "/sklepy-internetowe/kiedy-warto-zalozyc-sklep-woocommerce/",
+      "target": "/sklepy-internetowe/wiedza-kiedy-warto-zalozyc-sklep-woocommerce/",
+      "reason": "Odpowiednik artykułu / kategorii ustalony z publicznego WordPress REST API."
+    },
+    {
+      "source": "/strony-internetowe-dla-kancelarii/",
+      "target": "",
+      "reason": "Brak potwierdzonej strony docelowej. Wskaż istniejącą stronę lub odtwórz brakującą treść."
+    },
+    {
+      "source": "/wiedza/co-powinien-zawierac-sklep-przed-startem-reklamy/",
+      "target": "/sklepy-internetowe/co-powinien-zawierac-sklep-internetowy-przed-startem-reklamy/",
+      "reason": "Odpowiednik artykułu / kategorii ustalony z publicznego WordPress REST API."
+    },
+    {
+      "source": "/wiedza-logo-branding/logo-a-branding-czym-sie-roznia/",
+      "target": "/logo-branding/czym-rozni-sie-logo-od-brandingu/",
+      "reason": "Odpowiednik artykułu / kategorii ustalony z publicznego WordPress REST API."
+    },
+    {
+      "source": "/sklep-internetowy-dla-producenta/",
+      "target": "",
+      "reason": "Brak potwierdzonej strony docelowej. Wskaż istniejącą stronę lub odtwórz brakującą treść."
+    },
+    {
+      "source": "/strony-internetowe-dla-deweloperow/",
+      "target": "",
+      "reason": "Brak potwierdzonej strony docelowej. Wskaż istniejącą stronę lub odtwórz brakującą treść."
+    },
+    {
+      "source": "/wiedza/ksiega-znaku-czy-kazda-firma-jej-potrzebuje-kryteria/",
+      "target": "/logo-branding/ksiega-znaku/",
+      "reason": "Odpowiednik artykułu / kategorii ustalony z publicznego WordPress REST API."
+    },
+    {
+      "source": "/category/kampanie-meta-ads/",
+      "target": "/category/reklamy/",
+      "reason": "Końcowy adres istniejącego przekierowania /category/kampanie-reklamowe-meta-ads/ → /category/reklamy/, potwierdzony HTTP 200."
+    },
+    {
+      "source": "/wiedza/jak-wybrac-agencje-do-storzenia-strony-www/",
+      "target": "/seo-i-konwersja/jak-wybrac-agencje-do-stworzenia-strony-www/",
+      "reason": "Odpowiednik artykułu / kategorii ustalony z publicznego WordPress REST API."
+    },
+    {
+      "source": "/wiedza/jak-skrocic-formulaz-kontaktowy/",
+      "target": "/kampanie-reklamowe-meta-ads/jak-skrocic-formularz-kontaktowy-zeby-zwiekszyc-zapytania/",
+      "reason": "Odpowiednik artykułu / kategorii ustalony z publicznego WordPress REST API."
+    },
+    {
+      "source": "/category/seo/page/2/",
+      "target": "",
+      "reason": "Brak potwierdzonej strony docelowej. Wskaż istniejącą stronę lub odtwórz brakującą treść."
+    },
+    {
+      "source": "/category/strony-internetowe/page/3/",
+      "target": "",
+      "reason": "Brak potwierdzonej strony docelowej. Wskaż istniejącą stronę lub odtwórz brakującą treść."
+    },
+    {
+      "source": "/category/seo-i-konwersja/page/2/",
+      "target": "",
+      "reason": "Istniejące przekierowanie prowadzi do 404. Wymaga korekty reguły paginacji u źródła (wtyczka / serwer). Nie przekierowujemy automatycznie na pierwszą stronę."
+    }
+  ],
+  "resources": [
+    {
+      "source": "/wp-content/mu-plugins/assets/lucide.min.js",
+      "target": "/wp-content/plugins/zaprojektowani-suite/assets/js/vendor/lucide.min.js"
+    },
+    {
+      "source": "/zaprojektowani2/wp-content/web-font/lucide.min.js",
+      "target": "/wp-content/plugins/zaprojektowani-suite/assets/js/vendor/lucide.min.js"
+    },
+    {
+      "source": "/wp-content/uploads/2026/05/apartamentpiekna_strona-scaled.webp",
+      "target": ""
+    },
+    {
+      "source": "/wp-content/plugins/zaprojektowani-suite/assets/campaigns/apartament-logo.webp",
+      "target": ""
+    },
+    {
+      "source": "/wp-content/plugins/zaprojektowani-suite/assets/campaigns/mateusz-pointing.webp",
+      "target": ""
+    },
+    {
+      "source": "/wp-content/plugins/zaprojektowani-suite/assets/strony-internetowe/branza-prawnik.webp",
+      "target": ""
+    },
+    {
+      "source": "/wp-content/plugins/zaprojektowani-suite/assets/strony-internetowe/hero-laptop.webp",
+      "target": ""
+    },
+    {
+      "source": "/wp-content/plugins/zaprojektowani-suite/assets/strony-internetowe/tech-wordpress.svg",
+      "target": ""
+    },
+    {
+      "source": "/wp-content/uploads/2026/05/kiedy-warto-zalozyc-sklep-2-scaled.webp",
+      "target": "/wp-content/uploads/2026/05/kiedy-warto-zalozyc-sklep-2.webp"
+    },
+    {
+      "source": "/wp-content/uploads/2026/05/kiedy-warto-zalozyc-sklep-3-scaled.webp",
+      "target": "/wp-content/uploads/2026/05/kiedy-warto-zalozyc-sklep-3.webp"
+    }
+  ],
+  "css": [
+    "/wp-content/uploads/elementor/css/post-1446.css",
+    "/wp-content/uploads/elementor/css/post-1448.css",
+    "/wp-content/uploads/elementor/css/post-1671.css",
+    "/wp-content/uploads/elementor/css/post-1684.css",
+    "/wp-content/uploads/elementor/css/post-1800.css",
+    "/wp-content/uploads/elementor/css/post-1809.css",
+    "/wp-content/uploads/elementor/css/post-1818.css",
+    "/wp-content/uploads/elementor/css/post-1828.css",
+    "/wp-content/uploads/elementor/css/post-1837.css",
+    "/wp-content/uploads/elementor/css/post-1845.css",
+    "/wp-content/uploads/elementor/css/post-1919.css",
+    "/wp-content/uploads/elementor/css/post-1986.css",
+    "/wp-content/uploads/elementor/css/post-2010.css",
+    "/wp-content/uploads/elementor/css/post-2037.css",
+    "/wp-content/uploads/elementor/css/post-2049.css",
+    "/wp-content/uploads/elementor/css/post-2073.css",
+    "/wp-content/uploads/elementor/css/post-2086.css",
+    "/wp-content/uploads/elementor/css/post-2095.css",
+    "/wp-content/uploads/elementor/css/post-2104.css",
+    "/wp-content/uploads/elementor/css/post-2114.css",
+    "/wp-content/uploads/elementor/css/post-2120.css",
+    "/wp-content/uploads/elementor/css/post-2133.css",
+    "/wp-content/uploads/elementor/css/post-2140.css",
+    "/wp-content/uploads/elementor/css/post-2150.css",
+    "/wp-content/uploads/elementor/css/post-2156.css",
+    "/wp-content/uploads/elementor/css/post-2416.css",
+    "/wp-content/uploads/elementor/css/post-2424.css",
+    "/wp-content/uploads/elementor/css/post-2436.css",
+    "/wp-content/uploads/elementor/css/post-2445.css",
+    "/wp-content/uploads/elementor/css/post-2454.css",
+    "/wp-content/uploads/elementor/css/post-2464.css",
+    "/wp-content/uploads/elementor/css/post-2470.css",
+    "/wp-content/uploads/elementor/css/post-2479.css",
+    "/wp-content/uploads/elementor/css/post-2484.css",
+    "/wp-content/uploads/elementor/css/post-2492.css",
+    "/wp-content/uploads/elementor/css/post-2500.css",
+    "/wp-content/uploads/elementor/css/post-2508.css",
+    "/wp-content/uploads/elementor/css/post-2530.css",
+    "/wp-content/uploads/elementor/css/post-2539.css",
+    "/wp-content/uploads/elementor/css/post-2550.css",
+    "/wp-content/uploads/elementor/css/post-2564.css",
+    "/wp-content/uploads/elementor/css/post-2573.css",
+    "/wp-content/uploads/elementor/css/post-2580.css",
+    "/wp-content/uploads/elementor/css/post-2589.css",
+    "/wp-content/uploads/elementor/css/post-2684.css",
+    "/wp-content/uploads/elementor/css/post-2690.css",
+    "/wp-content/uploads/elementor/css/post-2698.css",
+    "/wp-content/uploads/elementor/css/post-2706.css",
+    "/wp-content/uploads/elementor/css/post-2714.css",
+    "/wp-content/uploads/elementor/css/post-2722.css",
+    "/wp-content/uploads/elementor/css/post-2794.css",
+    "/wp-content/uploads/elementor/css/post-2803.css",
+    "/wp-content/uploads/elementor/css/post-2812.css",
+    "/wp-content/uploads/elementor/css/post-2818.css",
+    "/wp-content/uploads/elementor/css/post-2828.css",
+    "/wp-content/uploads/elementor/css/post-2838.css",
+    "/wp-content/uploads/elementor/css/post-2844.css",
+    "/wp-content/uploads/elementor/css/post-2852.css",
+    "/wp-content/uploads/elementor/css/post-2860.css",
+    "/wp-content/uploads/elementor/css/post-2870.css",
+    "/wp-content/uploads/elementor/css/post-2878.css",
+    "/wp-content/uploads/elementor/css/post-2884.css",
+    "/wp-content/uploads/elementor/css/post-2892.css",
+    "/wp-content/uploads/elementor/css/post-2902.css",
+    "/wp-content/uploads/elementor/css/post-2908.css",
+    "/wp-content/uploads/elementor/css/post-3145.css",
+    "/wp-content/uploads/elementor/css/post-3154.css",
+    "/wp-content/uploads/elementor/css/post-3185.css",
+    "/wp-content/uploads/elementor/css/post-3193.css",
+    "/wp-content/uploads/elementor/css/post-3202.css",
+    "/wp-content/uploads/elementor/css/post-3336.css",
+    "/wp-content/uploads/elementor/css/post-3344.css",
+    "/wp-content/uploads/elementor/css/post-3352.css",
+    "/wp-content/uploads/elementor/css/post-3360.css",
+    "/wp-content/uploads/elementor/css/post-3368.css",
+    "/wp-content/uploads/elementor/css/post-3376.css",
+    "/wp-content/uploads/elementor/css/post-3384.css",
+    "/wp-content/uploads/elementor/css/post-3392.css",
+    "/wp-content/uploads/elementor/css/post-3400.css",
+    "/wp-content/uploads/elementor/css/post-3408.css",
+    "/wp-content/uploads/elementor/css/post-3774.css",
+    "/wp-content/uploads/elementor/css/post-3904.css",
+    "/wp-content/uploads/elementor/css/post-3912.css",
+    "/wp-content/uploads/elementor/css/post-3920.css",
+    "/wp-content/uploads/elementor/css/post-3928.css",
+    "/wp-content/uploads/elementor/css/post-4541.css",
+    "/wp-content/uploads/elementor/css/post-4551.css",
+    "/wp-content/uploads/elementor/css/post-4594.css",
+    "/wp-content/uploads/elementor/css/post-4612.css",
+    "/wp-content/uploads/elementor/css/post-4621.css",
+    "/wp-content/uploads/elementor/css/post-4630.css",
+    "/wp-content/uploads/elementor/css/post-744.css",
+    "/wp-content/uploads/elementor/css/post-935.css"
+  ],
+  "images": [
+    "/wp-content/uploads/2026/09/polerstone_realizacja.png",
+    "/wp-content/uploads/2026/09/swiatgrili_realizacja.png",
+    "/wp-content/uploads/2026/09/polerstone_realizacja-scaled.png",
+    "/wp-content/uploads/2026/09/ChatGPT-Image-Sep-6-2026-04_30_51-PM.png",
+    "/wp-content/uploads/2026/09/ChatGPT-Image-Sep-6-2026-02_52_13-PM.png",
+    "/wp-content/uploads/2026/09/ChatGPT-Image-Sep-6-2026-04_30_47-PM.png",
+    "/wp-content/uploads/2026/09/ChatGPT-Image-Sep-6-2026-04_34_02-PM.png"
+  ]
+}

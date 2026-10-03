@@ -1,0 +1,10 @@
+2.2.759 — Studio Wyceny / pełna izolacja iframe
+
+- Pierwszy ekran Studio Wyceny v19 działa teraz w osobnym dokumencie iframe.
+- CSS Elementora, motywu i starego konfiguratora nie przenika do ekranu wyboru.
+- Wygląd, fonty, breakpointy i animacje pochodzą bezpośrednio z zaakceptowanego pliku v19.
+- Iframe wychodzi do pełnej szerokości viewportu nawet wewnątrz kontenera Elementora.
+- Automatyczna wysokość iframe przez postMessage + ResizeObserver.
+- Kliknięcie karty wysyła bezpieczny komunikat do rodzica i otwiera istniejący brief.
+- Powrót do wyboru ponownie pokazuje iframe.
+- Grafiki web/shop są byte-identical względem zaakceptowanego HTML, ale ładowane jako lokalne assety zamiast base64.

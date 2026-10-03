@@ -1,0 +1,8 @@
+ZAPROJEKTOWANI SUITE 2.2.691
+
+Strony internetowe Katowice — poprawki po optymalizacji:
+- przywrócono czytelne pionowe i poziome dividers między logotypami w sekcji „Zaufali nam”,
+- powiększono i ponownie swobodnie osadzono zdjęcie zespołu w sekcji „Zaufali nam” na desktopie, tablecie i mobile,
+- przywrócono spójną typografię Plus Jakarta Sans w przyciskach portfolio,
+- zachowano poprawki FOUC i optymalizacje Lighthouse z wersji 2.2.690,
+- podbito wersję assetów i cache do 2.2.691.

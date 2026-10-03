@@ -1,0 +1,8 @@
+Zaprojektowani Suite 2.2.771
+
+- Wiedza: karty na stronie głównej /wiedza/ nie korzystają już z ręcznego pola „Zajawka”.
+- Kategorie bloga: zajawki są generowane z pierwszego sensownego akapitu treści artykułu.
+- Pomijane są m.in. „Ostatnia aktualizacja”, daty, zduplikowany tytuł i krótkie techniczne wstawki.
+- Krótkie akapity mogą być łączone, a tekst jest domykany do pełnego zdania, gdy to możliwe.
+- Zwiększono długość zajawki w głównych kartach Wiedzy i archiwach kategorii.
+- Podbicie wersji czyści cache indeksu Wiedzy.

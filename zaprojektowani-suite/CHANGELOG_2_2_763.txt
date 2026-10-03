@@ -1,0 +1,6 @@
+2.2.763 — Studio Wyceny / mobile offset + neutral pointer hover
+
+- mobile: cały izolowany widget podniesiony o 20 px (biały shell 150 px -> 130 px)
+- desktop: animacja hand pointera nie zmienia już tła nieaktywnej karty na niebieskawe
+- demo pointer nadal unosi kartę i daje delikatny neutralny cień, ale bez efektu „pół niebieskiej” karty
+- bez zmian w iframe isolation, fontach, wyborze usług i dalszym konfiguratorze

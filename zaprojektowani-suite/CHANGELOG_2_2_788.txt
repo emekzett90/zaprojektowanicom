@@ -1,0 +1,20 @@
+Zaprojektowani Suite 2.2.788 — Home hero: kaskada liter płynna na desktopie i działająca na mobile
+
+Problem w 2.2.787
+- Desktop: przy ładowaniu hero animacja lagowała. Chrome nie przyspiesza sprzętowo animacji filter:blur, więc 52 litery z rozmyciem i gradientem były przerysowywane co klatkę na głównym wątku, który w tym czasie ładuje też Spline (test: przerwy między klatkami do 450–570 ms, wszystkie animacje „nie-kompozytowane”).
+- Mobile: efektu nie było widać. Zegar animacji startował w momencie parsowania HTML, a telefon rysował pierwszą klatkę dużo później. Do tego do DOMContentLoaded cały hero ma opacity .001 (loader Suite), więc kaskada kończyła się, zanim hero był widoczny. Przy pierwszej wizycie tytuł zasłaniał też baner zgód.
+- Po kaskadzie ponownie odtwarzało się stare wejście tytułu (zhRise: fade + 26 px w górę).
+
+Zmiany (includes/front-fixes-308.php)
+- Animacja wyłącznie na opacity warstw GPU (compositor): rozmycie→ostrość to przenikanie dwóch warstw tej samej litery (rozmytej i ostrej), więc płynne 60 fps nawet przy zajętym głównym wątku. Krzywe odwzorowują oryginalne wejście (cubic-bezier(.2,.7,.2,1), 0,8 s, co 17 ms).
+- Start dopiero, gdy: strona się narysowała (IntersectionObserver), font tytułu jest załadowany (max 2,5 s czekania), tytuł jest w kadrze, hero jest faktycznie widoczny (loader/reveal Suite) i baner zgód nie zasłania tytułu (#zp-cookiebot-banner / #CybotCookiebotDialog, >40% pokrycia). Jeśli baner pojawi się w trakcie, kaskada zaczyna od nowa po jego zamknięciu.
+- Litery jako inline-block w słowach bez łamania, łamania linii zablokowane w miejscach oryginalnych, kerning wyrównany z pomiaru oryginalnego tekstu. Po kaskadzie tytuł wraca do oryginalnego HTML bez przesunięcia (weryfikacja ≤ 1 px na każdą literę; jeśli się nie zgadza, efekt jest pomijany i tytuł pokazuje się normalnie).
+- Po kaskadzie tytuł zostaje w stanie końcowym (klasa zh__title--lettersdone) — bez ponownego zhRise.
+- Preload kroju 500 Plus Jakarta Sans (tego używa H1 przy wadze 480; wcześniej preload był tylko dla 400/600/700) — tylko na stronie głównej, tylko jeśli plik istnieje.
+- EN, SEO, prefers-reduced-motion, rotator „Projektujemy …”: bez zmian względem 2.2.787.
+
+Wydajność
+- Skrypt inline ~10 KB, uruchomienie ~1 ms. Jednorazowe zbudowanie liter ~25–35 ms na telefonie (pomiar 84–153 ms przy 4× spowolnionym CPU), po narysowaniu strony, gdy tytuł jest jeszcze ukryty. Sama animacja nie obciąża głównego wątku.
+- Diagnostyka: jeśli efekt się nie uruchomi, powód jest w window.__zpLettersWhy (konsola).
+
+Po instalacji wyczyścić cache strony/CDN.

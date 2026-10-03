@@ -1,0 +1,12 @@
+<?php
+/**
+ * v2.2.472 — Logo & branding mobile hero polish: kicker parity, card position/shape, image size and bottom branding watermark.
+ */
+if (!defined('ABSPATH')) { exit; }
+
+add_action('wp_head', function () {
+  if (is_admin()) { return; }
+  ?>
+  <style id="zp-suite-281-logo-mobile-polish-final">@media (max-width:760px){html body #zpBrandHeroMobileKat .zpWebHeroKat__eyebrow{font-size:9px!important;line-height:1.1!important;font-weight:700!important;letter-spacing:.13em!important;gap:12px!important;margin:0 0 15px!important}html body #zpBrandHeroMobileKat .zpWebHeroKat__eyebrow::before{width:24px!important;flex:0 0 24px!important;flex-basis:24px!important}html body #zpBrandHeroMobileKat .zpBrandHeroMobileKat__mock,html body #zpBrandHeroMobileKat img.zpBrandHeroMobileKat__mock{content:url('https://zaprojektowani.com/wp-content/uploads/2026/05/zaprojektowani_logo_branding_zaufali_widget_alt_premium.webp')!important;width:134vw!important;min-width:134vw!important;max-width:none!important;height:auto!important;object-fit:contain!important;object-position:center top!important;image-rendering:auto!important}html body #zpBrandHeroMobileKat .zpWebHeroKat__pill{font-size:10px!important;letter-spacing:-.018em!important}html body #zpBrandHeroMobileKat .zpBrandHeroMobileKat__miniCard{top:374px!important;left:22px!important;width:min(258px,calc(100vw - 76px))!important;max-width:calc(100vw - 76px)!important;min-height:230px!important;height:auto!important;padding:16px!important;border-radius:22px!important}html body #zpBrandHeroMobileKat .zpBrandHeroMobileKat__miniCard::after{content:none!important;display:none!important}html body #zpBrandHeroMobileKat .zpBrandHeroMobileKat__miniCard strong{font-size:18px!important;line-height:1.08!important}html body #zpBrandHeroMobileKat .zpBrandHeroMobileKat__miniCard p{font-size:11px!important;line-height:1.46!important}html body #zpBrandHeroMobileKat .zpWebHeroKat__miniTop span{font-size:8.5px!important;letter-spacing:.13em!important}html body #zpBrandHeroMobileKat .zpWebHeroKat__visual::after{content:"BRANDING"!important;position:absolute!important;right:-10px!important;bottom:54px!important;z-index:3!important;font-size:58px!important;line-height:.78!important;font-weight:900!important;letter-spacing:-.085em!important;color:rgba(255,255,255,.045)!important;pointer-events:none!important;white-space:nowrap!important}html body #zpBrandHeroMobileKat .zpWebHeroKat__breadcrumbs--mobile{z-index:9!important}}</style>
+  <?php
+}, PHP_INT_MAX);

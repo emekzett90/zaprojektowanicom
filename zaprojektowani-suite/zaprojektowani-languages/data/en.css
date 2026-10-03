@@ -1,0 +1,60 @@
+@charset "UTF-8";
+html[lang^="en"][data-zpl-page="p-b728f27768b1"] .manifesto::before{content:"campaigns"}
+html[lang^="en"][data-zpl-page="p-b728f27768b1"] .ad-showcase::before{content:"formats"}
+html[lang^="en"][data-zpl-page="p-b728f27768b1"] .packages::before,html[lang^="en"][data-zpl-page="p-f9e1bbbbc6e3"] .packages::before{content:"choose a start"}
+@media (max-width:760px){html[lang^="en"] body .zpContactSystemLight__tab[data-contact-tab="form"] strong::after{content:"Contact\A form"}}
+@media (max-width:760px){html[lang^="en"] body .zpContactSystemLight__tab[data-contact-tab="phone"] strong::after{content:"Call\A me"}}
+@media (max-width:760px){html[lang^="en"] body .zpContactSystemLight__tab[data-contact-tab="whatsapp"] strong::after{content:"WhatsApp\A chat"}}
+@media (max-width:980px){html[lang^="en"] body .zpContactSystemLight .zpContactSystemLight__tab[data-contact-tab="form"] strong::after{content:"Contact\A form"!important}}
+@media (max-width:980px){html[lang^="en"] body .zpContactSystemLight .zpContactSystemLight__tab[data-contact-tab="phone"] strong::after{content:"Call\A me"!important}}
+@media (max-width:980px){html[lang^="en"] body .zpContactSystemLight .zpContactSystemLight__tab[data-contact-tab="whatsapp"] strong::after{content:"WhatsApp\A chat"!important}}
+@media (max-width:1100px){html[lang^="en"] body .zpContactSystemLight .zpContactSystemLight__tabs > .zpContactSystemLight__tab[data-contact-tab="form"] > strong::after{content:"Contact\A form"!important}}
+@media (max-width:1100px){html[lang^="en"] body .zpContactSystemLight .zpContactSystemLight__tabs > .zpContactSystemLight__tab[data-contact-tab="phone"] > strong::after{content:"Call\A me"!important}}
+@media (max-width:1100px){html[lang^="en"] body .zpContactSystemLight .zpContactSystemLight__tabs > .zpContactSystemLight__tab[data-contact-tab="whatsapp"] > strong::after{content:"WhatsApp\A chat"!important}}
+@media (max-width:980px){html[lang^="en"] body .zpContactSystemLight .zpContactSystemLight__tab[data-contact-tab="form"] strong::after,html[lang^="en"] body #zp-sklepy-internetowe-katowice .zpContactSystemLight .zpContactSystemLight__tab[data-contact-tab="form"] strong::after,html[lang^="en"] body #zp-strony-internetowe-katowice .zpContactSystemLight .zpContactSystemLight__tab[data-contact-tab="form"] strong::after,html[lang^="en"] body #zpStronyKatowice .zpContactSystemLight .zpContactSystemLight__tab[data-contact-tab="form"] strong::after{content:"Contact\A form"!important}}
+@media (max-width:980px){html[lang^="en"] body .zpContactSystemLight .zpContactSystemLight__tab[data-contact-tab="phone"] strong::after,html[lang^="en"] body #zp-sklepy-internetowe-katowice .zpContactSystemLight .zpContactSystemLight__tab[data-contact-tab="phone"] strong::after,html[lang^="en"] body #zp-strony-internetowe-katowice .zpContactSystemLight .zpContactSystemLight__tab[data-contact-tab="phone"] strong::after,html[lang^="en"] body #zpStronyKatowice .zpContactSystemLight .zpContactSystemLight__tab[data-contact-tab="phone"] strong::after{content:"Call me back"!important}}
+@media (max-width:760px){html[lang^="en"] body .zpContactSystemLight .zpContactSystemLight__tab[data-contact-tab="form"] > strong::after,html[lang^="en"] body #zp-sklepy-internetowe-katowice .zpContactSystemLight .zpContactSystemLight__tab[data-contact-tab="form"] > strong::after,html[lang^="en"] body #zp-strony-internetowe-katowice .zpContactSystemLight .zpContactSystemLight__tab[data-contact-tab="form"] > strong::after,html[lang^="en"] body #zpStronyKatowice .zpContactSystemLight .zpContactSystemLight__tab[data-contact-tab="form"] > strong::after{content:"Contact\A form"!important}}
+@media (max-width:760px){html[lang^="en"] body .zpContactSystemLight .zpContactSystemLight__tab[data-contact-tab="phone"] > strong::after,html[lang^="en"] body #zp-sklepy-internetowe-katowice .zpContactSystemLight .zpContactSystemLight__tab[data-contact-tab="phone"] > strong::after,html[lang^="en"] body #zp-strony-internetowe-katowice .zpContactSystemLight .zpContactSystemLight__tab[data-contact-tab="phone"] > strong::after,html[lang^="en"] body #zpStronyKatowice .zpContactSystemLight .zpContactSystemLight__tab[data-contact-tab="phone"] > strong::after{content:"Call me back"!important}}
+html[lang^="en"][data-zpl-page="p-7e7216fb96b1"] .manifesto::before{content:"brand"}
+html[lang^="en"][data-zpl-page="p-7e7216fb96b1"] .mark-preview::after{content:"primary version  /  negative  /  mono"}
+html[lang^="en"][data-zpl-page="p-7e7216fb96b1"] .dialog-media::after{content:"Zoom in ↗"}
+html[lang^="en"][data-zpl-page="p-7e7216fb96b1"] .local::before,html[lang^="en"][data-zpl-page="p-f9e1bbbbc6e3"] .local::before{content:"poland"}
+html[lang^="en"][data-zpl-page="p-7e7216fb96b1"] .faq::before{content:"questions"}
+html[lang^="en"][data-zpl-page="p-7e7216fb96b1"] .callback-section::before{content:"contact"}
+html[lang^="en"][data-zpl-page="p-f9e1bbbbc6e3"] .manifesto::before{content:"websites"}
+@media (min-width:981px){html[lang^="en"] body #zpShowcaseServices .zpSSSignature__sign:empty::before,html[lang^="en"] body .zpShowcaseServices .zpSSSignature__sign:empty::before{content:"Zaprojektowani team"}}
+@media (max-width:760px){html[lang^="en"] body .zpContactSystemLight .zpContactSystemLight__tab[data-contact-tab="form"] > strong::after,html[lang^="en"] body .zpContactSystemLight__tab[data-contact-tab="form"] > strong::after{content:"Contact\A form"!important}}
+@media (max-width:760px){html[lang^="en"] body .zpContactSystemLight .zpContactSystemLight__tab[data-contact-tab="phone"] > strong::after,html[lang^="en"] body .zpContactSystemLight__tab[data-contact-tab="phone"] > strong::after{content:"Call\A me"!important}}
+@media (max-width:760px){html[lang^="en"] body .zpContactSystemLight .zpContactSystemLight__tab[data-contact-tab="whatsapp"] > strong::after,html[lang^="en"] body .zpContactSystemLight__tab[data-contact-tab="whatsapp"] > strong::after{content:"WhatsApp\A chat"!important}}
+@media (max-width:980px){html[lang^="en"] body section#zpContactSystemLight.zpContactSystemLight .zpContactSystemLight__grid::before,html[lang^="en"] body .zpContactSystemLight[data-zp-contact-system-light] .zpContactSystemLight__grid::before{content:"Swipe right →"}}
+html[lang^="en"][data-zpl-page="p-beb3d76fe24d"] .zpCaseStudy .zpRelatedGrid a:after,html[lang^="en"][data-zpl-page="p-ae84e49c6651"] .zpCaseStudy .zpRelatedGrid a:after,html[lang^="en"][data-zpl-page="p-4c496cc52e7e"] .zpCaseStudy .zpRelatedGrid a:after,html[lang^="en"][data-zpl-page="p-2284404dcf5d"] .zpCaseStudy .zpRelatedGrid a:after,html[lang^="en"][data-zpl-page="p-1222f9317e51"] .zpCaseStudy .zpRelatedGrid a:after,html[lang^="en"][data-zpl-page="p-e0f57735275a"] .zpCaseStudy .zpRelatedGrid a:after,html[lang^="en"][data-zpl-page="p-9de3e26a3b56"] .zpCaseStudy .zpRelatedGrid a:after,html[lang^="en"][data-zpl-page="p-2e20f7cc0446"] .zpCaseStudy .zpRelatedGrid a:after,html[lang^="en"][data-zpl-page="p-fbcd832983e4"] .zpCaseStudy .zpRelatedGrid a:after,html[lang^="en"][data-zpl-page="p-d903a69ee52d"] .zpCaseStudy .zpRelatedGrid a:after,html[lang^="en"][data-zpl-page="p-ebc92ed8d0fa"] .zpCaseStudy .zpRelatedGrid a:after{content:"Read the guide ↗"}
+html[lang^="en"][data-zpl-page="p-5efe2d2bd0c8"] .zpArticleNewCTA::after,html[lang^="en"][data-zpl-page="p-9225455668a3"] .zpArticleNewCTA::after,html[lang^="en"][data-zpl-page="p-63e53cd71cb8"] .zpArticleNewCTA::after,html[lang^="en"][data-zpl-page="p-fbac6800c808"] .zpArticleNewCTA::after,html[lang^="en"][data-zpl-page="p-d17ce269bf01"] .zpArticleNewCTA::after{content:"website"}
+html[lang^="en"][data-zpl-page="p-619fb8601f07"] .zpArticleNewCTA::after{content:"ads"}
+html[lang^="en"][data-zpl-page="p-50cf0d3e923c"] .zpArticleNewCTA::after{content:"leads"}
+html[lang^="en"][data-zpl-page="p-1a37f916a1a8"] .zpArticleNewCTA::after,html[lang^="en"][data-zpl-page="p-c948ad857237"] .zpArticleNewCTA::after{content:"agency"}
+html[lang^="en"][data-zpl-page="p-2c3c1aa15e55"] .zpArticleNewCTA::after{content:"construction"}
+html[lang^="en"][data-zpl-page="p-37c2ec6c0d4e"] .zpArticleNewCTA:after{content:"quote"}
+html[lang^="en"][data-zpl-page="p-2bcc455f69ba"] .zpArticleNewCTA::after{content:"sales"}
+html[lang^="en"][data-zpl-page="p-6066d52cde79"] .zpArticleNewCTA::after{content:"guidelines"}
+html[lang^="en"][data-zpl-page="p-e27d481918be"] .zpArticleNewCTA::after{content:"rebuild"}
+html[lang^="en"][data-zpl-page="p-325964ee001c"] .zpArticleNewCTA::after{content:"mistakes"}
+html[lang^="en"][data-zpl-page="p-23e9594fc8ab"] .zpArticleNewCTA::after{content:"analytics"}
+html[lang^="en"][data-zpl-page="p-6f962b7c2659"] .zpArticleNewCTA::after{content:"cost"}
+html[lang^="en"][data-zpl-page="p-fc330317a399"] .zpArticleNewCTA::after{content:"small business"}
+html[lang^="en"][data-zpl-page="p-ae31c967a802"] .zpArticleNewCTA::after{content:"poland"}
+html[lang^="en"][data-zpl-page="p-e4cc3b0ede10"] .zpArticleNewCTA::after{content:"conversion"}
+html[lang^="en"][data-zpl-page="p-cade41606339"] .zpArticleNewCTA::after{content:"price"}
+html[lang^="en"][data-zpl-page="p-217b3349b1f5"] .zpArticleNewCTA::after{content:"local seo"}
+html[lang^="en"][data-zpl-page="p-93a3db4c590d"] .zpArticleNewCTA::after,html[lang^="en"][data-zpl-page="p-ca8a6d11f7a7"] .zpArticleNewCTA::after{content:"audit"}
+html[lang^="en"][data-zpl-page="p-5532f2d10bec"] .zpArticleNewCTA::after,html[lang^="en"][data-zpl-page="p-b02d959ba28f"] .zpArticleNewCTA::after{content:"brand book"}
+html[lang^="en"][data-zpl-page="p-0339914e7a67"] .zpArticleNewCTA::after{content:"offer"}
+html[lang^="en"][data-zpl-page="p-72e359f3a11f"] .zpArticleNewCTA::after{content:"form"}
+html[lang^="en"][data-zpl-page="p-bfe56da81c5b"] .zpArticleNewCTA::after{content:"process"}
+html[lang^="en"][data-zpl-page="p-6a9c9b87829f"] .zpArticleNewCTA::after,html[lang^="en"][data-zpl-page="p-732d7f9e3fe5"] .zpArticleNewCTA::after{content:"quote"}
+@media (max-width:760px){html[lang^="en"][data-zpl-page="p-6666cd76f969"] .zpShowcaseWhite__hint span::before{content:"Swipe the cards right"}}
+html[lang^="en"][data-zpl-page="p-8fe007fa9717"] #zpbsUltimate .zpbsTermCard[data-term-key="turbo"]::after{content:"FASTEST"!important}
+@media(max-width:780px){html[lang^="en"][data-zpl-page="p-8fe007fa9717"] body.zpbs-studio-page #zpbsUltimate .zpbsPackages::before{content:"Choose a package ↓"!important}}
+html[lang^="en"][data-zpl-page="p-39ece314e5be"] body #zpKnowledgePro .zpKBTopPicks__head::before{content:"insights"!important}
+html[lang^="en"][data-zpl-page="p-c5f18b488a4f"] .zpThankLogo__side:before{content:"summary"}
+html[lang^="en"][data-zpl-page="p-7b659fe4f386"] .zpThankWww__side:before{content:"summary"}
+html[lang^="en"][data-zpl-page="p-92a41229cfe0"] .zpThankShop__side:before{content:"summary"}

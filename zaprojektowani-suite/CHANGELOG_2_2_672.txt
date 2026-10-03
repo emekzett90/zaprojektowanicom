@@ -1,0 +1,7 @@
+ZAPROJEKTOWANI SUITE 2.2.672
+
+- FAQ: domyślna maksymalna szerokość całego modułu ustawiona na 1750 px.
+- FAQ: przyciski CTA otrzymały spójny navy gradient na hover zamiast jasnych lub różowych stanów.
+- FAQ: filtry kategorii również używają navy gradientu na hover i w stanie aktywnym.
+- FAQ: poprawiono wewnętrzny grid dolnego CTA, aby wykorzystywał pełną szerokość kontenera.
+- Zachowano responsywność tabletową i mobilną oraz brak cieni i watermarków.

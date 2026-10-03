@@ -1,0 +1,19 @@
+Zaprojektowani Suite 2.2.787 — Home hero: kaskada liter w H1
+
+Cel
+- Eleganckie wejście nagłówka H1 na stronie głównej (wariant „Letters”) bez zmiany wyglądu tytułu, gradientu ani rotatora usług pod spodem.
+
+Zmiany
+- Nowy plik includes/front-fixes-308.php (CSS w wp_head na stronie głównej + skrypt inline wstrzykiwany zaraz po </h1> hero przez filtr do_shortcode_tag).
+- Litery H1 pojawiają się kaskadowo co 17 ms (tylko rozmycie → ostrość i przezroczystość, bez ruchu). Całość trwa ok. 1,7 s.
+- Dotychczasowe wejście całego tytułu (zhRise: blur + rise) jest na stronie głównej wyłączone na rzecz kaskady; poza stroną główną bez zmian.
+- Gradient wyróżnionych słów (.zh__grad) wygląda identycznie: na czas kaskady każda litera dostaje wycinek tego samego gradientu (wartości computed ze strony, clone per linia), a po kaskadzie H1 wraca do oryginalnego HTML i gradient maluje znów CSS strony.
+- Rotator „Projektujemy …” (zh__svcRot) nie jest ruszany i dalej zmienia usługi jak dotąd.
+- HTML wysyłany do przeglądarki (SEO, H1) bez zmian: litery są dzielone dopiero w JS i po ok. 1,7 s tytuł wraca do pierwotnej postaci.
+- Wersja EN: na czas kaskady H1 ma data-zpl-skip; start przełącznika PL/EN (pointerdown/keydown, klasa is-busy, zdarzenie zpl:change) natychmiast przywraca oryginalny HTML, więc tłumaczenie fragmentu H1 działa jak dotąd.
+- prefers-reduced-motion, ramki (Skaner EN) i brak JS: tytuł bez efektu, jak dotąd.
+- Kerning: jeśli przeglądarka nie kernuje przez granice spanów (WebKit), skrypt wyrównuje pary liter marginesami z pomiaru w canvas, żeby układ w trakcie kaskady był identyczny z układem po przywróceniu.
+
+Uwagi
+- Po instalacji wyczyścić cache strony/CDN.
+- Litery startują z opacity .01 (a nie 0), więc H1 jest od pierwszej klatki elementem malowanym dla LCP.

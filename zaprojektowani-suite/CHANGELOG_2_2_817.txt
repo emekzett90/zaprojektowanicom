@@ -1,0 +1,9 @@
+Zaprojektowani Suite 2.2.817
+
+- Przebudowano od zera mechanizm „Zobacz pełny zakres” na /strony-internetowe-katowice/.
+- Panel pełnego zakresu jest teraz przenoszony bezpośrednio do karty pakietu, dzięki czemu stare warstwy/z-index nie mogą go przykrywać.
+- Desktop: otwarcie po najechaniu na przycisk oraz kliknięciu; mobile/tablet: tapnięcie.
+- X i Escape zamykają panel, a klik poza przypiętym panelem również go zamyka.
+- Pełny zakres przykrywa całą kartę, ma własny scroll dla długiej listy i zachowuje CTA na dole.
+- Usunięto efekt wygaszania pozostałych kart podczas otwarcia zakresu.
+- Cache-bust i wersja wtyczki: 2.2.817.

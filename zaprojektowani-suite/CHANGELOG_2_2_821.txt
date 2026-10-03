@@ -1,0 +1,15 @@
+Zaprojektowani Suite 2.2.821
+
+Studio Wyceny — pełne zakresy pakietów:
+- /studio-wyceny/ pobiera teraz aktualne nazwy i zakresy pakietów z oferty Logo & Branding, Strony internetowe i Sklepy internetowe.
+- Zsynchronizowano nazwy WWW: Landing Page, Strona Starter, Strona Premium, Projekt indywidualny.
+- Zsynchronizowano sklepy: Sklep Startowy, Sklep Rozwojowy, Sklep Indywidualny.
+- Zsynchronizowano Branding: Logo Startowe 999 zł, Mini Branding 1499 zł, Branding Premium 2999 zł oraz aktualne zakresy.
+- Każda karta obsługiwanych pakietów pokazuje 6 najważniejszych elementów z subtelnymi ikonami Lucide.
+- Dodano przycisk „Zobacz pełny zakres” z liczbą elementów / możliwości.
+- Pełny zakres otwiera się wewnątrz karty jako czytelny panel z X, scrollem oraz CTA „Wybierz ten pakiet”.
+- Panel pełnego zakresu nie wybiera pakietu przypadkowo; dopiero CTA lub klik w kartę przechodzi do kolejnego kroku.
+- Branding Premium pokazuje aktualnie nielimitowane koncepcje i poprawki oraz pełną księgę znaku.
+- Strona Premium pokazuje nieograniczoną liczbę podstron i aktualny zakres 82 elementów.
+- Sklep Rozwojowy pokazuje aktualny zakres e-commerce obejmujący Merchant Center, tracking, SEO, kampanie i automatyzacje.
+- Dodatki brandingowe są blokowane, jeśli dany element znajduje się już w wybranym pakiecie.

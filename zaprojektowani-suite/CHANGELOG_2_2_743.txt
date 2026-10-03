@@ -1,0 +1,5 @@
+Zaprojektowani Suite 2.2.743
+
+- Mega menu „Usługi”: karta „Najczęściej wybierane” korzysta teraz z grafiki zgorecki_oferta.webp.
+- Zmiana działa zarówno w ciemnej, jak i jasnej wersji mega menu.
+- Zachowano istniejący gradient i hover karty dla czytelności tekstu.

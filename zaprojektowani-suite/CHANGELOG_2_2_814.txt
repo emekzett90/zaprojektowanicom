@@ -1,0 +1,10 @@
+ZAPROJEKTOWANI SUITE 2.2.814
+
+- Rozbudowano sekcję pakietów na /strony-internetowe-katowice/.
+- Landing Page, Strona Starter, Strona Premium i Projekt indywidualny mają teraz bogatsze listy zakresu na froncie.
+- Dodano subtelne ikony Lucide dopasowane do elementów zakresu.
+- Dodano interaktywny „Zobacz pełny zakres” z panelem na hover desktop / klik mobile.
+- Dodano X do zamykania panelu, obsługę Escape i kliknięcia poza panelem.
+- Premium otrzymał badge: SEO Ready / Ads Ready / Analytics Ready.
+- Pełne zakresy zawierają SEO, analitykę, UX/UI, copywriting, responsywność, wydajność i wdrożenie zgodnie z wybranym pakietem.
+- Wymuszono odświeżenie cache tej podstrony po aktualizacji.

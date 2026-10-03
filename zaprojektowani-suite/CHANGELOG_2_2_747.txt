@@ -1,0 +1,9 @@
+2.2.747 — O nas / premium team story
+
+- Pełny redesign podstrony /o-nas/
+- Hero z trzema osobami jako osobne warstwy
+- Osobne profile: Marta, Mateusz, Stanisław
+- Nowa sekcja zaufania / wyróżnień oparta na realnych danych, bez fikcyjnych nagród
+- Nowy proces pracy, historia, kompetencje 360° i CTA
+- Reveal na scrollu i subtelny floating zespołu
+- Plus Jakarta Sans, pełne RWD

@@ -1,0 +1,6 @@
+v2.2.731 — HOME H1 descender fix
+
+- Zachowano mniejszy H1 na stronie głównej (#zhHero).
+- Zwiększono minimalnie line-height w hero H1, aby nie ucinało dolnych ogonków liter.
+- Dodano bezpieczny dolny padding / overflow visible dla gradientowego fragmentu H1.
+- Naprawa problemu z przycięciem litery „g” w słowie „branding”.

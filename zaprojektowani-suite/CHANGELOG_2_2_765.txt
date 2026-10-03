@@ -1,0 +1,5 @@
+2.2.765 — Studio Wyceny / tighter mobile cards
+
+- mobile: skrócono minimalną wysokość kart usług z 790 px do 690 px,
+- dzięki temu przestrzeń pomiędzy opisem usługi a dolnymi pillami jest wyraźnie mniejsza (około połowę mniej pustego miejsca),
+- desktop, zdjęcia, typografia, animacja pointera i pozostały układ pozostają bez zmian.

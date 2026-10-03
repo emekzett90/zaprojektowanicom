@@ -1,0 +1,8 @@
+Zaprojektowani Suite 2.2.734
+
+- Baza: 2.2.733 katowice-h1-wider — zachowano poszerzony H1 na /strony-internetowe-katowice/.
+- Strona główna: dodano sekcję „Najczęściej wybierane” po sekcji „Zakres usług”.
+- Dodano 3 rekomendowane ścieżki: Mini Branding, Strona Premium / Sklep Rozwojowy oraz Standard Performance.
+- Dodano zdjęcia Marty, Mateusza i Stanisława z WordPress uploads, switcher Strona/Sklep oraz CTA do Studio Wyceny.
+- Dodano finalne poprawki kontrastu, hoverów, RWD i reveal animation z gałęzi 2.2.736.
+- Nie przenoszono zmian 2.2.736 dotyczących kart pakietów na podstronie /strony-internetowe-katowice/.

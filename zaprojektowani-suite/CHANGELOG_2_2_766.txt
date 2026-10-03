@@ -1,0 +1,4 @@
+2.2.766 — Studio Wyceny / desktop note position
+
+- Przesunięto napis „To zajmie około 2 minuty” na desktopie o 150 px w lewo.
+- Mobile pozostaje bez zmian.

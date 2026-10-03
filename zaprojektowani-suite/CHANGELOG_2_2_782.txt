@@ -1,0 +1,7 @@
+Zaprojektowani Suite 2.2.782
+
+- Dopracowano modal szczegółów portfolio brandingowego na stronie głównej: równe marginesy, spokojniejsza siatka, czytelna typografia i kwadratowa prezentacja projektu bez pionowego kadrowania.
+- Sekcja celu / kierunku / efektu otrzymała bardziej czytelny układ bez wąskich pionowych kolumn.
+- Dodano Natalia Arciszewska oraz Zgórecki Nieruchomości również do /realizacje/ wraz z pełnymi opisami, zakresem, efektami, narzędziami i wersją EN.
+- Brandingowe karty i modal na /realizacje/ pokazują kwadratowe artworki w całości zamiast je przycinać.
+- Wersja: 2.2.782.

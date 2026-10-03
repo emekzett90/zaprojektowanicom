@@ -1,0 +1,8 @@
+Zaprojektowani Suite 2.2.716
+
+- Wiedza: skrócony H1 i bardziej ekspercki lead hero.
+- Wiedza: prawa karta hero ma nowy komunikat bez sloganu „bez lania wody”.
+- Wiedza: łączne czytania animują się z separatorem tysięcy, np. 50,356.
+- Wiedza: usunięto dekoracyjny marquee logotypów narzędzi z dolnego paska.
+- Wiedza: w jego miejscu dodano crawlable „Szybkie ścieżki” do głównych klastrów tematycznych z realnymi licznikami wpisów.
+- Wiedza: dopracowane proporcje hero i dolnego paska na desktopie.

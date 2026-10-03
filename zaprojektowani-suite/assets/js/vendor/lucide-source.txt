@@ -1,0 +1,4 @@
+Lucide 0.574.0
+https://github.com/lucide-icons/lucide
+https://registry.npmjs.org/lucide/-/lucide-0.574.0.tgz
+sha512-7McOOl6Rn3cvJiVTeUjPBp0V/4LaSKAkJOwXOwqK+gXAIzPebgG29NBQooCf9q8i25BegdAS27IqTLqOVERppQ==

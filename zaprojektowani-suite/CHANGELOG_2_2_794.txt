@@ -1,0 +1,20 @@
+Zaprojektowani Suite 2.2.794 — mobile: hero widoczne od pierwszego bajtu, bez zacięcia; zespół wychodzi zza kickera
+
+Baza: 2.2.793.
+
+Mobile (≤1100 px)
+- Przyczyna zacięcia „pod H1”: wejście hero było uruchamiane przez JavaScript (klasa na <html> po sparsowaniu hero). Na telefonie główny wątek jest w tym momencie zajęty parsowaniem reszty 1,5 MB HTML (163 bloki <style>), więc start animacji się opóźniał, a elementy pod H1 stały w półprzezroczystym, „rozmytym” stanie do zwolnienia wątku.
+- Teraz wejście jest w czystym CSS: animacje startują w chwili sparsowania każdego elementu, bez udziału JavaScriptu i bez czekania na główny wątek. Sekcja hero jest widoczna od pierwszego sparsowanego fragmentu (nie czeka na DOMContentLoaded jak inne sekcje). Tylko opacity + transform (GPU); robot: samo opacity.
+- Pomiar (silnik Safari, profil iPhone): H1 widoczne w 90% już 200 ms PRZED DOMContentLoaded, jeszcze w trakcie parsowania; Chrome z 4× wolniejszym CPU: hero widoczne w pierwszej klatce.
+- JavaScript na mobile zwalnia już tylko baner zgód (0,9 s po sparsowaniu hero). Baner: ok. 0,5 s po load; „Odrzuć” chowa go w 43 ms.
+
+Zespół nad kickerem (desktop + mobile)
+- Sylwetki zeszły niżej: ich dolna, wtopiona część nakłada się na linię kickera — wyglądają, jakby wychodziły zza niego. Kicker leży nad sylwetkami (czytelny).
+- Desktop: +20 % (156 → 187 px) i ok. 100 px niżej względem poprzedniej wersji (do kickera). Mobile: 122 px.
+
+Pozostałe
+- Desktop bez zmian: kaskada liter, wejście opisu/CTA/chipów/opinii, odblask CTA, skan chipów, gradient zmieniający kierunek.
+- Pliki: includes/front-fixes-311.php, zaprojektowani-suite.php.
+
+Testy: WebKit (profil iPhone 15) i desktop na HTML strony przepuszczonym przez prawdziwy kod PHP tej wersji; Chrome z 4× wolniejszym CPU i wolną siecią. Brak testu na fizycznym telefonie.
+Po instalacji wyczyścić cache strony / optymalizatora / CDN.

@@ -1,0 +1,5 @@
+Zaprojektowani Suite v2.2.665
+
+Studio Wyceny:
+- telefon: wszystkie zdjęcia obniżone o kolejne 20 px,
+- telefon: zdjęcie „Logo i branding” powiększone dodatkowo o 10%.

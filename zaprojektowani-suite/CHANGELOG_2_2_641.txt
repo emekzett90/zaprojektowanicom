@@ -1,0 +1,8 @@
+Zaprojektowani Suite v2.2.641
+
+Studio Wyceny — mobile:
+- usunięto rzeczywiste źródła przycinania kart: contain: paint, overflow: hidden i clip-path z animacji wejścia,
+- zdjęcia są duże, zachowują pełne proporcje (object-fit: contain) i swobodnie wychodzą ponad górną krawędź karty,
+- zdjęcia mają własną animację float i cień 3D,
+- zwiększono odstępy między kartami, aby grafika nie nachodziła na kartę powyżej,
+- poprawiono ucinanie nagłówka „Twój projekt?” na mobile.

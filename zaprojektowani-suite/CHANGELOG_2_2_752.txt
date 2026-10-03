@@ -1,0 +1,5 @@
+Zaprojektowani Suite 2.2.752
+- Home featured packages: przeniesiono badge rekomendacji do górnego lewego rogu każdej karty.
+- Home featured packages: przeniesiono pill z opisem zakresu do górnego prawego rogu każdej karty.
+- Home featured packages: dodano prawy pill również na środkowej karcie WWW & e-commerce.
+- Zachowano responsywne ustawienia dla mobile.

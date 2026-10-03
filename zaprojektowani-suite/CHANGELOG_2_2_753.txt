@@ -1,0 +1,9 @@
+Zaprojektowani Suite 2.2.753
+- Home featured packages: badge rekomendacji przypięty do górnego lewego rogu całej karty.
+- Home featured packages: pill kategorii przypięty do górnego prawego rogu całej karty.
+- Identyczne pozycjonowanie w 3 kolumnach oraz na mobile.
+- Seobility: dodany Apple Touch Icon.
+- Seobility: title strony głównej zsynchronizowany z H1.
+- Seobility: usuwane puste strong/b, ograniczane powtórzone, zbyt długie i nadmiarowe tagi strong/b w surowym HTML bez zmiany wyglądu po załadowaniu strony.
+- Seobility: więcej naturalnych akapitów i dłuższych zdań w SEO intro.
+- Seobility: konserwatywna minifikacja HTML i inline CSS strony głównej.
