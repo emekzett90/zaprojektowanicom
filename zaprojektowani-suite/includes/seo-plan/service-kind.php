@@ -9,11 +9,18 @@ if (!defined('ABSPATH')) { exit; }
  * overlay) asks these helpers instead. Katowice pages behave exactly as before.
  */
 function zp_suite_service_slugs(): array {
-  return [
-    'strony' => ['strony-internetowe-katowice', 'tworzenie-stron-internetowych'],
-    'sklepy' => ['sklepy-internetowe-katowice', 'tworzenie-sklepow-internetowych'],
-    'logo'   => ['logo-branding-katowice', 'projektowanie-logo', 'identyfikacja-wizualna'],
-  ];
+  static $slugs = null;
+  if ($slugs === null) {
+    $slugs = [
+      'strony' => ['strony-internetowe-katowice', 'tworzenie-stron-internetowych'],
+      'sklepy' => ['sklepy-internetowe-katowice', 'tworzenie-sklepow-internetowych'],
+      'logo'   => ['logo-branding-katowice', 'projektowanie-logo', 'identyfikacja-wizualna'],
+    ];
+    // 2.4.0: content pages (data/pages.php) built on the website template.
+    $pages = is_file(__DIR__ . '/data/pages.php') ? (array) include __DIR__ . '/data/pages.php' : [];
+    foreach ($pages as $path => $page) { $slugs[$page['kind'] ?? 'strony'][] = trim((string) $path, '/'); }
+  }
+  return $slugs;
 }
 
 /** 'strony' | 'sklepy' | 'logo' | '' for a request URI (default: the current one). */

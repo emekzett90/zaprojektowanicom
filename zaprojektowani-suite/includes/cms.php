@@ -762,11 +762,11 @@ function zp_suite_cms_defaults(){
       'image'=>'https://zaprojektowani.com/wp-content/uploads/2026/05/laptop_zaprojektowani.webp'
     ],
     [
-      'title'=>'Strony dla salonów beauty',
-      'url'=>'/strony-internetowe-dla-salonow-beauty/',
-      'icon'=>'sparkles',
+      'title'=>'Strony internetowe dla lekarzy',
+      'url'=>'/strony-internetowe-dla-lekarzy/',
+      'icon'=>'stethoscope',
       'num'=>'03',
-      'text'=>'Oferta zabiegów, pakiety, rezerwacje, opinie, lokalne SEO i estetyka premium dopasowana do klientek, które najczęściej oglądają stronę z telefonu.',
+      'text'=>'Rzeczowa informacja o usługach i zespole, umawianie wizyt, dane gabinetu i lokalne SEO — bez cech reklamy, zgodnie z zasadami informowania o świadczeniach.',
       'image'=>'https://zaprojektowani.com/wp-content/uploads/2026/05/laptop_widget-scaled.webp'
     ],
     [

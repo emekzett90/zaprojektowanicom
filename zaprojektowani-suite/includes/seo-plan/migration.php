@@ -10,7 +10,7 @@ if (!defined('ABSPATH')) { exit; }
  *  5. sets the plan's H1 as the post title of the posts that get a new H1,
  *  6. marks thank-you pages noindex in Rank Math,
  *  7. clears the Rank Math sitemap cache and LiteSpeed cache.
- * Every changed value is backed up in zp_seo_plan_backup; Narzędzia → Plan SEO 2.3.0 can
+ * Every changed value is backed up in zp_seo_plan_backup; Narzędzia → Plan SEO can
  * restore them. Values changed by hand after the migration are never overwritten.
  */
 
@@ -187,6 +187,7 @@ function zp_seo_plan_migrate(): void {
   $legacy['/kampanie-reklamowe/'] = ['title' => 'Kampanie Meta Ads i Google Ads | Zaprojektowani', 'description' => 'Kampanie Meta Ads i Google Ads: oferta, kreacje, strona docelowa i pomiar zapytań. Poznaj ofertę Zaprojektowani i zaplanuj działania reklamowe.', 'h1' => '', 'post' => false];
   $legacy['/wiedza/'] = ['title' => 'Wiedza: strony WWW, sklepy, SEO i branding | Zaprojektowani', 'description' => 'Praktyczne poradniki o stronach internetowych, sklepach WooCommerce, SEO, logo, brandingu i Meta Ads. Sprawdź koszty, procesy, checklisty i przykłady.', 'h1' => '', 'post' => false];
   foreach ($legacy as $path => $e) {
+    if (isset($plan[$path])) { continue; }
     $id = zp_seo_plan_find_post($path);
     if (!$id || (isset($backup['status'][$id]))) { continue; }
     $results = [];

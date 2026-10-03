@@ -36,6 +36,14 @@ function zp_seo_plan_business_node(): array {
     ],
     'areaServed' => ['@type' => 'Country', 'name' => 'Polska'],
     'knowsAbout' => ['tworzenie stron internetowych', 'tworzenie sklepów internetowych', 'WooCommerce', 'projektowanie logo', 'identyfikacja wizualna', 'branding'],
+    'hasMap' => 'https://www.google.com/maps/place/?q=place_id:ChIJh0fbrHpbFkcRPEegRF9aX_I',
+    'foundingDate' => '2022',
+    'openingHoursSpecification' => [[
+      '@type' => 'OpeningHoursSpecification',
+      'dayOfWeek' => ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
+      'opens' => '09:00',
+      'closes' => '17:00',
+    ]],
     'sameAs' => ['https://www.instagram.com/zaprojektowanicom', 'https://www.facebook.com/zaprojektowanicom'],
   ];
 }
@@ -58,6 +66,8 @@ function zp_seo_plan_service_node(): ?array {
     'sklepy-local' => ['Sklepy internetowe Katowice', 'Tworzenie sklepów internetowych WooCommerce'],
     'logo-local' => ['Logo i branding Katowice', 'Projektowanie logo i identyfikacji wizualnej'],
   ];
+  $content = zp_seo_content_page_by_variant($variant);
+  if ($content) { $names[$variant] = [$content['schema']['name'], $content['schema']['serviceType']]; }
   $local = substr($variant, -6) === '-local';
   $url = home_url($path);
   $site = home_url('/');

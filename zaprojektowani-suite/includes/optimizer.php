@@ -1471,7 +1471,7 @@ add_action('wp_footer', function () {
   'use strict';
   var loaded=false, timer=0, interacted=false;
   function isMobile(){try{return !!(w.matchMedia&&w.matchMedia('(max-width:880px)').matches);}catch(e){return false;}}
-  function isStrony(){try{return /\/(strony-internetowe-katowice|tworzenie-stron-internetowych)\//.test(w.location&&w.location.pathname||'');}catch(e){return false;}}
+  function isStrony(){try{return /\/(<?php echo zp_suite_service_slug_regex('strony'); ?>)\//.test(w.location&&w.location.pathname||'');}catch(e){return false;}}
   function navBusy(){try{var n=d.getElementById('zpNewNav');return !!(n&&n.querySelector('#zpNewNavDrawer.is-open'));}catch(e){return false;}}
   function inject(){
     if(loaded) return;

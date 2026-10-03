@@ -1,7 +1,7 @@
 <?php
 if (!defined('ABSPATH')) { exit; }
 
-/** Narzędzia → Plan SEO 2.3.0: migration log, re-run, undo and pause. */
+/** Narzędzia → Plan SEO: migration log, re-run, undo and pause. */
 
 add_action('admin_menu', function () {
   add_management_page('Plan SEO ' . ZP_SEO_PLAN_VERSION, 'Plan SEO ' . ZP_SEO_PLAN_VERSION, 'manage_options', 'zp-seo-plan', 'zp_seo_plan_admin_page');

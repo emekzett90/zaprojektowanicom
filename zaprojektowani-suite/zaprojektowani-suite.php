@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Zaprojektowani Suite
  * Description: Zaprojektowani Suite z wersją angielską strony (PL/EN, adresy /en/, przełącznik języka), automatycznymi naprawami SEO, nagłówków, zasobów i paginacji na podstawie audytu z 13.09.2026.
- * Version: 2.3.0
+ * Version: 2.4.0
  * Requires at least: 6.5
  * Requires PHP: 8.0
  * Author: Zaprojektowani.com
@@ -16,7 +16,7 @@ if (defined('ZP_SUITE_VERSION')) {
   return;
 }
 
-define('ZP_SUITE_VERSION', '2.3.0');
+define('ZP_SUITE_VERSION', '2.4.0');
 define('ZP_SUITE_PATH', plugin_dir_path(__FILE__));
 define('ZP_SUITE_URL', plugin_dir_url(__FILE__));
 
@@ -1610,3 +1610,6 @@ require_once ZP_SUITE_PATH . 'includes/ultimate-seo/bootstrap.php';
 
 // v2.3.0 — keyword plan: Rank Math values, nationwide service pages, redirects, schema and indexation.
 require_once ZP_SUITE_PATH . 'includes/seo-plan/bootstrap.php';
+
+// v2.4.0 — minified stylesheets (assets/*.min.css, tools/minify_css.py).
+require_once ZP_SUITE_PATH . 'includes/css-min.php';

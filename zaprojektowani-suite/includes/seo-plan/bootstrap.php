@@ -12,12 +12,16 @@ if (!defined('ABSPATH')) { exit; }
  * - Duplicate posts are merged with 301 redirects, old prefixes redirect to current URLs.
  * - One business entity in structured data, cleaner sitemaps and robots rules.
  *
- * Narzędzia → Plan SEO 2.3.0 shows the migration log and can undo the database changes.
+ * 2.4.0 adds the website pages from the content thread (content-pages.php, data/pages.php),
+ * /kampanie-reklamowe/ as a Rank Math page, one project count (stats.php) and post authors
+ * from the team (authors.php).
+ *
+ * Narzędzia → Plan SEO shows the migration log and can undo the database changes.
  */
 
-define('ZP_SEO_PLAN_VERSION', '2.3.0');
+define('ZP_SEO_PLAN_VERSION', '2.4.0');
 
-/** The plan is on unless an administrator paused it (Narzędzia → Plan SEO 2.3.0). */
+/** The plan is on unless an administrator paused it (Narzędzia → Plan SEO). */
 function zp_seo_plan_active(): bool {
   return get_option('zp_seo_plan_paused') !== '1';
 }
@@ -55,10 +59,13 @@ function zp_seo_plan_is_en(): bool {
   return class_exists('\ZPL\Router') && \ZPL\Router::$lang === 'en';
 }
 
+require_once __DIR__ . '/content-pages.php';
 require_once __DIR__ . '/service-pages.php';
 require_once __DIR__ . '/redirects.php';
 require_once __DIR__ . '/indexation.php';
 require_once __DIR__ . '/schema.php';
 require_once __DIR__ . '/links.php';
+require_once __DIR__ . '/stats.php';
+require_once __DIR__ . '/authors.php';
 require_once __DIR__ . '/migration.php';
 require_once __DIR__ . '/admin.php';

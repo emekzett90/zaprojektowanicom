@@ -22,6 +22,14 @@ final class Router {
         '/tworzenie-sklepow-internetowych/' => '/sklepy-internetowe-katowice/',
         '/projektowanie-logo/' => '/logo-branding-katowice/',
         '/identyfikacja-wizualna/' => '/logo-branding-katowice/',
+        // suite 2.4.0: website pages written in Polish only.
+        '/strony-wordpress/' => '/strony-internetowe-katowice/',
+        '/opieka-wordpress/' => '/strony-internetowe-katowice/',
+        '/strona-wizytowka/' => '/strony-internetowe-katowice/',
+        '/tworzenie-landing-page/' => '/strony-internetowe-katowice/',
+        '/strony-internetowe-dla-kancelarii/' => '/strony-internetowe-katowice/',
+        '/strony-internetowe-dla-lekarzy/' => '/strony-internetowe-katowice/',
+        '/strony-internetowe-dla-deweloperow/' => '/strony-internetowe-katowice/',
     ];
     const NEVER = '~^/(?:wp-admin|wp-login\.php|wp-json|wp-content|wp-includes|wp-cron\.php|xmlrpc\.php|feed|comments/feed|wp-sitemap|sitemap|[a-z0-9_-]+-sitemap\d*\.xml|sitemap_index\.xml|robots\.txt|favicon\.ico)(?:/|$|\?)~i';
 

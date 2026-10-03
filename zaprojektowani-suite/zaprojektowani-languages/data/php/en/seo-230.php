@@ -85,4 +85,12 @@ return [
 'Cennik i wycena <1>strony internetowej, sklepu, logo lub kampanii</1>.'=>'Pricing and quotes for <1>a website, online store, logo or campaign</1>.',
 '<1>Sklepy internetowe Katowice — </1>Sklepy internetowe, które <2>sprzedają.</2>'=>'<1>Online stores Katowice — </1>Online stores that <2>sell.</2>',
 '<1>Strony internetowe Katowice — </1>Strony firmowe, które <2>zdobywają zapytania.</2>'=>'<1>Websites Katowice — </1>Business websites that <2>win inquiries.</2>',
+/* 2.4.0: /kampanie-reklamowe/ (Rank Math title and description, H1). */
+'Kampanie Meta Ads i Google Ads dla firm | Zaprojektowani'=>'Meta Ads and Google Ads campaigns for businesses | Zaprojektowani',
+'Kampanie Facebook i Instagram Ads (Meta Ads) oraz Google Ads dla firm: strategia, kreacje, strona docelowa i pomiar zapytań w jednym zespole.'=>'Facebook and Instagram Ads (Meta Ads) and Google Ads campaigns for businesses: strategy, creative, landing page and lead tracking in one team.',
+'<1>Kampanie reklamowe dla firm — </1>Meta Ads + Google Ads, które mają <2>konkretny cel.</2>'=>'<1>Ad campaigns for businesses — </1>Meta Ads + Google Ads with <2>a clear goal.</2>',
+/* 2.4.0: home industry tile for doctors. */
+'Strony dla lekarzy i gabinetów'=>'Websites for doctors and clinics',
+'Strony internetowe dla lekarzy'=>'Websites for doctors',
+'Rzeczowa informacja o usługach, umawianie wizyt i lokalne SEO.'=>'Clear information about services, appointment booking and local SEO.',
 ];
