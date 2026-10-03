@@ -18,7 +18,8 @@ final class Runtime {
         Router::$external = $uri;
         $path = (string) (wp_parse_url($uri, PHP_URL_PATH) ?: '/');
         $rel = Router::rel($path);
-        if ($rel === '/sitemap-en.xml') { add_action('init', [Sitemap::class, 'render'], 0); return; }
+        if ($rel === Sitemap::PATH) { add_action('init', [Sitemap::class, 'render'], 0); return; }
+        if ($rel === Sitemap::LEGACY) { add_action('init', [Sitemap::class, 'redirect'], 0); return; }
         if (isset($_GET['zpl_frame'])) { add_action('init', [Frame::class, 'serve'], 0); return; }
         if (isset($_GET['rest_route']) || Router::never($rel)) { return; }
         Scan::boot_frame(); // Skaner EN frame (?zpl_scan=1, administrator only)

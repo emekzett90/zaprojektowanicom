@@ -212,6 +212,14 @@ function zp_seo_plan_migrate(): void {
   update_option(ZP_SEO_PLAN_BACKUP, $backup, false);
   $log[] = 'Strony podziękowań z noindex: ' . $thanks . '.';
 
+  // 7b. Old translation plugins (2.6.4). The languages module switches them off only when it is activated,
+  // and an update from a ZIP is not an activation. "Zaprojektowani Ultimate English AI" is still installed on
+  // the live site, and its sitemap addresses (pl-/en-sitemap.xml, sitemap-pl/-en.xml) were still answering.
+  if (class_exists('ZPL\\Cleanup')) {
+    $off = \ZPL\Cleanup::deactivate();
+    $log[] = $off ? 'Wyłączono stare wtyczki tłumaczeń: ' . implode(', ', $off) . '. Ich dane zostały.' : 'Żadna stara wtyczka tłumaczeń nie była włączona.';
+  }
+
   // 8. Caches.
   zp_seo_plan_purge_caches();
   $log[] = 'Wyczyszczono pamięć podręczną map witryny Rank Math i LiteSpeed.';

@@ -81,6 +81,9 @@ add_action('wp_head', function () {
     . (zp_seo_guide_page() ? zp_seo_guide_css() : '')
     // Website pages: on phones the hero H1 was 120% wide and its first line ran past the screen edge.
     . (zp_suite_service_kind() === 'strony' ? '@media(max-width:680px){html body .hero h1{width:auto}}' : '')
+    // 2.6.4: shop heroes, also from a hero saved in the Katowice page's CMS: the gradient phrase takes the
+    // H1's line height (it had 1.14, so the lines around it stood further apart than the rest).
+    . (zp_suite_service_kind() === 'sklepy' ? 'html body #zp-sklepy-internetowe-katowice #zhHero.zpShopHeroUnified h1.zh__title span.zh__grad{line-height:inherit!important}' : '')
     . '</style>' . "\n";
 }, 40);
 

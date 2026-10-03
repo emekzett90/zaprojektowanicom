@@ -4,6 +4,21 @@ namespace ZPL;
 if (!defined('ABSPATH')) { exit; }
 
 final class Sitemap {
+    /**
+     * Address of the English sitemap. Until Suite 2.6.4 it was /sitemap-en.xml, but on the live site
+     * that address (and /sitemap-pl.xml) answers 410 before WordPress gets to it, most likely because of
+     * the old "Zaprojektowani Ultimate English AI" plugin. The old address now redirects here.
+     */
+    const PATH = '/english-sitemap.xml';
+    const LEGACY = '/sitemap-en.xml';
+
+    public static function url(): string { return home_url(self::PATH); }
+
+    public static function redirect(): void {
+        wp_redirect(self::url(), 301, 'Zaprojektowani Languages');
+        exit;
+    }
+
     public static function render(): void {
         status_header(200);
         header('Content-Type: application/xml; charset=UTF-8');
@@ -28,9 +43,9 @@ final class Sitemap {
     }
 
     public static function boot(): void {
-        add_filter('robots_txt', static function ($out) { return rtrim((string) $out) . "\nSitemap: " . home_url('/sitemap-en.xml') . "\n"; }, 99);
+        add_filter('robots_txt', static function ($out) { return rtrim((string) $out) . "\nSitemap: " . self::url() . "\n"; }, 99);
         add_filter('rank_math/sitemap/index', static function ($xml) {
-            return $xml . '<sitemap><loc>' . esc_url(home_url('/sitemap-en.xml')) . '</loc><lastmod>' . esc_html(gmdate('c', (int) (Dict::meta()['built'] ?? time()))) . '</lastmod></sitemap>';
+            return $xml . '<sitemap><loc>' . esc_url(self::url()) . '</loc><lastmod>' . esc_html(gmdate('c', (int) (Dict::meta()['built'] ?? time()))) . '</lastmod></sitemap>';
         });
     }
 }

@@ -1,0 +1,27 @@
+ZAPROJEKTOWANI SUITE 2.6.4
+
+Poprawka: angielska mapa witryny, stare mapy językowe i odstępy linii w H1.
+
+Angielska mapa witryny:
+- na żywej stronie https://zaprojektowani.com/sitemap-en.xml (i /sitemap-pl.xml) zwracała 410, choć strony /en/ działają; inne nazwy map dają zwykłe 404, więc 410 ustawia coś przed WordPressem dla tych dwóch adresów,
+- na serwerze jest stara wtyczka „Zaprojektowani Ultimate English AI” (jej plik odpowiada pod /wp-content/plugins/zaprojektowani-ultimate-english-ai/); to ona najpewniej dopisuje pl-/en-sitemap.xml do indeksu i robots.txt i blokuje sitemap-en.xml,
+- mapa angielska ma teraz adres https://zaprojektowani.com/english-sitemap.xml (te same adresy /en/ z hreflang), a stary /sitemap-en.xml przekierowuje na nią 301, gdy tylko dotrze do wtyczki,
+- gotowy sitemap_index.xml i robots.txt zawsze zawierają mapę angielską i nigdy nie zawierają pl-sitemap.xml, en-sitemap.xml, sitemap-pl.xml ani sitemap-en.xml (filtr robots.txt działa teraz na samym końcu),
+- /en-sitemap.xml przekierowuje 301 na mapę angielską, a /pl-sitemap.xml na sitemap_index.xml (wcześniej 410), więc stare wpisy w Search Console i ręczne sprawdzenia trafiają na działające mapy,
+- przy pierwszym wejściu po aktualizacji wtyczka wyłącza stare wtyczki tłumaczeń (Ultimate English AI, AI Translator, Ultimate AI Languages), jeśli są włączone; ich pliki i dane zostają, wpis o tym jest w dzienniku migracji planu SEO,
+- sprawdzone lokalnie z wtyczką udającą starą: przy włączonej starej wtyczce english-sitemap.xml daje 200 i 114 adresów EN, indeks ma post-, page-, author- i english-sitemap; po migracji stara wtyczka jest wyłączona, a sitemap-en.xml przekierowuje na nową mapę.
+
+H1 w hero (prośba Mata: linie za daleko od siebie, także na Tworzeniu sklepów):
+- wyróżniona fraza z gradientem miała własną, większą interlinię (1,14 na komputerze, 1,16 na telefonie), więc linie z nią stały dalej niż reszta nagłówka,
+- teraz fraza bierze interlinię nagłówka i wszystkie linie stoją w równych odstępach; dolne dopełnienie gradientu zostaje, więc ogonki i akcenty się nie ucinają,
+- przy 1440 px: Tworzenie sklepów 83/88/91 px → 83/83/83 px, Sklepy Katowice 88/91 px → 83/83 px, Tworzenie stron 86–92 px → 85–87 px,
+- przy 390 px: Tworzenie sklepów 44/46/48 px → 44 px, Sklepy Katowice 46/48 px → 44 px, Tworzenie stron 48–54 px → 48–49 px,
+- dotyczy stron sklepów (także hero zapisanego w CMS strony Sklepy Katowice), stron internetowych, logo i kampanii; hero bloga /wiedza/ bez zmian.
+
+Po wgraniu:
+1. Wejdź raz na dowolną stronę (uruchamia się migracja i wyłącza starą wtyczkę tłumaczeń).
+2. LiteSpeed Cache → Purge All.
+3. Rank Math → Mapa witryny → Zapisz zmiany.
+4. Sprawdź https://zaprojektowani.com/sitemap_index.xml i https://zaprojektowani.com/english-sitemap.xml.
+
+Zawiera też 2.6.1, 2.6.2 i 2.6.3.

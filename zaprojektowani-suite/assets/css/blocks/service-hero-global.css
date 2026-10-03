@@ -842,3 +842,20 @@ html body section.zh.zpUnifiedServiceHero[data-zp-unified-service-hero] .zh__str
     right: calc((100vw - 2200px) / 2) !important;
   }
 }
+
+/* ---------------------------------------------------------------------
+   2.6.4 — prośba Mata: linie H1 w hero za daleko od siebie (Tworzenie
+   sklepów, Tworzenie stron). Wyróżniona fraza z gradientem miała własną,
+   większą interlinię (1,14 na komputerze, 1,16 na telefonie), więc linie
+   z nią odstawały od reszty nagłówka (np. 83 px, potem 88 i 91 px).
+   Teraz fraza bierze interlinię nagłówka i wszystkie linie stoją w równych
+   odstępach. Dolne dopełnienie gradientu zostaje, więc litery się nie
+   ucinają. Hero bloga (/wiedza/) ma własne zasady i zostaje bez zmian.
+   --------------------------------------------------------------------- */
+html body section.zh.zpUnifiedServiceHero[data-zp-unified-service-hero]:not(.zh--knowledge) .zh__title .zh__grad,
+body.zp-service-hero-page .hero h1 .gradient-text,
+#zp-logo-branding-katowice .hero h1 .gradient-text,
+#zp-strony-internetowe-katowice .hero h1 .gradient-text,
+.zpCampaignPage .hero h1 .gradient-text {
+  line-height: inherit !important;
+}
