@@ -1618,3 +1618,6 @@ require_once ZP_SUITE_PATH . 'includes/seo-plan/bootstrap.php';
 
 // v2.4.0 — minified stylesheets (assets/*.min.css, tools/minify_css.py).
 require_once ZP_SUITE_PATH . 'includes/css-min.php';
+
+// Stopka v3 — linki pod plan fraz, ceny usług, pas lokalny Katowice, akordeon na telefonie.
+require_once ZP_SUITE_PATH . 'includes/footer-v3.php';

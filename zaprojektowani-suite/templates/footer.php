@@ -93,15 +93,15 @@ $zp_logo_light = 'https://zaprojektowani.com/wp-content/uploads/2026/05/ZP_CIEMN
 
             <p class="zpMegaFooter__about"><?php echo esc_html($zp_footer_about); ?></p>
 
-            <div class="zpMegaFooter__socials" role="group" aria-label="Social media">
-              <a href="https://www.facebook.com/zaprojektowanicom" target="_blank" rel="noopener" aria-label="Facebook"><i data-lucide="thumbs-up"></i></a>
-              <a href="https://www.instagram.com/zaprojektowanicom" target="_blank" rel="noopener" aria-label="Instagram"><i data-lucide="camera"></i></a>
-              <a href="/kontakt/" aria-label="Kontakt"><i data-lucide="briefcase-business"></i></a>
-              <a href="/wiedza/" aria-label="Wiedza"><i data-lucide="play-circle"></i></a>
+            <div class="zpMegaFooter__socials" role="group" aria-label="Zaprojektowani w sieci">
+              <a href="https://www.instagram.com/zaprojektowanicom" target="_blank" rel="noopener" aria-label="Instagram" title="Instagram"><?php echo zp_footer_v3_icon('instagram'); ?></a>
+              <a href="https://www.facebook.com/zaprojektowanicom" target="_blank" rel="noopener" aria-label="Facebook" title="Facebook"><?php echo zp_footer_v3_icon('facebook'); ?></a>
+              <a href="https://search.google.com/local/reviews?placeid=<?php echo esc_attr(ZP_FOOTER_V3_PLACE_ID); ?>" target="_blank" rel="noopener" aria-label="Opinie w Google" title="Opinie w Google"><?php echo zp_footer_v3_icon('google'); ?></a>
+              <a href="https://wa.me/<?php echo esc_attr($zp_brand_whatsapp); ?>" target="_blank" rel="noopener" aria-label="WhatsApp" title="WhatsApp"><?php echo zp_footer_v3_icon('whatsapp'); ?></a>
             </div>
           </div>
 
-          <div class="zpMegaFooter__contactCards" role="group" aria-label="Kontakt">
+          <address class="zpMegaFooter__contactCards" aria-label="Kontakt">
             <a href="tel:+48501054253" class="zpMegaFooter__contactCard">
               <i data-lucide="phone-call"></i>
               <span>
@@ -118,83 +118,38 @@ $zp_logo_light = 'https://zaprojektowani.com/wp-content/uploads/2026/05/ZP_CIEMN
               </span>
             </a>
 
-            <div class="zpMegaFooter__contactCard zpMegaFooter__contactCard--company" aria-label="Dane firmy">
-              <i data-lucide="building-2"></i>
+            <a href="https://www.google.com/maps/place/?q=place_id:<?php echo esc_attr(ZP_FOOTER_V3_PLACE_ID); ?>" target="_blank" rel="noopener" class="zpMegaFooter__contactCard zpMegaFooter__contactCard--company">
+              <i data-lucide="map-pin"></i>
               <span>
-                <em>Zaprojektowani</em>
-                <strong>NIP: 9930682613</strong>
-                <small>ul. Modelarska 18/2</small>
-                <small>40-142 Katowice</small>
+                <em>Biuro w Katowicach</em>
+                <strong>ul. Modelarska 18/2, 40-142 Katowice</strong>
+                <small>Pon.–pt. 9:00–17:00 · NIP 9930682613</small>
               </span>
-            </div>
-          </div>
+            </a>
+          </address>
         </div>
 
-        <nav class="zpMegaFooter__links" aria-label="Linki stopki">
-
-          <div class="zpMegaFooter__group">
-            <h3>Usługi</h3>
-            <ul>
-              <li><a href="/strony-internetowe-katowice/"><i data-lucide="monitor"></i><span>Strony internetowe</span><b data-lucide="arrow-up-right"></b></a></li>
-              <li><a href="/sklepy-internetowe-katowice/"><i data-lucide="shopping-cart"></i><span>Sklepy WooCommerce</span><b data-lucide="arrow-up-right"></b></a></li>
-              <li><a href="/logo-branding-katowice/"><i data-lucide="pen-tool"></i><span>Logo & Branding</span><b data-lucide="arrow-up-right"></b></a></li>
-              <li><a href="/kampanie-reklamowe/"><i data-lucide="megaphone"></i><span>Kampanie reklamowe</span><b data-lucide="arrow-up-right"></b></a></li>
-              <li><a href="/studio-wyceny/"><i data-lucide="search-check"></i><span>SEO i treści</span><b data-lucide="arrow-up-right"></b></a></li>
-              <li><a href="<?php echo esc_url(zp_seo_plan_url('/opieka-wordpress/', '/studio-wyceny/')); ?>"><i data-lucide="settings-2"></i><span>Opieka WordPress</span><b data-lucide="arrow-up-right"></b></a></li>
+        <nav class="zpMegaFooter__links zpFootNav" aria-label="Mapa serwisu">
+          <?php foreach (zp_footer_v3_groups() as $zp_fg_key => $zp_fg) : $zp_fg_id = 'zpFootNav-' . $zp_fg_key; ?>
+          <div class="zpFootNav__group<?php echo $zp_fg['open'] ? ' is-open' : ''; ?>" data-zp-foot-group>
+            <p class="zpFootNav__title" id="<?php echo esc_attr($zp_fg_id); ?>-title"><?php echo esc_html($zp_fg['title']); ?></p>
+            <ul class="zpFootNav__list" id="<?php echo esc_attr($zp_fg_id); ?>" aria-labelledby="<?php echo esc_attr($zp_fg_id); ?>-title">
+              <?php foreach ($zp_fg['items'] as $zp_fi) : $zp_fi_ext = !empty($zp_fi['external']); ?>
+              <li><a class="zpFootNav__link<?php echo $zp_fi_ext ? ' zpFootNav__link--ext' : ''; ?>" href="<?php echo esc_url($zp_fi['href']); ?>"<?php echo $zp_fi_ext ? ' target="_blank" rel="noopener"' : ''; ?>><span><?php echo esc_html($zp_fi['text']); ?></span></a><?php if (!empty($zp_fi['price'])) : ?><span class="zpFootNav__price"><?php echo esc_html(zp_footer_v3_price($zp_fi['price'])); ?></span><?php endif; ?></li>
+              <?php endforeach; ?>
             </ul>
           </div>
-
-          <div class="zpMegaFooter__group">
-            <h3>Oferta</h3>
-            <ul>
-              <li><a href="/strony-internetowe-katowice/"><i data-lucide="layout-template"></i><span>Strona firmowa</span><b data-lucide="arrow-up-right"></b></a></li>
-              <li><a href="<?php echo esc_url(zp_seo_plan_url('/tworzenie-landing-page/', zp_seo_plan_url('/strony-internetowe/landing-page-co-to/', '/strony-internetowe-katowice/'))); ?>"><i data-lucide="panel-top"></i><span>Landing page</span><b data-lucide="arrow-up-right"></b></a></li>
-              <li><a href="/sklepy-internetowe-katowice/"><i data-lucide="store"></i><span>Sklep internetowy</span><b data-lucide="arrow-up-right"></b></a></li>
-              <li><a href="/logo-branding-katowice/"><i data-lucide="badge-check"></i><span>Projekt logo</span><b data-lucide="arrow-up-right"></b></a></li>
-              <li><a href="<?php echo esc_url(zp_seo_plan_url('/identyfikacja-wizualna/', '/logo-branding-katowice/')); ?>"><i data-lucide="palette"></i><span>Identyfikacja wizualna</span><b data-lucide="arrow-up-right"></b></a></li>
-              <li><a href="/studio-wyceny/"><i data-lucide="calculator"></i><span>Bezpłatna wycena</span><b data-lucide="arrow-up-right"></b></a></li>
-            </ul>
-          </div>
-
-          <div class="zpMegaFooter__group">
-            <h3>Firma</h3>
-            <ul>
-              <li><a href="/o-nas/"><i data-lucide="users"></i><span>O nas</span><b data-lucide="arrow-up-right"></b></a></li>
-              <li><a href="/o-nas/"><i data-lucide="book-open"></i><span>Nasza historia</span><b data-lucide="arrow-up-right"></b></a></li>
-              <li><a href="/realizacje/"><i data-lucide="gallery-horizontal-end"></i><span>Realizacje</span><b data-lucide="arrow-up-right"></b></a></li>
-              <li><a href="https://www.facebook.com/zaprojektowanicom/reviews" target="_blank" rel="noopener nofollow"><i data-lucide="star"></i><span>Opinie klientów</span><b data-lucide="arrow-up-right"></b></a></li>
-              <li><a href="/wiedza/"><i data-lucide="newspaper"></i><span>Blog</span><b data-lucide="arrow-up-right"></b></a></li>
-              <li><a href="/kontakt/"><i data-lucide="send"></i><span>Kontakt</span><b data-lucide="arrow-up-right"></b></a></li>
-            </ul>
-          </div>
-
-          <div class="zpMegaFooter__group">
-            <h3>Pomoc</h3>
-            <ul>
-              <li><a href="/#faq"><i data-lucide="circle-help"></i><span>FAQ</span><b data-lucide="arrow-up-right"></b></a></li>
-              <li><a href="/kontakt/"><i data-lucide="clipboard-list"></i><span>Brief projektu</span><b data-lucide="arrow-up-right"></b></a></li>
-              <li><a href="/wiedza/"><i data-lucide="graduation-cap"></i><span>Poradniki</span><b data-lucide="arrow-up-right"></b></a></li>
-              <li><a href="/polityka-prywatnosci/"><i data-lucide="shield-check"></i><span>Polityka prywatności</span><b data-lucide="arrow-up-right"></b></a></li>
-              <li><a href="/regulamin/"><i data-lucide="file-text"></i><span>Regulamin</span><b data-lucide="arrow-up-right"></b></a></li>
-              <li><a href="/cookies/"><i data-lucide="cookie"></i><span>Polityka cookies</span><b data-lucide="arrow-up-right"></b></a></li>
-              <li><a href="/rodo/"><i data-lucide="shield"></i><span>RODO</span><b data-lucide="arrow-up-right"></b></a></li>
-            </ul>
-          </div>
-
+          <?php endforeach; ?>
         </nav>
       </section>
 
-      <section class="zpMegaFooter__chips" aria-label="Popularne tematy">
-        <span>Popularne tematy:</span>
-        <a href="/strony-internetowe-katowice/">strony internetowe</a>
-        <a href="/sklepy-internetowe-katowice/">sklepy WooCommerce</a>
-        <a href="/logo-branding-katowice/">logo dla firmy</a>
-        <a href="<?php echo esc_url(zp_seo_plan_url('/identyfikacja-wizualna/', '/logo-branding-katowice/')); ?>">branding</a>
-        <a href="/strony-internetowe-katowice/" data-zp-local="1">strony internetowe Katowice</a>
-        <a href="/kampanie-reklamowe/">Kampanie reklamowe</a>
-        <a href="/studio-wyceny/">SEO</a>
-        <a href="/realizacje/">portfolio</a>
-        <a href="/kontakt/">wycena projektu</a>
+      <section class="zpFootLocal" aria-label="Strony lokalne">
+        <p class="zpFootLocal__text"><span class="zpFootLocal__pin"><?php echo zp_footer_v3_icon('pin'); ?></span><span><strong>Studio w Katowicach.</strong> <span>Projektujemy dla firm z całej Polski.</span></span></p>
+        <ul class="zpFootLocal__links">
+          <?php foreach (zp_footer_v3_local_links() as $zp_fl) : ?>
+          <li><a href="<?php echo esc_url($zp_fl['path']); ?>" data-zp-local="1"><?php echo esc_html($zp_fl['text']); ?></a></li>
+          <?php endforeach; ?>
+        </ul>
       </section>
     </div>
   </section>
