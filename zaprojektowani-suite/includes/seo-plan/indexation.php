@@ -33,12 +33,25 @@ add_filter('robots_txt', function ($output) {
   return implode("\n", $lines);
 }, 100);
 
-// A translation plugin that is still active can append its pl/en sitemaps to Rank Math's index.
-// Those URLs return 410 above, so the index must not list them (2.6.1).
+/** The index without entries for the old pl/en sitemaps (they return 410 above). */
+function zp_seo_plan_strip_gone_sitemaps(string $xml): string {
+  $out = preg_replace('~<sitemap>\s*<loc>[^<]*/(?:pl|en)-sitemap\.xml</loc>.*?</sitemap>\s*~is', '', $xml);
+  return is_string($out) ? $out : $xml;
+}
+
+// A translation plugin that is still active can append its pl/en sitemaps to Rank Math's index (2.6.1).
 add_filter('rank_math/sitemap/index', function ($xml) {
   if (!zp_seo_plan_active() || !is_string($xml) || $xml === '') { return $xml; }
-  return (string) preg_replace('~<sitemap>\s*<loc>[^<]*/(?:pl|en)-sitemap\.xml</loc>.*?</sitemap>\s*~is', '', $xml);
+  return zp_seo_plan_strip_gone_sitemaps($xml);
 }, 999);
+
+// On the live site pl-sitemap.xml and en-sitemap.xml are still listed in sitemap_index.xml, so they come
+// in some other way (a sitemap provider of that plugin, or Rank Math's cache). The finished index is
+// filtered as a whole, whatever added them (2.6.3).
+add_action('init', function () {
+  if (!zp_seo_plan_active() || is_admin() || zp_seo_plan_path() !== '/sitemap_index.xml') { return; }
+  ob_start(static function ($out) { return is_string($out) ? zp_seo_plan_strip_gone_sitemaps($out) : $out; });
+}, 0);
 
 add_filter('rank_math/frontend/robots', function ($robots) {
   if (!zp_seo_plan_active() || !is_array($robots)) { return $robots; }
