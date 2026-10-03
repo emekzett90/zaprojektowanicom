@@ -1,0 +1,30 @@
+ZAPROJEKTOWANI SUITE 2.7.0
+
+Wspólne wydanie: strony Katowice, nowa stopka i moduł Tłumacz EN w jednym pliku wtyczki.
+Zawiera wszystko z 2.3.0–2.6.4.
+
+Strony Katowice (prośba Mata: pakiety i więcej sekcji, bo strony były puste):
+- /strony-internetowe-katowice/: wracają pakiety (nagłówek „Pakiety stron internetowych dla firm z Katowic i Śląska”), realizacje, branże i zakres prac,
+- /sklepy-internetowe-katowice/: wracają pakiety sklepów, sekcja „Sklepy internetowe Katowice — WooCommerce i sprzedaż online”, proces tworzenia sklepu i branże,
+- /logo-branding-katowice/: wracają pakiety (Logo Startowe, Mini Branding, Branding Premium), proces i pliki,
+- ceny tylko potwierdzone (logo 999 / 1499 / 2999 zł); pakiety stron i sklepów są te same co na stronach ogólnopolskich,
+- strony lokalne dalej celują w frazy z Katowicami i Śląskiem; nagłówki sekcji zostają lokalne albo ogólne, bez fraz stron ogólnopolskich,
+- pytanie w FAQ o pełną ofertę ma nową treść, bo pakiety są teraz na samej stronie; link do strony ogólnopolskiej zostaje.
+
+Stopka v3 (z wątku „Stopka strony”):
+- ten sam wygląd ciemnego pasa i dolnego paska; zmienia się biała część z linkami,
+- kolumny: Usługi (z cenami od 3 999 / 6 499 / 999 / 1 200 zł/mies.), Strony dla firm, Ceny i poradniki, Firma,
+- pas „Studio w Katowicach” z linkami do 3 stron lokalnych, prawdziwe profile (Instagram, Facebook, opinie Google, WhatsApp), adres z linkiem do Map Google,
+- na telefonie kolumny rozwijają się po dotknięciu; bez powtórzonych linków (35 linków do 34 adresów zamiast 40 do 23).
+
+Tłumacz EN (OpenAI), moduł wtyczki (z wątku „Wtyczka tłumacząca na angielski”):
+- codziennie o 3:00 tłumaczy nowe wpisy i strony na angielski i publikuje je pod /en/ z hreflang i w angielskiej mapie witryny,
+- klucz API wkleja się w ZP Suite → Tłumacz EN → Ustawienia; w kodzie nie ma żadnego klucza,
+- model gpt-4.1, limit 400 000 znaków dziennie, starsze treści wyłączone do czasu włączenia w ustawieniach,
+- nowe strony EN trafiają do https://zaprojektowani.com/english-sitemap.xml (adres mapy EN od 2.6.4).
+
+Po wgraniu:
+1. Wejdź raz na dowolną stronę.
+2. LiteSpeed Cache → Purge All.
+3. Rank Math → Mapa witryny → Zapisz zmiany.
+4. ZP Suite → Tłumacz EN → Ustawienia: wklej NOWY klucz API OpenAI i zapisz. Wynik pierwszego tłumaczenia jest na zakładce Status.
