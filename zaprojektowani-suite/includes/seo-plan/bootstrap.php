@@ -18,11 +18,12 @@ if (!defined('ABSPATH')) { exit; }
  * 2.5.0 adds the guide sections, menu items, content batch 2 and new articles (articles.php);
  * 2.6.0 adds content batch 3 (5 more articles, links to them once they are live).
  * 2.6.1 fixes page-sitemap.xml (a template function declared twice) and tunes the website hero H1.
+ * 2.6.2 fixes the shop page guide built from an Elementor post (layout and editorial notes).
  *
  * Narzędzia → Plan SEO shows the migration log and can undo the database changes.
  */
 
-define('ZP_SEO_PLAN_VERSION', '2.6.1');
+define('ZP_SEO_PLAN_VERSION', '2.6.2');
 
 /** The plan is on unless an administrator paused it (Narzędzia → Plan SEO). */
 function zp_seo_plan_active(): bool {
