@@ -13,6 +13,8 @@ final class Dict {
     private static $shards = [];
     private static $overrides = null;
     private static $page = [];
+    /** @var array<string,array<string,string>> extra dictionaries from the zpl_dictionary filter, per direction+page */
+    private static $external = [];
 
     public static function page_id(string $source): string { return substr(md5($source), 0, 12); }
 
@@ -39,9 +41,26 @@ final class Dict {
         return $rev;
     }
 
-    public static function flush(): void { self::$overrides = null; self::$shards = []; self::$page = []; }
+    public static function flush(): void { self::$overrides = null; self::$shards = []; self::$page = []; self::$external = []; }
 
-    public static function has_page(string $source): bool { return is_file(self::dir('en') . 'p/' . self::page_id($source) . '.php'); }
+    /** Shipped page dictionary, or a page translated by another module (filter zpl_has_page, e.g. Tłumacz EN). */
+    public static function has_page(string $source): bool {
+        if (is_file(self::dir('en') . 'p/' . self::page_id($source) . '.php')) { return true; }
+        return function_exists('apply_filters') && (bool) apply_filters('zpl_has_page', false, $source);
+    }
+
+    /**
+     * Last-resort translations for one page (filter zpl_dictionary: key => translation, $lang is the direction).
+     * Shipped dictionaries and manual overrides always win; loaded once per page and direction.
+     */
+    private static function external(string $lang, string $source): array {
+        $k = $lang . $source;
+        if (!isset(self::$external[$k])) {
+            $v = function_exists('apply_filters') ? apply_filters('zpl_dictionary', [], $lang, $source) : [];
+            self::$external[$k] = is_array($v) ? $v : [];
+        }
+        return self::$external[$k];
+    }
 
     /** Exact lookup (no templates). */
     public static function exact(string $key, string $lang, string $source): ?string {
@@ -60,6 +79,8 @@ final class Dict {
             $s = self::shard($lang, $idx[$h]);
             if (isset($s[$key])) { return $s[$key]; }
         }
+        $x = self::external($lang, $source);
+        if (isset($x[$key])) { return (string) $x[$key]; }
         return null;
     }
 

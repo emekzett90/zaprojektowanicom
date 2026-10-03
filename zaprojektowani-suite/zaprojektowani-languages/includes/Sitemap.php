@@ -9,6 +9,8 @@ final class Sitemap {
         header('Content-Type: application/xml; charset=UTF-8');
         header('X-Robots-Tag: noindex, follow');
         $pages = (array) (Dict::meta()['pages'] ?? []);
+        // Pages translated after the dictionary was built (e.g. by Tłumacz EN).
+        $pages = array_values(array_unique(array_merge($pages, (array) apply_filters('zpl_sitemap_pages', []))));
         echo '<?xml version="1.0" encoding="UTF-8"?>' . "\n";
         echo '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">' . "\n";
         foreach ($pages as $source) {

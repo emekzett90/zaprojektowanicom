@@ -29,6 +29,11 @@ if (is_file(ZP_SUITE_PATH . 'zaprojektowani-languages/zaprojektowani-languages.p
   require_once ZP_SUITE_PATH . 'zaprojektowani-languages/zaprojektowani-languages.php';
 }
 
+// Tłumacz EN (OpenAI) — codziennie tłumaczy nowe treści na angielski; korzysta z modułu językowego.
+if (defined('ZPL_VERSION') && is_file(ZP_SUITE_PATH . 'zaprojektowani-translator/translator.php')) {
+  require_once ZP_SUITE_PATH . 'zaprojektowani-translator/translator.php';
+}
+
 require_once ZP_SUITE_PATH . 'includes/settings.php';
 require_once ZP_SUITE_PATH . 'includes/cms.php';
 require_once ZP_SUITE_PATH . 'includes/assets.php';
