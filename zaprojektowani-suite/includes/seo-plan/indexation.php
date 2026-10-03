@@ -33,6 +33,13 @@ add_filter('robots_txt', function ($output) {
   return implode("\n", $lines);
 }, 100);
 
+// A translation plugin that is still active can append its pl/en sitemaps to Rank Math's index.
+// Those URLs return 410 above, so the index must not list them (2.6.1).
+add_filter('rank_math/sitemap/index', function ($xml) {
+  if (!zp_seo_plan_active() || !is_string($xml) || $xml === '') { return $xml; }
+  return (string) preg_replace('~<sitemap>\s*<loc>[^<]*/(?:pl|en)-sitemap\.xml</loc>.*?</sitemap>\s*~is', '', $xml);
+}, 999);
+
 add_filter('rank_math/frontend/robots', function ($robots) {
   if (!zp_seo_plan_active() || !is_array($robots)) { return $robots; }
   $noindex = is_category() || (is_page() && zp_seo_plan_is_thank_you_path(zp_seo_plan_path(get_permalink())));

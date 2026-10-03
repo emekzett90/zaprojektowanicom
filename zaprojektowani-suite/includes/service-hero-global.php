@@ -26,6 +26,8 @@ function zp_suite_service_hero_pages(){
 function zp_suite_is_service_hero_request(){
   $uri = isset($_SERVER['REQUEST_URI']) ? (string) wp_unslash($_SERVER['REQUEST_URI']) : '';
   if ($uri === '') { return false; }
+  // 2.6.1: the nationwide and content pages built on the website and logo templates get the same hero.
+  if (function_exists('zp_suite_service_kind') && in_array(zp_suite_service_kind($uri), ['strony', 'logo'], true)) { return true; }
   foreach (zp_suite_service_hero_pages() as $slug) {
     if (strpos($uri, '/' . $slug) !== false) { return true; }
   }
