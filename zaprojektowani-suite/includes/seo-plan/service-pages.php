@@ -78,14 +78,7 @@ add_action('wp_head', function () {
     . '.zpSeoLink:hover{text-decoration-thickness:2px}'
     // Guide sections on the content pages: the template's wrapper is dark, light sections set their own background.
     . 'section.section.zpSeoPlanGuide{background:#fff}#proces~section.section.zpSeoPlanGuide{background:#f7f8fa}'
-    . '.zpSeoPlanGuide__body{max-width:880px;margin:clamp(34px,4vw,56px) 0 0;color:#4f5665;font-size:clamp(15px,1.15vw,17px);line-height:1.75}'
-    . '.zpSeoPlanGuide__body h2{margin:1.9em 0 .6em;color:#05070b;font-size:clamp(24px,2.3vw,32px);line-height:1.16;letter-spacing:-.03em;font-weight:650}'
-    . '.zpSeoPlanGuide__body h3,.zpSeoPlanGuide__body h4{margin:1.5em 0 .5em;color:#05070b;font-size:clamp(19px,1.6vw,22px);line-height:1.28;letter-spacing:-.02em;font-weight:650}'
-    . '.zpSeoPlanGuide__body p{margin:0 0 1em}.zpSeoPlanGuide__body ul,.zpSeoPlanGuide__body ol{margin:0 0 1.15em;padding-left:1.25em}'
-    . '.zpSeoPlanGuide__body li{margin:.35em 0}.zpSeoPlanGuide__body strong{color:#05070b}'
-    . '.zpSeoPlanGuide__body a{color:#05070b;font-weight:600;text-decoration:underline;text-underline-offset:3px}'
-    . '.zpSeoPlanGuide__body img{display:block;max-width:100%;height:auto;margin:1.4em 0;border-radius:18px}'
-    . '.zpSeoPlanGuide__body table{width:100%;border-collapse:collapse;margin:0 0 1.2em;font-size:.94em}.zpSeoPlanGuide__body td,.zpSeoPlanGuide__body th{padding:10px 12px;border-bottom:1px solid rgba(5,7,11,.1);text-align:left}'
+    . (zp_seo_guide_page() ? zp_seo_guide_css() : '')
     // Website pages: on phones the hero H1 was 120% wide and its first line ran past the screen edge.
     . (zp_suite_service_kind() === 'strony' ? '@media(max-width:680px){html body .hero h1{width:auto}}' : '')
     . '</style>' . "\n";
@@ -235,11 +228,13 @@ function zp_seo_shop_guide_html(): string {
   $content = (string) $post->post_content;
   if ($content === '') { return ''; }
   if (function_exists('has_blocks') && has_blocks($content)) { $content = do_blocks($content); }
+  $content = zp_seo_guide_clean_post_html((string) $content);
   $content = preg_replace('~<(script|style|noscript|template|form|iframe)\b[^>]*>.*?</\1>~is', '', $content);
   $content = strip_shortcodes((string) $content);
   if (stripos($content, '<p') === false) { $content = wpautop($content); }
   $content = preg_replace('~<h1\b[^>]*>.*?</h1>~is', '', $content);
-  $content = preg_replace('~\s(?:style|class|id|data-[a-z0-9_-]+)=("[^"]*"|\'[^\']*\')~i', '', (string) $content);
+  // Attributes go in zp_seo_guide_clean_post_html() (the guide classes stay); this is the fallback without DOM.
+  if (!class_exists('DOMDocument')) { $content = preg_replace('~\s(?:style|class|id|data-[a-z0-9_-]+)=("[^"]*"|\'[^\']*\')~i', '', (string) $content); }
   $content = wp_kses_post((string) $content);
   $content = preg_replace('~<p>\s*(?:&nbsp;)?\s*</p>~i', '', $content);
   if (trim(wp_strip_all_tags((string) $content)) === '') { return ''; }
@@ -254,7 +249,7 @@ function zp_seo_shop_guide_html(): string {
     . '<span class="zpShopSeoBoost__kicker">Poradnik / tworzenie sklepu internetowego krok po kroku</span>'
     . '<div class="zpShopSeoBoost__headline"><h2 class="zpShopSeoBoost__title" id="zpSeoPlanGuideTitle">Od pomysłu na ofertę do gotowego sklepu online.</h2>'
     . '<p class="zpShopSeoBoost__lead">' . $lead . '</p></div></header>'
-    . '<div class="zpSeoPlanGuide__body">' . $content . '</div></div></section>';
+    . zp_seo_guide_body((string) $content, '/tworzenie-sklepow-internetowych/') . '</div></section>';
 }
 
 /* ------------------------------------------------------------------- specs */

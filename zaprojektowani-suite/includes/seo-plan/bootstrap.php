@@ -59,12 +59,17 @@ function zp_seo_plan_is_en(): bool {
   return class_exists('\ZPL\Router') && \ZPL\Router::$lang === 'en';
 }
 
+require_once __DIR__ . '/guide.php';
 require_once __DIR__ . '/content-pages.php';
 require_once __DIR__ . '/service-pages.php';
+require_once __DIR__ . '/campaigns.php';
+require_once __DIR__ . '/articles.php';
+require_once __DIR__ . '/posts.php';
 require_once __DIR__ . '/redirects.php';
 require_once __DIR__ . '/indexation.php';
 require_once __DIR__ . '/schema.php';
 require_once __DIR__ . '/links.php';
+require_once __DIR__ . '/menu.php';
 require_once __DIR__ . '/stats.php';
 require_once __DIR__ . '/authors.php';
 require_once __DIR__ . '/migration.php';

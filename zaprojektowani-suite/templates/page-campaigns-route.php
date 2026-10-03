@@ -50,6 +50,10 @@ if ($zp_campaign_rank_math) {
     }));
   }, PHP_INT_MAX);
 }
+/* 2.5.0: texts from content batch 2 (includes/seo-plan/campaigns.php), only while the plan is on. */
+if ($zp_campaign_rank_math && function_exists('zp_seo_campaigns_transform')) {
+  ob_start('zp_seo_campaigns_transform');
+}
 if (!$zp_campaign_rank_math) {
   nocache_headers();
   add_filter('pre_get_document_title', static function(){

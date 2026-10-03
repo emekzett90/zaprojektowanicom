@@ -269,6 +269,34 @@ html body #zpNewNav.zpNewNav--knowledgeArchive:not(.is-mega-open){border-bottom:
 
 <nav class="zpNewNav__desktop" aria-label="Menu główne">
         <ul class="zpNewNav__menu">
+<?php
+/* Suite 2.5.0: SEO-plan subpages in the existing mega menu and mobile menu. Shown only on the
+   Polish site while the SEO plan is on and the page is published; the English site keeps its menu. */
+$zp_menu_250 = static function (string $path): bool {
+  return function_exists('zp_seo_plan_active') && zp_seo_plan_active() && function_exists('zp_seo_plan_is_en') && !zp_seo_plan_is_en()
+    && function_exists('zp_seo_plan_link_is_live') && zp_seo_plan_link_is_live($path);
+};
+$zp_menu_250_item = static function (string $path, string $icon, string $title, string $desc) use ($zp_menu_250): string {
+  if (!$zp_menu_250($path)) { return ''; }
+  return '<a class="zpNewNav__megaLink" href="' . esc_url($path) . '"><span class="zpNewNav__megaIco"><i data-lucide="' . esc_attr($icon) . '"></i></span><span><span class="zpNewNav__megaTitle">' . esc_html($title) . '</span>'
+    . ($desc !== '' ? '<span class="zpNewNav__megaDesc">' . esc_html($desc) . '</span>' : '') . '</span></a>';
+};
+$zp_menu_250_m = static function (string $path, string $icon, string $title, string $desc) use ($zp_menu_250): string {
+  if (!$zp_menu_250($path)) { return ''; }
+  return '<a href="' . esc_url($path) . '"><span class="zpNewNav__mSubIcon"><i data-lucide="' . esc_attr($icon) . '"></i></span><span><strong>' . esc_html($title) . '</strong><em>' . esc_html($desc) . '</em></span><span class="zpNewNav__mGo"><i data-lucide="arrow-up-right"></i></span></a>';
+};
+$zp_menu_250_industry = [
+  ['/strony-internetowe-dla-kancelarii/', 'scale', 'Kancelarie i prawnicy', 'Specjalizacje, zespół i kontakt'],
+  ['/strony-internetowe-dla-lekarzy/', 'stethoscope', 'Lekarze i gabinety', 'Usługi, cennik i rejestracja'],
+  ['/strony-internetowe-dla-deweloperow/', 'building-2', 'Deweloperzy i inwestycje', 'Inwestycje, mieszkania i zapytania'],
+];
+$zp_menu_250_ind_desk = '';
+$zp_menu_250_ind_mob = '';
+foreach ($zp_menu_250_industry as $zp_ind) {
+  $zp_menu_250_ind_desk .= $zp_menu_250_item($zp_ind[0], $zp_ind[1], $zp_ind[2], '');
+  $zp_menu_250_ind_mob .= $zp_menu_250_m($zp_ind[0], $zp_ind[1], $zp_ind[2], $zp_ind[3]);
+}
+?>
           <li class="zpNewNav__item"><a class="zpNewNav__link" href="/">Start</a></li>
           <li class="zpNewNav__item" data-mega>
             <a class="zpNewNav__link" href="/strony-internetowe-katowice/" aria-haspopup="true" aria-expanded="false">Usługi <?php echo zp_suite_header_inline_icon('chevron-down', 'zpNewNav__caret'); ?></a>
@@ -279,18 +307,21 @@ html body #zpNewNav.zpNewNav--knowledgeArchive:not(.is-mega-open){border-bottom:
                     <a class="zpNewNav__megaLink" href="/logo-branding-katowice/"><span class="zpNewNav__megaIco"><i data-lucide="sparkles"></i></span><span><span class="zpNewNav__megaTitle">Projekt logo</span><span class="zpNewNav__megaDesc">Projekt znaku, warianty, pliki do druku i internetu.</span></span></a>
                     <a class="zpNewNav__megaLink" href="<?php echo esc_url(zp_seo_plan_url('/identyfikacja-wizualna/', '/logo-branding-katowice/')); ?>"><span class="zpNewNav__megaIco"><i data-lucide="book-open-text"></i></span><span><span class="zpNewNav__megaTitle">Brandbook</span><span class="zpNewNav__megaDesc">Kolory, typografia, zasady użycia i system wizualny.</span></span></a>
                     <a class="zpNewNav__megaLink" href="<?php echo esc_url(zp_seo_plan_url('/identyfikacja-wizualna/', '/logo-branding-katowice/')); ?>"><span class="zpNewNav__megaIco"><i data-lucide="badge-check"></i></span><span><span class="zpNewNav__megaTitle">Rebranding</span><span class="zpNewNav__megaDesc">Odświeżenie marki i uporządkowanie komunikacji wizualnej.</span></span></a>
+                    <?php echo $zp_menu_250_item('/strona-wizytowka/', 'id-card', 'Strona wizytówka', 'Strona one page z ofertą, opiniami i szybkim kontaktem.'); ?>
                   </div></div>
                   <div class="zpNewNav__megaCol"><p class="zpNewNav__megaHead">Strony &amp; sklepy</p><div class="zpNewNav__megaList">
                     <a class="zpNewNav__megaLink" href="/strony-internetowe-katowice/"><span class="zpNewNav__megaIco"><i data-lucide="panel-top"></i></span><span><span class="zpNewNav__megaTitle">Strona premium</span><span class="zpNewNav__megaDesc">Projekt, wdrożenie, wersja mobilna, SEO i analityka.</span></span></a>
+                    <?php echo $zp_menu_250_item('/strony-wordpress/', 'layout-template', 'Strona WordPress', 'Projekt bez gotowego motywu i prosta edycja treści.'); ?>
                     <a class="zpNewNav__megaLink" href="/sklepy-internetowe-katowice/"><span class="zpNewNav__megaIco"><i data-lucide="package-check"></i></span><span><span class="zpNewNav__megaTitle">Sklep WooCommerce</span><span class="zpNewNav__megaDesc">Produkty, koszyk, płatności, dostawy i gotowość do reklam.</span></span></a>
                     <a class="zpNewNav__megaLink" href="/kontakt/"><span class="zpNewNav__megaIco"><i data-lucide="rocket"></i></span><span><span class="zpNewNav__megaTitle">Rozbudowa strony</span><span class="zpNewNav__megaDesc">Nowe sekcje, funkcje, formularze, kalkulatory i optymalizacja.</span></span></a>
                   </div></div>
                   <div class="zpNewNav__megaCol"><p class="zpNewNav__megaHead">Sprzedaż</p><div class="zpNewNav__megaList">
                     <a class="zpNewNav__megaLink" href="/kampanie-reklamowe/"><span class="zpNewNav__megaIco"><i data-lucide="badge-percent"></i></span><span><span class="zpNewNav__megaTitle">Kampanie reklamowe</span><span class="zpNewNav__megaDesc">Meta Ads i Google Ads: strategia, kreacja, analityka i optymalizacja.</span></span></a>
+                    <?php echo $zp_menu_250_item('/tworzenie-landing-page/', 'mouse-pointer-click', 'Landing page', 'Strona pod kampanię, która zamienia kliknięcia w zapytania.'); ?>
                     <a class="zpNewNav__megaLink" href="/kontakt/"><span class="zpNewNav__megaIco"><i data-lucide="goal"></i></span><span><span class="zpNewNav__megaTitle">Lejki sprzedażowe</span><span class="zpNewNav__megaDesc">Struktura strony i reklam ułożona pod konkretne zapytania.</span></span></a>
                     <a class="zpNewNav__megaLink" href="<?php echo esc_url(function_exists('zp_seo_plan_url') ? zp_seo_plan_url('/opieka-wordpress/', '/kontakt/') : '/kontakt/'); ?>"><span class="zpNewNav__megaIco"><i data-lucide="life-buoy"></i></span><span><span class="zpNewNav__megaTitle">Wsparcie techniczne</span><span class="zpNewNav__megaDesc">Pomoc po wdrożeniu i stała opieka nad stroną.</span></span></a>
                   </div></div>
-                  <div class="zpNewNav__megaCol zpNewNav__megaPromoCol"><p class="zpNewNav__megaHead">Najczęściej wybierane</p><a class="zpNewNav__promoCard zpNewNav__promoCard--logo" href="/logo-branding-katowice/"><span class="zpNewNav__promoMedia" aria-hidden="true"><img src="https://zaprojektowani.com/wp-content/uploads/2026/09/zgorecki_oferta.webp" alt="" loading="lazy" decoding="async"></span><span class="zpNewNav__promoBody"><span class="zpNewNav__promoTitle">Logo <span class="zpNewNav__promoPrice">już od 999 zł</span></span><span class="zpNewNav__promoText">Profesjonalny znak, pliki do użycia i spójny kierunek wizualny.</span></span><span class="zpNewNav__promoBtn">Zamów logo <i data-lucide="arrow-up-right"></i></span></a></div>
+                  <div class="zpNewNav__megaCol zpNewNav__megaPromoCol"><p class="zpNewNav__megaHead">Najczęściej wybierane</p><a class="zpNewNav__promoCard zpNewNav__promoCard--logo" href="/logo-branding-katowice/"><span class="zpNewNav__promoMedia" aria-hidden="true"><img src="https://zaprojektowani.com/wp-content/uploads/2026/09/zgorecki_oferta.webp" alt="" loading="lazy" decoding="async"></span><span class="zpNewNav__promoBody"><span class="zpNewNav__promoTitle">Logo <span class="zpNewNav__promoPrice">już od 999 zł</span></span><span class="zpNewNav__promoText">Profesjonalny znak, pliki do użycia i spójny kierunek wizualny.</span></span><span class="zpNewNav__promoBtn">Zamów logo <i data-lucide="arrow-up-right"></i></span></a><?php if ($zp_menu_250_ind_desk !== '') : ?><p class="zpNewNav__megaHead zpNewNav__megaHead--branze">Strony dla branż</p><div class="zpNewNav__megaList zpNewNav__megaList--branze"><?php echo $zp_menu_250_ind_desk; ?></div><?php endif; ?></div>
                 </div>
                 <div class="zpNewNav__megaBottom"><div class="zpNewNav__megaBottomInner"><p class="zpNewNav__megaClaim">Od pomysłu do gotowego systemu sprzedaży.</p><p class="zpNewNav__megaText">Możemy zacząć od logo, strony, sklepu albo kampanii — ważne, żeby całość pracowała na jeden cel.</p><a class="zpNewNav__megaBtn" href="/studio-wyceny/"><span>Omów projekt</span><i data-lucide="arrow-up-right"></i></a></div></div>
               </div>
@@ -350,10 +381,14 @@ html body #zpNewNav.zpNewNav--knowledgeArchive:not(.is-mega-open){border-bottom:
             <div class="zpNewNav__mSubWrap">
               <div class="zpNewNav__mSub zpNewNav__mSub--cards">
                 <a href="/strony-internetowe-katowice/"><span class="zpNewNav__mSubIcon"><i data-lucide="monitor"></i></span><span><strong>Strony internetowe</strong><em>WWW, WordPress, SEO</em></span><span class="zpNewNav__mGo"><i data-lucide="arrow-up-right"></i></span></a>
+                <?php echo $zp_menu_250_m('/strony-wordpress/', 'layout-template', 'Strona WordPress', 'Projekt bez gotowego motywu'); ?>
+                <?php echo $zp_menu_250_m('/strona-wizytowka/', 'id-card', 'Strona wizytówka', 'One page dla firmy'); ?>
+                <?php echo $zp_menu_250_m('/tworzenie-landing-page/', 'mouse-pointer-click', 'Landing page', 'Strona pod kampanię'); ?>
                 <a href="/sklepy-internetowe-katowice/"><span class="zpNewNav__mSubIcon"><i data-lucide="shopping-cart"></i></span><span><strong>Sklepy internetowe</strong><em>WooCommerce i sprzedaż</em></span><span class="zpNewNav__mGo"><i data-lucide="arrow-up-right"></i></span></a>
                 <a href="/logo-branding-katowice/"><span class="zpNewNav__mSubIcon"><i data-lucide="pen-tool"></i></span><span><strong>Logo & branding</strong><em>Identyfikacja wizualna</em></span><span class="zpNewNav__mGo"><i data-lucide="arrow-up-right"></i></span></a>
                 <a href="/kampanie-reklamowe/"><span class="zpNewNav__mSubIcon"><i data-lucide="megaphone"></i></span><span><strong>Kampanie reklamowe</strong><em>Meta Ads + Google Ads</em></span><span class="zpNewNav__mGo"><i data-lucide="arrow-up-right"></i></span></a>
                 <a href="/kontakt/"><span class="zpNewNav__mSubIcon"><i data-lucide="search-check"></i></span><span><strong>SEO i treści</strong><em>Widoczność w Google</em></span><span class="zpNewNav__mGo"><i data-lucide="arrow-up-right"></i></span></a>
+                <?php if ($zp_menu_250_ind_mob !== '') : ?><p class="zpNewNav__mSubHead">Strony dla branż</p><?php echo $zp_menu_250_ind_mob; endif; ?>
               </div>
             </div>
           </div>
