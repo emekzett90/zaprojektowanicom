@@ -22,11 +22,13 @@ if (!defined('ABSPATH')) { exit; }
  * 2.6.3 keeps the 410 pl/en sitemaps out of the finished index and halves the 2.6.1 hero H1 line height.
  * 2.6.4 moves the English sitemap to /english-sitemap.xml, redirects the old maps, switches off old translators
  *       and gives the hero H1 gradient phrase the heading's line height.
+ * 2.7.0 brings back packages and more sections on the three Katowice pages (and merges the footer v3
+ *       and the Tłumacz EN module, which live outside this folder).
  *
  * Narzędzia → Plan SEO shows the migration log and can undo the database changes.
  */
 
-define('ZP_SEO_PLAN_VERSION', '2.6.4');
+define('ZP_SEO_PLAN_VERSION', '2.7.0');
 
 /** The plan is on unless an administrator paused it (Narzędzia → Plan SEO). */
 function zp_seo_plan_active(): bool {

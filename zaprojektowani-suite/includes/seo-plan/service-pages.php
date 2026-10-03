@@ -321,7 +321,8 @@ function zp_seo_service_spec(string $variant): ?array {
     case 'strony-local':
       return [
         'kind' => 'strony',
-        'drop' => ['class="section manifesto"', 'id="oferta"', 'id="pakiety"', 'id="portfolio"', 'id="branze"', 'class="pointing"', 'id="analityka"', 'id="zakres"'],
+        // 2.7.0 (Mat): packages, projects, industries and scope are back, so the page is not empty.
+        'drop' => ['class="section manifesto"', 'id="oferta"', 'class="pointing"', 'id="analityka"'],
         'h1' => 'Strony internetowe <strong class="gradient-text">w Katowicach i na Śląsku</strong>',
         'faq' => [
           ['new', 'Czy możemy spotkać się w Katowicach?', 'Tak. Nasze biuro mieści się w Katowicach przy <strong>ul. Modelarskiej 18/2</strong>. Na spotkaniu omawiamy brief, cele strony i zakres prac. Kolejne etapy — makiety, projekt i odbiory — prowadzimy w biurze albo online, jak wygodniej.'],
@@ -329,11 +330,12 @@ function zp_seo_service_spec(string $variant): ?array {
           ['keep', 2],
           ['new', 'Ile kosztuje strona internetowa w Katowicach?', 'Cena zależy od zakresu, a nie od miasta: liczby podstron, poziomu projektu, treści i funkcji. Od czego zależy cena, wyjaśniamy w poradniku ' . $L($cost_www, 'ile kosztuje strona internetowa') . ', a dokładną wycenę przygotujemy po uzupełnieniu ' . $L('/studio-wyceny/', 'Studia Wyceny') . '.'],
           ['keep', 3],
-          ['new', 'Gdzie znajdę pełną ofertę stron internetowych?', 'Pakiety, proces, realizacje i odpowiedzi na pytania o zakres opisujemy na stronie ' . $L('/tworzenie-stron-internetowych/', 'tworzenie stron internetowych') . '. Tam też sprawdzisz, czym różni się strona wizytówka, strona firmowa i rozbudowany serwis.'],
+          ['new', 'Gdzie znajdę więcej o tworzeniu stron internetowych?', 'Pakiety i realizacje pokazujemy wyżej na tej stronie. Więcej o procesie i o tym, czym różni się strona wizytówka, strona firmowa i rozbudowany serwis, piszemy na stronie ' . $L('/tworzenie-stron-internetowych/', 'tworzenie stron internetowych') . '.'],
           ['keep', 8],
         ],
         'replace' => [
           ['Tworzymy strony dla firm z Katowic, Śląska i całej Polski: od', 'Studio z Katowic, ul. Modelarska 18/2. Tworzymy strony internetowe dla firm ze Śląska: od'],
+          ['<h2 class="section-title">Wybierz zakres — od landing page po <strong>serwis premium.</strong></h2>', '<h2 class="section-title">Pakiety stron internetowych <strong>dla firm z Katowic i Śląska.</strong></h2>'],
           ['<p class="section-kicker">Katowice • Śląsk • cała Polska</p>', '<p class="section-kicker">Katowice • ul. Modelarska 18/2 • Śląsk</p>'],
           ['<h2 class="section-title"> Jedno studio. <strong>Współpraca bez granic lokalizacji.</strong> </h2>', '<h2 class="section-title">Spotkajmy się <strong>w Katowicach.</strong></h2>'],
           ['Z Katowic projektujemy marki dla firm z całej Polski. Brief, prezentacje kierunków, konsultacje i przekazanie plików możemy przeprowadzić online — etap po etapie.', 'Zapraszamy do naszego biura przy ul. Modelarskiej 18/2 w Katowicach — tam omówimy brief, cele i zakres strony. Jeśli wygodniej, cały proces przeprowadzimy online. Pełny zakres usług opisujemy na stronie ' . $L('/tworzenie-stron-internetowych/', 'tworzenie stron internetowych') . '.'],
@@ -380,7 +382,8 @@ function zp_seo_service_spec(string $variant): ?array {
       return [
         'kind' => 'sklepy',
         'faq_style' => 'shop',
-        'drop' => ['id="zpShopWhyLight"', 'id="oferta-sklepow"', 'id="sklepy-woocommerce-katowice"', 'id="zpShopProcessFlow"', 'id="zpEcomIndustries"'],
+        // 2.7.0 (Mat): packages, the local WooCommerce section, process and industries are back.
+        'drop' => ['id="zpShopWhyLight"'],
         'h1' => 'Sklepy internetowe <span class="zh__grad">w Katowicach i na Śląsku</span>',
         'faq' => [
           ['new', 'Czy tworzycie sklepy internetowe dla firm z Katowic?', 'Tak. Projektujemy i wdrażamy <strong>sklepy internetowe dla firm z Katowic i całego Śląska</strong>. Zapraszamy do naszego biura przy ul. Modelarskiej 18/2 w Katowicach — tam omówimy model sprzedaży, produkty i zakres wdrożenia. Pełny zakres usług opisujemy na stronie ' . $L('/tworzenie-sklepow-internetowych/', 'tworzenie sklepów internetowych') . '.'],
@@ -457,14 +460,15 @@ function zp_seo_service_spec(string $variant): ?array {
     case 'logo-local':
       return [
         'kind' => 'logo',
-        'drop' => ['class="section manifesto"', 'id="pakiety"', 'id="system"', 'id="proces"', 'id="pliki"'],
+        // 2.7.0 (Mat): packages, process and files are back.
+        'drop' => ['class="section manifesto"', 'id="system"'],
         'h1' => 'Projektowanie logo <strong class="gradient-text">i branding w Katowicach</strong>',
         'faq' => [
           ['keep', 1],
           ['keep', 3],
           ['new', 'Czy możemy zrobić warsztat marki w Katowicach?', 'Tak. Warsztat marki prowadzimy w naszym biurze przy <strong>ul. Modelarskiej 18/2 w Katowicach</strong>. Omawiamy charakter firmy, odbiorców, konkurencję i miejsca użycia znaku. Kolejne etapy — prezentacje i odbiory — mogą odbywać się w biurze albo online.'],
           ['keep', 8], ['keep', 9],
-          ['new', 'Gdzie znajdę pełną ofertę logo i brandingu?', 'Pakiety, proces i pliki, które otrzymujesz, opisujemy na stronach ' . $L('/projektowanie-logo/', 'projektowanie logo') . ' oraz ' . $L('/identyfikacja-wizualna/', 'identyfikacja wizualna') . '.'],
+          ['new', 'Gdzie znajdę więcej o logo i identyfikacji wizualnej?', 'Pakiety, proces i pliki, które otrzymujesz, pokazujemy wyżej na tej stronie. Więcej o samym znaku i o całym systemie marki piszemy na stronach ' . $L('/projektowanie-logo/', 'projektowanie logo') . ' oraz ' . $L('/identyfikacja-wizualna/', 'identyfikacja wizualna') . '.'],
         ],
         'replace' => [
           ['Tworzymy <strong>logo, identyfikacje wizualne i brandbooki</strong>, które dobrze wyglądają nie tylko na prezentacji. Projektujemy system gotowy na stronę internetową, social media, druk, opakowania i materiały sprzedażowe.', 'Studio z Katowic, ul. Modelarska 18/2. Projektujemy <strong>logo i identyfikację wizualną</strong> dla firm z Katowic i Śląska — z warsztatem marki w naszym biurze albo w pełni online.'],

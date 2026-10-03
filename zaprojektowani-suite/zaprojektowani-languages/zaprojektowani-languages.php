@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Zaprojektowani Languages (PL/EN)
  * Description: Angielska wersja frontendu zaprojektowani.com — adresy /en/, tłumaczenia dostarczone w pliku (bez AI), przełącznik PL/EN bez przeładowania strony, hreflang i mapa witryny EN. Zastępuje wcześniejsze wtyczki tłumaczące.
- * Version: 1.0.12
+ * Version: 1.0.13
  * Requires at least: 6.3
  * Requires PHP: 7.4
  * Author: Zaprojektowani
@@ -24,7 +24,9 @@ if (defined('ZPL_EMBEDDED')) {
 }
 if (defined('ZPL_VERSION')) { return; }
 
-define('ZPL_VERSION', '1.0.12');
+define('ZPL_VERSION', '1.0.13');
+// 1.0.13: filters zpl_dictionary, zpl_has_page and zpl_sitemap_pages let other modules add translated pages.
+define('ZPL_API', 1);
 define('ZPL_FILE', __FILE__);
 define('ZPL_HOST', defined('ZPL_EMBEDDED') ? (string) ZPL_EMBEDDED : __FILE__); // the plugin file WordPress knows
 define('ZPL_DIR', plugin_dir_path(__FILE__));

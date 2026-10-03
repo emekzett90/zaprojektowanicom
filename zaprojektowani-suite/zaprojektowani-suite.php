@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Zaprojektowani Suite
  * Description: Zaprojektowani Suite z wersją angielską strony (PL/EN, adresy /en/, przełącznik języka), automatycznymi naprawami SEO, nagłówków, zasobów i paginacji na podstawie audytu z 13.09.2026.
- * Version: 2.6.4
+ * Version: 2.7.0
  * Requires at least: 6.5
  * Requires PHP: 8.0
  * Author: Zaprojektowani.com
@@ -16,7 +16,7 @@ if (defined('ZP_SUITE_VERSION')) {
   return;
 }
 
-define('ZP_SUITE_VERSION', '2.6.4');
+define('ZP_SUITE_VERSION', '2.7.0');
 define('ZP_SUITE_PATH', plugin_dir_path(__FILE__));
 define('ZP_SUITE_URL', plugin_dir_url(__FILE__));
 
@@ -27,6 +27,11 @@ require_once ZP_SUITE_PATH . 'includes/seo-plan/service-kind.php';
 if (is_file(ZP_SUITE_PATH . 'zaprojektowani-languages/zaprojektowani-languages.php')) {
   define('ZPL_EMBEDDED', __FILE__);
   require_once ZP_SUITE_PATH . 'zaprojektowani-languages/zaprojektowani-languages.php';
+}
+
+// Tłumacz EN (OpenAI) — codziennie tłumaczy nowe treści na angielski; korzysta z modułu językowego.
+if (defined('ZPL_VERSION') && is_file(ZP_SUITE_PATH . 'zaprojektowani-translator/translator.php')) {
+  require_once ZP_SUITE_PATH . 'zaprojektowani-translator/translator.php';
 }
 
 require_once ZP_SUITE_PATH . 'includes/settings.php';
@@ -1613,3 +1618,6 @@ require_once ZP_SUITE_PATH . 'includes/seo-plan/bootstrap.php';
 
 // v2.4.0 — minified stylesheets (assets/*.min.css, tools/minify_css.py).
 require_once ZP_SUITE_PATH . 'includes/css-min.php';
+
+// Stopka v3 — linki pod plan fraz, ceny usług, pas lokalny Katowice, akordeon na telefonie.
+require_once ZP_SUITE_PATH . 'includes/footer-v3.php';
