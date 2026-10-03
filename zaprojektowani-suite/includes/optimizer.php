@@ -767,7 +767,7 @@ function zp_suite_2492_is_home_like() {
 
 function zp_suite_2492_is_logo_branding_request() {
   if (!zp_suite_is_frontend_request()) { return false; }
-  if (function_exists('is_page') && (is_page('logo-branding-katowice') || is_page('logo-branding'))) {
+  if (function_exists('is_page') && (zp_suite_is_service_page('logo') || is_page('logo-branding'))) {
     return true;
   }
   if (is_singular()) {
@@ -783,7 +783,7 @@ function zp_suite_2232_is_strony_katowice_request() {
   if (!zp_suite_is_frontend_request()) {
     return false;
   }
-  if (function_exists('is_page') && is_page('strony-internetowe-katowice')) {
+  if (function_exists('is_page') && zp_suite_is_service_page('strony')) {
     return true;
   }
   if (is_singular()) {
@@ -1355,7 +1355,7 @@ if (!function_exists('zp_suite_defer_hero_video_sources')) {
 
 function zp_suite_2344_is_service_landing_request() {
   if (!zp_suite_is_frontend_request()) { return false; }
-  if (function_exists('is_page') && (is_page('strony-internetowe-katowice') || is_page('sklepy-internetowe-katowice') || is_page('logo-branding-katowice'))) {
+  if (function_exists('is_page') && zp_suite_service_kind() !== '') {
     return true;
   }
   if (is_singular()) {
@@ -1395,7 +1395,7 @@ add_action('wp_head', function () {
 if (!function_exists('zp_suite_2535_is_service_landing_request')) {
   function zp_suite_2535_is_service_landing_request() {
     if (!function_exists('zp_suite_is_frontend_request') || !zp_suite_is_frontend_request()) { return false; }
-    if (function_exists('is_page') && (is_page('strony-internetowe-katowice') || is_page('sklepy-internetowe-katowice') || is_page('logo-branding-katowice'))) {
+    if (function_exists('is_page') && zp_suite_service_kind() !== '') {
       return true;
     }
     if (is_singular()) {
@@ -1442,7 +1442,7 @@ add_filter('script_loader_tag', function ($tag, $handle, $src) {
   // it only "loaded" after scroll on mobile. Keep only this page controller on the normal
   // footer path; lower/global service extras can still be hydrated later.
   $req_uri_548 = isset($_SERVER['REQUEST_URI']) ? (string) $_SERVER['REQUEST_URI'] : '';
-  if ($handle === 'zp-suite-strony-katowice' && strpos($req_uri_548, '/strony-internetowe-katowice') !== false) {
+  if ($handle === 'zp-suite-strony-katowice' && zp_suite_is_service_page('strony', $req_uri_548)) {
     return $tag;
   }
 
@@ -1471,7 +1471,7 @@ add_action('wp_footer', function () {
   'use strict';
   var loaded=false, timer=0, interacted=false;
   function isMobile(){try{return !!(w.matchMedia&&w.matchMedia('(max-width:880px)').matches);}catch(e){return false;}}
-  function isStrony(){try{return /\/strony-internetowe-katowice\//.test(w.location&&w.location.pathname||'');}catch(e){return false;}}
+  function isStrony(){try{return /\/(strony-internetowe-katowice|tworzenie-stron-internetowych)\//.test(w.location&&w.location.pathname||'');}catch(e){return false;}}
   function navBusy(){try{var n=d.getElementById('zpNewNav');return !!(n&&n.querySelector('#zpNewNavDrawer.is-open'));}catch(e){return false;}}
   function inject(){
     if(loaded) return;
@@ -1535,7 +1535,7 @@ add_action('wp_footer', function () {
 add_action('wp_head', function () {
   if (!function_exists('zp_suite_is_frontend_request') || !zp_suite_is_frontend_request()) { return; }
   $uri = isset($_SERVER['REQUEST_URI']) ? (string) $_SERVER['REQUEST_URI'] : '';
-  if (strpos($uri, '/strony-internetowe-katowice') === false && !(function_exists('is_page') && is_page('strony-internetowe-katowice'))) { return; }
+  if (!zp_suite_is_service_page('strony', $uri) && !(function_exists('is_page') && zp_suite_is_service_page('strony'))) { return; }
   ?>
 <style id="zp-suite-2548-strony-nextfold-smooth">
 @media (max-width:880px){
@@ -1600,7 +1600,7 @@ add_action('template_redirect', function () {
       // directly below hero. If the user scrolls quickly, these images should already be
       // decoded/queued instead of waiting for native lazy loading at the viewport edge.
       $req_uri_548_img = isset($_SERVER['REQUEST_URI']) ? (string) $_SERVER['REQUEST_URI'] : '';
-      $is_strony_nextfold_548 = strpos($req_uri_548_img, '/strony-internetowe-katowice') !== false && (
+      $is_strony_nextfold_548 = zp_suite_is_service_page('strony', $req_uri_548_img) && (
         stripos($tag, 'mateusz_pointing_down2.webp') !== false ||
         stripos($tag, 'APARTEMENTPIEKNA-1.webp') !== false ||
         stripos($tag, 'SIEMANOWSKI-2.webp') !== false

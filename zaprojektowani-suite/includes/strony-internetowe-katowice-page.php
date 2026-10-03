@@ -9,7 +9,7 @@ if (!defined('ABSPATH')) { exit; }
  */
 function zp_suite_strony_internetowe_katowice_v2_request(){
   if (is_admin() || wp_doing_ajax() || wp_is_json_request()) { return false; }
-  if (function_exists('is_page') && is_page('strony-internetowe-katowice')) { return true; }
+  if (function_exists('is_page') && zp_suite_is_service_page('strony')) { return true; }
   if (!is_singular()) { return false; }
   $post = get_post();
   if (!$post) { return false; }

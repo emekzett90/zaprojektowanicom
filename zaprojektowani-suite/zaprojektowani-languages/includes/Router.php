@@ -16,6 +16,13 @@ final class Router {
     private static $home = null;
 
     const DEFAULT_EXCLUDE = ['/oferty/', '/briefy/'];
+    /** Polish pages with no English version of their own => the English page that covers them (suite 2.3.0). */
+    const ALIASES = [
+        '/tworzenie-stron-internetowych/' => '/strony-internetowe-katowice/',
+        '/tworzenie-sklepow-internetowych/' => '/sklepy-internetowe-katowice/',
+        '/projektowanie-logo/' => '/logo-branding-katowice/',
+        '/identyfikacja-wizualna/' => '/logo-branding-katowice/',
+    ];
     const NEVER = '~^/(?:wp-admin|wp-login\.php|wp-json|wp-content|wp-includes|wp-cron\.php|xmlrpc\.php|feed|comments/feed|wp-sitemap|sitemap|[a-z0-9_-]+-sitemap\d*\.xml|sitemap_index\.xml|robots\.txt|favicon\.ico)(?:/|$|\?)~i';
 
     public static function data(): array {
@@ -107,6 +114,7 @@ final class Router {
         }
         $pl = substr($path, 3);
         if (isset(self::routes()[$pl]) && self::routes()[$pl] !== $path) { return ['en', '', false, self::routes()[$pl]]; }
+        if (isset(self::ALIASES[$pl]) && !isset(self::routes()[$pl])) { return ['en', '', false, self::en_path($pl)]; }
         $paged = self::paged_en($pl);
         if ($paged !== null && $paged !== $path) { return ['en', '', false, $paged]; }
         return ['en', $pl, false, null];
@@ -123,6 +131,7 @@ final class Router {
     public static function en_path(string $pl): string {
         $pl = self::norm_path($pl);
         if (isset(self::routes()[$pl])) { return self::routes()[$pl]; }
+        if (isset(self::ALIASES[$pl]) && isset(self::routes()[self::ALIASES[$pl]])) { return self::routes()[self::ALIASES[$pl]]; }
         $paged = self::paged_en($pl);
         return $paged ?? ('/en' . $pl);
     }

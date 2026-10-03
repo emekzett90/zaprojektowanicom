@@ -785,7 +785,7 @@ pointer-events:auto!important;
 <nav class="zh__rail" aria-label="Social i postęp">
 <span class="zh__railIco">
 <a href="https://www.facebook.com/zaprojektowanicom" target="_blank" rel="noopener" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M14 9h3l.4-3H14V4.6c0-.9.3-1.4 1.5-1.4H17V.6C16.6.5 15.6.4 14.6.4 12.2.4 10.7 1.9 10.7 4.4V6H8v3h2.7v11H14z"/></svg></a>
-<a href="https://www.instagram.com/zaprojektowani" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1.1" fill="currentColor" stroke="none"/></svg></a>
+<a href="https://www.instagram.com/zaprojektowanicom" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1.1" fill="currentColor" stroke="none"/></svg></a>
 <a href="https://www.linkedin.com/company/zaprojektowani" target="_blank" rel="noopener" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6.5 8.2A1.6 1.6 0 1 0 6.5 5a1.6 1.6 0 0 0 0 3.2zM5.1 9.6h2.8V20H5.1zM10.2 9.6H13v1.5c.4-.8 1.5-1.8 3.2-1.8 2.4 0 3.6 1.5 3.6 4.4V20h-2.8v-5.4c0-1.3-.5-2.2-1.7-2.2-1 0-1.5.7-1.8 1.4-.1.2-.1.5-.1.8V20h-2.8z"/></svg></a>
 </span>
 <span class="zh__railProg"><span class="zh__railProgFill" id="zhProg"></span></span>
@@ -793,7 +793,7 @@ pointer-events:auto!important;
 <div class="zh__inner">
 <div class="zh__copy">
 <p class="zh__eb"><span class="dot"></span>Studio projektowe i technologiczne • Katowice</p>
-<h1 class="zh__title">Strony internetowe Katowice, <span class="zh__grad">sklepy WooCommerce i branding</span></h1>
+<h1 class="zh__title">Strony internetowe, <span class="zh__grad">sklepy WooCommerce i branding</span> dla firm z całej Polski</h1>
 <p class="zh__svcRot" aria-hidden="true">Projektujemy
   <span class="zh__svcRotMask" id="zhSvcRot"><span>
     <i>strony internetowe WordPress</i>
@@ -809,9 +809,9 @@ pointer-events:auto!important;
 <a class="zh__btn zh__btn--g" href="/realizacje/"><span>Zobacz realizacje</span><svg viewBox="0 0 24 24"><path d="M7 17L17 7"/><path d="M8 7h9v9"/></svg></a>
 </div>
 <div class="zh__chips" aria-label="Zakres usług">
-<a class="zh__chip" href="/strony-internetowe-katowice/"><b>01</b><span>strony internetowe Katowice</span></a>
+<a class="zh__chip" href="/strony-internetowe-katowice/"><b>01</b><span>tworzenie stron internetowych</span></a>
 <a class="zh__chip" href="/sklepy-internetowe-katowice/"><b>02</b><span>sklepy internetowe WooCommerce</span></a>
-<a class="zh__chip" href="/logo-branding-katowice/"><b>03</b><span>logo i branding Katowice</span></a>
+<a class="zh__chip" href="/logo-branding-katowice/"><b>03</b><span>projektowanie logo</span></a>
 <a class="zh__chip" href="/kampanie-reklamowe/"><b>04</b><span>kampanie reklamowe</span></a>
 </div>
 </div>

@@ -27,9 +27,9 @@ v8.6:
     <header class="zpSS__head">
       <div>
         <div class="zpSS__kicker">Usługi i branże</div>
-        <h2 class="zpSS__title" id="zpShowcaseServicesTitle">Strony internetowe Katowice, sklepy, branding i kampanie dla firm, które <em>chcą rosnąć online</em>.</h2>
+        <h2 class="zpSS__title" id="zpShowcaseServicesTitle">Strony internetowe, sklepy, branding i kampanie dla firm, które <em>chcą rosnąć online</em>.</h2>
       </div>
-      <p class="zpSS__lead">Projektujemy strony internetowe Katowice, sklepy internetowe WooCommerce, logo, branding i kampanie Meta Ads dla firm lokalnych oraz marek z całej Polski. Każdy obszar łączymy z UX, SEO, treściami i konwersją.</p>
+      <p class="zpSS__lead">Projektujemy strony internetowe, sklepy internetowe WooCommerce, logo, branding i kampanie Meta Ads dla firm i marek z całej Polski. Każdy obszar łączymy z UX, SEO, treściami i konwersją.</p>
     </header>
 
     <div class="zpSS__stack">
@@ -39,7 +39,7 @@ v8.6:
         <div class="zpSSCard__content">
           <div class="zpSSCard__copy">
             <div class="zpSSCard__label"><i data-lucide="monitor-smartphone"></i> Strony internetowe</div>
-            <h3 class="zpSSCard__h3">Strony internetowe Katowice</h3>
+            <h3 class="zpSSCard__h3">Strony internetowe</h3>
             <p class="zpSSCard__desc"><strong>Strona może sprzedawać, edukować i budować zaufanie zanim klient zadzwoni.</strong>Projektujemy strony firmowe, landing page i serwisy premium dla kancelarii, deweloperów, salonów beauty, lekarzy i firm usługowych — z dobrą strukturą nagłówków, responsywnością, SEO oraz jasną ścieżką kontaktu.</p>
             <div class="zpSSCard__actions">
               <a class="zpSSBtn" href="/strony-internetowe-katowice/"><span>Strony www</span><i data-lucide="arrow-right"></i></a>
@@ -67,7 +67,7 @@ v8.6:
         <div class="zpSSCard__content">
           <div class="zpSSCard__copy">
             <div class="zpSSCard__label"><i data-lucide="shopping-bag"></i> Sklepy internetowe</div>
-            <h3 class="zpSSCard__h3">Sklepy internetowe Katowice i WooCommerce</h3>
+            <h3 class="zpSSCard__h3">Sklepy internetowe WooCommerce</h3>
             <p class="zpSSCard__desc"><strong>Dobry e-commerce to nie tylko ładna karta produktu.</strong>Budujemy sklepy WooCommerce z przejrzystą strukturą, płatnościami, automatyzacjami, analityką, konfiguracją dostaw i układem dopasowanym do sprzedaży.</p>
             <div class="zpSSCard__actions">
               <a class="zpSSBtn" href="/sklepy-internetowe-katowice/"><span>Sklepy internetowe</span><i data-lucide="arrow-right"></i></a>
@@ -94,7 +94,7 @@ v8.6:
         <div class="zpSSCard__content">
           <div class="zpSSCard__copy">
             <div class="zpSSCard__label"><i data-lucide="sparkles"></i> Logo i branding</div>
-            <h3 class="zpSSCard__h3">Logo i branding Katowice</h3>
+            <h3 class="zpSSCard__h3">Logo i branding</h3>
             <p class="zpSSCard__desc"><strong>Logo to dopiero początek — marka musi działać w każdym miejscu styku z klientem.</strong>Tworzymy znaki, systemy identyfikacji, kolory, typografię, materiały firmowe i brandbooki gotowe do użycia online oraz w druku.</p>
             <div class="zpSSCard__actions">
               <a class="zpSSBtn" href="/logo-branding-katowice/"><span>Logo i branding</span><i data-lucide="arrow-right"></i></a>

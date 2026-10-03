@@ -11,7 +11,7 @@ add_action('wp_footer', function(){
     (function(){
       try{
         var path = (window.location && window.location.pathname ? window.location.pathname : '').replace(/\/+$/,'/');
-        if(path === '/sklepy-internetowe-katowice/'){
+        if(path === '/sklepy-internetowe-katowice/' || path === '/tworzenie-sklepow-internetowych/'){
           document.documentElement.classList.add('zp-page-shop-katowice');
           document.body && document.body.classList.add('zp-page-shop-katowice');
         }

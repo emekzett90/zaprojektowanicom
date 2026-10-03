@@ -153,7 +153,7 @@ final class ZPSSEO_Repair {
         foreach ($d['resources'] as $r) { $jobs[] = ['type'=>'resource','source'=>$r['source'],'target'=>$r['target']]; }
         foreach ($d['css'] as $p) { $jobs[] = ['type'=>'css','source'=>$p]; }
         foreach ($d['images'] as $p) { $jobs[] = ['type'=>'image','source'=>$p]; }
-        if (class_exists('ZPSSEO_Editorial')) {
+        if (class_exists('ZPSSEO_Editorial') && !(function_exists('zp_seo_plan_active') && zp_seo_plan_active())) {
             // Suite includes the original shortcode provider; no fallback dependency job.
             foreach (ZPSSEO_Editorial::editorial() as $r) { $jobs[]=['type'=>'editorial','source'=>$r['path']]; }
             $jobs[]=['type'=>'purge','source'=>'@ultimate/cache'];

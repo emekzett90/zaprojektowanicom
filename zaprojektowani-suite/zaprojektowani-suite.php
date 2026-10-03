@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Zaprojektowani Suite
  * Description: Zaprojektowani Suite z wersją angielską strony (PL/EN, adresy /en/, przełącznik języka), automatycznymi naprawami SEO, nagłówków, zasobów i paginacji na podstawie audytu z 13.09.2026.
- * Version: 2.2.828
+ * Version: 2.3.0
  * Requires at least: 6.5
  * Requires PHP: 8.0
  * Author: Zaprojektowani.com
@@ -16,9 +16,12 @@ if (defined('ZP_SUITE_VERSION')) {
   return;
 }
 
-define('ZP_SUITE_VERSION', '2.2.828');
+define('ZP_SUITE_VERSION', '2.3.0');
 define('ZP_SUITE_PATH', plugin_dir_path(__FILE__));
 define('ZP_SUITE_URL', plugin_dir_url(__FILE__));
+
+// v2.3.0 — nationwide service pages reuse the Katowice templates; gating helpers load first.
+require_once ZP_SUITE_PATH . 'includes/seo-plan/service-kind.php';
 
 // Wersja angielska (PL/EN, adresy /en/) — moduł Zaprojektowani Languages wbudowany w Suite.
 if (is_file(ZP_SUITE_PATH . 'zaprojektowani-languages/zaprojektowani-languages.php')) {
@@ -1604,3 +1607,6 @@ require_once ZP_SUITE_PATH . 'includes/front-fixes-323.php';
 
 // Integrated SEO repair module, based on the supplied Suite templates.
 require_once ZP_SUITE_PATH . 'includes/ultimate-seo/bootstrap.php';
+
+// v2.3.0 — keyword plan: Rank Math values, nationwide service pages, redirects, schema and indexation.
+require_once ZP_SUITE_PATH . 'includes/seo-plan/bootstrap.php';

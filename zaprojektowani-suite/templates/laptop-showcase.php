@@ -18,7 +18,7 @@ v1.3:
       <span class="zpLaptopShowcase__eyebrow">Strona, która pracuje</span>
 
       <h2 id="zpLaptopShowcaseTitle">
-        Strony internetowe Katowice, które <span>wyglądają premium</span>, wspierają SEO i realnie pomagają zdobywać zapytania
+        Strony internetowe, które <span>wyglądają premium</span>, wspierają SEO i realnie pomagają zdobywać zapytania
       </h2>
 
       <p>

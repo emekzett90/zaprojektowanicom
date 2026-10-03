@@ -13,7 +13,7 @@ final class Sitemap {
         echo '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">' . "\n";
         foreach ($pages as $source) {
             $source = (string) $source;
-            if (Router::is_excluded($source) || strpos($source, '/page/') !== false) { continue; }
+            if (Router::is_excluded($source) || strpos($source, '/page/') !== false || strpos($source, '/dziekujemy') === 0) { continue; }
             $routes = Router::routes();
             if (!isset($routes[$source])) { continue; }
             $en = esc_url(home_url($routes[$source]));

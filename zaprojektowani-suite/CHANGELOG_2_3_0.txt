@@ -1,0 +1,39 @@
+ZAPROJEKTOWANI SUITE 2.3.0
+
+Plan SEO (audyt z 3.10.2026 i plan fraz kluczowych, faza 1). Cel: pozycje w całej Polsce na frazy usługowe, bez zmiany wyglądu strony.
+
+Nowe strony usług (ogólnopolskie, na istniejących szablonach stron Katowice):
+- /tworzenie-stron-internetowych/, /tworzenie-sklepow-internetowych/, /projektowanie-logo/, /identyfikacja-wizualna/,
+- tworzą się same przy pierwszym wejściu na stronę po aktualizacji (strony WordPress z tytułem, opisem i frazą w Rank Math),
+- menu, stopka, strona główna i wpisy linkują do nich zamiast do stron Katowice; linki oznaczone jako lokalne zostają na stronach Katowice.
+
+Strony Katowice:
+- krótsze, z sekcjami lokalnymi (współpraca w Katowicach, mapa, realizacje, opinie, FAQ o Katowicach i Śląsku, formularz),
+- nowe nagłówki H1 z frazami lokalnymi.
+
+Tytuły, opisy i nagłówki:
+- kod przestał nadpisywać tytuły, opisy i H1 (moduł redakcyjny, mapa meta w seo.php, nadpisania strony głównej),
+- wartości z planu są zapisane w Rank Math przy każdej stronie i wpisie, więc można je dalej edytować w panelu,
+- wartości zmienione ręcznie nie są nadpisywane; kopia poprzednich wartości jest w bazie.
+
+Przekierowania i indeksacja:
+- 27 zduplikowanych wpisów połączonych z odpowiednikami (301, wpisy trafiają do szkiców),
+- wpis o tworzeniu sklepów → /tworzenie-sklepow-internetowych/ (treść poradnika jest teraz na stronie usługi),
+- stare prefiksy (/wiedza/…, /poradniki/…, /kampanie-meta-ads/…), kopie „-2”, pozostałości /de/ (301 albo 410),
+- literówka w adresie wpisu poprawiona (301 ze starego adresu),
+- strony podziękowań i kategorie: noindex; mapy witryny bez nich; stare mapy pl-sitemap i en-sitemap: 410.
+
+Dane strukturalne:
+- jedna firma (ProfessionalService) z pełnym adresem, NIP, telefonem i profilami Instagram/Facebook zaprojektowanicom,
+- węzeł Service na stronach usług (strony ogólnopolskie: Polska, strony Katowice: Katowice i woj. śląskie),
+- usunięte zdublowane grafy z seo.php i strony Katowice.
+
+Inne:
+- alt obrazków z biblioteki mediów zamiast nazw plików; brak automatycznego zamieniania <strong> na <span>,
+- pod wpisami lista „Powiązane usługi i poradniki” z linkami z planu fraz,
+- Studio Wyceny ma nagłówek H1 („Cennik i wycena strony internetowej, sklepu, logo lub kampanii”),
+- wersja angielska: tłumaczenia nowych tytułów, opisów i nagłówków; /en/ dla nowych stron prowadzi do odpowiedników Katowice,
+- poprawka: na telefonie nagłówek strony o stronach internetowych nie wychodzi już poza ekran,
+- Meta Pixel: ViewContent także na nowych stronach usług.
+
+Panel: Narzędzia → Plan SEO 2.3.0 — dziennik zmian, ponowne uruchomienie, wstrzymanie oraz cofnięcie zmian w bazie.

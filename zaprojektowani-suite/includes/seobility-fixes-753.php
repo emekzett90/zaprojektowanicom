@@ -62,9 +62,11 @@ function zp_suite_753_cleanup_html(string $html): string {
 
   // Seobility flags repeats, very long bold text and >22 semantic bold tags.
   // Keep the first 22 unique, short tags in raw HTML; the rest are restored client-side for identical appearance.
+  // 2.3.0: Google reads the same HTML as visitors, so bold tags are no longer swapped for spans.
+  $plan_on = function_exists('zp_seo_plan_active') && zp_seo_plan_active();
   $kept = 0;
   $seen = [];
-  $html = preg_replace_callback('~<(strong|b)\b([^>]*)>(.*?)</\\1>~is', function($m) use (&$kept, &$seen){
+  if (!$plan_on) $html = preg_replace_callback('~<(strong|b)\b([^>]*)>(.*?)</\\1>~is', function($m) use (&$kept, &$seen){
     $plain = trim(wp_strip_all_tags(html_entity_decode($m[3], ENT_QUOTES | ENT_HTML5, 'UTF-8')));
     if ($plain === '') return '';
     $normalized = preg_replace('/\s+/u', ' ', $plain);

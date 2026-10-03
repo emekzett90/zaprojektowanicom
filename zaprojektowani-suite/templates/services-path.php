@@ -24,7 +24,7 @@ v1.9:
         <span class="zpServicesPath__eyebrow">Zakres usług</span>
 
         <h2 id="zpServicesPathTitle">
-          Strony internetowe Katowice, sklepy WooCommerce i branding jako spójny system pozyskiwania klientów
+          Strony internetowe, sklepy WooCommerce i branding jako spójny system pozyskiwania klientów
         </h2>
       </div>
 
@@ -45,7 +45,7 @@ v1.9:
 
     <div class="zpServicesPath__grid" role="group" aria-label="Usługi Zaprojektowani">
 
-      <a class="zpServicesPath__item" href="/logo-branding-katowice/" aria-label="Zobacz ofertę: Logo i branding Katowice">
+      <a class="zpServicesPath__item" href="/logo-branding-katowice/" aria-label="Zobacz ofertę: projektowanie logo i branding">
         <div class="zpServicesPath__icon" aria-hidden="true">
           <i data-lucide="pen-tool"></i>
         </div>
@@ -54,14 +54,14 @@ v1.9:
 
         <div class="zpServicesPath__content">
           <span>Logo i identyfikacja wizualna</span>
-          <h3>Logo i branding Katowice</h3>
+          <h3>Logo i branding</h3>
           <p>
             Budujemy rozpoznawalny system wizualny: logo, kolorystykę, typografię, brandbook i materiały, które porządkują komunikację marki od strony internetowej po reklamy Meta Ads.
           </p>
         </div>
       </a>
 
-      <a class="zpServicesPath__item" href="/strony-internetowe-katowice/" aria-label="Zobacz ofertę: Strony internetowe Katowice">
+      <a class="zpServicesPath__item" href="/strony-internetowe-katowice/" aria-label="Zobacz ofertę: tworzenie stron internetowych">
         <div class="zpServicesPath__icon" aria-hidden="true">
           <i data-lucide="monitor"></i>
         </div>
@@ -70,14 +70,14 @@ v1.9:
 
         <div class="zpServicesPath__content">
           <span>WWW / WordPress</span>
-          <h3>Strony internetowe Katowice</h3>
+          <h3>Strony internetowe</h3>
           <p>
             Projektujemy strony firmowe WordPress nastawione na wiarygodność, szybki kontakt i widoczność lokalną w Google — z dopracowanym mobile, analityką oraz treściami pod konkretne usługi.
           </p>
         </div>
       </a>
 
-      <a class="zpServicesPath__item" href="/sklepy-internetowe-katowice/" aria-label="Zobacz ofertę: Sklepy internetowe Katowice">
+      <a class="zpServicesPath__item" href="/sklepy-internetowe-katowice/" aria-label="Zobacz ofertę: tworzenie sklepów internetowych">
         <div class="zpServicesPath__icon" aria-hidden="true">
           <i data-lucide="shopping-cart"></i>
         </div>
@@ -86,7 +86,7 @@ v1.9:
 
         <div class="zpServicesPath__content">
           <span>E-commerce</span>
-          <h3>Sklepy internetowe Katowice</h3>
+          <h3>Sklepy internetowe</h3>
           <p>
             Tworzymy sklepy internetowe WooCommerce z czytelną kartą produktu, koszykiem, płatnościami i układem gotowym pod SEO, kampanie oraz dalszy rozwój sprzedaży online.
           </p>

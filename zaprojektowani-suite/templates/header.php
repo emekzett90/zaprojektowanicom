@@ -80,9 +80,7 @@ $zp_header_overlay_class = (
   is_front_page()
   || is_home()
   || is_singular('post')
-  || is_page('strony-internetowe-katowice')
-  || is_page('sklepy-internetowe-katowice')
-  || is_page('logo-branding-katowice')
+  || zp_suite_service_kind() !== ''
   || is_page('kontakt')
   || is_page('wiedza')
   || (isset($_SERVER['REQUEST_URI']) && strpos((string) $_SERVER['REQUEST_URI'], '/wiedza') !== false)
@@ -279,8 +277,8 @@ html body #zpNewNav.zpNewNav--knowledgeArchive:not(.is-mega-open){border-bottom:
                 <div class="zpNewNav__megaGrid">
                   <div class="zpNewNav__megaCol"><p class="zpNewNav__megaHead">Start marki</p><div class="zpNewNav__megaList">
                     <a class="zpNewNav__megaLink" href="/logo-branding-katowice/"><span class="zpNewNav__megaIco"><i data-lucide="sparkles"></i></span><span><span class="zpNewNav__megaTitle">Projekt logo</span><span class="zpNewNav__megaDesc">Projekt znaku, warianty, pliki do druku i internetu.</span></span></a>
-                    <a class="zpNewNav__megaLink" href="/logo-branding-katowice/"><span class="zpNewNav__megaIco"><i data-lucide="book-open-text"></i></span><span><span class="zpNewNav__megaTitle">Brandbook</span><span class="zpNewNav__megaDesc">Kolory, typografia, zasady użycia i system wizualny.</span></span></a>
-                    <a class="zpNewNav__megaLink" href="/logo-branding-katowice/"><span class="zpNewNav__megaIco"><i data-lucide="badge-check"></i></span><span><span class="zpNewNav__megaTitle">Rebranding</span><span class="zpNewNav__megaDesc">Odświeżenie marki i uporządkowanie komunikacji wizualnej.</span></span></a>
+                    <a class="zpNewNav__megaLink" href="<?php echo esc_url(zp_seo_plan_url('/identyfikacja-wizualna/', '/logo-branding-katowice/')); ?>"><span class="zpNewNav__megaIco"><i data-lucide="book-open-text"></i></span><span><span class="zpNewNav__megaTitle">Brandbook</span><span class="zpNewNav__megaDesc">Kolory, typografia, zasady użycia i system wizualny.</span></span></a>
+                    <a class="zpNewNav__megaLink" href="<?php echo esc_url(zp_seo_plan_url('/identyfikacja-wizualna/', '/logo-branding-katowice/')); ?>"><span class="zpNewNav__megaIco"><i data-lucide="badge-check"></i></span><span><span class="zpNewNav__megaTitle">Rebranding</span><span class="zpNewNav__megaDesc">Odświeżenie marki i uporządkowanie komunikacji wizualnej.</span></span></a>
                   </div></div>
                   <div class="zpNewNav__megaCol"><p class="zpNewNav__megaHead">Strony &amp; sklepy</p><div class="zpNewNav__megaList">
                     <a class="zpNewNav__megaLink" href="/strony-internetowe-katowice/"><span class="zpNewNav__megaIco"><i data-lucide="panel-top"></i></span><span><span class="zpNewNav__megaTitle">Strona premium</span><span class="zpNewNav__megaDesc">Projekt, wdrożenie, wersja mobilna, SEO i analityka.</span></span></a>

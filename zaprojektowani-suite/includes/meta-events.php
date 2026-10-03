@@ -184,14 +184,14 @@ add_action('wp_footer', function () {
   function serviceFrom(text) {
     var t = String(text || '').toLowerCase();
     if (/sklep|shop|woo/.test(t)) { return 'sklepy'; }
-    if (/logo|brand/.test(t)) { return 'logo-branding'; }
+    if (/logo|brand|identyfikac/.test(t)) { return 'logo-branding'; }
     if (/kampani|reklam|ads/.test(t)) { return 'kampanie'; }
     if (/stron|web|www|landing/.test(t)) { return 'strony'; }
     return '';
   }
 
   // ViewContent — service landing pages.
-  var lp = path.match(/^\/(?:en\/)?(strony-internetowe-katowice|sklepy-internetowe-katowice|logo-branding-katowice)\/?$/);
+  var lp = path.match(/^\/(?:en\/)?(strony-internetowe-katowice|sklepy-internetowe-katowice|logo-branding-katowice|tworzenie-stron-internetowych|tworzenie-sklepow-internetowych|projektowanie-logo|identyfikacja-wizualna)\/?$/);
   if (lp) { track('ViewContent', { content_category: serviceFrom(lp[1]), content_name: lp[1] }); }
 
   // Lead — Studio Wyceny thank-you pages (redirect target after a successful submission).

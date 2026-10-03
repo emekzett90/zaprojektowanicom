@@ -114,6 +114,11 @@ function zp_suite_180_html_polish($html){
     $html = preg_replace_callback('/<img\b[^>]*>/i', function($m) use (&$img_index){
       $tag = $m[0];
       $img_index++;
+      if (stripos($tag, ' alt=') === false && function_exists('zp_seo_plan_active') && zp_seo_plan_active()) {
+        // 2.3.0: media library alt or decorative alt="", never a file name.
+        $src = preg_match('/src=["\']([^"\']+)["\']/i', $tag, $srcm) ? $srcm[1] : '';
+        $tag = preg_replace('/<img\b/i', '<img alt="'.esc_attr(function_exists('zp_suite_seo_alt_library') ? zp_suite_seo_alt_library($src) : '').'"', $tag, 1);
+      }
       if (stripos($tag, ' alt=') === false) {
         $alt = 'Zaprojektowani.com — projektowanie stron, sklepów i brandingu';
         if (preg_match('/src=["\']([^"\']+)["\']/i', $tag, $srcm)) {

@@ -15,7 +15,7 @@ if (!function_exists('zp_suite_perf_bool_214')) {
 
 function zp_suite_is_katowice_perf_page_214() {
   if (is_admin()) { return false; }
-  return is_page('strony-internetowe-katowice') || (isset($_SERVER['REQUEST_URI']) && strpos((string)$_SERVER['REQUEST_URI'], '/strony-internetowe-katowice') !== false);
+  return zp_suite_is_service_page('strony') || (isset($_SERVER['REQUEST_URI']) && strpos((string)$_SERVER['REQUEST_URI'], '/strony-internetowe-katowice') !== false);
 }
 
 function zp_suite_is_katowice_perf_lite_214() {

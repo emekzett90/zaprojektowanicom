@@ -94,8 +94,8 @@ $zp_logo_light = 'https://zaprojektowani.com/wp-content/uploads/2026/05/ZP_CIEMN
             <p class="zpMegaFooter__about"><?php echo esc_html($zp_footer_about); ?></p>
 
             <div class="zpMegaFooter__socials" role="group" aria-label="Social media">
-              <a href="https://facebook.com/zaprojektowanicom" target="_blank" rel="noopener nofollow" aria-label="Facebook"><i data-lucide="thumbs-up"></i></a>
-              <a href="https://instagram.com/zaprojektowanicom" target="_blank" rel="noopener nofollow" aria-label="Instagram"><i data-lucide="camera"></i></a>
+              <a href="https://www.facebook.com/zaprojektowanicom" target="_blank" rel="noopener" aria-label="Facebook"><i data-lucide="thumbs-up"></i></a>
+              <a href="https://www.instagram.com/zaprojektowanicom" target="_blank" rel="noopener" aria-label="Instagram"><i data-lucide="camera"></i></a>
               <a href="/kontakt/" aria-label="Kontakt"><i data-lucide="briefcase-business"></i></a>
               <a href="/wiedza/" aria-label="Wiedza"><i data-lucide="play-circle"></i></a>
             </div>
@@ -148,10 +148,10 @@ $zp_logo_light = 'https://zaprojektowani.com/wp-content/uploads/2026/05/ZP_CIEMN
             <h3>Oferta</h3>
             <ul>
               <li><a href="/strony-internetowe-katowice/"><i data-lucide="layout-template"></i><span>Strona firmowa</span><b data-lucide="arrow-up-right"></b></a></li>
-              <li><a href="/strony-internetowe-katowice/"><i data-lucide="panel-top"></i><span>Landing page</span><b data-lucide="arrow-up-right"></b></a></li>
+              <li><a href="<?php echo esc_url(zp_seo_plan_url('/strony-internetowe/landing-page-co-to/', '/strony-internetowe-katowice/')); ?>"><i data-lucide="panel-top"></i><span>Landing page</span><b data-lucide="arrow-up-right"></b></a></li>
               <li><a href="/sklepy-internetowe-katowice/"><i data-lucide="store"></i><span>Sklep internetowy</span><b data-lucide="arrow-up-right"></b></a></li>
               <li><a href="/logo-branding-katowice/"><i data-lucide="badge-check"></i><span>Projekt logo</span><b data-lucide="arrow-up-right"></b></a></li>
-              <li><a href="/logo-branding-katowice/"><i data-lucide="palette"></i><span>Identyfikacja wizualna</span><b data-lucide="arrow-up-right"></b></a></li>
+              <li><a href="<?php echo esc_url(zp_seo_plan_url('/identyfikacja-wizualna/', '/logo-branding-katowice/')); ?>"><i data-lucide="palette"></i><span>Identyfikacja wizualna</span><b data-lucide="arrow-up-right"></b></a></li>
               <li><a href="/studio-wyceny/"><i data-lucide="calculator"></i><span>Bezpłatna wycena</span><b data-lucide="arrow-up-right"></b></a></li>
             </ul>
           </div>
@@ -187,9 +187,10 @@ $zp_logo_light = 'https://zaprojektowani.com/wp-content/uploads/2026/05/ZP_CIEMN
       <section class="zpMegaFooter__chips" aria-label="Popularne tematy">
         <span>Popularne tematy:</span>
         <a href="/strony-internetowe-katowice/">strony internetowe</a>
-        <a href="/strony-internetowe-katowice/">sklepy WooCommerce</a>
+        <a href="/sklepy-internetowe-katowice/">sklepy WooCommerce</a>
         <a href="/logo-branding-katowice/">logo dla firmy</a>
-        <a href="/logo-branding-katowice/">branding</a>
+        <a href="<?php echo esc_url(zp_seo_plan_url('/identyfikacja-wizualna/', '/logo-branding-katowice/')); ?>">branding</a>
+        <a href="/strony-internetowe-katowice/" data-zp-local="1">strony internetowe Katowice</a>
         <a href="/kampanie-reklamowe/">Kampanie reklamowe</a>
         <a href="/studio-wyceny/">SEO</a>
         <a href="/realizacje/">portfolio</a>

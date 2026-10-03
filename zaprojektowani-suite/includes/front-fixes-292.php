@@ -15,7 +15,7 @@ if (!defined('ABSPATH')) { exit; }
 function zp_suite_292_logo_portfolio_cards_css(){
   if (is_admin()) { return; }
   $uri = isset($_SERVER['REQUEST_URI']) ? (string) $_SERVER['REQUEST_URI'] : '';
-  if (strpos($uri, '/logo-branding-katowice') === false) { return; }
+  if (!zp_suite_is_service_page('logo', $uri)) { return; }
   ?>
 <style id="zp-suite-front-fixes-292-logo-cards-xl">
 /* ===== Rozmiar karty: 2x + auto wysokość (stretch w szynie) ===== */

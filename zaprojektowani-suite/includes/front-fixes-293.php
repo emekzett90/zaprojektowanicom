@@ -15,9 +15,7 @@ function zp_suite_293_faq_hover_unify_css(){
   if (is_admin()) { return; }
   $uri = isset($_SERVER['REQUEST_URI']) ? (string) $_SERVER['REQUEST_URI'] : '';
   if (
-    strpos($uri, '/strony-internetowe-katowice') === false &&
-    strpos($uri, '/sklepy-internetowe-katowice') === false &&
-    strpos($uri, '/logo-branding-katowice') === false
+    zp_suite_service_kind($uri) === ''
   ) { return; }
   ?>
 <style id="zp-suite-front-fixes-293-faq-hover-unify">

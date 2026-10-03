@@ -18,6 +18,8 @@ final class ZPSSEO_Editorial {
         ];
     }
     public static function rule($path = null) {
+        // 2.3.0: titles, descriptions and H1s live in Rank Math and the post title (keyword plan).
+        if (function_exists('zp_seo_plan_active') && zp_seo_plan_active()) { return null; }
         if (!self::enabled() || is_admin()) { return null; }
         $path=$path ?? ZPSSEO_Repair::path(wp_unslash($_SERVER['REQUEST_URI'] ?? ''));
         if (is_404() || !is_singular() || is_preview() || post_password_required()) { return null; }

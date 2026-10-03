@@ -52,6 +52,8 @@ final class Dict {
         if (isset($s[$key])) { return $s[$key]; }
         $c = self::shard($lang, 'common');
         if (isset($c[$key])) { return $c[$key]; }
+        $c = self::shard($lang, 'seo-230');
+        if (isset($c[$key])) { return $c[$key]; }
         $idx = self::shard($lang, 'index');
         $h = substr(md5($key), 0, 10);
         if (isset($idx[$h])) {

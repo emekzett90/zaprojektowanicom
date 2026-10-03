@@ -91,8 +91,31 @@ function zp_suite_seo_alt_from_src($src){
   if (!$base) $base = 'Zaprojektowani.com — projekt strony internetowej, sklepu lub brandingu';
   return 'Zaprojektowani.com — '.$base;
 }
+/**
+ * 2.3.0: alt text comes from the media library; an image without one gets alt="" (decorative)
+ * instead of a file name ("Zaprojektowani.com — crew mateusz"). An explicit empty alt stays empty.
+ */
+function zp_suite_seo_alt_library($src){
+  static $cache = [];
+  $src = (string) $src;
+  if ($src === '' || stripos($src, '/wp-content/uploads/') === false) return '';
+  if (!isset($cache[$src])) {
+    $id = attachment_url_to_postid(preg_replace('/-\d+x\d+(?=\.[a-z0-9]+$)/i', '', strtok($src, '?')));
+    $alt = $id ? trim((string) get_post_meta($id, '_wp_attachment_image_alt', true)) : '';
+    $cache[$src] = $alt;
+  }
+  return $cache[$src];
+}
 function zp_suite_seo_alt_buffer($html){
   if (!is_string($html) || stripos($html, '<img') === false) return $html;
+  if (function_exists('zp_seo_plan_active') && zp_seo_plan_active()) {
+    return preg_replace_callback('/<img\b([^>]*?)>/i', function($m){
+      $tag=$m[0];
+      if (preg_match('/\salt\s*=/i', $tag)) return $tag;
+      $src=''; if (preg_match('/\bsrc\s*=\s*(["\'])(.*?)\1/i', $tag, $sm)) $src=$sm[2];
+      return preg_replace('/<img\b/i', '<img alt="'.esc_attr(zp_suite_seo_alt_library($src)).'"', $tag, 1);
+    }, $html);
+  }
   return preg_replace_callback('/<img\b([^>]*?)>/i', function($m){
     $tag=$m[0];
     if (preg_match('/\balt\s*=\s*(["\'])(.*?)\1/i', $tag, $am) && trim($am[2]) !== '') return $tag;

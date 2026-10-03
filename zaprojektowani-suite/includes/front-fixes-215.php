@@ -14,7 +14,7 @@ if (!function_exists('zp_suite_perf_bool_215')) {
 
 function zp_suite_is_shop_perf_page_215() {
   if (is_admin()) { return false; }
-  return is_page('sklepy-internetowe-katowice') || (isset($_SERVER['REQUEST_URI']) && strpos((string)$_SERVER['REQUEST_URI'], '/sklepy-internetowe-katowice') !== false);
+  return zp_suite_is_service_page('sklepy') || (isset($_SERVER['REQUEST_URI']) && strpos((string)$_SERVER['REQUEST_URI'], '/sklepy-internetowe-katowice') !== false);
 }
 
 function zp_suite_is_shop_perf_lite_215() {

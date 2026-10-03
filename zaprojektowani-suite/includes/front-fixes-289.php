@@ -10,7 +10,7 @@ if (!defined('ABSPATH')) { exit; }
 function zp_suite_289_strony_portfolio_mockups_quality_css(){
   if (is_admin()) { return; }
   $uri = isset($_SERVER['REQUEST_URI']) ? (string) $_SERVER['REQUEST_URI'] : '';
-  if (strpos($uri, '/strony-internetowe-katowice') === false) { return; }
+  if (!zp_suite_is_service_page('strony', $uri)) { return; }
   ?>
 <style id="zp-suite-front-fixes-289-portfolio-quality-v566">
 @media (min-width:981px){
@@ -96,7 +96,7 @@ add_action('wp_head', 'zp_suite_289_strony_portfolio_mockups_quality_css', 9998)
 function zp_suite_289_strony_portfolio_force_original_js(){
   if (is_admin()) { return; }
   $uri = isset($_SERVER['REQUEST_URI']) ? (string) $_SERVER['REQUEST_URI'] : '';
-  if (strpos($uri, '/strony-internetowe-katowice') === false) { return; }
+  if (!zp_suite_is_service_page('strony', $uri)) { return; }
   ?>
 <script id="zp-suite-front-fixes-289-portfolio-original-js-v566">
 (function(){

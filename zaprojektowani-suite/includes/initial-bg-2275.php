@@ -21,7 +21,7 @@ function zp_suite_2275_is_home_like_request() {
   }
 
   // SEO landing pages with dark hero paint. Wiedza has its own lighter boot logic below.
-  if (function_exists('is_page') && is_page('strony-internetowe-katowice')) {
+  if (function_exists('is_page') && zp_suite_is_service_page('strony')) {
     return true;
   }
 

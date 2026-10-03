@@ -87,7 +87,7 @@ add_filter('body_class', function($classes){
 
   $is_logo_branding = false;
 
-  if (function_exists('is_page') && (is_page('logo-branding-katowice') || is_page('logo-branding'))) {
+  if (function_exists('is_page') && (zp_suite_is_service_page('logo') || is_page('logo-branding'))) {
     $is_logo_branding = true;
   }
 
@@ -123,9 +123,9 @@ add_filter('body_class', function($classes){
   $is_logo = false;
 
   if (function_exists('is_page')) {
-    if (is_page('strony-internetowe-katowice')) $is_strony = true;
-    if (is_page('sklepy-internetowe-katowice')) $is_sklepy = true;
-    if (is_page('logo-branding-katowice') || is_page('logo-branding')) $is_logo = true;
+    if (zp_suite_is_service_page('strony')) $is_strony = true;
+    if (zp_suite_is_service_page('sklepy')) $is_sklepy = true;
+    if (zp_suite_is_service_page('logo') || is_page('logo-branding')) $is_logo = true;
   }
 
   if (function_exists('is_singular') && is_singular()) {

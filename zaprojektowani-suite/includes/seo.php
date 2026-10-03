@@ -12,6 +12,11 @@ function zp_suite_seo_is_front_page() {
   return !is_admin() && (is_front_page() || is_home());
 }
 
+/** 2.3.0: with the keyword plan on, Rank Math holds titles, descriptions and schema (includes/seo-plan). */
+function zp_suite_seo_plan_on() {
+  return function_exists('zp_seo_plan_active') && zp_seo_plan_active();
+}
+
 function zp_suite_home_title() {
   return 'Strony internetowe Katowice, sklepy WooCommerce i branding';
 }
@@ -22,14 +27,17 @@ function zp_suite_home_description() {
 
 /** Rank Math support — can still be overridden manually in Rank Math if needed. */
 add_filter('rank_math/frontend/title', function ($title) {
+  if (zp_suite_seo_plan_on()) { return $title; }
   return zp_suite_seo_is_front_page() ? zp_suite_home_title() : $title;
 }, 20);
 
 add_filter('rank_math/frontend/description', function ($description) {
+  if (zp_suite_seo_plan_on()) { return $description; }
   return zp_suite_seo_is_front_page() ? zp_suite_home_description() : $description;
 }, 20);
 
 add_filter('rank_math/frontend/canonical', function ($canonical) {
+  if (zp_suite_seo_plan_on()) { return $canonical; }
   return zp_suite_seo_is_front_page() ? home_url('/') : $canonical;
 }, 20);
 
@@ -41,6 +49,7 @@ function zp_suite_seo_current_slug(){
   return sanitize_title($path);
 }
 function zp_suite_seo_page_meta_map(){
+  if (zp_suite_seo_plan_on()) { return []; }
   return [
     'strony-internetowe-katowice' => [
       'title' => 'Strony Internetowe Katowice | Projektowanie i tworzenie stron WWW',
@@ -82,7 +91,7 @@ add_filter('rank_math/frontend/canonical', function($canonical){
 
 /** Fallback meta tags when Rank Math is not active or does not print them. */
 add_action('wp_head', function () {
-  if (!zp_suite_seo_is_front_page()) {
+  if (!zp_suite_seo_is_front_page() || zp_suite_seo_plan_on()) {
     return;
   }
 
@@ -93,7 +102,7 @@ add_action('wp_head', function () {
 
 /** Structured data for homepage: Organization + WebSite + Service catalog + FAQPage. */
 add_action('wp_head', function () {
-  if (!zp_suite_seo_is_front_page()) {
+  if (!zp_suite_seo_is_front_page() || zp_suite_seo_plan_on()) {
     return;
   }
 
@@ -116,7 +125,7 @@ add_action('wp_head', function () {
         'telephone' => zp_suite_opt('brand.phone','+48501054253'),
         'sameAs' => [
           'https://www.facebook.com/zaprojektowanicom',
-          'https://www.instagram.com/zaprojektowani.com/',
+          'https://www.instagram.com/zaprojektowanicom',
         ],
         'knowsAbout' => [
           'strony internetowe Katowice',
@@ -274,7 +283,7 @@ add_action('wp_head', function () {
  * ZP Suite v2.2.111 — schema dla kluczowych podstron SEO.
  */
 add_action('wp_head', function(){
-  if (is_admin()) return;
+  if (is_admin() || zp_suite_seo_plan_on()) return;
   $uri = trim(parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH), '/');
   $site = home_url('/');
   $base = [

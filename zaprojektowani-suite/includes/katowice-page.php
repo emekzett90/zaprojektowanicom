@@ -815,6 +815,7 @@ function zp_suite_katowice_enqueue_assets(){
 }
 
 function zp_suite_katowice_schema(){
+  if (function_exists('zp_seo_plan_active') && zp_seo_plan_active()) { return ''; } // 2.3.0: schema from includes/seo-plan/schema.php
   $rows = zp_suite_katowice_get_struct('faq');
   $faqItems = [];
   foreach($rows as $r){
