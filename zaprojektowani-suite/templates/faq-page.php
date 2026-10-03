@@ -239,7 +239,7 @@ if (!function_exists('zp_faq_template_cluster_links')) {
                     <span><?php echo esc_html($item['q'] ?? ''); ?></span>
                     <span class="zpFaqItem__plus" aria-hidden="true"></span>
                   </summary>
-                  <div class="zpFaqItem__body"><?php echo wp_kses_post($item['a'] ?? ''); ?></div>
+                  <div class="zpFaqItem__body"><?php echo wp_kses_post(apply_filters('zp_suite_faq_answer', (string) ($item['a'] ?? ''), $item)); ?></div>
                 </details>
               <?php endforeach; ?>
             </div>

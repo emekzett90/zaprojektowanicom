@@ -78,14 +78,7 @@ add_action('wp_head', function () {
     . '.zpSeoLink:hover{text-decoration-thickness:2px}'
     // Guide sections on the content pages: the template's wrapper is dark, light sections set their own background.
     . 'section.section.zpSeoPlanGuide{background:#fff}#proces~section.section.zpSeoPlanGuide{background:#f7f8fa}'
-    . '.zpSeoPlanGuide__body{max-width:880px;margin:clamp(34px,4vw,56px) 0 0;color:#4f5665;font-size:clamp(15px,1.15vw,17px);line-height:1.75}'
-    . '.zpSeoPlanGuide__body h2{margin:1.9em 0 .6em;color:#05070b;font-size:clamp(24px,2.3vw,32px);line-height:1.16;letter-spacing:-.03em;font-weight:650}'
-    . '.zpSeoPlanGuide__body h3,.zpSeoPlanGuide__body h4{margin:1.5em 0 .5em;color:#05070b;font-size:clamp(19px,1.6vw,22px);line-height:1.28;letter-spacing:-.02em;font-weight:650}'
-    . '.zpSeoPlanGuide__body p{margin:0 0 1em}.zpSeoPlanGuide__body ul,.zpSeoPlanGuide__body ol{margin:0 0 1.15em;padding-left:1.25em}'
-    . '.zpSeoPlanGuide__body li{margin:.35em 0}.zpSeoPlanGuide__body strong{color:#05070b}'
-    . '.zpSeoPlanGuide__body a{color:#05070b;font-weight:600;text-decoration:underline;text-underline-offset:3px}'
-    . '.zpSeoPlanGuide__body img{display:block;max-width:100%;height:auto;margin:1.4em 0;border-radius:18px}'
-    . '.zpSeoPlanGuide__body table{width:100%;border-collapse:collapse;margin:0 0 1.2em;font-size:.94em}.zpSeoPlanGuide__body td,.zpSeoPlanGuide__body th{padding:10px 12px;border-bottom:1px solid rgba(5,7,11,.1);text-align:left}'
+    . (zp_seo_guide_page() ? zp_seo_guide_css() : '')
     // Website pages: on phones the hero H1 was 120% wide and its first line ran past the screen edge.
     . (zp_suite_service_kind() === 'strony' ? '@media(max-width:680px){html body .hero h1{width:auto}}' : '')
     . '</style>' . "\n";
@@ -114,6 +107,14 @@ function zp_seo_service_transform(string $html, array $spec, string $variant): s
   foreach ($spec['after'] ?? [] as $marker => $callback) {
     $insert = is_callable($callback) ? (string) call_user_func($callback) : '';
     if ($insert !== '') { $html = zp_seo_html_insert_after_section($html, $marker, $insert); }
+  }
+  // 'before': [marker of a section, callback, fallback marker to insert after when that section is missing].
+  foreach ($spec['before'] ?? [] as $rule) {
+    $insert = is_callable($rule[1]) ? (string) call_user_func($rule[1]) : '';
+    if ($insert === '') { continue; }
+    $range = zp_seo_html_section_range($html, $rule[0]);
+    if ($range) { $html = substr($html, 0, $range[0]) . $insert . "\n" . substr($html, $range[0]); }
+    elseif (!empty($rule[2])) { $html = zp_seo_html_insert_after_section($html, $rule[2], $insert); }
   }
   // Deliberate links to the local pages; data-zp-local keeps them out of the site-wide remap (links.php).
   $html = strtr($html, [
@@ -235,11 +236,13 @@ function zp_seo_shop_guide_html(): string {
   $content = (string) $post->post_content;
   if ($content === '') { return ''; }
   if (function_exists('has_blocks') && has_blocks($content)) { $content = do_blocks($content); }
+  $content = zp_seo_guide_clean_post_html((string) $content);
   $content = preg_replace('~<(script|style|noscript|template|form|iframe)\b[^>]*>.*?</\1>~is', '', $content);
   $content = strip_shortcodes((string) $content);
   if (stripos($content, '<p') === false) { $content = wpautop($content); }
   $content = preg_replace('~<h1\b[^>]*>.*?</h1>~is', '', $content);
-  $content = preg_replace('~\s(?:style|class|id|data-[a-z0-9_-]+)=("[^"]*"|\'[^\']*\')~i', '', (string) $content);
+  // Attributes go in zp_seo_guide_clean_post_html() (the guide classes stay); this is the fallback without DOM.
+  if (!class_exists('DOMDocument')) { $content = preg_replace('~\s(?:style|class|id|data-[a-z0-9_-]+)=("[^"]*"|\'[^\']*\')~i', '', (string) $content); }
   $content = wp_kses_post((string) $content);
   $content = preg_replace('~<p>\s*(?:&nbsp;)?\s*</p>~i', '', $content);
   if (trim(wp_strip_all_tags((string) $content)) === '') { return ''; }
@@ -254,7 +257,7 @@ function zp_seo_shop_guide_html(): string {
     . '<span class="zpShopSeoBoost__kicker">Poradnik / tworzenie sklepu internetowego krok po kroku</span>'
     . '<div class="zpShopSeoBoost__headline"><h2 class="zpShopSeoBoost__title" id="zpSeoPlanGuideTitle">Od pomysłu na ofertę do gotowego sklepu online.</h2>'
     . '<p class="zpShopSeoBoost__lead">' . $lead . '</p></div></header>'
-    . '<div class="zpSeoPlanGuide__body">' . $content . '</div></div></section>';
+    . zp_seo_guide_body((string) $content, '/tworzenie-sklepow-internetowych/') . '</div></section>';
 }
 
 /* ------------------------------------------------------------------- specs */
@@ -267,6 +270,10 @@ function zp_seo_service_spec(string $variant): ?array {
   $cost_logo = '/logo-branding/ile-kosztuje-logo-dla-firmy-i-co-obejmuje-cena/';
   $local = static function (string $key, string $text): string {
     return '<a class="zpSeoLink" href="{{' . $key . '}}">' . $text . '</a>';
+  };
+  // Articles published by the plan (2.5.0): linked only once they are live, plain text otherwise.
+  $A = static function (string $path, string $text) use ($L): string {
+    return zp_seo_plan_link_is_live($path) ? $L($path, $text) : $text;
   };
 
   $content = zp_seo_content_page_by_variant($variant);
@@ -282,7 +289,7 @@ function zp_seo_service_spec(string $variant): ?array {
           ['new', 'Czy tworzycie strony internetowe dla firm z całej Polski?', 'Tak. Projektujemy i tworzymy strony internetowe dla firm z całej Polski — <strong>strony firmowe, ' . $L('/strona-wizytowka/', 'strony wizytówki') . ', landing page’e i rozbudowane serwisy</strong>. Brief, prezentacje i odbiory prowadzimy online, a z firmami ze Śląska spotykamy się też w naszym biurze w Katowicach.'],
           ['keep', 2], ['keep', 3], ['keep', 4],
           ['new', 'Ile kosztuje stworzenie strony internetowej?', 'Cena zależy od zakresu: liczby podstron, poziomu projektu, treści, funkcji, SEO czy sklepu WooCommerce. Od czego zależy cena strony wizytówki, firmowej i rozbudowanej, wyjaśniamy w poradniku ' . $L($cost_www, 'ile kosztuje strona internetowa') . '. Dokładną wycenę przygotujemy po ' . $L('/studio-wyceny/', 'uzupełnieniu Studia Wyceny') . ' — dobierzemy wtedy zakres: landing page, Starter, Premium albo projekt indywidualny.'],
-          ['new', 'Na czym robicie strony internetowe?', 'Najczęściej ' . $L('/strony-wordpress/', 'na WordPressie') . '. Projekt powstaje indywidualnie, bez gotowego szablonu, a wdrożenie daje <strong>łatwą edycję treści, szybkie działanie i solidne podstawy SEO</strong>. Przy prostszych projektach, takich jak strona wizytówka czy landing page, dobieramy lżejszą strukturę — zasada zostaje ta sama: strona ma prowadzić do kontaktu.'],
+          ['new', 'Na czym robicie strony internetowe?', 'Najczęściej ' . $L('/strony-wordpress/', 'na WordPressie') . '. Projekt powstaje indywidualnie, bez gotowego szablonu, a wdrożenie daje <strong>łatwą edycję treści, szybkie działanie i solidne podstawy SEO</strong>. Przy prostszych projektach, takich jak strona wizytówka czy landing page, dobieramy lżejszą strukturę — zasada zostaje ta sama: strona ma prowadzić do kontaktu. Jeśli rozważasz kreator albo samodzielną pracę, przeczytaj, ' . $A('/strony-internetowe/jak-stworzyc-strone-internetowa/', 'jak stworzyć stronę internetową') . ' i kiedy warto oddać ją agencji.'],
           ['new', 'Czy wykonujecie sklepy internetowe WooCommerce?', 'Tak. ' . $L('/tworzenie-sklepow-internetowych/', 'Tworzenie sklepów internetowych') . ' na WooCommerce to nasza druga główna specjalizacja — od prostych sklepów produktowych po wdrożenia z wariantami, płatnościami, dostawami, katalogiem B2B i konfiguratorami.'],
           ['keep', 7], ['keep', 8],
           ['new', 'Ile trwa stworzenie strony internetowej?', 'Termin zależy od zakresu i tempa przekazywania materiałów. Strona wizytówka lub landing page powstaje szybciej niż serwis firmowy z kilkunastoma podstronami i treściami SEO. Po briefie podajemy harmonogram z etapami i datą publikacji.'],
@@ -357,7 +364,8 @@ function zp_seo_service_spec(string $variant): ?array {
           ['FAQ — sklepy internetowe Katowice i WooCommerce.', 'FAQ — tworzenie sklepów internetowych i WooCommerce.'],
           ['albo sklep lokalnej firmy z Katowic.', 'albo sklep lokalnej firmy.'],
         ],
-        'after' => ['id="sklepy-woocommerce-katowice"' => 'zp_seo_shop_guide_html'],
+        // The guide goes last, right above the FAQ (Mat, 2.5.0).
+        'before' => [['id="zpFaqShopKatNavy"', 'zp_seo_shop_guide_html', 'id="sklepy-woocommerce-katowice"']],
       ];
 
     case 'sklepy-local':
@@ -384,7 +392,7 @@ function zp_seo_service_spec(string $variant): ?array {
         'h1' => 'Projektowanie logo <strong class="gradient-text">i logotypów dla firm</strong>',
         'faq' => [
           ['new', 'Czy projektujecie logo dla firm z całej Polski?', 'Tak. Projektujemy <strong>logo i logotypy</strong> dla firm z całej Polski. Cały proces — od briefu po odbiór uporządkowanych plików — prowadzimy online, a firmy ze Śląska mogą spotkać się z nami w biurze w Katowicach.'],
-          ['new', 'Czym różni się logo, logotyp i sygnet?', '<strong>Logotyp</strong> to znak zbudowany z samego napisu — nazwy firmy w dopracowanym kroju. <strong>Sygnet</strong> to symbol graficzny, który działa też samodzielnie, np. jako ikona czy avatar. <strong>Logo</strong> to potoczna nazwa całego znaku: logotypu, sygnetu albo ich połączenia. Formę dobieramy do nazwy, branży i miejsc użycia.'],
+          ['new', 'Czym różni się logo, logotyp i sygnet?', '<strong>Logotyp</strong> to znak zbudowany z samego napisu — nazwy firmy w dopracowanym kroju. <strong>Sygnet</strong> to symbol graficzny, który działa też samodzielnie, np. jako ikona czy avatar. <strong>Logo</strong> to potoczna nazwa całego znaku: logotypu, sygnetu albo ich połączenia. Formę dobieramy do nazwy, branży i miejsc użycia. Przykłady pokazujemy w poradniku ' . $A('/logo-branding/logo-logotyp-sygnet-roznice/', 'logo, logotyp czy sygnet') . '.'],
           ['keep', 2], ['keep', 3], ['keep', 4], ['keep', 5], ['keep', 8], ['keep', 9], ['keep', 10], ['keep', 13], ['keep', 14], ['keep', 15],
         ],
         'replace' => [
@@ -401,6 +409,8 @@ function zp_seo_service_spec(string $variant): ?array {
           ['<p class="section-kicker">FAQ / logo i branding</p>', '<p class="section-kicker">FAQ / projektowanie logo</p>'],
           ['dzięki którym marka pozostaje spójna na stronie, w social mediach i druku.', 'dzięki którym marka pozostaje spójna na stronie, w social mediach i druku. Ten zakres opisujemy na stronie ' . $L('/identyfikacja-wizualna/', 'identyfikacja wizualna') . '.'],
           ['Dodatkowe materiały, opakowania lub rozbudowane wdrożenie wyceniamy indywidualnie.', 'Dodatkowe materiały, opakowania lub rozbudowane wdrożenie wyceniamy indywidualnie. Więcej w poradniku ' . $L($cost_logo, 'ile kosztuje logo dla firmy') . '.'],
+          ['uporządkowany zestaw gotowy dla drukarni i zespołu digital.', 'uporządkowany zestaw gotowy dla drukarni i zespołu digital. Czym jest ' . $A('/logo-branding/logo-wektorowe-pliki-logo/', 'logo wektorowe') . ' i do czego służy każdy format, wyjaśniamy w osobnym poradniku.'],
+          ['przygotowany do legalnego, codziennego użycia przez firmę.', 'przygotowany do legalnego, codziennego użycia przez firmę. Jeśli chcesz mieć wyłączność na znak, sprawdź, jak wygląda ' . $A('/logo-branding/jak-zastrzec-logo/', 'zastrzeżenie logo') . ' w Urzędzie Patentowym.'],
         ],
       ];
 
@@ -410,7 +420,7 @@ function zp_seo_service_spec(string $variant): ?array {
         'drop' => ['class="section manifesto"'],
         'h1' => 'Identyfikacja wizualna <strong class="gradient-text">i branding dla firm</strong>',
         'faq' => [
-          ['new', 'Co obejmuje identyfikacja wizualna firmy?', 'Identyfikacja wizualna to system: <strong>logo i jego warianty, kolory, typografia, styl grafik i zdjęć</strong>, wzory materiałów firmowych oraz zasady ich użycia zebrane w księdze znaku. Dzięki niemu marka wygląda tak samo na stronie, w social mediach, w ofertach i w druku. Więcej w poradniku ' . $L('/logo-branding/identyfikacja-wizualna-firmy/', 'identyfikacja wizualna firmy: co zawiera') . '.'],
+          ['new', 'Co obejmuje identyfikacja wizualna firmy?', 'Identyfikacja wizualna to system: <strong>logo i jego warianty, kolory, typografia, styl grafik i zdjęć</strong>, wzory materiałów firmowych oraz zasady ich użycia zebrane w księdze znaku. Dzięki niemu marka wygląda tak samo na stronie, w social mediach, w ofertach i w druku. Przy kampaniach system uzupełnia ' . $A('/logo-branding/key-visual-co-to-jest/', 'key visual kampanii') . ', czyli wspólny motyw reklam. Więcej w poradniku ' . $L('/logo-branding/identyfikacja-wizualna-firmy/', 'identyfikacja wizualna firmy: co zawiera') . '.'],
           ['keep', 2],
           ['new', 'Ile kosztuje identyfikacja wizualna?', 'Zakres zaczyna się od <strong>Mini Brandingu od 1499 zł</strong> (logo, kolory i typografia), a pełny system z księgą znaku to <strong>Branding Premium od 2999 zł</strong>. Dodatkowe materiały wyceniamy indywidualnie. Szczegóły opisujemy w poradniku ' . $L($cost_logo, 'ile kosztuje logo i identyfikacja wizualna') . '.'],
           ['keep', 4], ['keep', 6], ['keep', 7], ['keep', 11], ['keep', 12], ['keep', 14],

@@ -133,3 +133,15 @@ add_action('template_redirect', function () {
     return zp_seo_plan_remap_html($html);
   });
 }, 2);
+
+/*
+ * 2.5.0: on the FAQ page, the answer about the scope of a visual identity links "key visual"
+ * to the new article once it is live (the answers are stored in the FAQ editor, so the link
+ * is added when the page is shown and disappears when the plan is paused).
+ */
+add_filter('zp_suite_faq_answer', function ($answer, $item) {
+  if (!zp_seo_plan_active() || zp_seo_plan_is_en() || strpos((string) ($item['q'] ?? ''), 'Co może obejmować projekt identyfikacji wizualnej') !== 0) { return $answer; }
+  $path = '/logo-branding/key-visual-co-to-jest/';
+  if (stripos($answer, $path) !== false || !zp_seo_plan_link_is_live($path)) { return $answer; }
+  return (string) preg_replace('~(?<![\w>/-])key visual(?![\w<])~u', '<a href="' . esc_url(home_url($path)) . '">key visual</a>', $answer, 1);
+}, 10, 2);

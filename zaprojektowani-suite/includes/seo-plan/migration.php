@@ -3,7 +3,8 @@ if (!defined('ABSPATH')) { exit; }
 
 /**
  * One-time database changes of the keyword plan (runs once per plan version):
- *  1. creates the nationwide service pages (copies of the Katowice pages),
+ *  1. creates the nationwide service pages (copies of the Katowice pages) and publishes
+ *     the new articles from the content thread (articles.php),
  *  2. moves merged duplicate posts to drafts (their URLs redirect with 301),
  *  3. fixes the "ampanie-…" typo slug,
  *  4. writes SEO titles, descriptions and focus keywords into Rank Math,
@@ -108,6 +109,8 @@ function zp_seo_plan_migrate(): void {
 
   // 1. Nationwide service pages.
   $log = array_merge($log, zp_seo_service_create_pages());
+  // 1b. New articles from the content thread (2.5.0), before their titles and links are written below.
+  $log = array_merge($log, zp_seo_articles_create());
 
   // 2. The shop post's content moves to /tworzenie-sklepow-internetowych/; remember it before drafting.
   $shop_path = '/sklepy-internetowe/tworzenie-sklepow-internetowych-od-pomyslu-na-oferte-do-gotowego-sklepu-online/';
@@ -278,11 +281,11 @@ function zp_seo_plan_restore(): array {
     update_option('rank-math-options-titles', $opts);
   }
   $n = 0;
-  foreach (get_posts(['post_type' => 'page', 'post_status' => 'publish', 'numberposts' => 20, 'fields' => 'ids', 'meta_key' => '_zp_seo_plan_created', 'suppress_filters' => true]) as $id) {
+  foreach (get_posts(['post_type' => ['page', 'post'], 'post_status' => 'publish', 'numberposts' => 50, 'fields' => 'ids', 'meta_key' => '_zp_seo_plan_created', 'suppress_filters' => true]) as $id) {
     wp_update_post(['ID' => $id, 'post_status' => 'draft']);
     $n++;
   }
-  $log[] = 'Nowe strony usług przeniesione do szkiców: ' . $n . '.';
+  $log[] = 'Nowe strony usług i artykuły przeniesione do szkiców: ' . $n . '.';
   delete_option(ZP_SEO_PLAN_BACKUP);
   delete_option('zp_seo_plan_migrated');
   zp_seo_plan_purge_caches();

@@ -106,14 +106,14 @@ function zp_seo_content_cards(string $html, string $card_re, array $items, array
   return is_string($out) ? $out : $html;
 }
 
-function zp_seo_content_guide_html(array $g): string {
+function zp_seo_content_guide_html(array $g, string $path = ''): string {
   $id = sanitize_html_class($g['id']);
   return '<section class="section zpSeoPlanGuide" id="' . esc_attr($id) . '" aria-labelledby="' . esc_attr($id) . '-title"><div class="wrap">'
     . '<div class="section-head"><div class="section-head__copy reveal">'
     . '<p class="section-kicker">' . $g['kicker'] . '</p>'
     . '<h2 class="section-title" id="' . esc_attr($id) . '-title">' . $g['title'] . '</h2>'
     . ($g['lead'] !== '' ? '<p class="section-lead">' . zp_seo_content_urls($g['lead']) . '</p>' : '')
-    . '</div></div><div class="zpSeoPlanGuide__body">' . zp_seo_content_urls($g['body']) . '</div></div></section>';
+    . '</div></div>' . zp_seo_guide_body(zp_seo_content_urls($g['body']), $path) . '</div></section>';
 }
 
 /** Kancelarie: the law-firm case study first, the beauty one second (numbers follow the order). */
@@ -255,7 +255,7 @@ function zp_seo_content_transform(string $html, array $page): string {
     $pos = array_search('guide', $page['order'], true);
     $after = $pos ? ($page['order'][$pos - 1] ?? 'hero') : 'hero';
     $range = zp_seo_html_section_range($html, $markers[$after] ?? $markers['hero']);
-    if ($range) { $html = substr($html, 0, $range[1]) . "\n" . zp_seo_content_guide_html($page['guide']) . substr($html, $range[1]); }
+    if ($range) { $html = substr($html, 0, $range[1]) . "\n" . zp_seo_content_guide_html($page['guide'], (string) ($page['path'] ?? '')) . substr($html, $range[1]); }
   }
 
   return zp_seo_content_reorder($html, $page['order'], $markers, $guide_marker);
