@@ -18,12 +18,15 @@ function zp_suite_contact_page_html($file){
 }
 
 
+// Guarded: Rank Math renders every page for its image sitemap in one request (2.6.1).
+if (!function_exists('zp_suite_strip_contact_visual_submit_bridge')) {
 function zp_suite_strip_contact_visual_submit_bridge($html) {
   return preg_replace(
     '/\s*form\.addEventListener\(\s*[\'"]submit[\'"]\s*,\s*function\s*\(\s*e\s*\)\s*\{\s*if\s*\(\s*form\.getAttribute\(\s*[\'"]action[\'"]\s*\)\s*===\s*[\'"]#[\'"]\s*\)\s*\{\s*e\.preventDefault\(\s*\)\s*;\s*alert\([\s\S]*?\)\s*;\s*\}\s*\}\s*\)\s*;\s*/',
     "\n        /* submit obsługuje bridge AJAX z wtyczki */\n",
     $html
   );
+}
 }
 
 $form_html = zp_suite_contact_page_html(__DIR__ . '/contact-page/form.html');
