@@ -233,7 +233,7 @@ function zp_seo_shop_guide_html(): string {
   $id = (int) get_option('zp_seo_plan_shop_post', 0);
   $post = $id ? get_post($id) : null;
   if (!$post || $post->post_type !== 'post') { return ''; }
-  $content = (string) $post->post_content;
+  $content = zp_seo_guide_post_source($post);
   if ($content === '') { return ''; }
   if (function_exists('has_blocks') && has_blocks($content)) { $content = do_blocks($content); }
   $content = zp_seo_guide_clean_post_html((string) $content);
@@ -245,6 +245,7 @@ function zp_seo_shop_guide_html(): string {
   if (!class_exists('DOMDocument')) { $content = preg_replace('~\s(?:style|class|id|data-[a-z0-9_-]+)=("[^"]*"|\'[^\']*\')~i', '', (string) $content); }
   $content = wp_kses_post((string) $content);
   $content = preg_replace('~<p>\s*(?:&nbsp;)?\s*</p>~i', '', $content);
+  $content = zp_seo_guide_strip_notes((string) $content);
   if (trim(wp_strip_all_tags((string) $content)) === '') { return ''; }
   $lead = 'Pełny przewodnik po tym, jak powstaje sklep: od modelu sprzedaży i oferty, przez strukturę kategorii i '
     . '<a class="zpSeoLink" href="' . esc_url(home_url('/sklepy-internetowe/karta-produktu-w-sklepie-internetowym/')) . '">kartę produktu</a>, '
