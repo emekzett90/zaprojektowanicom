@@ -243,7 +243,7 @@ final class Worker {
 
     // ------------------------------------------------------- post status hooks
 
-    /** A translated post that stops being public loses its English version at once (no 404s left in sitemap-en). */
+    /** A translated post that stops being public loses its English version at once (no 404s left in the English sitemap). */
     public static function status_changed($new, $old, $post): void {
         if ($old === $new || ($old !== 'publish' && $new !== 'publish') || !($post instanceof \WP_Post) || !Bridge::ready() || get_option('zpte_db') !== Store::DB_VERSION) { return; }
         $row = Store::path_by_post((int) $post->ID);
