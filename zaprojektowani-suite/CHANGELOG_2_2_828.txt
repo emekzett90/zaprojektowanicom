@@ -1,0 +1,7 @@
+ZAPROJEKTOWANI SUITE 2.2.828
+
+Meta Pixel — wartości zdarzeń (naprawa błędu z diagnostyki Menedżera zdarzeń: „100% zdarzeń InitiateCheckout bez prawidłowej wartości i waluty”):
+- InitiateCheckout wysyła value + currency (PLN): dla logo cenę zaznaczonego pakietu (domyślnie 999 zł), dla stron/sklepów budżet z suwaka Studio Wyceny, a gdy klient go nie ustawił — wartość szacunkową,
+- Lead ze strony podziękowania liczy wartość z prawdziwego zamówienia: cena pakietu logo (999 / 1499 / 2999 zł, pobierana z ustawień pakietów) albo budżet podany przez klienta,
+- Lead z formularzy kontaktowych dostaje wartość szacunkową dla usługi,
+- wartości szacunkowe (filtr zp_suite_meta_default_values): strony 6000, sklepy 6000, logo 999, kampanie 3000, kontakt 3000 — tylko sygnał dla optymalizacji Meta, nigdzie niewyświetlany.

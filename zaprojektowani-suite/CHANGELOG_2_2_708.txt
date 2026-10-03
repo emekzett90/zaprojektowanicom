@@ -1,0 +1,10 @@
+ZAPROJEKTOWANI SUITE 2.2.708
+
+1. Strona główna — desktopowy sticky dock został przebudowany na znacznie
+   mniejszy i subtelniejszy pasek przy dolnej krawędzi ekranu.
+2. Dodano półprzezroczysty efekt glass z delikatnym blur, cienką ramką i
+   lekkim cieniem zamiast dużego, ciężkiego kontenera.
+3. Zmniejszono szerokość, wysokość, ikony, typografię, odstępy i dolny zapas
+   strony. Główne CTA pozostaje wyróżnione, ale w spokojniejszej formie.
+4. Widok mobile pozostał bez zmian.
+5. Wersję wtyczki podbito do 2.2.708.

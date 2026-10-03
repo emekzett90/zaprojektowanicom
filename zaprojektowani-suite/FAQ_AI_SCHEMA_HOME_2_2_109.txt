@@ -1,0 +1,15 @@
+ZAPROJEKTOWANI.COM — FAQ HOME / AI SEO / SCHEMA v2.2.109
+
+Zmiany:
+- FAQ na stronie głównej rozbudowane do 10 treściwych pytań i odpowiedzi.
+- Odpowiedzi są napisane pełnymi zdaniami, żeby były czytelne dla użytkowników, Google i systemów AI.
+- FAQ opisuje: czym zajmuje się Zaprojektowani.com, strony internetowe Katowice, sklepy WooCommerce, logo i branding, SEO, kampanie Meta Ads, branże, praca zdalna i start współpracy.
+- Sekcja FAQ ma microdata FAQPage / Question / Answer.
+- Globalny JSON-LD na stronie głównej zawiera Organization, LocalBusiness, WebSite, WebPage, ItemList usług, BreadcrumbList i FAQPage.
+- Organization ma knowsAbout, a LocalBusiness ma hasOfferCatalog z głównymi usługami.
+
+Cel:
+- wzmocnić widoczność strony głównej pod strategię SEO z maja 2026,
+- poprawić kontekst semantyczny dla robotów i asystentów AI,
+- zwiększyć szansę na wykorzystanie treści FAQ w wynikach rozszerzonych / odpowiedziach AI,
+- nie spamować frazami, tylko naturalnie opisać zakres usług.

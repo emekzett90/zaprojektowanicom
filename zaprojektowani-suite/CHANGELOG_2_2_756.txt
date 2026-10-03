@@ -1,0 +1,7 @@
+2.2.756 — O nas / photo blend and awards composition fix
+
+- Jak pracujemy: usunięto podpis „kontakt bez pośredników”.
+- Jak pracujemy: zdjęcie team_kontakt wtopione od dołu, bez ramki i z mocniejszą ekspozycją.
+- Studio Awards: zdjęcie wiedza_ekipa wyjęte z małej ramki i przebudowane jako większy visual wystający poza kartę.
+- Studio Awards: zdjęcie zostało powiększone, wtopione od dołu i ustawione tak, by wychodziło ponad dolną część feature card.
+- Zachowano wcześniejsze poprawki reveal / timeline / trust / SEO.

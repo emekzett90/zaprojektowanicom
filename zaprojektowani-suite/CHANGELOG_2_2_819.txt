@@ -1,0 +1,13 @@
+Zaprojektowani Suite 2.2.819
+
+- /sklepy-internetowe-katowice/: przebudowane pakiety sklepów w stylu podstron WWW i brandingu.
+- Sekcja pakietów przeniesiona wyżej: bezpośrednio przed portfolio e-commerce.
+- Dodane sylwetki Marty, Mateusza i Stanisława nad kartami; zdjęcia mogą wychodzić ponad karty.
+- Rozbudowany frontend: 12+ elementów Startowy, 14+ Rozwojowy, 16+ Indywidualny.
+- Dodany pasek „Każdy sklep w standardzie”.
+- Dodane subtelne ikony Lucide do zakresów.
+- Sklep Rozwojowy: SEO Ready / Ads Ready / Merchant Ready / Analytics Ready.
+- Dodany pełny zakres na hover desktop i tap/click mobile, z X, Escape, scrollem i CTA.
+- Startowy: 45+ elementów pełnego zakresu.
+- Rozwojowy: 70+ elementów pełnego systemu sprzedaży.
+- Indywidualny: 30+ przykładowych możliwości (B2B, ERP/CRM, BaseLinker, konfiguratory, API, AI itd.).

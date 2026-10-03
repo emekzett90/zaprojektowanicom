@@ -1,0 +1,44 @@
+ZAPROJEKTOWANI.COM — TREŚĆ DO WKLEJENIA W EDYTORZE STRONY GŁÓWNEJ DLA RANK MATH
+
+WAŻNE:
+Jeśli strona główna w WordPressie zawiera tylko shortcode [zp_home_full], Rank Math w edytorze może widzieć „Content is 1 words long”, mimo że na froncie cała treść z wtyczki normalnie istnieje. To ograniczenie analizy shortcode’ów w edytorze.
+
+Najprostsze rozwiązanie:
+W treści strony głównej, nad albo pod shortcodem [zp_home_full], wklej poniższy blok jako zwykły tekst/HTML. Można go zostawić jako widoczny krótki opis SEO albo użyć jako blok treści w Elementorze. Nie chowaj tekstu na display:none, bo to zły sygnał SEO.
+
+Rekomendowany układ treści w edytorze:
+[zp_home_full]
+
+A jeśli Rank Math nadal pokazuje 1 word, dodaj pod shortcodem normalny blok tekstowy z treścią:
+
+Strony internetowe Katowice, sklepy internetowe i branding dla firm z całej Polski
+
+Zaprojektowani.com tworzy strony internetowe Katowice, sklepy internetowe WooCommerce, logo, branding, identyfikację wizualną, SEO oraz kampanie Meta Ads. Projektujemy strony WordPress i sklepy dla firm ze Śląska oraz całej Polski, łącząc design, szybkość działania, treści, UX i konwersję. Dzięki temu nowa strona nie jest tylko estetycznym widokiem, ale realnym narzędziem do zdobywania zapytań, sprzedaży i budowania zaufania.
+
+Najczęściej pomagamy firmom, które potrzebują nowej strony internetowej, sklepu WooCommerce, odświeżenia marki, projektu logo, poprawy widoczności w Google albo kampanii reklamowej na Facebooku i Instagramie. Każdy projekt zaczynamy od celu biznesowego, analizy oferty i ścieżki użytkownika, a dopiero później dobieramy układ strony, treści, formularze, sekcje usługowe, portfolio i CTA.
+
+Na stronie głównej kierujemy użytkownika do najważniejszych usług: strony internetowe Katowice, sklepy internetowe Katowice, logo i branding Katowice oraz kampanie Meta Ads. Dla bardziej sprecyzowanych potrzeb rozwijamy też landing pages branżowe, między innymi strony internetowe dla kancelarii, deweloperów, salonów beauty, lekarzy, producentów i marek premium.
+
+Linki wewnętrzne, które powinny być obecne na stronie:
+- /strony-internetowe-katowice/
+- /sklepy-internetowe-katowice/
+- /logo-branding-katowice/
+- /kampanie-meta-ads/
+- /studio-wyceny/
+- /kontakt/
+
+Ustawienia Rank Math:
+Focus Keyword:
+strony internetowe Katowice
+
+Additional Keywords:
+projektowanie stron internetowych Katowice
+sklepy internetowe Katowice
+logo i branding Katowice
+kampanie Meta Ads
+
+SEO Title:
+Strony internetowe Katowice, sklepy i branding | Zaprojektowani.com
+
+Meta Description:
+Strony internetowe Katowice, sklepy WooCommerce, logo i branding, SEO oraz kampanie Meta Ads dla firm ze Śląska i całej Polski.

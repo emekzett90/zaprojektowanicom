@@ -1,0 +1,10 @@
+Zaprojektowani Suite 2.2.717
+
+Wiedza — hero typography polish:
+- dekoracyjne słowo „wiedza” w hero jest teraz pisane małymi literami, bez CAPS,
+- usunięto rotację WIEDZA / SEO / WWW / SKLEPY / BRANDING w tle,
+- słowo jest większe i osadzone nisko za fotografią zespołu,
+- prawa krawędź celowo wychodzi lekko poza viewport,
+- dodano miękkie wygaszenie po bokach i od dołu, żeby napis wtapiać w tło,
+- desktop/tablet/mobile mają osobne proporcje i pozycjonowanie,
+- zmiana jest wyłącznie dekoracyjna (aria-hidden) i nie wpływa na H1 ani SEO treści.

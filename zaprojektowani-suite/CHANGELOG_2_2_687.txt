@@ -1,0 +1,8 @@
+ZAPROJEKTOWANI SUITE 2.2.687
+
+Logo & Branding Katowice — poprawki po review:
+- zmniejszono widoczność orba w tle hero o ok. 50%,
+- dodano delikatne, pływające kuleczki na orbicie w hero,
+- na mobile w sekcji „Następny krok” powiększono zdjęcie o kolejne 10%,
+- na mobile podniesiono zdjęcie w sekcji „Następny krok” o 60 px,
+- podbito wersję assetów i odświeżanie cache do 2.2.687.

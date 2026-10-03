@@ -1,0 +1,14 @@
+ZAPROJEKTOWANI SUITE 2.2.720 — REALIZACJE WOW / SEO-FIRST
+
+- pełna przebudowa hero /realizacje/: dynamiczny kolaż prawdziwych projektów zamiast pojedynczego dekoracyjnego portretu,
+- statystyki w hero liczone bezpośrednio z CMS Realizacje,
+- nowe ścieżki usługowe: strony WWW, sklepy WooCommerce, logo i branding,
+- portfolio renderowane również po stronie PHP — marki, opisy i zakres są dostępne w HTML bez JavaScriptu,
+- filtrowanie i slider zachowane jako progressive enhancement,
+- karty projektów dostały stabilne identyfikatory #case-nazwa-projektu,
+- modal aktualizuje hash URL i obsługuje wejście bezpośrednio z linku do case study,
+- poprawiony modal: usunięty zdublowany wiersz Status,
+- nowa sekcja SEO/CTA po portfolio z crawlable linkami do usług i Wiedzy,
+- dynamiczne filtry i liczniki na podstawie CMS Realizacje,
+- Rank Math: dedykowany title, description, canonical i ItemList projektów,
+- nowy premium UI: większa hierarchia, równe karty, subtelne motion, lepszy mobile i dostępność.

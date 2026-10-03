@@ -1,0 +1,12 @@
+Zaprojektowani Suite 2.2.684
+
+Logo & Branding Katowice:
+- zmniejszono pustą przestrzeń nad sekcją „Najpierw charakter” na desktopie,
+- usunięto nadmierny odstęp między headingiem a zdjęciem Stanisława na mobile,
+- wycentrowano i powiększono grafikę case study Siemianowski na mobile,
+- wyrównano nagłówek nawigacji portfolio i pierwszą kartę do osi headingu sekcji,
+- podniesiono i wycentrowano zdjęcie w sekcji „Jeden zespół”,
+- powiększono o 20%, podniesiono i wycentrowano zdjęcie w sekcji „Następny krok”,
+- naprawiono mobilną mapę: wszystkie nazwy miast są widoczne i klikalne,
+- usunięto desktopowy efekt przechylania mapy powodujący cięcie cienia,
+- podbito wersję assetów i dodano jednorazowe czyszczenie cache strony.

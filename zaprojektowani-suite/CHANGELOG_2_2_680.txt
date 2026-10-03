@@ -1,0 +1,7 @@
+Zaprojektowani Suite 2.2.680
+
+- Dodano podstronę /kampanie-reklamowe/ z projektu kampanie-v2 1:1.
+- CSS, JavaScript, fonty i obrazy podstrony są dostarczane lokalnie z katalogu wtyczki.
+- Dodano automatyczne utworzenie opublikowanej strony WordPress „Kampanie reklamowe”.
+- Zaktualizowano odnośniki w menu desktopowym, menu mobilnym, stopce i sekcjach serwisu.
+- Przygotowano obsługę lokalnego, pakietowego pliku Lucide z kompatybilnym fallbackiem do obecnej lokalizacji serwerowej.

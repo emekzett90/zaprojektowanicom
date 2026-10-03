@@ -1,0 +1,13 @@
+<?php
+/**
+ * ZAPROJEKTOWANI Suite — front fixes v2.2.195
+ * Home reviews: rail alignment + lighter/smaller review text.
+ */
+if (!defined('ABSPATH')) exit;
+
+add_action('wp_head', function () {
+  if (is_admin()) return;
+  ?>
+  <style id="zp-suite-front-fixes-195">html body .zpRevEd .zpRevEd__inner{width: min(1740px,calc(100% - clamp(28px,6vw,112px))) !important;max-width: 1740px !important;margin-left: auto !important;margin-right: auto !important}html body .zpRevEd .zpRevEd__more .zpRevEd__railWrap{width: 100vw !important;max-width: 100vw !important;margin-left: calc(50% - 50vw) !important;margin-right: 0 !important;overflow-x: clip !important;overflow-y: visible !important}html body .zpRevEd .zpRevEd__more .zpRevEd__rail{padding-left: max(calc((100vw - 1740px) / 2),calc(clamp(28px,6vw,112px) / 2)) !important;padding-right: max(28px,calc((100vw - 1740px) / 2 + 28px)) !important}html body .zpRevEd .zpRevEd__more .zpRevEd__moreHead{width: 100% !important;max-width: 100% !important}html body .zpRevEd .zpRevEd__featured blockquote{font-size: clamp(24px,3.1vw,46px) !important;font-weight: 420 !important;font-variation-settings: "wght" 420 !important;line-height: 1.04 !important;letter-spacing: -0.052em !important}html body .zpRevEd .zpRevEd__quote p{font-size: clamp(18px,2.15vw,34px) !important;font-weight: 420 !important;font-variation-settings: "wght" 420 !important;line-height: 1.08 !important;letter-spacing: -0.05em !important}html body .zpRevEd .zpRevEd__miniCard p{font-size: clamp(16px,1.55vw,26px) !important;font-weight: 420 !important;font-variation-settings: "wght" 420 !important;line-height: 1.08 !important;letter-spacing: -0.048em !important}@media (max-width: 767px){html body .zpRevEd .zpRevEd__inner{width: calc(100% - 20px) !important;max-width: none !important}html body .zpRevEd .zpRevEd__more .zpRevEd__railWrap{width: 100vw !important;margin-left: calc(50% - 50vw) !important;overflow-x: hidden !important}html body .zpRevEd .zpRevEd__more .zpRevEd__rail{padding-left: 10px !important;padding-right: calc(16vw + 10px) !important}html body .zpRevEd .zpRevEd__featured blockquote{font-size: clamp(21px,7.1vw,32px) !important;font-weight: 420 !important;font-variation-settings: "wght" 420 !important}html body .zpRevEd .zpRevEd__quote p{font-size: clamp(17px,5.9vw,27px) !important;font-weight: 420 !important;font-variation-settings: "wght" 420 !important;line-height: 1.08 !important}html body .zpRevEd .zpRevEd__miniCard p{font-size: clamp(16px,5.8vw,24px) !important;font-weight: 420 !important;font-variation-settings: "wght" 420 !important;line-height: 1.08 !important}}</style>
+  <?php
+}, 999999);

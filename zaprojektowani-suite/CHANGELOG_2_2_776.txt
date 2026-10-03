@@ -1,0 +1,5 @@
+Zaprojektowani Suite 2.2.776
+
+- Karta z cytatem zespołu (sekcja „Porozmawiajmy o projekcie” na stronie głównej i karta CTA w portfolio stron usług Katowice): pod cytatem jest teraz logo Zaprojektowani (ZP_CIEMNE_BEZ_CIENIA). Wcześniejszy podpis rysowany maską SVG nie wyświetlał się i zostawiał puste miejsce.
+- Mobile (do 860 px): zdjęcie zespołu w karcie kontaktu na stronie głównej zjeżdża niżej, więc nie zasłania już przycisku WhatsApp.
+- Nowa warstwa: includes/front-fixes-304.php + assets/css/front-fixes-304.css. Reszta bez zmian względem 2.2.775.

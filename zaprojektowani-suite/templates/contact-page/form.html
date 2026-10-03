@@ -1,0 +1,814 @@
+<!-- =========================================================
+ZAPROJEKTOWANI — CONTACT FORM / LIGHT MAIL PREVIEW v1.3 MODE LOGIC + SMOOTH REVEAL
+Elementor HTML Widget
+
+v1.3:
+- logika trybów: Szybki kontakt / Pełny brief / Oddzwońcie
+- pola formularza skracają się zależnie od trybu
+- płynne animacje przełączania pól
+- animacja wejścia całego widgetu
+- ciemny navy gradient jaśniejszy niż v1.2, bez zielonego akcentu
+- ikony wymuszone na białe po hover/active
+- button dark navy + hover reverse / jaśniejszy gradient
+- prawa kolumna sticky desktop
+- dynamiczny podgląd maila
+========================================================= -->
+
+<section class="zpContactFormLight" id="zpContactFormLight" aria-labelledby="zpContactFormLightTitle" data-ready="0" data-mode="quick">
+  <script src="/wp-content/web-font/lucide.min.js"></script>
+
+  <div class="zpContactFormLight__bgText" aria-hidden="true">kontakt</div>
+
+  <div class="zpContactFormLight__inner">
+
+    <header class="zpContactFormLight__head" data-zp-reveal>
+      <div class="zpContactFormLight__headCopy">
+        <span class="zpContactFormLight__kicker">Formularz kontaktowy</span>
+
+        <h2 id="zpContactFormLightTitle">
+          Wyceń projekt i ustalmy konkretny plan działania.
+        </h2>
+      </div>
+
+      <p class="zpContactFormLight__lead">
+        Możesz zostawić tylko numer telefonu, opisać temat w kilku zdaniach albo wysłać pełniejszy brief
+        dotyczący strony internetowej, sklepu WooCommerce, logo, brandingu, SEO lub kampanii. Po prawej stronie zobaczysz, jak tworzy się wiadomość,
+        którą otrzymamy.
+      </p>
+    </header>
+
+    <div class="zpContactFormLight__layout">
+
+      <form
+        class="zpContactFormLight__form"
+        id="zpContactFormMain"
+        method="post"
+        enctype="multipart/form-data"
+        action="#"
+        data-zp-reveal
+      >
+
+        <div class="zpContactFormLight__formTop">
+          <span class="zpContactFormLight__step">01</span>
+          <div>
+            <strong>Jak chcesz się z nami skontaktować?</strong>
+            <p>Wybierz prostą ścieżkę kontaktu albo dokładniejszy brief projektowy.</p>
+          </div>
+        </div>
+
+        <div class="zpContactFormLight__mode" aria-label="Wybierz typ wiadomości">
+          <label>
+            <input type="radio" name="contact_mode" value="Prośba o oddzwonienie" data-mode-value="call" checked>
+            <span>
+              <i data-lucide="phone-call"></i>
+              <strong>Oddzwońcie</strong>
+              <small>Najszybciej — zostaw numer, oddzwonimy.</small>
+            </span>
+          </label>
+
+          <label>
+            <input type="radio" name="contact_mode" value="Szybki kontakt" data-mode-value="quick">
+            <span>
+              <i data-lucide="zap"></i>
+              <strong>Szybki kontakt</strong>
+              <small>Kilka danych i krótki opis sprawy.</small>
+            </span>
+          </label>
+
+          <label>
+            <input type="radio" name="contact_mode" value="Pełny brief projektu" data-mode-value="brief">
+            <span>
+              <i data-lucide="clipboard-list"></i>
+              <strong>Pełny brief</strong>
+              <small>Zakres, budżet, termin, pliki i inspiracje.</small>
+            </span>
+          </label>
+        </div>
+
+        <div class="zpContactFormLight__divider"></div>
+
+        <div class="zpContactFormLight__group" data-mode-section="all">
+          <div class="zpContactFormLight__formTop">
+            <span class="zpContactFormLight__step">02</span>
+            <div>
+              <strong>Dane kontaktowe</strong>
+              <p data-copy-quick="Podaj dane, żebyśmy mogli szybko odpisać lub oddzwonić." data-copy-brief="Podaj dane, żebyśmy mogli wrócić z odpowiedzią lub dopytać o szczegóły." data-copy-call="Najważniejszy jest numer telefonu — resztę możemy ustalić w rozmowie.">
+                Podaj dane, żebyśmy mogli szybko odpisać lub oddzwonić.
+              </p>
+            </div>
+          </div>
+
+          <div class="zpContactFormLight__fields zpContactFormLight__fields--two">
+            <label class="zpContactFormLight__field" data-field="name">
+              <span>Imię i nazwisko</span>
+              <input type="text" name="name" placeholder="np. Jan Kowalski" data-preview="name">
+            </label>
+
+            <label class="zpContactFormLight__field" data-field="company">
+              <span>Nazwa firmy</span>
+              <input type="text" name="company" placeholder="np. nazwa Twojej firmy" data-preview="company">
+            </label>
+
+            <label class="zpContactFormLight__field" data-field="email">
+              <span>Adres e-mail</span>
+              <input type="email" name="email" placeholder="kontakt@twojafirma.pl" data-preview="email">
+            </label>
+
+            <label class="zpContactFormLight__field" data-field="phone">
+              <span>Telefon</span>
+              <input type="tel" name="phone" placeholder="np. 501 054 253" data-preview="phone">
+            </label>
+          </div>
+        </div>
+
+        <div class="zpContactFormLight__animBlock" data-mode-section="quick brief">
+          <div class="zpContactFormLight__divider"></div>
+
+          <div class="zpContactFormLight__formTop">
+            <span class="zpContactFormLight__step">03</span>
+            <div>
+              <strong>Zakres projektu</strong>
+              <p>Zaznacz tematy, których dotyczy wiadomość.</p>
+            </div>
+          </div>
+
+          <div class="zpContactFormLight__railHint" aria-hidden="true">Przesuń w prawo →</div>
+
+          <div class="zpContactFormLight__checks" aria-label="Wybierz zakres projektu">
+            <label>
+              <input type="checkbox" name="services[]" value="Strona internetowa">
+              <span><i data-lucide="layout-template"></i> Strona internetowa</span>
+            </label>
+
+            <label>
+              <input type="checkbox" name="services[]" value="Sklep internetowy">
+              <span><i data-lucide="shopping-bag"></i> Sklep internetowy</span>
+            </label>
+
+            <label>
+              <input type="checkbox" name="services[]" value="Logo i branding">
+              <span><i data-lucide="sparkles"></i> Logo i branding</span>
+            </label>
+
+            <label>
+              <input type="checkbox" name="services[]" value="SEO">
+              <span><i data-lucide="search-check"></i> SEO</span>
+            </label>
+
+            <label>
+              <input type="checkbox" name="services[]" value="Meta Ads">
+              <span><i data-lucide="megaphone"></i> Meta Ads</span>
+            </label>
+
+            <label>
+              <input type="checkbox" name="services[]" value="Inny temat">
+              <span><i data-lucide="plus-circle"></i> Inny temat</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="zpContactFormLight__animBlock" data-mode-section="brief">
+          <div class="zpContactFormLight__fields zpContactFormLight__fields--two">
+            <label class="zpContactFormLight__field">
+              <span>Budżet orientacyjny</span>
+              <select name="budget" data-preview="budget">
+                <option value="">Wybierz zakres</option>
+                <option>do 3 000 zł</option>
+                <option>3 000–6 000 zł</option>
+                <option>6 000–10 000 zł</option>
+                <option>10 000–20 000 zł</option>
+                <option>powyżej 20 000 zł</option>
+                <option>Potrzebuję wyceny</option>
+              </select>
+            </label>
+
+            <label class="zpContactFormLight__field">
+              <span>Preferowany termin</span>
+              <select name="deadline" data-preview="deadline">
+                <option value="">Wybierz termin</option>
+                <option>Jak najszybciej</option>
+                <option>Do 2 tygodni</option>
+                <option>Do miesiąca</option>
+                <option>W ciągu 2–3 miesięcy</option>
+                <option>Nie mam konkretnego terminu</option>
+              </select>
+            </label>
+          </div>
+
+          <label class="zpContactFormLight__field">
+            <span>Adres obecnej strony lub inspiracje</span>
+            <input type="text" name="website" placeholder="np. link do strony, konkurencji albo inspiracji" data-preview="website">
+          </label>
+        </div>
+
+        <div class="zpContactFormLight__animBlock" data-mode-section="call">
+          <div class="zpContactFormLight__divider"></div>
+
+          <div class="zpContactFormLight__fields zpContactFormLight__fields--two">
+            <label class="zpContactFormLight__field">
+              <span>Kiedy najlepiej oddzwonić?</span>
+              <select name="callback_time" data-preview="callback_time">
+                <option value="">Wybierz porę</option>
+                <option>Rano</option>
+                <option>Po południu</option>
+                <option>Wieczorem</option>
+                <option>Jak najszybciej</option>
+                <option>Ustalimy SMS-em</option>
+              </select>
+            </label>
+
+            <label class="zpContactFormLight__field">
+              <span>Temat rozmowy</span>
+              <select name="callback_topic" data-preview="callback_topic">
+                <option value="">Wybierz temat</option>
+                <option>Strona internetowa</option>
+                <option>Sklep internetowy</option>
+                <option>Logo / branding</option>
+                <option>SEO / reklamy</option>
+                <option>Inny temat</option>
+              </select>
+            </label>
+          </div>
+        </div>
+
+        <div class="zpContactFormLight__animBlock" data-mode-section="quick brief call">
+          <label class="zpContactFormLight__field">
+            <span data-label-message>Opis sprawy</span>
+            <textarea name="message" rows="7" placeholder="Napisz krótko, czego potrzebujesz, co już masz i jaki efekt chcesz osiągnąć." data-preview="message"></textarea>
+          </label>
+        </div>
+
+        <div class="zpContactFormLight__animBlock" data-mode-section="brief">
+          <div class="zpContactFormLight__upload" data-zp-upload>
+            <input id="zpContactFiles" type="file" name="files[]" multiple>
+            <label for="zpContactFiles">
+              <i data-lucide="upload-cloud"></i>
+              <strong>Dodaj pliki do projektu</strong>
+              <span>Logo, brief, zdjęcia, PDF, inspiracje, screeny lub materiały marki.</span>
+              <em>Wybierz pliki</em>
+            </label>
+
+            <div class="zpContactFormLight__fileList" data-zp-file-list>
+              <span>Nie wybrano jeszcze plików.</span>
+            </div>
+          </div>
+        </div>
+
+        <label class="zpContactFormLight__consent">
+          <input type="checkbox" name="consent" required>
+          <span>
+            Wyrażam zgodę na kontakt w sprawie przesłanego zapytania. Administratorem danych jest Zaprojektowani.com.
+          </span>
+        </label>
+
+        <div class="zpContactFormLight__submitRow">
+          <button class="zpContactFormLight__submit" type="submit">
+            <span data-submit-text>Wyślij</span>
+            <i data-lucide="send"></i>
+          </button>
+
+          <p data-submit-note>
+            Odpowiadamy konkretnie — zwykle w ciągu <strong>1 dnia roboczego</strong>.
+          </p>
+        </div>
+      </form>
+
+      <aside class="zpContactFormLight__side" aria-label="Podgląd wiadomości i dane kontaktowe" data-zp-reveal>
+
+        <div class="zpContactFormLight__mailWindow" aria-live="polite">
+          <div class="zpContactFormLight__mailTop">
+            <div class="zpContactFormLight__dots" aria-hidden="true">
+              <span></span><span></span><span></span>
+            </div>
+            <strong>Nowa wiadomość</strong>
+            <i data-lucide="mail-plus"></i>
+          </div>
+
+          <div class="zpContactFormLight__mailMeta">
+            <div>
+              <span>Do</span>
+              <strong>kontakt@zaprojektowani.com</strong>
+            </div>
+            <div>
+              <span>Od</span>
+              <strong data-mail-from>Twój e-mail</strong>
+            </div>
+          </div>
+
+          <div class="zpContactFormLight__mailSubject">
+            <span>Temat</span>
+            <strong data-mail-subject>Zapytanie ze strony — Szybki kontakt</strong>
+          </div>
+
+          <div class="zpContactFormLight__mailBody">
+            <p><strong>Tryb kontaktu:</strong> <span data-mail-mode>Szybki kontakt</span></p>
+            <p><strong>Imię i nazwisko:</strong> <span data-mail-name>—</span></p>
+            <p><strong>Firma:</strong> <span data-mail-company>—</span></p>
+            <p><strong>Telefon:</strong> <span data-mail-phone>—</span></p>
+            <p data-mail-row="services"><strong>Zakres:</strong> <span data-mail-services>Nie wybrano jeszcze zakresu.</span></p>
+            <p data-mail-row="budget"><strong>Budżet:</strong> <span data-mail-budget>—</span></p>
+            <p data-mail-row="deadline"><strong>Termin:</strong> <span data-mail-deadline>—</span></p>
+            <p data-mail-row="website"><strong>Link / inspiracje:</strong> <span data-mail-website>—</span></p>
+            <p data-mail-row="callback"><strong>Oddzwonić:</strong> <span data-mail-callback>—</span></p>
+
+            <div class="zpContactFormLight__mailMessage">
+              <span>Treść wiadomości</span>
+              <p data-mail-message>Tu pojawi się opis sprawy, gdy zaczniesz pisać formularz.</p>
+            </div>
+
+            <div class="zpContactFormLight__mailFiles" data-mail-row="files">
+              <span>Załączniki</span>
+              <strong data-mail-files>Brak dodanych plików.</strong>
+            </div>
+          </div>
+        </div>
+
+        <div class="zpContactFormLight__contactCards">
+
+          <a class="zpContactFormLight__contactCard" href="tel:+48501054253">
+            <i data-lucide="phone-call"></i>
+            <span>Telefon</span>
+            <strong>501 054 253</strong>
+            <small>Zadzwoń w sprawie projektu</small>
+          </a>
+
+          <a class="zpContactFormLight__contactCard" href="https://wa.me/48501054253" target="_blank" rel="noopener">
+            <i data-lucide="message-circle"></i>
+            <span>WhatsApp</span>
+            <strong>Napisz do nas</strong>
+            <small>Szybki kontakt i pliki</small>
+          </a>
+
+          <a class="zpContactFormLight__contactCard" href="mailto:kontakt@zaprojektowani.com">
+            <i data-lucide="mail"></i>
+            <span>E-mail</span>
+            <strong>kontakt@zaprojektowani.com</strong>
+            <small>Brief, oferta, współpraca</small>
+          </a>
+
+          <div class="zpContactFormLight__contactCard">
+            <i data-lucide="map-pin"></i>
+            <span>Adres</span>
+            <strong>Zaprojektowani</strong><small>NIP: 9930682613</small>
+            <small>ul. Modelarska 18/2, 40-142 Katowice</small>
+          </div>
+
+        </div>
+
+      </aside>
+
+    </div>
+  </div>
+
+  <div class="zpContactFormLight__mapWrap" data-zp-reveal>
+    <div class="zpContactFormLight__mapHead">
+      <span>Nasza lokalizacja</span>
+      <strong>Zaprojektowani</strong><small>NIP: 9930682613<br>ul. Modelarska 18/2, 40-142 Katowice</small>
+    </div>
+
+    <iframe
+      class="zpContactFormLight__map"
+      title="Mapa Google — Zaprojektowani, ul. Modelarska 18/2, Katowice"
+      loading="lazy"
+      referrerpolicy="no-referrer-when-downgrade"
+      src="https://www.google.com/maps?q=Modelarska%2018%2C%20Katowice&output=embed">
+    </iframe>
+  </div>
+</section>
+
+<style>@font-face{font-family:"Plus Jakarta Sans Local";src:url("/wp-content/web-font/jakarta/plus-jakarta-sans-v12-latin_latin-ext-regular.woff2") format("woff2");font-weight:400;font-style:normal;font-display:swap;}@font-face{font-family:"Plus Jakarta Sans Local";src:url("/wp-content/web-font/jakarta/plus-jakarta-sans-v12-latin_latin-ext-500.woff2") format("woff2");font-weight:500;font-style:normal;font-display:swap;}@font-face{font-family:"Plus Jakarta Sans Local";src:url("/wp-content/web-font/jakarta/plus-jakarta-sans-v12-latin_latin-ext-600.woff2") format("woff2");font-weight:600;font-style:normal;font-display:swap;}@font-face{font-family:"Plus Jakarta Sans Local";src:url("/wp-content/web-font/jakarta/plus-jakarta-sans-v12-latin_latin-ext-700.woff2") format("woff2");font-weight:700;font-style:normal;font-display:swap;}@font-face{font-family:"Plus Jakarta Sans Local";src:url("/wp-content/web-font/jakarta/plus-jakarta-sans-v12-latin_latin-ext-800.woff2") format("woff2");font-weight:800;font-style:normal;font-display:swap;}.zpContactFormLight,.zpContactFormLight *,.zpContactFormLight *::before,.zpContactFormLight *::after{box-sizing:border-box}.zpContactFormLight{--font:"Plus Jakarta Sans Local",system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;--ink:#05070b;--muted:#667386;--soft:#f7f8fa;--line:rgba(7,17,31,.105);--heroGrad:linear-gradient(135deg,#020407 0%,#05070b 42%,#071426 72%,#102a4f 100%);--heroGradHover:linear-gradient(135deg,#05070b 0%,#071426 48%,#102a4f 100%);--heroGradSoft:linear-gradient(135deg,#020407 0%,#071426 58%,#102a4f 100%);--navy:#071426;--ease:cubic-bezier(.22,1,.36,1);position:relative;width:100%;overflow:visible;isolation:isolate;padding:clamp(54px,7vw,104px) 0 0;background:#fff;color:var(--ink);font-family:var(--font);-webkit-font-smoothing:antialiased;text-rendering:geometricPrecision;font-synthesis:none}.zpContactFormLight *,.zpContactFormLight input,.zpContactFormLight textarea,.zpContactFormLight select,.zpContactFormLight button{font-family:var(--font)!important}.zpContactFormLight a{color:inherit;text-decoration:none!important}.zpContactFormLight svg{display:block}.zpContactFormLight__bgText{position:absolute;left:50%;bottom:160px;z-index:-1;width:100vw;transform:translateX(-50%);color:#05070b;opacity:.022;font-size:clamp(128px,18vw,320px);line-height:.78;letter-spacing:-.105em;font-weight:800;text-align:center;text-transform:lowercase;white-space:nowrap;pointer-events:none;user-select:none}.zpContactFormLight__inner{width:min(1500px,calc(100% - 56px));margin:0 auto}.zpContactFormLight__head{display:grid;grid-template-columns:minmax(0,1fr) minmax(320px,520px);gap:clamp(26px,5vw,86px);align-items:end;margin-bottom:clamp(30px,4vw,58px)}.zpContactFormLight__kicker{display:inline-flex;align-items:center;gap:10px;margin:0 0 16px;color:#667386;font-size:10px;line-height:1;font-weight:800;letter-spacing:.145em;text-transform:uppercase}.zpContactFormLight__kicker::before{content:"";width:30px;height:1px;background:#071426}.zpContactFormLight h2{max-width:880px;margin:0;color:#05070b;font-size:clamp(34px,5vw,68px);line-height:1;letter-spacing:-.052em;font-weight:650;text-wrap:balance}.zpContactFormLight__lead{margin:0;color:#667386;font-size:clamp(14px,1.15vw,17px);line-height:1.66;letter-spacing:-.01em}.zpContactFormLight__layout{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(420px,.9fr);gap:clamp(18px,2.5vw,34px);align-items:start}.zpContactFormLight__form{border:1px solid rgba(7,17,31,.105);background:#fff;border-radius:34px;padding:clamp(22px,2.4vw,34px);box-shadow:0 30px 90px rgba(7,17,31,.06)}.zpContactFormLight__formTop{display:grid;grid-template-columns:48px minmax(0,1fr);gap:15px;align-items:start;margin-bottom:20px}.zpContactFormLight__step{width:48px;height:48px;display:grid;place-items:center;border-radius:999px;background:#f7f8fa;border:1px solid rgba(7,17,31,.08);color:#071426;font-size:12px;line-height:1;font-weight:850;letter-spacing:.08em}.zpContactFormLight__formTop strong{display:block;margin:1px 0 5px;color:#05070b;font-size:clamp(22px,2vw,30px);line-height:1.06;letter-spacing:-.045em;font-weight:650}.zpContactFormLight__formTop p{margin:0;color:#667386;font-size:13px;line-height:1.55}.zpContactFormLight__mode{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.zpContactFormLight__mode label{cursor:pointer}.zpContactFormLight__mode input{position:absolute;opacity:0;pointer-events:none}.zpContactFormLight__mode span{position:relative;overflow:hidden;min-height:164px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:11px;padding:20px 18px;border-radius:24px;border:1px solid rgba(7,17,31,.10);background:#fff;box-shadow:0 14px 40px rgba(7,17,31,.045);transition:background .22s ease,border-color .22s ease,transform .22s ease,box-shadow .22s ease}.zpContactFormLight__mode span::before{content:"";position:absolute;inset:0;z-index:0;background:var(--heroGrad);opacity:0;transform:scale(.985);transition:opacity .28s var(--ease),transform .34s var(--ease)}.zpContactFormLight__mode span::after{content:"";position:absolute;inset:1px;z-index:1;border-radius:23px;pointer-events:none;background: radial-gradient(circle at 78% 12%,rgba(255,255,255,.11),transparent 32%),linear-gradient(135deg,rgba(255,255,255,.075),rgba(255,255,255,0) 44%);opacity:0;transition:opacity .28s ease}.zpContactFormLight__mode span > *{position:relative;z-index:2}.zpContactFormLight__mode span i{margin:0 auto 2px;width:50px;height:50px;display:grid;place-items:center;border-radius:19px;background:#f4f5f7;color:#071426;transition:background .28s ease,color .28s ease,transform .28s var(--ease),border-color .28s ease}.zpContactFormLight__mode span i svg{width:22px!important;height:22px!important;color:currentColor!important;stroke:currentColor!important}.zpContactFormLight__mode span strong{color:#071426;font-size:19px;line-height:1.05;letter-spacing:-.04em;font-weight:760;transition:color .28s ease}.zpContactFormLight__mode span small{color:#667386;font-size:12px;line-height:1.42;font-weight:560;transition:color .28s ease}.zpContactFormLight__mode label:hover span,.zpContactFormLight__mode input:checked + span{border-color:rgba(16,42,79,.66);box-shadow:0 26px 70px rgba(7,17,31,.16),inset 0 1px 0 rgba(255,255,255,.12);transform:translateY(-3px)}.zpContactFormLight__mode label:hover span::before,.zpContactFormLight__mode input:checked + span::before{opacity:1;transform:scale(1)}.zpContactFormLight__mode label:hover span::after,.zpContactFormLight__mode input:checked + span::after{opacity:1}.zpContactFormLight__mode label:hover span strong,.zpContactFormLight__mode label:hover span small,.zpContactFormLight__mode input:checked + span strong,.zpContactFormLight__mode input:checked + span small{color:#fff!important}.zpContactFormLight__mode label:hover span i,.zpContactFormLight__mode input:checked + span i{background:rgba(255,255,255,.14)!important;color:#fff!important;border:1px solid rgba(255,255,255,.18);transform:translateY(-1px)}.zpContactFormLight__mode label:hover span i svg,.zpContactFormLight__mode input:checked + span i svg,.zpContactFormLight__mode label:hover span i svg *,.zpContactFormLight__mode input:checked + span i svg *{color:#fff!important;stroke:#fff!important}.zpContactFormLight__group,.zpContactFormLight__animBlock{overflow:hidden;transition: max-height .55s var(--ease),opacity .38s ease,transform .48s var(--ease),filter .38s ease,margin .38s ease}.zpContactFormLight__animBlock.is-hidden{max-height:0!important;opacity:0;transform:translateY(-10px);filter: none;pointer-events:none;margin-top:0!important;margin-bottom:0!important}.zpContactFormLight__animBlock.is-visible{max-height:1200px;opacity:1;transform:translateY(0);filter: none;pointer-events:auto}.zpContactFormLight__fields{display:grid;gap:14px}.zpContactFormLight__fields--two{grid-template-columns:repeat(2,minmax(0,1fr))}.zpContactFormLight__field{display:grid;gap:8px;margin:0 0 14px;transition: max-height .42s var(--ease),opacity .28s ease,transform .38s var(--ease),margin .28s ease}.zpContactFormLight__field.is-hidden{max-height:0!important;opacity:0;transform:translateY(-8px);pointer-events:none;margin:0!important;overflow:hidden}.zpContactFormLight__field.is-visible{max-height:120px;opacity:1;transform:translateY(0);pointer-events:auto}.zpContactFormLight__field span{color:#4d5969;font-size:12px;line-height:1;font-weight:800;letter-spacing:.035em}.zpContactFormLight__field input,.zpContactFormLight__field select,.zpContactFormLight__field textarea{width:100%;border:1px solid rgba(7,17,31,.12);border-radius:18px;background:#fff;color:#071426;outline:none;box-shadow:none;font-size:15px;line-height:1.35;font-weight:520;transition:border-color .22s ease,background .22s ease,box-shadow .22s ease}.zpContactFormLight__field input,.zpContactFormLight__field select{min-height:58px;padding:0 16px}.zpContactFormLight__field textarea{resize:vertical;min-height:170px;padding:16px}.zpContactFormLight__field input::placeholder,.zpContactFormLight__field textarea::placeholder{color:#9aa3af}.zpContactFormLight__field input:focus,.zpContactFormLight__field select:focus,.zpContactFormLight__field textarea:focus{border-color:rgba(7,20,38,.42);background:#fbfcfe;box-shadow:0 0 0 4px rgba(7,20,38,.075)}.zpContactFormLight__divider{height:1px;background:rgba(7,17,31,.09);margin:26px 0}.zpContactFormLight__checks{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin:0 0 18px}.zpContactFormLight__checks label{cursor:pointer}.zpContactFormLight__checks input{position:absolute;opacity:0;pointer-events:none}.zpContactFormLight__checks span{min-height:48px;display:flex;align-items:center;justify-content:center;text-align:center;gap:9px;padding:0 12px;border-radius:999px;border:1px solid rgba(7,17,31,.10);background:#f7f8fa;color:#344256;font-size:12px;line-height:1;font-weight:800;letter-spacing:-.01em;transition:background .22s ease,color .22s ease,border-color .22s ease,transform .22s ease,box-shadow .22s ease}.zpContactFormLight__checks span svg{width:16px!important;height:16px!important;color:currentColor!important;stroke:currentColor!important}.zpContactFormLight__checks input:checked + span{background:var(--heroGrad)!important;color:#fff!important;border-color:rgba(16,42,79,.70)!important;transform:translateY(-1px);box-shadow:0 16px 42px rgba(7,17,31,.13)}.zpContactFormLight__checks input:checked + span svg,.zpContactFormLight__checks input:checked + span svg *{color:#fff!important;stroke:#fff!important}.zpContactFormLight__upload{margin:18px 0}.zpContactFormLight__upload input{position:absolute;opacity:0;pointer-events:none}.zpContactFormLight__upload label{cursor:pointer;display:grid;justify-items:center;text-align:center;gap:10px;padding:28px 20px;border-radius:26px;border:1px dashed rgba(7,17,31,.24);background:#f8f9fb;transition:border-color .22s ease,transform .22s ease,background .22s ease}.zpContactFormLight__upload label:hover{transform:translateY(-2px);border-color:rgba(7,17,31,.44);background:#f5f6f8}.zpContactFormLight__upload label i{width:52px;height:52px;display:grid;place-items:center;border-radius:20px;color:#fff;background:var(--heroGrad)}.zpContactFormLight__upload label i svg{width:24px!important;height:24px!important;color:#fff!important;stroke:#fff!important}.zpContactFormLight__upload label strong{color:#071426;font-size:20px;line-height:1.08;letter-spacing:-.035em;font-weight:700}.zpContactFormLight__upload label span{max-width:520px;color:#667386;font-size:13px;line-height:1.5}.zpContactFormLight__upload label em{display:inline-flex;align-items:center;justify-content:center;min-height:36px;padding:0 14px;border-radius:999px;background:#fff;border:1px solid rgba(7,17,31,.10);color:#071426;font-style:normal;font-size:11px;line-height:1;font-weight:850;letter-spacing:.07em;text-transform:uppercase}.zpContactFormLight__fileList{margin-top:10px;display:flex;flex-wrap:wrap;gap:7px}.zpContactFormLight__fileList span{display:inline-flex;align-items:center;min-height:30px;padding:0 10px;border-radius:999px;background:#f4f5f7;border:1px solid rgba(7,17,31,.08);color:#667386;font-size:11px;line-height:1;font-weight:700}.zpContactFormLight__consent{display:grid;grid-template-columns:18px minmax(0,1fr);gap:10px;align-items:start;margin:18px 0 0;color:#667386;font-size:12px;line-height:1.45}.zpContactFormLight__consent input{margin-top:2px;accent-color:#071426}.zpContactFormLight__submitRow{display:flex;align-items:center;justify-content:space-between;gap:18px;margin-top:22px}.zpContactFormLight__submit{cursor:pointer;position:relative;isolation:isolate;overflow:hidden;min-height:60px;display:inline-flex;align-items:center;justify-content:center;gap:11px;padding:0 28px;border-radius:999px;border:1px solid rgba(7,20,38,.95);background:var(--heroGrad);color:#fff;font-size:13px;line-height:1;font-weight:850;letter-spacing:.045em;text-transform:none;transition:transform .28s var(--ease),box-shadow .28s ease,border-color .28s ease,color .28s ease}.zpContactFormLight__submit::before{content:"";position:absolute;inset:0;z-index:-1;background:var(--heroGradHover);opacity:0;transition:opacity .34s var(--ease)}.zpContactFormLight__submit:hover{transform:translateY(-2px);border-color:#1c477a;box-shadow:0 20px 54px rgba(7,17,31,.18)}.zpContactFormLight__submit:hover::before{opacity:1}.zpContactFormLight__submit svg{width:17px!important;height:17px!important;color:#fff!important;stroke:#fff!important}.zpContactFormLight__submitRow p{max-width:260px;margin:0;color:#667386;font-size:12px;line-height:1.45}.zpContactFormLight__submitRow p strong{color:#071426}.zpContactFormLight__side{position:sticky;top:96px;align-self:start;display:grid;gap:14px;max-height:calc(100vh - 112px);overflow:auto;overscroll-behavior:auto;padding-right:2px}.zpContactFormLight__side::-webkit-scrollbar{width:6px}.zpContactFormLight__side::-webkit-scrollbar-thumb{background:rgba(7,17,31,.18);border-radius:999px}.zpContactFormLight__mailWindow{overflow:hidden;border-radius:30px;background:#fff;border:1px solid rgba(7,17,31,.115);box-shadow:0 30px 90px rgba(7,17,31,.075)}.zpContactFormLight__mailTop{min-height:58px;display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:14px;padding:0 18px;border-bottom:1px solid rgba(7,17,31,.08);background:#fafafa}.zpContactFormLight__dots{display:flex;gap:6px}.zpContactFormLight__dots span{width:10px;height:10px;border-radius:999px;background:#cbd1da}.zpContactFormLight__dots span:nth-child(1){background:#071426}.zpContactFormLight__dots span:nth-child(2){background:#3f4856}.zpContactFormLight__dots span:nth-child(3){background:#cbd1da}.zpContactFormLight__mailTop strong{color:#071426;font-size:13px;line-height:1;font-weight:850;letter-spacing:.04em;text-transform:uppercase}.zpContactFormLight__mailTop svg{width:18px!important;height:18px!important;color:#071426!important;stroke:#071426!important}.zpContactFormLight__mailMeta{display:grid;grid-template-columns:1fr;gap:0;padding:14px 18px;border-bottom:1px solid rgba(7,17,31,.08)}.zpContactFormLight__mailMeta div{display:grid;grid-template-columns:48px minmax(0,1fr);gap:12px;align-items:center;min-height:30px}.zpContactFormLight__mailMeta span,.zpContactFormLight__mailSubject span,.zpContactFormLight__mailMessage span,.zpContactFormLight__mailFiles span{color:#5f6877;font-size:10px;line-height:1;font-weight:850;letter-spacing:.12em;text-transform:uppercase}.zpContactFormLight__mailMeta strong,.zpContactFormLight__mailSubject strong{color:#071426;font-size:13px;line-height:1.25;font-weight:720;word-break:break-word}.zpContactFormLight__mailSubject{display:grid;grid-template-columns:64px minmax(0,1fr);gap:12px;align-items:center;padding:14px 18px;border-bottom:1px solid rgba(7,17,31,.08)}.zpContactFormLight__mailBody{padding:18px}.zpContactFormLight__mailBody p{margin:0 0 10px;color:#4f5b6b;font-size:12.5px;line-height:1.45}.zpContactFormLight__mailBody p strong{color:#071426;font-weight:800}.zpContactFormLight__mailBody [data-mail-row]{transition:opacity .28s ease,transform .28s var(--ease),max-height .34s var(--ease),margin .28s ease;overflow:hidden}.zpContactFormLight__mailBody [data-mail-row].is-mail-hidden{opacity:0;transform:translateY(-6px);max-height:0;margin:0!important}.zpContactFormLight__mailMessage{margin-top:16px;padding:16px;border-radius:20px;background:#f7f8fa;border:1px solid rgba(7,17,31,.07)}.zpContactFormLight__mailMessage p{margin:10px 0 0;color:#344256;font-size:13px;line-height:1.55;white-space:pre-wrap}.zpContactFormLight__mailFiles{display:grid;gap:9px;margin-top:12px;padding:14px 16px;border-radius:18px;background:#fff;border:1px solid rgba(7,17,31,.08)}.zpContactFormLight__mailFiles strong{color:#344256;font-size:12px;line-height:1.35;font-weight:700}.zpContactFormLight__contactCards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.zpContactFormLight__contactCard{position:relative;overflow:hidden;min-height:146px;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;text-align:center;gap:9px;padding:18px;border-radius:24px;background:#fff;border:1px solid rgba(7,17,31,.09);transition:transform .28s var(--ease),border-color .28s ease,box-shadow .28s ease}.zpContactFormLight__contactCard::before{content:"";position:absolute;inset:0;z-index:0;background:var(--heroGrad);opacity:0;transform:scale(.985);transition:opacity .28s var(--ease),transform .34s var(--ease)}.zpContactFormLight__contactCard > *{position:relative;z-index:2}.zpContactFormLight__contactCard:hover{transform:translateY(-4px);border-color:rgba(16,42,79,.60);box-shadow:0 24px 64px rgba(7,17,31,.15)}.zpContactFormLight__contactCard:hover::before{opacity:1;transform:scale(1)}.zpContactFormLight__contactCard i{margin:0 auto;width:42px;height:42px;display:grid;place-items:center;border-radius:16px;background:#f4f5f7;color:#071426;transition:background .28s ease,color .28s ease,transform .28s var(--ease)}.zpContactFormLight__contactCard i svg{width:20px!important;height:20px!important;color:currentColor!important;stroke:currentColor!important}.zpContactFormLight__contactCard span{color:#667386;font-size:10px;line-height:1;font-weight:850;letter-spacing:.12em;text-transform:uppercase;transition:color .28s ease}.zpContactFormLight__contactCard strong{color:#071426;font-size:17px;line-height:1.08;letter-spacing:-.035em;font-weight:760;word-break:break-word;transition:color .28s ease}.zpContactFormLight__contactCard small{margin-top:auto;color:#667386;font-size:12px;line-height:1.32;font-weight:600;transition:color .28s ease}.zpContactFormLight__contactCard:hover i{background:rgba(255,255,255,.14);color:#fff!important;transform:translateY(-1px)}.zpContactFormLight__contactCard:hover i svg,.zpContactFormLight__contactCard:hover i svg *{color:#fff!important;stroke:#fff!important}.zpContactFormLight__contactCard:hover span,.zpContactFormLight__contactCard:hover strong,.zpContactFormLight__contactCard:hover small{color:#fff!important}.zpContactFormLight__mapWrap{width:100%;margin:clamp(36px,5vw,70px) 0 0;background:#fff;color:#071426;border-top:1px solid rgba(7,17,31,.09)}.zpContactFormLight__mapHead{width:min(1500px,calc(100% - 56px));margin:0 auto;padding:24px 0;display:flex;align-items:center;justify-content:space-between;gap:18px}.zpContactFormLight__mapHead span{color:#667386;font-size:10px;line-height:1;font-weight:850;letter-spacing:.14em;text-transform:uppercase}.zpContactFormLight__mapHead strong{color:#071426;font-size:clamp(18px,1.8vw,28px);line-height:1.1;letter-spacing:-.04em;font-weight:650;text-align:right}.zpContactFormLight__map{display:block;width:100%;height:clamp(360px,42vw,520px);border:0;filter:saturate(.86) contrast(1.03)}[data-zp-reveal]{opacity:0;transform:translate3d(0,28px,0);filter: none;transition: opacity .78s var(--ease),transform .88s var(--ease),filter .78s ease}.zpContactFormLight[data-ready="1"] [data-zp-reveal]{opacity:1;transform:translate3d(0,0,0);filter: none}.zpContactFormLight[data-ready="1"] .zpContactFormLight__head{transition-delay:.04s}.zpContactFormLight[data-ready="1"] .zpContactFormLight__form{transition-delay:.14s}.zpContactFormLight[data-ready="1"] .zpContactFormLight__side{transition-delay:.22s}.zpContactFormLight[data-ready="1"] .zpContactFormLight__mapWrap{transition-delay:.28s}@media (max-width:1120px){.zpContactFormLight__layout,.zpContactFormLight__head{grid-template-columns:1fr}.zpContactFormLight__side{position:relative;top:auto;max-height:none;overflow:visible;padding-right:0}}@media (max-width:760px){.zpContactFormLight{padding-top:48px}.zpContactFormLight__inner,.zpContactFormLight__mapHead{width:calc(100% - 28px)}.zpContactFormLight__head{gap:18px;margin-bottom:28px}.zpContactFormLight h2{font-size:clamp(32px,10vw,42px);line-height:1.02;letter-spacing:-.048em}.zpContactFormLight__lead{font-size:14px;line-height:1.6}.zpContactFormLight__form{padding:18px;border-radius:28px}.zpContactFormLight__mode,.zpContactFormLight__fields--two,.zpContactFormLight__checks,.zpContactFormLight__contactCards{grid-template-columns:1fr}.zpContactFormLight__mode span{min-height:142px}.zpContactFormLight__checks span{justify-content:flex-start;text-align:left}.zpContactFormLight__submitRow{display:grid;grid-template-columns:1fr}.zpContactFormLight__submit{width:100%}.zpContactFormLight__submitRow p{max-width:none;text-align:center}.zpContactFormLight__mailSubject{grid-template-columns:1fr;gap:8px}.zpContactFormLight__mapHead{display:grid;grid-template-columns:1fr;gap:10px}.zpContactFormLight__mapHead strong{text-align:left}}@media (prefers-reduced-motion:reduce){.zpContactFormLight *,.zpContactFormLight *::before,.zpContactFormLight *::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}[data-zp-reveal]{opacity:1!important;transform:none!important;filter:none!important}}html,body{overflow-x:clip}@supports not (overflow-x:clip){html,body{overflow-x:hidden}}#zpContactFormLight[data-mode="call"] .zpContactFormLight__group .zpContactFormLight__fields--two{grid-template-columns:repeat(2,minmax(0,1fr)) !important;align-items:start !important}#zpContactFormLight[data-mode="call"] .zpContactFormLight__group .zpContactFormLight__field.is-hidden{display:none !important}#zpContactFormLight[data-mode="call"] .zpContactFormLight__group [data-field="name"],#zpContactFormLight[data-mode="call"] .zpContactFormLight__group [data-field="phone"]{display:grid !important;max-height:none !important;opacity:1 !important;transform:none !important;margin:0 0 14px !important}#zpContactFormLight[data-mode="call"] .zpContactFormLight__group [data-field="phone"]{grid-column:auto !important}@media (max-width:760px){#zpContactFormLight[data-mode="call"] .zpContactFormLight__group .zpContactFormLight__fields--two{grid-template-columns:1fr !important}}#zpContactFormLight .zpContactFormLight__mode label:hover span i,#zpContactFormLight .zpContactFormLight__mode input:checked + span i{background:rgba(255,255,255,.16) !important;color:#fff !important;border-color:rgba(255,255,255,.22) !important}#zpContactFormLight .zpContactFormLight__mode label:hover span i svg,#zpContactFormLight .zpContactFormLight__mode label:hover span i svg *,#zpContactFormLight .zpContactFormLight__mode input:checked + span i svg,#zpContactFormLight .zpContactFormLight__mode input:checked + span i svg *{color:#fff !important;stroke:#fff !important;fill:none !important}#zpContactFormLight .zpContactFormLight__checks input:checked + span i,#zpContactFormLight .zpContactFormLight__checks input:checked + span svg,#zpContactFormLight .zpContactFormLight__checks input:checked + span svg *{color:#fff !important;stroke:#fff !important;fill:none !important}#zpContactFormLight .zpContactFormLight__contactCard:hover i{background:rgba(255,255,255,.16) !important;color:#fff !important;border:1px solid rgba(255,255,255,.22) !important}#zpContactFormLight .zpContactFormLight__contactCard:hover i svg,#zpContactFormLight .zpContactFormLight__contactCard:hover i svg *{color:#fff !important;stroke:#fff !important;fill:none !important}#zpContactFormLight .zpContactFormLight__upload label i,#zpContactFormLight .zpContactFormLight__submit{color:#fff !important}#zpContactFormLight .zpContactFormLight__upload label i svg,#zpContactFormLight .zpContactFormLight__upload label i svg *,#zpContactFormLight .zpContactFormLight__submit svg,#zpContactFormLight .zpContactFormLight__submit svg *{color:#fff !important;stroke:#fff !important;fill:none !important}#zpContactFormLight{--heroGrad:linear-gradient(135deg,#020407 0%,#05070b 42%,#071426 72%,#102a4f 100%) !important;--heroGradHover:linear-gradient(135deg,#05070b 0%,#071426 48%,#102a4f 100%) !important;--heroGradSoft:linear-gradient(135deg,#020407 0%,#071426 58%,#102a4f 100%) !important}#zpContactFormLight svg.lucide,#zpContactFormLight [data-lucide],#zpContactFormLight .lucide{color:currentColor !important;stroke:currentColor !important;fill:none !important}#zpContactFormLight .zpContactFormLight__mode span > svg,#zpContactFormLight .zpContactFormLight__mode span > .lucide{position:relative !important;z-index:2 !important;width:50px !important;height:50px !important;padding:14px !important;margin:0 auto 2px !important;border-radius:19px !important;background:#f4f5f7 !important;transition: background .28s ease,color .28s ease,stroke .28s ease,transform .28s cubic-bezier(.22,1,.36,1),border-color .28s ease !important}#zpContactFormLight .zpContactFormLight__mode label:hover span > svg,#zpContactFormLight .zpContactFormLight__mode label:hover span > .lucide,#zpContactFormLight .zpContactFormLight__mode input:checked + span > svg,#zpContactFormLight .zpContactFormLight__mode input:checked + span > .lucide{background:rgba(255,255,255,.16) !important;border:1px solid rgba(255,255,255,.22) !important;transform:translateY(-1px) !important}#zpContactFormLight .zpContactFormLight__mode label:hover span > svg *,#zpContactFormLight .zpContactFormLight__mode label:hover span > .lucide *,#zpContactFormLight .zpContactFormLight__mode input:checked + span > svg *,#zpContactFormLight .zpContactFormLight__mode input:checked + span > .lucide *{stroke:#fff !important;fill:none !important}#zpContactFormLight .zpContactFormLight__checks input:checked + span > svg *,#zpContactFormLight .zpContactFormLight__checks input:checked + span > .lucide *{stroke:#fff !important;fill:none !important}#zpContactFormLight .zpContactFormLight__contactCard > svg,#zpContactFormLight .zpContactFormLight__contactCard > .lucide{position:relative !important;z-index:2 !important;width:42px !important;height:42px !important;padding:11px !important;margin:0 auto !important;border-radius:16px !important;background:#f4f5f7 !important;transition: background .28s ease,color .28s ease,stroke .28s ease,transform .28s cubic-bezier(.22,1,.36,1) !important}#zpContactFormLight .zpContactFormLight__contactCard:hover > svg,#zpContactFormLight .zpContactFormLight__contactCard:hover > .lucide{background:rgba(255,255,255,.16) !important;border:1px solid rgba(255,255,255,.22) !important;transform:translateY(-1px) !important}#zpContactFormLight .zpContactFormLight__upload label > svg,#zpContactFormLight .zpContactFormLight__upload label > .lucide{width:52px !important;height:52px !important;padding:14px !important;border-radius:20px !important;background:var(--heroGrad) !important;color:#fff !important;stroke:#fff !important}#zpContactFormLight .zpContactFormLight__upload label > svg *,#zpContactFormLight .zpContactFormLight__upload label > .lucide *,#zpContactFormLight .zpContactFormLight__submit > svg *,#zpContactFormLight .zpContactFormLight__submit > .lucide *{stroke:#fff !important;fill:none !important}#zpContactFormLight svg.lucide,#zpContactFormLight .lucide{background:transparent !important;border:none !important;box-shadow:none !important;padding:0 !important;border-radius:0 !important;color:currentColor !important;stroke:currentColor !important;fill:none !important}#zpContactFormLight svg.lucide *,#zpContactFormLight .lucide *{stroke:currentColor !important;fill:none !important}#zpContactFormLight .zpContactFormLight__mode span > svg,#zpContactFormLight .zpContactFormLight__mode span > .lucide{width:34px !important;height:34px !important;margin:0 auto 4px !important;padding:0 !important;display:block !important;background:transparent !important;border:none !important;border-radius:0 !important;box-shadow:none !important;color:#071426 !important;stroke:#071426 !important;transition: color .28s ease,stroke .28s ease,transform .28s cubic-bezier(.22,1,.36,1) !important}#zpContactFormLight .zpContactFormLight__mode label:hover span > svg,#zpContactFormLight .zpContactFormLight__mode label:hover span > .lucide,#zpContactFormLight .zpContactFormLight__mode input:checked + span > svg,#zpContactFormLight .zpContactFormLight__mode input:checked + span > .lucide{background:transparent !important;border:none !important;box-shadow:none !important;color:#fff !important;stroke:#fff !important;transform:translateY(-1px) scale(1.04) !important}#zpContactFormLight .zpContactFormLight__mode label:hover span > svg *,#zpContactFormLight .zpContactFormLight__mode input:checked + span > svg *,#zpContactFormLight .zpContactFormLight__mode label:hover span > .lucide *,#zpContactFormLight .zpContactFormLight__mode input:checked + span > .lucide *{stroke:#fff !important;fill:none !important}#zpContactFormLight .zpContactFormLight__checks span > svg,#zpContactFormLight .zpContactFormLight__checks span > .lucide{width:16px !important;height:16px !important;padding:0 !important;background:transparent !important;border:none !important;border-radius:0 !important;box-shadow:none !important;color:currentColor !important;stroke:currentColor !important;flex:0 0 16px !important}#zpContactFormLight .zpContactFormLight__checks input:checked + span > svg,#zpContactFormLight .zpContactFormLight__checks input:checked + span > .lucide{color:#fff !important;stroke:#fff !important}#zpContactFormLight .zpContactFormLight__contactCard > svg,#zpContactFormLight .zpContactFormLight__contactCard > .lucide{width:30px !important;height:30px !important;margin:0 auto 2px !important;padding:0 !important;display:block !important;background:transparent !important;border:none !important;border-radius:0 !important;box-shadow:none !important;color:#071426 !important;stroke:#071426 !important;transition: color .28s ease,stroke .28s ease,transform .28s cubic-bezier(.22,1,.36,1) !important}#zpContactFormLight .zpContactFormLight__contactCard:hover > svg,#zpContactFormLight .zpContactFormLight__contactCard:hover > .lucide{background:transparent !important;border:none !important;box-shadow:none !important;color:#fff !important;stroke:#fff !important;transform:translateY(-1px) scale(1.04) !important}#zpContactFormLight .zpContactFormLight__contactCard:hover > svg *,#zpContactFormLight .zpContactFormLight__contactCard:hover > .lucide *{stroke:#fff !important;fill:none !important}#zpContactFormLight .zpContactFormLight__upload label > svg,#zpContactFormLight .zpContactFormLight__upload label > .lucide{width:34px !important;height:34px !important;padding:0 !important;background:transparent !important;border:none !important;border-radius:0 !important;box-shadow:none !important;color:#071426 !important;stroke:#071426 !important}#zpContactFormLight .zpContactFormLight__upload label:hover > svg,#zpContactFormLight .zpContactFormLight__upload label:hover > .lucide{color:#102a4f !important;stroke:#102a4f !important}#zpContactFormLight .zpContactFormLight__submit > svg,#zpContactFormLight .zpContactFormLight__submit > .lucide{width:17px !important;height:17px !important;padding:0 !important;background:transparent !important;border:none !important;border-radius:0 !important;box-shadow:none !important;color:#fff !important;stroke:#fff !important}</style>
+<style id="zp-studio-contact-dark-v22767">
+/* Studio Wyceny only: full-bleed black/navy contact band. Other pages keep the light contact form. */
+body.zpbs-studio-page #zpContactFormLight{
+  position:relative!important;
+  isolation:isolate!important;
+  overflow:visible!important;
+  padding-top:clamp(76px,7vw,118px)!important;
+  padding-bottom:clamp(72px,7vw,112px)!important;
+  background:transparent!important;
+  color:#fff!important;
+}
+body.zpbs-studio-page #zpContactFormLight::before{
+  content:"";position:absolute;z-index:-2;top:0;bottom:0;left:50%;width:100vw;
+  transform:translateX(-50%);
+  background:linear-gradient(135deg,#020407 0%,#050a12 34%,#071426 67%,#0d284b 100%)!important;
+  pointer-events:none;
+}
+body.zpbs-studio-page #zpContactFormLight::after{
+  content:"";position:absolute;z-index:-1;inset:0;pointer-events:none;
+  background:radial-gradient(circle at 12% 18%,rgba(49,126,230,.18),transparent 29%),radial-gradient(circle at 88% 9%,rgba(91,155,247,.12),transparent 25%),radial-gradient(circle at 50% 92%,rgba(31,83,148,.14),transparent 34%);
+}
+body.zpbs-studio-page #zpContactFormLight .zpContactFormLight__bgText{color:#fff!important;opacity:.025!important}
+body.zpbs-studio-page #zpContactFormLight .zpContactFormLight__kicker{color:#78adf1!important}
+body.zpbs-studio-page #zpContactFormLight .zpContactFormLight__kicker::before{background:#78adf1!important}
+body.zpbs-studio-page #zpContactFormLight h2{color:#fff!important}
+body.zpbs-studio-page #zpContactFormLight .zpContactFormLight__lead{color:rgba(226,235,247,.72)!important}
+body.zpbs-studio-page #zpContactFormLight .zpContactFormLight__form{
+  background:#fff!important;border-color:rgba(255,255,255,.16)!important;
+  box-shadow:0 38px 100px rgba(0,0,0,.32)!important;
+}
+body.zpbs-studio-page #zpContactFormLight .zpContactFormLight__mailWindow{
+  background:#fff!important;border-color:rgba(255,255,255,.14)!important;
+  box-shadow:0 38px 100px rgba(0,0,0,.28)!important;
+}
+body.zpbs-studio-page #zpContactFormLight .zpContactFormLight__contactCard{
+  background:rgba(255,255,255,.96)!important;border-color:rgba(255,255,255,.18)!important;
+  box-shadow:0 18px 46px rgba(0,0,0,.13)!important;
+}
+body.zpbs-studio-page #zpContactFormLight .zpContactFormLight__side::-webkit-scrollbar-thumb{background:rgba(255,255,255,.22)!important}
+body.zpbs-studio-page #zpContactFormLight .zpContactFormLight__mapWrap{
+  background:transparent!important;color:#fff!important;border-top:1px solid rgba(255,255,255,.12)!important;
+}
+body.zpbs-studio-page #zpContactFormLight .zpContactFormLight__mapHead span{color:rgba(210,224,243,.62)!important}
+body.zpbs-studio-page #zpContactFormLight .zpContactFormLight__mapHead strong,
+body.zpbs-studio-page #zpContactFormLight .zpContactFormLight__mapHead small{color:#fff!important}
+body.zpbs-studio-page #zpContactFormLight .zpContactFormLight__map{
+  border-top:1px solid rgba(255,255,255,.10)!important;
+  box-shadow:0 -18px 52px rgba(0,0,0,.12)!important;
+}
+@media(max-width:760px){
+  body.zpbs-studio-page #zpContactFormLight{padding-top:58px!important;padding-bottom:70px!important}
+  body.zpbs-studio-page #zpContactFormLight .zpContactFormLight__inner,
+  body.zpbs-studio-page #zpContactFormLight .zpContactFormLight__mapHead{width:calc(100% - 28px)!important}
+}
+</style>
+
+<script>
+  (function(){
+    function initZpContactFormLight(){
+      var root=document.getElementById('zpContactFormLight');
+      if(!root || root.dataset.initialized==='1') return;
+      root.dataset.initialized='1';
+
+      function initIcons(){
+        if(window.lucide && typeof window.lucide.createIcons==='function'){
+          try{
+            window.lucide.createIcons({
+              attrs:{
+                'stroke-width':2,
+                'stroke-linecap':'round',
+                'stroke-linejoin':'round',
+                'aria-hidden':'true'
+              }
+            });
+          }catch(e){}
+        }
+
+        root.querySelectorAll('.zpContactFormLight__mode input:checked + span i svg, .zpContactFormLight__checks input:checked + span svg').forEach(function(svg){
+          svg.style.stroke='#fff';
+          svg.style.color='#fff';
+        });
+      }
+
+      initIcons();
+      window.addEventListener('load',initIcons,{once:true,passive:true});
+
+      var form=root.querySelector('#zpContactFormMain');
+      var fileInput=root.querySelector('#zpContactFiles');
+      var fileList=root.querySelector('[data-zp-file-list]');
+      var modeInputs=Array.prototype.slice.call(root.querySelectorAll('input[name="contact_mode"]'));
+      var modeBlocks=Array.prototype.slice.call(root.querySelectorAll('[data-mode-section]'));
+      var formTopCopy=root.querySelector('.zpContactFormLight__group .zpContactFormLight__formTop p');
+      var messageLabel=root.querySelector('[data-label-message]');
+      var submitText=root.querySelector('[data-submit-text]');
+      var submitNote=root.querySelector('[data-submit-note]');
+
+      function getModeKey(){
+        var checked=root.querySelector('input[name="contact_mode"]:checked');
+        return checked ? checked.getAttribute('data-mode-value') : 'quick';
+      }
+
+      function getModeLabel(){
+        var checked=root.querySelector('input[name="contact_mode"]:checked');
+        return checked ? checked.value : 'Szybki kontakt';
+      }
+
+      function updateHeights(){
+        modeBlocks.forEach(function(block){
+          var modes=(block.getAttribute('data-mode-section') || '').split(' ');
+          var current=getModeKey();
+          var shouldShow=modes.indexOf(current) !== -1 || modes.indexOf('all') !== -1;
+
+          if(shouldShow){
+            block.classList.remove('is-hidden');
+            block.classList.add('is-visible');
+            block.style.maxHeight=block.scrollHeight + 42 + 'px';
+          }else{
+            block.classList.remove('is-visible');
+            block.classList.add('is-hidden');
+            block.style.maxHeight='0px';
+          }
+        });
+      }
+
+      function updateFieldVisibility(){
+        var mode=getModeKey();
+        var company=root.querySelector('[data-field="company"]');
+        var email=root.querySelector('[data-field="email"]');
+        var phone=root.querySelector('[data-field="phone"]');
+
+        [company,email,phone].forEach(function(field){
+          if(field){
+            field.classList.remove('is-hidden');
+            field.classList.add('is-visible');
+          }
+        });
+
+        if(mode==='quick'){
+          if(company){
+            company.classList.add('is-hidden');
+            company.classList.remove('is-visible');
+          }
+        }
+
+        if(mode==='call'){
+          if(company){
+            company.classList.add('is-hidden');
+            company.classList.remove('is-visible');
+          }
+          if(email){
+            email.classList.add('is-hidden');
+            email.classList.remove('is-visible');
+          }
+        }
+      }
+
+      function updateTexts(){
+        var mode=getModeKey();
+
+        if(formTopCopy){
+          if(mode==='brief') formTopCopy.textContent=formTopCopy.getAttribute('data-copy-brief');
+          else if(mode==='call') formTopCopy.textContent=formTopCopy.getAttribute('data-copy-call');
+          else formTopCopy.textContent=formTopCopy.getAttribute('data-copy-quick');
+        }
+
+        if(messageLabel){
+          if(mode==='call') messageLabel.textContent='Krótka notatka do rozmowy';
+          else if(mode==='brief') messageLabel.textContent='Opis projektu';
+          else messageLabel.textContent='Opis sprawy';
+        }
+
+        var textarea=root.querySelector('[name="message"]');
+        if(textarea){
+          if(mode==='call') textarea.setAttribute('placeholder','Napisz krótko, czego dotyczy rozmowa — resztę ustalimy telefonicznie.');
+          else if(mode==='brief') textarea.setAttribute('placeholder','Opisz projekt, cel strony, funkcje, styl, grupę odbiorców i materiały, które już masz.');
+          else textarea.setAttribute('placeholder','Napisz krótko, czego potrzebujesz, co już masz i jaki efekt chcesz osiągnąć.');
+        }
+
+        if(submitText){
+          submitText.textContent='Wyślij';
+        }
+
+        if(submitNote){
+          if(mode==='call') submitNote.innerHTML='Oddzwonimy możliwie szybko — zwykle w ciągu <strong>1 dnia roboczego</strong>.';
+          else if(mode==='brief') submitNote.innerHTML='Im dokładniejszy brief, tym szybciej przygotujemy <strong>konkretną propozycję</strong>.';
+          else submitNote.innerHTML='Odpowiadamy konkretnie — zwykle w ciągu <strong>1 dnia roboczego</strong>.';
+        }
+      }
+
+      function applyMode(){
+        var mode=getModeKey();
+        root.setAttribute('data-mode',mode);
+        updateFieldVisibility();
+        updateTexts();
+        updateHeights();
+        updatePreview();
+        initIcons();
+
+        setTimeout(updateHeights,80);
+        setTimeout(updateHeights,320);
+      }
+
+      function getVal(selector, fallback){
+        var el=root.querySelector(selector);
+        if(!el) return fallback || '—';
+        var val=(el.value || '').trim();
+        return val || (fallback || '—');
+      }
+
+      function setText(selector, value){
+        var el=root.querySelector(selector);
+        if(el) el.textContent=value;
+      }
+
+      function getServices(){
+        var checked=Array.prototype.slice.call(root.querySelectorAll('input[name="services[]"]:checked'));
+        if(!checked.length) return 'Nie wybrano jeszcze zakresu.';
+        return checked.map(function(input){return input.value;}).join(', ');
+      }
+
+      function getFilesText(){
+        if(!fileInput || !fileInput.files || !fileInput.files.length) return 'Brak dodanych plików.';
+        return Array.prototype.slice.call(fileInput.files).map(function(file){return file.name;}).join(', ');
+      }
+
+      function toggleMailRow(name, show){
+        var el=root.querySelector('[data-mail-row="' + name + '"]');
+        if(!el) return;
+        if(show) el.classList.remove('is-mail-hidden');
+        else el.classList.add('is-mail-hidden');
+      }
+
+      function updatePreview(){
+        var mode=getModeKey();
+        var modeLabel=getModeLabel();
+
+        var email=getVal('[name="email"]','Twój e-mail');
+        var name=getVal('[name="name"]','—');
+        var company=getVal('[name="company"]','—');
+        var phone=getVal('[name="phone"]','—');
+        var budget=getVal('[name="budget"]','—');
+        var deadline=getVal('[name="deadline"]','—');
+        var website=getVal('[name="website"]','—');
+        var message=getVal('[name="message"]','Tu pojawi się opis sprawy, gdy zaczniesz pisać formularz.');
+        var services=getServices();
+        var files=getFilesText();
+        var callbackTime=getVal('[name="callback_time"]','—');
+        var callbackTopic=getVal('[name="callback_topic"]','—');
+
+        var subject='Zapytanie ze strony — ' + modeLabel;
+
+        if(mode==='brief' && services !== 'Nie wybrano jeszcze zakresu.'){
+          subject='Brief: ' + services;
+        }
+
+        if(mode==='quick' && services !== 'Nie wybrano jeszcze zakresu.'){
+          subject='Szybkie zapytanie: ' + services;
+        }
+
+        if(mode==='call'){
+          subject='Prośba o oddzwonienie';
+        }
+
+        setText('[data-mail-from]', mode==='call' ? (phone !== '—' ? phone : 'Twój telefon') : email);
+        setText('[data-mail-subject]',subject);
+        setText('[data-mail-mode]',modeLabel);
+        setText('[data-mail-name]',name);
+        setText('[data-mail-company]',mode==='call' ? '—' : company);
+        setText('[data-mail-phone]',phone);
+        setText('[data-mail-services]',services);
+        setText('[data-mail-budget]',budget);
+        setText('[data-mail-deadline]',deadline);
+        setText('[data-mail-website]',website);
+        setText('[data-mail-message]',message);
+        setText('[data-mail-files]',files);
+        setText('[data-mail-callback]',callbackTime + (callbackTopic !== '—' ? ' / ' + callbackTopic : ''));
+
+        toggleMailRow('services', mode==='quick' || mode==='brief');
+        toggleMailRow('budget', mode==='brief');
+        toggleMailRow('deadline', mode==='brief');
+        toggleMailRow('website', mode==='brief');
+        toggleMailRow('files', mode==='brief');
+        toggleMailRow('callback', mode==='call');
+      }
+
+      if(fileInput && fileList){
+        fileInput.addEventListener('change',function(){
+          fileList.innerHTML='';
+
+          if(!fileInput.files || !fileInput.files.length){
+            fileList.innerHTML='<span>Nie wybrano jeszcze plików.</span>';
+            updatePreview();
+            updateHeights();
+            return;
+          }
+
+          Array.prototype.slice.call(fileInput.files).forEach(function(file){
+            var item=document.createElement('span');
+            item.textContent=file.name;
+            fileList.appendChild(item);
+          });
+
+          updatePreview();
+          updateHeights();
+        });
+      }
+
+      modeInputs.forEach(function(input){
+        input.addEventListener('change',applyMode);
+      });
+
+      if(form){
+        form.addEventListener('input',function(){
+          updatePreview();
+          updateHeights();
+        });
+
+        form.addEventListener('change',function(){
+          updatePreview();
+          updateHeights();
+          initIcons();
+        });
+        /* submit obsługuje bridge AJAX z wtyczki */
+}
+
+      if('IntersectionObserver' in window){
+        var io=new IntersectionObserver(function(entries){
+          entries.forEach(function(entry){
+            if(entry.isIntersecting){
+              root.setAttribute('data-ready','1');
+              io.disconnect();
+            }
+          });
+        },{threshold:.12,rootMargin:'0px 0px -8% 0px'});
+        io.observe(root);
+      }else{
+        root.setAttribute('data-ready','1');
+      }
+
+      applyMode();
+
+      window.addEventListener('resize',function(){
+        updateHeights();
+      },{passive:true});
+
+      setTimeout(function(){
+        root.setAttribute('data-ready','1');
+        updateHeights();
+      },160);
+    }
+
+    if(document.readyState==='loading'){
+      document.addEventListener('DOMContentLoaded',initZpContactFormLight);
+    }else{
+      initZpContactFormLight();
+    }
+  })();
+</script>
+
+
+<style id="zp-studio-contact-mail-polish-v22768">
+/* Studio Wyceny: stronger mail-preview typography and guaranteed rounded top corners. */
+body.zpbs-studio-page #zpContactFormLight .zpContactFormLight__mailWindow{
+  position:relative!important;
+  overflow:hidden!important;
+  border-radius:34px!important;
+  -webkit-border-radius:34px!important;
+  background:#fff!important;
+  background-clip:padding-box!important;
+  isolation:isolate!important;
+}
+body.zpbs-studio-page #zpContactFormLight .zpContactFormLight__mailTop{
+  min-height:66px!important;
+  border-radius:33px 33px 0 0!important;
+  -webkit-border-radius:33px 33px 0 0!important;
+  padding:0 22px!important;
+  overflow:hidden!important;
+}
+body.zpbs-studio-page #zpContactFormLight .zpContactFormLight__mailTop strong{
+  font-size:15px!important;
+  line-height:1.08!important;
+}
+body.zpbs-studio-page #zpContactFormLight .zpContactFormLight__mailTop svg{
+  width:20px!important;
+  height:20px!important;
+}
+body.zpbs-studio-page #zpContactFormLight .zpContactFormLight__dots span{
+  width:11px!important;
+  height:11px!important;
+}
+body.zpbs-studio-page #zpContactFormLight .zpContactFormLight__mailMeta{
+  padding:17px 22px!important;
+}
+body.zpbs-studio-page #zpContactFormLight .zpContactFormLight__mailMeta div{
+  grid-template-columns:56px minmax(0,1fr)!important;
+  min-height:34px!important;
+}
+body.zpbs-studio-page #zpContactFormLight .zpContactFormLight__mailMeta span,
+body.zpbs-studio-page #zpContactFormLight .zpContactFormLight__mailSubject span,
+body.zpbs-studio-page #zpContactFormLight .zpContactFormLight__mailMessage span,
+body.zpbs-studio-page #zpContactFormLight .zpContactFormLight__mailFiles span{
+  font-size:11px!important;
+}
+body.zpbs-studio-page #zpContactFormLight .zpContactFormLight__mailMeta strong,
+body.zpbs-studio-page #zpContactFormLight .zpContactFormLight__mailSubject strong{
+  font-size:15px!important;
+  line-height:1.35!important;
+}
+body.zpbs-studio-page #zpContactFormLight .zpContactFormLight__mailSubject{
+  grid-template-columns:76px minmax(0,1fr)!important;
+  padding:17px 22px!important;
+}
+body.zpbs-studio-page #zpContactFormLight .zpContactFormLight__mailBody{
+  padding:22px!important;
+}
+body.zpbs-studio-page #zpContactFormLight .zpContactFormLight__mailBody p{
+  font-size:14px!important;
+  line-height:1.52!important;
+  margin-bottom:12px!important;
+}
+body.zpbs-studio-page #zpContactFormLight .zpContactFormLight__mailMessage{
+  margin-top:18px!important;
+  padding:18px!important;
+  border-radius:22px!important;
+}
+body.zpbs-studio-page #zpContactFormLight .zpContactFormLight__mailMessage p{
+  font-size:14.5px!important;
+  line-height:1.58!important;
+}
+@media(max-width:760px){
+  body.zpbs-studio-page #zpContactFormLight .zpContactFormLight__mailWindow{border-radius:28px!important;-webkit-border-radius:28px!important}
+  body.zpbs-studio-page #zpContactFormLight .zpContactFormLight__mailTop{border-radius:27px 27px 0 0!important;-webkit-border-radius:27px 27px 0 0!important}
+}
+</style>
+<!-- /ZAPROJEKTOWANI — CONTACT FORM / LIGHT MAIL PREVIEW v1.3 -->

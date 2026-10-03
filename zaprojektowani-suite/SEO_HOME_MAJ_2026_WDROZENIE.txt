@@ -1,0 +1,58 @@
+ZAPROJEKTOWANI.COM — SEO HOME / MAJ 2026 — WDROŻENIE v2.2.107
+
+Cel strony głównej:
+Home jest hubem dla usług: strony internetowe Katowice + cała Polska, sklepy internetowe Katowice + WooCommerce, logo i branding Katowice, kampanie Meta Ads, SEO, UX i konwersja.
+
+Priorytety:
+1. Strony internetowe i sklepy internetowe
+2. Logo / branding / identyfikacja wizualna
+3. Kampanie Meta Ads
+
+Rank Math — rekomendowane ustawienia:
+Focus keyword: strony internetowe Katowice
+Additional keywords:
+- projektowanie stron internetowych Katowice
+- sklepy internetowe Katowice
+- logo i branding Katowice
+- kampanie Meta Ads
+
+Meta title:
+Strony internetowe Katowice, sklepy i branding | Zaprojektowani.com
+
+Meta description:
+Zaprojektowani.com: strony internetowe Katowice, sklepy WooCommerce, logo, branding, SEO i kampanie Meta Ads dla firm ze Śląska i całej Polski.
+
+H1:
+Strony internetowe, sklepy internetowe i branding dla firm z Katowic i całej Polski.
+
+Główne URL-e do linkowania:
+- /strony-internetowe-katowice/
+- /sklepy-internetowe-katowice/
+- /logo-branding-katowice/
+- /kampanie-meta-ads/
+- /studio-wyceny/
+- /kontakt/
+- /realizacje/
+
+Branżowe landing pages:
+- /strony-internetowe-dla-kancelarii/
+- /strony-internetowe-dla-deweloperow/
+- /strony-internetowe-dla-salonow-beauty/
+- /strony-internetowe-dla-lekarzy/
+- /sklep-internetowy-dla-producenta/
+- /sklep-internetowy-dla-marki-premium/
+
+Stare URL-e:
+- /strony-sklepy/ -> /strony-internetowe-katowice/
+- /logo-branding/ -> /logo-branding-katowice/
+- /kampanie-reklamowe/ -> /kampanie-meta-ads/
+
+Zasady:
+- Nie upychać fraz.
+- Każdy widget ma mieć naturalny sens SEO.
+- Home nie może komunikować tylko brandingu.
+- CTA do wyceny kierować głównie na /studio-wyceny/.
+- W treściach używać: WordPress, WooCommerce, strony internetowe, sklepy internetowe, logo, branding, SEO, UX, konwersja, Katowice, Śląsk, cała Polska.
+
+
+v2.2.108: Dodano widoczny blok SEO intro po hero oraz plik RANK_MATH_HOME_TRESC_DO_WKLEJENIA.txt, bo Rank Math w edytorze może nie analizować treści generowanej przez shortcode [zp_home_full].

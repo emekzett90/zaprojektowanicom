@@ -1,0 +1,27 @@
+Zaprojektowani Suite 2.2.791 — przełącznik języka, płynne wejście hero na mobile, sygnet ZP za robotem, gradient zmieniający kierunek
+
+Baza: zaprojektowani-suite-2.2.790-hero-mobile-polish.zip (bez zmian w pozostałych plikach).
+
+Przełącznik języka (desktop + menu mobilne + pasek mobilny) — przywrócony
+- Moduł językowy pomijał wstawianie przełącznika, jeśli w HTML strony występował tekst „data-zpl-switch”. Od 2.2.787 zawierał go skrypt kaskady liter, więc przełącznik znikał na desktopie i na mobile.
+- Moduł sprawdza teraz prawdziwy atrybut w tagu HTML (zaprojektowani-languages/includes/Switcher.php), a skrypty inline nie zawierają już tej nazwy dosłownie.
+- Test na HTML strony głównej: poprzednio 0 wstawionych przełączników, teraz 3 (nagłówek desktop, pasek mobilny, menu mobilne).
+
+Mobile (≤1100 px) — wejście hero bez skoku treści
+- Stan początkowy ustawiany w <head> przed pierwszym renderem (html.zp-hero-pre, CSS inline w <head>). Hero nigdy nie pokazuje się na gotowo, żeby potem zniknąć i wjechać niżej.
+- Przy DOMContentLoaded, w tej samej klatce, w której Suite odsłania hero, kolejno wchodzą: robot, etykieta, H1, „Projektujemy…”, opis, przyciski CTA, chipy, karty opinii. Tylko opacity + translate/scale (GPU), lekka sprężystość przy przyciskach i kartach. Po wejściu przejścia są zdejmowane (hovery działają jak wcześniej).
+- Skryptowe wejście z 2.2.790 (front-fixes-310) wyłączone. Z 310 zostają gradient na mobile i styl kart opinii.
+- Banner zgód zwalniany po wejściu (limit 5 s z front-fixes-309 bez zmian).
+
+Sygnet ZP za robotem (desktop + mobile)
+- Duży, wtopiony sygnet (uploads/2026/09/1_2-scaled.webp, 58 KB) pod robotem, z miękką maską brzegów. Na desktopie porusza się razem z robotem (paralaksa), na mobile wchodzi razem z nim.
+- Obraz ładuje się dopiero przy odsłonięciu hero, więc nie konkuruje z pierwszym renderem. Adres można zmienić filtrem zp_suite_311_signet_url.
+
+Gradient na wyróżnionych słowach zmienia kierunek (desktop + mobile)
+- Nad H1 leży kopia (aria-hidden, pomijana przez tłumacza) z odwróconym położeniem tego samego gradientu. Animowana jest tylko jej opacity (6,5 s w jedną stronę, GPU), a poza ekranem animacja stoi.
+- Na desktopie kopia powstaje dopiero po kaskadzie liter.
+
+Pliki: includes/front-fixes-311.php (nowy), includes/front-fixes-308.php, includes/front-fixes-310.php, zaprojektowani-languages/includes/Switcher.php, zaprojektowani-suite.php.
+
+Testy: WebKit (silnik Safari, profil iPhone 15) i desktop na żywej stronie z podmienionym kodem. Przełącznik sprawdzony wykonaniem Switcher::inject na HTML strony głównej. Brak testu na fizycznym telefonie.
+Po instalacji wyczyścić cache strony / optymalizatora / CDN.

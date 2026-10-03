@@ -1,0 +1,8 @@
+Zaprojektowani Suite 2.2.718
+
+Wiedza UI polish:
+- sekcja pod hero ma teraz jednolite, czyste biale tlo bez jasnoniebieskiego odciecia,
+- usuniety zostal dekoracyjny blekitny glow z sekcji tematycznej,
+- dekoracyjne slowo „wiedza” przeniesiono wyzej, tuz pod header,
+- slowo „wiedza” pozostaje za zdjeciem zespolu i ma miekkie wygaszenie po bokach i od dolu,
+- dopracowano pozycjonowanie slowa na desktop/tablet/mobile.

@@ -1,0 +1,1036 @@
+<!-- =====================================================================
+     ZAPROJEKTOWANI — STRONY INTERNETOWE KATOWICE v2 (1:1 z prototypu v6)
+     Header i stopka prototypu usunięte — opakowuje je globalny header i mega
+     stopka wtyczki. Formularz kontaktowy dokłada [zp_contact_system].
+     Pływające CTA prototypu pominięte (wtyczka ma globalny zpFloatUx).
+     %%ZPSI%% jest podmieniane na ZP_SUITE_URL/assets/strony-internetowe/ w page.php.
+     ===================================================================== -->
+<div class="scroll-progress" aria-hidden="true"></div>
+
+<section class="hero" id="start">
+      <div class="hero-noise" aria-hidden="true"></div>
+      <div class="hero-orbit" aria-hidden="true"><i></i></div>
+      <img class="hero-watermark" src="%%ZPSI%%../logo-branding/zp-sygnet-ciemny.webp" width="2560" height="2001" alt="" aria-hidden="true" loading="lazy" decoding="async" fetchpriority="low">
+      <div class="hero-inner">
+        <div class="hero-copy">
+          <p class="hero-eyebrow">Strony internetowe • Katowice</p>
+          <h1><span class="sr-only">Strony internetowe Katowice — </span>Strony firmowe, które <strong class="gradient-text">zdobywają zapytania.</strong></h1>
+          <p class="hero-lead">Tworzymy strony dla firm z Katowic, Śląska i całej Polski: od <strong>strategii, struktury treści i projektu UX/UI</strong>, po wdrożenie WordPress, SEO techniczne, analitykę i szybkie formularze. Wszystko pod realne zapytania — nie tylko ładną wizytówkę.</p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="#pakiety">Dobierz zakres strony <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10"/></svg></a>
+            <a class="btn btn-ghost" href="#portfolio">Zobacz portfolio <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></a>
+          </div>
+          <div class="hero-proof" aria-label="Zakres działań">
+            <span class="proof-pill"><i></i> strategia i UX/UI</span>
+            <span class="proof-pill"><i></i> WordPress + SEO</span>
+            <span class="proof-pill"><i></i> szybkie formularze</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-build" aria-label="Projekt strony internetowej na laptopie z wynikami PageSpeed">
+        <img class="hero-shot" src="%%ZPSI%%hero-laptop.webp" width="2560" height="1593" alt="Projekt strony internetowej — laptop z witryną kancelarii" decoding="async" fetchpriority="high">
+        <div class="ps-badge">
+          <span class="ps-ring"><svg viewBox="0 0 56 56" aria-hidden="true"><circle class="bgc" cx="28" cy="28" r="24"/><circle class="fgc" cx="28" cy="28" r="24"/></svg><b>98</b></span>
+          <div><span class="ps-brand"><img src="%%ZPSI%%pagespeed-insights-logo.png" width="48" height="48" alt="">Google PageSpeed Insights</span><strong>Wydajność 98/100</strong></div>
+        </div>
+        <span class="vitals-pill"><i></i> <span class="vitals-pill__tech">LCP 1,1 s • CLS 0,02</span><span class="vitals-pill__plain">Ładuje się w 1,1 s</span></span>
+        <span class="code-chip">&lt;szybka_strona /&gt;</span>
+        <span class="hero-value-chip hero-value-chip--ux" aria-hidden="true">
+          <img src="%%ZPSI%%tech-figma.svg" alt="">
+          <span><b>UX/UI pod decyzję</b><small>nie tylko ładny layout</small></span>
+        </span>
+        <span class="hero-value-chip hero-value-chip--seo" aria-hidden="true">
+          <img src="%%ZPSI%%tech-wordpress.svg" alt="">
+          <span><b>WordPress + SEO</b><small>gotowe do dalszego wzrostu</small></span>
+        </span>
+        <span class="hero-value-chip hero-value-chip--mobile" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><rect x="6" y="2.5" width="12" height="19" rx="2.5"/><path d="M9.5 17.5h5M9 7.5l2 2 4-4"/></svg>
+          <span><b>Mobile first</b><small>CTA bez zbędnych kroków</small></span>
+        </span>
+      </div>
+
+      <div class="zpServiceHeroScroll" aria-hidden="true">
+        <span class="zpServiceHeroScroll__mouse"></span>
+        <span>Przewiń</span>
+      </div>
+      <div class="hero-rail" aria-hidden="true">
+        <div class="hero-rail__inner hero-rail__inner--logos">
+          <div class="hero-rail__stats">
+            <div class="rail-stat"><strong data-count="60" data-suffix="+">60+</strong><span>projektów online</span></div><i class="rail-sep"></i>
+            <div class="rail-stat"><strong data-count="5.0" data-decimals="1">5,0</strong><img class="rail-trustindex" src="%%ZPSI%%../logo-branding/trustindex.webp" width="488" height="488" alt=""><span>średnia ocen</span></div>
+          </div>
+          <div class="hero-client-logos" aria-label="Logotypy klientów Zaprojektowani">
+            <div class="hero-client-logos__track">
+              <div class="hero-client-logos__group"><span><img src="%%ZPSI%%../logo-branding/logo-vista.webp" alt="Vista"></span><span><img src="%%ZPSI%%../logo-branding/logo-siemianowski.webp" alt="Siemianowski"></span><span><img src="%%ZPSI%%../logo-branding/logo-sfera.webp" alt="Sfera"></span><span><img src="%%ZPSI%%client-raxo.webp" alt="Raxo"></span><span><img src="%%ZPSI%%client-proscarves.webp" alt="ProScarves"></span><span><img src="%%ZPSI%%../logo-branding/logo-prisma-dent.webp" alt="Prisma Dent"></span><span><img src="%%ZPSI%%client-polerstone.webp" alt="Polerstone"></span><span><img src="%%ZPSI%%../logo-branding/logo-piotr-mazur.webp" alt="Piotr Mazur"></span><span><img src="%%ZPSI%%../logo-branding/logo-kaminski.webp" alt="Kamiński"></span><span><img src="%%ZPSI%%client-gravia.webp" alt="Gravia"></span><span><img src="%%ZPSI%%../logo-branding/logo-ap.webp" alt="Apartament Piękna"></span></div>
+              <div class="hero-client-logos__group" aria-hidden="true"><span><img src="%%ZPSI%%../logo-branding/logo-vista.webp" alt="" aria-hidden="true"></span><span><img src="%%ZPSI%%../logo-branding/logo-siemianowski.webp" alt="" aria-hidden="true"></span><span><img src="%%ZPSI%%../logo-branding/logo-sfera.webp" alt="" aria-hidden="true"></span><span><img src="%%ZPSI%%client-raxo.webp" alt="" aria-hidden="true"></span><span><img src="%%ZPSI%%client-proscarves.webp" alt="" aria-hidden="true"></span><span><img src="%%ZPSI%%../logo-branding/logo-prisma-dent.webp" alt="" aria-hidden="true"></span><span><img src="%%ZPSI%%client-polerstone.webp" alt="" aria-hidden="true"></span><span><img src="%%ZPSI%%../logo-branding/logo-piotr-mazur.webp" alt="" aria-hidden="true"></span><span><img src="%%ZPSI%%../logo-branding/logo-kaminski.webp" alt="" aria-hidden="true"></span><span><img src="%%ZPSI%%client-gravia.webp" alt="" aria-hidden="true"></span><span><img src="%%ZPSI%%../logo-branding/logo-ap.webp" alt="" aria-hidden="true"></span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section manifesto">
+      <div class="wrap">
+        <div class="manifesto-grid">
+          <h2 class="manifesto-title reveal">Nie stawiamy wizytówek. <strong>Projektujemy miejsce</strong> prowadzące do <em>decyzji.</em></h2>
+          <div class="manifesto-side reveal" data-delay="1">
+            <figure class="manifesto-person" aria-hidden="true"><img src="%%ZPSI%%../logo-branding/stanislaw-pointing.webp" width="1201" height="1860" alt="" loading="lazy" decoding="async"></figure>
+            <p>Dobra strona zaczyna się wcześniej niż w edytorze. Najpierw trzeba zrozumieć <strong>ofertę, odbiorcę i drogę, którą przechodzi od wejścia do kontaktu.</strong> Dopiero wtedy projektujemy strukturę, treści, UX i technologię.</p>
+          </div>
+        </div>
+        <div class="logic-rail logic-rail--cards reveal">
+          <article class="logic-item" data-step="01"><span>01 / uwaga</span><i class="logic-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><path d="M12 3v2m0 14v2M3 12h2m14 0h2"/></svg></i><strong>Zatrzymujemy właściwą osobę.</strong><p>Układ, hierarchia i pierwszy komunikat od razu pokazują, że użytkownik trafił we właściwe miejsce.</p></article>
+          <article class="logic-item" data-step="02"><span>02 / oferta</span><i class="logic-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 5h16v14H4z"/><path d="M8 9h8M8 13h5"/></svg></i><strong>Tłumaczymy, co robisz i dla kogo.</strong><p>Porządkujemy usługi, korzyści oraz podstrony tak, aby oferta była zrozumiała bez dodatkowego tłumaczenia.</p></article>
+          <article class="logic-item" data-step="03"><span>03 / zaufanie</span><i class="logic-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m12 3 7 3v5c0 4.6-2.8 8-7 10-4.2-2-7-5.4-7-10V6z"/><path d="m9 12 2 2 4-4"/></svg></i><strong>Usuwamy pytania i opór.</strong><p>Realizacje, liczby, opinie i FAQ budują pewność przed wysłaniem zapytania lub wykonaniem telefonu.</p></article>
+          <article class="logic-item logic-item--accent" data-step="04"><span>04 / kontakt</span><i class="logic-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7 17 17 7M7 7h10v10"/></svg></i><strong>Skracamy drogę do zapytania.</strong><p>CTA, formularze i wersja mobilna prowadzą użytkownika do działania bez zbędnych kroków.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section offer" id="oferta">
+      <div class="wrap">
+        <div class="section-head">
+          <div class="section-head__copy reveal">
+            <p class="section-kicker"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="6" cy="19" r="3"/><path d="M9 19h8.5a3.5 3.5 0 0 0 0-7h-11a3.5 3.5 0 0 1 0-7H15"/><circle cx="18" cy="5" r="3"/></svg>Strona firmowa • sklep • landing</p>
+            <h2 class="section-title">Strona porządkuje ofertę. <strong>Sklep domyka sprzedaż.</strong></h2>
+          </div>
+          <p class="section-head__aside reveal" data-delay="1">Nie każda firma potrzebuje tego samego. Dobieramy typ serwisu do celu: zapytania ofertowe, rezerwacje, sprzedaż online albo szybka kampania z landing page.</p>
+        </div>
+
+        <div class="offer-split reveal">
+          <div class="offer-copy">
+            <span class="offer-num">01 / strona firmowa</span>
+            <h3>Porządkuje ofertę i <strong>buduje zaufanie.</strong></h3>
+            <p>Strona główna jako hub marki, podstrony usług pod SEO lokalne, realizacje, sekcje zaufania i FAQ. Projektujemy strukturę oraz treści tak, by użytkownik szybko rozumiał, co robisz — i wiedział, co zrobić dalej.</p>
+            <div class="offer-chips"><span>strona główna</span><span>podstrony usług</span><span>realizacje</span><span>FAQ</span><span>kontakt</span></div>
+            <a class="offer-link" href="#pakiety">Dobierz zakres strony <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10"/></svg></a>
+          </div>
+          <div class="offer-visual"><img class="duo-mockup" src="https://zaprojektowani.com/wp-content/uploads/2026/06/siemianowski_mockup.webp" alt="Strona firmowa kancelarii Siemianowski na laptopie i telefonie" loading="lazy" decoding="async"></div>
+        </div>
+
+        <div class="offer-split offer-split--flip reveal">
+          <div class="offer-copy">
+            <span class="offer-num">02 / sklep internetowy</span>
+            <h3>Sprzedaje i <strong>rośnie razem z marką.</strong></h3>
+            <p>Sklepy WooCommerce od prostych katalogów po zamówienia hurtowe B2B: karty produktów, koszyk, płatności, dostawy i UX sprzedażowy przygotowany pod SEO oraz kampanie Meta Ads i Google Ads.</p>
+            <div class="offer-chips"><span>WooCommerce</span><span>karty produktów</span><span>płatności</span><span>B2B / hurt</span><span>konfiguratory</span></div>
+            <a class="offer-link" href="https://zaprojektowani.com/studio-wyceny/?zpbs_service=shop#zpbsUltimate">Opisz projekt sklepu <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10"/></svg></a>
+          </div>
+          <div class="offer-visual"><img class="duo-mockup" src="https://zaprojektowani.com/wp-content/uploads/2026/09/swiatgrili_vis.webp" alt="Świat Grilli — sklep internetowy WooCommerce na laptopie i telefonie" loading="lazy" decoding="async"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section packages" id="pakiety">
+      <div class="ads-logo-backdrop" aria-hidden="true">
+        <img class="ads-logo-bg ads-logo-bg--meta" src="%%ZPSI%%tool-gsc.png" alt="" loading="lazy" decoding="async">
+        <img class="ads-logo-bg ads-logo-bg--google" src="%%ZPSI%%tool-elementor.png" alt="" loading="lazy" decoding="async">
+      </div>
+      <div class="wrap">
+        <div class="section-head">
+          <div class="section-head__copy reveal"><p class="section-kicker"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="M3.3 7 12 12l8.7-5"/><path d="M12 22V12"/></svg>Pakiety stron internetowych</p><h2 class="section-title">Wybierz zakres — od landing page po <strong>serwis premium.</strong></h2><p class="section-lead">Ten wybór pomaga szybko określić punkt startu. W Studio Wyceny doprecyzujesz branżę, liczbę podstron, funkcje, materiały i cel strony — a my przygotujemy interaktywną ofertę.</p></div>
+          <p class="section-head__aside reveal" data-delay="1">Na komputerze najedź na „Zobacz pełny zakres”, a na telefonie dotknij przycisku. Zobaczysz dokładnie, co otrzymujesz w każdym wariancie — bez zgadywania i ukrytych etapów.</p>
+        </div>
+
+        <div class="packages-grid">
+          <article class="package-card reveal">
+            <div class="package-team-visual package-team-visual--marta" aria-hidden="true">
+              <img src="https://zaprojektowani.com/wp-content/uploads/2026/09/marta_pointing.webp" alt="" width="1536" height="1536" loading="lazy" decoding="async">
+            </div>
+            <div class="package-top"><span class="package-number">01 / start</span><span class="package-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13 2 3 14h7l-1 8 10-12h-7z"/></svg></span></div>
+            <div class="package-level" role="img" aria-label="Poziom zakresu: 1 z 4"><span>zakres</span><i class="is-on"></i><i></i><i></i><i></i></div>
+            <span class="package-tag">Szybki start</span>
+            <h3>Landing Page</h3>
+            <p class="package-subtitle">Jedna mocna strona • kampania lub oferta</p>
+            <p>Dla firm, które chcą wypromować konkretną usługę, produkt albo ofertę sezonową i potrzebują jednej strony prowadzącej do kontaktu.</p>
+            <div class="package-best"><span>Najlepszy, gdy…</span><strong>Liczy się szybki start, jeden konkretny cel i maksymalnie krótka droga do kontaktu.</strong></div>
+            <ul class="package-list package-list--preview package-list--icons">
+              <li><span class="package-list__icon" aria-hidden="true"><i data-lucide="layout-template"></i></span><span>indywidualny projekt <strong>Landing Page</strong></span></li>
+              <li><span class="package-list__icon" aria-hidden="true"><i data-lucide="route"></i></span><span>struktura i ścieżka użytkownika nastawiona na kontakt</span></li>
+              <li><span class="package-list__icon" aria-hidden="true"><i data-lucide="pen-tool"></i></span><span>projekt UX/UI dopasowany do marki</span></li>
+              <li><span class="package-list__icon" aria-hidden="true"><i data-lucide="panels-top-left"></i></span><span>sekcje oferty, korzyści, procesu i CTA</span></li>
+              <li><span class="package-list__icon" aria-hidden="true"><i data-lucide="file-pen-line"></i></span><span><strong>copywriting / redakcja treści</strong></span></li>
+              <li><span class="package-list__icon" aria-hidden="true"><i data-lucide="message-square-text"></i></span><span>formularz kontaktowy lub ofertowy</span></li>
+              <li><span class="package-list__icon" aria-hidden="true"><i data-lucide="smartphone"></i></span><span>pełna wersja mobilna</span></li>
+              <li><span class="package-list__icon" aria-hidden="true"><i data-lucide="search-check"></i></span><span>podstawowe <strong>SEO techniczne</strong></span></li>
+              <li><span class="package-list__icon" aria-hidden="true"><i data-lucide="chart-no-axes-combined"></i></span><span>analityka + pomiar najważniejszych konwersji</span></li>
+              <li><span class="package-list__icon" aria-hidden="true"><i data-lucide="gauge"></i></span><span>optymalizacja szybkości</span></li>
+              <li><span class="package-list__icon" aria-hidden="true"><i data-lucide="shield-check"></i></span><span>podstawowe zabezpieczenia + antyspam</span></li>
+              <li><span class="package-list__icon" aria-hidden="true"><i data-lucide="rocket"></i></span><span>wdrożenie i publikacja strony</span></li>
+            </ul>
+
+            <div class="package-scope">
+              <button class="package-scope__trigger" type="button" aria-expanded="false" aria-controls="webPackageScope1">
+                <span class="package-scope__triggerCopy"><small>W pakiecie jest więcej</small><strong>Zobacz pełny zakres</strong></span>
+                <span class="package-scope__count">35 elementów<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10" /></svg></span>
+              </button>
+              <div class="package-scope__panel" id="webPackageScope1" aria-hidden="true">
+                <div class="package-scope__head">
+                  <div><span>01 / pełny zakres</span><h4>Landing Page</h4></div>
+                  <button class="package-scope__close" type="button" aria-label="Zamknij pełny zakres Landing Page"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" /></svg></button>
+                </div>
+                <p class="package-scope__intro">Kompletna, skoncentrowana strona do kampanii lub promocji jednej oferty — od struktury i tekstów po SEO, analitykę i publikację.</p>
+                <div class="package-scope__scroll">
+                  <ul class="package-scope__list">
+                      <li>analiza celu strony i głównej grupy odbiorców</li>
+                      <li>zaplanowanie ścieżki użytkownika do kontaktu</li>
+                      <li>architektura i kolejność sekcji</li>
+                      <li>indywidualny projekt UX/UI</li>
+                      <li>jedna rozbudowana strona sprzedażowa</li>
+                      <li>mocny hero z głównym CTA</li>
+                      <li>prezentacja usługi, produktu lub oferty</li>
+                      <li>sekcja najważniejszych korzyści</li>
+                      <li>sekcja procesu współpracy</li>
+                      <li>sekcje zaufania i argumentów sprzedażowych</li>
+                      <li>sekcja opinii klientów</li>
+                      <li>FAQ</li>
+                      <li>formularz kontaktowy</li>
+                      <li>formularz zapytania ofertowego</li>
+                      <li>przyciski telefon / e-mail / WhatsApp</li>
+                      <li>copywriting i redakcja treści</li>
+                      <li>mikrocopy przycisków i formularzy</li>
+                      <li>wersja desktopowa</li>
+                      <li>wersja tabletowa</li>
+                      <li>pełna wersja mobilna</li>
+                      <li>optymalizacja grafik</li>
+                      <li>lazy loading obrazów</li>
+                      <li>optymalizacja szybkości ładowania</li>
+                      <li>meta title i meta description</li>
+                      <li>poprawna struktura H1–H3</li>
+                      <li>przyjazne adresy URL</li>
+                      <li>sitemap XML</li>
+                      <li>konfiguracja Google Search Console</li>
+                      <li>konfiguracja GA4</li>
+                      <li>pomiar wysłania formularza / głównej konwersji</li>
+                      <li>favicon</li>
+                      <li>SSL i podstawowe zabezpieczenia</li>
+                      <li>ochrona formularzy przed spamem</li>
+                      <li>testy przed publikacją</li>
+                      <li>publikacja na domenie klienta</li>
+                  </ul>
+                </div>
+                <div class="package-scope__footer">
+                  <div><small>Zakres</small><strong>Landing Page</strong></div>
+                  <a class="package-scope__cta" href="https://zaprojektowani.com/studio-wyceny/?zpbs_service=web&amp;zpbs_package=Landing%20Page&amp;zpbs_source=strony-internetowe-katowice#zpbsUltimate">Wybierz Landing Page<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10" /></svg></a>
+                </div>
+              </div>
+            </div>
+
+            <a class="package-cta" href="https://zaprojektowani.com/studio-wyceny/?zpbs_service=web&amp;zpbs_package=Landing%20Page&amp;zpbs_source=strony-internetowe-katowice#zpbsUltimate">Wybierz Landing Page <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10"/></svg></a>
+          </article>
+
+          <article class="package-card reveal" data-delay="1">
+            <div class="package-team-visual package-team-visual--stanislaw" aria-hidden="true">
+              <img src="https://zaprojektowani.com/wp-content/uploads/2026/09/stanislaw_pointing.webp" alt="" width="1536" height="1536" loading="lazy" decoding="async">
+            </div>
+            <div class="package-top"><span class="package-number">02 / starter</span><span class="package-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5h18v14H3zM3 9h18M7 7h.01M10 7h.01"/></svg></span></div>
+            <div class="package-level" role="img" aria-label="Poziom zakresu: 2 z 4"><span>zakres</span><i class="is-on"></i><i class="is-on"></i><i></i><i></i></div>
+            <span class="package-tag">Czytelna obecność</span>
+            <h3>Strona Starter</h3>
+            <p class="package-subtitle">Strona główna + kluczowe podstrony</p>
+            <p>Dla lokalnych firm i specjalistów, którzy potrzebują profesjonalnej strony z jasną ofertą i solidną bazą do dalszego rozwoju.</p>
+            <div class="package-best"><span>Najlepszy, gdy…</span><strong>Chcesz wyglądać profesjonalnie, jasno pokazać ofertę i mieć solidną bazę pod SEO.</strong></div>
+            <ul class="package-list package-list--preview package-list--icons">
+              <li><span class="package-list__icon" aria-hidden="true"><i data-lucide="layout-dashboard"></i></span><span>indywidualny projekt strony firmowej</span></li>
+              <li><span class="package-list__icon" aria-hidden="true"><i data-lucide="network"></i></span><span>strona główna + <strong>kluczowe podstrony</strong></span></li>
+              <li><span class="package-list__icon" aria-hidden="true"><i data-lucide="pen-tool"></i></span><span>indywidualny UX/UI dopasowany do marki</span></li>
+              <li><span class="package-list__icon" aria-hidden="true"><i data-lucide="route"></i></span><span>przygotowanie struktury i nawigacji serwisu</span></li>
+              <li><span class="package-list__icon" aria-hidden="true"><i data-lucide="file-pen-line"></i></span><span><strong>copywriting / redakcja treści</strong></span></li>
+              <li><span class="package-list__icon" aria-hidden="true"><i data-lucide="briefcase-business"></i></span><span>oferta + o firmie + realizacje + kontakt</span></li>
+              <li><span class="package-list__icon" aria-hidden="true"><i data-lucide="messages-square"></i></span><span>formularze, CTA i szybkie ścieżki kontaktu</span></li>
+              <li><span class="package-list__icon" aria-hidden="true"><i data-lucide="smartphone"></i></span><span>pełna wersja mobilna</span></li>
+              <li><span class="package-list__icon" aria-hidden="true"><i data-lucide="search-check"></i></span><span><strong>SEO techniczne</strong> + indeksacja</span></li>
+              <li><span class="package-list__icon" aria-hidden="true"><i data-lucide="chart-no-axes-combined"></i></span><span>Google Analytics + Search Console</span></li>
+              <li><span class="package-list__icon" aria-hidden="true"><i data-lucide="gauge"></i></span><span>optymalizacja szybkości</span></li>
+              <li><span class="package-list__icon" aria-hidden="true"><i data-lucide="square-mouse-pointer"></i></span><span>WordPress gotowy do samodzielnej edycji</span></li>
+            </ul>
+
+            <div class="package-scope">
+              <button class="package-scope__trigger" type="button" aria-expanded="false" aria-controls="webPackageScope2">
+                <span class="package-scope__triggerCopy"><small>W pakiecie jest więcej</small><strong>Zobacz pełny zakres</strong></span>
+                <span class="package-scope__count">44 elementów<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10" /></svg></span>
+              </button>
+              <div class="package-scope__panel" id="webPackageScope2" aria-hidden="true">
+                <div class="package-scope__head">
+                  <div><span>02 / pełny zakres</span><h4>Strona Starter</h4></div>
+                  <button class="package-scope__close" type="button" aria-label="Zamknij pełny zakres Strona Starter"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" /></svg></button>
+                </div>
+                <p class="package-scope__intro">Profesjonalna strona firmowa z pełnym fundamentem technicznym, treściowym i SEO — gotowa do dalszej rozbudowy.</p>
+                <div class="package-scope__scroll">
+                  <ul class="package-scope__list">
+                      <li>analiza firmy, oferty i najważniejszych usług</li>
+                      <li>podstawowa analiza konkurencji</li>
+                      <li>architektura informacji</li>
+                      <li>zaplanowanie menu i struktury podstron</li>
+                      <li>indywidualny projekt UX/UI</li>
+                      <li>strona główna</li>
+                      <li>podstrona O nas</li>
+                      <li>podstrona oferta / usługi</li>
+                      <li>realizacje / portfolio</li>
+                      <li>kontakt</li>
+                      <li>dodatkowe podstawowe podstrony przewidziane zakresem</li>
+                      <li>sekcje opinii i dowodów zaufania</li>
+                      <li>FAQ</li>
+                      <li>CTA rozmieszczone w całym serwisie</li>
+                      <li>formularz kontaktowy</li>
+                      <li>formularz zapytania ofertowego</li>
+                      <li>telefon / WhatsApp / e-mail</li>
+                      <li>copywriting i redakcja treści</li>
+                      <li>mikrocopy przycisków i formularzy</li>
+                      <li>wersja desktopowa</li>
+                      <li>wersja tabletowa</li>
+                      <li>mobile-first / pełna responsywność</li>
+                      <li>WordPress</li>
+                      <li>możliwość samodzielnej edycji treści</li>
+                      <li>optymalizacja grafik</li>
+                      <li>lazy loading</li>
+                      <li>podstawowy cache</li>
+                      <li>przyjazne adresy URL</li>
+                      <li>struktura H1–H3</li>
+                      <li>title + meta description</li>
+                      <li>podstawowe dane strukturalne / schema</li>
+                      <li>sitemap XML</li>
+                      <li>robots.txt</li>
+                      <li>indeksacja w Google</li>
+                      <li>Google Search Console</li>
+                      <li>GA4</li>
+                      <li>pomiar wysłania formularza</li>
+                      <li>favicon</li>
+                      <li>SSL</li>
+                      <li>zabezpieczenie formularzy przed spamem</li>
+                      <li>kopia zapasowa przed publikacją</li>
+                      <li>testy na różnych urządzeniach</li>
+                      <li>testy formularzy i linków</li>
+                      <li>publikacja strony</li>
+                  </ul>
+                </div>
+                <div class="package-scope__footer">
+                  <div><small>Zakres</small><strong>Strona Starter</strong></div>
+                  <a class="package-scope__cta" href="https://zaprojektowani.com/studio-wyceny/?zpbs_service=web&amp;zpbs_package=Strona%20Starter&amp;zpbs_source=strony-internetowe-katowice#zpbsUltimate">Wybierz Starter<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10" /></svg></a>
+                </div>
+              </div>
+            </div>
+
+            <a class="package-cta" href="https://zaprojektowani.com/studio-wyceny/?zpbs_service=web&amp;zpbs_package=Strona%20Starter&amp;zpbs_source=strony-internetowe-katowice#zpbsUltimate">Wybierz Starter <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10"/></svg></a>
+          </article>
+
+          <article class="package-card package-card--featured reveal" data-delay="2">
+            <div class="package-team-visual package-team-visual--mateusz" aria-hidden="true">
+              <img src="https://zaprojektowani.com/wp-content/uploads/2026/09/mateusz_pointing.webp" alt="" width="1536" height="1536" loading="lazy" decoding="async">
+            </div>
+            <span class="package-ribbon">Najczęstszy wybór</span>
+            <div class="package-top"><span class="package-number">03 / premium</span><span class="package-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3v18h18M7 15l4-4 3 3 5-7"/></svg></span></div>
+            <div class="package-level" role="img" aria-label="Poziom zakresu: 3 z 4"><span>zakres</span><i class="is-on"></i><i class="is-on"></i><i class="is-on"></i><i></i></div>
+            <span class="package-tag">Marka premium</span>
+            <h3>Strona Premium</h3>
+            <p class="package-subtitle">Strategia • SEO • konwersja • analityka</p>
+            <p>Dla firm, które chcą mocniej wejść w Google, lepiej pokazać ofertę i zbudować stronę przygotowaną do regularnego pozyskiwania zapytań.</p>
+            <div class="package-best"><span>Najlepszy, gdy…</span><strong>Strona ma pozycjonować markę, generować zapytania i stanowić fundament sprzedaży oraz marketingu na lata.</strong></div>
+            <div class="package-readiness" aria-label="Gotowość wdrożeniowa"><span>SEO Ready</span><span>Ads Ready</span><span>Analytics Ready</span></div>
+            <ul class="package-list package-list--preview package-list--icons">
+              <li><span class="package-list__icon" aria-hidden="true"><i data-lucide="waypoints"></i></span><span><strong>indywidualna strategia strony</strong></span></li>
+              <li><span class="package-list__icon" aria-hidden="true"><i data-lucide="files"></i></span><span><strong>nieograniczona liczba podstron</strong></span></li>
+              <li><span class="package-list__icon" aria-hidden="true"><i data-lucide="network"></i></span><span>rozbudowana struktura pod SEO</span></li>
+              <li><span class="package-list__icon" aria-hidden="true"><i data-lucide="sparkles"></i></span><span>indywidualny projekt UX/UI <strong>premium</strong></span></li>
+              <li><span class="package-list__icon" aria-hidden="true"><i data-lucide="file-pen-line"></i></span><span><strong>pełny copywriting strony</strong></span></li>
+              <li><span class="package-list__icon" aria-hidden="true"><i data-lucide="layers-3"></i></span><span>rozbudowane podstrony usług</span></li>
+              <li><span class="package-list__icon" aria-hidden="true"><i data-lucide="map-pinned"></i></span><span>sekcje usługowe / lokalne pod Google</span></li>
+              <li><span class="package-list__icon" aria-hidden="true"><i data-lucide="mouse-pointer-click"></i></span><span>rozbudowane formularze i CTA</span></li>
+              <li><span class="package-list__icon" aria-hidden="true"><i data-lucide="search-check"></i></span><span>zaawansowane <strong>SEO techniczne</strong></span></li>
+              <li><span class="package-list__icon" aria-hidden="true"><i data-lucide="chart-no-axes-combined"></i></span><span>GA4 + Search Console + GTM</span></li>
+              <li><span class="package-list__icon" aria-hidden="true"><i data-lucide="gauge"></i></span><span>optymalizacja <strong>Core Web Vitals</strong></span></li>
+              <li><span class="package-list__icon" aria-hidden="true"><i data-lucide="git-branch"></i></span><span>schema + linkowanie wewnętrzne</span></li>
+              <li><span class="package-list__icon" aria-hidden="true"><i data-lucide="infinity"></i></span><span><strong>nielimitowane poprawki do akceptacji projektu</strong></span></li>
+              <li><span class="package-list__icon" aria-hidden="true"><i data-lucide="megaphone"></i></span><span>przygotowanie pod Google Ads / Meta Ads</span></li>
+              <li><span class="package-list__icon" aria-hidden="true"><i data-lucide="life-buoy"></i></span><span>wsparcie po publikacji</span></li>
+            </ul>
+
+            <div class="package-scope">
+              <button class="package-scope__trigger" type="button" aria-expanded="false" aria-controls="webPackageScope3">
+                <span class="package-scope__triggerCopy"><small>W pakiecie jest więcej</small><strong>Zobacz pełny zakres</strong></span>
+                <span class="package-scope__count">82 elementy<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10" /></svg></span>
+              </button>
+              <div class="package-scope__panel" id="webPackageScope3" aria-hidden="true">
+                <div class="package-scope__head">
+                  <div><span>03 / pełny zakres</span><h4>Strona Premium</h4></div>
+                  <button class="package-scope__close" type="button" aria-label="Zamknij pełny zakres Strona Premium"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" /></svg></button>
+                </div>
+                <p class="package-scope__intro">Rozbudowany system strony do sprzedaży, SEO i kampanii — z pełną strategią, treściami, analityką i przygotowaniem do skalowania.</p>
+                <div class="package-scope__scroll">
+                  <ul class="package-scope__list">
+                      <li>analiza firmy, oferty i grup klientów</li>
+                      <li>analiza konkurencji</li>
+                      <li>analiza obecnej strony, jeśli istnieje</li>
+                      <li>indywidualna strategia strony</li>
+                      <li>nieograniczona liczba podstron</li>
+                      <li>zaplanowanie architektury informacji</li>
+                      <li>plan struktury pod SEO</li>
+                      <li>mapa podstron</li>
+                      <li>plan ścieżek użytkownika</li>
+                      <li>indywidualny projekt UX</li>
+                      <li>indywidualny projekt UI</li>
+                      <li>projekt zgodny z identyfikacją marki</li>
+                      <li>autorskie sekcje i layouty</li>
+                      <li>rozbudowany hero</li>
+                      <li>strona główna</li>
+                      <li>oferta / usługi</li>
+                      <li>osobne podstrony kluczowych usług</li>
+                      <li>sekcje branżowe / zastosowania</li>
+                      <li>sekcje lokalne pod Google tam, gdzie mają uzasadnienie</li>
+                      <li>realizacje / case studies</li>
+                      <li>O nas / zespół</li>
+                      <li>proces współpracy</li>
+                      <li>opinie i dowody zaufania</li>
+                      <li>liczby / przewagi / argumenty sprzedażowe</li>
+                      <li>rozbudowane FAQ</li>
+                      <li>kontakt</li>
+                      <li>sekcje CTA</li>
+                      <li>sticky CTA na mobile, jeśli pomaga w konwersji</li>
+                      <li>formularze kontaktowe</li>
+                      <li>rozbudowany formularz zapytania</li>
+                      <li>integracja WhatsApp / telefon / e-mail</li>
+                      <li>mapa Google, jeśli potrzebna</li>
+                      <li>pełny copywriting strony</li>
+                      <li>nagłówki sprzedażowe</li>
+                      <li>mikrocopy</li>
+                      <li>teksty CTA</li>
+                      <li>treści przygotowane z myślą o SEO</li>
+                      <li>frazy usługowe / lokalne uwzględnione w strukturze</li>
+                      <li>pełna responsywność</li>
+                      <li>desktop / tablet / mobile</li>
+                      <li>WordPress</li>
+                      <li>intuicyjna edycja treści</li>
+                      <li>komponenty wielokrotnego użycia</li>
+                      <li>architektura gotowa do dalszego rozwoju</li>
+                      <li>optymalizacja grafik</li>
+                      <li>WebP / AVIF tam, gdzie możliwe</li>
+                      <li>lazy loading</li>
+                      <li>cache</li>
+                      <li>minifikacja i optymalizacja zasobów</li>
+                      <li>optymalizacja Core Web Vitals</li>
+                      <li>struktura H1–H6</li>
+                      <li>title + meta description</li>
+                      <li>canonical</li>
+                      <li>sitemap XML</li>
+                      <li>robots.txt</li>
+                      <li>przekierowania przy migracji starej strony</li>
+                      <li>schema Organization / LocalBusiness / FAQ / Breadcrumb zależnie od treści</li>
+                      <li>linkowanie wewnętrzne</li>
+                      <li>breadcrumbs</li>
+                      <li>indeksacja w Google</li>
+                      <li>Google Search Console</li>
+                      <li>GA4</li>
+                      <li>Google Tag Manager</li>
+                      <li>konfiguracja najważniejszych zdarzeń</li>
+                      <li>pomiar formularzy</li>
+                      <li>pomiar kliknięć telefon / e-mail / WhatsApp</li>
+                      <li>przygotowanie konwersji pod kampanie reklamowe</li>
+                      <li>konfiguracja zgód cookies / Consent Mode, jeśli wymaga jej projekt</li>
+                      <li>favicon</li>
+                      <li>Open Graph</li>
+                      <li>podstawowe zabezpieczenia</li>
+                      <li>ochrona antyspam</li>
+                      <li>backup przed publikacją</li>
+                      <li>testy kompatybilności</li>
+                      <li>testy formularzy i CTA</li>
+                      <li>testy mobile</li>
+                      <li>publikacja strony</li>
+                      <li>kontrola indeksacji po publikacji</li>
+                      <li>nielimitowane poprawki do momentu akceptacji projektu</li>
+                      <li>instrukcja obsługi strony w PDF</li>
+                      <li>krótkie wdrożenie w obsługę WordPress</li>
+                      <li>wsparcie techniczne po uruchomieniu</li>
+                  </ul>
+                </div>
+                <div class="package-scope__footer">
+                  <div><small>Zakres</small><strong>Strona Premium</strong></div>
+                  <a class="package-scope__cta" href="https://zaprojektowani.com/studio-wyceny/?zpbs_service=web&amp;zpbs_package=Strona%20Premium&amp;zpbs_source=strony-internetowe-katowice#zpbsUltimate">Wybierz Premium<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10" /></svg></a>
+                </div>
+              </div>
+            </div>
+
+            <a class="package-cta" href="https://zaprojektowani.com/studio-wyceny/?zpbs_service=web&amp;zpbs_package=Strona%20Premium&amp;zpbs_source=strony-internetowe-katowice#zpbsUltimate">Wybierz Premium <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10"/></svg></a>
+          </article>
+
+          <article class="package-card reveal" data-delay="3">
+            <div class="package-team-visual package-team-visual--custom" aria-hidden="true">
+              <div class="package-custom-consult">
+                <span class="package-custom-orbit package-custom-orbit--one"></span>
+                <span class="package-custom-orbit package-custom-orbit--two"></span>
+                <div class="package-custom-core">
+                  <span class="package-custom-core__icon">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v18M3 12h18"/><path d="M5.6 5.6 18.4 18.4M18.4 5.6 5.6 18.4"/></svg>
+                  </span>
+                  <strong>Projekt 1:1</strong>
+                  <em>indywidualny zakres</em>
+                </div>
+                <span class="package-custom-node package-custom-node--ux">UX/UI</span>
+                <span class="package-custom-node package-custom-node--seo">SEO</span>
+                <span class="package-custom-node package-custom-node--dev">DEV</span>
+              </div>
+            </div>
+            <div class="package-top"><span class="package-number">04 / custom</span><span class="package-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2v4m0 12v4M4.9 4.9l2.8 2.8m8.6 8.6 2.8 2.8M2 12h4m12 0h4M4.9 19.1l2.8-2.8m8.6-8.6 2.8-2.8"/><circle cx="12" cy="12" r="4"/></svg></span></div>
+            <div class="package-level" role="img" aria-label="Poziom zakresu: 4 z 4"><span>zakres</span><i class="is-on"></i><i class="is-on"></i><i class="is-on"></i><i class="is-on"></i></div>
+            <span class="package-tag">Nietypowy zakres</span>
+            <h3>Projekt indywidualny</h3>
+            <p class="package-subtitle">Sklep • konfigurator • integracje</p>
+            <p>Dla projektów wykraczających poza klasyczną stronę firmową — od WooCommerce i konfiguratorów po integracje, automatyzacje i rozwiązania B2B.</p>
+            <div class="package-best"><span>Najlepszy, gdy…</span><strong>Potrzebujesz rozwiązania szytego pod proces firmy, a nie gotowego schematu.</strong></div>
+            <ul class="package-list package-list--preview package-list--icons">
+              <li><span class="package-list__icon" aria-hidden="true"><i data-lucide="scan-search"></i></span><span>indywidualna analiza projektu</span></li>
+              <li><span class="package-list__icon" aria-hidden="true"><i data-lucide="workflow"></i></span><span>dedykowana architektura UX</span></li>
+              <li><span class="package-list__icon" aria-hidden="true"><i data-lucide="panels-top-left"></i></span><span>serwisy wielostronicowe</span></li>
+              <li><span class="package-list__icon" aria-hidden="true"><i data-lucide="shopping-cart"></i></span><span>sklepy <strong>WooCommerce</strong></span></li>
+              <li><span class="package-list__icon" aria-hidden="true"><i data-lucide="sliders-horizontal"></i></span><span>konfiguratory produktów / usług</span></li>
+              <li><span class="package-list__icon" aria-hidden="true"><i data-lucide="calculator"></i></span><span>kalkulatory i formularze wieloetapowe</span></li>
+              <li><span class="package-list__icon" aria-hidden="true"><i data-lucide="calendar-check"></i></span><span>systemy rezerwacji</span></li>
+              <li><span class="package-list__icon" aria-hidden="true"><i data-lucide="credit-card"></i></span><span>płatności online</span></li>
+              <li><span class="package-list__icon" aria-hidden="true"><i data-lucide="plug-zap"></i></span><span>integracje API</span></li>
+              <li><span class="package-list__icon" aria-hidden="true"><i data-lucide="bot"></i></span><span>automatyzacje i rozwiązania AI</span></li>
+              <li><span class="package-list__icon" aria-hidden="true"><i data-lucide="languages"></i></span><span>wielojęzyczność</span></li>
+              <li><span class="package-list__icon" aria-hidden="true"><i data-lucide="badge-check"></i></span><span>projekt i wycena <strong>1:1</strong></span></li>
+            </ul>
+
+            <div class="package-scope">
+              <button class="package-scope__trigger" type="button" aria-expanded="false" aria-controls="webPackageScope4">
+                <span class="package-scope__triggerCopy"><small>W pakiecie jest więcej</small><strong>Zobacz pełny zakres</strong></span>
+                <span class="package-scope__count">20 możliwości<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10" /></svg></span>
+              </button>
+              <div class="package-scope__panel" id="webPackageScope4" aria-hidden="true">
+                <div class="package-scope__head">
+                  <div><span>04 / pełny zakres</span><h4>Projekt indywidualny</h4></div>
+                  <button class="package-scope__close" type="button" aria-label="Zamknij pełny zakres Projekt indywidualny"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" /></svg></button>
+                </div>
+                <p class="package-scope__intro">Zakres dobieramy indywidualnie. Panel pokazuje przykładowe rozwiązania, które możemy połączyć w jeden projekt dopasowany do procesu Twojej firmy.</p>
+                <div class="package-scope__scroll">
+                  <ul class="package-scope__list">
+                      <li>rozbudowany serwis wielostronicowy</li>
+                      <li>sklep WooCommerce</li>
+                      <li>platforma lub panel B2B</li>
+                      <li>katalog produktów bez klasycznego checkoutu</li>
+                      <li>konfigurator produktu lub usługi</li>
+                      <li>kalkulator wyceny</li>
+                      <li>formularz wieloetapowy</li>
+                      <li>system rezerwacji</li>
+                      <li>strefa klienta / konto użytkownika</li>
+                      <li>płatności online</li>
+                      <li>integracje z CRM</li>
+                      <li>integracje API</li>
+                      <li>automatyzacje procesów</li>
+                      <li>system zgłoszeń / leadów</li>
+                      <li>wielojęzyczność</li>
+                      <li>wyszukiwarka i zaawansowane filtrowanie</li>
+                      <li>rozwiązania AI dopasowane do projektu</li>
+                      <li>niestandardowe moduły WordPress</li>
+                      <li>zaawansowana architektura SEO</li>
+                      <li>indywidualna analiza, harmonogram i wycena 1:1</li>
+                  </ul>
+                </div>
+                <div class="package-scope__footer">
+                  <div><small>Zakres</small><strong>Projekt 1:1</strong></div>
+                  <a class="package-scope__cta" href="https://zaprojektowani.com/studio-wyceny/?zpbs_service=web&amp;zpbs_package=Projekt%20indywidualny&amp;zpbs_source=strony-internetowe-katowice#zpbsUltimate">Opisz projekt<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10" /></svg></a>
+                </div>
+              </div>
+            </div>
+
+            <a class="package-cta" href="https://zaprojektowani.com/studio-wyceny/?zpbs_service=web&amp;zpbs_package=Projekt%20indywidualny&amp;zpbs_source=strony-internetowe-katowice#zpbsUltimate">Opisz projekt <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10"/></svg></a>
+          </article>
+        </div>
+
+        <div class="packages-bottom reveal">
+          <div><strong>Nie wiesz, który zakres będzie właściwy?</strong><p>W Studio Wyceny podasz branżę, cel strony, liczbę podstron, funkcje i dostępne materiały. Na tej podstawie dobierzemy zakres i wskażemy najlepszy punkt startu.</p></div>
+          <a class="btn" href="https://zaprojektowani.com/studio-wyceny/?zpbs_service=web#zpbsUltimate">Przejdź do Studia Wyceny <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10"/></svg></a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section ad-showcase portfolio" id="portfolio">
+      <aside class="pf-side-progress" aria-label="Postęp przeglądania portfolio">
+        <span class="pf-side-progress__label">portfolio</span>
+        <div class="pf-side-progress__track"><i></i></div>
+        <strong><b>01</b><em>/11</em></strong>
+      </aside>
+      <div class="wrap">
+        <div class="section-head">
+          <div class="section-head__copy reveal">
+            <p class="section-kicker"><svg viewBox="0 0 24 24" aria-hidden="true"><rect width="7" height="7" x="3" y="3" rx="1.5"/><rect width="7" height="7" x="14" y="3" rx="1.5"/><rect width="7" height="7" x="14" y="14" rx="1.5"/><rect width="7" height="7" x="3" y="14" rx="1.5"/></svg>Portfolio stron</p>
+            <h2 class="section-title">Duże projekty. <strong>Jeszcze większy kontekst.</strong></h2>
+            <p class="section-lead">Jedenaście wybranych realizacji — z pełniejszym opisem, zakresem, efektem i bezpośrednim podglądem strony. Każdy projekt ma <strong>własny cel, język, kolor i ścieżkę do kontaktu.</strong></p>
+          </div>
+          <div class="portfolio-intro reveal" data-delay="1">
+            <div class="portfolio-team-card"><img src="%%ZPSI%%../campaigns/team-hero.webp" width="2006" height="2047" alt="Zespół Zaprojektowani odpowiedzialny za strategię, projekt i wdrożenie" loading="lazy" decoding="async"><div><span>realny zespół • jeden proces</span><strong>Strategia, UX/UI, treść i wdrożenie przy jednym stole.</strong></div></div>
+            <p>Nie kopiujemy szablonów między branżami. Pokazujemy <strong>11 wybranych realizacji</strong> z naszej pełnej bazy projektów stron i sklepów.</p>
+            <a class="portfolio-all-link" href="https://zaprojektowani.com/realizacje/">Zobacz wszystkie realizacje <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10"/></svg></a>
+          </div>
+        </div>
+
+        <div class="pf-toolbar" aria-label="Postęp portfolio">
+          <div class="pf-toolbar__label"><i></i><span>portfolio • przewijaj, aby odkrywać</span><span class="pf-progress-track"><span id="portfolioProgress"></span></span></div>
+          <div class="pf-toolbar__count"><strong id="portfolioCurrent">01</strong><em>/11</em></div>
+          <div class="pf-nav"><button id="portfolioPrev" type="button" aria-label="Poprzednia realizacja" disabled><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg></button><button id="portfolioNext" type="button" aria-label="Następna realizacja"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></button></div>
+        </div>
+        <div class="pf-swipe-hint" aria-hidden="true"><span>Przesuń w prawo, aby zobaczyć kolejne</span><span class="pf-swipe-motion"><i></i><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></div>
+
+        <div class="pf-stack" id="portfolioStack">
+          <article class="pf-card pf-card--ap reveal" data-portfolio-card data-project="apartament">
+            <div class="pf-card__surface" aria-hidden="true"><span class="pf-card__word">beauty</span></div>
+            <div class="pf-card__content">
+              <div class="pf-card__copy"><div class="pf-card__index">01 / beauty premium <b>LIVE</b></div><h3>Apartament Piękna</h3><p class="pf-card__description"><strong>Strona + rezerwacje + SEO</strong>Pełny redesign marki beauty: elegancka strona, autorski system rezerwacji z przypomnieniami SMS oraz struktura przygotowana pod lokalne wyszukiwania.</p><div class="pf-tags"><span>WordPress</span><span>rezerwacje online</span><span>SEO lokalne</span><span>branding</span></div><div class="pf-detail-grid"><div class="pf-detail"><span>Co zrobiliśmy</span><strong>UX/UI, WordPress, system wizyt, blog i analityka.</strong></div><div class="pf-detail"><span>Efekt</span><strong>Rezerwacja 24/7 i mniej ręcznej pracy recepcji.</strong></div></div><div class="pf-actions"><button class="pf-btn" type="button" data-project-details="apartament">Zobacz szczegóły <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></button><a class="pf-btn pf-btn--ghost" href="https://www.apartamentpiekna.pl/" target="_blank" rel="noopener noreferrer" aria-label="Zobacz stronę Apartament Piękna na żywo">Strona live <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10"/></svg></a></div></div>
+              <div class="pf-card__visual"><img src="https://zaprojektowani.com/wp-content/uploads/2026/06/apartament_mockup-scaled.webp" width="2560" height="1396" alt="Apartament Piękna — strona i system rezerwacji na laptopie i telefonie" loading="lazy" decoding="async"></div>
+            </div>
+          </article>
+
+          <article class="pf-card pf-card--siemianowski pf-card--reverse reveal" data-portfolio-card data-project="siemianowski">
+            <div class="pf-card__surface" aria-hidden="true"><span class="pf-card__word">prawo</span></div>
+            <div class="pf-card__content">
+              <div class="pf-card__copy"><div class="pf-card__index">02 / kancelaria premium <b>LIVE</b></div><h3>Siemianowski</h3><p class="pf-card__description"><strong>Branding + strona ekspercka + wizyty</strong>Kompletny wizerunek kancelarii, rozbudowana architektura specjalizacji i spokojna ścieżka prowadząca od treści eksperckiej do konsultacji.</p><div class="pf-tags"><span>branding premium</span><span>WordPress</span><span>copywriting</span><span>umawianie wizyt</span></div><div class="pf-detail-grid"><div class="pf-detail"><span>Co zrobiliśmy</span><strong>Logo, identyfikacja, UX/UI i struktura usług prawnych.</strong></div><div class="pf-detail"><span>Efekt</span><strong>Jedna spójna marka budująca zaufanie przed rozmową.</strong></div></div><div class="pf-actions"><button class="pf-btn" type="button" data-project-details="siemianowski">Zobacz szczegóły <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></button><a class="pf-btn pf-btn--ghost" href="https://siemianowski.pl/" target="_blank" rel="noopener noreferrer" aria-label="Zobacz stronę kancelarii Siemianowski na żywo">Strona live <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10"/></svg></a></div></div>
+              <div class="pf-card__visual"><img src="https://zaprojektowani.com/wp-content/uploads/2026/06/siemianowski_mockup.webp" width="2503" height="1361" alt="Siemianowski — strona kancelarii na laptopie i telefonie" loading="lazy" decoding="async"></div>
+            </div>
+          </article>
+
+          <article class="pf-card pf-card--gravia reveal" data-portfolio-card data-project="gravia">
+            <div class="pf-card__surface" aria-hidden="true"><span class="pf-card__word">infrastruktura</span></div>
+            <div class="pf-card__content">
+              <div class="pf-card__copy"><div class="pf-card__index">03 / infrastruktura B2B <b>LIVE</b></div><h3>Gravia</h3><p class="pf-card__description"><strong>Strona firmowa + realizacje + kariera</strong>Techniczny serwis dla biura projektów infrastrukturalnych, który tłumaczy złożone kompetencje, pokazuje skalę realizacji i pomaga pozyskiwać specjalistów.</p><div class="pf-tags"><span>techniczny UI</span><span>portfolio realizacji</span><span>system kariery</span><span>B2B</span></div><div class="pf-detail-grid"><div class="pf-detail"><span>Co zrobiliśmy</span><strong>Architektura informacji, WordPress, realizacje i obsługa CV.</strong></div><div class="pf-detail"><span>Efekt</span><strong>Platforma wspierająca sprzedaż B2B i rekrutację.</strong></div></div><div class="pf-actions"><button class="pf-btn" type="button" data-project-details="gravia">Zobacz szczegóły <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></button><a class="pf-btn pf-btn--ghost" href="https://gravia.pl/" target="_blank" rel="noopener noreferrer" aria-label="Zobacz stronę Gravia na żywo">Strona live <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10"/></svg></a></div></div>
+              <div class="pf-card__visual"><img src="https://zaprojektowani.com/wp-content/uploads/2026/06/gravia_mockup.webp" width="2530" height="1362" alt="Gravia — techniczna strona biura projektów na laptopie i telefonie" loading="lazy" decoding="async"></div>
+            </div>
+          </article>
+
+          <article class="pf-card pf-card--shothome pf-card--reverse reveal" data-portfolio-card data-project="shothome">
+            <div class="pf-card__surface" aria-hidden="true"><span class="pf-card__word">wnętrza</span></div>
+            <div class="pf-card__content">
+              <div class="pf-card__copy"><div class="pf-card__index">04 / wykończenia • Warszawa <b>LIVE</b></div><h3>ShotHome</h3><p class="pf-card__description"><strong>Strona + SEO + wycena online</strong>Serwis usługowy nastawiony na zapytania: oferta drzwi i podłóg, customowa wycena, katalog produktów, realizacje oraz treści pod lokalne SEO.</p><div class="pf-tags"><span>darmowa wycena</span><span>SEO Warszawa</span><span>katalog produktów</span><span>panel realizacji</span></div><div class="pf-detail-grid"><div class="pf-detail"><span>Co zrobiliśmy</span><strong>UX/UI, WordPress, konfigurator wyceny, blog i katalog.</strong></div><div class="pf-detail"><span>Efekt</span><strong>Strona stała się jednocześnie ofertą i generatorem leadów.</strong></div></div><div class="pf-actions"><button class="pf-btn" type="button" data-project-details="shothome">Zobacz szczegóły <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></button><a class="pf-btn pf-btn--ghost" href="https://www.shothome.pl/" target="_blank" rel="noopener noreferrer" aria-label="Zobacz stronę ShotHome na żywo">Strona live <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10"/></svg></a></div></div>
+              <div class="pf-card__visual"><img src="https://zaprojektowani.com/wp-content/uploads/2026/06/shothome_mockup.webp" width="2441" height="1383" alt="ShotHome — strona usługowa z wyceną online na laptopie i telefonie" loading="lazy" decoding="async"></div>
+            </div>
+          </article>
+
+          <article class="pf-card pf-card--proscarves reveal" data-portfolio-card data-project="proscarves">
+            <div class="pf-card__surface" aria-hidden="true"><span class="pf-card__word">fans</span></div>
+            <div class="pf-card__content">
+              <div class="pf-card__copy"><div class="pf-card__index">05 / e-commerce + B2B custom <b>LIVE</b></div><h3>ProScarves</h3><p class="pf-card__description"><strong>Sklep detaliczny + zamówienia klubowe</strong>Rozbudowany e-commerce łączący gotowe produkty dla fanów z osobną ścieżką wyceny produkcji customowej dla klubów, firm i organizacji.</p><div class="pf-tags"><span>WooCommerce</span><span>B2B custom</span><span>system wyceny</span><span>rynki międzynarodowe</span></div><div class="pf-detail-grid"><div class="pf-detail"><span>Co zrobiliśmy</span><strong>Dwie ścieżki sprzedaży, konfigurator i skalowalna struktura.</strong></div><div class="pf-detail"><span>Efekt</span><strong>Detal i hurt działają razem, bez komplikowania zakupu.</strong></div></div><div class="pf-actions"><button class="pf-btn" type="button" data-project-details="proscarves">Zobacz szczegóły <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></button><a class="pf-btn pf-btn--ghost" href="https://www.proscarves.com/" target="_blank" rel="noopener noreferrer" aria-label="Zobacz sklep ProScarves na żywo">Strona live <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10"/></svg></a></div></div>
+              <div class="pf-card__visual"><img src="https://zaprojektowani.com/wp-content/uploads/2026/06/proscarves_mockup-scaled.webp" width="2560" height="1353" alt="ProScarves — sklep detaliczny i system zamówień B2B na laptopie i telefonie" loading="lazy" decoding="async"></div>
+            </div>
+          </article>
+
+          <article class="pf-card pf-card--krawiec pf-card--reverse reveal" data-portfolio-card data-project="krawiec">
+            <div class="pf-card__surface" aria-hidden="true"><span class="pf-card__word">premium</span></div>
+            <div class="pf-card__content">
+              <div class="pf-card__copy"><div class="pf-card__index">06 / usługi premium <b>LIVE</b></div><h3>Krawiec z dojazdem</h3><p class="pf-card__description"><strong>Rebranding + strona + system wizyt</strong>Elegancka marka i mobile-firstowa strona wyjaśniająca nietypowy model usługi oraz prowadząca klienta prosto do rezerwacji spotkania z dojazdem.</p><div class="pf-tags"><span>rebranding</span><span>system wizyt</span><span>mobile-first</span><span>SEO lokalne</span></div><div class="pf-detail-grid"><div class="pf-detail"><span>Co zrobiliśmy</span><strong>Identyfikacja, WordPress, kalendarz i lokalna struktura treści.</strong></div><div class="pf-detail"><span>Efekt</span><strong>Spójna marka i mniej ręcznego ustalania terminów.</strong></div></div><div class="pf-actions"><button class="pf-btn" type="button" data-project-details="krawiec">Zobacz szczegóły <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></button><a class="pf-btn pf-btn--ghost" href="https://krawieczdojazdem.pl/" target="_blank" rel="noopener noreferrer" aria-label="Zobacz stronę Krawiec z dojazdem na żywo">Strona live <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10"/></svg></a></div></div>
+              <div class="pf-card__visual"><img src="https://zaprojektowani.com/wp-content/uploads/2026/06/kaminski_mockup-scaled.webp" width="2560" height="1340" alt="Krawiec z dojazdem — strona i system umawiania wizyt na laptopie i telefonie" loading="lazy" decoding="async"></div>
+            </div>
+          </article>
+
+          <article class="pf-card pf-card--papeterio reveal" data-portfolio-card data-project="papeterio">
+            <div class="pf-card__surface" aria-hidden="true"><span class="pf-card__word">papier</span></div>
+            <div class="pf-card__content">
+              <div class="pf-card__copy"><div class="pf-card__index">07 / papeteria • e-commerce <b>LIVE</b></div><h3>Papeterio</h3><p class="pf-card__description"><strong>Sklep WooCommerce + personalizacja</strong>Subtelny sklep internetowy, który łączy emocjonalną estetykę marki z czytelnymi wariantami, dodatkami i personalizacją produktów.</p><div class="pf-tags"><span>WooCommerce</span><span>personalizacja</span><span>płatności</span><span>mobile UX</span></div><div class="pf-detail-grid"><div class="pf-detail"><span>Co zrobiliśmy</span><strong>Karty produktów, warianty, dodatki, koszyk i płatności.</strong></div><div class="pf-detail"><span>Efekt</span><strong>Złożone zamówienie można złożyć bez dodatkowego kontaktu.</strong></div></div><div class="pf-actions"><button class="pf-btn" type="button" data-project-details="papeterio">Zobacz szczegóły <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></button><a class="pf-btn pf-btn--ghost" href="https://papeterio.pl/" target="_blank" rel="noopener noreferrer" aria-label="Zobacz sklep Papeterio na żywo">Strona live <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10"/></svg></a></div></div>
+              <div class="pf-card__visual"><img src="https://zaprojektowani.com/wp-content/uploads/2026/06/papeterio_mockup-scaled.webp" width="2560" height="1347" alt="Papeterio — sklep z papeterią i personalizacją na laptopie i telefonie" loading="lazy" decoding="async"></div>
+            </div>
+          </article>
+
+          <article class="pf-card pf-card--bransoletka pf-card--reverse reveal" data-portfolio-card data-project="bransoletka">
+            <div class="pf-card__surface" aria-hidden="true"><span class="pf-card__word">jewellery</span></div>
+            <div class="pf-card__content">
+              <div class="pf-card__copy"><div class="pf-card__index">08 / detal + hurt <b>LIVE</b></div><h3>Bransoletka24</h3><p class="pf-card__description"><strong>WooCommerce B2C + B2B</strong>Sklep dla dwóch grup klientów: przejrzyste kategorie, filtry, warianty, wishlista i uproszczony checkout dla sprzedaży detalicznej oraz hurtowej.</p><div class="pf-tags"><span>WooCommerce</span><span>B2C + B2B</span><span>wishlista</span><span>checkout</span></div><div class="pf-detail-grid"><div class="pf-detail"><span>Co zrobiliśmy</span><strong>System hurtowy, płatności, filtry, warianty i optymalizacja UX.</strong></div><div class="pf-detail"><span>Efekt</span><strong>Jeden skalowalny sklep dla klientów i partnerów hurtowych.</strong></div></div><div class="pf-actions"><button class="pf-btn" type="button" data-project-details="bransoletka">Zobacz szczegóły <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></button><a class="pf-btn pf-btn--ghost" href="https://bransoletka24.pl/" target="_blank" rel="noopener noreferrer" aria-label="Zobacz sklep Bransoletka24 na żywo">Strona live <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10"/></svg></a></div></div>
+              <div class="pf-card__visual"><img src="https://zaprojektowani.com/wp-content/uploads/2026/06/bransoletka24_mockup-scaled.webp" width="2560" height="1444" alt="Bransoletka24 — sklep detaliczny i hurtowy na laptopie i telefonie" loading="lazy" decoding="async"></div>
+            </div>
+          </article>
+
+          <article class="pf-card pf-card--rutpoz reveal" data-portfolio-card data-project="rutpoz">
+            <div class="pf-card__surface" aria-hidden="true"><span class="pf-card__word">ppoż</span></div>
+            <div class="pf-card__content">
+              <div class="pf-card__copy"><div class="pf-card__index">09 / system PPOŻ + AI <b>LIVE</b></div><h3>RUTPOŻ</h3><p class="pf-card__description"><strong>Strona + system zgłoszeń + asystent AI</strong>Platforma firmowa rozbudowana o kalkulatory branżowe, raporty PDF, zgłoszenia serwisowe i asystenta odpowiadającego klientom przez całą dobę.</p><div class="pf-tags"><span>AI chatbot</span><span>kalkulatory PPOŻ</span><span>raporty PDF</span><span>system zgłoszeń</span></div><div class="pf-detail-grid"><div class="pf-detail"><span>Co zrobiliśmy</span><strong>WordPress, narzędzia branżowe, AI i cyfrowa obsługa serwisu.</strong></div><div class="pf-detail"><span>Efekt</span><strong>Praktyczne centrum obsługi zamiast klasycznej wizytówki.</strong></div></div><div class="pf-actions"><button class="pf-btn" type="button" data-project-details="rutpoz">Zobacz szczegóły <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></button><a class="pf-btn pf-btn--ghost" href="https://rutpoz.pl/" target="_blank" rel="noopener noreferrer" aria-label="Zobacz stronę RUTPOŻ na żywo">Strona live <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10"/></svg></a></div></div>
+              <div class="pf-card__visual"><img src="https://zaprojektowani.com/wp-content/uploads/2026/06/rutpoz_mockuP-scaled.webp" width="2560" height="1449" alt="RUTPOŻ — platforma PPOŻ z asystentem AI na laptopie i telefonie" loading="lazy" decoding="async"></div>
+            </div>
+          </article>
+
+          <article class="pf-card pf-card--swiatgrili pf-card--reverse reveal" data-portfolio-card data-project="swiatgrili">
+            <div class="pf-card__surface" aria-hidden="true"><span class="pf-card__word">grill</span></div>
+            <div class="pf-card__content">
+              <div class="pf-card__copy"><div class="pf-card__index">10 / e-commerce • grille <b>LIVE</b></div><h3>Świat Grilli</h3><p class="pf-card__description"><strong>Sklep WooCommerce + marki + sprzedaż online</strong>Nowy e-commerce dla sklepu z grillami, wędzarniami i akcesoriami wielu marek. Projekt porządkuje rozbudowaną ofertę, skraca drogę do produktu i mocno eksponuje kategorie, promocje oraz zaufanie zakupowe.</p><div class="pf-tags"><span>WooCommerce</span><span>katalog marek</span><span>filtry produktów</span><span>mobile commerce</span></div><div class="pf-detail-grid"><div class="pf-detail"><span>Co zrobiliśmy</span><strong>UX/UI sklepu, WooCommerce, kategorie, marki, koszyk i mobile.</strong></div><div class="pf-detail"><span>Efekt</span><strong>Czytelny sklep, w którym łatwiej znaleźć właściwy grill i przejść do zakupu.</strong></div></div><div class="pf-actions"><button class="pf-btn" type="button" data-project-details="swiatgrili">Zobacz szczegóły <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></button><a class="pf-btn pf-btn--ghost" href="https://swiatgrili.pl/" target="_blank" rel="noopener noreferrer" aria-label="Zobacz sklep Świat Grilli na żywo">Strona live <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10"/></svg></a></div></div>
+              <div class="pf-card__visual"><img src="https://zaprojektowani.com/wp-content/uploads/2026/09/swiatgrili_vis.webp" width="1000" height="750" alt="Świat Grilli — sklep internetowy z grillami na laptopie i telefonie" loading="lazy" decoding="async"></div>
+            </div>
+          </article>
+
+          <article class="pf-card pf-card--polerstone reveal" data-portfolio-card data-project="polerstone">
+            <div class="pf-card__surface" aria-hidden="true"><span class="pf-card__word">kamień</span></div>
+            <div class="pf-card__content">
+              <div class="pf-card__copy"><div class="pf-card__index">11 / kamieniarstwo premium <b>LIVE</b></div><h3>Polerstone</h3><p class="pf-card__description"><strong>Strona premium + oferta kamienia + realizacje</strong>Minimalistyczny serwis dla firmy kamieniarskiej specjalizującej się w blatach, granicie, marmurze, kwarcytach i spiekach. Duże zdjęcia materiałów, mocna typografia i czytelna architektura budują premium charakter marki.</p><div class="pf-tags"><span>WordPress</span><span>oferta materiałów</span><span>portfolio realizacji</span><span>wycena</span></div><div class="pf-detail-grid"><div class="pf-detail"><span>Co zrobiliśmy</span><strong>UX/UI, WordPress, prezentacja materiałów, realizacje i ścieżka do wyceny.</strong></div><div class="pf-detail"><span>Efekt</span><strong>Nowoczesna prezentacja kamienia, która sprzedaje jakość jeszcze przed kontaktem.</strong></div></div><div class="pf-actions"><button class="pf-btn" type="button" data-project-details="polerstone">Zobacz szczegóły <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></button><a class="pf-btn pf-btn--ghost" href="https://polerstone.pl/" target="_blank" rel="noopener noreferrer" aria-label="Zobacz stronę Polerstone na żywo">Strona live <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10"/></svg></a></div></div>
+              <div class="pf-card__visual"><img src="https://zaprojektowani.com/wp-content/uploads/2026/09/polerstone_vis_front.webp" width="1000" height="667" alt="Polerstone — strona firmy kamieniarskiej na laptopie i telefonie" loading="lazy" decoding="async"></div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <dialog class="project-dialog" id="projectDialog" aria-labelledby="projectDialogTitle">
+      <div class="project-dialog__shell">
+        <button class="project-dialog__close" type="button" data-project-close aria-label="Zamknij szczegóły projektu"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+        <header class="project-dialog__hero" id="projectDialogHero">
+          <div><span class="project-dialog__eyebrow" id="projectDialogEyebrow"></span><h2 id="projectDialogTitle"></h2><p class="project-dialog__meta" id="projectDialogMeta"></p></div>
+          <dl class="project-dialog__facts" aria-label="Informacje o projekcie">
+            <div><dt>Klient</dt><dd id="projectDialogClient"></dd></div>
+            <div><dt>Rok</dt><dd id="projectDialogYear"></dd></div>
+            <div><dt>Typ projektu</dt><dd id="projectDialogType"></dd></div>
+            <div><dt>Status</dt><dd>Strona działa live</dd></div>
+          </dl>
+        </header>
+        <figure class="project-dialog__cover"><img id="projectDialogImage" alt="" decoding="async"><figcaption id="projectDialogCaption"></figcaption></figure>
+        <div class="project-dialog__body">
+          <div class="project-dialog__intro"><div><span class="project-dialog__section-label">O projekcie</span><p class="project-dialog__lead" id="projectDialogLead"></p></div><section class="project-dialog__technologies" aria-labelledby="projectDialogTechTitle"><h3 id="projectDialogTechTitle">Technologie i narzędzia</h3><div class="project-tech-grid" id="projectDialogTechnologies"></div></section></div>
+          <div class="project-dialog__story"><article class="project-story-card"><span>Wyzwanie</span><p id="projectDialogChallenge"></p></article><article class="project-story-card"><span>Rozwiązanie</span><p id="projectDialogSolution"></p></article><article class="project-story-card"><span>Efekt</span><p id="projectDialogEffect"></p></article></div>
+          <div class="project-dialog__columns"><section><h3>Zakres projektu</h3><ul class="project-scope" id="projectDialogScope"></ul><h3 class="project-capabilities-title">Funkcje i rozwiązania</h3><div class="project-capabilities" id="projectDialogCapabilities"></div></section><section><h3>Najważniejsze rezultaty</h3><div class="project-results" id="projectDialogResults"></div><h3 class="project-capabilities-title">Zakres kompetencji</h3><div class="project-services" id="projectDialogServices"></div></section></div>
+          <div class="project-dialog__footer"><p>Chcesz podobny projekt? Opisz cel, funkcje i materiały — przygotujemy zakres dopasowany do Twojej firmy.</p><div class="project-dialog__actions"><a class="btn btn-ghost" href="https://zaprojektowani.com/studio-wyceny/?zpbs_service=web#zpbsUltimate">Zamów podobny projekt</a><a class="btn btn-primary" id="projectDialogLive" href="#" target="_blank" rel="noopener noreferrer">Zobacz stronę live <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10"/></svg></a></div></div>
+        </div>
+      </div>
+    </dialog>
+
+    <section class="client-trust" aria-labelledby="clientTrustTitle">
+      <div class="wrap">
+        <div class="client-trust__head">
+          <div class="reveal"><p class="section-kicker section-kicker--light">Zaufali nam</p><h2 class="client-trust__title" id="clientTrustTitle">Projektowaliśmy strony internetowe, sklepy WooCommerce i branding dla firm z <strong>różnych branż.</strong></h2></div>
+          <div class="client-trust__aside reveal" data-delay="1"><figure class="client-trust__people" aria-hidden="true"><img src="%%ZPSI%%trusted-team.webp" width="955" height="934" alt="" loading="lazy" decoding="async"></figure><p class="client-trust__lead">Od usług lokalnych i kancelarii, przez beauty i medycynę estetyczną, po e-commerce oraz firmy B2B — porządkujemy ofertę, projektujemy stronę i przygotowujemy fundament pod SEO oraz dalszy marketing.</p></div>
+        </div>
+        <div class="client-trust__logos" role="group" aria-label="Logotypy klientów Zaprojektowani">
+          <figure class="client-logo client-logo--compact reveal"><img src="%%ZPSI%%../logo-branding/logo-vista.webp" width="1047" height="1001" alt="Vista" loading="lazy" decoding="async"></figure>
+          <figure class="client-logo client-logo--wide client-logo--siemianowski reveal" data-delay="1"><img src="%%ZPSI%%../logo-branding/logo-siemianowski.webp" width="1051" height="175" alt="Siemianowski" loading="lazy" decoding="async"></figure>
+          <figure class="client-logo client-logo--compact reveal" data-delay="2"><img src="%%ZPSI%%../logo-branding/logo-sfera.webp" width="730" height="1048" alt="Sfera" loading="lazy" decoding="async"></figure>
+          <figure class="client-logo client-logo--wide client-logo--raxo reveal"><img src="%%ZPSI%%client-raxo.webp" width="1050" height="328" alt="Raxo" loading="lazy" decoding="async"></figure>
+          <figure class="client-logo client-logo--compact reveal" data-delay="1"><img src="%%ZPSI%%client-proscarves.webp" width="906" height="1038" alt="ProScarves" loading="lazy" decoding="async"></figure>
+          <figure class="client-logo reveal" data-delay="2"><img src="%%ZPSI%%../logo-branding/logo-prisma-dent.webp" width="1048" height="646" alt="Prisma Dent" loading="lazy" decoding="async"></figure>
+          <figure class="client-logo reveal"><img src="%%ZPSI%%client-polerstone.webp" width="1228" height="730" alt="Polerstone" loading="lazy" decoding="async"></figure>
+          <figure class="client-logo reveal" data-delay="1"><img src="%%ZPSI%%../logo-branding/logo-piotr-mazur.webp" width="1042" height="812" alt="Piotr Mazur — adwokat" loading="lazy" decoding="async"></figure>
+          <figure class="client-logo client-logo--wide reveal" data-delay="2"><img src="%%ZPSI%%../logo-branding/logo-kaminski.webp" width="1053" height="210" alt="Kamiński — krawiectwo miarowe" loading="lazy" decoding="async"></figure>
+          <figure class="client-logo client-logo--gravia reveal"><img src="%%ZPSI%%client-gravia.webp" width="1044" height="628" alt="Gravia" loading="lazy" decoding="async"></figure>
+          <figure class="client-logo client-logo--wide reveal" data-delay="1"><img src="%%ZPSI%%../logo-branding/logo-ap.webp" width="1052" height="392" alt="Apartament Piękna" loading="lazy" decoding="async"></figure>
+        </div>
+        <div class="client-trust__foot"><div class="client-trust__signature"><strong class="client-trust__services"><b>strony</b><i aria-hidden="true"><svg viewBox="0 0 24 14"><path d="M2 7h18M15 2l5 5-5 5"/></svg></i><b>sklepy</b><i aria-hidden="true"><svg viewBox="0 0 24 14"><path d="M2 7h18M15 2l5 5-5 5"/></svg></i><b>logo</b><i aria-hidden="true"><svg viewBox="0 0 24 14"><path d="M2 7h18M15 2l5 5-5 5"/></svg></i><b>branding</b></strong><span>jeden proces, spójny wygląd i gotowość pod dalszy marketing</span></div><a class="client-trust__cta" href="https://zaprojektowani.com/studio-wyceny/?zpbs_service=web#zpbsUltimate">Ty możesz być następny <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10"/></svg></a></div>
+      </div>
+    </section>
+
+    <section class="section industries" id="branze">
+      <div class="wrap">
+        <div class="section-head">
+          <div class="section-head__copy reveal"><p class="section-kicker"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 21v-4h6v4"/></svg>Strony dla branż</p><h2 class="section-title">Inna branża. <strong>Inna droga do klienta.</strong></h2><p class="section-lead">Inaczej projektuje się stronę kancelarii, inaczej kliniki, salonu beauty, dewelopera czy producenta. Dlatego strukturę, treści, UX i SEO budujemy <strong>pod konkretną branżę</strong> — tak, żeby strona realnie prowadziła klienta do kontaktu.</p></div>
+          <p class="section-head__aside reveal" data-delay="1">Nie widzisz swojej branży? Opisz projekt w Studio Wyceny — dopasujemy strukturę strony, SEO i zakres wdrożenia do Twojej firmy.</p>
+        </div>
+        <div class="ind-grid">
+          <article class="ind-card reveal"><img src="%%ZPSI%%branza-prawnik.webp" alt="Strony internetowe dla kancelarii" loading="lazy" decoding="async"><span class="ind-num">01</span><div class="ind-body"><strong>Kancelarie i usługi eksperckie</strong><p>Wiarygodność, prezentacja specjalizacji i jasna ścieżka do konsultacji.</p><div class="ind-tags"><span>specjalizacje</span><span>SEO lokalne</span><span>formularz konsultacji</span></div></div></article>
+          <article class="ind-card reveal" data-delay="1"><img src="https://zaprojektowani.com/wp-content/uploads/2026/05/strona_internetowa_dla_developera.webp" alt="Strony dla deweloperów i inwestycji" loading="lazy" decoding="async"><span class="ind-num">02</span><div class="ind-body"><strong>Deweloperzy i nieruchomości</strong><p>Prezentacja inwestycji, karty lokali, rzuty i leady sprzedażowe.</p><div class="ind-tags"><span>karty lokali</span><span>formularze zapytań</span><span>landing pod kampanie</span></div></div></article>
+          <article class="ind-card reveal" data-delay="2"><img src="https://zaprojektowani.com/wp-content/uploads/2026/05/strona_internetowa_dla_branzy_beauty.webp" alt="Strony dla salonów beauty" loading="lazy" decoding="async"><span class="ind-num">03</span><div class="ind-body"><strong>Beauty i medycyna estetyczna</strong><p>Klimat miejsca, oferta zabiegów, opinie i rezerwacja wizyty.</p><div class="ind-tags"><span>oferta zabiegów</span><span>opinie i efekty</span><span>rezerwacje</span></div></div></article>
+          <article class="ind-card reveal"><img src="%%ZPSI%%branza-lekarz.webp" alt="Strony internetowe dla lekarzy" loading="lazy" decoding="async"><span class="ind-num">04</span><div class="ind-body"><strong>Lekarze, kliniki, gabinety</strong><p>Spokojna komunikacja, struktura usług i szybka rejestracja pacjenta.</p><div class="ind-tags"><span>ścieżka pacjenta</span><span>FAQ i rejestracja</span><span>lokalne SEO</span></div></div></article>
+          <article class="ind-card reveal" data-delay="1"><img src="%%ZPSI%%branza-producent.webp" alt="Strony i sklepy dla producentów" loading="lazy" decoding="async"><span class="ind-num">05</span><div class="ind-body"><strong>Producenci i B2B</strong><p>Katalog produktów, zapytania hurtowe i struktura pod frazy produktowe.</p><div class="ind-tags"><span>katalog B2B</span><span>zapytania hurtowe</span><span>WooCommerce</span></div></div></article>
+          <article class="ind-card reveal" data-delay="2"><img src="https://zaprojektowani.com/wp-content/uploads/2026/05/sklepy_internetowe_dla_marek_premium.webp" alt="Sklepy internetowe dla marek premium" loading="lazy" decoding="async"><span class="ind-num">06</span><div class="ind-body"><strong>Marki premium i e-commerce</strong><p>Storytelling produktu, UX sprzedażowy i układ gotowy pod kampanie.</p><div class="ind-tags"><span>product storytelling</span><span>koszyk i płatności</span><span>remarketing</span></div></div></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="pointing">
+      <div class="wrap pointing-wrap">
+        <div class="pointing-copy reveal">
+          <p class="section-kicker"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>Projekt + treść + technika</p>
+          <h2>Ładny projekt to dopiero <strong>połowa dobrej strony.</strong></h2>
+          <p>Jeżeli treści nie tłumaczą oferty, strona ładuje się wolno, a formularz zniechęca — nawet najlepszy design nie przyniesie zapytań. Dlatego patrzymy na całość: strukturę, copy, UX, szybkość, SEO techniczne i pomiar.</p>
+          <a class="btn" href="#zakres">Zobacz pełny zakres <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10"/></svg></a>
+        </div>
+        <div class="pointing-visual reveal" data-delay="1"><img src="%%ZPSI%%../logo-branding/stanislaw-pointing.webp" alt="Stanisław z zespołu Zaprojektowani wskazuje kolejny krok" loading="lazy" decoding="async"></div>
+        <div class="pointing-note reveal" data-delay="2"><span>Wspólny mianownik</span><strong>Struktura → treść → UX → technika → pomiar</strong></div>
+      </div>
+    </section>
+
+    <section class="section process" id="proces">
+      <div class="wrap">
+        <div class="process-headline reveal">
+          <p class="section-kicker"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="8" height="8" rx="2"/><path d="M7 11v4a2 2 0 0 0 2 2h4"/><rect x="13" y="13" width="8" height="8" rx="2"/></svg>Jak projektujemy strony</p>
+          <h2 class="section-title">Od briefu do publikacji. <strong>Bez chaosu między etapami.</strong></h2>
+          <p class="section-lead">Nie zaczynamy od przypadkowego układu ani szablonowej sekcji. Najpierw poznajemy firmę, ofertę i cel strony — a każdy etap ma <strong>jasny zakres, terminy i kryterium akceptacji.</strong></p>
+        </div>
+        <figure class="process-person-stage reveal" data-delay="1" aria-hidden="true">
+          <img src="%%ZPSI%%../logo-branding/mateusz-sitting.webp" alt="" loading="lazy" decoding="async">
+          <figcaption><span>6 etapów</span><strong>Jedna spójna ścieżka</strong></figcaption>
+        </figure>
+        <div class="process-track">
+          <article class="process-step"><span class="process-num">01</span><div class="process-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2"/></svg></div><h3>Zakres i cel</h3><p>Wybierasz punkt startu: landing page, strona firmowa Starter, Premium albo projekt indywidualny — zawsze pod konkretny cel biznesowy.</p></article>
+          <article class="process-step"><span class="process-num">02</span><div class="process-icon"><svg viewBox="0 0 24 24"><path d="M4 5h16v14H4zM8 9h8M8 13h5"/></svg></div><h3>Brief i materiały</h3><p>W konfiguratorze podajesz branżę, funkcje, materiały i termin. Możesz wgrać logo, teksty, inspiracje i link do obecnej strony.</p></article>
+          <article class="process-step"><span class="process-num">03</span><div class="process-icon"><svg viewBox="0 0 24 24"><path d="M4 19V9m5 10V5m5 14v-7m5 7V3"/></svg></div><h3>Analiza i wycena</h3><p>Sprawdzamy zakres, cele, SEO i wymagania techniczne. Interaktywną ofertę otrzymujesz zwykle w 3–4 dni robocze.</p></article>
+          <article class="process-step"><span class="process-num">04</span><div class="process-icon"><svg viewBox="0 0 24 24"><path d="M4 4h16v16H4zM8 15l3-3 2 2 3-4 3 5"/><circle cx="9" cy="9" r="1"/></svg></div><h3>Struktura i UX/UI</h3><p>Projektujemy architekturę podstron, makiety, treści i wersję mobilną — z myślą o ścieżce od wejścia do kontaktu.</p></article>
+          <article class="process-step"><span class="process-num">05</span><div class="process-icon"><svg viewBox="0 0 24 24"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3M3 16v3a2 2 0 0 0 2 2h3m8 0h3a2 2 0 0 0 2-2v-3"/><circle cx="12" cy="12" r="3"/></svg></div><h3>Wdrożenie WordPress</h3><p>Budujemy stronę, konfigurujemy SEO techniczne, analitykę, formularze, szybkość ładowania i bezpieczeństwo.</p></article>
+          <article class="process-step"><span class="process-num">06</span><div class="process-icon"><svg viewBox="0 0 24 24"><path d="m5 13 4 4L19 7"/></svg></div><h3>100% satysfakcji</h3><p>Nie zamykamy projektu na sztucznej liczbie poprawek. Dopracowujemy stronę, aż będzie spójna z marką i zaakceptowana.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section dashboard-section" id="analityka">
+      <div class="ads-logo-backdrop" aria-hidden="true">
+        <img class="ads-logo-bg ads-logo-bg--psi" src="%%ZPSI%%pagespeed-insights-logo.png" alt="" loading="lazy" decoding="async">
+        <img class="ads-logo-bg ads-logo-bg--gsc" src="%%ZPSI%%tool-gsc.png" alt="" loading="lazy" decoding="async">
+      </div>
+      <div class="wrap">
+        <div class="section-head">
+          <div class="section-head__copy reveal"><p class="section-kicker section-kicker--light"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>Technika bez kompromisów</p><h2 class="section-title">Strona ma wyglądać premium. <strong class="gradient-text">I działać jak premium.</strong></h2><p class="section-lead" style="color:rgba(255,255,255,.58)">Tak wygląda raport jakości wdrożenia strony Apartamentu Piękna: szybkość na mobile, techniczne SEO, dostępność i wzrost kliknięć z Google po publikacji — w jednym widoku.</p></div>
+          <div class="reveal" data-delay="1"><span class="data-note"><img src="%%ZPSI%%pagespeed-insights-logo.png" width="48" height="48" alt=""> wynik sprawdzony w PageSpeed Insights • mobile</span></div>
+        </div>
+        <img class="dashboard-team reveal" data-delay="1" src="%%ZPSI%%../logo-branding/wiedza-ekipa.webp" width="1759" height="1823" alt="Zespół Zaprojektowani analizuje jakość i wyniki strony" loading="lazy" decoding="async">
+
+        <div class="report-window campaign-cockpit reveal" aria-label="Raport jakości technicznej strony Apartamentu Piękna">
+          <div class="rw-top"><i></i><i></i><i></i><span class="rw-brand"><img src="%%ZPSI%%pagespeed-insights-logo.png" width="48" height="48" alt="">PageSpeed Insights</span><span class="rw-address">apartamentpiekna.pl • mobile</span></div>
+          <div class="report-body">
+            <div class="report-gauges">
+              <div class="gauge"><span class="gauge-ring" style="--v:98"><svg viewBox="0 0 76 76" aria-hidden="true"><circle class="g-bg" cx="38" cy="38" r="32"/><circle class="g-fg" cx="38" cy="38" r="32"/></svg><b data-count="98">98</b></span><span>Wydajność</span></div>
+              <div class="gauge"><span class="gauge-ring" style="--v:100"><svg viewBox="0 0 76 76" aria-hidden="true"><circle class="g-bg" cx="38" cy="38" r="32"/><circle class="g-fg" cx="38" cy="38" r="32"/></svg><b data-count="100">100</b></span><span>SEO</span></div>
+              <div class="gauge"><span class="gauge-ring" style="--v:96"><svg viewBox="0 0 76 76" aria-hidden="true"><circle class="g-bg" cx="38" cy="38" r="32"/><circle class="g-fg" cx="38" cy="38" r="32"/></svg><b data-count="96">96</b></span><span>Dostępność</span></div>
+              <div class="gauge"><span class="gauge-ring" style="--v:100"><svg viewBox="0 0 76 76" aria-hidden="true"><circle class="g-bg" cx="38" cy="38" r="32"/><circle class="g-fg" cx="38" cy="38" r="32"/></svg><b data-count="100">100</b></span><span>Dobre praktyki</span></div>
+            </div>
+            <div class="cockpit-layout">
+              <div class="cockpit-main">
+                <div class="chart-card">
+                  <div class="card-heading"><strong><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3v16a2 2 0 0 0 2 2h16"/><path d="M7 15l4-5 4 3 5-7"/></svg>Kliknięcia z Google tydzień po tygodniu</strong><span class="chart-delta">▲ +212% w 6 mies.</span></div>
+                  <div class="legend"><span><i></i> mobile</span><span><i></i> desktop</span></div>
+                  <svg class="big-chart" viewBox="0 0 760 300" role="img" aria-label="Wzrost kliknięć z Google po publikacji nowej strony">
+                    <path class="grid" d="M45 20v235M45 255h690M45 200h690M45 145h690M45 90h690M45 35h690"/>
+                    <text class="axis" x="8" y="258">0</text>
+                    <text class="axis" x="8" y="203">300</text>
+                    <text class="axis" x="8" y="148">600</text>
+                    <text class="axis" x="8" y="93">900</text>
+                    <text class="axis" x="8" y="38">1,2k</text>
+                    <text class="axis" x="44" y="282">PUBLIKACJA</text><text class="axis" x="716" y="282">DZIŚ</text>
+                    <path class="line-a" data-zp-motion-skip="1" d="M45 232 C 95 226, 125 214, 175 207 S 265 196, 315 178 S 400 165, 450 142 S 545 116, 605 96 S 700 74, 735 60"/>
+                    <path class="line-b" data-zp-motion-skip="1" d="M45 245 C 100 241, 140 233, 190 227 S 285 214, 335 205 S 425 194, 475 177 S 575 158, 635 140 S 705 122, 735 112"/>
+                    <circle class="dot" cx="735" cy="60" r="5" fill="#4285F4"/>
+                    <circle class="dot-ring" cx="735" cy="60" r="6" fill="none" stroke="#4285F4" stroke-width="1.5"/>
+                    <circle class="dot" cx="735" cy="112" r="5" fill="#a142f4"/>
+                    <circle class="dot-ring" cx="735" cy="112" r="6" fill="none" stroke="#a142f4" stroke-width="1.5"/>
+                  </svg>
+                </div>
+              </div>
+              <aside class="cockpit-side">
+                <div class="funnel-card">
+                  <div class="card-heading"><strong><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13 2 3 14h7l-1 8 10-12h-7z"/></svg>Core Web Vitals</strong><span>mobile</span></div>
+                  <div class="funnel-bars">
+                    <div class="funnel-bar"><span>LCP — największy element</span><strong data-count="1.1" data-decimals="1" data-suffix=" s">1,1 s</strong><i style="--w:92%"></i></div>
+                    <div class="funnel-bar"><span>INP — reakcja na dotyk</span><strong data-count="128" data-suffix=" ms">128 ms</strong><i style="--w:88%"></i></div>
+                    <div class="funnel-bar"><span>CLS — stabilność układu</span><strong data-count="0.02" data-decimals="2">0,02</strong><i style="--w:96%"></i></div>
+                    <div class="funnel-bar"><span>TTFB — czas serwera</span><strong data-count="0.3" data-decimals="1" data-suffix=" s">0,3 s</strong><i style="--w:90%"></i></div>
+                  </div>
+                </div>
+                <div class="mix-card">
+                  <div class="card-heading"><strong><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></svg>Źródła ruchu</strong><span>po 6 mies.</span></div>
+                  <div class="mix-content"><div class="donut" id="mixDonut" data-a="68" data-c1="#4285F4" data-c2="#e3e7ee" style="background:conic-gradient(#4285F4 0 0%,#e3e7ee 0% 100%)"><strong data-count="68" data-suffix="%">68%</strong><small>organiczny</small></div><div class="mix-legend"><span><i></i> Google — organicznie <b>68%</b></span><span><i></i> direct + social <b>32%</b></span></div></div>
+                </div>
+              </aside>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section cases" id="realizacje">
+      <div class="wrap">
+        <div class="section-head">
+          <div class="section-head__copy reveal"><p class="section-kicker"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 20V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/><rect width="20" height="14" x="2" y="6" rx="2"/></svg>Case study</p><h2 class="section-title">Dwie marki. Dwa cele. <strong>Jeden sposób myślenia.</strong></h2></div>
+          <p class="section-head__aside reveal" data-delay="1">Wynik strony powstaje na styku struktury, treści, techniki i obsługi zapytań. Dlatego pokazujemy nie tylko projekt, ale też liczby, które przyszły po wdrożeniu.</p>
+        </div>
+
+        <div class="case-stack">
+          <article class="case-card case-card--beauty reveal">
+            <div class="case-card__inner">
+              <div class="case-copy">
+                <span class="case-index"><i></i> 01 / beauty &amp; medycyna estetyczna</span>
+                <img class="case-client-logo case-client-logo--ap" src="%%ZPSI%%../campaigns/apartament-logo.webp" alt="Apartament Piękna" loading="lazy" decoding="async">
+                <div class="case-platforms"><em>strona • system rezerwacji • SEO lokalne</em></div>
+                <h3>Apartament <strong>Piękna</strong></h3>
+                <p>Kompleksowy redesign wizerunku online: odświeżona identyfikacja, pełny projekt strony i autorski system rezerwacji wizyt. Struktura i treści ułożone pod lokalne frazy oraz szybkie umówienie wizyty — od pierwszego wejścia po potwierdzoną rezerwację.</p>
+                <div class="case-tags"><span>WordPress</span><span>system rezerwacji</span><span>SEO lokalne</span><span>mobile-first</span></div>
+                <div class="case-results-title"><span>Po wdrożeniu • pierwsze 6 miesięcy</span></div>
+                <div class="case-results">
+                  <div class="case-result"><span>Wydajność mobile</span><strong data-count="98" data-suffix="/100">98/100</strong><small>LCP 1,1 s • PageSpeed Insights</small></div>
+                  <div class="case-result"><span>Kliknięcia z Google</span><strong data-count="212" data-suffix="%">212%</strong><small>▲ wzrost vs poprzednia strona</small></div>
+                  <div class="case-result"><span>Rezerwacje online</span><strong data-count="96">96</strong><small>miesięcznie • średnia z 3 mies.</small></div>
+                  <div class="case-result"><span>Konwersja formularza</span><strong data-count="4.7" data-decimals="1" data-suffix="%">4,7%</strong><small>wejścia → wysłane zapytania</small></div>
+                </div>
+              </div>
+              <div class="case-visual"><img src="https://zaprojektowani.com/wp-content/uploads/2026/06/apartament_mockup-scaled.webp" alt="Apartament Piękna — strona internetowa na laptopie i telefonie" loading="lazy" decoding="async"><div class="case-badge"><span>Punkt styku</span><strong>Rezerwacja w dwóch krokach, bez telefonu.</strong></div></div>
+            </div>
+          </article>
+
+          <article class="case-card case-card--tailor reveal">
+            <div class="case-card__inner">
+              <div class="case-visual"><img src="https://zaprojektowani.com/wp-content/uploads/2026/06/siemianowski_mockup.webp" alt="Kancelaria Siemianowski — strona internetowa na laptopie i telefonie" loading="lazy" decoding="async"><div class="case-badge"><span>Punkt styku</span><strong>Ekspercka treść prowadzi do konsultacji.</strong></div></div>
+              <div class="case-copy">
+                <span class="case-index"><i></i> 02 / kancelaria premium</span>
+                <img class="case-client-logo case-client-logo--ap" src="%%ZPSI%%../logo-branding/logo-siemianowski.webp" alt="Kancelaria Siemianowski" loading="lazy" decoding="async">
+                <div class="case-platforms"><em>branding • strona firmowa • umawianie wizyt</em></div>
+                <h3>Kancelaria <strong>Siemianowski</strong></h3>
+                <p>Elegancka strona firmowa z rozbudowaną strukturą podstron usługowych, premium oprawą wizualną i systemem umawiania wizyt. Projekt łączy zaufanie, ekspercki charakter i wygodną ścieżkę pierwszego kontaktu.</p>
+                <div class="case-tags"><span>branding premium</span><span>podstrony usług</span><span>umawianie wizyt</span><span>WordPress</span></div>
+                <div class="case-results-title"><span>Po wdrożeniu • pierwsze 6 miesięcy</span></div>
+                <div class="case-results">
+                  <div class="case-result"><span>Podstrony usługowe</span><strong data-count="14">14</strong><small>każda pod osobne frazy SEO</small></div>
+                  <div class="case-result"><span>Wydajność mobile</span><strong data-count="97" data-suffix="/100">97/100</strong><small>LCP 1,2 s • PageSpeed Insights</small></div>
+                  <div class="case-result"><span>Wyświetlenia lokalne</span><strong data-count="178" data-suffix="%">178%</strong><small>▲ wzrost w Google w 6 mies.</small></div>
+                  <div class="case-result"><span>Umówione konsultacje</span><strong data-count="32">32</strong><small>miesięcznie przez stronę</small></div>
+                </div>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section reviews" id="opinie">
+      <div class="wrap">
+        <div class="section-head">
+          <div class="section-head__copy reveal"><p class="section-kicker"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1z"/></svg>Opinie klientów</p><h2 class="section-title">Klienci wracają, bo proces <strong>jest tak dobry jak efekt.</strong></h2></div>
+          <p class="section-head__aside reveal" data-delay="1">W opiniach najczęściej wracają te same elementy: sprawna komunikacja, czytelny proces, nowoczesny projekt i wdrożenie, które realnie porządkuje markę online.</p>
+        </div>
+
+        <div class="reviews-banner reveal">
+          <div class="reviews-score"><img src="%%ZPSI%%../logo-branding/trustindex.webp" alt="Trustindex — certyfikat opinii" loading="lazy" decoding="async"><div><strong data-count="5.0" data-decimals="1">5,0</strong><small>średnia ocena • 54 opinie</small></div></div>
+          <span class="reviews-stars" aria-label="5 na 5 gwiazdek">★★★★★</span>
+          <div class="reviews-platforms" aria-label="Platformy opinii"><span><img src="%%ZPSI%%review-google.webp" width="150" height="150" alt="">Google</span><span><img src="%%ZPSI%%review-facebook.webp" width="150" height="150" alt="">Facebook</span></div>
+          <a class="btn" href="https://www.trustindex.io/reviews/zaprojektowani.com" target="_blank" rel="noopener nofollow">Zobacz profil opinii <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10"/></svg></a>
+        </div>
+
+        <div class="reviews-themes reveal" data-delay="1" aria-label="Najczęściej doceniane elementy współpracy"><span>Profesjonalizm</span><span>Świetny kontakt</span><span>Nowoczesny design</span><span>Terminowość</span><span>Szybkie poprawki</span></div>
+
+        <div class="reviews-grid reveal" data-delay="1" role="region" aria-label="Wybrane opinie klientów — przewiń poziomo na telefonie" tabindex="0">
+          <article class="review-item review-item--featured"><span class="review-stars" aria-hidden="true">★★★★★</span><p>„Najbardziej doceniam komunikację. Zawsze wiadomo, na jakim etapie jest projekt, co jest po naszej stronie, a co po ich. Żadnego «znikania» na tygodnie.”</p><footer><span class="review-avatar">M</span><div><strong>Magdalena Kasińska</strong><small class="review-source"><img src="%%ZPSI%%review-google.webp" width="150" height="150" alt="">5,0/5 • Google</small></div></footer></article>
+          <article class="review-item"><span class="review-stars" aria-hidden="true">★★★★★</span><p>„Profesjonalne podejście, świetny kontakt i nowoczesny projekt strony www. Wszystko wykonane sprawnie i zgodnie z ustaleniami. Efekt końcowy naprawdę robi wrażenie!"</p><footer><span class="review-avatar">A</span><div><strong>Aneta Waszkiewicz</strong><small class="review-source"><img src="%%ZPSI%%review-google.webp" width="150" height="150" alt="">5,0/5 • Google</small></div></footer></article>
+          <article class="review-item"><span class="review-stars" aria-hidden="true">★★★★★</span><p>„Największy plus: proces. Od ustaleń po finalne wdrożenie wszystko idzie krok po kroku i wiadomo, na jakim etapie jesteśmy. Zero chaosu."</p><footer><span class="review-avatar">D</span><div><strong>Dana Studniarek</strong><small class="review-source"><img src="%%ZPSI%%review-google.webp" width="150" height="150" alt="">5,0/5 • Google</small></div></footer></article>
+          <article class="review-item"><span class="review-stars" aria-hidden="true">★★★★★</span><p>„Polecam z całego serca! Zrobili nam nową stronę gabinetu i odświeżyli logo. Wszystko spójne, eleganckie i w końcu na poziomie tego, co robimy na co dzień.”</p><footer><span class="review-avatar">K</span><div><strong>Krzysztof Motylski</strong><small class="review-source"><img src="%%ZPSI%%review-google.webp" width="150" height="150" alt="">5,0/5 • Google</small></div></footer></article>
+          <article class="review-item"><span class="review-stars" aria-hidden="true">★★★★★</span><p>„Jestem bardzo zadowolona ze współpracy. Potrzebowałam prostej, ale ładnej strony pod mój salon kosmetyczny.”</p><footer><span class="review-avatar">S</span><div><strong>Sylwia Gasentzer</strong><small class="review-source"><img src="%%ZPSI%%review-google.webp" width="150" height="150" alt="">5,0/5 • Google</small></div></footer></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section scope" id="zakres">
+      <div class="wrap">
+        <div class="section-head">
+          <div class="section-head__copy reveal"><p class="section-kicker"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z"/><path d="m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65"/><path d="m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65"/></svg>Co bierzemy na siebie</p><h2 class="section-title">Nie tylko wygląd. <strong>Cały system strony.</strong></h2></div>
+          <p class="section-head__aside reveal" data-delay="1">Zakres dobieramy do etapu firmy i celu strony. Bez pakowania niepotrzebnych elementów do oferty.</p>
+        </div>
+        <div class="scope-grid">
+          <article class="scope-card reveal"><span class="scope-num">01 / fundament</span><div class="scope-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2"/></svg></div><h3>Strategia i struktura serwisu</h3><p>Zaczynamy od celu biznesowego: co strona ma przynosić i komu ma służyć. Projektujemy architekturę podstron, ścieżkę użytkownika od wejścia do kontaktu, plan treści oraz strukturę pod SEO lokalne i usługowe — zanim powstanie pierwszy piksel projektu.</p><img class="scope-watermark" src="%%ZPSI%%../logo-branding/zp-sygnet-ciemny.webp" alt="" loading="lazy" decoding="async"></article>
+          <article class="scope-card reveal" data-delay="1"><span class="scope-num">02 / projekt</span><div class="scope-icon"><svg viewBox="0 0 24 24"><path d="M4 4h16v16H4zM8 15l3-3 2 2 3-4 3 5"/><circle cx="9" cy="9" r="1"/></svg></div><h3>UX/UI i treści</h3><p>Makiety, projekt graficzny, copywriting, mikrocopy i sekcje zaufania — spójne z marką i pisane pod decyzję użytkownika.</p></article>
+          <article class="scope-card reveal"><span class="scope-num">03 / wdrożenie</span><div class="scope-icon"><svg viewBox="0 0 24 24"><path d="M12 2v4m0 12v4M4.9 4.9l2.8 2.8m8.6 8.6 2.8 2.8M2 12h4m12 0h4M4.9 19.1l2.8-2.8m8.6-8.6 2.8-2.8"/><circle cx="12" cy="12" r="4"/></svg></div><h3>WordPress</h3><p>Czyste, rozwijalne wdrożenie — po starcie łatwo dodasz blog, podstrony, landing pages albo sklep.</p></article>
+          <article class="scope-card reveal" data-delay="1"><span class="scope-num">04 / technika</span><div class="scope-icon"><svg viewBox="0 0 24 24"><path d="M13 2 3 14h7l-1 8 10-12h-7z"/></svg></div><h3>SEO techniczne i szybkość</h3><p>Nagłówki, schema, indeksacja, Core Web Vitals, optymalizacja obrazów i mobile-first od pierwszego dnia.</p></article>
+          <article class="scope-card reveal"><span class="scope-num">05 / pomiar</span><div class="scope-icon"><svg viewBox="0 0 24 24"><path d="M4 19V9m5 10V5m5 14v-7m5 7V3"/></svg></div><h3>Analityka i formularze</h3><p>GA4, zdarzenia, szybkie formularze, integracje i pomiar zapytań — żeby było widać, co strona naprawdę przynosi.</p></article>
+          <article class="scope-card reveal" data-delay="1"><span class="scope-num">06 / rozwój</span><div class="scope-icon"><svg viewBox="0 0 24 24"><path d="m4 16 4-4 4 3 7-8M19 7v5m0-5h-5"/></svg></div><h3>Opieka po starcie</h3><p>Aktualizacje, kopie zapasowe, drobne zmiany i rozwój: nowe sekcje, podstrony SEO, landing pages pod kampanie.</p></article>
+        </div>
+      </div>
+    </section>
+
+
+
+    <section class="team-section">
+      <img class="team-signet" src="%%ZPSI%%../logo-branding/zp-sygnet-ciemny.webp" alt="" aria-hidden="true" loading="lazy" decoding="async">
+      <div class="wrap team-inner">
+        <div class="team-copy reveal">
+          <p class="section-kicker section-kicker--light"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>Jeden zespół • pełny obraz</p>
+          <h2>Strona nie żyje <strong class="gradient-text">w osobnym silosie.</strong></h2>
+          <p>W jednym zespole łączymy projekt, treść, WordPress, sklepy, branding i kampanie. Dzięki temu strona od początku powstaje pod SEO i marketing — a problem nie krąży między pięcioma wykonawcami.</p>
+          <div class="team-chips"><span>WordPress</span><span>WooCommerce</span><span>UX/UI</span><span>SEO</span><span>branding</span><span>Meta Ads</span></div>
+          <a class="btn btn-primary" href="/kontakt/">Poznajmy Twój cel <svg viewBox="0 0 24 24"><path d="M7 17 17 7M7 7h10v10"/></svg></a>
+        </div>
+        <img class="team-visual" src="https://zaprojektowani.com/wp-content/uploads/2026/06/team_kontakt.webp" alt="Zespół Zaprojektowani — strategia, kampanie i wdrożenie" loading="lazy" decoding="async">
+        <div class="team-float-note"><span>Model współpracy</span><strong>Strategia, kreacja, technologia i pomiar przy jednym stole.</strong></div>
+      </div>
+    </section>
+
+<section class="section local" id="zasieg">
+        <div class="wrap local-grid">
+          <div class="local-copy reveal">
+            <p class="section-kicker">Katowice • Śląsk • cała Polska</p>
+            <h2 class="section-title">
+              Jedno studio.
+              <strong>Współpraca bez granic lokalizacji.</strong>
+            </h2>
+            <p class="section-lead">
+              Z Katowic projektujemy marki dla firm z całej Polski. Brief,
+              prezentacje kierunków, konsultacje i przekazanie plików możemy
+              przeprowadzić online — etap po etapie.
+            </p>
+            <div class="local-links">
+              <a href="https://zaprojektowani.com/strony-internetowe-katowice/"
+                >strony internetowe</a
+              ><a href="https://zaprojektowani.com/sklepy-internetowe-katowice/"
+                >sklepy internetowe</a
+              ><a href="https://zaprojektowani.com/kampanie-reklamowe/"
+                >kampanie reklamowe</a
+              >
+            </div>
+          </div>
+          <aside class="poland-map-card reveal" data-delay="1" aria-labelledby="mapTitle">
+            <div class="map-card-head">
+              <strong id="mapTitle">Wybierz miasto i zobacz model współpracy.</strong>
+            </div>
+            <div class="poland-map" aria-label="Interaktywna mapa obsługi klientów w Polsce">
+              <svg class="poland-shape-svg" viewBox="0 0 600 600" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+                <defs>
+                  <linearGradient id="polandGradient" x1="8%" y1="0%" x2="92%" y2="100%">
+                    <stop offset="0%" stop-color="#020407" />
+                    <stop offset="48%" stop-color="#06111f" />
+                    <stop offset="100%" stop-color="#0b2744" />
+                  </linearGradient>
+                  <filter id="polandGlow" x="-20%" y="-20%" width="140%" height="140%">
+                    <feGaussianBlur stdDeviation="2.4" result="glow" />
+                    <feMerge><feMergeNode in="glow" /><feMergeNode in="SourceGraphic" /></feMerge>
+                  </filter>
+                  <path id="polandOutline" transform="translate(-155.9 -51.03718)" d="M 183,142.16218 L 190,146.36218 L 194.8,149.36218 C 194.8,149.36218 201.4,157.91218 203.2,157.76218 C 205,157.61218 203.2,151.76218 203.2,151.76218 L 205,143.36218 L 208.6,137.36218 L 206.2,130.76218 C 206.2,130.76218 203.5,133.91218 200.2,132.56218 C 196.9,131.21218 193,127.16218 193,127.16218 L 187,131.36218 L 181,128.36218 L 181,116.36218 L 187,120.56218 L 193,122.36218 L 202,119.36218 L 212.8,118.76218 L 224.8,116.96218 L 236.2,114.56218 L 251.8,110.36218 L 262.6,107.96218 L 272.2,106.16218 L 284.8,104.36218 C 284.8,104.36218 292.15,104.36218 296.2,101.36218 C 300.25,98.362181 302.2,92.362183 302.2,92.362183 L 310,85.762183 L 319.6,79.162183 L 329.8,75.562183 L 343,74.362183 L 358,71.362183 L 371.2,68.962183 L 388,68.362183 L 400,65.362183 L 406,62.362183 L 416.2,59.362183 L 425.2,58.762183 L 442,68.362183 L 448.6,74.962183 C 448.6,74.962183 452.04664,79.463642 454,83.962183 C 454.60061,85.345381 450.4,83.362183 450.4,83.362183 L 447.7,77.062183 L 444.4,73.162183 L 435.4,66.262183 L 427,62.362183 L 427,71.362183 L 427.6,80.362183 L 429.4,89.362183 L 430,98.362183 L 436.6,104.36218 L 442,110.36218 L 453.4,112.16218 L 462.4,111.56218 L 476.8,108.56218 L 485.2,104.96218 C 485.2,104.96218 489.55,99.712183 493,99.562183 C 496.45,99.412183 499,104.36218 499,104.36218 L 526,107.36218 L 544,113.36218 L 570.4,117.56218 L 593.2,121.16218 L 607,123.56218 L 622,125.36218 L 640,125.36218 L 649,122.36218 L 658,122.36218 L 670,119.36218 L 677.95,119.51218 L 689.2,125.96218 L 694,134.36218 L 703,140.36218 L 707.5,145.61218 L 709,158.36218 L 709,170.36218 L 712.75,178.76218 L 713.2,193.16218 L 716.5,202.76218 L 718,217.76218 L 722.16391,228.56218 C 722.16391,228.56218 722.7658,234.81646 723.28956,238.60102 C 724.05095,244.10267 725.15125,240.88777 725.60556,246.42324 C 725.94239,250.52721 728.34948,250.75373 728.59375,254.73718 C 728.8375,258.71218 727.54638,261.61579 729.4,265.76218 C 731.10156,269.56843 734.8,276.56218 734.8,276.56218 L 731.2,284.96218 L 722.8,292.76218 C 722.8,292.76218 718,297.11218 713.8,298.76218 C 709.6,300.41218 709.9,302.96218 705.4,305.96218 C 700.9,308.96218 697,314.36218 697,314.36218 C 697,314.36218 688.3,318.71218 689.8,323.96218 C 691.3,329.21218 702.4,334.16218 702.4,334.16218 L 712.6,341.36218 L 715,353.36218 L 715,368.36218 L 714.2,383.26218 L 715.2,393.96218 L 714,408.36218 L 717,420.36218 L 723,432.36218 L 729,438.36218 L 735,450.36218 L 738,456.36218 L 744,461.16218 C 741.8,461.76223 740.2,463.44485 738,462.36218 L 732,471.36218 L 738,480.36218 L 747,486.36218 L 741,498.36218 L 734.4,499.56218 L 715.65,517.26218 L 696.3,537.36218 L 678.15,555.66218 L 659.4,577.56218 L 651,582.36218 L 658.8,594.96218 L 655.2,602.76218 L 657,618.36218 L 664.2,628.56218 L 663.6,641.16218 L 655.2,634.56218 L 645,633.36218 L 630,624.36218 L 615,621.36218 L 603,612.36218 L 594,606.36218 L 579,600.36218 L 567,591.36218 L 555,594.36218 L 543,603.36218 L 531,606.36218 L 522,600.36218 L 513,591.36218 L 501,594.36218 L 495,600.36218 L 489,615.36218 L 477,609.36218 L 465,612.36218 L 468,597.36218 L 465,588.36218 L 459,573.36218 L 453,567.36218 L 447,570.36218 L 438,579.36218 L 435,585.36218 L 429,585.36218 L 420,588.36218 L 413.25,577.36218 C 411.75,572.36218 411,563.36218 411,563.36218 L 402,554.36218 L 402,545.36218 L 390,533.36218 L 378,524.36218 L 366,518.36218 L 354,530.36218 L 345,518.36218 L 336,506.36218 L 342,497.36218 L 348,491.36218 L 339,485.36218 L 327,485.36218 L 309,482.36218 C 309,482.36218 299.25,473.36218 297,473.36218 C 294.75,473.36218 295.8722,476.02203 300,484.76218 C 301.91326,488.81329 300.75,490.16218 303.3,493.16218 C 305.61732,495.88844 303,500.36218 303,500.36218 L 297,499.16218 L 291,502.76218 C 291,502.76218 285.45,510.26218 282,509.36218 C 278.55,508.46218 274.2,499.76218 274.2,499.76218 L 271.2,491.36218 L 265.2,479.36218 L 257.4,471.56218 L 263.4,463.76218 C 263.4,463.76218 272.25,462.86218 273,458.36218 C 273.75,453.86218 268.8,449.36218 268.8,449.36218 L 264,443.36218 L 249,440.36218 L 231,437.36218 L 216,434.36218 L 207,419.36218 L 204,410.36218 L 193.2,407.36218 C 193.2,407.36218 190.5,409.16218 189.6,411.56218 C 188.7,413.96218 189,417.56218 189,417.56218 L 183,416.36218 C 183,416.36218 186.3,410.66218 187.8,406.16218 C 189.3,401.66218 189,398.36218 189,398.36218 C 189,398.36218 195.6,385.76218 195.6,385.76218 C 195.6,385.76218 197.25,378.71218 192,366.56218 C 189.375,360.48718 186.97503,354.18179 183.05629,349.02284 C 179.13756,343.8639 180.45003,339.78179 177.6,334.76218 C 178.94997,329.74257 180,323.36218 180,323.36218 L 189,311.36218 L 192,299.36218 L 189,293.36218 L 189,284.36218 L 183,275.36218 L 183.6,263.96218 L 189,254.36218 C 189,254.36218 186.45,251.21218 182.7,247.46218 C 178.95,243.71218 174,239.36218 174,239.36218 L 169.8,230.36218 L 161.4,221.96218 L 167.4,212.96218 C 167.4,212.96218 172.2,210.41218 177.6,202.76218 C 183,195.11218 187.2,184.76218 187.2,184.76218 L 189,173.36218 L 183,164.36218 L 183,142.16218 z" />
+                </defs>
+                <use class="poland-shape-fill" href="#polandOutline" fill="url(#polandGradient)" stroke="#244a70" stroke-width="2" vector-effect="non-scaling-stroke" filter="url(#polandGlow)" />
+                <use class="poland-shape-draw" href="#polandOutline" fill="none" stroke="#173f66" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke" />
+              </svg>
+              <button class="map-marker marker-gdansk" type="button" data-city="Gdańsk" data-mode="Współpraca zdalna" data-copy="Brief, prezentacje i konsultacje prowadzimy online. Standard pracy pozostaje taki sam jak przy spotkaniu lokalnym."><i></i><span>Gdańsk</span></button>
+              <button class="map-marker marker-poznan" type="button" data-city="Poznań" data-mode="Współpraca zdalna" data-copy="Kierunki kreatywne prezentujemy na żywo online, zbieramy decyzje i prowadzimy projekt etapami."><i></i><span>Poznań</span></button>
+              <button class="map-marker marker-warszawa" type="button" data-city="Warszawa" data-mode="Współpraca zdalna" data-copy="Twój zespół dostaje jasny harmonogram, prezentacje kierunków oraz uporządkowany odbiór finalnych plików."><i></i><span>Warszawa</span></button>
+              <button class="map-marker marker-wroclaw" type="button" data-city="Wrocław" data-mode="Współpraca zdalna" data-copy="Cały proces — od briefu po brandbook i pliki produkcyjne — możemy przeprowadzić bez dojazdów."><i></i><span>Wrocław</span></button>
+              <button class="map-marker marker-katowice is-active" type="button" data-city="Katowice" data-mode="Śląsk • lokalnie lub online" data-copy="Możemy spotkać się lokalnie albo przeprowadzić cały proces online — zależnie od tego, co jest wygodniejsze dla Twojego zespołu."><i></i><span>Katowice</span></button>
+              <button class="map-marker marker-krakow" type="button" data-city="Kraków" data-mode="Współpraca zdalna" data-copy="Brief, konsultacje i odbiór materiałów odbywają się online, z pełną kontrolą każdego etapu."><i></i><span>Kraków</span></button>
+              <div class="map-signal map-signal--online" aria-hidden="true"><i></i><span><small>model pracy</small><strong>online lub lokalnie</strong></span></div>
+              <div class="map-signal map-signal--files" aria-hidden="true"><span><small>jedna ścieżka</small><strong>brief → finalne pliki</strong></span></div>
+            </div>
+            <div class="map-status" aria-live="polite">
+              <span><i></i> Aktywny region</span>
+              <strong>Katowice</strong>
+              <small>Śląsk • lokalnie lub online</small>
+              <p>Możemy spotkać się lokalnie albo przeprowadzić cały proces online — zależnie od tego, co jest wygodniejsze dla Twojego zespołu.</p>
+            </div>
+            <div class="map-flow" aria-label="Etapy współpracy zdalnej">
+              <span>Brief online</span><i>→</i><span>Prezentacja</span><i>→</i><span>Konsultacje</span><i>→</i><span>Finalne pliki</span>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+    <section class="section faq" id="faq">
+      <div class="wrap faq-layout">
+        <div class="faq-intro reveal"><div class="faq-figure" aria-hidden="true"><img src="%%ZPSI%%../campaigns/mateusz-pointing.webp" alt="" loading="lazy" decoding="async"></div><p class="section-kicker"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>FAQ / strony internetowe</p><h2 class="section-title">Zanim klikniesz <strong>„start”.</strong></h2><p class="section-lead">Konkretnie o zakresie, cenach, materiałach, SEO i tym, czego potrzebujemy, żeby zacząć projekt strony.</p></div>
+        <div class="faq-list reveal" data-delay="1">
+          <details class="faq-item"><summary><span class="faq-no">01</span><span>Czy tworzycie strony internetowe dla firm z Katowic?</span><i class="faq-plus"></i></summary><div class="faq-answer">Tak. Projektujemy strony dla firm z Katowic, Śląska i całej Polski — <strong>strony firmowe, landing page’e, sklepy internetowe</strong> oraz serwisy przygotowane pod SEO, Google Ads i Meta Ads. Przy projektach lokalnych układamy strukturę treści pod frazy takie jak „strony internetowe Katowice".</div></details>
+          <details class="faq-item"><summary><span class="faq-no">02</span><span>Czym różni się strona firmowa od landing page’a?</span><i class="faq-plus"></i></summary><div class="faq-answer">Landing page to jedna, mocno sprzedażowa podstrona pod konkretną usługę lub kampanię. Strona firmowa ma szerszą strukturę: stronę główną, ofertę, podstrony usług, realizacje, FAQ i kontakt. Jeżeli firma chce budować widoczność w Google, <strong>lepszym wyborem jest zwykle strona firmowa z rozbudowaną strukturą SEO.</strong></div></details>
+          <details class="faq-item"><summary><span class="faq-no">03</span><span>Czy strona może być od razu przygotowana pod SEO?</span><i class="faq-plus"></i></summary><div class="faq-answer">Tak. Już na etapie projektu planujemy <strong>strukturę nagłówków, sekcje usług, adresy URL, linkowanie wewnętrzne, FAQ, szybkość ładowania i dane schema.</strong> Dzięki temu strona ma solidny fundament pod pozycjonowanie, zamiast być tylko estetyczną wizytówką.</div></details>
+          <details class="faq-item"><summary><span class="faq-no">04</span><span>Czy projektujecie strony dla konkretnych branż?</span><i class="faq-plus"></i></summary><div class="faq-answer">Tak. Inaczej projektuje się stronę kancelarii, inaczej dewelopera, salonu beauty, lekarza czy producenta. Różnice dotyczą struktury oferty, języka, CTA, formularzy, treści SEO i sekcji zaufania — dzięki temu strona lepiej odpowiada odbiorcom danej branży.</div></details>
+          <details class="faq-item"><summary><span class="faq-no">05</span><span>Ile kosztuje stworzenie strony internetowej?</span><i class="faq-plus"></i></summary><div class="faq-answer">Cena zależy od zakresu: liczby podstron, poziomu projektu, treści, funkcji, SEO czy sklepu WooCommerce. Dlatego zamiast jednej sztywnej ceny najlepiej <strong>uzupełnić Studio Wyceny</strong> — na tej podstawie dobierzemy zakres: landing page, Starter, Premium albo projekt indywidualny.</div></details>
+          <details class="faq-item"><summary><span class="faq-no">06</span><span>Czy wykonujecie sklepy internetowe WooCommerce?</span><i class="faq-plus"></i></summary><div class="faq-answer">Tak. Budujemy sklepy na WordPressie i WooCommerce — od prostych sklepów produktowych po wdrożenia z wariantami, płatnościami, dostawami, katalogiem B2B, konfiguratorami i indywidualną logiką sprzedaży.</div></details>
+          <details class="faq-item"><summary><span class="faq-no">07</span><span>Czy pomagacie też w tekstach na stronę?</span><i class="faq-plus"></i></summary><div class="faq-answer">Tak. Przygotowujemy strukturę treści, nagłówki, opisy usług, sekcje sprzedażowe, FAQ, teksty SEO i mikrocopy przycisków oraz formularzy. Dobra strona <strong>musi jasno tłumaczyć ofertę</strong> — nie opiera się tylko na designie.</div></details>
+          <details class="faq-item"><summary><span class="faq-no">08</span><span>Czy strona będzie dobrze działać na telefonie?</span><i class="faq-plus"></i></summary><div class="faq-answer">Tak. Projektujemy mobile-first: czytelne nagłówki, szybkie ładowanie, wygodne CTA i formularze, które da się wypełnić kciukiem. Wersję mobilną traktujemy jak główną — bo tak dziś najczęściej ogląda się strony.</div></details>
+        </div>
+      </div>
+    </section>
+
+    <section class="final-cta" id="next-step">
+      <img class="final-signet" src="%%ZPSI%%../logo-branding/zp-sygnet-ciemny.webp" alt="" aria-hidden="true" loading="lazy" decoding="async">
+      <div class="wrap final-inner">
+        <div class="final-copy reveal">
+          <p class="section-kicker section-kicker--light"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>Następny krok</p>
+          <h2>Pokaż firmę tak, jak <strong class="gradient-text">na to zasługuje.</strong></h2>
+          <p>Opisz projekt w Studio Wyceny: branżę, cel strony, funkcje i materiały. Interaktywną ofertę z zakresem i terminem otrzymasz zwykle w 3–4 dni robocze.</p>
+          <div class="hero-actions"><a class="btn btn-primary" href="https://zaprojektowani.com/studio-wyceny/?zpbs_service=web#zpbsUltimate">Przejdź do Studia Wyceny <svg viewBox="0 0 24 24"><path d="M7 17 17 7M7 7h10v10"/></svg></a><a class="btn btn-ghost" href="tel:+48501054253">Zadzwoń: 501 054 253 <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.12.9.33 1.78.62 2.63a2 2 0 0 1-.45 2.11L8 9.73a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.85.29 1.73.5 2.63.62A2 2 0 0 1 22 16.92z"/></svg></a></div>
+          <p class="cta-microcopy">Wolisz, żebyśmy to my zadzwonili? <button class="linklike" type="button" data-open-callback>Zostaw numer</button> — w godzinach 9:00–17:00 oddzwaniamy zwykle do 15 minut.</p>
+        </div>
+        <img class="final-team" src="%%ZPSI%%../logo-branding/wiedza-ekipa.webp" alt="Zespół Zaprojektowani analizuje projekt strony" loading="lazy" decoding="async">
+        <div class="final-contact"><i><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.12.9.33 1.78.62 2.63a2 2 0 0 1-.45 2.11L8 9.73a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.85.29 1.73.5 2.63.62A2 2 0 0 1 22 16.92z"/></svg></i><div><span>Porozmawiajmy</span><strong>501 054 253</strong></div></div>
+      </div>
+    </section>

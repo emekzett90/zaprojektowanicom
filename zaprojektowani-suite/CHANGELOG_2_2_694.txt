@@ -1,0 +1,11 @@
+ZAPROJEKTOWANI SUITE 2.2.694
+
+Strony internetowe Katowice — poprawki po review:
+- naprawiono klikalność przycisku „Opisz projekt” i CTA pod pakietami,
+- pogrubiono nazwy pakietów i ujednolicono wygląd kart z Logo & Branding Katowice,
+- usunięto dekoracyjne przygaszenie i zbędne tła z sekcji pakietów,
+- przycięto sylwetki zespołu do granicy ciemnej sekcji,
+- na mobile przesunięto chip UX/UI o 50 px w dół i 40 px w prawo,
+- zwiększono o 1 px font przycisków portfolio,
+- dodano niezależny trigger animacji rysowania mapy Polski,
+- podbito wersję assetów i cache do 2.2.694.

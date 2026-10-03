@@ -1,0 +1,7 @@
+Zaprojektowani Suite 2.2.780 (wersja angielska 1.0.8)
+
+- Współpraca z nową wtyczką „Zaprojektowani Skaner EN” (osobny ZIP): strony otwierane przez skaner (?zpl_scan=1, tylko administrator) wyglądają jak dla gościa, nie wysyłają żadnych danych (formularze, statystyki, piksele) i nie przełączają języka same.
+- Naprawy wykonane przez skaner działają od razu: dodatkowo tłumaczone atrybuty data-* (np. etykiety pakietów w Studiu Wyceny), dodatkowe pola danych strukturalnych dla Google, angielskie napisy CSS (::before/::after).
+- Dane strukturalne (JSON-LD) po angielsku także w polach keywords, addressRegion i areaServed (np. „Województwo śląskie” → „Silesian Voivodeship”), 162 nowe tłumaczenia.
+- Nowe tłumaczenia tekstów znalezionych skanerem.
+- Zawiera zmiany z 2.2.776–2.2.779 (wersja angielska w Suite, logo w karcie kontaktowej, zdjęcie zespołu na telefonie, zdjęcie Zgórecki +15%).

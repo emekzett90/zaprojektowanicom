@@ -1,0 +1,7 @@
+Zaprojektowani Suite 2.2.676
+
+- Realizacje: usunięty delikatny skok pionowy zdjęcia Stanisława po zakończeniu animacji.
+- Ustawione rzeczywiste wymiary grafiki 1201 x 1860, aby przeglądarka rezerwowała poprawne miejsce przed załadowaniem.
+- Animacja wejścia przeniesiona z obrazu na kontener i pozbawiona zmiany osi Y.
+- Na desktopie sylwetka otrzymała warstwę ponad fixed headerem, dzięki czemu głowa może naturalnie nachodzić na nawigację.
+- Pozostałe elementy hero zachowują dotychczasową warstwę i układ.

@@ -1,0 +1,7 @@
+Zaprojektowani Suite 2.2.815
+
+- /strony-internetowe-katowice/: zwiększono o 1 px typografię list zakresu na kartach pakietów.
+- Podniesiono zdjęcia Marty, Stanisława i Mateusza o kolejne 25 px.
+- Naprawiono otwieranie „Zobacz pełny zakres” po najechaniu: dodano niezależny stan JS is-hover-open oraz obsługę kliknięcia/mobile.
+- Strona Premium: dodano „nieograniczona liczba podstron” na froncie i w pełnym zakresie; licznik zakresu zaktualizowano do 82 elementów.
+- Cache-bust i wersja wtyczki: 2.2.815.

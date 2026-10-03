@@ -1,0 +1,8 @@
+Zaprojektowani Suite 2.2.773
+
+- Home: Trustindex zaktualizowany do 69 opinii, Facebook do 54 opinii.
+- Home: statystyki 120+ projektów / 5.0★ / 10+ lat mają poprawne wartości także bez działania animacji JS; usunięto ryzyko pozostania na 0.
+- O nas: dolne krawędzie zdjęć zespołu w hero zostały płynnie wtopione w tło.
+- O nas: mocniejsze i naturalne wtopienie od dołu zdjęcia pod sekcją „Mniej chaosu. Więcej świadomych decyzji.”.
+- O nas: usunięto zdjęcie z karty „Projekt ma wyglądać dobrze. Ale nagradzamy te, które robią coś więcej.” i skorygowano układ karty.
+- O nas: liczba opinii Trustindex zaktualizowana do 69.

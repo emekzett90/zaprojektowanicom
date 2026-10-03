@@ -1,0 +1,7 @@
+Zaprojektowani Suite v2.2.657
+
+Studio Wyceny:
+- mobile: wszystkie zdjęcia obniżone o 30 px,
+- około 1335 px: zdjęcia w 1., 2. i 4. karcie obniżone o ok. 40 px,
+- około 1725 px: zdjęcia w 1. i 2. karcie podniesione o 60 px,
+- pełna / bardzo szeroka rozdzielczość: zdjęcia w 1. i 2. karcie podniesione o 50 px.

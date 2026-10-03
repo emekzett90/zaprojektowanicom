@@ -1,0 +1,11 @@
+v2.2.732 — STRONY INTERNETOWE KATOWICE: +2 REALIZACJE
+
+- Dodano realizację Świat Grilli do portfolio na /strony-internetowe-katowice/.
+- Dodano realizację Polerstone do portfolio na /strony-internetowe-katowice/.
+- Dodano dedykowane mockupy, linki LIVE, opisy, zakresy, efekty i technologie obu projektów.
+- Świat Grilli: WordPress + WooCommerce; karta w czerni i czerwieni inspirowanej identyfikacją sklepu.
+- Polerstone: WordPress + Figma; karta w grafitowo-kamiennej palecie premium.
+- Rozszerzono modal „Zobacz szczegóły” o oba projekty.
+- Zmieniono licznik portfolio z 9 na 11 i poprawiono copy sekcji.
+- Licznik jest dodatkowo synchronizowany dynamicznie z faktyczną liczbą kart.
+- Podbito wersję i cache-bust do 2.2.732.

@@ -1,0 +1,8 @@
+Zaprojektowani Suite 2.2.816
+
+- Naprawiono panel „Zobacz pełny zakres” na /strony-internetowe-katowice/.
+- Panel jest teraz bezwzględnie kotwiczony do całej karty pakietu (top/right/bottom/left), dzięki czemu nie rozwija się od miejsca przycisku i nie wypada poza kartę.
+- Dodano stan has-scope-open na karcie, który stabilizuje z-index, transformacje i widoczność podczas hover/click.
+- Pozostałe karty delikatnie wygaszają się, gdy pełny zakres jest otwarty.
+- Zachowano X, Escape, kliknięcie poza panelem oraz obsługę hover desktop / tap mobile.
+- Cache-bust i wersja wtyczki: 2.2.816.

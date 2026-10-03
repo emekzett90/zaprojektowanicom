@@ -1,0 +1,6 @@
+2.2.749 — O nas / hero, Trustindex, team portraits, Studio Awards redesign
+- Hero team photos now float freely on a light background (navy card removed).
+- Trustindex proof bar redesigned on dark navy so the white Trustindex logo remains legible.
+- Marta / Mateusz / Stanislaw portraits enlarged by ~30% and lowered inside profile cards.
+- Replaced the old photo-only Studio od srodka section with Studio Awards 2026 — clearly labelled internal studio selection, not external awards.
+- Added four internal award categories, project references, subtle team imagery and responsive layouts.

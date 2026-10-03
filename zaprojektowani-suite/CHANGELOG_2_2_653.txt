@@ -1,0 +1,7 @@
+Zaprojektowani Suite v2.2.653
+
+Studio Wyceny:
+- baza mobile z v2.2.649 zachowana,
+- na mobile/tablet zmieniona tylko pozycja kafelka ikony na prawą stronę,
+- desktop i większe: ustawienia jak w v2.2.651,
+- responsywne dopasowanie dla mniejszych desktopów.

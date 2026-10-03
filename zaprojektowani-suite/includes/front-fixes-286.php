@@ -1,0 +1,15 @@
+<?php
+/**
+ * ZP Suite v2.2.482 — portfolio details shadow cleanup + logo card/body + about mobile nav size.
+ * - Home portfolio: remove drop-shadow/box-shadow from “Szczegóły” buttons on mobile and desktop.
+ * - Logo & branding Katowice: mobile System marki body text +2px vs previous fix.
+ * - O nas: mobile search and hamburger size matched to FAQ/Realizacje light pages.
+ */
+if (!defined('ABSPATH')) { exit; }
+
+add_action('wp_head', function () {
+  if (is_admin()) { return; }
+  ?>
+  <style id="zp-suite-front-fixes-286-portfolio-logo-about-v482">html body #zpShowcaseWhite .zpShowcaseMobile__detailsBtn,html body #zpShowcaseWhite .zpShowcaseMobile__detailsBtn:hover,html body #zpShowcaseWhite .zpShowcaseMobile__detailsBtn:focus,html body #zpShowcaseWhite .zpShowcaseMobile__detailsBtn:active,html body #zpShowcaseWhite .zpShowcaseWhite__btn--primary,html body #zpShowcaseWhite .zpShowcaseWhite__btn--primary:hover,html body #zpShowcaseWhite .zpShowcaseWhite__btn--primary:focus,html body #zpShowcaseWhite .zpShowcaseWhite__btn--primary:active,html body #zpShowcaseWhite button[data-zp-detail],html body #zpShowcaseWhite button[data-zp-detail]:hover,html body #zpShowcaseWhite button[data-zp-detail]:focus,html body #zpShowcaseWhite button[data-zp-detail]:active{box-shadow:none!important;filter:none!important;text-shadow:none!important;-webkit-filter:none!important}html body #zpShowcaseWhite .zpShowcaseMobile__detailsBtn::before,html body #zpShowcaseWhite .zpShowcaseMobile__detailsBtn::after,html body #zpShowcaseWhite .zpShowcaseWhite__btn--primary::before,html body #zpShowcaseWhite .zpShowcaseWhite__btn--primary::after,html body #zpShowcaseWhite button[data-zp-detail]::before,html body #zpShowcaseWhite button[data-zp-detail]::after{box-shadow:none!important;filter:none!important;text-shadow:none!important;-webkit-filter:none!important}@media (max-width:760px){html body #zpBrandHeroMobileKat .zpBrandHeroMobileKat__miniCard p,html body #zpBrandHeroMobileKat .zpWebHeroKat__miniCard.zpBrandHeroMobileKat__miniCard p{font-size:12.15px!important;line-height:1.15!important;max-width:194px!important}}@media (max-width:980px){html body.zp-about-nav-final #zpNewNav .zpNewNav__mobileSearch,html body.zp-about-nav-final #zpNewNav .zpNewNav__burger,html body:has(#zpAboutPage) #zpNewNav .zpNewNav__mobileSearch,html body:has(#zpAboutPage) #zpNewNav .zpNewNav__burger{width:44px!important;height:44px!important;min-width:44px!important;min-height:44px!important;flex:0 0 44px!important;padding:0!important;margin:0!important;display:grid!important;place-items:center!important;border-radius:0!important;border:0!important;background:transparent!important;box-shadow:none!important;filter:none!important;color:#071426!important}html body.zp-about-nav-final #zpNewNav .zpNewNav__mobileSearch svg,html body.zp-about-nav-final #zpNewNav .zpNewNav__burger svg,html body:has(#zpAboutPage) #zpNewNav .zpNewNav__mobileSearch svg,html body:has(#zpAboutPage) #zpNewNav .zpNewNav__burger svg{width:20px!important;height:20px!important;min-width:20px!important;min-height:20px!important;stroke-width:1.9!important}}</style>
+  <?php
+}, PHP_INT_MAX);

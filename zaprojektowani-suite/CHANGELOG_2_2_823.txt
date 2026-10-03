@@ -1,0 +1,8 @@
+Zaprojektowani Suite 2.2.823
+
+- Studio Wyceny: mocno zwiększona typografia prawego podsumowania briefu.
+- Etykiety Budżet / Kontakt / Termin / Branża / Cel są większe, bez CAPS i z naturalnym trackingiem.
+- Wartości w kafelkach podsumowania są wyraźnie większe i cięższe typograficznie.
+- Powiększono tytuł projektu, status postępu i chipa usługi/pakietu.
+- Blok „Opis projektu” ma większy nagłówek, ikonę i tekst opisu.
+- Zachowano responsywność i układ premium z wersji 2.2.822.

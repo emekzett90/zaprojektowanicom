@@ -1,0 +1,7 @@
+ZAPROJEKTOWANI SUITE 2.2.709
+
+1. Całkowicie usunięto desktopowy sticky dock ze strony głównej.
+2. Usunięto jego PHP, HTML, JavaScript oraz dedykowany arkusz CSS.
+3. Usunięto martwą zakładkę „Dock desktop” z panelu administracyjnego.
+4. Mobilny sticky dock pozostaje bez zmian.
+5. Wersję wtyczki podbito do 2.2.709.

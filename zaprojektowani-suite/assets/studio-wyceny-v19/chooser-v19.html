@@ -1,0 +1,405 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Studio Wyceny — wybór usługi</title>
+<style>
+@font-face{font-family:"Plus Jakarta Sans";src:url("https://zaprojektowani.com/wp-content/web-font/jakarta/plus-jakarta-sans-v12-latin_latin-ext-regular.woff2") format("woff2");font-weight:400;font-display:swap}
+@font-face{font-family:"Plus Jakarta Sans";src:url("https://zaprojektowani.com/wp-content/web-font/jakarta/plus-jakarta-sans-v12-latin_latin-ext-500.woff2") format("woff2");font-weight:500;font-display:swap}
+@font-face{font-family:"Plus Jakarta Sans";src:url("https://zaprojektowani.com/wp-content/web-font/jakarta/plus-jakarta-sans-v12-latin_latin-ext-700.woff2") format("woff2");font-weight:700 900;font-display:swap}
+:root{
+  --ink:#07111f; --muted:#6a7a92; --line:#dbe7f1; --soft:#f5f8fb;
+  --blue:#1f6eea; --navy:#081a31; --r-xl:34px;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:#fff;color:var(--ink);font-family:"Plus Jakarta Sans",Inter,Arial,sans-serif;-webkit-font-smoothing:antialiased}
+body{overflow-x:hidden}
+button{font:inherit}
+img{display:block;max-width:100%}
+a{color:inherit;text-decoration:none}
+.zp-chooser{position:relative;background:#fff;overflow:hidden;padding:66px 0 90px}
+.zp-chooser:before{content:none!important;display:none!important;background:none!important}
+.zp-wrap{position:relative;z-index:1;width:min(1760px,calc(100% - 72px));margin:0 auto}
+.zp-hero{display:grid;grid-template-columns:minmax(520px,.93fr) minmax(620px,1.07fr);gap:48px;align-items:end;margin-bottom:28px}
+.zp-copy{padding:16px 0 6px}
+.zp-kicker{display:flex;align-items:center;gap:12px;margin:0 0 22px;color:#1f5da8;font-size:10px;font-weight:800;letter-spacing:.18em;text-transform:uppercase}
+.zp-kicker:before{content:"";width:34px;height:1px;background:#1f5da8;opacity:.6}
+.zp-title{margin:0;max-width:790px;font-family:"Plus Jakarta Sans",Inter,Arial,sans-serif;line-height:.955;letter-spacing:-.058em;font-size:clamp(58px,4.65vw,84px)}
+.zp-title__light{display:block;font-weight:500}
+.zp-title__strong{display:block;font-weight:700}
+.zp-lead{max-width:700px;margin:28px 0 0;color:var(--muted);font-size:18px;line-height:1.68;letter-spacing:-.014em}
+.zp-lead strong{color:#18365c}
+.zp-pick{display:flex;align-items:center;gap:18px;margin-top:36px;position:relative;width:max-content;max-width:100%}
+.zp-pick__badge{position:relative;display:flex;align-items:center;gap:12px;height:50px;padding:0 22px 0 12px;border-radius:999px;background:#fff;border:1px solid var(--line);overflow:hidden}
+.zp-pick__badge:before{content:"";position:absolute;inset:0;background:linear-gradient(115deg,transparent 25%,rgba(54,128,236,.072) 45%,transparent 68%);transform:translateX(-120%);animation:badgeShine 4.2s ease-in-out infinite}
+.zp-pick__icon{position:relative;z-index:1;width:36px;height:36px;border-radius:50%;display:grid;place-items:center;background:#eef6ff;color:#0d2c54;border:1px solid #d7e8fb}
+.zp-pick__icon svg{width:18px;height:18px}
+.zp-pick__text{position:relative;z-index:1;color:#34506e;font-size:10px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;white-space:nowrap}
+.zp-pick__text strong{color:#1f5da8}
+.zp-pick__arrow{position:relative;width:84px;height:84px;flex:0 0 auto;display:grid;place-items:center;overflow:visible;margin-left:6px}
+.zp-pick__arrow img{width:72px;height:auto;display:block;position:relative;z-index:2;filter:drop-shadow(0 10px 16px rgba(31,110,234,.22));animation:handNudge 1.8s ease-in-out infinite;transform-origin:60% 20%}
+.zp-pick__arrow .main,.zp-pick__arrow .head{display:none}
+.zp-pick__arrow:before{display:none}
+
+.zp-proof__item:not(:first-child){padding-left:34px}
+.zp-proof__item--hint{justify-content:flex-start}
+
+.zp-pick__arrow .head{display:none}
+.zp-pick__arrow:before{display:none}
+
+.zp-proof__item:not(:first-child){padding-left:34px}
+.zp-proof__item--hint{justify-content:flex-start}
+
+.zp-team{position:relative;height:450px;overflow:hidden}
+.zp-team:before{content:"";position:absolute;right:0;bottom:16px;width:min(772px,100%);height:404px;border-radius:50%;background:radial-gradient(circle at 50% 56%, rgba(60,131,232,.11), rgba(60,131,232,.04) 56%, transparent 72%)}
+.zp-team__people{position:absolute;inset:0}
+.zp-team__person{position:absolute;object-fit:contain;object-position:bottom center;filter:drop-shadow(0 8px 16px rgba(22,48,80,.04));animation:teamBob 6s ease-in-out infinite}
+.zp-team__person--mateusz{height:412px;right:410px;bottom:-36px;animation-delay:-.6s}
+.zp-team__person--marta{height:376px;right:210px;bottom:-38px;z-index:2;animation-delay:-2s}
+.zp-team__person--stanislaw{height:420px;right:-8px;bottom:-36px;animation-delay:-1.2s}
+.zp-team__fade{position:absolute;left:0;right:0;bottom:0;height:86px;background:linear-gradient(to top,#fff 10%,rgba(255,255,255,.94) 34%,rgba(255,255,255,0));z-index:4;pointer-events:none}
+.zp-note{position:absolute;right:222px;top:2px;z-index:5;font-family:"Bradley Hand","Segoe Print","Comic Sans MS",cursive;font-size:26px;line-height:1.03;color:#5b86c2;transform:rotate(-4deg);letter-spacing:.01em;max-width:180px;text-align:left;white-space:normal}
+.zp-note span{display:block}
+.zp-note:after{content:"↙";display:block;font-size:32px;line-height:1;margin-top:4px;text-align:center;animation:noteBounce 2s ease-in-out infinite}
+.zp-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:40px;align-items:stretch}
+.zp-card-wrap{min-width:0;animation:floatCard 6.2s ease-in-out infinite;will-change:transform;overflow:visible}
+.zp-card-wrap:nth-child(2){animation-delay:-1.4s}.zp-card-wrap:nth-child(3){animation-delay:-2.8s}.zp-card-wrap:nth-child(4){animation-delay:-4.1s}
+.zp-card{position:relative;appearance:none;display:flex;flex-direction:column;width:100%;height:664px;padding:0;border-radius:38px;border:1px solid var(--line);background:#fff;overflow:hidden;text-align:left;color:inherit;cursor:pointer;transition:transform .28s ease,border-color .28s ease,background .28s ease;box-shadow:none}
+.zp-card:hover{transform:translateY(-7px);border-color:#a9c9ed}
+.zp-card:focus-visible{outline:3px solid rgba(31,110,234,.22);outline-offset:4px}
+.zp-card.is-selected{background:linear-gradient(180deg,#0a223d 0%,#06182d 100%);border-color:#4b9bff;color:#fff}
+.zp-card__visual{position:relative;height:386px;min-height:386px;padding:10px 18px 0;background:linear-gradient(180deg,#f7fafc 0%,#eef4f8 100%);overflow:hidden;border-radius:37px 37px 0 0}
+.zp-card__visual:after{content:"";position:absolute;left:0;right:0;bottom:0;height:110px;background:linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,.88) 54%, rgba(255,255,255,1));pointer-events:none}
+.zp-card.is-selected .zp-card__visual{background:linear-gradient(180deg,#0b2748 0%,#0a1e38 100%)}
+.zp-card.is-selected .zp-card__visual:after{background:linear-gradient(to bottom, rgba(6,24,45,0), rgba(6,24,45,.82) 54%, rgba(6,24,45,1))}
+.zp-card__visual-inner{position:absolute;inset:14px 18px 0 18px;display:flex;align-items:flex-start;justify-content:center;overflow:visible}
+.zp-card__visual img{width:100%;height:100%;max-height:382px;object-fit:contain;object-position:center top;transform:translateY(var(--img-y,0px)) scale(var(--img-scale,1));transform-origin:center top;transition:transform .55s cubic-bezier(.2,.7,.2,1)}
+.zp-card:hover .zp-card__visual img{transform:translateY(calc(var(--img-y,0px) - 4px)) scale(calc(var(--img-scale,1) + .02))}
+.zp-card--web{--img-y:42px;--img-scale:1.09}
+.zp-card--shop{--img-y:36px;--img-scale:1.11}
+.zp-card--brand{--img-y:42px;--img-scale:1.18}
+.zp-card--ads{--img-y:42px;--img-scale:1.10}
+.zp-card--web,.zp-card--shop,.zp-card--brand,.zp-card--ads{overflow:visible}
+.zp-card--web .zp-card__visual,.zp-card--shop .zp-card__visual,.zp-card--brand .zp-card__visual,.zp-card--ads .zp-card__visual{overflow:visible}
+.zp-card--web .zp-card__visual-inner,.zp-card--shop .zp-card__visual-inner,.zp-card--brand .zp-card__visual-inner,.zp-card--ads .zp-card__visual-inner{inset:-6px 8px 0 8px;overflow:visible;z-index:3}
+.zp-card--web .zp-card__visual img,.zp-card--shop .zp-card__visual img,.zp-card--brand .zp-card__visual img,.zp-card--ads .zp-card__visual img{max-height:430px}
+.zp-card--web .zp-card__content,.zp-card--shop .zp-card__content,.zp-card--brand .zp-card__content,.zp-card--ads .zp-card__content{position:relative;z-index:2}
+
+.zp-card__num{position:absolute;left:24px;top:18px;z-index:4;font-family:"Plus Jakarta Sans",Inter,Arial,sans-serif;font-size:78px;line-height:1;font-weight:700;letter-spacing:-.06em;color:rgba(7,17,31,.068)}
+.zp-card.is-selected .zp-card__num{color:rgba(122,181,255,.15)}
+.zp-card__content{position:relative;z-index:2;display:flex;flex-direction:column;flex:1;padding:24px 24px 24px;border-radius:0 0 37px 37px}
+.zp-card__headline{display:flex;align-items:center;gap:14px}
+.zp-card__icon{width:52px;height:52px;border-radius:16px;display:grid;place-items:center;background:#eff6ff;color:#0c2c52;border:1px solid #d7e8fb;flex:0 0 auto}
+.zp-card__icon svg{width:24px;height:24px}
+.zp-card.is-selected .zp-card__icon{background:#fff;color:#0f315a;border-color:#fff}
+.zp-card h3{margin:0;font-family:"Plus Jakarta Sans",Inter,Arial,sans-serif;font-size:28px;line-height:1.07;letter-spacing:-.035em;font-weight:700}
+.zp-card p{margin:18px 0 0;max-width:31ch;color:#60728a;font-size:15.5px;line-height:1.62}
+.zp-card.is-selected p{color:#d9e6f7}
+.zp-card__bottom{display:flex;flex-wrap:wrap;gap:9px;margin-top:auto;padding-top:22px}
+.zp-chip{display:inline-flex;align-items:center;justify-content:center;height:35px;padding:0 14px;border-radius:999px;background:#eff4fa;color:#3f5875;font-size:12px;font-weight:500;white-space:nowrap}
+.zp-chip--price{background:#fff;border:1px solid #d8e3ee;color:#0a1627;font-weight:800}
+.zp-card.is-selected .zp-chip{background:rgba(255,255,255,.08);color:#e7f0fb;border:1px solid rgba(255,255,255,.12)}
+.zp-card.is-selected .zp-chip--price{background:#fff;color:#07111f;border-color:#fff}
+.zp-card__arrow{position:absolute;right:18px;bottom:18px;z-index:4;width:56px;height:56px;border-radius:50%;display:grid;place-items:center;background:#fff;color:#0d2b53;border:1px solid rgba(10,44,83,.08);transition:transform .28s ease}
+.zp-card__arrow svg{width:21px;height:21px;transition:transform .28s ease}
+.zp-card:hover .zp-card__arrow{transform:translateY(-3px)}
+.zp-card:hover .zp-card__arrow svg{transform:translateX(4px)}
+.zp-card.is-demo-hover{transform:translateY(-10px);border-color:#9fc7f7;box-shadow:0 22px 46px rgba(31,110,234,.14)}
+.zp-card.is-demo-hover:not(.is-selected){background:linear-gradient(180deg,#ffffff 0%,#f3f8ff 100%)}
+.zp-demo-hand{position:absolute;z-index:999;left:0;top:0;width:62px;height:62px;pointer-events:none;opacity:0;transform:translate3d(0,0,0) rotate(-10deg);transition:left .78s cubic-bezier(.2,.75,.2,1),top .78s cubic-bezier(.2,.75,.2,1),opacity .16s ease;will-change:left,top,opacity;overflow:visible}
+.zp-demo-hand img{width:62px;height:auto;display:block;filter:drop-shadow(0 10px 15px rgba(31,110,234,.26));animation:demoHandTap 1.22s ease-in-out infinite;transform-origin:58% 18%}
+@keyframes handNudge{0%,100%{transform:translate3d(0,0,0) rotate(-10deg) scale(1)}50%{transform:translate3d(8px,8px,0) rotate(-6deg) scale(1.03)}}
+@keyframes demoHandTap{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(8px) scale(.95)}}
+
+.zp-proof{display:grid;grid-template-columns:1.18fr 1fr 1fr 1.22fr;gap:0;margin-top:34px;padding-top:10px;align-items:center}
+.zp-proof__item{display:flex;align-items:center;gap:12px;padding:10px 34px 10px 0;border-right:1px solid #e4ebf3;color:#58708e;min-height:56px}
+.zp-proof__item:last-child{border-right:0;padding-right:0;justify-content:flex-start;padding-left:34px}
+.zp-proof__item strong{font-size:17px;line-height:1;color:#081120}
+.zp-proof__item svg{width:22px;height:22px;flex:0 0 auto;color:#081120}
+.zp-proof__item span:last-child{font-size:14px;line-height:1.4}
+.zp-proof__item--rating{gap:16px}
+.zp-proof__logoWrap{display:inline-flex;align-items:center;justify-content:center;height:56px;min-width:214px;padding:0 22px;border-radius:999px;background:linear-gradient(180deg,#123157 0%, #081a31 100%);border:1px solid rgba(255,255,255,.12);box-shadow:inset 0 1px 0 rgba(255,255,255,.08)}
+.zp-proof__logoWrap img{height:auto;width:160px;max-width:160px;display:block;object-fit:contain}
+.zp-proof__logoWrap{cursor:pointer;text-decoration:none;transition:opacity .2s ease,transform .2s ease}.zp-proof__logoWrap:hover{opacity:.92;transform:translateY(-1px)}
+.zp-proof__ratingText{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.zp-stars{display:inline-flex;gap:2px;color:#1f6eea;font-size:20px;line-height:1;margin:0 1px 0 0}
+.zp-proof__item--hint{gap:10px;justify-content:flex-end}
+@keyframes badgeShine{0%,18%{transform:translateX(-130%)}46%,58%{transform:translateX(130%)}100%{transform:translateX(130%)}}
+@keyframes drawArrow{0%{opacity:1}100%{opacity:1}}
+@keyframes handBounce{0%,100%{transform:translateY(0) rotate(-12deg) scale(1)}50%{transform:translateY(9px) rotate(-7deg) scale(1.08)}}
+@keyframes floatCard{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+@keyframes teamBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+@keyframes noteBounce{0%,100%{transform:translateY(0)}50%{transform:translateY(5px)}}
+@media (max-width:1500px){.zp-wrap{width:min(1380px,calc(100% - 52px))}.zp-hero{grid-template-columns:1fr 1fr;gap:40px}.zp-team{height:430px}.zp-team__person--mateusz{height:385px;right:330px;bottom:-32px}.zp-team__person--marta{height:350px;right:160px;bottom:-34px}.zp-team__person--stanislaw{height:394px;bottom:-32px}.zp-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:34px}.zp-card{height:644px}.zp-card__visual{height:366px;min-height:366px}.zp-proof{grid-template-columns:1.2fr 1fr 1fr 1.2fr}}
+@media (max-width:1024px){.zp-chooser{padding:34px 0 72px}.zp-wrap{width:min(100% - 32px,940px)}.zp-hero{grid-template-columns:1fr;gap:6px;align-items:start}.zp-copy{padding-top:4px}.zp-title{font-size:clamp(46px,10vw,66px)}.zp-lead{font-size:17px;max-width:100%}.zp-pick{margin-top:24px}.zp-team{height:362px;margin-top:12px}.zp-team:before{right:50%;transform:translateX(50%);width:min(720px,110%);height:318px}.zp-team__person--mateusz{height:324px;right:242px;bottom:-30px}.zp-team__person--marta{height:298px;right:121px;bottom:-32px}.zp-team__person--stanislaw{height:328px;right:-2px;bottom:-30px}.zp-note{top:18px;right:-2px;font-size:23px;max-width:128px}.zp-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:24px}.zp-card{height:620px}.zp-card__visual{height:350px;min-height:350px}.zp-card--brand{--img-y:-8px;--img-scale:1.12}.zp-card--ads{--img-y:-8px;--img-scale:1.12}.zp-proof{grid-template-columns:1fr 1fr;row-gap:16px;margin-top:24px}.zp-proof__item{min-height:auto;padding:10px 20px 10px 0}.zp-proof__item:nth-child(2){border-right:0;padding-left:22px}.zp-proof__item:nth-child(3){border-right:1px solid #e4ebf3;padding-left:22px}.zp-proof__item:last-child{justify-content:flex-start;padding-left:22px}}
+@media (max-width:720px){.zp-card:not(.is-selected) .zp-card__visual{background:#fff}.zp-card:not(.is-selected) .zp-card__visual:after{background:linear-gradient(to bottom,rgba(255,255,255,0),rgba(255,255,255,.88) 55%,#fff 100%)}.zp-wrap{width:calc(100% - 22px)}.zp-kicker{font-size:8px;letter-spacing:.15em;margin-bottom:18px}.zp-title{font-size:44px;line-height:.98}.zp-lead{margin-top:18px;font-size:16px;line-height:1.58}.zp-pick{gap:10px;align-items:flex-start}.zp-pick__badge{height:46px;padding-right:14px;max-width:100%}.zp-pick__text{font-size:10px;letter-spacing:.11em;white-space:normal;line-height:1.2}.zp-pick__arrow{width:84px;height:84px;margin-top:0}.zp-team{height:420px;margin-top:12px}.zp-team:before{width:122%;height:338px;right:50%;transform:translateX(50%);bottom:24px}.zp-team__person{filter:none}.zp-team__person--mateusz{height:228px;left:18px;right:auto;bottom:-22px}.zp-team__person--marta{height:214px;left:52%;right:auto;transform:translateX(-50%);bottom:-24px}.zp-team__person--stanislaw{height:230px;right:16px;bottom:-22px}.zp-team__fade{height:92px}.zp-note{font-size:18px;max-width:102px;top:4px;right:22px;line-height:1.02}.zp-note:after{font-size:26px;margin-top:2px}.zp-grid{grid-template-columns:1fr;gap:22px}.zp-card{height:auto;border-radius:32px}.zp-card__visual{height:auto;min-height:0;padding:8px 14px 38px;border-radius:31px 31px 0 0;overflow:visible;background:#fff}.zp-card__visual-inner{position:relative;inset:auto;aspect-ratio:16/12.55;align-items:flex-start;padding-top:4px;overflow:visible}.zp-card__visual img{width:100%;height:100%;max-height:none;object-fit:contain;object-position:center top;transform:translateY(var(--img-y-mobile,0px)) scale(var(--img-scale-mobile,1));transform-origin:center top}.zp-card:hover .zp-card__visual img{transform:translateY(calc(var(--img-y-mobile,0px) - 2px)) scale(calc(var(--img-scale-mobile,1) + .02))}.zp-card--web{--img-y-mobile:10px;--img-scale-mobile:1.16}.zp-card--shop{--img-y-mobile:8px;--img-scale-mobile:1.17}.zp-card--brand{--img-y-mobile:12px;--img-scale-mobile:1.18}.zp-card--ads{--img-y-mobile:12px;--img-scale-mobile:1.18}
+  .zp-card--web,.zp-card--shop,.zp-card--brand,.zp-card--ads{overflow:hidden}
+  .zp-card--web .zp-card__visual,.zp-card--shop .zp-card__visual,.zp-card--brand .zp-card__visual,.zp-card--ads .zp-card__visual{overflow:visible}
+  .zp-card--web .zp-card__visual-inner,.zp-card--shop .zp-card__visual-inner,.zp-card--brand .zp-card__visual-inner,.zp-card--ads .zp-card__visual-inner{inset:auto;overflow:visible}
+
+.zp-team__people{inset:auto auto 0 46.5%;width:700px;height:430px;transform:translateX(-50%) scale(.91);transform-origin:bottom center}
+.zp-team__person--mateusz{height:400px;right:320px;left:auto;bottom:-34px;transform:none}
+.zp-team__person--marta{height:366px;right:164px;left:auto;bottom:-36px;transform:none;z-index:2}
+.zp-team__person--stanislaw{height:405px;right:0;left:auto;bottom:-34px;transform:none}
+.zp-card__num{font-size:68px;left:18px;top:14px;color:rgba(7,17,31,.066)}.zp-card.is-selected .zp-card__num{color:rgba(122,181,255,.18)}.zp-card{min-height:690px}.zp-card__content{padding:32px 18px 28px;min-height:285px}.zp-card h3{font-size:27px;line-height:1.08}.zp-card p{font-size:15px;max-width:none;margin-top:14px}.zp-card__bottom{padding-top:24px}.zp-card__arrow{width:52px;height:52px;right:16px;bottom:16px}.zp-card:hover{transform:none;border-color:var(--line);box-shadow:none}.zp-card:hover .zp-card__visual img{transform:translateY(var(--img-y-mobile,0px)) scale(var(--img-scale-mobile,1))}.zp-card:not(.is-selected).is-demo-hover{transform:none;border-color:var(--line);box-shadow:none;background:#fff}.zp-card.is-selected.is-demo-hover{transform:none;box-shadow:none}.zp-proof{grid-template-columns:1fr;margin-top:28px}.zp-proof__item,.zp-proof__item:nth-child(2),.zp-proof__item:nth-child(3),.zp-proof__item:last-child{border-right:0;padding:16px 0;justify-content:flex-start;border-bottom:1px solid #e4ebf3}.zp-proof__item:last-child{border-bottom:0;padding-left:0}}
+
+@media (max-width:720px){
+  .zp-demo-hand{position:fixed!important;z-index:99999!important;width:62px!important;height:62px!important;pointer-events:none!important;overflow:visible!important;opacity:0;visibility:visible!important;display:block!important;transform:rotate(-10deg)!important}
+  .zp-demo-hand img{width:62px!important;height:auto!important;display:block!important;opacity:1!important;visibility:visible!important;filter:drop-shadow(0 10px 16px rgba(31,110,234,.28))!important}
+}
+@media (prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+</style>
+
+<style id="zp-studio-v20-font-lock">
+html,body,.zp-chooser,.zp-chooser *,.zp-chooser button,.zp-chooser input,.zp-chooser textarea,.zp-chooser select{font-family:"Plus Jakarta Sans",Inter,Arial,sans-serif!important}
+.zp-note,.zp-note *{font-family:"Bradley Hand","Segoe Print","Comic Sans MS",cursive!important}
+</style>
+
+<style id="zp-studio-v20-pointer-lock">
+.zp-demo-hand{position:absolute!important;z-index:2147483000!important;width:62px!important;height:62px!important;display:block!important;visibility:visible!important;pointer-events:none!important;overflow:visible!important;opacity:0;transition:left .76s cubic-bezier(.16,1,.3,1),top .76s cubic-bezier(.16,1,.3,1),opacity .2s ease!important;will-change:left,top,opacity!important}
+.zp-demo-hand img{display:block!important;width:62px!important;height:auto!important;max-width:none!important;opacity:1!important;visibility:visible!important;filter:drop-shadow(0 10px 15px rgba(31,110,234,.26))!important;transform-origin:58% 18%!important}
+.zp-demo-hand.is-tapping img{animation:zpV20PointerTap 1.05s ease-in-out infinite!important}
+@keyframes zpV20PointerTap{0%,100%{transform:translate3d(0,0,0) scale(1) rotate(0deg)}48%{transform:translate3d(5px,7px,0) scale(.91) rotate(-4deg)}70%{transform:translate3d(1px,2px,0) scale(.98) rotate(-1deg)}}
+@media(max-width:720px){.zp-demo-hand{width:62px!important;height:62px!important}.zp-demo-hand img{width:62px!important}}
+</style>
+
+<style id="zp-studio-v21-clean-bg-note-fix">
+/* v2.2.762: pure white page background; keep only the local circle behind the team. */
+.zp-chooser{background:#fff!important}
+.zp-chooser:before{content:none!important;display:none!important;background:none!important}
+@media (min-width:1025px){
+  .zp-note{right:72px!important;top:2px!important;max-width:180px!important;padding-right:4px!important}
+}
+</style>
+
+<style id="zp-studio-v22-demo-hover-neutral">
+/* v2.2.763 — pointer demo only lifts the card; it must not recolor half of it. */
+@media (min-width:721px){
+  .zp-card.is-demo-hover{
+    border-color:var(--line)!important;
+    box-shadow:0 20px 42px rgba(7,17,31,.10)!important;
+  }
+  .zp-card.is-demo-hover:not(.is-selected){
+    background:#fff!important;
+  }
+  .zp-card.is-demo-hover:not(.is-selected) .zp-card__visual{
+    background:linear-gradient(180deg,#f7fafc 0%,#eef4f8 100%)!important;
+  }
+  .zp-card.is-demo-hover:not(.is-selected) .zp-card__visual:after{
+    background:linear-gradient(to bottom,rgba(255,255,255,0),rgba(255,255,255,.88) 54%,#fff)!important;
+  }
+}
+</style>
+
+<style id="zp-studio-v29-heading-note-fix">
+/* v2.2.769 — lighter first H1 line; handwritten note moved ~300px left on desktop. */
+.zp-title__light{font-weight:500!important}
+.zp-title__strong{font-weight:700!important}
+@media (min-width:1025px){
+  .zp-note{right:372px!important;top:2px!important;max-width:180px!important;padding-right:4px!important}
+}
+</style>
+</head>
+<body>
+<section class="zp-chooser">
+  <div class="zp-demo-hand" aria-hidden="true"><img src="https://zaprojektowani.com/wp-content/uploads/2026/09/hand_pointer.webp" alt=""></div>
+  <div class="zp-wrap">
+    <div class="zp-hero">
+      <div class="zp-copy">
+        <div class="zp-kicker">Studio wyceny · bezpłatnie · odpowiedź w 48h</div>
+        <h1 class="zp-title"><span class="zp-title__light">Od czego zaczynamy</span><span class="zp-title__strong">Twój projekt?</span></h1>
+        <p class="zp-lead">Wybierz usługę, która Cię interesuje, a następnie odpowiesz na kilka prostych pytań. Na tej podstawie przygotujemy dla Ciebie indywidualną <strong>wycenę</strong> i rekomendowany zakres działań.</p>
+        <div class="zp-pick" aria-hidden="true">
+          <div class="zp-pick__badge">
+            <span class="zp-pick__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 18.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Z"/><path d="M12 3v3M21 12h-3M6 12H3M18.36 5.64l-2.12 2.12M7.76 16.24l-2.12 2.12M18.36 18.36l-2.12-2.12M7.76 7.76 5.64 5.64"/></svg></span>
+            <span class="zp-pick__text">Wybierz usługę — <strong>kliknij kartę</strong></span>
+          </div>
+        </div>
+      </div>
+      <div class="zp-team">
+        <div class="zp-note"><span>To zajmie</span><span>około 2</span><span>minuty</span></div>
+        <div class="zp-team__people">
+          <img class="zp-team__person zp-team__person--mateusz" src="https://zaprojektowani.com/wp-content/uploads/2026/09/mateusz_pointing.webp" alt="Mateusz Zaprojektowani">
+          <img class="zp-team__person zp-team__person--marta" src="https://zaprojektowani.com/wp-content/uploads/2026/09/marta_pointing.webp" alt="Marta Zaprojektowani">
+          <img class="zp-team__person zp-team__person--stanislaw" src="https://zaprojektowani.com/wp-content/uploads/2026/09/stanislaw_pointing.webp" alt="Stanisław Zaprojektowani">
+        </div>
+        <div class="zp-team__fade"></div>
+      </div>
+    </div>
+    <div class="zp-grid">
+      <div class="zp-card-wrap"><button class="zp-card zp-card--web is-selected" type="button" aria-pressed="true" data-service="strona"><span class="zp-card__visual"><span class="zp-card__num">01</span><span class="zp-card__visual-inner"><img src="web.png" alt="Strona internetowa — realizacja Polerstone"></span><span class="zp-card__arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></span><span class="zp-card__content"><span class="zp-card__headline"><span class="zp-card__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></svg></span><h3>Strona internetowa</h3></span><p>Landing page, strona firmowa lub rozbudowany serwis pod SEO i sprzedaż — projekt, wdrożenie i najlepszy start online.</p><span class="zp-card__bottom"><span class="zp-chip zp-chip--price">od 3 999 zł</span><span class="zp-chip">2–4 tygodnie</span><span class="zp-chip">WordPress</span></span></span></button></div>
+      <div class="zp-card-wrap"><button class="zp-card zp-card--shop" type="button" aria-pressed="false" data-service="sklep"><span class="zp-card__visual"><span class="zp-card__num">02</span><span class="zp-card__visual-inner"><img src="shop.png" alt="Sklep internetowy — realizacja Świat Grilli"></span><span class="zp-card__arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></span><span class="zp-card__content"><span class="zp-card__headline"><span class="zp-card__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 7h12l-1 12H7L6 7Z"/><path d="M9 9V6a3 3 0 0 1 6 0v3"/></svg></span><h3>Sklep internetowy</h3></span><p>WooCommerce, płatności, dostawy, produkty i automatyzacje — sklep, który dobrze wygląda i dobrze sprzedaje.</p><span class="zp-card__bottom"><span class="zp-chip zp-chip--price">od 6 999 zł</span><span class="zp-chip">3–6 tygodni</span><span class="zp-chip">WooCommerce</span></span></span></button></div>
+      <div class="zp-card-wrap"><button class="zp-card zp-card--brand" type="button" aria-pressed="false" data-service="branding"><span class="zp-card__visual"><span class="zp-card__num">03</span><span class="zp-card__visual-inner"><img src="https://zaprojektowani.com/wp-content/uploads/2026/09/zgorecki_bez_tla-2.webp" alt="Logo i branding — materiały identyfikacji"></span><span class="zp-card__arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></span><span class="zp-card__content"><span class="zp-card__headline"><span class="zp-card__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20.2 3.8a5.1 5.1 0 0 0-7.2 0L4.6 12.2a5.1 5.1 0 1 0 7.2 7.2l6.3-6.3a3.6 3.6 0 1 0-5-5l-5.5 5.5"/></svg></span><h3>Logo i branding</h3></span><p>Logo, identyfikacja wizualna, brandbook i materiały firmowe — spójny wizerunek, który od razu buduje zaufanie.</p><span class="zp-card__bottom"><span class="zp-chip zp-chip--price">od 999 zł</span><span class="zp-chip">7–14 dni</span><span class="zp-chip">Stałe pakiety</span></span></span></button></div>
+      <div class="zp-card-wrap"><button class="zp-card zp-card--ads" type="button" aria-pressed="false" data-service="kampanie"><span class="zp-card__visual"><span class="zp-card__num">04</span><span class="zp-card__visual-inner"><img src="https://zaprojektowani.com/wp-content/uploads/2026/09/kampanie_bez_tla-2.webp" alt="Kampanie reklamowe — Meta Ads i Google Ads"></span><span class="zp-card__arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></span><span class="zp-card__content"><span class="zp-card__headline"><span class="zp-card__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 20V10M10 20V4M16 20v-7M22 20V7"/></svg></span><h3>Kampanie reklamowe</h3></span><p>Meta Ads, Google Ads, strategia, kreacje, analityka i pomiar konwersji — od uruchomienia po skalowanie wyników.</p><span class="zp-card__bottom"><span class="zp-chip zp-chip--price">od 1 200 zł/mc</span><span class="zp-chip">start w 7 dni</span><span class="zp-chip">Meta · Google</span></span></span></button></div>
+    </div>
+    <div class="zp-proof"><div class="zp-proof__item zp-proof__item--rating"><a class="zp-proof__logoWrap" href="https://www.trustindex.io/reviews/zaprojektowani.com" target="_blank" rel="noopener noreferrer" aria-label="Zobacz opinie Zaprojektowani w Trustindex"><img src="https://zaprojektowani.com/wp-content/uploads/2026/05/trustindex_logo_wieksze.webp" alt="Trustindex"></a><span class="zp-proof__ratingText"><strong>5.0</strong><span class="zp-stars">★★★★★</span><span>Google i Facebook</span></span></div><div class="zp-proof__item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg><strong>120+</strong><span>zrealizowanych projektów</span></div><div class="zp-proof__item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg><strong>48h</strong><span>na wycenę</span></div><div class="zp-proof__item zp-proof__item--hint"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 9l5 12 1.8-5.2L21 14 9 9z"/></svg><span>Wybierz kartę, aby przejść do briefu</span></div></div>
+  </div>
+</section>
+<script>
+(function(){
+  document.querySelectorAll('.zp-card[data-service]').forEach(function(card){
+    card.addEventListener('click', function(){
+      document.querySelectorAll('.zp-card[data-service]').forEach(function(c){
+        c.classList.remove('is-selected');
+        c.setAttribute('aria-pressed','false');
+      });
+      this.classList.add('is-selected');
+      this.setAttribute('aria-pressed','true');
+      window.dispatchEvent(new CustomEvent('zp-service-select', {detail:{service:this.dataset.service}}));
+    });
+  });
+})();
+</script>
+
+<script id="zp-studio-v20-pointer-demo">
+(function(){
+  'use strict';
+  var section=document.querySelector('.zp-chooser');
+  var hand=document.querySelector('.zp-demo-hand');
+  var cards=[].slice.call(document.querySelectorAll('.zp-card[data-service]'));
+  if(!section||!hand||!cards.length)return;
+
+  var stopped=false;
+  var active=null;
+  var moveTimer=null;
+  var cycleTimer=null;
+  var lastViewport={top:0,bottom:0};
+  var pointerImg=hand.querySelector('img');
+
+  /* Never let hover itself kill the demo. It stops only after a real selection. */
+  cards.forEach(function(card){
+    card.addEventListener('click',function(){
+      stopped=true;
+      clearTimeout(moveTimer);
+      clearTimeout(cycleTimer);
+      hand.style.opacity='0';
+      cards.forEach(function(c){c.classList.remove('is-demo-hover');});
+    },{once:true});
+  });
+
+  function clearHover(){cards.forEach(function(c){c.classList.remove('is-demo-hover');});}
+  function visibleCards(top,bottom){
+    var list=[];
+    cards.forEach(function(card){
+      var r=card.getBoundingClientRect();
+      var visible=Math.max(0,Math.min(bottom,r.bottom)-Math.max(top,r.top));
+      if(visible>Math.min(110,r.height*.16))list.push({card:card,visible:visible,rect:r});
+    });
+    list.sort(function(a,b){return b.visible-a.visible;});
+    return list;
+  }
+  function pointFor(card,stage){
+    var sr=section.getBoundingClientRect();
+    var r=card.getBoundingClientRect();
+    var mobile=window.matchMedia&&window.matchMedia('(max-width:720px)').matches;
+    if(stage==='approach'){
+      return {
+        x:r.left-sr.left+r.width*(mobile?.18:.22)-(mobile?18:24),
+        y:r.top-sr.top+r.height*(mobile?.08:.10)-(mobile?30:36)
+      };
+    }
+    return {
+      x:r.left-sr.left+r.width*(mobile?.44:.48)-(mobile?18:22),
+      y:r.top-sr.top+Math.min(r.height*(mobile?.21:.22),mobile?150:170)-(mobile?12:14)
+    };
+  }
+  function moveHand(card){
+    if(stopped||!card)return;
+    clearTimeout(moveTimer);
+    clearHover();
+    active=card;
+    var a=pointFor(card,'approach');
+    var t=pointFor(card,'target');
+    hand.style.opacity='1';
+    hand.style.left=Math.round(a.x)+'px';
+    hand.style.top=Math.round(a.y)+'px';
+    hand.classList.remove('is-tapping');
+    void hand.offsetWidth;
+    moveTimer=setTimeout(function(){
+      if(stopped||active!==card)return;
+      card.classList.add('is-demo-hover');
+      hand.style.left=Math.round(t.x)+'px';
+      hand.style.top=Math.round(t.y)+'px';
+      hand.classList.add('is-tapping');
+    },520);
+  }
+  function scheduleCycle(list){
+    clearTimeout(cycleTimer);
+    if(stopped||!list.length)return;
+    var pool=list.slice(0,Math.min(4,list.length));
+    var idx=Math.max(0,pool.findIndex(function(x){return x.card===active;}));
+    var next=pool[(idx+1)%pool.length].card;
+    cycleTimer=setTimeout(function(){moveHand(next);scheduleCycle(pool);},2300);
+  }
+  function updateFromViewport(top,bottom){
+    if(stopped)return;
+    lastViewport={top:top,bottom:bottom};
+    var list=visibleCards(top,bottom);
+    if(!list.length){
+      hand.style.opacity='0';
+      clearHover();
+      active=null;
+      clearTimeout(cycleTimer);
+      return;
+    }
+    if(!active||!list.some(function(x){return x.card===active;}))moveHand(list[0].card);
+    scheduleCycle(list);
+  }
+
+  /* Parent knows the real browser viewport; this is crucial because iframe itself is auto-height. */
+  window.addEventListener('message',function(ev){
+    if(ev.origin!==window.location.origin)return;
+    var d=ev.data||{};
+    if(d.source!=='zp-studio-v19-parent'||d.type!=='viewport')return;
+    updateFromViewport(Number(d.top)||0,Number(d.bottom)||0);
+  });
+
+  /* Standalone/fallback preview: animate over cards even without a parent bridge. */
+  setTimeout(function(){
+    if(stopped||lastViewport.bottom>0)return;
+    var top=window.scrollY||0;
+    updateFromViewport(top,top+(window.innerHeight||900));
+  },950);
+  window.addEventListener('resize',function(){
+    if(stopped)return;
+    if(lastViewport.bottom>0)updateFromViewport(lastViewport.top,lastViewport.bottom);
+  });
+})();
+</script>
+
+<script id="zp-studio-v19-iframe-bridge">
+(function(){
+  'use strict';
+  var MAP={strona:'web',sklep:'shop',branding:'brand',kampanie:'ads',web:'web',shop:'shop',brand:'brand',ads:'ads'};
+  function post(type,payload){
+    try{
+      var msg={source:'zp-studio-v19-iframe',type:type};
+      if(payload){for(var k in payload){if(Object.prototype.hasOwnProperty.call(payload,k))msg[k]=payload[k];}}
+      window.parent.postMessage(msg, window.location.origin);
+    }catch(e){}
+  }
+  window.addEventListener('zp-service-select',function(ev){
+    var raw=ev&&ev.detail&&ev.detail.service?String(ev.detail.service):'web';
+    post('service-select',{service:MAP[raw]||'web'});
+  });
+  function sendHeight(){
+    var h=Math.max(
+      document.documentElement ? document.documentElement.scrollHeight : 0,
+      document.body ? document.body.scrollHeight : 0
+    );
+    if(h>0)post('resize',{height:Math.ceil(h)});
+  }
+  if('ResizeObserver' in window){
+    try{new ResizeObserver(sendHeight).observe(document.documentElement);}catch(e){}
+  }
+  window.addEventListener('load',function(){sendHeight();setTimeout(sendHeight,120);setTimeout(sendHeight,700);});
+  window.addEventListener('resize',function(){setTimeout(sendHeight,40);});
+  document.addEventListener('DOMContentLoaded',function(){sendHeight();});
+  setTimeout(sendHeight,40);setTimeout(sendHeight,350);setTimeout(sendHeight,1200);
+})();
+</script>
+
+
+</body>
+</html>

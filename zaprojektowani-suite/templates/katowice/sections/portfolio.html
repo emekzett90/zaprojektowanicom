@@ -1,0 +1,212 @@
+<!-- =========================================================
+ZAPROJEKTOWANI — PORTFOLIO / SCROLL REVEAL CARDS v2.7 PROSCARVES + CTA SIGNATURE FIX
+Elementor HTML Widget
+
+v2.5:
+- podmienione mockupy: Gravia, ShotHome, RUTPOŻ na nowe transparentne mockupy laptop/phone
+- dodana karta ShotHome jako realizacja: strona internetowa + SEO + custom darmowa wycena + system realizacji
+- mockupy bez tła, bez ramek, bez wrapperów, bez jasnych kwadratowych poświat
+- realistyczny cień „pod obiektem” jako miękka elipsa pod mockupem, zamiast agresywnego drop-shadow
+- dodana karta Siemianowski jako pozycja 2: kancelaria, branding, rozbudowana strona, system umawiania wizyt
+- usunięte zdublowane zoomy mockupów na hover/active — karta się powiększa, mockupy tylko floatują
+- twardszy no-flash: karty nie migają przed inicjalizacją JS
+- poprawione łamanie label/H3, żeby tytuł nie wskakiwał do jednej linii z kickerem
+- podmienione mockupy: Apartament Piękna, Krawiec z dojazdem, Papeterio, Bransoletka24
+- dodana karta Krawiec z dojazdem
+- HARD FIX: usunięte wszystkie shine/aura/glow/kwadratowe poświaty z kart i mockupów
+- zachowany styl v2.2: active card pop, progress, mobile swipe, Mateusz CTA
+========================================================= -->
+
+<section class="zpPortfolioReveal" id="zpPortfolioReveal" aria-labelledby="zpPortfolioRevealTitle">
+  
+
+  <div class="zpPRProgress" aria-hidden="true">
+    <span class="zpPRProgress__label">portfolio</span>
+    <span class="zpPRProgress__track"><span class="zpPRProgress__bar"></span></span>
+    <span class="zpPRProgress__count"><strong>01</strong><em>/10</em></span>
+  </div>
+
+  
+
+  <div class="zpSS__inner">
+    <figure class="zpPRHeroPerson" aria-hidden="true">
+      <img src="https://zaprojektowani.com/wp-content/uploads/2026/05/mateusz_pointing_down2.webp" alt="" loading="lazy" decoding="async">
+      <figcaption class="zpPRHeroPerson__note"><span>portfolio</span><strong>zobacz kierunki projektowe</strong></figcaption>
+    </figure>
+
+    <header class="zpSS__head">
+      <div class="zpSS__headText">
+        <div class="zpSS__kicker">Portfolio stron</div>
+        <h2 class="zpSS__title" id="zpPortfolioRevealTitle">Realizacje stron internetowych i sklepów, które <em>pokazują jakość przed pierwszym kontaktem</em>.</h2>
+        <p class="zpSS__lead">Zobacz, jak różnie może wyglądać dobra strona: kancelaria, beauty, infrastruktura, usługi lokalne, e-commerce i B2B. Każdy projekt ma własny cel, język i ścieżkę do kontaktu.</p>
+      </div>
+    </header>
+
+    <div class="zpPRBigWord" aria-hidden="true">portfolio</div>
+    <div class="zpPRSwipeHint" aria-hidden="true"><span>Przesuń w prawo</span><i data-lucide="arrow-right"></i></div>
+
+    <div class="zpSS__stack">
+      <article class="zpSSCard zpSSCard--portfolio zpSSCard--ap" data-zp-ss-card data-index="0">
+        <span class="zpSSCard__decor" aria-hidden="true"></span><span class="zpSSCard__decor2" aria-hidden="true"></span>
+        <span class="zpSSCard__word" aria-hidden="true">apartment</span><span class="zpSSCard__word zpSSCard__word--side" aria-hidden="true">01</span>
+        <div class="zpSSCard__content">
+          <div class="zpSSCard__copy">
+            <div class="zpSSCard__label"><i data-lucide="monitor-smartphone"></i> Beauty premium / medycyna estetyczna</div>
+            <h3 class="zpSSCard__h3">Apartament Piękna</h3>
+            <p class="zpSSCard__desc"><strong>Strona + Rezerwacje + SEO</strong>Dla marki Apartament Piękna z Tarnowa przygotowaliśmy kompleksowy redesign wizerunku online — od odświeżenia identyfikacji, przez pełny projekt strony, po autorski system rezerwacji wizyt.</p>
+            <div class="zpSSCard__actions"><a class="zpSSBtn" href="https://www.apartamentpiekna.pl/" target="_blank" rel="noopener"><span>Zobacz stronę</span><i data-lucide="arrow-up-right"></i></a><a class="zpSSBtn zpSSBtn--ghost" href="/studio-wyceny/"><span>Zamów</span><i data-lucide="external-link"></i></a></div>
+            <div class="zpSSBadges" aria-hidden="true"><span class="zpSSBadge"><i data-lucide="check-circle-2"></i> rezerwacje online</span><span class="zpSSBadge"><i data-lucide="check-circle-2"></i> SEO lokalne</span><span class="zpSSBadge"><i data-lucide="check-circle-2"></i> premium beauty</span></div>
+          </div>
+          <div class="zpSSCard__visual" aria-hidden="true"><span class="zpSSMockAura zpSSMockAura--web"></span><span class="zpSSMockIcon zpSSMockIcon--web"><i data-lucide="layout-template"></i></span><div class="zpSSCard__mock zpSSCard__mock--portfolio"><img src="https://zaprojektowani.com/wp-content/uploads/2026/06/apartament_mockup-scaled.webp" alt="" loading="lazy" decoding="async"></div></div>
+        </div>
+        <aside class="zpSSReview" aria-label="Zakres projektu"><div class="zpSSReview__top"><div class="zpSSReview__person"><span class="zpSSReview__avatar">A</span><div><p class="zpSSReview__name">Apartament Piękna</p><span class="zpSSReview__date">Strona + Rezerwacje + SEO</span></div></div><span class="zpSSReview__g">01</span></div><div class="zpSSReview__stars">★★★★★</div><p class="zpSSReview__text">Zakres: projekt UI/UX, wdrożenie WordPress, system rezerwacji, dopracowanie mobile, formularze, analityka oraz SEO lokalne pod Tarnów.</p></aside>
+      </article>
+
+      <article class="zpSSCard zpSSCard--portfolio zpSSCard--siemianowski" data-zp-ss-card data-index="1">
+        <span class="zpSSCard__decor" aria-hidden="true"></span><span class="zpSSCard__decor2" aria-hidden="true"></span>
+        <span class="zpSSCard__word" aria-hidden="true">siemianowski</span><span class="zpSSCard__word zpSSCard__word--side" aria-hidden="true">02</span>
+        <div class="zpSSCard__content">
+          <div class="zpSSCard__copy">
+            <div class="zpSSCard__label"><i data-lucide="scale"></i> Kancelaria premium / prawo i restrukturyzacja</div>
+            <h3 class="zpSSCard__h3">Siemianowski</h3>
+            <p class="zpSSCard__desc"><strong>Strona firmowa + Branding + Wizyty</strong>Dla kancelarii Siemianowski przygotowaliśmy elegancką stronę firmową z rozbudowaną strukturą podstron, premium oprawą wizualną, brandingiem oraz systemem umawiania wizyt. Projekt łączy zaufanie, ekspercki charakter i wygodną ścieżkę pierwszego kontaktu.</p>
+            <div class="zpSSCard__actions"><a class="zpSSBtn" href="https://siemianowski.pl/" target="_blank" rel="noopener"><span>Zobacz stronę</span><i data-lucide="arrow-up-right"></i></a><a class="zpSSBtn zpSSBtn--ghost" href="/studio-wyceny/"><span>Zamów</span><i data-lucide="external-link"></i></a></div>
+            <div class="zpSSBadges" aria-hidden="true"><span class="zpSSBadge"><i data-lucide="check-circle-2"></i> branding premium</span><span class="zpSSBadge"><i data-lucide="check-circle-2"></i> wiele podstron</span><span class="zpSSBadge"><i data-lucide="check-circle-2"></i> umawianie wizyt</span></div>
+          </div>
+          <div class="zpSSCard__visual" aria-hidden="true"><span class="zpSSMockAura zpSSMockAura--web"></span><span class="zpSSMockIcon zpSSMockIcon--web"><i data-lucide="layout-template"></i></span><div class="zpSSCard__mock zpSSCard__mock--portfolio"><img src="https://zaprojektowani.com/wp-content/uploads/2026/06/siemianowski_mockup.webp" alt="" loading="lazy" decoding="async"></div></div>
+        </div>
+        <aside class="zpSSReview" aria-label="Zakres projektu"><div class="zpSSReview__top"><div class="zpSSReview__person"><span class="zpSSReview__avatar">S</span><div><p class="zpSSReview__name">Siemianowski</p><span class="zpSSReview__date">Strona + Branding + Wizyty</span></div></div><span class="zpSSReview__g">02</span></div><div class="zpSSReview__stars">★★★★★</div><p class="zpSSReview__text">Zakres: branding, projekt UI/UX, rozbudowana strona WordPress, podstrony usługowe, elegancka identyfikacja wizualna, system umawiania wizyt i dopracowanie mobile.</p></aside>
+      </article>
+
+      <article class="zpSSCard zpSSCard--portfolio zpSSCard--gravia" data-zp-ss-card data-index="2">
+        <span class="zpSSCard__decor" aria-hidden="true"></span><span class="zpSSCard__decor2" aria-hidden="true"></span>
+        <span class="zpSSCard__word" aria-hidden="true">gravia</span><span class="zpSSCard__word zpSSCard__word--side" aria-hidden="true">03</span>
+        <div class="zpSSCard__content">
+          <div class="zpSSCard__copy">
+            <div class="zpSSCard__label"><i data-lucide="hard-hat"></i> Infrastruktura / branża drogowa</div>
+            <h3 class="zpSSCard__h3">Gravia</h3>
+            <p class="zpSSCard__desc"><strong>Strona firmowa + Kariera</strong>Nowoczesna, techniczna i funkcjonalna strona dla biura projektów infrastrukturalnych. Postawiliśmy na mocny B2B charakter, wyrazisty hero, czytelną prezentację usług, realizacje oraz sekcję kariery.</p>
+            <div class="zpSSCard__actions"><a class="zpSSBtn" href="https://gravia.pl/" target="_blank" rel="noopener"><span>Zobacz stronę</span><i data-lucide="arrow-up-right"></i></a><a class="zpSSBtn zpSSBtn--ghost" href="/studio-wyceny/"><span>Zamów</span><i data-lucide="external-link"></i></a></div>
+            <div class="zpSSBadges" aria-hidden="true"><span class="zpSSBadge"><i data-lucide="check-circle-2"></i> techniczny UI</span><span class="zpSSBadge"><i data-lucide="check-circle-2"></i> kariera</span><span class="zpSSBadge"><i data-lucide="check-circle-2"></i> B2B</span></div>
+          </div>
+          <div class="zpSSCard__visual" aria-hidden="true"><span class="zpSSMockAura zpSSMockAura--web"></span><span class="zpSSMockIcon zpSSMockIcon--web"><i data-lucide="layout-template"></i></span><div class="zpSSCard__mock zpSSCard__mock--portfolio"><img src="https://zaprojektowani.com/wp-content/uploads/2026/06/gravia_mockup.webp" alt="" loading="lazy" decoding="async"></div></div>
+        </div>
+        <aside class="zpSSReview" aria-label="Zakres projektu"><div class="zpSSReview__top"><div class="zpSSReview__person"><span class="zpSSReview__avatar">G</span><div><p class="zpSSReview__name">Gravia</p><span class="zpSSReview__date">Strona firmowa + Kariera</span></div></div><span class="zpSSReview__g">03</span></div><div class="zpSSReview__stars">★★★★★</div><p class="zpSSReview__text">Zakres: architektura strony, projekt UI/UX, wdrożenie WordPress, prezentacja usług infrastrukturalnych, realizacje, kariera i wizerunek premium dla B2B.</p></aside>
+      </article>
+
+      <article class="zpSSCard zpSSCard--portfolio zpSSCard--shothome" data-zp-ss-card data-index="3">
+        <span class="zpSSCard__decor" aria-hidden="true"></span><span class="zpSSCard__decor2" aria-hidden="true"></span>
+        <span class="zpSSCard__word" aria-hidden="true">shothome</span><span class="zpSSCard__word zpSSCard__word--side" aria-hidden="true">04</span>
+        <div class="zpSSCard__content">
+          <div class="zpSSCard__copy">
+            <div class="zpSSCard__label"><i data-lucide="home"></i> Drzwi / podłogi / wykończenia</div>
+            <h3 class="zpSSCard__h3">ShotHome</h3>
+            <p class="zpSSCard__desc"><strong>Strona + SEO + darmowa wycena</strong>Dla ShotHome stworzyliśmy stronę usługową od podstaw: projekt graficzny, WordPress, lokalne SEO pod Warszawę, blog, customową wycenę online, panel realizacji oraz katalog produktów podłogowych obsługiwany z panelu.</p>
+            <div class="zpSSCard__actions"><a class="zpSSBtn" href="https://www.shothome.pl/" target="_blank" rel="noopener"><span>Zobacz stronę</span><i data-lucide="arrow-up-right"></i></a><a class="zpSSBtn zpSSBtn--ghost" href="/studio-wyceny/"><span>Zamów</span><i data-lucide="external-link"></i></a></div>
+            <div class="zpSSBadges" aria-hidden="true"><span class="zpSSBadge"><i data-lucide="check-circle-2"></i> darmowa wycena</span><span class="zpSSBadge"><i data-lucide="check-circle-2"></i> SEO Warszawa</span><span class="zpSSBadge"><i data-lucide="check-circle-2"></i> panel realizacji</span></div>
+          </div>
+          <div class="zpSSCard__visual" aria-hidden="true"><span class="zpSSMockAura zpSSMockAura--web"></span><span class="zpSSMockIcon zpSSMockIcon--web"><i data-lucide="layout-template"></i></span><div class="zpSSCard__mock zpSSCard__mock--portfolio"><img src="https://zaprojektowani.com/wp-content/uploads/2026/06/shothome_mockup.webp" alt="" loading="lazy" decoding="async"></div></div>
+        </div>
+        <aside class="zpSSReview" aria-label="Zakres projektu"><div class="zpSSReview__top"><div class="zpSSReview__person"><span class="zpSSReview__avatar">S</span><div><p class="zpSSReview__name">ShotHome</p><span class="zpSSReview__date">Strona + SEO + Wycena</span></div></div><span class="zpSSReview__g">04</span></div><div class="zpSSReview__stars">★★★★★</div><p class="zpSSReview__text">Zakres: projekt graficzny, WordPress, customowa wycena online, system realizacji, blog, SEO Warszawa i katalog produktów podłogowych.</p></aside>
+      </article>
+
+      <article class="zpSSCard zpSSCard--portfolio zpSSCard--proscarves" data-zp-ss-card data-index="4">
+        <span class="zpSSCard__decor" aria-hidden="true"></span><span class="zpSSCard__decor2" aria-hidden="true"></span>
+        <span class="zpSSCard__word" aria-hidden="true">proscarves</span><span class="zpSSCard__word zpSSCard__word--side" aria-hidden="true">05</span>
+        <div class="zpSSCard__content">
+          <div class="zpSSCard__copy">
+            <div class="zpSSCard__label"><i data-lucide="shopping-cart"></i> B2B custom / sklep dla fanów sportu</div>
+            <h3 class="zpSSCard__h3">ProScarves</h3>
+            <p class="zpSSCard__desc"><strong>Sklep internetowy + system zamówień hurtowych</strong>Dla ProScarves przygotowujemy rozbudowany e-commerce podzielony na dwa tryby sprzedaży: część hurtową dla klubów, firm i organizacji oraz sklep detaliczny z szalikami i gadżetami dla fanów piłki nożnej. W projekcie powstaje konfigurator zamówień customowych, ścieżka zapytań B2B oraz czytelna prezentacja produktów gotowych.</p>
+            <div class="zpSSCard__actions"><a class="zpSSBtn" href="https://www.proscarves.com/" target="_blank" rel="noopener"><span>Zobacz stronę</span><i data-lucide="arrow-up-right"></i></a><a class="zpSSBtn zpSSBtn--ghost" href="/studio-wyceny/"><span>Zamów</span><i data-lucide="external-link"></i></a></div>
+            <div class="zpSSBadges" aria-hidden="true"><span class="zpSSBadge"><i data-lucide="check-circle-2"></i> B2B custom</span><span class="zpSSBadge"><i data-lucide="check-circle-2"></i> konfigurator</span><span class="zpSSBadge"><i data-lucide="check-circle-2"></i> sklep detaliczny</span></div>
+          </div>
+          <div class="zpSSCard__visual" aria-hidden="true"><span class="zpSSMockAura zpSSMockAura--web"></span><span class="zpSSMockIcon zpSSMockIcon--web"><i data-lucide="layout-template"></i></span><div class="zpSSCard__mock zpSSCard__mock--portfolio"><img src="https://zaprojektowani.com/wp-content/uploads/2026/06/proscarves_mockup-scaled.webp" alt="" loading="lazy" decoding="async"></div></div>
+        </div>
+        <aside class="zpSSReview" aria-label="Zakres projektu"><div class="zpSSReview__top"><div class="zpSSReview__person"><span class="zpSSReview__avatar">P</span><div><p class="zpSSReview__name">ProScarves</p><span class="zpSSReview__date">E-commerce + B2B Custom</span></div></div><span class="zpSSReview__g">05</span></div><div class="zpSSReview__stars">★★★★★</div><p class="zpSSReview__text">Zakres: sklep WooCommerce, ścieżka zamówień hurtowych i customowych, konfigurator zapytań, produkty detaliczne, UX koszyka, mobile i prezentacja oferty dla klubów oraz fanów piłki nożnej.</p></aside>
+      </article>
+
+      <article class="zpSSCard zpSSCard--portfolio zpSSCard--krawiec" data-zp-ss-card data-index="5">
+        <span class="zpSSCard__decor" aria-hidden="true"></span><span class="zpSSCard__decor2" aria-hidden="true"></span>
+        <span class="zpSSCard__word" aria-hidden="true">krawiec</span><span class="zpSSCard__word zpSSCard__word--side" aria-hidden="true">06</span>
+        <div class="zpSSCard__content">
+          <div class="zpSSCard__copy">
+            <div class="zpSSCard__label"><i data-lucide="scissors"></i> Usługi premium / lokalne SEO</div>
+            <h3 class="zpSSCard__h3">Krawiec z dojazdem</h3>
+            <p class="zpSSCard__desc"><strong>Strona + Rebranding + System wizyt</strong>Dla marki Krawiec z dojazdem przygotowaliśmy elegancki rebranding, nową stronę internetową i autorski system umawiania wizyt z dojazdem do klienta. Projekt został dopracowany pod czytelność oferty, mobile, lokalne SEO i szybką ścieżkę kontaktu.</p>
+            <div class="zpSSCard__actions"><a class="zpSSBtn" href="https://krawieczdojazdem.pl/" target="_blank" rel="noopener"><span>Zobacz stronę</span><i data-lucide="arrow-up-right"></i></a><a class="zpSSBtn zpSSBtn--ghost" href="/studio-wyceny/"><span>Zamów</span><i data-lucide="external-link"></i></a></div>
+            <div class="zpSSBadges" aria-hidden="true"><span class="zpSSBadge"><i data-lucide="check-circle-2"></i> system wizyt</span><span class="zpSSBadge"><i data-lucide="check-circle-2"></i> rebranding</span><span class="zpSSBadge"><i data-lucide="check-circle-2"></i> SEO lokalne</span></div>
+          </div>
+          <div class="zpSSCard__visual" aria-hidden="true"><span class="zpSSMockAura zpSSMockAura--web"></span><span class="zpSSMockIcon zpSSMockIcon--web"><i data-lucide="layout-template"></i></span><div class="zpSSCard__mock zpSSCard__mock--portfolio"><img src="https://zaprojektowani.com/wp-content/uploads/2026/06/kaminski_mockup-scaled.webp" alt="" loading="lazy" decoding="async"></div></div>
+        </div>
+        <aside class="zpSSReview" aria-label="Zakres projektu"><div class="zpSSReview__top"><div class="zpSSReview__person"><span class="zpSSReview__avatar">K</span><div><p class="zpSSReview__name">Krawiec z dojazdem</p><span class="zpSSReview__date">Strona + Rebranding + Wizyty</span></div></div><span class="zpSSReview__g">06</span></div><div class="zpSSReview__stars">★★★★★</div><p class="zpSSReview__text">Zakres: rebranding, projekt UI/UX, wdrożenie WordPress, system umawiania wizyt, formularze, treści usługowe, mobile UX i przygotowanie strony pod pozycjonowanie lokalne.</p></aside>
+      </article>
+
+      <article class="zpSSCard zpSSCard--portfolio zpSSCard--papeterio" data-zp-ss-card data-index="6">
+        <span class="zpSSCard__decor" aria-hidden="true"></span><span class="zpSSCard__decor2" aria-hidden="true"></span>
+        <span class="zpSSCard__word" aria-hidden="true">papeterio</span><span class="zpSSCard__word zpSSCard__word--side" aria-hidden="true">07</span>
+        <div class="zpSSCard__content">
+          <div class="zpSSCard__copy">
+            <div class="zpSSCard__label"><i data-lucide="shopping-bag"></i> Papeteria / e-commerce</div>
+            <h3 class="zpSSCard__h3">Papeterio</h3>
+            <p class="zpSSCard__desc"><strong>Sklep WooCommerce</strong>Subtelny, elegancki sklep online z papeterią i personalizacją produktów. Lekki charakter marki połączony z wygodnym zakupem, wariantami i płatnościami.</p>
+            <div class="zpSSCard__actions"><a class="zpSSBtn" href="https://papeterio.pl/" target="_blank" rel="noopener"><span>Zobacz stronę</span><i data-lucide="arrow-up-right"></i></a><a class="zpSSBtn zpSSBtn--ghost" href="/studio-wyceny/"><span>Zamów</span><i data-lucide="external-link"></i></a></div>
+            <div class="zpSSBadges" aria-hidden="true"><span class="zpSSBadge"><i data-lucide="check-circle-2"></i> WooCommerce</span><span class="zpSSBadge"><i data-lucide="check-circle-2"></i> personalizacja</span><span class="zpSSBadge"><i data-lucide="check-circle-2"></i> mobile UX</span></div>
+          </div>
+          <div class="zpSSCard__visual" aria-hidden="true"><span class="zpSSMockAura zpSSMockAura--web"></span><span class="zpSSMockIcon zpSSMockIcon--web"><i data-lucide="layout-template"></i></span><div class="zpSSCard__mock zpSSCard__mock--portfolio"><img src="https://zaprojektowani.com/wp-content/uploads/2026/06/papeterio_mockup-scaled.webp" alt="" loading="lazy" decoding="async"></div></div>
+        </div>
+        <aside class="zpSSReview" aria-label="Zakres projektu"><div class="zpSSReview__top"><div class="zpSSReview__person"><span class="zpSSReview__avatar">P</span><div><p class="zpSSReview__name">Papeterio</p><span class="zpSSReview__date">Sklep WooCommerce</span></div></div><span class="zpSSReview__g">07</span></div><div class="zpSSReview__stars">★★★★★</div><p class="zpSSReview__text">Zakres: sklep WooCommerce, UX koszyka, warianty produktów, płatności, responsywność i estetyczna prezentacja delikatnej marki.</p></aside>
+      </article>
+
+      <article class="zpSSCard zpSSCard--portfolio zpSSCard--bransoletka" data-zp-ss-card data-index="7">
+        <span class="zpSSCard__decor" aria-hidden="true"></span><span class="zpSSCard__decor2" aria-hidden="true"></span>
+        <span class="zpSSCard__word" aria-hidden="true">bransoletka</span><span class="zpSSCard__word zpSSCard__word--side" aria-hidden="true">08</span>
+        <div class="zpSSCard__content">
+          <div class="zpSSCard__copy">
+            <div class="zpSSCard__label"><i data-lucide="gem"></i> E-commerce / detal + hurt</div>
+            <h3 class="zpSSCard__h3">Bransoletka24</h3>
+            <p class="zpSSCard__desc"><strong>Sklep WooCommerce</strong>Sklep WooCommerce przygotowany od zera pod sprzedaż detaliczną i hurtową: szybkie kategorie, checkout, warianty produktów, wishlist i logiczny system B2B.</p>
+            <div class="zpSSCard__actions"><a class="zpSSBtn" href="https://bransoletka24.pl/" target="_blank" rel="noopener"><span>Zobacz stronę</span><i data-lucide="arrow-up-right"></i></a><a class="zpSSBtn zpSSBtn--ghost" href="/studio-wyceny/"><span>Zamów</span><i data-lucide="external-link"></i></a></div>
+            <div class="zpSSBadges" aria-hidden="true"><span class="zpSSBadge"><i data-lucide="check-circle-2"></i> WooCommerce</span><span class="zpSSBadge"><i data-lucide="check-circle-2"></i> checkout</span><span class="zpSSBadge"><i data-lucide="check-circle-2"></i> B2B + B2C</span></div>
+          </div>
+          <div class="zpSSCard__visual" aria-hidden="true"><span class="zpSSMockAura zpSSMockAura--web"></span><span class="zpSSMockIcon zpSSMockIcon--web"><i data-lucide="layout-template"></i></span><div class="zpSSCard__mock zpSSCard__mock--portfolio"><img src="https://zaprojektowani.com/wp-content/uploads/2026/06/bransoletka24_mockup-scaled.webp" alt="" loading="lazy" decoding="async"></div></div>
+        </div>
+        <aside class="zpSSReview" aria-label="Zakres projektu"><div class="zpSSReview__top"><div class="zpSSReview__person"><span class="zpSSReview__avatar">B</span><div><p class="zpSSReview__name">Bransoletka24</p><span class="zpSSReview__date">Sklep WooCommerce</span></div></div><span class="zpSSReview__g">08</span></div><div class="zpSSReview__stars">★★★★★</div><p class="zpSSReview__text">Zakres: sklep internetowy, logika hurtowa, UX kategorii, checkout, wishlist, wersja mobile i przygotowanie pod działania sprzedażowe.</p></aside>
+      </article>
+
+      <article class="zpSSCard zpSSCard--portfolio zpSSCard--rutpoz" data-zp-ss-card data-index="8">
+        <span class="zpSSCard__decor" aria-hidden="true"></span><span class="zpSSCard__decor2" aria-hidden="true"></span>
+        <span class="zpSSCard__word" aria-hidden="true">rutpoż</span><span class="zpSSCard__word zpSSCard__word--side" aria-hidden="true">09</span>
+        <div class="zpSSCard__content">
+          <div class="zpSSCard__copy">
+            <div class="zpSSCard__label"><i data-lucide="flame"></i> PPOŻ / system zgłoszeń + AI</div>
+            <h3 class="zpSSCard__h3">RUTPOŻ</h3>
+            <p class="zpSSCard__desc"><strong>System + AI</strong>Nowoczesna strona połączona z systemem zgłoszeń serwisowych, kalkulatorami PPOŻ, raportami PDF i asystentem AI obsługującym zapytania klientów 24/7.</p>
+            <div class="zpSSCard__actions"><a class="zpSSBtn" href="https://rutpoz.pl/" target="_blank" rel="noopener"><span>Zobacz stronę</span><i data-lucide="arrow-up-right"></i></a><a class="zpSSBtn zpSSBtn--ghost" href="/studio-wyceny/"><span>Zamów</span><i data-lucide="external-link"></i></a></div>
+            <div class="zpSSBadges" aria-hidden="true"><span class="zpSSBadge"><i data-lucide="check-circle-2"></i> AI chatbot</span><span class="zpSSBadge"><i data-lucide="check-circle-2"></i> kalkulatory</span><span class="zpSSBadge"><i data-lucide="check-circle-2"></i> B2B</span></div>
+          </div>
+          <div class="zpSSCard__visual" aria-hidden="true"><span class="zpSSMockAura zpSSMockAura--web"></span><span class="zpSSMockIcon zpSSMockIcon--web"><i data-lucide="layout-template"></i></span><div class="zpSSCard__mock zpSSCard__mock--portfolio"><img src="https://zaprojektowani.com/wp-content/uploads/2026/06/rutpoz_mockuP-scaled.webp" alt="" loading="lazy" decoding="async"></div></div>
+        </div>
+        <aside class="zpSSReview" aria-label="Zakres projektu"><div class="zpSSReview__top"><div class="zpSSReview__person"><span class="zpSSReview__avatar">R</span><div><p class="zpSSReview__name">RUTPOŻ</p><span class="zpSSReview__date">System + AI</span></div></div><span class="zpSSReview__g">09</span></div><div class="zpSSReview__stars">★★★★★</div><p class="zpSSReview__text">Zakres: strona firmowa, formularze serwisowe, kalkulatory, raporty PDF, asystent AI, SEO i mocna prezentacja specjalistycznej oferty.</p></aside>
+      </article>
+
+      <article class="zpSSCard zpSSCard--contact zpSSCard--portfolio zpSSCard--portfolioCta" data-zp-ss-card data-index="9">
+        <span class="zpSSCard__decor" aria-hidden="true"></span><span class="zpSSCard__decor2" aria-hidden="true"></span>
+        <span class="zpSSCard__word" aria-hidden="true">kontakt</span><span class="zpSSCard__word zpSSCard__word--side" aria-hidden="true">10</span>
+        <div class="zpSSCard__content">
+          <div class="zpSSCard__copy">
+            <div class="zpSSCard__label"><i data-lucide="messages-square"></i> Chcesz zamówić podobny projekt?</div>
+            <h3 class="zpSSCard__h3">Zróbmy stronę, która pasuje do Twojej marki</h3>
+            <p class="zpSSCard__desc"><strong>Nie kopiujemy gotowych schematów — projektujemy kierunek pod branżę, ofertę i cel sprzedażowy.</strong>Napisz do nas, a przygotujemy konkretną propozycję: zakres, styl, strukturę strony, funkcje, SEO i wdrożenie.</p>
+            <div class="zpSSCard__actions"><a class="zpSSBtn" href="/studio-wyceny/"><span>Zamów wycenę</span><i data-lucide="arrow-right"></i></a><a class="zpSSBtn zpSSBtn--ghost" href="https://wa.me/48501054253"><span>WhatsApp</span><i data-lucide="phone"></i></a></div>
+            <div class="zpSSBadges" aria-hidden="true"><span class="zpSSBadge"><i data-lucide="check-circle-2"></i> audyt potrzeb</span><span class="zpSSBadge"><i data-lucide="file-text"></i> konkretna oferta</span><span class="zpSSBadge"><i data-lucide="rocket"></i> szybki start</span></div>
+          </div>
+          <div class="zpSSCard__visual" aria-hidden="true"><span class="zpSSMockAura zpSSMockAura--contact"></span><span class="zpSSMockIcon zpSSMockIcon--contact"><i data-lucide="messages-square"></i></span><div class="zpSSCard__mock zpSSCard__mock--contact"><img src="https://zaprojektowani.com/wp-content/uploads/2026/06/team_kontakt.webp" alt="" loading="lazy" decoding="async"></div></div>
+        </div>
+        <aside class="zpSSSignature" aria-label="Cytat zespołu"><p class="zpSSSignature__quote">„Najlepsze portfolio to dopiero początek rozmowy. Najważniejsze jest to, jak Twoja strona ma pracować na zaufanie, zapytania i sprzedaż.”</p><img class="zpSSSignature__logo" src="https://zaprojektowani.com/wp-content/uploads/2026/05/ZP_CIEMNE_BEZ_CIENIA-768x358.webp" alt="Zaprojektowani" width="768" height="358" loading="lazy" decoding="async"></aside>
+      </article>
+    </div>
+  </div>
+
+  
+</section>

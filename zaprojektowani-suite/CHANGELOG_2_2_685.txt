@@ -1,0 +1,10 @@
+Zaprojektowani Suite 2.2.685
+
+Logo & Branding Katowice:
+- na desktopie podniesiono zdjęcie Stanisława w sekcji „Najpierw charakter” o 100 px,
+- zmniejszono odstęp pomiędzy headingiem tej sekcji a kartami procesu,
+- na mobile ustawiono głowę postaci pod headingiem bez nadmiernego opuszczania zdjęcia,
+- na mobile opuszczono chip „Logo w wektorach” o 80 px, aby nie zasłaniał twarzy,
+- szczegóły realizacji na mobile otwierają się jako pełnoekranowy, pionowo przewijany widok z przyciskiem X,
+- na mobile powiększono o kolejne 10% i podniesiono zdjęcie w sekcji „Następny krok”,
+- podbito wersję assetów i odświeżanie cache do 2.2.685.

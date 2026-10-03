@@ -1,0 +1,58 @@
+ZAPROJEKTOWANI SUITE — v2.2.669
+================================
+Data: 2026-07-12
+Zakres: robot Spline (hero główna), logo w stopce, wpisy bloga w stopce studia,
+scalenie równoległej gałęzi "v2.2.666-studio-images-no-shadow".
+
+WAŻNE — SCALENIE GAŁĘZI
+-----------------------
+Krążyły dwie równoległe paczki v2.2.666 zbudowane z 2.2.665:
+  A) ...-studio-images-no-shadow.zip  (cienie zdjęć kart studia usunięte w 298)
+  B) ...-mega-drawer-header-band-scroll-perf.zip  (header 981–1200, mega/drawer,
+     perf pod hero) — na tej bazie powstały 667/668.
+v2.2.669 = B (z 667/668) + przeniesiony blok A
+("zp-suite-front-fixes-298-v2666-studio-images-no-shadow": filter/box-shadow OFF
+na .zpbsServiceShot + img we wszystkich stanach oraz twarde wyłączenie
+rozmytych pseudo-cieni ::before/::after). Od teraz jedna linia wersji.
+
+1. ROBOT SPLINE NA GŁÓWNEJ (templates/home-hero.php, loader zh-spline-loader)
+------------------------------------------------------------------------------
+Kod ładowania robota był IDENTYCZNY w obu paczkach 666 i na produkcji — realną
+przyczyną znikania robota u prawdziwego usera były zbyt agresywne bramki
+loadera. Trzy zmiany (wizualnie 1:1, Lighthouse dalej poster-only):
+a) Usunięte solo-heurystyki "plugins.length===0" i "outerWidth===0" z loadera —
+   fałszywie gasiły robota w realnych przeglądarkach (Brave/Arc/utwardzony
+   Chrome raportują 0 pluginów). Werdykt syntetyczny daje wyłącznie wspólny
+   detektor 2547 (wp_head, wymaga >=2 sygnałów + probe WebGL software) czytany
+   przez w.zpSyntheticAudit — dokładnie po to powstał w v2.2.547.
+b) Bramka szerokości z nasłuchem: dotąd okno <=1100px przy load (np. DevTools
+   zadokowane, okno side-by-side) wyłączało robota NA STAŁE mimo późniejszej
+   maksymalizacji. Teraz matchMedia('(min-width:1101px)') change => start.
+c) Fallback CDN: gdy unpkg.com nie odpowie, viewer (ta sama paczka i wersja
+   @splinetool/viewer@1.10.57) ładuje się z cdn.jsdelivr.net. Fallback odpala
+   się WYŁĄCZNIE po onerror unpkg — zero nowych requestów w zwykłym ruchu.
+
+2. LOGO W STOPCE (templates/footer.php + assets/css/blocks/footer.css)
+----------------------------------------------------------------------
+Pełne ciemne logo wraca do stopki:
+https://zaprojektowani.com/wp-content/uploads/2026/05/ZP_CIEMNE_BEZ_CIENIA-scaled.webp
+(było: sam sygnet zp_sygnet_ciemny). Podmienione też mobilne background-image
+fallback w footer.css (<=760px), żeby sygnet nie prześwitywał pod przezroczystym
+webp. Rozmiar slotu bez zmian (188px szer., wysokość auto).
+
+3. STUDIO WYCENY — WPISY BLOGA W STOPCE "KWADRATOWE" (front-fixes-301)
+----------------------------------------------------------------------
+Root cause: studiowy blok "zpbs-v22184-shortcode-final-overrides" wymusza
+overflow:visible!important na CAŁEJ stopce selektorem ".zpMegaFooter *"
+(stary fix pod sticky/teamPhoto). Absolutnie pozycjonowane zdjęcie wpisu
+(inset:0) przestawało być przycinane przez border-radius:26px karty — stąd
+"kwadratowe" posty tylko na /studio-wyceny/. Fix: przywrócony clipping
+wyłącznie na karcie wpisu (html body.zpbs-studio-page .zpMegaFooter
+.zpMegaFooter__post a{overflow:hidden!important}) — wyższa specyficzność bije
+wildcard, reszta overrides v22184 nietknięta.
+
+WERYFIKACJA
+-----------
+Żywy DOM (desktop 1440): blog-band studia z powrotem 1:1 z podstronami
+(zaokrąglenia + przycięte zdjęcia), logo w stopce renderuje się poprawnie,
+pipeline Spline potwierdzony (viewer+scena wstają po odblokowaniu bramek).

@@ -1,0 +1,6 @@
+Zaprojektowani Suite v2.2.661
+
+Studio Wyceny:
+- mobile i mniejsze rozdzielczości: wszystkie zdjęcia obniżone o 30 px,
+- pełna / bardzo szeroka rozdzielczość: 1. zdjęcie podniesione dodatkowo o 50 px,
+- pełna / bardzo szeroka rozdzielczość: 2. zdjęcie podniesione dodatkowo o 20 px.

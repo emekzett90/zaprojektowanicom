@@ -1,0 +1,5 @@
+Zaprojektowani Suite 2.2.677
+
+- Sylwetka Stanisława nadal może nachodzić głową na header, ale jest przycinana przy dolnej krawędzi hero i nie zasłania paska opinii.
+- Mobile: zwiększony odstęp między featured a nagłówkiem portfolio.
+- Mobile: wyszukiwarka i kategorie są przenoszone pod nagłówek portfolio, przed siatkę realizacji.

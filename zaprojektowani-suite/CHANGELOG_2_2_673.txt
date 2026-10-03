@@ -1,0 +1,9 @@
+Zaprojektowani Suite 2.2.673
+
+- Wdrożono zaakceptowaną wersję Realizacje 2.0 pod /realizacje/.
+- 32 projekty z CMS, rozbudowane case studies i dopracowane treści.
+- Slider 3 wyróżnionych projektów z autoplay i sterowaniem.
+- Filtry, wyszukiwarka, responsywny mobile swipe, animacje wejścia.
+- Rozbudowany modal: cel, rozwiązanie, efekt, zakres, rezultaty, technologie i proces.
+- Prawdziwe logo Trustindex, Google/Facebook 5.0 i zdjęcie Stanisława.
+- Automatyczne utworzenie strony /realizacje/ i pełnoekranowy route template.

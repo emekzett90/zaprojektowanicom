@@ -1,0 +1,47 @@
+ZAPROJEKTOWANI SUITE ULTIMATE SEO 2.2.729
+Baza: przesłana zaprojektowani-suite 2.2.728, realizacje-image-up-70.
+
+1. WordPress → Wtyczki → Dodaj nową → Wyślij wtyczkę.
+2. Wybierz zaprojektowani-suite-ultimate-seo-2.2.729.zip.
+3. Wybierz zastąpienie istniejącej Zaprojektowani Suite. Jeśli jest nieaktywna, aktywuj.
+
+To aktualizacja całej Suite, z tym samym folderem i plikiem głównym. Nie jest to
+osobna wtyczka do instalowania obok Suite. Nie wymaga wcześniejszego ZIP-a Ultimate 2.0.
+Po aktualizacji aktywnej Suite naprawy zaczynają się automatycznie przy uruchomieniu
+WordPressa. Po nowej instalacji rozpoczyna je aktywacja. Nie trzeba wybierać modułów
+ani ręcznie wpisywać nagłówków. Kolejka: 161 operacji, partiami w tle.
+Poprzednia wtyczka zaprojektowani-ahrefs-repair, jeśli jest aktywna, zostanie
+wyłączona automatycznie; jej zmiany metadanych są przywracane przed nową kopią.
+Panel Narzędzia → Naprawy Ahrefs jest tylko opcjonalnym podglądem wyników.
+
+Zmiany: oryginalne szablony i formularze Suite; H1 strony głównej z zachowanym
+wyróżnieniem gradientowym; H1 i metadane istniejących artykułów z planu; linkowanie,
+ALT z biblioteki mediów, naprawy adresów zasobów i starych stron; regeneracja CSS
+Elementora; kopie WebP; poprawiona paginacja kategorii; dołączony lokalny Lucide.
+Pięć grafik wskazanych jako brakujące znajduje się w paczce na oryginalnych ścieżkach.
+
+Nie publikujemy briefów redakcyjnych jako gotowych artykułów. Plan obejmuje
+15 adresów: w poprzednim odczycie witryny 12 istniało, 3 były nieopublikowane.
+Dla nowych adresów reguły będą zastosowane, gdy opublikujesz właściwe artykuły.
+
+Nie ma gwarancji wyniku 100/100 ani pozycji Google. Brakujących treści lub zdjęć
+nie zastępujemy pozornymi stronami 200. Martwe linki bez potwierdzonego odpowiednika
+są usuwane z HTML dopiero po potwierdzeniu 404, z zachowaniem treści elementu.
+Brakujące adresy mogą dalej występować w audycie, jeśli crawler zna je z innych źródeł.
+Naprawy plików wymagają zapisu do uploads, a CSS — aktywnego Elementora i jego danych.
+Praca w tle wymaga WP-Cron lub połączeń zwrotnych. Obsługiwany cache WordPressa jest
+czyszczony automatycznie; zewnętrzny CDN może nadal podawać starszą wersję.
+Działa na zaprojektowani.com / www.zaprojektowani.com, bez multisite.
+Wymagania tej paczki: WordPress 6.5+, PHP 8.0+.
+
+Nie wyłączaj całej Suite tylko po to, aby wyłączyć naprawy SEO — obsługuje ona stronę.
+W panelu napraw można wyłączyć filtry i kolejkę. Zmiany w samych szablonach i poprawka
+paginacji pozostają częścią Suite. Powrót do przesłanej 2.2.728 przywraca jej kod.
+Dezaktywacja Suite przywraca pola SEO zapisane przez moduł, o ile nie zmieniono ich
+później ręcznie. Kopie WebP i wygenerowane CSS pozostają, oryginały nie są kasowane.
+
+Wykonano 110 testów PHP: 84 regresji, 14 integracji, 8 migracji i 4 paginacji.
+Dodatkowo sprawdzono składnię plików PHP/JS, interfejs Lucide, renderowanie pięciu
+stron oraz podgląd strony głównej na komputerze i telefonie. Testy są lokalne,
+na WordPressie 7.1. Nie wykonano wdrożenia na hostingu ani ponownego audytu Ahrefs.
+Formularze są zachowane; nie wysyłano testowych zapytań do firmy.

@@ -1,0 +1,7 @@
+Zaprojektowani Suite 2.2.807
+
+- Desktop hero: Spline/WebGL no longer starts during the initial load.
+- Desktop hero: Spline starts on the first genuine user interaction (mouse, click, wheel, keyboard/touch).
+- Lighthouse/headless/software-WebGL environments keep the optimized poster fallback instead of starting the heavy 3D scene.
+- This targets PageSpeed Insights desktop RPC::DEADLINE_EXCEEDED while preserving the animated robot for real desktop users.
+- No mobile hero layout/crew positioning changes vs 2.2.806.

@@ -1,0 +1,11 @@
+/* ZP Suite v2.2.776 — contact card: Zaprojektowani logo under the team quote, team photo lower on mobile. */
+
+/* Logo in place of the old SVG-mask signature (the mask file did not render, leaving the card empty). */
+html body .zpSSSignature .zpSSSignature__logo,html body #zpShowcaseServices .zpSSSignature .zpSSSignature__logo,html body #zpPortfolioReveal .zpSSSignature .zpSSSignature__logo{display:block!important;width:clamp(128px,10.5vw,176px)!important;max-width:60%!important;height:auto!important;margin:clamp(16px,1.4vw,22px) 0 0!important;padding:0!important;border:0!important;border-radius:0!important;box-shadow:none!important;background:none!important;opacity:1!important;visibility:visible!important;filter:none!important;transform:none!important;object-fit:contain!important}
+
+@media (max-width:860px){
+  html body .zpSSSignature .zpSSSignature__logo,html body #zpShowcaseServices .zpSSSignature .zpSSSignature__logo,html body #zpPortfolioReveal .zpSSSignature .zpSSSignature__logo{width:124px!important;margin-top:14px!important}
+  /* Home "Porozmawiajmy" card: the team photo started behind the WhatsApp button — move it (and the quote card) down. */
+  html body #zpShowcaseServices .zpSSCard--contact .zpSSCard__visual,
+  html body .zpShowcaseServices .zpSSCard--contact .zpSSCard__visual{margin-top:52px!important}
+}

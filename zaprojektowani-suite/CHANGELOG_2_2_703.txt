@@ -1,0 +1,10 @@
+ZAPROJEKTOWANI SUITE 2.2.703
+
+1. Dodano wspólny, animowany biało-błękitny wskaźnik „Przewiń” pośrodku hero na podstronach:
+   - /logo-branding-katowice/
+   - /kampanie-reklamowe/
+   - /strony-internetowe-katowice/
+2. Wskaźnik ma jednolite położenie nad dolnym railem, wariant responsywny oraz obsługę prefers-reduced-motion.
+3. Hero /wiedza/ i /kontakt/ ujednolicono z podstronami usługowymi: tło, kicker, typografię H1, animowany gradient wyróżnienia, lead, CTA, rytm odstępów i dolny rail.
+4. Zachowano istniejące treści, zdjęcia, statystyki, linki, formularz kontaktowy i ustawienia pozycji postaci.
+5. Wersję wtyczki podbito do 2.2.703.

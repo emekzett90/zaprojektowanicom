@@ -1,0 +1,14 @@
+<?php
+/**
+ * ZAPROJEKTOWANI Suite — front fixes v2.2.230
+ * FAQ: wyrównanie odstępu hero/kicker do Realizacji + ciemne karty CTA black→navy.
+ * Nie rusza treści FAQ, pytań, filtrów ani działania dropdownu z v2.2.229.
+ */
+if (!defined('ABSPATH')) exit;
+
+add_action('wp_footer', function(){
+  if (is_admin() || !is_page('faq')) return;
+  ?>
+  <style id="zp-suite-front-fixes-230-faq-spacing-cards">html body .zpFaqPage{padding-top:154px!important}html body .zpFaqPage__hero{padding-top:0!important}@media(max-width:1080px){html body .zpFaqPage{padding-top:144px!important}}@media(max-width:640px){html body .zpFaqPage{padding-top:138px!important}}html body .zpFaqPage__heroCard,html body .zpFaqPage__ctaMini{color:#fff!important;background: radial-gradient(circle at 16% 0%,rgba(255,255,255,.07),transparent 34%),radial-gradient(circle at 96% 14%,rgba(28,71,122,.18),transparent 42%),linear-gradient(135deg,#020304 0%,#05070b 42%,#071426 72%,#102a4f 118%)!important;border:1px solid rgba(255,255,255,.115)!important;box-shadow:0 26px 76px rgba(3,7,14,.18)!important;overflow:hidden!important;isolation:isolate!important}html body .zpFaqPage__heroCard:before,html body .zpFaqPage__heroCard:after,html body .zpFaqPage__ctaMini:before,html body .zpFaqPage__ctaMini:after{content:none!important;display:none!important;opacity:0!important;background:none!important}html body .zpFaqPage__heroCard strong,html body .zpFaqPage__ctaMini strong{color:#fff!important;position:relative!important;z-index:2!important}html body .zpFaqPage__heroCard p,html body .zpFaqPage__ctaMini p{color:rgba(255,255,255,.72)!important;position:relative!important;z-index:2!important}html body .zpFaqPage__heroLinks,html body .zpFaqPage__ctaMini a{position:relative!important;z-index:2!important}html body .zpFaqPage__heroCard .zpFaqPage__heroLinks a:first-child,html body .zpFaqPage__ctaMini a{background:#fff!important;color:#071426!important;border-color:rgba(255,255,255,.82)!important;box-shadow:0 14px 34px rgba(0,0,0,.16)!important}html body .zpFaqPage__heroCard .zpFaqPage__heroLinks a:first-child:before,html body .zpFaqPage__ctaMini a:before{background:linear-gradient(100deg,#020407 0%,#071426 36%,#102a4f 72%,#1c477a 100%)!important}html body .zpFaqPage__heroCard .zpFaqPage__heroLinks a:first-child:hover,html body .zpFaqPage__ctaMini a:hover{color:#fff!important;border-color:rgba(28,71,122,.62)!important;transform:translateY(-1px)!important}html body .zpFaqPage__heroCard .zpFaqPage__heroLinks a:nth-child(2){background:rgba(255,255,255,.075)!important;color:#fff!important;border-color:rgba(255,255,255,.22)!important;box-shadow:none!important}html body .zpFaqPage__heroCard .zpFaqPage__heroLinks a:nth-child(2):hover{background:rgba(255,255,255,.12)!important;color:#fff!important;border-color:rgba(255,255,255,.88)!important}</style>
+  <?php
+}, 2147483647);

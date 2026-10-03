@@ -1,0 +1,9 @@
+Zaprojektowani Suite 2.2.822
+
+- Logo & Branding, Strony i Sklepy: dodany heading „W pakiecie m.in.” w normalnej pisowni, bez CAPS, w stylu headingowym.
+- Listy elementów pakietów na wszystkich trzech podstronach powiększone o 2 px.
+- Studio Wyceny: heading „W pakiecie m.in.” większy, bez CAPS; lista zakresu +2 px.
+- Studio Wyceny: przebudowane podsumowanie briefu w sidebarze.
+- Nowy panel „Twój brief”: ciemny header, status aktualizacji na żywo, wybrany projekt, chip usługi/pakietu, pasek postępu, kafelkowe podsumowanie i czytelniejszy opis projektu.
+- W podsumowaniu nie powtarzamy już usługi i pakietu w kafelkach, bo są pokazane w nagłówku projektu.
+- Wersja wtyczki: 2.2.822.

@@ -1,0 +1,6 @@
+2.2.764 — Studio Wyceny / mobile higher
+
+- mobile: izolowany ekran Studio Wyceny podniesiony o kolejne 40 px
+- biały shell mobile: padding-top 130 px -> 90 px
+- desktop bez zmian
+- neutralna animacja pointera z 2.2.763 zachowana

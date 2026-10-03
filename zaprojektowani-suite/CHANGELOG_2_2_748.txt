@@ -1,0 +1,8 @@
+2.2.748 — O nas / extended trust, team story, reviews & portfolio
+
+- Added large Trustindex proof card with provided logo and review link.
+- Added studio-life editorial photo wall using team_hero_homepage, wiedza_ekipa and team_kontakt.
+- Added selected real client reviews from existing site review data.
+- Added featured portfolio projects: Polerstone, Świat Grilli, ProScarves.
+- Expanded responsive styling and reveal animations for new sections.
+- Kept external-award claims grounded in verifiable proof instead of fabricated awards.

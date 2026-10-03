@@ -1,0 +1,6 @@
+Zaprojektowani Suite 2.2.825
+
+- Studio Wyceny: Marta nad prawym podsumowaniem powiększona o około 10%.
+- Sylwetka została przesunięta za kartę „Twój brief”, dzięki czemu dolna część naturalnie chowa się pod kartą.
+- Dodano subtelne wygaszenie dolnej części sylwetki, aby płynniej wtapiała się w podsumowanie.
+- Dostosowano proporcje i overlap na desktopie, tablecie i mobile.

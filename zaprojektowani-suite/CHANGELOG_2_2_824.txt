@@ -1,0 +1,7 @@
+Zaprojektowani Suite 2.2.824
+
+- Studio Wyceny: dodano Martę nad prawym podsumowaniem briefu.
+- Użyto wskazanej grafiki marta_pointing-_2_.png.
+- Sylwetka jest centralnie nad kartą podsumowania, z delikatnym cieniem i lekkim glow, bez zasłaniania treści.
+- Dostosowano rozmiar Marty dla desktopu, tabletu i mobile.
+- Zachowano przebudowane podsumowanie i większą typografię z 2.2.823.
