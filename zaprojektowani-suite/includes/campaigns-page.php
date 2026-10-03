@@ -52,8 +52,17 @@ function zp_suite_campaigns_render_and_exit(){
  * Najwcześniejsze możliwe przejęcie trasy. Działa przed query, canonical,
  * starymi slugami kategorii, Rank Math i menedżerami przekierowań.
  */
-add_action('parse_request', function(){
+add_action('parse_request', function($wp){
   if (!is_admin() && zp_suite_campaigns_request_path() === '/kampanie-reklamowe/') {
+    /* 2.4.0: with the SEO plan on, the request queries the real page, so Rank Math prints its
+       title, description, canonical and schema. The template is still rendered on template_redirect. */
+    if (function_exists('zp_seo_plan_active') && zp_seo_plan_active() && $wp instanceof WP) {
+      $page = get_page_by_path('kampanie-reklamowe', OBJECT, 'page');
+      if ($page && $page->post_status === 'publish') {
+        $wp->query_vars = ['page_id' => (int) $page->ID, 'zp_campaigns_page' => '1'];
+        return;
+      }
+    }
     zp_suite_campaigns_render_and_exit();
   }
 }, PHP_INT_MIN);

@@ -33,11 +33,11 @@
         ],
         [
           'num' => '03',
-          'icon' => 'sparkles',
-          'title' => 'Strony dla branży beauty',
-          'text' => 'Estetyka premium, oferta zabiegów, lokalne SEO i rezerwacje.',
+          'icon' => 'stethoscope',
+          'title' => 'Strony dla lekarzy i gabinetów',
+          'text' => 'Rzeczowa informacja o usługach, umawianie wizyt i lokalne SEO.',
           'image' => 'https://zaprojektowani.com/wp-content/uploads/2026/05/strona_internetowa_dla_branzy_beauty.webp',
-          'url' => '/strony-internetowe-dla-salonow-beauty/',
+          'url' => '/strony-internetowe-dla-lekarzy/',
         ],
         [
           'num' => '04',

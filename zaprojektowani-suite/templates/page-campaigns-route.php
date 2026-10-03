@@ -37,11 +37,25 @@ wp_enqueue_script(
 );
 
 status_header(200);
-nocache_headers();
 
-add_filter('pre_get_document_title', static function(){
-  return 'Kampanie reklamowe Katowice — Meta Ads + Google Ads | Zaprojektowani';
-}, 999);
+/* 2.4.0: with the SEO plan on, this is the real WordPress page: the title, description and
+   canonical come from Rank Math and the page cache may keep it like any other page. */
+$zp_campaign_rank_math = function_exists('zp_seo_plan_active') && zp_seo_plan_active() && is_page();
+if ($zp_campaign_rank_math) {
+  // The page's own body classes (page, page-id-…) would switch on site-wide rules that this
+  // template was never styled for, so the body keeps the classes it had as a virtual route.
+  add_filter('body_class', static function ($classes) {
+    return array_values(array_filter((array) $classes, static function ($c) {
+      return !preg_match('~^(page|page-template.*|page-id-\d+|page-parent|page-child|parent-pageid-\d+|elementor-page(-\d+)?|singular|wp-singular)$~', (string) $c);
+    }));
+  }, PHP_INT_MAX);
+}
+if (!$zp_campaign_rank_math) {
+  nocache_headers();
+  add_filter('pre_get_document_title', static function(){
+    return 'Kampanie reklamowe Katowice — Meta Ads + Google Ads | Zaprojektowani';
+  }, 999);
+}
 ?>
 <!doctype html>
 <html <?php language_attributes(); ?>>
@@ -49,8 +63,10 @@ add_filter('pre_get_document_title', static function(){
   <meta charset="<?php bloginfo('charset'); ?>">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#05070b">
+<?php if (!$zp_campaign_rank_math) : ?>
   <meta name="description" content="Kampanie reklamowe Katowice — Meta Ads i Google Ads. Strategia, kreacja, analityka i optymalizacja kampanii w jednym zespole.">
   <link rel="canonical" href="<?php echo esc_url(home_url('/kampanie-reklamowe/')); ?>">
+<?php endif; ?>
   <link rel="preload" href="<?php echo esc_url($zp_campaign_asset_url); ?>plus-jakarta-sans-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="<?php echo esc_url($zp_campaign_asset_url); ?>plus-jakarta-sans-700.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="<?php echo esc_url($zp_campaign_asset_url); ?>team-hero.webp" as="image" type="image/webp" fetchpriority="high">
@@ -83,7 +99,7 @@ echo $zp_logo_thumb_fix(do_shortcode('[zp_header]'));
       <div class="hero-inner">
         <div class="hero-copy">
           <p class="hero-eyebrow">Kampanie reklamowe • Katowice</p>
-          <h1><span class="sr-only">Kampanie reklamowe Katowice — </span>Meta Ads + Google Ads, które mają <strong class="gradient-text">konkretny cel.</strong></h1>
+          <h1><span class="sr-only">Kampanie reklamowe dla firm — </span>Meta Ads + Google Ads, które mają <strong class="gradient-text">konkretny cel.</strong></h1>
           <p class="hero-lead">Łączymy <strong>strategię, kreację, analitykę i optymalizację</strong>, żeby reklama nie kończyła się na kliknięciu. Budujemy spójną drogę: od pierwszego kontaktu z marką do telefonu, formularza, rezerwacji albo zakupu.</p>
           <div class="hero-actions">
             <a class="btn btn-primary" href="#pakiety">Dobierz zakres kampanii <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10"/></svg></a>

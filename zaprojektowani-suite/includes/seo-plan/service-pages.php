@@ -13,7 +13,14 @@ if (!defined('ABSPATH')) { exit; }
 
 /** Path => what the page shows. 'source' is the Katowice page a new page is copied from. */
 function zp_seo_service_registry(): array {
-  return [
+  static $content = null;
+  if ($content === null) {
+    $content = [];
+    foreach (zp_seo_content_pages() as $path => $page) {
+      $content[$path] = ['kind' => 'strony', 'variant' => $page['variant'], 'source' => '/strony-internetowe-katowice/', 'title' => $page['title'], 'shortcode' => 'zp_strony_internetowe_katowice'];
+    }
+  }
+  return $content + [
     '/tworzenie-stron-internetowych/'   => ['kind' => 'strony', 'variant' => 'strony-national',   'source' => '/strony-internetowe-katowice/', 'title' => 'Tworzenie stron internetowych', 'shortcode' => 'zp_strony_internetowe_katowice'],
     '/tworzenie-sklepow-internetowych/' => ['kind' => 'sklepy', 'variant' => 'sklepy-national',   'source' => '/sklepy-internetowe-katowice/', 'title' => 'Tworzenie sklepów internetowych', 'shortcode' => 'zp_sklepy_internetowe_katowice'],
     '/projektowanie-logo/'              => ['kind' => 'logo',   'variant' => 'logo-national',     'source' => '/logo-branding-katowice/',      'title' => 'Projektowanie logo', 'shortcode' => 'zp_logo_branding_katowice'],
@@ -53,6 +60,7 @@ add_filter('do_shortcode_tag', function ($output, $tag) {
   if ($variant === '') { return $output; }
   $spec = zp_seo_service_spec($variant);
   if (!$spec || $spec['kind'] !== $kinds[$tag]) { return $output; }
+  if (!empty($spec['content'])) { return zp_seo_service_remap_links(zp_seo_content_transform($output, $spec['content'])); }
   return zp_seo_service_transform($output, $spec, $variant);
 }, 20, 2);
 
@@ -68,6 +76,8 @@ add_action('wp_head', function () {
   echo '<style id="zp-seo-plan-230">'
     . '.zpSeoLink{color:inherit!important;font-weight:600;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px}'
     . '.zpSeoLink:hover{text-decoration-thickness:2px}'
+    // Guide sections on the content pages: the template's wrapper is dark, light sections set their own background.
+    . 'section.section.zpSeoPlanGuide{background:#fff}#proces~section.section.zpSeoPlanGuide{background:#f7f8fa}'
     . '.zpSeoPlanGuide__body{max-width:880px;margin:clamp(34px,4vw,56px) 0 0;color:#4f5665;font-size:clamp(15px,1.15vw,17px);line-height:1.75}'
     . '.zpSeoPlanGuide__body h2{margin:1.9em 0 .6em;color:#05070b;font-size:clamp(24px,2.3vw,32px);line-height:1.16;letter-spacing:-.03em;font-weight:650}'
     . '.zpSeoPlanGuide__body h3,.zpSeoPlanGuide__body h4{margin:1.5em 0 .5em;color:#05070b;font-size:clamp(19px,1.6vw,22px);line-height:1.28;letter-spacing:-.02em;font-weight:650}'
@@ -77,7 +87,7 @@ add_action('wp_head', function () {
     . '.zpSeoPlanGuide__body img{display:block;max-width:100%;height:auto;margin:1.4em 0;border-radius:18px}'
     . '.zpSeoPlanGuide__body table{width:100%;border-collapse:collapse;margin:0 0 1.2em;font-size:.94em}.zpSeoPlanGuide__body td,.zpSeoPlanGuide__body th{padding:10px 12px;border-bottom:1px solid rgba(5,7,11,.1);text-align:left}'
     // Website pages: on phones the hero H1 was 120% wide and its first line ran past the screen edge.
-    . (in_array(zp_seo_service_variant(), ['strony-national', 'strony-local'], true) ? '@media(max-width:680px){html body .hero h1{width:auto}}' : '')
+    . (zp_suite_service_kind() === 'strony' ? '@media(max-width:680px){html body .hero h1{width:auto}}' : '')
     . '</style>' . "\n";
 }, 40);
 
@@ -259,6 +269,9 @@ function zp_seo_service_spec(string $variant): ?array {
     return '<a class="zpSeoLink" href="{{' . $key . '}}">' . $text . '</a>';
   };
 
+  $content = zp_seo_content_page_by_variant($variant);
+  if ($content) { return ['kind' => $content['kind'], 'content' => $content]; }
+
   switch ($variant) {
 
     case 'strony-national':
@@ -266,10 +279,10 @@ function zp_seo_service_spec(string $variant): ?array {
         'kind' => 'strony',
         'h1' => 'Tworzenie i projektowanie <strong class="gradient-text">stron internetowych dla firm</strong>',
         'faq' => [
-          ['new', 'Czy tworzycie strony internetowe dla firm z całej Polski?', 'Tak. Projektujemy i tworzymy strony internetowe dla firm z całej Polski — <strong>strony firmowe, strony wizytówki, landing page’e i rozbudowane serwisy</strong>. Brief, prezentacje i odbiory prowadzimy online, a z firmami ze Śląska spotykamy się też w naszym biurze w Katowicach.'],
+          ['new', 'Czy tworzycie strony internetowe dla firm z całej Polski?', 'Tak. Projektujemy i tworzymy strony internetowe dla firm z całej Polski — <strong>strony firmowe, ' . $L('/strona-wizytowka/', 'strony wizytówki') . ', landing page’e i rozbudowane serwisy</strong>. Brief, prezentacje i odbiory prowadzimy online, a z firmami ze Śląska spotykamy się też w naszym biurze w Katowicach.'],
           ['keep', 2], ['keep', 3], ['keep', 4],
-          ['new', 'Ile kosztuje stworzenie strony internetowej?', 'Cena zależy od zakresu: liczby podstron, poziomu projektu, treści, funkcji, SEO czy sklepu WooCommerce. Orientacyjne kwoty dla strony wizytówki, firmowej i rozbudowanej opisujemy w poradniku ' . $L($cost_www, 'ile kosztuje strona internetowa') . '. Dokładną wycenę przygotujemy po ' . $L('/studio-wyceny/', 'uzupełnieniu Studia Wyceny') . ' — dobierzemy wtedy zakres: landing page, Starter, Premium albo projekt indywidualny.'],
-          ['new', 'Na czym robicie strony internetowe?', 'Najczęściej na WordPressie. Projekt powstaje indywidualnie, bez gotowego szablonu, a wdrożenie daje <strong>łatwą edycję treści, szybkie działanie i solidne podstawy SEO</strong>. Przy prostszych projektach, takich jak strona wizytówka czy landing page, dobieramy lżejszą strukturę — zasada zostaje ta sama: strona ma prowadzić do kontaktu.'],
+          ['new', 'Ile kosztuje stworzenie strony internetowej?', 'Cena zależy od zakresu: liczby podstron, poziomu projektu, treści, funkcji, SEO czy sklepu WooCommerce. Od czego zależy cena strony wizytówki, firmowej i rozbudowanej, wyjaśniamy w poradniku ' . $L($cost_www, 'ile kosztuje strona internetowa') . '. Dokładną wycenę przygotujemy po ' . $L('/studio-wyceny/', 'uzupełnieniu Studia Wyceny') . ' — dobierzemy wtedy zakres: landing page, Starter, Premium albo projekt indywidualny.'],
+          ['new', 'Na czym robicie strony internetowe?', 'Najczęściej ' . $L('/strony-wordpress/', 'na WordPressie') . '. Projekt powstaje indywidualnie, bez gotowego szablonu, a wdrożenie daje <strong>łatwą edycję treści, szybkie działanie i solidne podstawy SEO</strong>. Przy prostszych projektach, takich jak strona wizytówka czy landing page, dobieramy lżejszą strukturę — zasada zostaje ta sama: strona ma prowadzić do kontaktu.'],
           ['new', 'Czy wykonujecie sklepy internetowe WooCommerce?', 'Tak. ' . $L('/tworzenie-sklepow-internetowych/', 'Tworzenie sklepów internetowych') . ' na WooCommerce to nasza druga główna specjalizacja — od prostych sklepów produktowych po wdrożenia z wariantami, płatnościami, dostawami, katalogiem B2B i konfiguratorami.'],
           ['keep', 7], ['keep', 8],
           ['new', 'Ile trwa stworzenie strony internetowej?', 'Termin zależy od zakresu i tempa przekazywania materiałów. Strona wizytówka lub landing page powstaje szybciej niż serwis firmowy z kilkunastoma podstronami i treściami SEO. Po briefie podajemy harmonogram z etapami i datą publikacji.'],
@@ -278,11 +291,13 @@ function zp_seo_service_spec(string $variant): ?array {
           ['<p class="hero-eyebrow">Strony internetowe • Katowice</p>', '<p class="hero-eyebrow">Strony internetowe • cała Polska</p>'],
           ['Tworzymy strony dla firm z Katowic, Śląska i całej Polski: od', 'Projektujemy i tworzymy strony internetowe dla firm z całej Polski: od'],
           ['<h2 class="section-title">Wybierz zakres — od landing page po <strong>serwis premium.</strong></h2>', '<h2 class="section-title">Strona wizytówka, firmowa czy <strong>rozbudowany serwis?</strong></h2>'],
-          ['<p class="section-lead">Ten wybór pomaga szybko określić punkt startu. W Studio Wyceny doprecyzujesz', '<p class="section-lead">Ten wybór pomaga szybko określić punkt startu. Orientacyjne kwoty opisujemy w poradniku ' . $L($cost_www, 'ile kosztuje strona internetowa') . ', a dokładną ' . $L('/studio-wyceny/', 'wycenę strony internetowej') . ' przygotujemy na podstawie Studia Wyceny. Doprecyzujesz w nim'],
+          ['<p class="section-lead">Ten wybór pomaga szybko określić punkt startu. W Studio Wyceny doprecyzujesz', '<p class="section-lead">Ten wybór pomaga szybko określić punkt startu. Od czego zależy cena, wyjaśniamy w poradniku ' . $L($cost_www, 'ile kosztuje strona internetowa') . ', a dokładną ' . $L('/studio-wyceny/', 'wycenę strony internetowej') . ' przygotujemy na podstawie Studia Wyceny. Doprecyzujesz w nim'],
           ['<h2 class="section-title">Duże projekty. <strong>Jeszcze większy kontekst.</strong></h2>', '<h2 class="section-title">Realizacje stron internetowych. <strong>Duże projekty, większy kontekst.</strong></h2>'],
           ['<h2 class="section-title">Od briefu do publikacji. <strong>Bez chaosu między etapami.</strong></h2>', '<h2 class="section-title">Etapy tworzenia strony internetowej. <strong>Od briefu do publikacji.</strong></h2>'],
           ['<strong>jasny zakres, terminy i kryterium akceptacji.</strong></p>', '<strong>jasny zakres, terminy i kryterium akceptacji.</strong> Szczegółowo opisujemy je w poradniku ' . $L('/strony-internetowe/tworzenie-stron-internetowych-profesjonalny-proces-od-strategii-do-wdrozenia/', 'etapy tworzenia strony internetowej') . '.</p>'],
           ['<h2 class="section-title">Nie tylko wygląd. <strong>Cały system strony.</strong></h2>', '<h2 class="section-title">Projektowanie stron www. <strong>UX, treści i design w jednym systemie.</strong></h2>'],
+          ['Tak. Inaczej projektuje się stronę kancelarii, inaczej dewelopera, salonu beauty, lekarza czy producenta.', 'Tak. Inaczej projektuje się stronę ' . $L('/strony-internetowe-dla-kancelarii/', 'kancelarii') . ', inaczej ' . $L('/strony-internetowe-dla-deweloperow/', 'dewelopera') . ', salonu beauty, ' . $L('/strony-internetowe-dla-lekarzy/', 'lekarza') . ' czy producenta.'],
+          ['<p>Aktualizacje, kopie zapasowe, drobne zmiany i rozwój: nowe sekcje, podstrony SEO, landing pages pod kampanie.</p>', '<p>Aktualizacje, kopie zapasowe i drobne zmiany w ramach usługi ' . $L('/opieka-wordpress/', 'opieka nad stroną WordPress') . ', a do tego rozwój: nowe sekcje, podstrony SEO, landing pages pod kampanie.</p>'],
           ['<p class="section-kicker">Katowice • Śląsk • cała Polska</p>', '<p class="section-kicker">Cała Polska • siedziba w Katowicach</p>'],
           ['Z Katowic projektujemy marki dla firm z całej Polski. Brief, prezentacje kierunków, konsultacje i przekazanie plików możemy przeprowadzić online — etap po etapie.', 'Pracujemy z firmami z całej Polski, a nasze studio mieści się w Katowicach. Brief, makiety, prezentacje projektu, konsultacje i odbiór strony prowadzimy online — etap po etapie. Firmy ze Śląska zapraszamy też do biura: ' . $local('strony-katowice', 'strony internetowe w Katowicach') . '.'],
         ],
@@ -297,7 +312,7 @@ function zp_seo_service_spec(string $variant): ?array {
           ['new', 'Czy możemy spotkać się w Katowicach?', 'Tak. Nasze biuro mieści się w Katowicach przy <strong>ul. Modelarskiej 18/2</strong>. Na spotkaniu omawiamy brief, cele strony i zakres prac. Kolejne etapy — makiety, projekt i odbiory — prowadzimy w biurze albo online, jak wygodniej.'],
           ['new', 'Czy tworzycie strony internetowe dla firm z całego Śląska?', 'Tak. Pracujemy z firmami z Katowic i całego województwa śląskiego, a także z innych regionów Polski. Firmom działającym lokalnie układamy strukturę treści pod <strong>wyszukiwania lokalne</strong> i łączymy stronę z Profilem Firmy w Google.'],
           ['keep', 2],
-          ['new', 'Ile kosztuje strona internetowa w Katowicach?', 'Cena zależy od zakresu, a nie od miasta: liczby podstron, poziomu projektu, treści i funkcji. Orientacyjne kwoty opisujemy w poradniku ' . $L($cost_www, 'ile kosztuje strona internetowa') . ', a dokładną wycenę przygotujemy po uzupełnieniu ' . $L('/studio-wyceny/', 'Studia Wyceny') . '.'],
+          ['new', 'Ile kosztuje strona internetowa w Katowicach?', 'Cena zależy od zakresu, a nie od miasta: liczby podstron, poziomu projektu, treści i funkcji. Od czego zależy cena, wyjaśniamy w poradniku ' . $L($cost_www, 'ile kosztuje strona internetowa') . ', a dokładną wycenę przygotujemy po uzupełnieniu ' . $L('/studio-wyceny/', 'Studia Wyceny') . '.'],
           ['keep', 3],
           ['new', 'Gdzie znajdę pełną ofertę stron internetowych?', 'Pakiety, proces, realizacje i odpowiedzi na pytania o zakres opisujemy na stronie ' . $L('/tworzenie-stron-internetowych/', 'tworzenie stron internetowych') . '. Tam też sprawdzisz, czym różni się strona wizytówka, strona firmowa i rozbudowany serwis.'],
           ['keep', 8],

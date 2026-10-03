@@ -256,6 +256,16 @@ return [
       ],
     ],
   ],
+  '/kampanie-reklamowe/' => [
+    'kind' => 'page',
+    'focus' => 'kampanie facebook ads, kampanie meta ads, agencja facebook ads, prowadzenie kampanii meta ads',
+    'title' => 'Kampanie Meta Ads i Google Ads dla firm | Zaprojektowani',
+    'description' => 'Kampanie Facebook i Instagram Ads (Meta Ads) oraz Google Ads dla firm: strategia, kreacje, strona docelowa i pomiar zapytań w jednym zespole.',
+    'h1' => 'Kampanie Meta Ads i Google Ads dla firm',
+    'editorial_title' => '',
+    'editorial_description' => '',
+    'links' => [],
+  ],
   '/logo-branding/ile-kosztuje-logo-dla-firmy-i-co-obejmuje-cena/' => [
     'kind' => 'post',
     'focus' => 'projekt logo ceny, logo ceny, projektowanie logo cena, projekt logo cena, logo cena',
@@ -307,6 +317,10 @@ return [
     'editorial_title' => 'Ile kosztuje utrzymanie strony internetowej? Koszty roczne',
     'editorial_description' => 'Policz koszt utrzymania strony internetowej: domenę, hosting, licencje, aktualizacje i opiekę. Oddziel niezbędne opłaty od wydatków na rozwój serwisu.',
     'links' => [
+      [
+        'text' => 'opieka nad stroną WordPress',
+        'path' => '/opieka-wordpress/',
+      ],
       [
         'text' => 'ile kosztuje strona internetowa',
         'path' => '/strony-www/ile-kosztuje-stworzenie-strony-internetowej-dla-firmy/',
@@ -383,6 +397,10 @@ return [
     'editorial_description' => 'Dowiedz się, czym jest landing page, kiedy go wybrać i jakie sekcje powinien zawierać. Zaplanuj ofertę, formularz oraz pomiar zapytań z kampanii.',
     'links' => [
       [
+        'text' => 'tworzenie landing page',
+        'path' => '/tworzenie-landing-page/',
+      ],
+      [
         'text' => 'tworzenie stron internetowych',
         'path' => '/tworzenie-stron-internetowych/',
       ],
@@ -396,7 +414,12 @@ return [
     'h1' => '',
     'editorial_title' => 'Landing page — przykłady i omówienie sekcji krok po kroku',
     'editorial_description' => 'Zobacz przykłady landing page i analizę ich sekcji: oferty, dowodów zaufania, CTA oraz formularza. Wykorzystaj wnioski przy planowaniu własnej strony.',
-    'links' => [],
+    'links' => [
+      [
+        'text' => 'projektowanie landing page',
+        'path' => '/tworzenie-landing-page/',
+      ],
+    ],
   ],
   '/logo-branding/ksiega-znaku-co-to-jest-co-zawiera-i-kiedy-firma-jej-potrzebuje/' => [
     'kind' => 'post',
@@ -646,7 +669,12 @@ return [
     'h1' => '',
     'editorial_title' => '',
     'editorial_description' => '',
-    'links' => [],
+    'links' => [
+      [
+        'text' => 'tworzenie stron WordPress',
+        'path' => '/strony-wordpress/',
+      ],
+    ],
   ],
   '/strony-internetowe/woocommerce-czy-prestashop/' => [
     'kind' => 'post',
@@ -776,7 +804,12 @@ return [
     'h1' => '',
     'editorial_title' => '',
     'editorial_description' => '',
-    'links' => [],
+    'links' => [
+      [
+        'text' => 'strony na WordPress',
+        'path' => '/strony-wordpress/',
+      ],
+    ],
   ],
   '/sklepy-internetowe/ile-trwa-stworzenie-strony-internetowej/' => [
     'kind' => 'post',
@@ -817,6 +850,10 @@ return [
     'editorial_title' => '',
     'editorial_description' => '',
     'links' => [
+      [
+        'text' => 'strona wizytówka',
+        'path' => '/strona-wizytowka/',
+      ],
       [
         'text' => 'tworzenie stron internetowych',
         'path' => '/tworzenie-stron-internetowych/',
@@ -862,6 +899,126 @@ return [
     'editorial_title' => '',
     'editorial_description' => '',
     'links' => [
+      [
+        'text' => 'tworzenie stron internetowych',
+        'path' => '/tworzenie-stron-internetowych/',
+      ],
+    ],
+  ],
+  /* 2.4.0: content pages, batch 1 (tresci/paczka-1/plan-wpisy.php). */
+  '/opieka-wordpress/' => [
+    'kind' => 'page',
+    'focus' => 'opieka wordpress, obsługa strony internetowej, opieka nad stroną internetową, opieka nad stroną www, administracja stroną internetową',
+    'title' => 'Opieka WordPress i obsługa strony | Zaprojektowani',
+    'description' => 'Opieka WordPress w stałym abonamencie: aktualizacje, kopie zapasowe, bezpieczeństwo, monitoring i drobne zmiany treści. Zamów bezpłatny przegląd strony.',
+    'h1' => 'Opieka nad stroną WordPress i obsługa strony internetowej',
+    'editorial_title' => '',
+    'editorial_description' => '',
+    'links' => [
+      ['text' => 'Strony WordPress', 'path' => '/strony-wordpress/'],
+      ['text' => 'Ile kosztuje utrzymanie strony internetowej', 'path' => '/seo-i-konwersja/ile-kosztuje-utrzymanie-strony-internetowej/'],
+      ['text' => 'Tworzenie sklepów internetowych', 'path' => '/tworzenie-sklepow-internetowych/'],
+    ],
+  ],
+  '/strona-wizytowka/' => [
+    'kind' => 'page',
+    'focus' => 'strona wizytówka, strona internetowa wizytówka, strona wizytówka cena, strona one page, strona typu one page',
+    'title' => 'Strona wizytówka i one page dla firmy | Zaprojektowani',
+    'description' => 'Strona wizytówka lub one page dla małej firmy: projekt, treści, formularz i SEO na start. Sprawdź, co zawiera pakiet, ile kosztuje i jak szybko startujemy.',
+    'h1' => 'Strona wizytówka i strona one page dla firmy',
+    'editorial_title' => '',
+    'editorial_description' => '',
+    'links' => [
+      ['text' => 'Tworzenie stron internetowych', 'path' => '/tworzenie-stron-internetowych/'],
+      ['text' => 'Strona internetowa dla małej firmy', 'path' => '/strony-www/strona-internetowa-dla-malej-firmy/'],
+      ['text' => 'Studio Wyceny', 'path' => '/studio-wyceny/'],
+    ],
+  ],
+  '/strony-internetowe-dla-deweloperow/' => [
+    'kind' => 'page',
+    'focus' => 'strony internetowe dla deweloperów, strona dla dewelopera, strona internetowa dla dewelopera, strona inwestycji deweloperskiej, strony internetowe dla deweloperów cena',
+    'title' => 'Strony internetowe dla deweloperów | Zaprojektowani',
+    'description' => 'Strony internetowe dla deweloperów: wyszukiwarka i karty lokali, jawne ceny z historią, lokalizacja, standard i formularze zapytań wygodne na telefonie.',
+    'h1' => 'Strony internetowe dla deweloperów i inwestycji',
+    'editorial_title' => '',
+    'editorial_description' => '',
+    'links' => [
+      ['text' => 'Tworzenie stron internetowych', 'path' => '/tworzenie-stron-internetowych/'],
+      ['text' => 'Kampanie Meta Ads i Google Ads', 'path' => '/kampanie-reklamowe/'],
+      ['text' => 'Studio Wyceny', 'path' => '/studio-wyceny/'],
+    ],
+  ],
+  '/strony-internetowe-dla-kancelarii/' => [
+    'kind' => 'page',
+    'focus' => 'strony internetowe dla prawników, strona internetowa dla prawnika, strona internetowa dla kancelarii, strony internetowe dla kancelarii, strona www dla kancelarii',
+    'title' => 'Strony internetowe dla prawników | Zaprojektowani',
+    'description' => 'Strony internetowe dla prawników i kancelarii: specjalizacje opisane językiem klienta, profile zespołu, umawianie konsultacji i treści zgodne z zasadami etyki.',
+    'h1' => 'Strony internetowe dla kancelarii i prawników',
+    'editorial_title' => '',
+    'editorial_description' => '',
+    'links' => [
+      ['text' => 'Tworzenie stron internetowych', 'path' => '/tworzenie-stron-internetowych/'],
+      ['text' => 'Identyfikacja wizualna', 'path' => '/identyfikacja-wizualna/'],
+      ['text' => 'Studio Wyceny', 'path' => '/studio-wyceny/'],
+    ],
+  ],
+  '/strony-internetowe-dla-lekarzy/' => [
+    'kind' => 'page',
+    'focus' => 'strony internetowe dla lekarzy, strona internetowa dla psychologa, strony dla lekarzy, strona internetowa dla lekarza, strona internetowa dla dentysty',
+    'title' => 'Strony internetowe dla lekarzy i gabinetów | Zaprojektowani',
+    'description' => 'Strony internetowe dla lekarzy, gabinetów i psychologów: zakres świadczeń, specjaliści, rejestracja online i lokalne SEO zgodne z zasadami informacji medycznej.',
+    'h1' => 'Strony internetowe dla lekarzy, gabinetów i psychologów',
+    'editorial_title' => '',
+    'editorial_description' => '',
+    'links' => [
+      ['text' => 'Tworzenie stron internetowych', 'path' => '/tworzenie-stron-internetowych/'],
+      ['text' => 'Identyfikacja wizualna', 'path' => '/identyfikacja-wizualna/'],
+      ['text' => 'Studio Wyceny', 'path' => '/studio-wyceny/'],
+    ],
+  ],
+  '/strony-wordpress/' => [
+    'kind' => 'page',
+    'focus' => 'strony wordpress, tworzenie stron wordpress, strony na wordpress, strona na wordpress, tworzenie stron internetowych wordpress',
+    'title' => 'Strony WordPress dla firm | Zaprojektowani',
+    'description' => 'Strony WordPress dla firm: indywidualny projekt, szybkie działanie, łatwa edycja treści i SEO od startu. Zobacz realizacje i sprawdź, ile kosztuje strona.',
+    'h1' => 'Tworzenie stron WordPress dla firm',
+    'editorial_title' => '',
+    'editorial_description' => '',
+    'links' => [
+      ['text' => 'Tworzenie stron internetowych', 'path' => '/tworzenie-stron-internetowych/'],
+      ['text' => 'Opieka nad stroną WordPress', 'path' => '/opieka-wordpress/'],
+      ['text' => 'WordPress, Wix czy Webflow', 'path' => '/strony-internetowe/wordpress-wix-czy-webflow/'],
+      ['text' => 'Ile kosztuje strona internetowa', 'path' => '/strony-www/ile-kosztuje-stworzenie-strony-internetowej-dla-firmy/'],
+    ],
+  ],
+  '/tworzenie-landing-page/' => [
+    'kind' => 'page',
+    'focus' => 'tworzenie landing page, landing page cena, wordpress landing page, landing page wordpress, projektowanie landing page',
+    'title' => 'Tworzenie landing page pod reklamy | Zaprojektowani',
+    'description' => 'Tworzenie landing page pod kampanie Google Ads i Meta Ads: oferta, teksty, formularz, pomiar konwersji i szybkie ładowanie. Sprawdź zakres pakietu i cenę.',
+    'h1' => 'Tworzenie landing page, który zamienia ruch w zapytania',
+    'editorial_title' => '',
+    'editorial_description' => '',
+    'links' => [
+      ['text' => 'Landing page — co to jest', 'path' => '/strony-internetowe/landing-page-co-to/'],
+      ['text' => 'Landing page — przykłady', 'path' => '/seo-i-konwersja/landing-page-przyklady/'],
+      ['text' => 'Kampanie Meta Ads', 'path' => '/kampanie-reklamowe/'],
+    ],
+  ],
+  /* 2.4.0: related links only; title, description and H1 stay as they are. */
+  '/sklepy-internetowe/strona-internetowa-dla-branzy-beauty-jakie-sekcje-zwiekszaja-zapytania/' => [
+    'kind' => 'post',
+    'focus' => '',
+    'title' => '',
+    'description' => '',
+    'h1' => '',
+    'editorial_title' => '',
+    'editorial_description' => '',
+    'links' => [
+      [
+        'text' => 'strony internetowe dla lekarzy',
+        'path' => '/strony-internetowe-dla-lekarzy/',
+      ],
       [
         'text' => 'tworzenie stron internetowych',
         'path' => '/tworzenie-stron-internetowych/',

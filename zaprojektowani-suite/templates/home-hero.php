@@ -856,7 +856,7 @@ pointer-events:auto!important;
 <div class="zh__strip">
 <div class="zh__stripIn">
 <div class="zh__stats">
-<div class="zh__stat"><b data-count="120" data-suffix="+">120+</b><span>projektów</span></div>
+<?php $zp_hero_projects = function_exists('zp_seo_plan_projects_count') ? zp_seo_plan_projects_count() : 120; ?><div class="zh__stat"><b data-count="<?php echo (int) $zp_hero_projects; ?>" data-suffix="+"><?php echo (int) $zp_hero_projects; ?>+</b><span>projektów</span></div>
 <div class="zh__stat"><b data-count="5.0" data-dec="1">5.0</b><i>★</i><span>średnia ocena</span></div>
 <div class="zh__stat"><b data-count="10" data-suffix="+">10+</b><span>lat doświadczenia</span></div>
 </div>

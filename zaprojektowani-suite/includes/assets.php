@@ -18,7 +18,7 @@ add_action('wp_head', function(){
     return;
   }
   ?>
-<script id="zp-service-firstpaint-marker">(function(d,p,h){try{h=d.documentElement;p=(location.pathname||'').replace(/\/+$/,'/');if(p==='/'||p===''){h.classList.add('zp-clean-hero-fp');h.classList.add('zp-home-hero-fp');h.setAttribute('data-zp-path','home');}if(/\/(strony-internetowe-katowice|tworzenie-stron-internetowych|sklepy-internetowe-katowice|tworzenie-sklepow-internetowych|logo-branding-katowice|projektowanie-logo|identyfikacja-wizualna|kampanie-reklamowe)\//.test(p)){h.classList.add('zp-service-hero-fp');h.classList.add('zp-clean-hero-fp');if(/\/(strony-internetowe-katowice|tworzenie-stron-internetowych)\//.test(p)){h.classList.add('zp-strony-katowice-fp');h.setAttribute('data-zp-path','strony-internetowe-katowice');}if(/\/(sklepy-internetowe-katowice|tworzenie-sklepow-internetowych)\//.test(p)){h.classList.add('zp-sklepy-katowice-fp');h.setAttribute('data-zp-path','sklepy-internetowe-katowice');}if(/\/(logo-branding-katowice|projektowanie-logo|identyfikacja-wizualna)\//.test(p)){h.classList.add('zp-logo-branding-fp');h.setAttribute('data-zp-path','logo-branding-katowice');}if(p.indexOf('/kampanie-reklamowe/')>-1){h.classList.add('zp-kampanie-fp');h.setAttribute('data-zp-path','kampanie-reklamowe');}}if(/\/(kontakt|wiedza)\//.test(p)){h.classList.add('zp-clean-hero-fp');}}catch(e){}})(document);</script>
+<script id="zp-service-firstpaint-marker">(function(d,p,h){try{h=d.documentElement;p=(location.pathname||'').replace(/\/+$/,'/');if(p==='/'||p===''){h.classList.add('zp-clean-hero-fp');h.classList.add('zp-home-hero-fp');h.setAttribute('data-zp-path','home');}if(/\/(<?php echo zp_suite_service_slug_regex(); ?>|kampanie-reklamowe)\//.test(p)){h.classList.add('zp-service-hero-fp');h.classList.add('zp-clean-hero-fp');if(/\/(<?php echo zp_suite_service_slug_regex('strony'); ?>)\//.test(p)){h.classList.add('zp-strony-katowice-fp');h.setAttribute('data-zp-path','strony-internetowe-katowice');}if(/\/(sklepy-internetowe-katowice|tworzenie-sklepow-internetowych)\//.test(p)){h.classList.add('zp-sklepy-katowice-fp');h.setAttribute('data-zp-path','sklepy-internetowe-katowice');}if(/\/(logo-branding-katowice|projektowanie-logo|identyfikacja-wizualna)\//.test(p)){h.classList.add('zp-logo-branding-fp');h.setAttribute('data-zp-path','logo-branding-katowice');}if(p.indexOf('/kampanie-reklamowe/')>-1){h.classList.add('zp-kampanie-fp');h.setAttribute('data-zp-path','kampanie-reklamowe');}}if(/\/(kontakt|wiedza)\//.test(p)){h.classList.add('zp-clean-hero-fp');}}catch(e){}})(document);</script>
   <?php
 }, 0);
 
@@ -515,7 +515,7 @@ add_action('wp_head', function(){
   $href = add_query_arg(
     'ver',
     zp_suite_asset_version('assets/css/blocks/header.css'),
-    ZP_SUITE_URL . 'assets/css/blocks/header.css'
+    ZP_SUITE_URL . (function_exists('zp_suite_min_css_rel') ? zp_suite_min_css_rel('assets/css/blocks/header.css') : 'assets/css/blocks/header.css')
   );
 
   echo "\n<style id=\"zp-suite-header-head-critical-css\">\n" . zp_suite_header_critical_css() . "\n

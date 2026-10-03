@@ -140,7 +140,7 @@ $zp_logo_light = 'https://zaprojektowani.com/wp-content/uploads/2026/05/ZP_CIEMN
               <li><a href="/logo-branding-katowice/"><i data-lucide="pen-tool"></i><span>Logo & Branding</span><b data-lucide="arrow-up-right"></b></a></li>
               <li><a href="/kampanie-reklamowe/"><i data-lucide="megaphone"></i><span>Kampanie reklamowe</span><b data-lucide="arrow-up-right"></b></a></li>
               <li><a href="/studio-wyceny/"><i data-lucide="search-check"></i><span>SEO i treści</span><b data-lucide="arrow-up-right"></b></a></li>
-              <li><a href="/studio-wyceny/"><i data-lucide="settings-2"></i><span>Opieka WordPress</span><b data-lucide="arrow-up-right"></b></a></li>
+              <li><a href="<?php echo esc_url(zp_seo_plan_url('/opieka-wordpress/', '/studio-wyceny/')); ?>"><i data-lucide="settings-2"></i><span>Opieka WordPress</span><b data-lucide="arrow-up-right"></b></a></li>
             </ul>
           </div>
 
@@ -148,7 +148,7 @@ $zp_logo_light = 'https://zaprojektowani.com/wp-content/uploads/2026/05/ZP_CIEMN
             <h3>Oferta</h3>
             <ul>
               <li><a href="/strony-internetowe-katowice/"><i data-lucide="layout-template"></i><span>Strona firmowa</span><b data-lucide="arrow-up-right"></b></a></li>
-              <li><a href="<?php echo esc_url(zp_seo_plan_url('/strony-internetowe/landing-page-co-to/', '/strony-internetowe-katowice/')); ?>"><i data-lucide="panel-top"></i><span>Landing page</span><b data-lucide="arrow-up-right"></b></a></li>
+              <li><a href="<?php echo esc_url(zp_seo_plan_url('/tworzenie-landing-page/', zp_seo_plan_url('/strony-internetowe/landing-page-co-to/', '/strony-internetowe-katowice/'))); ?>"><i data-lucide="panel-top"></i><span>Landing page</span><b data-lucide="arrow-up-right"></b></a></li>
               <li><a href="/sklepy-internetowe-katowice/"><i data-lucide="store"></i><span>Sklep internetowy</span><b data-lucide="arrow-up-right"></b></a></li>
               <li><a href="/logo-branding-katowice/"><i data-lucide="badge-check"></i><span>Projekt logo</span><b data-lucide="arrow-up-right"></b></a></li>
               <li><a href="<?php echo esc_url(zp_seo_plan_url('/identyfikacja-wizualna/', '/logo-branding-katowice/')); ?>"><i data-lucide="palette"></i><span>Identyfikacja wizualna</span><b data-lucide="arrow-up-right"></b></a></li>

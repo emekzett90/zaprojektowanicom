@@ -1,0 +1,34 @@
+ZAPROJEKTOWANI SUITE 2.4.0
+
+Plan SEO, część 2: nowe podstrony z wątku treści, punkty 6, 8, 13 i 17 audytu oraz zmiany z planu linków. Wygląd strony bez zmian poza drobiazgami wymienionymi niżej.
+
+Nowe podstrony (na szablonie strony o stronach internetowych, z nowymi tekstami):
+- /strony-wordpress/, /opieka-wordpress/, /strona-wizytowka/, /tworzenie-landing-page/,
+- /strony-internetowe-dla-kancelarii/, /strony-internetowe-dla-lekarzy/, /strony-internetowe-dla-deweloperow/,
+- tworzą się same przy pierwszym wejściu na stronę po aktualizacji, z tytułem, opisem i frazą w Rank Math,
+- każda ma własne H1, zakres, proces, poradnik, 8 pytań FAQ, CTA i węzeł Service w danych strukturalnych,
+- linki do nich: stopka (Opieka WordPress, Landing page), menu (Wsparcie techniczne → opieka WordPress), kafelek branży na stronie głównej (lekarze zamiast beauty), FAQ strony o stronach internetowych i 7 wpisów,
+- wersja angielska: /en/ tych adresów prowadzi do strony Web design Katowice.
+
+/kampanie-reklamowe/ (pkt 8):
+- przy włączonym planie to zwykła strona WordPress: tytuł, opis, kanoniczny adres, robots i Open Graph z Rank Math (do edycji w panelu),
+- nowy tytuł bez Katowic („Kampanie Meta Ads i Google Ads dla firm”), H1 zaczyna się od „Kampanie reklamowe dla firm”, tłumaczenie EN,
+- strona może trafiać do cache LiteSpeed jak pozostałe.
+
+Liczba realizacji (pkt 17):
+- jedna liczba w całej witrynie (114+), z ustawień wtyczki: ZP Suite → Strona główna CMS → Liczby / widoczność → Globalne liczby zaufania → Liczba realizacji.
+
+Autorzy wpisów (pkt 13):
+- wpisy podpisane „Zaprojektowani” mają autora z zespołu według tematu: strony, sklepy, UX i SEO: Mateusz; logo i branding: Marta; kampanie: Stanisław,
+- zmienia się tylko tekst w obecnym podpisie („Mateusz | Zaprojektowani”) i autor artykułu w danych strukturalnych (osoba z rolą, zdjęciem i linkiem do strony O nas),
+- wpisy z innym autorem w WordPressie zostają bez zmian.
+
+Dane firmy (plan linków):
+- dane strukturalne: link do mapy Google, rok założenia, godziny otwarcia,
+- mapa na stronie kontaktu wskazuje adres Modelarska 18/2.
+
+Szybkość (pkt 6):
+- zminifikowane kopie arkuszy CSS (bez komentarzy i białych znaków, reguły bez zmian), o ok. 180 KB mniej,
+- po ręcznej zmianie arkusza strona sama wraca do pełnej wersji tego pliku.
+
+Panel: Narzędzia → Plan SEO 2.4.0 — dziennik zmian, ponowne uruchomienie, wstrzymanie oraz cofnięcie zmian w bazie. Wstrzymanie planu przywraca też poprzedni podpis wpisów, stary nagłówek /kampanie-reklamowe/ i pełne arkusze CSS.
