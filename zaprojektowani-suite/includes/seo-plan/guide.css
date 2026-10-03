@@ -3,46 +3,48 @@
    team-float-note, team-chips and the template buttons. Values copied from the website template. */
 .zpGuide {
   --g-ink: #05070b; --g-navy: #102a4f; --g-blue: #1c477a; --g-ice: #8ec8f7; --g-muted: #5f6979;
-  --g-line: rgba(5,7,11,.11); --g-ease: cubic-bezier(.16,1,.3,1); --g-card: #f7f9fb; --g-item: #fff;
-  display: grid; grid-template-columns: minmax(0,1fr) clamp(300px,25vw,410px); gap: clamp(18px,2vw,30px);
+  --g-line: rgba(5,7,11,.11); --g-ease: cubic-bezier(.16,1,.3,1); --g-card: #f7f9fb; --g-item: #fff; --g-gap: clamp(18px,2vw,30px);
+  display: grid; grid-template-columns: minmax(0,1fr) clamp(300px,25vw,410px); gap: var(--g-gap);
   align-items: start; color: var(--g-ink);
 }
 .zpGuide *, .zpGuide *::before, .zpGuide *::after { box-sizing: border-box }
 /* The sections clip their overflow; "clip" (unlike "hidden") lets the side column stay sticky. */
 section.zpSeoPlanGuide { overflow: clip }
 #proces ~ section.zpSeoPlanGuide .zpGuide { --g-card: #fff; --g-item: #f7f9fb }
-.zpGuide__aside { grid-column: 2; grid-row: 1; position: sticky; top: 112px; display: grid; gap: 14px; min-width: 0 }
+.zpGuide__aside { grid-column: 2; grid-row: 1; position: sticky; z-index: 2; top: 112px; display: grid; gap: 14px; min-width: 0 }
 .zpGuide__main { grid-column: 1; grid-row: 1; display: grid; gap: 14px; min-width: 0 }
 .zpGuide__toc, .zpGuide__photo { min-width: 0 }
 
-/* Sticky column: team photo in the team-section style, then the table of contents. */
-.zpGuide__photo {
-  position: relative; isolation: isolate; overflow: hidden; margin: 0; min-height: clamp(340px,26vw,420px); border-radius: 28px; color: #fff;
-  background: radial-gradient(circle at 70% 34%,rgba(28,71,122,.45),transparent 46%),linear-gradient(145deg,#05070b,#071426 62%,#05070b);
+/* Sticky column: the team as a free cut-out (no panel behind it), about 30% larger than the column
+   allows, reaching a little over the cards on the left and standing behind the table of contents. */
+.zpGuide__photo { position: relative; isolation: isolate; margin: 0 0 -104px; min-width: 0; color: #fff; pointer-events: none }
+.zpGuide__photo::before {
+  content: ""; position: absolute; z-index: -1; left: 50%; bottom: 0; width: 120%; aspect-ratio: 1; border-radius: 50%; transform: translate(-56%,18%);
+  background: radial-gradient(circle,rgba(28,71,122,.13),rgba(28,71,122,.04) 42%,transparent 66%);
+}
+/* The shadow sits on the wrapper: on the image itself the fade mask would cut it off at the image's edges. */
+.zpGuide__teamWrap { display: block; filter: drop-shadow(0 26px 44px rgba(7,17,31,.2)) }
+/* ".zpGuide" in front: the shop template's ".zpShopKatPage img" (max-width, height) must not win. */
+.zpGuide .zpGuide__team {
+  position: relative; display: block; width: 118%; max-width: none; height: auto; margin-left: calc(-1 * var(--g-gap) - 26px);
+  /* The cut at the bottom fades out where it is not behind the table of contents. */
+  -webkit-mask-image: linear-gradient(to top,transparent 0%,#000 24%); mask-image: linear-gradient(to top,transparent 0%,#000 24%);
 }
 .zpGuide__signet, .zpGuide__bandSignet {
   position: absolute; z-index: 0; right: -22%; bottom: -18%; width: 90%; max-width: none; opacity: .07; transform: rotate(-8deg); filter: brightness(2.3); pointer-events: none;
   -webkit-mask-image: radial-gradient(circle,#000,transparent 70%); mask-image: radial-gradient(circle,#000,transparent 70%);
 }
-.zpGuide__team {
-  position: absolute; z-index: 1; left: 50%; bottom: 0; width: 88%; max-width: none; height: auto; transform: translateX(-44%);
-  filter: drop-shadow(0 38px 80px rgba(0,0,0,.36));
-  -webkit-mask-image: linear-gradient(to top,transparent 0%,#000 12%); mask-image: linear-gradient(to top,transparent 0%,#000 12%);
-}
 .zpGuide__note {
-  position: absolute; z-index: 2; left: 16px; bottom: 62px; width: min(240px,70%); padding: 16px 17px;
-  border: 1px solid rgba(255,255,255,.14); border-radius: 23px; background: rgba(4,9,18,.58);
-  box-shadow: 0 28px 70px rgba(0,0,0,.33); -webkit-backdrop-filter: blur(18px); backdrop-filter: blur(18px); transform: rotate(-3deg);
+  position: absolute; z-index: 2; right: -2%; bottom: 134px; width: min(214px,62%); padding: 15px 16px;
+  border: 1px solid rgba(255,255,255,.12); border-radius: 22px; background: linear-gradient(145deg,rgba(7,17,31,.9),rgba(16,42,79,.9));
+  box-shadow: 0 28px 70px rgba(7,17,31,.3); -webkit-backdrop-filter: blur(18px); backdrop-filter: blur(18px); transform: rotate(3deg);
 }
 .zpGuide__note span { display: block; color: var(--g-ice); font-size: 9px; font-weight: 800; letter-spacing: .13em; text-transform: uppercase }
 .zpGuide__note strong { display: block; margin-top: 8px; font-size: 14px; line-height: 1.4; font-weight: 700 }
-.zpGuide__meta { position: absolute; z-index: 2; left: 16px; right: 16px; bottom: 16px; display: flex; flex-wrap: wrap; gap: 8px }
-.zpGuide__meta span {
-  min-height: 34px; padding: 0 12px; display: inline-flex; align-items: center; border: 1px solid rgba(255,255,255,.12); border-radius: 999px;
-  background: rgba(4,9,18,.42); color: rgba(255,255,255,.68); font-size: 10px; font-weight: 750; -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
-}
-.zpGuide__toc { padding: 26px 22px 18px; border: 1px solid var(--g-line); border-radius: 28px; background: var(--g-card) }
-.zpGuide__toc > strong { display: block; margin: 0 0 8px; color: #8a98a8; font-size: 9px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase }
+.zpGuide__toc { position: relative; z-index: 1; padding: 24px 22px 18px; border: 1px solid var(--g-line); border-radius: 28px; background: var(--g-card); box-shadow: 0 -18px 50px rgba(7,17,31,.07) }
+.zpGuide__tocHead { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 4px 12px; margin: 0 0 8px }
+.zpGuide__tocHead strong, .zpGuide__meta { color: #8a98a8; font-size: 9px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase }
+.zpGuide__meta { color: var(--g-blue); letter-spacing: .08em }
 .zpGuide__toc ol { margin: 0; padding: 0; list-style: none }
 .zpGuide__toc li + li { border-top: 1px solid var(--g-line) }
 .zpGuide__toc a {
@@ -149,13 +151,20 @@ section.zpSeoPlanGuide { overflow: clip }
 .zpGuide__card--accent .zpGuide__figure figcaption { color: rgba(255,255,255,.55) }
 
 /* Contact band with a team member, in the team-section style. */
+/* The person stands in the band and reaches above it (the band no longer clips, its signet layer does). */
 .zpGuide__band {
-  position: relative; isolation: isolate; overflow: hidden; display: grid; grid-template-columns: clamp(130px,13vw,190px) minmax(0,1fr) auto;
-  align-items: center; gap: clamp(18px,2.4vw,36px); min-height: 230px; padding: 0 clamp(26px,3vw,44px) 0 0; border-radius: 28px; color: #fff;
+  --g-pop: clamp(64px,6vw,96px);
+  position: relative; isolation: isolate; display: grid; grid-template-columns: clamp(130px,13vw,190px) minmax(0,1fr) auto;
+  align-items: center; gap: clamp(18px,2.4vw,36px); min-height: 230px; margin-top: calc(var(--g-pop) - 34px); padding: 0 clamp(26px,3vw,44px) 0 0; border-radius: 28px; color: #fff;
   background: radial-gradient(circle at 22% 40%,rgba(28,71,122,.42),transparent 38%),linear-gradient(145deg,#05070b,#071426 62%,#05070b);
 }
+.zpGuide__bandBg { position: absolute; z-index: 0; inset: 0; overflow: hidden; border-radius: inherit; pointer-events: none }
 .zpGuide__bandSignet { right: -14%; bottom: -60%; width: 60% }
-.zpGuide__bandPerson { position: relative; z-index: 1; align-self: end; width: 100%; max-width: none; height: auto; margin-top: 24px; filter: drop-shadow(0 30px 60px rgba(0,0,0,.36)) }
+.zpGuide__bandFig { position: relative; z-index: 1; align-self: stretch; min-height: 100% }
+.zpGuide .zpGuide__bandPerson {
+  position: absolute; left: 50%; bottom: 0; width: auto; max-width: none; height: calc(100% + var(--g-pop)); transform: translateX(-50%);
+  filter: drop-shadow(0 30px 60px rgba(0,0,0,.36));
+}
 .zpGuide__bandCopy { position: relative; z-index: 1; padding: 34px 0 }
 .zpGuide__bandKicker { display: inline-flex; align-items: center; gap: 12px; color: rgba(255,255,255,.68); font-size: 10px; font-weight: 800; line-height: 1; letter-spacing: .16em; text-transform: uppercase }
 .zpGuide__bandKicker::before { content: ""; width: 32px; height: 1px; background: linear-gradient(90deg,#fff,var(--g-ice)) }
@@ -183,17 +192,27 @@ section.zpSeoPlanGuide { overflow: clip }
   .zpGuide__card h2 { grid-column: 1; align-self: start }
   .zpGuide__card .zpGuide__text { grid-column: 2; margin-top: 30px }
 }
+/* One column: the table of contents first, then the team coming out from behind the first card. */
 @media (max-width: 1100px) {
   .zpGuide { grid-template-columns: minmax(0,1fr) }
   .zpGuide__aside, .zpGuide__main { grid-column: 1; grid-row: auto }
-  .zpGuide__aside { position: static; grid-template-columns: minmax(0,1fr) minmax(0,1fr) }
+  .zpGuide__aside { position: relative; z-index: 0; top: auto; margin-bottom: -96px }
+  .zpGuide__main { position: relative; z-index: 1 }
+  .zpGuide__toc { order: -1; box-shadow: none }
+  .zpGuide__photo { width: min(115%,480px); margin-left: calc((100% - min(115%,480px)) / 2); margin-right: 0 }
+  .zpGuide .zpGuide__team { width: auto; max-width: 100%; max-height: 470px; margin: 0 auto }
+  .zpGuide__teamWrap { filter: drop-shadow(0 10px 18px rgba(7,17,31,.14)) }
+  .zpGuide__note { right: 2%; bottom: 150px }
 }
 @media (max-width: 760px) {
   .zpGuide { gap: 12px }
   .zpGuide__aside { grid-template-columns: minmax(0,1fr); gap: 12px }
-  .zpGuide__photo { min-height: 340px; border-radius: 24px }
-  .zpGuide__team { width: 84%; transform: translateX(-42%) }
+  .zpGuide__aside { margin-bottom: -84px }
+  .zpGuide__photo { width: 115%; margin-left: -7.5% }
+  .zpGuide__note { right: 6%; bottom: 128px; width: min(190px,52%); padding: 13px 14px; border-radius: 19px }
+  .zpGuide__note strong { font-size: 13px }
   .zpGuide__toc { margin-right: -14px; padding: 0; border: 0; border-radius: 0; background: none }
+  .zpGuide__tocHead { margin-right: 14px }
   .zpGuide__toc ol { display: flex; gap: 8px; overflow-x: auto; padding: 0 14px 4px 0; scrollbar-width: none; scroll-snap-type: x proximity }
   .zpGuide__toc ol::-webkit-scrollbar { display: none }
   .zpGuide__toc li { flex: 0 0 auto; scroll-snap-align: start }
@@ -206,10 +225,12 @@ section.zpSeoPlanGuide { overflow: clip }
   .zpGuide__card h2, .zpGuide__card--accent h2 { margin-top: 24px; font-size: clamp(24px,7vw,30px) }
   .zpGuide__text { font-size: 15.5px }
   .zpGuide__features li::before { margin-bottom: 18px }
-  .zpGuide__band { grid-template-columns: 112px minmax(0,1fr); gap: 0 16px; padding: 0 18px 0 0; border-radius: 24px }
-  .zpGuide__bandCopy { padding: 26px 0 }
+  /* On a phone the person stands above the copy and reaches out of the band's top edge. */
+  .zpGuide__band { --g-pop: 78px; grid-template-columns: minmax(0,1fr); gap: 0; padding: 0; border-radius: 24px }
+  .zpGuide__bandFig { height: 112px; min-height: 0 }
+  .zpGuide .zpGuide__bandPerson { left: 14px; transform: none; height: calc(112px + var(--g-pop)) }
+  .zpGuide__bandCopy { padding: 18px 22px 22px }
   .zpGuide__bandTitle { font-size: 22px }
-  .zpGuide__bandActions { grid-column: 1 / -1; display: grid; grid-template-columns: 1fr; padding: 0 18px 22px }
+  .zpGuide__bandActions { display: grid; grid-template-columns: 1fr; padding: 0 18px 22px }
   .zpGuide__btn { width: 100%; min-height: 52px; font-size: 13px }
-  .zpGuide__bandPerson { grid-row: 1; margin-top: 20px }
 }

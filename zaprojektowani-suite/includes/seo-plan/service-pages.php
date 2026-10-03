@@ -108,6 +108,14 @@ function zp_seo_service_transform(string $html, array $spec, string $variant): s
     $insert = is_callable($callback) ? (string) call_user_func($callback) : '';
     if ($insert !== '') { $html = zp_seo_html_insert_after_section($html, $marker, $insert); }
   }
+  // 'before': [marker of a section, callback, fallback marker to insert after when that section is missing].
+  foreach ($spec['before'] ?? [] as $rule) {
+    $insert = is_callable($rule[1]) ? (string) call_user_func($rule[1]) : '';
+    if ($insert === '') { continue; }
+    $range = zp_seo_html_section_range($html, $rule[0]);
+    if ($range) { $html = substr($html, 0, $range[0]) . $insert . "\n" . substr($html, $range[0]); }
+    elseif (!empty($rule[2])) { $html = zp_seo_html_insert_after_section($html, $rule[2], $insert); }
+  }
   // Deliberate links to the local pages; data-zp-local keeps them out of the site-wide remap (links.php).
   $html = strtr($html, [
     'href="{{strony-katowice}}"' => 'data-zp-local="1" href="' . esc_url(home_url('/strony-internetowe-katowice/')) . '"',
@@ -356,7 +364,8 @@ function zp_seo_service_spec(string $variant): ?array {
           ['FAQ — sklepy internetowe Katowice i WooCommerce.', 'FAQ — tworzenie sklepów internetowych i WooCommerce.'],
           ['albo sklep lokalnej firmy z Katowic.', 'albo sklep lokalnej firmy.'],
         ],
-        'after' => ['id="sklepy-woocommerce-katowice"' => 'zp_seo_shop_guide_html'],
+        // The guide goes last, right above the FAQ (Mat, 2.5.0).
+        'before' => [['id="zpFaqShopKatNavy"', 'zp_seo_shop_guide_html', 'id="sklepy-woocommerce-katowice"']],
       ];
 
     case 'sklepy-local':

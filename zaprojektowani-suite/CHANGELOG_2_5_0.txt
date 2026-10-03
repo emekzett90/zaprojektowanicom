@@ -4,8 +4,11 @@ Plan SEO, część 3: nowe sekcje „Poradnik” na podstronach usługowych, now
 
 Sekcje „Poradnik” (8 podstron usługowych):
 - /strony-wordpress/, /opieka-wordpress/, /strona-wizytowka/, /tworzenie-landing-page/, /strony-internetowe-dla-kancelarii/, /strony-internetowe-dla-lekarzy/, /strony-internetowe-dla-deweloperow/, /tworzenie-sklepow-internetowych/,
+- sekcja jest teraz na dole strony: pod wszystkimi sekcjami usługi, tuż nad FAQ (na stronie sklepów: pod „Sklep dla producenta lub marki premium”, nad FAQ),
 - elementy z obecnych podstron usługowych: karty z numerem i ikoną (pierwsza granatowa), listy z „ptaszkami”, numerowane kafelki,
-- obok kart przypięta kolumna ze zdjęciem zespołu (zdjęcia, których strona już używa) i spisem treści; w połowie pasek z osobą z zespołu i przyciskami do kontaktu i Studia Wyceny,
+- obok kart przypięta kolumna ze zdjęciem zespołu (zdjęcia, których strona już używa) i spisem treści: zespół stoi swobodnie, bez ciemnego tła, jest większy, wychodzi zza spisu treści i lekko wchodzi na kartę po lewej,
+- w połowie pasek z osobą z zespołu (wychodzi ponad pasek) i przyciskami do kontaktu i Studia Wyceny,
+- na telefonie i tablecie: spis treści na górze, pod nim zespół wychodzący zza pierwszej karty; osoba w pasku stoi nad tekstem i wychodzi ponad pasek,
 - treść, nagłówki i linki bez zmian.
 
 Menu „Usługi”:

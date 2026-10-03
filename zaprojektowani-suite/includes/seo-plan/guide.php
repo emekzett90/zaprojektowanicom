@@ -7,9 +7,10 @@ if (!defined('ABSPATH')) { exit; }
  * The guide text stays the same HTML (headings, paragraphs, lists, links), only its layout
  * changes, built from the service pages' own components: every H2 becomes a scope card
  * (number, icon, the first one dark), lists get the package-list check marks, a list whose
- * items open with a bold phrase becomes a row of numbered cards, a sticky column shows a team
- * photo in the team-section style and the table of contents, and halfway down a dark band
- * with a team member links to contact.
+ * items open with a bold phrase becomes a row of numbered cards, a sticky column shows the team
+ * (a cut-out photo with no panel behind it, coming out from behind the table of contents and a little
+ * over the cards) and the table of contents, and halfway down a dark band with a team member who
+ * reaches above the band links to contact.
  */
 
 /** Team photo and the person in the contact band, per page. */
@@ -116,9 +117,10 @@ function zp_seo_guide_body(string $body, string $path): string {
       . '<div class="zpGuide__text">' . zp_seo_guide_lists($c['html']) . '</div></div></article>';
   }
 
+  // The signet sits in its own clipping layer, so the person can reach above the band.
   $band = '<aside class="zpGuide__band" aria-label="Kontakt z zespołem">'
-    . '<img class="zpGuide__bandSignet" src="' . esc_url(ZP_SUITE_URL . 'assets/logo-branding/zp-sygnet-ciemny.webp') . '" alt="" aria-hidden="true" loading="lazy" decoding="async">'
-    . '<img class="zpGuide__bandPerson" src="' . esc_url($img . 'hero-team/crew-' . $setup['person'] . '.webp') . '" alt="' . esc_attr($person['name'] . ' z zespołu Zaprojektowani') . '" width="322" height="440" loading="lazy" decoding="async">'
+    . '<span class="zpGuide__bandBg" aria-hidden="true"><img class="zpGuide__bandSignet" src="' . esc_url(ZP_SUITE_URL . 'assets/logo-branding/zp-sygnet-ciemny.webp') . '" alt="" loading="lazy" decoding="async"></span>'
+    . '<span class="zpGuide__bandFig"><img class="zpGuide__bandPerson" src="' . esc_url($img . 'hero-team/crew-' . $setup['person'] . '.webp') . '" alt="' . esc_attr($person['name'] . ' z zespołu Zaprojektowani') . '" width="322" height="440" loading="lazy" decoding="async"></span>'
     . '<div class="zpGuide__bandCopy"><span class="zpGuide__bandKicker">Masz pytanie do tego tematu?</span>'
     . '<strong class="zpGuide__bandTitle">Opisz swoją sytuację, a <b>' . esc_html($person['name']) . ' podpowie, od czego zacząć.</b></strong>'
     . '<span class="zpGuide__bandRole">' . esc_html($person['name'] . ' • ' . $person['job']) . '</span></div>'
@@ -133,12 +135,13 @@ function zp_seo_guide_body(string $body, string $path): string {
   foreach ($chunks as $i => $c) {
     $toc .= '<li><a href="#' . esc_attr($c['id']) . '"><span>' . $two($i + 1) . '</span>' . esc_html(wp_strip_all_tags($c['title'])) . '</a></li>';
   }
+  $size = @getimagesize(ZP_SUITE_PATH . 'assets/img/guide/' . $setup['photo'] . '.webp');
+  $dims = $size ? ' width="' . (int) $size[0] . '" height="' . (int) $size[1] . '"' : '';
   $aside = '<aside class="zpGuide__aside" aria-label="Poradnik w skrócie">'
-    . '<figure class="zpGuide__photo"><img class="zpGuide__signet" src="' . esc_url(ZP_SUITE_URL . 'assets/logo-branding/zp-sygnet-ciemny.webp') . '" alt="" aria-hidden="true" loading="lazy" decoding="async">'
-    . '<img class="zpGuide__team" src="' . esc_url($img . 'guide/' . $setup['photo'] . '.webp') . '" alt="Zespół Zaprojektowani" loading="lazy" decoding="async">'
-    . '<figcaption class="zpGuide__note"><span>Z praktyki studia</span><strong>Tak odpowiadamy klientom przed startem projektu.</strong></figcaption>'
-    . '<div class="zpGuide__meta"><span>~' . zp_seo_guide_minutes($body) . ' min czytania</span><span>' . zp_seo_guide_topics($total) . '</span></div></figure>'
-    . '<nav class="zpGuide__toc" aria-label="Spis treści poradnika"><strong>Spis treści</strong><ol>' . $toc . '</ol></nav></aside>';
+    . '<figure class="zpGuide__photo"><span class="zpGuide__teamWrap"><img class="zpGuide__team" src="' . esc_url($img . 'guide/' . $setup['photo'] . '.webp') . '" alt="Zespół Zaprojektowani"' . $dims . ' loading="lazy" decoding="async"></span>'
+    . '<figcaption class="zpGuide__note"><span>Z praktyki studia</span><strong>Tak odpowiadamy klientom przed startem projektu.</strong></figcaption></figure>'
+    . '<nav class="zpGuide__toc" aria-label="Spis treści poradnika"><div class="zpGuide__tocHead"><strong>Spis treści</strong>'
+    . '<span class="zpGuide__meta">~' . zp_seo_guide_minutes($body) . ' min czytania • ' . zp_seo_guide_topics($total) . '</span></div><ol>' . $toc . '</ol></nav></aside>';
 
   return '<div class="zpGuide">' . $aside . '<div class="zpGuide__main">' . implode('', $cards) . '</div></div>';
 }
