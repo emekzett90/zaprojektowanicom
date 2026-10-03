@@ -1,0 +1,30 @@
+ZAPROJEKTOWANI SUITE 2.6.0
+
+Plan SEO, część 4: trzecia paczka treści, czyli 5 nowych artykułów o marce i stronach internetowych, oraz linki do nich z podstron usług i starszych wpisów. Wygląd strony bez zmian poza elementami wymienionymi niżej.
+
+5 nowych artykułów (szablon wpisów zpArticleNew):
+- /logo-branding/archetypy-marki/,
+- /logo-branding/jak-wymyslic-nazwe-firmy/,
+- /logo-branding/strategia-marki/,
+- /strony-internetowe/rodzaje-stron-internetowych/,
+- /strony-internetowe/makieta-strony-internetowej/,
+- publikują się razem przy pierwszym wejściu na stronę, tak samo jak artykuły z 2.5.0: kopia układu Elementora z istniejącego wpisu tej samej kategorii, nowa treść, kategoria, zajawka, tytuł/opis/fraza w Rank Math, obrazek wyróżniający,
+- gdy wpisu-wzoru z Elementorem nie ma, artykuł zapisuje się jako szkic.
+
+Zdjęcia (assets/img/wpisy/, 14 plików):
+- 5 okładek i 9 zdjęć w treści, wszystkie z naszych realizacji (Kancelaria Siemianowski, Pracownia Urody, Eat Tasty, Wonder, Gravia, Krawiec z dojazdem, Apartament Piękna) i ze zdjęć zespołu, które strona już ma; bez stocków,
+- plansze w tym samym układzie co zdjęcia artykułów z 2.5.0,
+- w artykule o makiecie drugie miejsce na zdjęcie (makieta w trzech etapach) zostaje puste, bo nie mamy zdjęć prawdziwych makiet.
+
+Linki do nowych artykułów (każdy pojawia się dopiero, gdy artykuł jest opublikowany):
+- /identyfikacja-wizualna/: nowe pytanie w FAQ „Od czego zaczyna się projekt identyfikacji wizualnej?” z linkami do strategii marki i archetypów,
+- /tworzenie-stron-internetowych/: po jednym zdaniu w dwóch odpowiedziach FAQ (rodzaje stron internetowych, makieta strony internetowej),
+- /strona-wizytowka/: jedno zdanie w poradniku pod tabelą (typy stron internetowych),
+- bloki „Powiązane usługi i poradniki” w 8 wpisach: branding od podstaw, kolory i typografia marki, projekt logo od czego zacząć, brief do logo, strona dla firmy co powinna zawierać, proces tworzenia stron, brief do projektowania strony, zastrzeżenie logo.
+
+Widoczne zmiany na stronie:
+- stopka „Ostatnie wpisy na blogu” pokazuje nowe artykuły (zawsze pokazuje najnowsze),
+- /identyfikacja-wizualna/: jedno pytanie więcej w FAQ,
+- /strona-wizytowka/: jedno zdanie więcej w poradniku.
+
+Panel: Narzędzia → Plan SEO 2.6.0 — dziennik zmian, ponowne uruchomienie, wstrzymanie oraz cofnięcie zmian w bazie. Cofnięcie przenosi nowe artykuły do szkiców.

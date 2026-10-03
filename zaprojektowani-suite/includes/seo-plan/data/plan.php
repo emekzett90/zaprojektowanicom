@@ -342,6 +342,7 @@ return [
         'text' => 'tworzenie stron internetowych',
         'path' => '/tworzenie-stron-internetowych/',
       ],
+      ['text' => 'makieta strony', 'path' => '/strony-internetowe/makieta-strony-internetowej/'],
     ],
   ],
   '/strony-internetowe/projektowanie-stron-internetowych-co-decyduje-o-zapytaniach/' => [
@@ -498,6 +499,9 @@ return [
         'text' => 'identyfikacja wizualna',
         'path' => '/identyfikacja-wizualna/',
       ],
+      ['text' => 'archetypy marki', 'path' => '/logo-branding/archetypy-marki/'],
+      ['text' => 'jak wymyślić nazwę firmy', 'path' => '/logo-branding/jak-wymyslic-nazwe-firmy/'],
+      ['text' => 'strategia marki', 'path' => '/logo-branding/strategia-marki/'],
     ],
   ],
   '/seo-i-konwersja/jak-zalozyc-sklep-internetowy/' => [
@@ -528,6 +532,7 @@ return [
         'text' => 'projektowanie logo',
         'path' => '/projektowanie-logo/',
       ],
+      ['text' => 'nazwa dla firmy', 'path' => '/logo-branding/jak-wymyslic-nazwe-firmy/'],
     ],
   ],
   '/logo-branding/logo-ai-czy-projektant/' => [
@@ -634,6 +639,7 @@ return [
         'text' => 'projektowanie logo',
         'path' => '/projektowanie-logo/',
       ],
+      ['text' => 'archetyp marki', 'path' => '/logo-branding/archetypy-marki/'],
     ],
   ],
   '/logo-branding/brief-do-logo-i-identyfikacji-wizualnej/' => [
@@ -650,6 +656,7 @@ return [
         'path' => '/projektowanie-logo/',
       ],
       ['text' => 'key visual', 'path' => '/logo-branding/key-visual-co-to-jest/'],
+      ['text' => 'jak zbudować strategię marki', 'path' => '/logo-branding/strategia-marki/'],
     ],
   ],
   '/strony-www/jak-przygotowac-brief-do-projektowania-strony-internetowej/' => [
@@ -665,6 +672,7 @@ return [
         'text' => 'tworzenie stron internetowych',
         'path' => '/tworzenie-stron-internetowych/',
       ],
+      ['text' => 'makieta strony internetowej', 'path' => '/strony-internetowe/makieta-strony-internetowej/'],
     ],
   ],
   '/strony-internetowe/wordpress-wix-czy-webflow/' => [
@@ -771,6 +779,7 @@ return [
         'text' => 'strona internetowa dla firmy',
         'path' => '/tworzenie-stron-internetowych/',
       ],
+      ['text' => 'rodzaje stron internetowych', 'path' => '/strony-internetowe/rodzaje-stron-internetowych/'],
     ],
   ],
   '/strony-internetowe/szablon-czy-projekt-indywidualny-strony/' => [
@@ -1105,6 +1114,7 @@ return [
       ['text' => 'logo a logotyp i sygnet', 'path' => '/logo-branding/logo-logotyp-sygnet-roznice/'],
       ['text' => 'logo AI czy projektant', 'path' => '/logo-branding/logo-ai-czy-projektant/'],
       ['text' => 'ile kosztuje logo dla firmy', 'path' => '/logo-branding/ile-kosztuje-logo-dla-firmy-i-co-obejmuje-cena/'],
+      ['text' => 'jak wymyślić nazwę firmy', 'path' => '/logo-branding/jak-wymyslic-nazwe-firmy/'],
     ],
   ],
   '/logo-branding/key-visual-co-to-jest/' => [
@@ -1162,6 +1172,82 @@ return [
     'editorial_description' => '',
     'links' => [
       ['text' => 'logo a logotyp', 'path' => '/logo-branding/logo-logotyp-sygnet-roznice/'],
+    ],
+  ],
+  /* 2.6.0: content batch 3 (tresci/paczka-3/plan-wpisy.php). */
+  '/logo-branding/archetypy-marki/' => [
+    'kind' => 'post',
+    'focus' => 'archetypy marki, archetyp marki, 12 archetypów marki, archetypy marki przykłady, jak wybrać archetyp marki',
+    'title' => 'Archetypy marki – 12 archetypów z przykładami marek',
+    'description' => 'Archetypy marki to 12 wzorców osobowości, które porządkują komunikację i wygląd firmy. Poznaj wszystkie z przykładami i sprawdź, jak wybrać archetyp marki.',
+    'h1' => 'Archetypy marki – 12 archetypów z przykładami i jak wybrać swój',
+    'editorial_title' => '',
+    'editorial_description' => '',
+    'links' => [
+      ['text' => 'identyfikacja wizualna', 'path' => '/identyfikacja-wizualna/'],
+      ['text' => 'strategia marki', 'path' => '/logo-branding/strategia-marki/'],
+      ['text' => 'kolory i typografia marki', 'path' => '/logo-branding/kolory-i-typografia-marki/'],
+      ['text' => 'brief do logo i identyfikacji wizualnej', 'path' => '/logo-branding/brief-do-logo-i-identyfikacji-wizualnej/'],
+    ],
+  ],
+  '/logo-branding/jak-wymyslic-nazwe-firmy/' => [
+    'kind' => 'post',
+    'focus' => 'nazwa dla firmy, jak wymyślić nazwę firmy, wymyślanie nazwy firmy, naming firmy, nazwa firmy',
+    'title' => 'Nazwa dla firmy – jak ją wymyślić? Metody i przykłady',
+    'description' => 'Nazwa dla firmy ma być krótka, łatwa do zapamiętania i wolna w rejestrach. Poznaj 6 metod wymyślania nazw, przykłady marek i listę rzeczy do sprawdzenia.',
+    'h1' => 'Jak wymyślić nazwę firmy? Metody, przykłady i co sprawdzić przed wyborem',
+    'editorial_title' => '',
+    'editorial_description' => '',
+    'links' => [
+      ['text' => 'projektowanie logo', 'path' => '/projektowanie-logo/'],
+      ['text' => 'jak zastrzec logo', 'path' => '/logo-branding/jak-zastrzec-logo/'],
+      ['text' => 'strategia marki', 'path' => '/logo-branding/strategia-marki/'],
+      ['text' => 'logo, logotyp i sygnet', 'path' => '/logo-branding/logo-logotyp-sygnet-roznice/'],
+    ],
+  ],
+  '/strony-internetowe/makieta-strony-internetowej/' => [
+    'kind' => 'post',
+    'focus' => 'makieta strony internetowej, makieta strony www, wireframe strony internetowej, makieta strony, prototyp strony internetowej',
+    'title' => 'Makieta strony internetowej – co to jest i jak ją zrobić?',
+    'description' => 'Makieta strony internetowej to plan układu strony przed projektem graficznym. Zobacz, czym różnią się wireframe, mockup i prototyp, i jak zrobić makietę.',
+    'h1' => 'Makieta strony www – wireframe, mockup i prototyp krok po kroku',
+    'editorial_title' => '',
+    'editorial_description' => '',
+    'links' => [
+      ['text' => 'tworzenie stron internetowych', 'path' => '/tworzenie-stron-internetowych/'],
+      ['text' => 'etapy tworzenia strony internetowej', 'path' => '/strony-internetowe/tworzenie-stron-internetowych-profesjonalny-proces-od-strategii-do-wdrozenia/'],
+      ['text' => 'rodzaje stron internetowych', 'path' => '/strony-internetowe/rodzaje-stron-internetowych/'],
+      ['text' => 'projektowanie stron www z myślą o użytkowniku', 'path' => '/ux-cro-analityka/projektowanie-stron-www-z-mysla-o-uzytkowniku/'],
+    ],
+  ],
+  '/strony-internetowe/rodzaje-stron-internetowych/' => [
+    'kind' => 'post',
+    'focus' => 'rodzaje stron internetowych, typy stron internetowych, rodzaje stron www, jaką stronę internetową wybrać',
+    'title' => 'Rodzaje stron internetowych – 12 typów i do czego służą',
+    'description' => 'Rodzaje stron internetowych od wizytówki i strony firmowej po sklep, portal i aplikację. Zobacz 12 typów stron, ich zastosowania i jak wybrać właściwy.',
+    'h1' => 'Typy stron internetowych – który rodzaj strony wybrać dla firmy?',
+    'editorial_title' => '',
+    'editorial_description' => '',
+    'links' => [
+      ['text' => 'tworzenie stron internetowych', 'path' => '/tworzenie-stron-internetowych/'],
+      ['text' => 'strona wizytówka', 'path' => '/strona-wizytowka/'],
+      ['text' => 'makieta strony internetowej', 'path' => '/strony-internetowe/makieta-strony-internetowej/'],
+      ['text' => 'WordPress, Wix czy Webflow', 'path' => '/strony-internetowe/wordpress-wix-czy-webflow/'],
+    ],
+  ],
+  '/logo-branding/strategia-marki/' => [
+    'kind' => 'post',
+    'focus' => 'strategia marki, jak zbudować strategię marki, strategia brandingowa, elementy strategii marki, strategia marki przykład',
+    'title' => 'Strategia marki – co to jest i jak ją zbudować? Przykład',
+    'description' => 'Strategia marki mówi, dla kogo jest firma, czym się wyróżnia i jak komunikuje. Zobacz 9 elementów strategii, plan w 7 krokach i przykład dla małej firmy.',
+    'h1' => 'Jak zbudować strategię marki? Elementy, przykład i plan krok po kroku',
+    'editorial_title' => '',
+    'editorial_description' => '',
+    'links' => [
+      ['text' => 'identyfikacja wizualna', 'path' => '/identyfikacja-wizualna/'],
+      ['text' => 'archetypy marki', 'path' => '/logo-branding/archetypy-marki/'],
+      ['text' => 'brief do logo i identyfikacji wizualnej', 'path' => '/logo-branding/brief-do-logo-i-identyfikacji-wizualnej/'],
+      ['text' => 'branding firmy od podstaw', 'path' => '/logo-branding/branding-firmy-od-podstaw/'],
     ],
   ],
 ];

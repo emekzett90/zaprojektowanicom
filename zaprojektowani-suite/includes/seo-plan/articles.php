@@ -2,7 +2,7 @@
 if (!defined('ABSPATH')) { exit; }
 
 /**
- * New articles from the content thread (2.5.0: content batch 2), published by the migration.
+ * New articles from the content thread (2.5.0: content batch 2, 2.6.0: content batch 3), published by the migration.
  *
  * Each article copies the Elementor layout of an existing article in the same category
  * (data/articles.php, 'source'), so it gets the same template, article styles and CTA

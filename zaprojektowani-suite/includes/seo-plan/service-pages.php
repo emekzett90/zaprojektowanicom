@@ -271,9 +271,13 @@ function zp_seo_service_spec(string $variant): ?array {
   $local = static function (string $key, string $text): string {
     return '<a class="zpSeoLink" href="{{' . $key . '}}">' . $text . '</a>';
   };
-  // Articles published by the plan (2.5.0): linked only once they are live, plain text otherwise.
+  // Articles published by the plan (2.5.0+): linked only once they are live, plain text otherwise.
   $A = static function (string $path, string $text) use ($L): string {
     return zp_seo_plan_link_is_live($path) ? $L($path, $text) : $text;
+  };
+  // A whole sentence that points to such an article: shown only once the article is live (2.6.0).
+  $AS = static function (string $path, string $before, string $text, string $after) use ($L): string {
+    return zp_seo_plan_link_is_live($path) ? $before . $L($path, $text) . $after : '';
   };
 
   $content = zp_seo_content_page_by_variant($variant);
@@ -286,13 +290,13 @@ function zp_seo_service_spec(string $variant): ?array {
         'kind' => 'strony',
         'h1' => 'Tworzenie i projektowanie <strong class="gradient-text">stron internetowych dla firm</strong>',
         'faq' => [
-          ['new', 'Czy tworzycie strony internetowe dla firm z całej Polski?', 'Tak. Projektujemy i tworzymy strony internetowe dla firm z całej Polski — <strong>strony firmowe, ' . $L('/strona-wizytowka/', 'strony wizytówki') . ', landing page’e i rozbudowane serwisy</strong>. Brief, prezentacje i odbiory prowadzimy online, a z firmami ze Śląska spotykamy się też w naszym biurze w Katowicach.'],
+          ['new', 'Czy tworzycie strony internetowe dla firm z całej Polski?', 'Tak. Projektujemy i tworzymy strony internetowe dla firm z całej Polski — <strong>strony firmowe, ' . $L('/strona-wizytowka/', 'strony wizytówki') . ', landing page’e i rozbudowane serwisy</strong>. Brief, prezentacje i odbiory prowadzimy online, a z firmami ze Śląska spotykamy się też w naszym biurze w Katowicach.' . $AS('/strony-internetowe/rodzaje-stron-internetowych/', ' Czym różnią się ', 'rodzaje stron internetowych', ' i który wybrać, wyjaśniamy w osobnym poradniku.')],
           ['keep', 2], ['keep', 3], ['keep', 4],
           ['new', 'Ile kosztuje stworzenie strony internetowej?', 'Cena zależy od zakresu: liczby podstron, poziomu projektu, treści, funkcji, SEO czy sklepu WooCommerce. Od czego zależy cena strony wizytówki, firmowej i rozbudowanej, wyjaśniamy w poradniku ' . $L($cost_www, 'ile kosztuje strona internetowa') . '. Dokładną wycenę przygotujemy po ' . $L('/studio-wyceny/', 'uzupełnieniu Studia Wyceny') . ' — dobierzemy wtedy zakres: landing page, Starter, Premium albo projekt indywidualny.'],
           ['new', 'Na czym robicie strony internetowe?', 'Najczęściej ' . $L('/strony-wordpress/', 'na WordPressie') . '. Projekt powstaje indywidualnie, bez gotowego szablonu, a wdrożenie daje <strong>łatwą edycję treści, szybkie działanie i solidne podstawy SEO</strong>. Przy prostszych projektach, takich jak strona wizytówka czy landing page, dobieramy lżejszą strukturę — zasada zostaje ta sama: strona ma prowadzić do kontaktu. Jeśli rozważasz kreator albo samodzielną pracę, przeczytaj, ' . $A('/strony-internetowe/jak-stworzyc-strone-internetowa/', 'jak stworzyć stronę internetową') . ' i kiedy warto oddać ją agencji.'],
           ['new', 'Czy wykonujecie sklepy internetowe WooCommerce?', 'Tak. ' . $L('/tworzenie-sklepow-internetowych/', 'Tworzenie sklepów internetowych') . ' na WooCommerce to nasza druga główna specjalizacja — od prostych sklepów produktowych po wdrożenia z wariantami, płatnościami, dostawami, katalogiem B2B i konfiguratorami.'],
           ['keep', 7], ['keep', 8],
-          ['new', 'Ile trwa stworzenie strony internetowej?', 'Termin zależy od zakresu i tempa przekazywania materiałów. Strona wizytówka lub landing page powstaje szybciej niż serwis firmowy z kilkunastoma podstronami i treściami SEO. Po briefie podajemy harmonogram z etapami i datą publikacji.'],
+          ['new', 'Ile trwa stworzenie strony internetowej?', 'Termin zależy od zakresu i tempa przekazywania materiałów. Strona wizytówka lub landing page powstaje szybciej niż serwis firmowy z kilkunastoma podstronami i treściami SEO. Po briefie podajemy harmonogram z etapami i datą publikacji.' . $AS('/strony-internetowe/makieta-strony-internetowej/', ' Jednym z pierwszych etapów jest ', 'makieta strony internetowej', ', czyli plan układu podstron przed projektem graficznym.')],
         ],
         'replace' => [
           ['<p class="hero-eyebrow">Strony internetowe • Katowice</p>', '<p class="hero-eyebrow">Strony internetowe • cała Polska</p>'],
@@ -421,6 +425,7 @@ function zp_seo_service_spec(string $variant): ?array {
         'h1' => 'Identyfikacja wizualna <strong class="gradient-text">i branding dla firm</strong>',
         'faq' => [
           ['new', 'Co obejmuje identyfikacja wizualna firmy?', 'Identyfikacja wizualna to system: <strong>logo i jego warianty, kolory, typografia, styl grafik i zdjęć</strong>, wzory materiałów firmowych oraz zasady ich użycia zebrane w księdze znaku. Dzięki niemu marka wygląda tak samo na stronie, w social mediach, w ofertach i w druku. Przy kampaniach system uzupełnia ' . $A('/logo-branding/key-visual-co-to-jest/', 'key visual kampanii') . ', czyli wspólny motyw reklam. Więcej w poradniku ' . $L('/logo-branding/identyfikacja-wizualna-firmy/', 'identyfikacja wizualna firmy: co zawiera') . '.'],
+          ['new', 'Od czego zaczyna się projekt identyfikacji wizualnej?', 'Od briefu i strategii marki. Poznajemy branżę, odbiorców, konkurencję i miejsca, w których marka będzie używana, a potem porządkujemy skojarzenia, ton, kolorystykę i typografię. Dopiero na tej podstawie powstają koncepcje logo i cały system.' . $AS('/logo-branding/strategia-marki/', ' Jak przygotować się do tego etapu, piszemy w poradnikach ', 'strategia marki', ' i ' . $A('/logo-branding/archetypy-marki/', 'archetyp marki') . '.')],
           ['keep', 2],
           ['new', 'Ile kosztuje identyfikacja wizualna?', 'Zakres zaczyna się od <strong>Mini Brandingu od 1499 zł</strong> (logo, kolory i typografia), a pełny system z księgą znaku to <strong>Branding Premium od 2999 zł</strong>. Dodatkowe materiały wyceniamy indywidualnie. Szczegóły opisujemy w poradniku ' . $L($cost_logo, 'ile kosztuje logo i identyfikacja wizualna') . '.'],
           ['keep', 4], ['keep', 6], ['keep', 7], ['keep', 11], ['keep', 12], ['keep', 14],
