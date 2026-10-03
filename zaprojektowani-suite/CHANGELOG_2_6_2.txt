@@ -1,0 +1,21 @@
+ZAPROJEKTOWANI SUITE 2.6.2
+
+Poprawka: rozsypany poradnik na stronie /tworzenie-sklepow-internetowych/ (komputer).
+
+Co było nie tak:
+- poradnik na stronie sklepów to treść starego wpisu „Tworzenie sklepów internetowych – od pomysłu na ofertę do gotowego sklepu online”. Wtyczka czytała ją z post_content, a przy wpisach zbudowanych w Elementorze to tylko okrojona kopia tekstu: bez div, span i klas,
+- przez to sprzątanie nie rozpoznawało nagłówka artykułu, spisu treści ani notatek, a sekcje artykułu (<section> bez klasy) zostawały wokół nagłówków H2. Po podziale poradnika na karty zamykające tagi wypychały wszystko od karty 03 aż do FAQ poza układ: numer przy lewej krawędzi ekranu, ikona przy prawej, zdjęcia i listy na całej szerokości,
+- na stronie widać było też notatkę redakcyjną z artykułu („ARTYKUŁ 01 — USTAWIENIA RANK MATH / WORDPRESS …”).
+
+Co się zmienia:
+- treść poradnika jest brana z widżetu HTML w danych Elementora (pełny HTML artykułu z klasami); post_content tylko wtedy, gdy wpis nie jest z Elementora,
+- komentarze i notatki redakcyjne (ARTYKUŁ, GRAFIKA itp.) są usuwane w całości, także gdy zapisały się jako zwykły tekst,
+- każdy element wokół nagłówka H2 jest rozpakowany, a każda karta poradnika sama domyka swoje znaczniki, więc nic nie może wyjść poza układ,
+- gdy treść nie ma klas: nagłówek artykułu, FAQ, „Więcej o…”, blok kontaktu i małe etykiety sekcji też są usuwane (strona ma własne FAQ i kontakt).
+
+Sprawdzone:
+- wszystkie 8 stron z poradnikiem: /tworzenie-sklepow-internetowych/, /strony-wordpress/, /opieka-wordpress/, /strona-wizytowka/, /tworzenie-landing-page/, /strony-internetowe-dla-kancelarii/, /strony-internetowe-dla-lekarzy/, /strony-internetowe-dla-deweloperow/,
+- zepsuty był tylko poradnik na stronie sklepów; pozostałe 7 ma treść zapisaną we wtyczce i ich HTML jest bez zmian,
+- wygląd poradnika (karty, spis treści, zdjęcie zespołu, ciemny pasek z kontaktem) taki sam jak na /strony-wordpress/.
+
+Zawiera też 2.6.1 (mapy witryny, H1 w hero).

@@ -94,6 +94,9 @@ function zp_seo_guide_topics(int $n): string {
  */
 function zp_seo_guide_body(string $body, string $path): string {
   [$intro, $chunks] = zp_seo_guide_split($body);
+  // Each piece goes into its own card, so a tag left open or closed across an H2 must not leak out of it (2.6.2).
+  $intro = force_balance_tags($intro);
+  foreach ($chunks as $k => $c) { $chunks[$k]['html'] = force_balance_tags($c['html']); }
   if (!$chunks) {
     return '<div class="zpGuide"><div class="zpGuide__main"><article class="zpGuide__card zpGuide__card--intro"><div class="zpGuide__text">'
       . zp_seo_guide_lists($body) . '</div></article></div></div>';
@@ -164,6 +167,7 @@ function zp_seo_guide_css(): string {
  * class, id, style and data attribute is dropped.
  */
 function zp_seo_guide_clean_post_html(string $html): string {
+  $html = zp_seo_guide_strip_notes($html);
   if (!class_exists('DOMDocument') || trim($html) === '') { return $html; }
   $prev = libxml_use_internal_errors(true);
   $doc = new DOMDocument('1.0', 'UTF-8');
@@ -182,6 +186,21 @@ function zp_seo_guide_clean_post_html(string $html): string {
   };
 
   foreach (iterator_to_array($xp->query('//script|//style|//noscript|//template|//form|//iframe|//h1|//nav')) as $n) { $remove($n); }
+  // Elementor keeps a copy of the post in post_content without divs, spans and classes, so the
+  // article's hero (header + aside) and its FAQ, related links and contact block are also found
+  // by their tags and headings (2.6.2).
+  foreach (iterator_to_array($xp->query('//header | //aside')) as $n) { $remove($n); }
+  foreach (iterator_to_array($xp->query('//*[h2]')) as $n) {
+    if (!$n instanceof DOMElement || !$n->parentNode || $n->getAttribute('id') === 'zp-guide-root') { continue; }
+    $h2 = $xp->query('h2', $n)->item(0);
+    $title = trim((string) preg_replace('~\s+~u', ' ', $h2 ? $h2->textContent : ''));
+    $words = str_word_count((string) $n->textContent);
+    $contact = $xp->query('.//a[contains(@href,"/kontakt") or contains(@href,"/studio-wyceny") or contains(@href,"wa.me") or starts-with(@href,"tel:") or starts-with(@href,"mailto:")]', $n)->length > 0;
+    if (preg_match('~^(?:FAQ|Najczęściej zadawane pytania|Najczęstsze pytania|Pytania i odpowiedzi|Więcej o\b|Przeczytaj (?:też|również)|Powiązane)~iu', $title)
+      || ($contact && $words < 90)) {
+      $remove($n);
+    }
+  }
   // FAQ items (the page has its own FAQ section) and the article's own blocks.
   foreach (iterator_to_array($xp->query('//details | //*[@id="faq"]')) as $n) { $remove($n); }
   foreach (iterator_to_array($xp->query('//*[@class]')) as $n) {
@@ -217,11 +236,63 @@ function zp_seo_guide_clean_post_html(string $html): string {
     }
     if ($keep !== '') { $n->setAttribute('class', $keep); }
   }
+  // Every wrapper around an H2 is unwrapped: the guide splits the text at its H2s, and a wrapper
+  // (a <section id="…"> with no class, as Elementor stores it) would leave open and closing tags in
+  // different cards and pull the rest of the guide out of its layout (2.6.2).
+  for ($guard = 0; $guard < 20; $guard++) {
+    $wrappers = [];
+    foreach ($xp->query('//*[.//h2]') as $n) {
+      if ($n instanceof DOMElement && $n->getAttribute('id') !== 'zp-guide-root' && $n->parentNode) { $wrappers[] = $n; }
+    }
+    if (!$wrappers) { break; }
+    foreach ($wrappers as $n) { if ($n->parentNode) { $unwrap($n); } }
+  }
   $root = $doc->getElementById('zp-guide-root');
   if (!$root) { return $html; }
+  // Section labels left as bare text in front of a heading (their spans are gone in Elementor's copy).
+  foreach (iterator_to_array($root->childNodes) as $child) {
+    if (!($child instanceof DOMElement && $child->nodeName === 'h2')) { continue; }
+    $prev = $child->previousSibling;
+    while ($prev instanceof DOMText && trim($prev->textContent) === '') { $prev = $prev->previousSibling; }
+    if ($prev instanceof DOMText && str_word_count(trim($prev->textContent)) <= 6) { $remove($prev); }
+  }
   $out = '';
   foreach ($root->childNodes as $child) { $out .= $doc->saveHTML($child); }
   return $out;
+}
+
+/**
+ * Editorial notes never reach the page: HTML comments (e.g. "ARTYKUŁ 01 — USTAWIENIA RANK MATH",
+ * "GRAFIKA 1"), also when they were saved as escaped text (2.6.2).
+ */
+function zp_seo_guide_strip_notes(string $html): string {
+  $out = preg_replace(['~<!--.*?-->~s', '~&lt;!--.*?(?:--&gt;|-->)~s', '~&amp;lt;!--.*?--&amp;gt;~s', '~<!--.*$~s', '~&lt;!--.*$~s'], '', $html);
+  return is_string($out) ? $out : $html;
+}
+
+/**
+ * Text of a post for a guide: the HTML of its Elementor article widget when the post is built with
+ * Elementor (post_content then only holds Elementor's stripped copy, without divs, spans and classes),
+ * otherwise post_content (2.6.2).
+ */
+function zp_seo_guide_post_source(WP_Post $post): string {
+  if (get_post_meta($post->ID, '_elementor_edit_mode', true) === 'builder') {
+    $raw = get_post_meta($post->ID, '_elementor_data', true);
+    $data = is_string($raw) ? json_decode($raw, true) : (is_array($raw) ? $raw : null);
+    $found = '';
+    $walk = static function ($elements) use (&$walk, &$found): void {
+      if (!is_array($elements)) { return; }
+      foreach ($elements as $el) {
+        if ($found !== '' || !is_array($el)) { continue; }
+        $html = (string) ($el['settings']['html'] ?? '');
+        if (($el['widgetType'] ?? '') === 'html' && stripos($html, '<article') !== false) { $found = $html; return; }
+        $walk($el['elements'] ?? []);
+      }
+    };
+    $walk($data);
+    if ($found !== '') { return $found; }
+  }
+  return (string) $post->post_content;
 }
 
 /** True on a page that shows a guide section (content pages and the nationwide shop page). */
