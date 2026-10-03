@@ -1,0 +1,41 @@
+ZAPROJEKTOWANI SUITE 2.5.0
+
+Plan SEO, część 3: nowe sekcje „Poradnik” na podstronach usługowych, nowe podstrony w menu, druga paczka treści (strona kampanii, 3 wpisy Meta Ads, 5 nowych artykułów) i poprawka nagłówków H1 we wpisach. Wygląd strony bez zmian poza elementami wymienionymi niżej.
+
+Sekcje „Poradnik” (8 podstron usługowych):
+- /strony-wordpress/, /opieka-wordpress/, /strona-wizytowka/, /tworzenie-landing-page/, /strony-internetowe-dla-kancelarii/, /strony-internetowe-dla-lekarzy/, /strony-internetowe-dla-deweloperow/, /tworzenie-sklepow-internetowych/,
+- elementy z obecnych podstron usługowych: karty z numerem i ikoną (pierwsza granatowa), listy z „ptaszkami”, numerowane kafelki,
+- obok kart przypięta kolumna ze zdjęciem zespołu (zdjęcia, których strona już używa) i spisem treści; w połowie pasek z osobą z zespołu i przyciskami do kontaktu i Studia Wyceny,
+- treść, nagłówki i linki bez zmian.
+
+Menu „Usługi”:
+- mega menu: Strona wizytówka (kolumna Start marki), Strona WordPress (Strony & sklepy), Landing page (Sprzedaż), nowa grupa „Strony dla branż” pod kartą promocyjną (kancelarie, lekarze, deweloperzy),
+- menu na telefonie: te same pozycje w rozwijanej liście „Usługi”,
+- na niskich ekranach laptopów mniejsze odstępy, a menu wyższe od okna przewija się w środku,
+- pozycje są widoczne tylko przy włączonym planie i w wersji polskiej.
+
+/kampanie-reklamowe/:
+- nowe teksty z paczki treści 2 (7 podmian), FAQ dłuższe o 2 pytania, nowy tytuł i opis w Rank Math, tłumaczenia EN,
+- jeśli któryś tekst w szablonie się zmieni i podmiana go nie znajdzie, wtyczka zapisze to w logu PHP, a strona zostaje jak była.
+
+Wpisy Meta Ads:
+- /meta-ads/facebook-ads-dla-firm-lokalnych/, /meta-ads/ile-kosztuje-reklama-na-facebooku/, /meta-ads/reklama-na-instagramie-a-facebook-ads/: tytuły, opisy, frazy i H1 z planu,
+- wpis o koszcie reklamy: nowa sekcja „W liczbach” po pierwszej sekcji i link do niej w spisie treści,
+- poprawione linki: literówka „ampanie-…” i stary adres /wiedza/landing-page-pod-kampanie-meta-ads/ (teraz /tworzenie-landing-page/).
+
+Nagłówki H1 we wpisach:
+- migracja zmieniała tylko tytuł wpisu, a widoczny H1 był wpisany w treść artykułu; teraz pierwszy H1 w artykule pokazuje tytuł wpisu (dotyczy wpisów z planu, także z 2.3.0),
+- zmiana działa przy wyświetlaniu, dane Elementora zostają nietknięte; po wstrzymaniu planu wraca stary H1.
+
+5 nowych artykułów (szablon wpisów zpArticleNew):
+- /strony-internetowe/jak-stworzyc-strone-internetowa/,
+- /logo-branding/jak-zastrzec-logo/, /logo-branding/key-visual-co-to-jest/, /logo-branding/logo-logotyp-sygnet-roznice/, /logo-branding/logo-wektorowe-pliki-logo/,
+- publikują się same przy pierwszym wejściu na stronę: kopia układu Elementora z istniejącego wpisu tej samej kategorii, nowa treść artykułu, kategoria, autor, zajawka, tytuł/opis/fraza w Rank Math, obrazek wyróżniający,
+- zdjęcia z naszych realizacji (bez stocków) trafiają do biblioteki mediów jeden raz,
+- gdy wpisu-wzoru z Elementorem nie ma, artykuł zapisuje się jako szkic (nic niedokończonego nie wychodzi na stronę),
+- linki do nowych artykułów: FAQ na /projektowanie-logo/ (logo, logotyp czy sygnet; logo wektorowe; zastrzeżenie logo), /identyfikacja-wizualna/ (key visual kampanii), /tworzenie-stron-internetowych/ (jak stworzyć stronę internetową), strona FAQ (key visual) i bloki „Powiązane” w 9 wpisach; każdy link pojawia się dopiero, gdy artykuł jest opublikowany.
+
+Zdjęcia w artykułach:
+- zdjęcia w ramkach artykułu dostają klasę zpArticleNew__img, dzięki której optymalizator ładuje je w pełnym rozmiarze; wcześniej zdjęcie z „logo” w nazwie pliku dostawało rozmiar małego logotypu klienta i było rozmyte.
+
+Panel: Narzędzia → Plan SEO 2.5.0 — dziennik zmian, ponowne uruchomienie, wstrzymanie oraz cofnięcie zmian w bazie. Cofnięcie przenosi nowe podstrony i nowe artykuły do szkiców.

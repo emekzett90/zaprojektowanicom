@@ -11,7 +11,8 @@ if (!defined('ABSPATH')) { exit; }
  *  - new sections from the content thread (data/sections.php), with a link in the article's
  *    table of contents,
  *  - links in posts that pointed to the wrong page: the old /wiedza/ landing page address
- *    (it redirects to a post about shops) and the "ampanie-…" typo address.
+ *    (it redirects to a post about shops) and the "ampanie-…" typo address,
+ *  - photos in the article are marked as article images, so they load in full size.
  * English pages are left alone.
  */
 
@@ -52,6 +53,12 @@ function zp_seo_posts_transform(string $html): string {
       $html = (string) preg_replace('~(<nav\b[^>]*zpArticleNewTOC.*?<a\b[^>]*href="#' . preg_quote($first, '~') . '"[^>]*>.*?</a>)~is', '$1<a href="#' . esc_attr($sid) . '">' . esc_html((string) $s['toc']) . '</a>', $html, 1);
     }
   }
+
+  // Photos in the article: the speed optimizer (includes/optimizer.php) recognises article
+  // images by a "zpArticle" class on the <img>. Without it, a photo whose file name contains
+  // e.g. "logo" was given the size hint of a small client logo (72px), so browsers loaded a
+  // blurry thumbnail. Only the class is added; it carries no styles.
+  $html = (string) preg_replace('~(<figure\b[^>]*\bzpArticleNew__imageBlock\b[^>]*>\s*)<img\b(?![^>]*\bclass=)~i', '$1<img class="zpArticleNew__img"', $html);
 
   // Links to the wrong page.
   foreach (zp_seo_posts_link_map() as $from => $to) {

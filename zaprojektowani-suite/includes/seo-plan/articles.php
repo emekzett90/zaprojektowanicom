@@ -113,7 +113,9 @@ function zp_seo_articles_create(): array {
     if ($kses) { kses_remove_filters(); }
     $id = wp_insert_post(wp_slash([
       'post_type' => 'post', 'post_status' => $status, 'post_title' => (string) $a['title'], 'post_name' => $slug,
-      'post_content' => $article, 'post_excerpt' => '', 'post_category' => [(int) $term->term_id],
+      // Excerpt for blog lists and cards: the plan's meta description (an automatic excerpt
+      // would start with the article's hero labels).
+      'post_content' => $article, 'post_excerpt' => (string) ((zp_seo_plan_entry($path) ?? [])['description'] ?? ''), 'post_category' => [(int) $term->term_id],
       'post_author' => $source ? (int) get_post_field('post_author', $source) : get_current_user_id(),
       'comment_status' => $source ? (string) get_post_field('comment_status', $source) : 'closed', 'ping_status' => 'closed',
     ]), true);
