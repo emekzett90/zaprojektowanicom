@@ -802,11 +802,14 @@ if (!function_exists('zp_suite_faq_schema_node')) {
 
 add_filter('rank_math/frontend/title', function($title){
   if (!zp_suite_faq_is_front()) return $title;
+  // 2.7.1: a title saved in Rank Math (the SEO plan writes one) wins over this default.
+  if (function_exists('zp_seo_faq_rank_math_owns') && zp_seo_faq_rank_math_owns('rank_math_title')) return $title;
   return 'FAQ — strony WWW, sklepy, branding i reklamy | Zaprojektowani';
 }, 80);
 
 add_filter('rank_math/frontend/description', function($description){
   if (!zp_suite_faq_is_front()) return $description;
+  if (function_exists('zp_seo_faq_rank_math_owns') && zp_seo_faq_rank_math_owns('rank_math_description')) return $description;
   return 'Odpowiedzi na najczęstsze pytania o strony internetowe, WooCommerce, logo i branding, SEO, kampanie reklamowe, wycenę i współpracę z Zaprojektowani.';
 }, 80);
 
