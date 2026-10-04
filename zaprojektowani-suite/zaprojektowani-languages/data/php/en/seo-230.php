@@ -93,4 +93,12 @@ return [
 'Strony dla lekarzy i gabinetów'=>'Websites for doctors and clinics',
 'Strony internetowe dla lekarzy'=>'Websites for doctors',
 'Rzeczowa informacja o usługach, umawianie wizyt i lokalne SEO.'=>'Clear information about services, appointment booking and local SEO.',
+/* 2.7.1: plan titles and descriptions of O nas, FAQ and Studio Wyceny (Rank Math values, shown on the English pages too). */
+'O nas: studio z Katowic, zespół i historia | Zaprojektowani'=>'About us: a studio from Katowice, team and story | Zaprojektowani',
+'Marta, Mateusz i Stanisław: studio z Katowic, które od 2022 roku projektuje strony internetowe, sklepy WooCommerce, logo i kampanie dla firm z całej Polski.'=>'Marta, Mateusz and Stanisław: a studio from Katowice that has been designing websites, WooCommerce stores, logos and ad campaigns for businesses across Poland since 2022.',
+'FAQ: pytania o strony, sklepy, logo i ceny | Zaprojektowani'=>'FAQ: questions about websites, stores, logos and prices | Zaprojektowani',
+'Odpowiedzi na najczęstsze pytania o strony internetowe, sklepy WooCommerce, logo, SEO i kampanie: ceny, terminy, wycena i współpraca z Zaprojektowani.'=>'Answers to the most common questions about websites, WooCommerce stores, logos, SEO and ad campaigns: prices, timelines, quotes and working with Zaprojektowani.',
+'Cennik: strona internetowa od 3 999 zł, sklep WooCommerce od 6 499 zł, logo od 999 zł, kampanie od 1 200 zł/mies. Odpowiedz na kilka pytań i otrzymaj wycenę.'=>'Prices: websites from PLN 3,999, WooCommerce stores from PLN 6,499, logos from PLN 999, ad campaigns from PLN 1,200/mo. Answer a few questions and get a quote.',
+/* 2.7.1: the Studio Wyceny chooser shows the confirmed shop price (it said 6 999 zł). */
+'od 6 499 zł'=>'from PLN 6,499',
 ];

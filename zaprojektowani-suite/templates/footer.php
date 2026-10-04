@@ -37,7 +37,7 @@ $zp_logo_light = 'https://zaprojektowani.com/wp-content/uploads/2026/05/ZP_CIEMN
 <!-- DARK CTA FULL BLEED -->
   <section class="zpMegaFooter__darkBand zpMegaFooter__darkBand--cta" aria-labelledby="zpMegaFooterCtaTitle">
     <div class="zpMegaFooter__darkBg" aria-hidden="true"></div>
-    <div class="zpMegaFooter__mark zpMegaFooter__mark--dark" aria-hidden="true">zaprojektowani</div>
+    <div class="zpMegaFooter__mark zpMegaFooter__mark--dark" aria-hidden="true" data-zp-mark="zaprojektowani"></div>
 
     <div class="zpMegaFooter__inner zpMegaFooter__inner--cta">
       <div class="zpMegaFooter__cta">
@@ -46,16 +46,12 @@ $zp_logo_light = 'https://zaprojektowani.com/wp-content/uploads/2026/05/ZP_CIEMN
 
           <h2 id="zpMegaFooterCtaTitle"><?php echo wp_kses($zp_footer_cta_heading, zp_suite_allowed_html()); ?></h2>
 
-          <p><?php echo esc_html($zp_footer_cta_lead); ?></p>
+          <?php if (trim((string) $zp_footer_cta_lead) !== '') : ?><p><?php echo esc_html($zp_footer_cta_lead); ?></p><?php endif; ?>
         </div>
 
-        <figure class="zpMegaFooter__teamPhoto" aria-hidden="true">
-          <img
-            src="<?php echo esc_url($zp_footer_team_photo); ?>"
-            alt=""
-            loading="lazy"
-            decoding="async"
-          >
+        <figure class="zpMegaFooter__teamPhoto">
+          <?php echo zp_footer_cta_team_img((string) $zp_footer_team_photo); ?>
+          <figcaption class="zpFootCta__team"><strong>Marta, Mateusz i Stanisław</strong> <span>zespół Zaprojektowani</span></figcaption>
         </figure>
 
         <div class="zpMegaFooter__ctaActions">
@@ -69,6 +65,12 @@ $zp_logo_light = 'https://zaprojektowani.com/wp-content/uploads/2026/05/ZP_CIEMN
             <i data-lucide="message-circle"></i>
           </a>
         </div>
+
+        <ul class="zpFootCta__proof" aria-label="Zaprojektowani w liczbach">
+          <?php foreach (zp_footer_cta_proof() as $zp_fp) : ?>
+            <li><?php if (!empty($zp_fp['href'])) : ?><a href="<?php echo esc_url($zp_fp['href']); ?>" target="_blank" rel="noopener"><?php endif; ?><b><?php echo esc_html($zp_fp['value']); ?><?php if (!empty($zp_fp['star'])) : ?><i aria-hidden="true">★</i><?php endif; ?></b><span><?php echo esc_html($zp_fp['label']); ?></span><?php if (!empty($zp_fp['href'])) : ?></a><?php endif; ?></li>
+          <?php endforeach; ?>
+        </ul>
       </div>
     </div>
   </section>

@@ -71,8 +71,11 @@ final class Dict {
         if (isset($s[$key])) { return $s[$key]; }
         $c = self::shard($lang, 'common');
         if (isset($c[$key])) { return $c[$key]; }
-        $c = self::shard($lang, 'seo-230');
-        if (isset($c[$key])) { return $c[$key]; }
+        // Texts added by the Suite's SEO plan (2.3.0 titles and headings, 2.7.1 page sections).
+        foreach (['seo-230', 'seo-271'] as $extra) {
+            $c = self::shard($lang, $extra);
+            if (isset($c[$key])) { return $c[$key]; }
+        }
         $idx = self::shard($lang, 'index');
         $h = substr(md5($key), 0, 10);
         if (isset($idx[$h])) {

@@ -61,8 +61,16 @@
     });
     return pending[lang];
   }
+  // The server answers at most 400 keys per request; long pages (e.g. service pages without a page
+  // dictionary) ask in parallel batches, so no text is left out of the switch.
   function lookup(lang, keys) {
-    keys = keys.filter(function (k) { return !negative[lang].has(k); }).slice(0, 400);
+    keys = keys.filter(function (k) { return !negative[lang].has(k); });
+    if (keys.length <= 400) return lookupBatch(lang, keys);
+    var jobs = [];
+    for (var i = 0; i < keys.length && i < 2400; i += 400) jobs.push(lookupBatch(lang, keys.slice(i, i + 400)));
+    return Promise.all(jobs).then(function (maps) { return Object.assign.apply(Object, [{}].concat(maps)); });
+  }
+  function lookupBatch(lang, keys) {
     if (!keys.length) return Promise.resolve({});
     var ctl = window.AbortController ? new AbortController() : null;
     var timer = ctl ? setTimeout(function () { ctl.abort(); }, 10000) : 0;

@@ -237,7 +237,7 @@ return [
     'kind' => 'page',
     'focus' => 'wycena strony internetowej, strona internetowa cennik, strony internetowe cennik, tworzenie stron internetowych cennik, wyceny stron internetowych',
     'title' => 'Cennik i wycena strony internetowej | Zaprojektowani',
-    'description' => 'Cennik stron wizytówek, stron firmowych, sklepów WooCommerce, logo i brandingu. Odpowiedz na kilka pytań i otrzymaj wycenę swojego projektu.',
+    'description' => 'Cennik: strona internetowa od 3 999 zł, sklep WooCommerce od 6 499 zł, logo od 999 zł, kampanie od 1 200 zł/mies. Odpowiedz na kilka pytań i otrzymaj wycenę.',
     'h1' => 'Cennik i wycena strony internetowej, sklepu i logo',
     'editorial_title' => '',
     'editorial_description' => '',
@@ -253,6 +253,61 @@ return [
       [
         'text' => 'ile kosztuje logo',
         'path' => '/logo-branding/ile-kosztuje-logo-dla-firmy-i-co-obejmuje-cena/',
+      ],
+    ],
+  ],
+  // 2.7.1: O nas and FAQ had no plan entry ("O nas - Zaprojektowani" and a title set in code).
+  '/o-nas/' => [
+    'kind' => 'page',
+    'focus' => 'zaprojektowani',
+    'title' => 'O nas: studio z Katowic, zespół i historia | Zaprojektowani',
+    'description' => 'Marta, Mateusz i Stanisław: studio z Katowic, które od 2022 roku projektuje strony internetowe, sklepy WooCommerce, logo i kampanie dla firm z całej Polski.',
+    'h1' => '',
+    'editorial_title' => '',
+    'editorial_description' => '',
+    'links' => [
+      [
+        'text' => 'tworzenie stron internetowych',
+        'path' => '/tworzenie-stron-internetowych/',
+      ],
+      [
+        'text' => 'tworzenie sklepów internetowych',
+        'path' => '/tworzenie-sklepow-internetowych/',
+      ],
+      [
+        'text' => 'projektowanie logo',
+        'path' => '/projektowanie-logo/',
+      ],
+      [
+        'text' => 'kampanie reklamowe',
+        'path' => '/kampanie-reklamowe/',
+      ],
+    ],
+  ],
+  '/najczesciej-zadawane-pytania/' => [
+    'kind' => 'page',
+    'focus' => 'najczęściej zadawane pytania',
+    'title' => 'FAQ: pytania o strony, sklepy, logo i ceny | Zaprojektowani',
+    'description' => 'Odpowiedzi na najczęstsze pytania o strony internetowe, sklepy WooCommerce, logo, SEO i kampanie: ceny, terminy, wycena i współpraca z Zaprojektowani.',
+    'h1' => '',
+    'editorial_title' => '',
+    'editorial_description' => '',
+    'links' => [
+      [
+        'text' => 'cennik stron internetowych, sklepów, logo i kampanii',
+        'path' => '/studio-wyceny/',
+      ],
+      [
+        'text' => 'ile kosztuje strona internetowa',
+        'path' => '/strony-www/ile-kosztuje-stworzenie-strony-internetowej-dla-firmy/',
+      ],
+      [
+        'text' => 'tworzenie sklepów internetowych',
+        'path' => '/tworzenie-sklepow-internetowych/',
+      ],
+      [
+        'text' => 'projektowanie logo',
+        'path' => '/projektowanie-logo/',
       ],
     ],
   ],

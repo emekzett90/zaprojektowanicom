@@ -7,29 +7,32 @@ if (!defined('ABSPATH')) { exit; }
  * - blog category archives (/strony-internetowe/, /sklepy-internetowe/ …): noindex, follow and out
  *   of the sitemap, so they stop competing with the service pages for the same phrases,
  * - Elementor template URLs (?elementor_library=…) return 404 to visitors,
- * - old sitemaps of a previous translation plugin (pl-sitemap.xml, en-sitemap.xml): out of the index and
- *   robots.txt; since 2.6.4 they redirect to live maps (before: 410), and the English map is always listed.
+ * - old sitemaps of a previous translation plugin (pl-sitemap.xml, en-sitemap.xml) and the earlier English
+ *   maps (sitemap-en.xml, english-sitemap.xml): out of the index and robots.txt and redirected to
+ *   sitemap_index.xml (before 2.6.4: 410); the English page and post maps are always in the index (2.7.1).
  */
 
 function zp_seo_plan_is_thank_you_path(string $path): bool {
   return (bool) preg_match('~^/dziekujemy[a-z0-9-]*/$~', $path);
 }
 
-/** Old language sitemaps: pl-/en-sitemap.xml (previous translation plugin) and sitemap-pl/-en.xml. */
-const ZP_SEO_PLAN_OLD_SITEMAPS = '(?:(?:pl|en)-sitemap|sitemap-(?:pl|en))\.xml';
+/** Old language sitemaps: pl-/en-sitemap.xml (previous translation plugin), sitemap-pl/-en.xml and
+ * english-sitemap.xml (the single English map of 2.6.4–2.7.0). */
+const ZP_SEO_PLAN_OLD_SITEMAPS = '(?:(?:pl|en)-sitemap|sitemap-(?:pl|en)|english-sitemap)\.xml';
 
-/** English sitemap URL when the languages module is there (it lists the map the same way), else ''. */
-function zp_seo_plan_en_sitemap_url(): string {
-  return method_exists('ZPL\\Sitemap', 'url') ? \ZPL\Sitemap::url() : '';
+/** English sitemaps of the languages module: type => URL (empty without the module). */
+function zp_seo_plan_en_sitemap_urls(): array {
+  if (method_exists('ZPL\\Sitemap', 'urls')) { return \ZPL\Sitemap::urls(); }
+  return method_exists('ZPL\\Sitemap', 'url') ? ['page' => \ZPL\Sitemap::url()] : [];
 }
 
 // 2.6.4: the old maps redirect to live ones (before: 410), so old Search Console entries and manual
-// checks land on a working map: Polish → the index, English → the English map.
+// checks land on a working map. Since 2.7.1 both go to the index, which lists the Polish and English maps.
 add_action('init', function () {
   if (!zp_seo_plan_active() || is_admin()) { return; }
   $path = zp_seo_plan_path();
   if ($path !== '/pl-sitemap.xml' && $path !== '/en-sitemap.xml') { return; }
-  $to = $path === '/en-sitemap.xml' ? zp_seo_plan_en_sitemap_url() : home_url('/sitemap_index.xml');
+  $to = $path === '/en-sitemap.xml' && !zp_seo_plan_en_sitemap_urls() ? '' : home_url('/sitemap_index.xml');
   if ($to === '') {
     status_header(410);
     header('Content-Type: text/plain; charset=UTF-8');
@@ -46,23 +49,23 @@ add_filter('robots_txt', function ($output) {
   if (!zp_seo_plan_active()) { return $output; }
   $lines = preg_split('~\r?\n~', (string) $output);
   $lines = array_filter($lines, static function ($line) { return !preg_match('~/' . ZP_SEO_PLAN_OLD_SITEMAPS . '\s*$~i', trim($line)); });
-  $out = implode("\n", $lines);
-  $en = zp_seo_plan_en_sitemap_url();
-  if ($en !== '' && strpos($out, $en) === false) { $out = rtrim($out) . "\nSitemap: " . $en . "\n"; }
-  return $out;
+  // The English maps are in sitemap_index.xml (2.7.1), so robots.txt names only the index.
+  return implode("\n", $lines);
 }, PHP_INT_MAX);
 
 /**
  * The index without entries for the old language sitemaps (see above). The finished index also gets the
- * English map if nothing listed it: on the live site it was missing (2.6.4).
+ * English maps if nothing listed them: on the live site the English map was missing (2.6.4).
+ * $in_handler: called from an output buffer handler, where nothing may render a page (no new buffers).
  */
-function zp_seo_plan_strip_gone_sitemaps(string $xml): string {
+function zp_seo_plan_strip_gone_sitemaps(string $xml, bool $in_handler = false): string {
   $out = preg_replace('~<sitemap>\s*<loc>[^<]*/' . ZP_SEO_PLAN_OLD_SITEMAPS . '</loc>.*?</sitemap>\s*~is', '', $xml);
   if (!is_string($out)) { return $xml; }
-  $en = zp_seo_plan_en_sitemap_url();
-  if ($en !== '' && strpos($out, '</sitemapindex>') !== false && strpos($out, '/' . basename($en) . '</loc>') === false) {
-    $built = class_exists('ZPL\\Dict') ? (int) (\ZPL\Dict::meta()['built'] ?? 0) : 0;
-    $entry = "\t<sitemap>\n\t\t<loc>" . esc_url($en) . "</loc>\n" . ($built ? "\t\t<lastmod>" . gmdate('c', $built) . "</lastmod>\n" : '') . "\t</sitemap>\n";
+  if (strpos($out, '</sitemapindex>') === false) { return $out; }
+  foreach (zp_seo_plan_en_sitemap_urls() as $type => $en) {
+    if (strpos($out, '/' . basename($en) . '</loc>') !== false) { continue; }
+    $mod = method_exists('ZPL\\Sitemap', 'lastmod') ? \ZPL\Sitemap::lastmod((string) $type, $in_handler) : 0;
+    $entry = "\t<sitemap>\n\t\t<loc>" . esc_url($en) . "</loc>\n" . ($mod ? "\t\t<lastmod>" . gmdate('c', $mod) . "</lastmod>\n" : '') . "\t</sitemap>\n";
     $out = str_replace('</sitemapindex>', $entry . '</sitemapindex>', $out);
   }
   return $out;
@@ -79,7 +82,7 @@ add_filter('rank_math/sitemap/index', function ($xml) {
 // filtered as a whole, whatever added them (2.6.3).
 add_action('init', function () {
   if (!zp_seo_plan_active() || is_admin() || zp_seo_plan_path() !== '/sitemap_index.xml') { return; }
-  ob_start(static function ($out) { return is_string($out) ? zp_seo_plan_strip_gone_sitemaps($out) : $out; });
+  ob_start(static function ($out) { return is_string($out) ? zp_seo_plan_strip_gone_sitemaps($out, true) : $out; });
 }, 0);
 
 add_filter('rank_math/frontend/robots', function ($robots) {

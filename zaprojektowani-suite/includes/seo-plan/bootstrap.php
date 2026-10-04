@@ -24,11 +24,16 @@ if (!defined('ABSPATH')) { exit; }
  *       and gives the hero H1 gradient phrase the heading's line height.
  * 2.7.0 brings back packages and more sections on the three Katowice pages (and merges the footer v3
  *       and the Tłumacz EN module, which live outside this folder).
+ * 2.7.1 optimizes Studio Wyceny (price list section, FAQPage, chooser fixes; studio.php), the FAQ page
+ *       (client-facing answers with prices; faq.php) and O nas (links to the services, AboutPage; about.php),
+ *       with plan entries for O nas and FAQ. The plan version must be new on the site, so the entries are written.
+ *       The same release lists the English page and post sitemaps in the index next to the Polish ones and
+ *       redirects /english-sitemap.xml (indexation.php), and adds the dark footer band (includes/footer-cta.php).
  *
  * Narzędzia → Plan SEO shows the migration log and can undo the database changes.
  */
 
-define('ZP_SEO_PLAN_VERSION', '2.7.0');
+define('ZP_SEO_PLAN_VERSION', '2.7.1');
 
 /** The plan is on unless an administrator paused it (Narzędzia → Plan SEO). */
 function zp_seo_plan_active(): bool {
@@ -81,5 +86,8 @@ require_once __DIR__ . '/links.php';
 require_once __DIR__ . '/menu.php';
 require_once __DIR__ . '/stats.php';
 require_once __DIR__ . '/authors.php';
+require_once __DIR__ . '/studio.php';
+require_once __DIR__ . '/faq.php';
+require_once __DIR__ . '/about.php';
 require_once __DIR__ . '/migration.php';
 require_once __DIR__ . '/admin.php';
