@@ -27,6 +27,8 @@ if (!defined('ABSPATH')) { exit; }
  * 2.7.1 optimizes Studio Wyceny (price list section, FAQPage, chooser fixes; studio.php), the FAQ page
  *       (client-facing answers with prices; faq.php) and O nas (links to the services, AboutPage; about.php),
  *       with plan entries for O nas and FAQ. The plan version must be new on the site, so the entries are written.
+ *       The same release lists the English page and post sitemaps in the index next to the Polish ones and
+ *       redirects /english-sitemap.xml (indexation.php), and adds the dark footer band (includes/footer-cta.php).
  *
  * Narzędzia → Plan SEO shows the migration log and can undo the database changes.
  */

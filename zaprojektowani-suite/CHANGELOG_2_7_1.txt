@@ -1,0 +1,40 @@
+ZAPROJEKTOWANI SUITE 2.7.1 (wersja finalna)
+
+Jeden plik wtyczki ze wszystkim: 2.3.0–2.7.0 oraz poprawki po instalacji 2.7.0,
+SEO stron FAQ, O nas i Studio Wyceny i nowy ciemny pas stopki.
+
+Przełącznik języka (zgłoszenie Mata po 2.7.0: nagłówek w hero zostawał po polsku):
+- po przełączeniu na EN bez przeładowania tłumaczą się H1 i hero na wszystkich podstronach,
+  a także sekcje dodane przez plan SEO: pakiety, poradniki, FAQ stron usług, cennik w Studio Wyceny,
+- słownik ma 1633 nowe tłumaczenia (zaprojektowani-languages/data/php/en/seo-271.php),
+- długie strony pytają serwer o brakujące teksty w kilku paczkach po 400, więc nic nie zostaje pominięte.
+
+Mapy witryny EN (zgłoszenie Mata: mapa angielska wyglądała jak goły tekst i miała starą datę):
+- dwie mapy jak polskie: english-page-sitemap.xml (strony) i english-post-sitemap.xml (wpisy),
+- ten sam wygląd co page-sitemap.xml (tabela Rank Math), data zmiany i obrazki każdej strony,
+  przy każdym adresie powiązanie z polską wersją (hreflang pl / en),
+- w sitemap_index.xml obie mapy EN obok post- i page-sitemap, z prawdziwą datą ostatniej zmiany,
+- stare adresy (english-sitemap.xml, sitemap-en.xml, en-sitemap.xml, pl-sitemap.xml) przekierowują
+  301 na sitemap_index.xml; robots.txt wskazuje tylko sitemap_index.xml.
+
+Studio Wyceny, FAQ i O nas (z wątku „FAQ, O nas i Studio wyceny”):
+- Studio Wyceny: sekcja „Cennik i wycena” pod formularzem (strona od 3 999 zł, sklep od 6 499 zł,
+  logo od 999 zł, kampanie od 1 200 zł/mies.), pięć pytań o cennik ze schematem FAQPage, stały H1,
+  opis w Google z cenami; w wyborze usługi cena sklepu 6 499 zł, liczba realizacji z ustawień,
+  lżejsze obrazki (WebP) i noindex dla samego pliku wyboru,
+- FAQ: 16 odpowiedzi przepisanych pod klienta (ceny, terminy, linki do usług i poradników),
+  kategorie bez „Katowice”, tytuł i opis z Rank Math,
+- O nas: nowy tytuł i opis, 4 karty usług prowadzą do stron usług, schemat AboutPage z zespołem.
+
+Ciemny pas stopki (z wątku „Stopka strony”):
+- zdjęcie zespołu z opisem (alt, podpis z imionami), wymiarami i srcset,
+- pod przyciskami liczby: projekty, ocena w Google (link do opinii), lata doświadczenia,
+- zdjęcie nie zasłania już nagłówka i opisu na laptopie, na telefonie widać cały zespół,
+- napis w tle nie jest tekstem strony; nagłówek z gradientem jak na stronach usług.
+
+Po wgraniu:
+1. Wejdź raz na dowolną stronę (zapisują się nowe tytuły i opisy FAQ, O nas i Studio Wyceny).
+2. LiteSpeed Cache → Purge All.
+3. Rank Math → Mapa witryny → Zapisz zmiany.
+4. Search Console → Mapy witryn: zostaw tylko sitemap_index.xml (mapy EN są w środku).
+5. Jeśli jeszcze nie: ZP Suite → Tłumacz EN → Ustawienia, wklej NOWY klucz API OpenAI.
