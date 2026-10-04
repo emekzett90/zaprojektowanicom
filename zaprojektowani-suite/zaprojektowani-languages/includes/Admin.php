@@ -69,7 +69,7 @@ final class Admin {
             'Poprawki ręczne' => number_format_i18n($ov),
             'Brakujące tłumaczenia (do przejrzenia)' => number_format_i18n($missing),
             'Wykluczone ścieżki' => implode(', ', Router::excludes()),
-            'Mapa witryny EN' => '<a href="' . esc_url(Sitemap::url()) . '" target="_blank">' . esc_html(Sitemap::url()) . '</a>',
+            'Mapy witryny EN' => implode('<br>', array_map(static function ($u) { return '<a href="' . esc_url($u) . '" target="_blank">' . esc_html($u) . '</a>'; }, Sitemap::urls())),
         ];
         foreach ($rows as $k => $v) { echo '<tr><th style="width:320px">' . esc_html($k) . '</th><td>' . wp_kses_post((string) $v) . '</td></tr>'; }
         echo '</tbody></table>';
