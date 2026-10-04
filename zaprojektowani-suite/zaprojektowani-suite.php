@@ -1621,3 +1621,5 @@ require_once ZP_SUITE_PATH . 'includes/css-min.php';
 
 // Stopka v3 — linki pod plan fraz, ceny usług, pas lokalny Katowice, akordeon na telefonie.
 require_once ZP_SUITE_PATH . 'includes/footer-v3.php';
+// Ciemny pas CTA stopki: zdjęcie zespołu z opisem i srcset, liczby zaufania, układ bez nachodzenia na tekst.
+require_once ZP_SUITE_PATH . 'includes/footer-cta.php';
