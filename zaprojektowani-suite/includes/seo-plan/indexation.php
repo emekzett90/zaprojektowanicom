@@ -56,14 +56,15 @@ add_filter('robots_txt', function ($output) {
 /**
  * The index without entries for the old language sitemaps (see above). The finished index also gets the
  * English maps if nothing listed them: on the live site the English map was missing (2.6.4).
+ * $in_handler: called from an output buffer handler, where nothing may render a page (no new buffers).
  */
-function zp_seo_plan_strip_gone_sitemaps(string $xml): string {
+function zp_seo_plan_strip_gone_sitemaps(string $xml, bool $in_handler = false): string {
   $out = preg_replace('~<sitemap>\s*<loc>[^<]*/' . ZP_SEO_PLAN_OLD_SITEMAPS . '</loc>.*?</sitemap>\s*~is', '', $xml);
   if (!is_string($out)) { return $xml; }
   if (strpos($out, '</sitemapindex>') === false) { return $out; }
   foreach (zp_seo_plan_en_sitemap_urls() as $type => $en) {
     if (strpos($out, '/' . basename($en) . '</loc>') !== false) { continue; }
-    $mod = method_exists('ZPL\\Sitemap', 'lastmod') ? \ZPL\Sitemap::lastmod((string) $type) : 0;
+    $mod = method_exists('ZPL\\Sitemap', 'lastmod') ? \ZPL\Sitemap::lastmod((string) $type, $in_handler) : 0;
     $entry = "\t<sitemap>\n\t\t<loc>" . esc_url($en) . "</loc>\n" . ($mod ? "\t\t<lastmod>" . gmdate('c', $mod) . "</lastmod>\n" : '') . "\t</sitemap>\n";
     $out = str_replace('</sitemapindex>', $entry . '</sitemapindex>', $out);
   }
@@ -81,7 +82,7 @@ add_filter('rank_math/sitemap/index', function ($xml) {
 // filtered as a whole, whatever added them (2.6.3).
 add_action('init', function () {
   if (!zp_seo_plan_active() || is_admin() || zp_seo_plan_path() !== '/sitemap_index.xml') { return; }
-  ob_start(static function ($out) { return is_string($out) ? zp_seo_plan_strip_gone_sitemaps($out) : $out; });
+  ob_start(static function ($out) { return is_string($out) ? zp_seo_plan_strip_gone_sitemaps($out, true) : $out; });
 }, 0);
 
 add_filter('rank_math/frontend/robots', function ($robots) {

@@ -122,11 +122,32 @@ final class Sitemap {
         return md5($last . '|' . ZPL_VERSION . '|' . (Dict::meta()['version'] ?? '') . '|' . implode(',', array_keys(self::translated())));
     }
 
-    /** Newest date in one English map (from the same entries the map lists, so index and map agree). */
-    public static function lastmod(string $type): int {
+    /**
+     * Newest date in one English map, from the same entries the map lists, so index and map agree.
+     * $quick: no page rendering (for output buffer handlers, where Elementor and Rank Math's image parser
+     * may not start a buffer): the cached entries when they are fresh, else the dates of the translated
+     * posts themselves.
+     */
+    public static function lastmod(string $type, bool $quick = false): int {
+        $rows = null;
+        if ($quick) {
+            $cached = get_transient(self::CACHE . '_' . $type);
+            if (is_array($cached) && ($cached['v'] ?? '') === self::version()) { $rows = (array) $cached['rows']; }
+        } else {
+            $rows = self::entries($type);
+        }
         $max = 0;
-        foreach (self::entries($type) as $r) {
-            if ($r['mod'] !== '') { $max = max($max, (int) strtotime($r['mod'] . ' UTC')); }
+        if ($rows !== null) {
+            foreach ($rows as $r) {
+                if (($r['mod'] ?? '') !== '') { $max = max($max, (int) strtotime($r['mod'] . ' UTC')); }
+            }
+        } else {
+            foreach (array_keys(self::translated()) as $source) {
+                $id = $source === '/' ? (int) get_option('page_on_front') : url_to_postid(home_url($source));
+                if ($id <= 0 || get_post_type($id) !== $type) { continue; }
+                $p = get_post($id);
+                if ($p && $p->post_status === 'publish') { $max = max($max, (int) strtotime(max($p->post_modified_gmt, $p->post_date_gmt) . ' UTC')); }
+            }
         }
         return $max ?: (int) (Dict::meta()['built'] ?? time());
     }
