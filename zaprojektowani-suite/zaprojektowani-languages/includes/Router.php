@@ -16,7 +16,11 @@ final class Router {
     private static $home = null;
 
     const DEFAULT_EXCLUDE = ['/oferty/', '/briefy/'];
-    /** Polish pages with no English version of their own => the English page that covers them (suite 2.3.0). */
+    /**
+     * Polish pages with no English version of their own => the English page that covers them (suite 2.3.0).
+     * Since 1.0.15 all of them have English routes in data/routes.php (e.g. /en/website-development/), so an
+     * alias only applies again if its route is removed.
+     */
     const ALIASES = [
         '/tworzenie-stron-internetowych/' => '/strony-internetowe-katowice/',
         '/tworzenie-sklepow-internetowych/' => '/sklepy-internetowe-katowice/',

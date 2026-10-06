@@ -8,7 +8,8 @@ if (!defined('ABSPATH')) { exit; }
  * layout), so they get every stylesheet, script and fix the Katowice pages have. What
  * differs is decided here from the URL: H1, hero copy, headings, FAQ and links follow the
  * keyword plan, and the Katowice pages drop the sections that now live on the nationwide
- * pages. English pages (/en/…) keep the original Katowice templates and translations.
+ * pages. English Katowice pages (/en/…-katowice/) keep the original templates and translations;
+ * the nationwide pages have their own English versions (2.8.0).
  */
 
 /** Path => what the page shows. 'source' is the Katowice page a new page is copied from. */
@@ -40,9 +41,13 @@ function zp_seo_service_shortcodes(): array {
   ];
 }
 
-/** Variant for the current request ('' = original template). */
+/**
+ * Variant for the current request ('' = original template). English pages of the Katowice templates keep
+ * the original; the nationwide and content pages have English versions of their own since 2.8.0
+ * (zaprojektowani-languages routes them, e.g. /en/website-development/), rendered from the same variant.
+ */
 function zp_seo_service_variant(): string {
-  if (!zp_seo_plan_active() || is_admin() || zp_seo_plan_is_en() || !did_action('wp')) { return ''; }
+  if (!zp_seo_plan_active() || is_admin() || !did_action('wp')) { return ''; }
   $path = '';
   if (is_singular()) {
     $id = get_queried_object_id();
@@ -50,7 +55,14 @@ function zp_seo_service_variant(): string {
   }
   if ($path === '') { $path = zp_seo_plan_path(); }
   $reg = zp_seo_service_registry();
+  if (zp_seo_plan_is_en() && (empty($reg[$path]['source']) || !zp_seo_service_has_en($path))) { return ''; }
   return $reg[$path]['variant'] ?? '';
+}
+
+/** The page has an English version of its own (not the Katowice page it was copied from). */
+function zp_seo_service_has_en(string $path): bool {
+  if (!class_exists('\ZPL\Router')) { return false; }
+  return isset(\ZPL\Router::routes()[$path]);
 }
 
 add_filter('do_shortcode_tag', function ($output, $tag) {
