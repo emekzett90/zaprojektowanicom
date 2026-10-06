@@ -6,6 +6,8 @@ if (!defined('ABSPATH')) { exit; }
  * - thank-you pages: noindex, out of the sitemaps,
  * - blog category archives (/strony-internetowe/, /sklepy-internetowe/ …): noindex, follow and out
  *   of the sitemap, so they stop competing with the service pages for the same phrases,
+ * - pages made for one client (/rutpoz-brief/, /dottore-logo-showcase/): noindex, nofollow and out of the
+ *   sitemaps, Polish and English (2.8.0),
  * - Elementor template URLs (?elementor_library=…) return 404 to visitors,
  * - old sitemaps of a previous translation plugin (pl-sitemap.xml, en-sitemap.xml) and the earlier English
  *   maps (sitemap-en.xml, english-sitemap.xml): out of the index and robots.txt and redirected to
@@ -14,6 +16,24 @@ if (!defined('ABSPATH')) { exit; }
 
 function zp_seo_plan_is_thank_you_path(string $path): bool {
   return (bool) preg_match('~^/dziekujemy[a-z0-9-]*/$~', $path);
+}
+
+/**
+ * Pages made for one client (questionnaires, presentations), 2.8.0: reachable by link, but noindex and
+ * out of the Polish and English sitemaps, and the Tłumacz EN module does not translate them. More can be
+ * added with the zp_seo_plan_private_pages filter, or per page in Rank Math (noindex has the same effect).
+ */
+function zp_seo_plan_private_pages(): array {
+  return (array) apply_filters('zp_seo_plan_private_pages', ['/rutpoz-brief/', '/dottore-logo-showcase/']);
+}
+
+function zp_seo_plan_is_private_path(string $path): bool {
+  return $path !== '' && in_array($path, zp_seo_plan_private_pages(), true);
+}
+
+/** Kept out of Google: thank-you pages and private client pages. */
+function zp_seo_plan_is_hidden_path(string $path): bool {
+  return zp_seo_plan_is_thank_you_path($path) || zp_seo_plan_is_private_path($path);
 }
 
 /** Old language sitemaps: pl-/en-sitemap.xml (previous translation plugin), sitemap-pl/-en.xml and
@@ -87,10 +107,13 @@ add_action('init', function () {
 
 add_filter('rank_math/frontend/robots', function ($robots) {
   if (!zp_seo_plan_active() || !is_array($robots)) { return $robots; }
-  $noindex = is_category() || (is_page() && zp_seo_plan_is_thank_you_path(zp_seo_plan_path(get_permalink())));
-  if ($noindex) {
+  $path = is_page() ? zp_seo_plan_path(get_permalink()) : '';
+  if (is_category() || zp_seo_plan_is_thank_you_path($path)) {
     $robots['index'] = 'noindex';
     $robots['follow'] = 'follow';
+  } elseif (zp_seo_plan_is_private_path($path)) {
+    $robots['index'] = 'noindex';
+    $robots['follow'] = 'nofollow';
   }
   return $robots;
 }, 30);
@@ -98,8 +121,9 @@ add_filter('rank_math/frontend/robots', function ($robots) {
 // Without Rank Math (or with its robots meta off) the same rule as a plain tag.
 add_action('wp_head', function () {
   if (!zp_seo_plan_active() || defined('RANK_MATH_VERSION')) { return; }
-  if (is_category() || (is_page() && zp_seo_plan_is_thank_you_path(zp_seo_plan_path(get_permalink())))) {
-    echo '<meta name="robots" content="noindex, follow">' . "\n";
+  $path = is_page() ? zp_seo_plan_path(get_permalink()) : '';
+  if (is_category() || zp_seo_plan_is_hidden_path($path)) {
+    echo '<meta name="robots" content="noindex, ' . (zp_seo_plan_is_private_path($path) ? 'nofollow' : 'follow') . '">' . "\n";
   }
 }, 1);
 
@@ -109,7 +133,7 @@ add_filter('rank_math/sitemap/exclude_taxonomy', function ($exclude, $taxonomy) 
 
 add_filter('rank_math/sitemap/entry', function ($url, $type, $object) {
   if (!zp_seo_plan_active() || !is_array($url) || empty($url['loc'])) { return $url; }
-  return zp_seo_plan_is_thank_you_path(zp_seo_plan_path($url['loc'])) ? false : $url;
+  return zp_seo_plan_is_hidden_path(zp_seo_plan_path($url['loc'])) ? false : $url;
 }, 10, 3);
 
 // Core sitemaps, in case Rank Math's are switched off.
@@ -119,7 +143,8 @@ add_filter('wp_sitemaps_taxonomies', function ($taxonomies) {
 });
 add_filter('wp_sitemaps_posts_query_args', function ($args, $post_type) {
   if (!zp_seo_plan_active() || $post_type !== 'page') { return $args; }
-  $ids = get_posts(['post_type' => 'page', 'post_status' => 'publish', 'numberposts' => 20, 'fields' => 'ids', 'suppress_filters' => true, 'post_name__in' => zp_seo_plan_thank_you_slugs()]);
+  $slugs = array_merge(zp_seo_plan_thank_you_slugs(), array_map(static function ($p) { return trim((string) $p, '/'); }, zp_seo_plan_private_pages()));
+  $ids = get_posts(['post_type' => 'page', 'post_status' => 'publish', 'numberposts' => 40, 'fields' => 'ids', 'suppress_filters' => true, 'post_name__in' => $slugs]);
   $args['post__not_in'] = array_merge((array) ($args['post__not_in'] ?? []), $ids);
   return $args;
 }, 10, 2);
