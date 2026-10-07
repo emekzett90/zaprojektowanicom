@@ -1,0 +1,25 @@
+ZAPROJEKTOWANI SUITE 2.8.1
+
+Poprawki po 2.8.0. Zawiera całą 2.8.0 (i Twoją 2.7.20).
+
+Mega menu, „Strony dla branż” (Twoja uwaga: prościej, bez ramek wokół ikonek):
+- na komputerze same ikonki, bez kafelków i ramek, w kolorze menu,
+- zamiast zaokrąglonego panelu z tłem tylko cienka linia nad rzędem branż,
+- na telefonie grupa branż ma zwykłe ikonki, jak reszta menu,
+- menu jest przez to niższe.
+
+Miniatury artykułów na liście Wiedza (Twój zrzut z /wiedza/):
+- okładki 10 artykułów z ostatnich paczek miały jasne tło nad i pod zdjęciami,
+  więc w kartach zostawał jasny pas; teraz są przycięte do samych zdjęć i wypełniają kartę,
+- po wgraniu wtyczka sama podmienia obrazek wyróżniający tych wpisów,
+  chyba że ustawiłeś tam inny obrazek ręcznie (wtedy go nie rusza).
+
+Search Console (audyt z 7.10):
+- 31 starych adresów z raportu „Nie znaleziono (404)” przekierowuje 301 na właściwe strony
+  (np. stare warianty adresów artykułów, /about-us/, /strony/); 22 pozostałe adresy z raportu
+  to śmieci, stare niemieckie adresy tłumacza, strony podziękowań i stronicowanie, więc zostają 404.
+
+Po wgraniu:
+1. Wejdź raz na dowolną stronę.
+2. Rank Math → Mapa witryny → Zapisz zmiany.
+3. Napisz w wątku „wgrane”.
