@@ -1,12 +1,12 @@
 {
  "format": 1,
- "zaktualizowano": "2026-10-07T23:45:59+02:00",
+ "zaktualizowano": "2026-10-08T00:04:24+02:00",
  "wpisy": [
   {
    "slug": "papier-firmowy",
    "sciezka": "/logo-branding/papier-firmowy/",
    "plik": "wpisy/papier-firmowy.json",
-   "sha256": "8d89a0513044d5bd67ea500d367d566a2113a418a2d1030180cfef7c2990ad1a",
+   "sha256": "dca178696e2729a9e8ecb5905ff2a874579ace26c8539bc07415900abcbbac8a",
    "publikacja": "2026-10-15T08:00:00+02:00",
    "paczka": 5
   },
@@ -14,7 +14,7 @@
    "slug": "kreatory-stron-internetowych",
    "sciezka": "/strony-internetowe/kreatory-stron-internetowych/",
    "plik": "wpisy/kreatory-stron-internetowych.json",
-   "sha256": "35b6ad1f11922b20beac6dd1e870a47caadb932729ec2cc138ffe747b91cdb0c",
+   "sha256": "89894d80e2a812615ceca32001dd1a3cdf19d69957919d6eb147bd9db1781848",
    "publikacja": "2026-10-19T08:00:00+02:00",
    "paczka": 5
   },
@@ -22,7 +22,7 @@
    "slug": "mockup-co-to-jest",
    "sciezka": "/logo-branding/mockup-co-to-jest/",
    "plik": "wpisy/mockup-co-to-jest.json",
-   "sha256": "6e2c53be6eccfb052343beddd5757bea1509ece919040104830e69101ab9f5ff",
+   "sha256": "4f10747ae00a8d3a9f54d18b7f7059f26ca5256e08ab2db03b93a001e1e70308",
    "publikacja": "2026-10-21T08:00:00+02:00",
    "paczka": 5
   },
@@ -30,7 +30,7 @@
    "slug": "seo-sklepu-internetowego",
    "sciezka": "/sklepy-internetowe/seo-sklepu-internetowego/",
    "plik": "wpisy/seo-sklepu-internetowego.json",
-   "sha256": "b85fc3e52da7ebb4feeecfbd8b41b68afd10014b115d2322bb9dc1e2889a5cf4",
+   "sha256": "59b66ea04ebe89a45c6652972aca5a6d23a9493fa21390e0cecc28c622cf3729",
    "publikacja": "2026-10-23T08:00:00+02:00",
    "paczka": 5
   },
@@ -38,7 +38,7 @@
    "slug": "logo-firmy-budowlanej",
    "sciezka": "/logo-branding/logo-firmy-budowlanej/",
    "plik": "wpisy/logo-firmy-budowlanej.json",
-   "sha256": "07e13973b8880683f9326088decb492444fbc33e2c1a8167f48f5c809d160ac4",
+   "sha256": "adef8d379f16a27e313eeafe362e02c7ec3e54b21501d73ad7e02ce4e691436e",
    "publikacja": "2026-10-27T08:00:00+01:00",
    "paczka": 5
   }
