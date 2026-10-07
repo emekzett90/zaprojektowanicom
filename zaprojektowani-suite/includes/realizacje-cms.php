@@ -1256,7 +1256,7 @@ function zp_suite_render_realizacje_cms_page(){
     if (empty($save['projects'])) { $save['projects']=zp_suite_realizacje_default_projects(); }
     if (empty($save['categories'])) { $save['categories']=zp_suite_realizacje_default_categories(); }
     update_option('zp_suite_realizacje_cms',$save,false); $home=function_exists('zp_suite_cms')?zp_suite_cms():[]; $real=zp_suite_realizacje_cms();
-    echo '<div class="notice notice-success is-dismissible"><p>Zapisano Realizacje CMS. Wyczyść cache Nitro/LiteSpeed po zmianach frontu.</p></div>';
+    echo '<div class="notice notice-success is-dismissible"><p>Zapisano Realizacje CMS.</p></div>';
   }
   $home_web=$home['portfolio']['web']??[]; $home_logo=$home['portfolio']['logo']??[]; $projects=$real['projects']??[]; $categories=$real['categories']??[]; ?>
   <div class="wrap zpSuiteAdmin zpSuiteRealizacjeAdmin"><div class="zpSuiteHero"><span class="zpSuiteBadge">ZAPROJEKTOWANI SUITE • REALIZACJE CMS</span><h1>Realizacje i portfolio w jednym miejscu.</h1><p>Zarządzasz osobno portfolio na stronie głównej i pełną podstroną Realizacje. Projekty z podstrony mają pełne dane do kart, filtrów i modalu szczegółów.</p><div class="zpStatus"><div class="zpStat"><strong><?php echo (int)count($home_web)+(int)count($home_logo); ?></strong><span>home portfolio</span></div><div class="zpStat"><strong><?php echo (int)count($projects); ?></strong><span>realizacje</span></div><div class="zpStat"><strong>[zp_realizacje]</strong><span>shortcode</span></div></div></div>

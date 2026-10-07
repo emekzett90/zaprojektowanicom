@@ -93,7 +93,7 @@ function zp_suite_save_admin(){
     $cms['industries'] = zp_suite_sanitize_repeater($raw['industries'] ?? []);
     update_option('zp_suite_cms', $cms, false);
   }
-  echo '<div class="zpNotice">Zapisano ustawienia Zaprojektowani Suite 1.6.0. Wyczyść LiteSpeed Cache, jeśli testujesz front.</div>';
+  echo '<div class="zpNotice">Zapisano ustawienia Zaprojektowani Suite.</div>';
 }
 
 function zp_field($section,$key,$label,$type='text',$help=''){

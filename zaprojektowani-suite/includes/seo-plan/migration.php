@@ -222,7 +222,7 @@ function zp_seo_plan_migrate(): void {
 
   // 8. Caches.
   zp_seo_plan_purge_caches();
-  $log[] = 'Wyczyszczono pamięć podręczną map witryny Rank Math i LiteSpeed.';
+  $log[] = 'Wyczyszczono pamięć podręczną map witryny Rank Math' . (defined('LSCWP_V') ? ' i LiteSpeed.' : '.');
 
   update_option('zp_seo_plan_migrated', ZP_SEO_PLAN_VERSION, false);
   update_option('zp_seo_plan_migrated_at', time(), false);
