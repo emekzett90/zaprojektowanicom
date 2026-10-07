@@ -125,6 +125,8 @@ final class Bridge {
             return 'wersję angielską zastępuje ' . \ZPL\Router::ALIASES[$path];
         }
         if (strpos($path, '/dziekujemy') === 0 || strpos($path, '/page/') !== false) { return 'strona pomocnicza'; }
+        // Pages made for one client (questionnaires, presentations) stay out of Google, so no English version.
+        if (function_exists('zp_seo_plan_is_private_path') && zp_seo_plan_is_private_path($path)) { return 'strona dla klienta (noindex)'; }
         return '';
     }
 

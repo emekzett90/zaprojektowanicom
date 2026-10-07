@@ -206,6 +206,7 @@ $form_html = '<div id="formularz-kontaktowy" style="position:relative;top:-92px;
         fd.set('consent', form.querySelector('input[name="consent"]:checked') ? '1' : '0');
         fd.set('services', selectedServices());
         fd.set('source', contactSourceLabel());
+        fd.set('zp_feedback', 'modal'); // 2.8.0: okno „Dziękujemy” wystarczy, bez drugiego takiego samego komunikatu w rogu
 
         var callbackTime = form.querySelector('[name="callback_time"]');
         var callbackTopic = form.querySelector('[name="callback_topic"]');
@@ -218,6 +219,7 @@ $form_html = '<div id="formularz-kontaktowy" style="position:relative;top:-92px;
           .then(function(r){ return r.json().catch(function(){ return {success:false,data:{title:'Błąd',messages:['Nie udało się odczytać odpowiedzi serwera.']}}; }); })
           .then(function(res){
             if(res && res.success){
+              try{ sessionStorage.setItem('zpLeadSent','1'); }catch(err){}
               pushContactSubmit(res, mode, selectedServices());
               showModal(res.data.title || 'Dziękujemy', '<p>' + escapeHtml(res.data.message || 'Wiadomość została wysłana.') + '</p>', 'success');
               form.reset();

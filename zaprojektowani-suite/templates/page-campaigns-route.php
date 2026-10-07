@@ -259,6 +259,7 @@ echo $zp_logo_thumb_fix(do_shortcode('[zp_header]'));
         </div>
       </div>
     </section>
+<?php if (function_exists('zp_suite_quick_contact_section')) { echo zp_suite_quick_contact_section('kampanie'); } ?>
 
 
     <section class="section channels" id="kanaly">

@@ -34,7 +34,10 @@ $form_html = zp_suite_strip_contact_visual_submit_bridge($form_html);
 
 // Home: używamy pełnego formularza z podstrony Kontakt, ale bez mapy Google.
 // Mapa zostaje tylko na /kontakt/, żeby główna szybciej się ładowała i nie robiła pustego bloku nad stopką.
-$form_html = preg_replace('/\s*<div class="zpContactFormLight__mapWrap"[\s\S]*?<\/div>\s*/', '', $form_html, 1);
+// 2.8.0: wycinamy cały blok mapy (z nagłówkiem i iframe). Wcześniej wzorzec kończył się na pierwszym </div>
+// (nagłówek mapy), więc zostawał ukryty iframe i luźne </div>, które zamykało kontener formularza za wcześnie:
+// okno „Dziękujemy” lądowało poza nim i po wysłaniu formularza na głównej i podstronach sklepów nic się nie pokazywało.
+$form_html = preg_replace('/\s*<div class="zpContactFormLight__mapWrap"[\s\S]*?<\/iframe>\s*<\/div>\s*/', '', $form_html, 1);
 
 // Home ma już jeden, wersjonowany Lucide z kolejki WordPress. Usuwamy lokalny fallback z HTML formularza,
 // żeby nie pobierać /web-font/lucide.min.js drugi raz bez ?ver=.
@@ -205,6 +208,7 @@ $form_html = '<div id="formularz-kontaktowy" style="position:relative;top:-92px;
         fd.set('consent', form.querySelector('input[name="consent"]:checked') ? '1' : '0');
         fd.set('services', selectedServices());
         fd.set('source', contactSourceLabel());
+        fd.set('zp_feedback', 'modal'); // 2.8.0: okno „Dziękujemy” wystarczy, bez drugiego takiego samego komunikatu w rogu
 
         var callbackTime = form.querySelector('[name="callback_time"]');
         var callbackTopic = form.querySelector('[name="callback_topic"]');
@@ -217,6 +221,7 @@ $form_html = '<div id="formularz-kontaktowy" style="position:relative;top:-92px;
           .then(function(r){ return r.json().catch(function(){ return {success:false,data:{title:'Błąd',messages:['Nie udało się odczytać odpowiedzi serwera.']}}; }); })
           .then(function(res){
             if(res && res.success){
+              try{ sessionStorage.setItem('zpLeadSent','1'); }catch(err){}
               pushContactSubmit(res, mode, selectedServices());
               showModal(res.data.title || 'Dziękujemy', '<p>' + escapeHtml(res.data.message || 'Wiadomość została wysłana.') + '</p>', 'success');
               form.reset();

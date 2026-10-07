@@ -171,7 +171,10 @@ add_action('wp_footer', function(){
     }catch(e){}
     var enabled='<?php echo esc_js($s['exit_popup_enabled'] ?? '1'); ?>'==='1'; if(enabled){
       var shown=sessionStorage.getItem('zpExitConsultShown')==='1'; var box=document.getElementById('zpExitConsult'); var form=box&&box.querySelector('[data-zp-exit-form]');
-      function openPopup(reason){ if(shown||!box) return; shown=true; sessionStorage.setItem('zpExitConsultShown','1'); box.classList.add('is-open'); box.setAttribute('aria-hidden','false'); fd('popup','open',reason||''); setTimeout(function(){var i=box.querySelector('input[name="phone"]'); if(i) i.focus();},120); }
+      /* 2.8.0: bez popupu po wysłanym zgłoszeniu i w trakcie wpisywania danych w formularzu na stronie. */
+      function leadSent(){ try{ return sessionStorage.getItem('zpLeadSent')==='1'; }catch(e){ return false; } }
+      function typing(){ var a=document.activeElement; return !!(a && a!==document.body && /^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName) && !(box && box.contains(a))); }
+      function openPopup(reason){ if(shown||!box||leadSent()) return; if(typing()){ if(reason==='time-delay'){ setTimeout(function(){ openPopup(reason); },15000); } return; } shown=true; sessionStorage.setItem('zpExitConsultShown','1'); box.classList.add('is-open'); box.setAttribute('aria-hidden','false'); fd('popup','open',reason||''); setTimeout(function(){var i=box.querySelector('input[name="phone"]'); if(i) i.focus();},120); }
       function closePopup(){ if(!box) return; box.classList.remove('is-open'); box.setAttribute('aria-hidden','true'); }
       document.addEventListener('mouseleave',function(e){ if(e.clientY<=4) openPopup('exit-intent'); });
       setTimeout(function(){ if(!shown && (window.scrollY>500 || document.visibilityState==='visible')) openPopup('time-delay'); }, parseInt('<?php echo esc_js($s['exit_popup_delay'] ?? '8500'); ?>',10)||8500);

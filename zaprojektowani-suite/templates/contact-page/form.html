@@ -31,9 +31,8 @@ v1.3:
       </div>
 
       <p class="zpContactFormLight__lead">
-        Możesz zostawić tylko numer telefonu, opisać temat w kilku zdaniach albo wysłać pełniejszy brief
-        dotyczący strony internetowej, sklepu WooCommerce, logo, brandingu, SEO lub kampanii. Po prawej stronie zobaczysz, jak tworzy się wiadomość,
-        którą otrzymamy.
+        Wystarczy imię i numer telefonu: oddzwonimy i razem ustalimy szczegóły. Możesz też opisać sprawę w kilku zdaniach
+        albo wysłać pełny brief strony internetowej, sklepu WooCommerce, logo, brandingu, SEO lub kampanii.
       </p>
     </header>
 
@@ -92,8 +91,8 @@ v1.3:
             <span class="zpContactFormLight__step">02</span>
             <div>
               <strong>Dane kontaktowe</strong>
-              <p data-copy-quick="Podaj dane, żebyśmy mogli szybko odpisać lub oddzwonić." data-copy-brief="Podaj dane, żebyśmy mogli wrócić z odpowiedzią lub dopytać o szczegóły." data-copy-call="Najważniejszy jest numer telefonu — resztę możemy ustalić w rozmowie.">
-                Podaj dane, żebyśmy mogli szybko odpisać lub oddzwonić.
+              <p data-copy-quick="Wystarczy telefon albo e-mail, żebyśmy mogli odpisać lub oddzwonić." data-copy-brief="Wystarczy telefon albo e-mail. O szczegóły dopytamy, jeśli będą potrzebne." data-copy-call="Najważniejszy jest numer telefonu — resztę możemy ustalić w rozmowie.">
+                Najważniejszy jest numer telefonu — resztę możemy ustalić w rozmowie.
               </p>
             </div>
           </div>
@@ -101,22 +100,25 @@ v1.3:
           <div class="zpContactFormLight__fields zpContactFormLight__fields--two">
             <label class="zpContactFormLight__field" data-field="name">
               <span>Imię i nazwisko</span>
-              <input type="text" name="name" placeholder="np. Jan Kowalski" data-preview="name">
+              <input type="text" name="name" placeholder="np. Jan Kowalski" autocomplete="name" maxlength="120" data-preview="name">
+              <em class="zpContactFormLight__error" data-error-for="name" aria-live="polite"></em>
             </label>
 
             <label class="zpContactFormLight__field" data-field="company">
-              <span>Nazwa firmy</span>
-              <input type="text" name="company" placeholder="np. nazwa Twojej firmy" data-preview="company">
+              <span>Nazwa firmy <small class="zpContactFormLight__opt">(opcjonalnie)</small></span>
+              <input type="text" name="company" placeholder="np. nazwa Twojej firmy" autocomplete="organization" maxlength="160" data-preview="company">
             </label>
 
             <label class="zpContactFormLight__field" data-field="email">
               <span>Adres e-mail</span>
-              <input type="email" name="email" placeholder="kontakt@twojafirma.pl" data-preview="email">
+              <input type="email" name="email" placeholder="kontakt@twojafirma.pl" autocomplete="email" inputmode="email" maxlength="160" data-preview="email">
+              <em class="zpContactFormLight__error" data-error-for="email" aria-live="polite"></em>
             </label>
 
             <label class="zpContactFormLight__field" data-field="phone">
               <span>Telefon</span>
-              <input type="tel" name="phone" placeholder="np. 501 054 253" data-preview="phone">
+              <input type="tel" name="phone" placeholder="np. 501 054 253" autocomplete="tel" inputmode="tel" maxlength="24" data-preview="phone">
+              <em class="zpContactFormLight__error" data-error-for="phone" aria-live="polite"></em>
             </label>
           </div>
         </div>
@@ -128,7 +130,7 @@ v1.3:
             <span class="zpContactFormLight__step">03</span>
             <div>
               <strong>Zakres projektu</strong>
-              <p>Zaznacz tematy, których dotyczy wiadomość.</p>
+              <p>Zaznacz, czego dotyczy wiadomość. Ten krok możesz pominąć.</p>
             </div>
           </div>
 
@@ -170,7 +172,7 @@ v1.3:
         <div class="zpContactFormLight__animBlock" data-mode-section="brief">
           <div class="zpContactFormLight__fields zpContactFormLight__fields--two">
             <label class="zpContactFormLight__field">
-              <span>Budżet orientacyjny</span>
+              <span>Budżet orientacyjny <small class="zpContactFormLight__opt">(opcjonalnie)</small></span>
               <select name="budget" data-preview="budget">
                 <option value="">Wybierz zakres</option>
                 <option>do 3 000 zł</option>
@@ -183,7 +185,7 @@ v1.3:
             </label>
 
             <label class="zpContactFormLight__field">
-              <span>Preferowany termin</span>
+              <span>Preferowany termin <small class="zpContactFormLight__opt">(opcjonalnie)</small></span>
               <select name="deadline" data-preview="deadline">
                 <option value="">Wybierz termin</option>
                 <option>Jak najszybciej</option>
@@ -196,8 +198,8 @@ v1.3:
           </div>
 
           <label class="zpContactFormLight__field">
-            <span>Adres obecnej strony lub inspiracje</span>
-            <input type="text" name="website" placeholder="np. link do strony, konkurencji albo inspiracji" data-preview="website">
+            <span>Adres obecnej strony lub inspiracje <small class="zpContactFormLight__opt">(opcjonalnie)</small></span>
+            <input type="text" name="website" placeholder="np. link do strony, konkurencji albo inspiracji" autocomplete="url" inputmode="url" data-preview="website">
           </label>
         </div>
 
@@ -206,7 +208,7 @@ v1.3:
 
           <div class="zpContactFormLight__fields zpContactFormLight__fields--two">
             <label class="zpContactFormLight__field">
-              <span>Kiedy najlepiej oddzwonić?</span>
+              <span>Kiedy najlepiej oddzwonić? <small class="zpContactFormLight__opt">(opcjonalnie)</small></span>
               <select name="callback_time" data-preview="callback_time">
                 <option value="">Wybierz porę</option>
                 <option>Rano</option>
@@ -218,7 +220,7 @@ v1.3:
             </label>
 
             <label class="zpContactFormLight__field">
-              <span>Temat rozmowy</span>
+              <span>Temat rozmowy <small class="zpContactFormLight__opt">(opcjonalnie)</small></span>
               <select name="callback_topic" data-preview="callback_topic">
                 <option value="">Wybierz temat</option>
                 <option>Strona internetowa</option>
@@ -235,6 +237,7 @@ v1.3:
           <label class="zpContactFormLight__field">
             <span data-label-message>Opis sprawy</span>
             <textarea name="message" rows="7" placeholder="Napisz krótko, czego potrzebujesz, co już masz i jaki efekt chcesz osiągnąć." data-preview="message"></textarea>
+            <em class="zpContactFormLight__error" data-error-for="message" aria-live="polite"></em>
           </label>
         </div>
 
@@ -257,9 +260,20 @@ v1.3:
         <label class="zpContactFormLight__consent">
           <input type="checkbox" name="consent" required>
           <span>
-            Wyrażam zgodę na kontakt w sprawie przesłanego zapytania. Administratorem danych jest Zaprojektowani.com.
+            Wyrażam zgodę na kontakt w sprawie przesłanego zapytania. Administratorem danych jest Zaprojektowani.com (<a href="/polityka-prywatnosci/" target="_blank" rel="noopener">polityka prywatności</a>).
           </span>
         </label>
+        <em class="zpContactFormLight__error zpContactFormLight__error--consent" data-error-for="consent" aria-live="polite"></em>
+
+        <div class="zpContactFormLight__msgs" hidden>
+          <span data-msg="name">Wpisz imię, żebyśmy wiedzieli, jak się do Ciebie zwracać.</span>
+          <span data-msg="phone">Wpisz numer telefonu, np. 501 054 253.</span>
+          <span data-msg="phone-short">Numer wygląda na niepełny. Wpisz 9 cyfr, np. 501 054 253.</span>
+          <span data-msg="reach">Wpisz telefon albo e-mail. Wystarczy jedno z nich.</span>
+          <span data-msg="email">Sprawdź adres e-mail, np. anna@firma.pl.</span>
+          <span data-msg="message">Dopisz kilka słów o sprawie. Wystarczy jedno, dwa zdania.</span>
+          <span data-msg="consent">Zaznacz zgodę na kontakt, żebyśmy mogli odpowiedzieć.</span>
+        </div>
 
         <div class="zpContactFormLight__submitRow">
           <button class="zpContactFormLight__submit" type="submit">
@@ -543,7 +557,7 @@ body.zpbs-studio-page #zpContactFormLight .zpContactFormLight__map{
         }
 
         if(messageLabel){
-          if(mode==='call') messageLabel.textContent='Krótka notatka do rozmowy';
+          if(mode==='call') messageLabel.innerHTML='Krótka notatka do rozmowy <small class="zpContactFormLight__opt">(opcjonalnie)</small>';
           else if(mode==='brief') messageLabel.textContent='Opis projektu';
           else messageLabel.textContent='Opis sprawy';
         }
@@ -702,6 +716,92 @@ body.zpbs-studio-page #zpContactFormLight .zpContactFormLight__map{
         /* submit obsługuje bridge AJAX z wtyczki */
 }
 
+      /* 2.8.0: po wysłaniu bridge wywołuje tę funkcję, żeby podgląd i wysokości bloków wróciły do stanu po resecie. */
+      window.zpContactFormLightUpdate=function(){
+        clearErrors();
+        updatePreview();
+        updateHeights();
+      };
+
+      /* 2.8.0: przyjazna walidacja przed wysłaniem — komunikat przy polu zamiast okna z listą błędów.
+         Słuchacz na document w fazie capture działa przed bridge AJAX (ten nasłuchuje na samym formularzu). */
+      function msgText(key){
+        var el=root.querySelector('.zpContactFormLight__msgs [data-msg="'+key+'"]');
+        return el ? el.textContent.trim() : '';
+      }
+      function setFieldError(key,text,markOnly){
+        var em=root.querySelector('[data-error-for="'+key+'"]');
+        var wrap=key==='consent' ? root.querySelector('.zpContactFormLight__consent') : (em ? em.closest('.zpContactFormLight__field') : null);
+        var input=key==='consent' ? root.querySelector('[name="consent"]') : (wrap ? wrap.querySelector('input,textarea,select') : null);
+        if(em && !markOnly) em.textContent=text||'';
+        if(wrap) wrap.classList.toggle('is-invalid',!!text);
+        if(em) em.classList.toggle('is-on',!!text && !markOnly);
+        if(input){ if(text) input.setAttribute('aria-invalid','true'); else input.removeAttribute('aria-invalid'); }
+      }
+      function clearErrors(){
+        ['name','email','phone','message','consent'].forEach(function(key){ setFieldError(key,''); });
+      }
+      function validateForm(){
+        var mode=getModeKey();
+        var val=function(n){ var el=form.querySelector('[name="'+n+'"]'); return el ? (el.value||'').trim() : ''; };
+        var phone=val('phone'), digits=phone.replace(/\D+/g,''), email=val('email');
+        var errors=[];
+        clearErrors();
+        if(val('name').length<2) errors.push(['name',msgText('name')]);
+        if(mode==='call'){
+          if(!digits.length) errors.push(['phone',msgText('phone')]);
+          else if(digits.length<9) errors.push(['phone',msgText('phone-short')]);
+        }else{
+          if(!phone && !email){
+            errors.push(['email',msgText('reach')]);
+            errors.push(['phone',msgText('reach'),true]);
+          }else{
+            if(email && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) errors.push(['email',msgText('email')]);
+            if(phone && digits.length<9) errors.push(['phone',msgText('phone-short')]);
+          }
+          if(val('message').length<10) errors.push(['message',msgText('message')]);
+        }
+        var consent=form.querySelector('[name="consent"]');
+        if(consent && !consent.checked) errors.push(['consent',msgText('consent')]);
+        errors.forEach(function(item){ setFieldError(item[0],item[1],item[2]); });
+        updateHeights();
+        if(!errors.length) return true;
+        var key=errors[0][0];
+        var first=key==='consent' ? consent : form.querySelector('[name="'+key+'"]');
+        if(first){
+          var box=first.getBoundingClientRect();
+          if(box.top<110 || box.bottom>window.innerHeight-60){
+            window.scrollTo({top:Math.max(0,box.top+window.pageYOffset-160),behavior:'smooth'});
+          }
+          try{ first.focus({preventScroll:true}); }catch(err){ try{ first.focus(); }catch(e2){} }
+        }
+        return false;
+      }
+      if(form){
+        form.setAttribute('novalidate','');
+        document.addEventListener('submit',function(e){
+          if(e.target!==form) return;
+          if(!validateForm()){
+            e.preventDefault();
+            e.stopImmediatePropagation();
+          }
+        },true);
+        var clearOnEdit=function(e){
+          var t=e.target;
+          if(!t || !t.name) return;
+          var key=t.name;
+          if(key==='email' || key==='phone'){
+            if(root.querySelector('[data-field="email"].is-invalid, [data-field="phone"].is-invalid')){ setFieldError('email',''); setFieldError('phone',''); updateHeights(); }
+            return;
+          }
+          var em=root.querySelector('[data-error-for="'+key+'"]');
+          if(em && em.classList.contains('is-on')){ setFieldError(key,''); updateHeights(); }
+        };
+        form.addEventListener('input',clearOnEdit);
+        form.addEventListener('change',clearOnEdit);
+        modeInputs.forEach(function(input){ input.addEventListener('change',function(){ clearErrors(); updateHeights(); }); });
+      }
+
       if('IntersectionObserver' in window){
         var io=new IntersectionObserver(function(entries){
           entries.forEach(function(entry){
@@ -809,6 +909,34 @@ body.zpbs-studio-page #zpContactFormLight .zpContactFormLight__mailMessage p{
 @media(max-width:760px){
   body.zpbs-studio-page #zpContactFormLight .zpContactFormLight__mailWindow{border-radius:28px!important;-webkit-border-radius:28px!important}
   body.zpbs-studio-page #zpContactFormLight .zpContactFormLight__mailTop{border-radius:27px 27px 0 0!important;-webkit-border-radius:27px 27px 0 0!important}
+}
+</style>
+<style id="zp-contact-friendly-280">
+/* 2.8.0: przyjaźniejszy formularz — dopisek „opcjonalnie”, komunikaty przy polach, krótsza wersja na telefonie.
+   Podwójne #id wygrywa z wcześniejszymi poprawkami (front-fixes) bez zmiany ich plików. */
+html body #zpContactFormLight#zpContactFormLight .zpContactFormLight__opt{display:inline;margin-left:3px;color:#8a94a3!important;font-size:11px!important;line-height:1!important;font-weight:600!important;letter-spacing:0!important;text-transform:none!important}
+html body #zpContactFormLight#zpContactFormLight .zpContactFormLight__error{display:none;margin:-2px 0 0!important;color:#b4380a!important;font-size:12px!important;line-height:1.4!important;font-style:normal!important;font-weight:650!important;letter-spacing:0!important;text-transform:none!important}
+html body #zpContactFormLight#zpContactFormLight .zpContactFormLight__error.is-on{display:block}
+html body #zpContactFormLight#zpContactFormLight .zpContactFormLight__field.is-invalid{max-height:none!important}
+html body #zpContactFormLight#zpContactFormLight .zpContactFormLight__field.is-invalid input,
+html body #zpContactFormLight#zpContactFormLight .zpContactFormLight__field.is-invalid textarea{border-color:#c2410c!important;background:#fffaf7!important;box-shadow:0 0 0 4px rgba(194,65,12,.08)!important}
+html body #zpContactFormLight#zpContactFormLight .zpContactFormLight__consent.is-invalid input[type="checkbox"]{border-color:#c2410c!important;box-shadow:0 0 0 4px rgba(194,65,12,.12)!important}
+html body #zpContactFormLight#zpContactFormLight .zpContactFormLight__error--consent{margin:8px 0 0 34px!important}
+html body #zpContactFormLight#zpContactFormLight .zpContactFormLight__consent a{color:#071426!important;font-weight:700!important;text-decoration:underline!important;text-underline-offset:3px}
+html body #zpContactFormLight#zpContactFormLight .zpContactFormLight__msgs{display:none!important}
+html body #zpContactFormLight#zpContactFormLight[data-mode="call"] .zpContactFormLight__field textarea{min-height:104px!important;height:104px}
+@media (max-width:760px){
+  html body #zpContactFormLight#zpContactFormLight .zpContactFormLight__mode{grid-template-columns:1fr!important;gap:8px!important}
+  html body #zpContactFormLight#zpContactFormLight .zpContactFormLight__mode span{display:grid!important;grid-template-columns:30px minmax(0,1fr)!important;grid-template-rows:auto auto!important;column-gap:14px!important;row-gap:4px!important;align-items:center!important;align-content:center!important;justify-items:start!important;min-height:0!important;height:auto!important;padding:15px 18px!important;text-align:left!important}
+  html body #zpContactFormLight#zpContactFormLight .zpContactFormLight__mode span > svg,
+  html body #zpContactFormLight#zpContactFormLight .zpContactFormLight__mode span > .lucide,
+  html body #zpContactFormLight#zpContactFormLight .zpContactFormLight__mode span > i{grid-column:1!important;grid-row:1 / span 2!important;width:28px!important;height:28px!important;margin:0!important;align-self:center!important}
+  html body #zpContactFormLight#zpContactFormLight .zpContactFormLight__mode span strong{grid-column:2!important;font-size:17px!important;line-height:1.1!important}
+  html body #zpContactFormLight#zpContactFormLight .zpContactFormLight__mode span small{grid-column:2!important;font-size:12px!important;line-height:1.35!important}
+  html body #zpContactFormLight#zpContactFormLight .zpContactFormLight__mailWindow{display:none!important}
+  html body #zpContactFormLight#zpContactFormLight .zpContactFormLight__field input,
+  html body #zpContactFormLight#zpContactFormLight .zpContactFormLight__field select,
+  html body #zpContactFormLight#zpContactFormLight .zpContactFormLight__field textarea{font-size:16px!important}
 }
 </style>
 <!-- /ZAPROJEKTOWANI — CONTACT FORM / LIGHT MAIL PREVIEW v1.3 -->

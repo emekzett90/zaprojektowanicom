@@ -565,7 +565,7 @@ function zp_suite_faq_save_admin() {
   ];
 
   update_option('zp_suite_faq_cms', $data, false);
-  echo '<div class="zpNotice">Zapisano FAQ. Wyczyść Nitro/LiteSpeed, jeśli testujesz front.</div>';
+  echo '<div class="zpNotice">Zapisano FAQ.</div>';
 }
 
 function zp_suite_faq_admin_input($name, $label, $value = '', $type = 'text', $wide = false, $help = '') {

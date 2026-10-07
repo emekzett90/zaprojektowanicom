@@ -1,0 +1,55 @@
+ZAPROJEKTOWANI SUITE 2.8.0
+
+Zbudowana na Twojej wersji 2.7.20: wszystkie Twoje zmiany 2.7.2–2.7.20 zostają.
+Zawiera też wszystko z 2.3.0–2.7.1.
+
+Nowe strony i artykuły (paczka treści 4):
+- 5 stron branżowych: salony beauty, trenerzy personalni, fotografowie, restauracje i kawiarnie,
+  hotele i pensjonaty (na szablonie stron branżowych, z FAQ i poradnikiem),
+- 5 artykułów: projekt wizytówki, logo salonu kosmetycznego, system rezerwacji online,
+  bramka płatnicza, sklep B2B (na szablonie „Projektowanie logo”),
+- linki do nich ze stron usług, FAQ (pytanie o branże linkuje wszystkie 8 stron),
+  strony dla lekarzy i wpisów, które o nich mówią,
+- angielskie wersje nowych stron robi Tłumacz EN (potrzebny klucz OpenAI w ustawieniach).
+
+Mega menu:
+- „Usługi” ma osobną sekcję „Strony dla branż” z 8 branżami i kolorowymi ikonami Lucide
+  (z biblioteki, którą menu już wczytuje), w ciemnym i jasnym menu,
+- na telefonie grupa „Strony dla branż” z takimi samymi ikonami.
+
+Formularze kontaktowe (z wątku „FAQ, O nas i Studio wyceny”):
+- długi formularz: przyjaźniejsze teksty, dopiski „(opcjonalnie)”, błędy pokazywane przy polach
+  zamiast okna z listą, link do polityki prywatności, wygodniejsze wpisywanie na telefonie,
+- nowy krótki formularz (imię, telefon albo e-mail, temat jednym kliknięciem) w połowie strony,
+  pod pakietami z cenami, bez cienia: główna, strony stron, sklepów i logo (ogólnopolskie,
+  katowickie, branżowe) oraz kampanie; po polsku i po angielsku,
+- po wysłaniu krótkiego formularza podziękowanie z imieniem w miejscu formularza,
+  mail „Prośba o kontakt: …” na kontakt@zaprojektowani.com, wpis w „Formularze / leady”,
+- naprawa: po długim formularzu na głównej i na stronach sklepów znowu pojawia się okno
+  „Dziękujemy” (wcześniej zgłoszenie dochodziło, ale klient nie widział potwierdzenia),
+- okienko konsultacji nie wyskakuje w trakcie wpisywania danych ani po wysłanym zgłoszeniu,
+- włączniki: ZP Suite → „Liczby / widoczność” → „Widoczność sekcji na home” →
+  „Krótki formularz kontaktowy — strona główna” i „— podstrony usług i kampanie”.
+
+Wersje angielskie:
+- 11 stron ogólnopolskich ma własne adresy EN (np. /en/website-development/, /en/logo-design/);
+  przełącznik PL/EN nie prowadzi już na angielskie strony Katowic,
+- 52 tłumaczenia dla tekstów z 2.7.2–2.7.20.
+
+Poprawki po audycie z 7.10:
+- 11 starych adresów z ruchem w Google, które dawały 404, przekierowuje 301 na właściwe strony,
+- sklepy internetowe Katowice: 120 opinii w sekcji Trustindex (było 54),
+- wpis „ile kosztuje strona internetowa”: sekcja „W liczbach” z Twoimi cenami,
+- linki ze słowem „Katowice” prowadzą do stron katowickich,
+- strony dla klientów /rutpoz-brief/ i /dottore-logo-showcase/: noindex i poza mapami witryny,
+- komunikaty po zapisie ustawień bez próśb o czyszczenie cache.
+
+Po wgraniu:
+1. Wejdź raz na dowolną stronę.
+2. Rank Math → Mapa witryny → Zapisz zmiany.
+3. Search Console → Mapy witryn: zostaw tylko sitemap_index.xml (mapy EN są w środku).
+4. Wyślij raz krótki formularz ze swoim numerem (np. na głównej pod „Polecanymi pakietami”)
+   i sprawdź, czy na kontakt@zaprojektowani.com przyszedł mail „Prośba o kontakt: …”
+   i czy zgłoszenie jest w ZP Suite → „Formularze / leady”.
+   Jeśli zgłoszenie jest w Leadach, a maila nie ma, to problem z wysyłką poczty na serwerze.
+5. Jeśli jeszcze nie: ZP Suite → Tłumacz EN → Ustawienia, wklej NOWY klucz API OpenAI.

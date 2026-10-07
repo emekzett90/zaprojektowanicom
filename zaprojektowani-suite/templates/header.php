@@ -289,6 +289,11 @@ $zp_menu_250_industry = [
   ['/strony-internetowe-dla-kancelarii/', 'scale', 'Kancelarie i prawnicy', 'Specjalizacje, zespół i kontakt'],
   ['/strony-internetowe-dla-lekarzy/', 'stethoscope', 'Lekarze i gabinety', 'Usługi, cennik i rejestracja'],
   ['/strony-internetowe-dla-deweloperow/', 'building-2', 'Deweloperzy i inwestycje', 'Inwestycje, mieszkania i zapytania'],
+  ['/strony-internetowe-dla-salonow-beauty/', 'flower-2', 'Salony beauty', 'Zabiegi, cennik i rezerwacje'],
+  ['/strony-internetowe-dla-trenerow-personalnych/', 'dumbbell', 'Trenerzy personalni', 'Oferta, pakiety i zapisy'],
+  ['/strony-internetowe-dla-fotografow/', 'camera', 'Fotografowie', 'Portfolio, sesje i zapytania'],
+  ['/strony-internetowe-dla-restauracji/', 'utensils-crossed', 'Restauracje i kawiarnie', 'Menu, rezerwacje i dojazd'],
+  ['/strony-internetowe-dla-hoteli/', 'bed-double', 'Hotele i pensjonaty', 'Pokoje, oferta i rezerwacje'],
 ];
 $zp_menu_250_ind_desk = '';
 $zp_menu_250_ind_mob = '';
@@ -338,7 +343,7 @@ $zp_menu_260_promo = static function (string $key, string $href, string $img, st
                   <div class="zpNewNav__megaCol zpNewNav__megaPromoCol"><p class="zpNewNav__megaHead">Najczęściej wybierane</p><a class="zpNewNav__promoCard zpNewNav__promoCard--logo" href="/logo-branding-katowice/"<?php echo $zp_menu_260 ? ' data-zp-promo="logo"' : ''; ?>><span class="zpNewNav__promoMedia" aria-hidden="true"><img src="https://zaprojektowani.com/wp-content/uploads/2026/09/zgorecki_oferta.webp" alt="" loading="lazy" decoding="async"></span><span class="zpNewNav__promoBody"><span class="zpNewNav__promoTitle">Logo <span class="zpNewNav__promoPrice">już od 999 zł</span></span><span class="zpNewNav__promoText">Profesjonalny znak, pliki do użycia i spójny kierunek wizualny.</span></span><span class="zpNewNav__promoBtn">Zamów logo <i data-lucide="arrow-up-right"></i></span></a><?php if ($zp_menu_260) {
                     echo $zp_menu_260_promo('strona', '/strony-internetowe-katowice/', ZP_SUITE_URL . 'assets/img/menu/promo-strona.webp', 'Strona internetowa', 'już od 3 999 zł', 'Projekt na miarę, wersja mobilna, SEO i szybkie działanie.', 'Zamów stronę', true);
                     echo $zp_menu_260_promo('sklep', '/sklepy-internetowe-katowice/', ZP_SUITE_URL . 'assets/img/menu/promo-sklep.webp', 'Sklep internetowy', 'już od 6 499 zł', 'Produkty, płatności i dostawy gotowe do sprzedaży i reklam.', 'Zamów sklep', true);
-                  } ?><?php if (function_exists('zp_suite_meta_verified_markup')) { echo zp_suite_meta_verified_markup('auto', 'mega'); } ?><?php if ($zp_menu_250_ind_desk !== '') : ?><p class="zpNewNav__megaHead zpNewNav__megaHead--branze">Strony dla branż</p><div class="zpNewNav__megaList zpNewNav__megaList--branze"><?php echo $zp_menu_250_ind_desk; ?></div><?php endif; ?></div>
+                  } ?><?php if (function_exists('zp_suite_meta_verified_markup')) { echo zp_suite_meta_verified_markup('auto', 'mega'); } ?></div><?php if ($zp_menu_250_ind_desk !== '') : ?><div class="zpNewNav__megaCol zpNewNav__megaCol--branze"><p class="zpNewNav__megaHead zpNewNav__megaHead--branze">Strony dla branż</p><div class="zpNewNav__megaList zpNewNav__megaList--branze"><?php echo $zp_menu_250_ind_desk; ?></div></div><?php endif; ?>
                 </div>
                 <div class="zpNewNav__megaBottom"><div class="zpNewNav__megaBottomInner"><?php if ($zp_menu_260) : ?><span class="zpNewNav__megaGuide" aria-hidden="true"><span class="zpNewNav__megaGuideBubble">Wybierz, od czego zaczynamy.</span><img class="zpNewNav__megaGuideImg" src="<?php echo esc_url(ZP_SUITE_URL . 'assets/img/menu/mateusz-wybierz.webp'); ?>" alt="" width="354" height="360" loading="lazy" decoding="async"></span><?php endif; ?><p class="zpNewNav__megaClaim">Od pomysłu do gotowego systemu sprzedaży.</p><p class="zpNewNav__megaText">Możemy zacząć od logo, strony, sklepu albo kampanii — ważne, żeby całość pracowała na jeden cel.</p><a class="zpNewNav__megaBtn" href="/studio-wyceny/"><span>Omów projekt</span><i data-lucide="arrow-up-right"></i></a></div></div>
               </div>

@@ -1,6 +1,7 @@
 <?php
 if (!defined('ABSPATH')) { exit; }
-/* Generated from mapa-fraz.json (phase 1), audyt/polaczenia-wpisow.csv and editorial.json — 2.3.0. */
+/* Generated from mapa-fraz.json (phase 1), audyt/polaczenia-wpisow.csv and editorial.json — 2.3.0.
+ * 2.8.0: 'slugs' += 11 old addresses with Google impressions that returned 404 (audyt-po-wdrozeniu, 7.10). */
 return [
   'exact' => [
     '/bez-kategorii/brandbook-w-praktyce-jak-uporzadkowac-marke/' => '/logo-branding/brandbook-co-powinien-zawierac-i-jak-go-czytac/',
@@ -43,6 +44,8 @@ return [
     'ampanie-reklamowe-facebook-i-instagram-najczestsze-bledy' => '/meta-ads/kampanie-reklamowe-facebook-i-instagram-najczestsze-bledy/',
     'brandbook-w-praktyce-jak-uporzadkowac-marke' => '/logo-branding/brandbook-co-powinien-zawierac-i-jak-go-czytac/',
     'brief-do-strony-internetowej-co-przygotowac-zeby-projekt-ruszyl-szybciej' => '/strony-www/jak-przygotowac-brief-do-projektowania-strony-internetowej/',
+    'case-study-proscarves-sklep-detaliczny-i-zapytania-b2b-w-jednym-systemie' => '/tworzenie-sklepow-internetowych/',
+    'case-study-siemianowski-elegancka-strona-kancelarii-i-system-budowania-zaufania' => '/strony-internetowe-dla-kancelarii/',
     'co-powinna-zawierac-dobra-strona-firmowa' => '/strony-internetowe/strona-internetowa-dla-firmy-co-powinna-zawierac/',
     'co-wplywa-na-cene-strony-internetowej-w-2026-roku' => '/strony-www/ile-kosztuje-stworzenie-strony-internetowej-dla-firmy/',
     'czy-warto-robic-audyt-strony-przed-meta-ads' => '/strony-www/audyt-strony-internetowej-firmy-przed-reklamami-i-seo/',
@@ -50,21 +53,30 @@ return [
     'ile-kosztuje-logo-dla-firmy-i-co-obejmuje-cena-2' => '/logo-branding/ile-kosztuje-logo-dla-firmy-i-co-obejmuje-cena/',
     'ile-kosztuje-strona-internetowa-dla-firmy-2026' => '/strony-www/ile-kosztuje-stworzenie-strony-internetowej-dla-firmy/',
     'ile-kosztuje-strona-internetowa-dla-firmy-2026-2' => '/strony-www/ile-kosztuje-stworzenie-strony-internetowej-dla-firmy/',
+    'jak-polaczyc-branding-strone-reklamy' => '/seo-i-konwersja/jak-polaczyc-branding-strone-reklamy-i-seo-w-jeden-system/',
     'jak-polaczyc-branding-strone-reklamy-i-seo' => '/seo-i-konwersja/jak-polaczyc-branding-strone-reklamy-i-seo-w-jeden-system/',
     'jak-porownac-oferty-agencji-na-strone-internetowa' => '/seo-i-konwersja/jak-wybrac-agencje-do-stworzenia-strony-www/',
     'jak-przygotowac-strone-pod-reklamy-facebook-i-instagram-2' => '/kampanie-reklamowe-meta-ads/jak-przygotowac-strone-pod-reklamy-facebook-i-instagram/',
+    'jak-przyporowac-strone-pod-reklamy-facebook-i-instagram' => '/kampanie-reklamowe-meta-ads/jak-przygotowac-strone-pod-reklamy-facebook-i-instagram/',
     'jak-skrocic-formularz-kontaktowy-zeby-zwiekszyc-zapytania' => '/ux-cro-analityka/formularz-kontaktowy-na-stronie-firmowej-jak-zwiekszyc-liczbe-zapytan/',
     'jak-zaprojektowac-skuteczna-strone-firmowa-dla-malej-firmy' => '/strony-www/strona-internetowa-dla-malej-firmy/',
     'kiedy-strona-wymaga-przebudowy-a-kiedy-wystarczy-optymalizacja' => '/strony-www/kiedy-warto-przebudowac-strone-internetowa-firmy/',
     'ksiega-znaku' => '/logo-branding/ksiega-znaku-co-to-jest-co-zawiera-i-kiedy-firma-jej-potrzebuje/',
     'ksiega-znaku-co-to-jest-co-zawiera-i-kiedy-firma-jej-potrzebuje-2' => '/logo-branding/ksiega-znaku-co-to-jest-co-zawiera-i-kiedy-firma-jej-potrzebuje/',
+    'ksiega-znaku-czy-kazda-firma-jej-potrzebuje-kryteria' => '/logo-branding/ksiega-znaku-co-to-jest-co-zawiera-i-kiedy-firma-jej-potrzebuje/',
+    'logo-premium-bez-przesady-jak-zaprojektowac-znak-ktory-nie-zestarzeje-sie-po-sezonie' => '/logo-branding/jakie-cechy-powinno-miec-dobre-logo-firmowe/',
+    'meta-ads-dla-uslug-lokalnych-jak-przygotowac-strone-zeby-kampania-miala-sens' => '/meta-ads/facebook-ads-dla-firm-lokalnych/',
     'mini-brandbook-czy-pelna-ksiega-znaku-co-wybrac' => '/logo-branding/ksiega-znaku-mini-brandbook-pelna-identyfikacja-wizualna-co-wybrac/',
     'podstrona-uslugi-premium-jak-opisac-oferte-na-stronie' => '/seo-i-konwersja/struktura-podstrony-uslugowej-premium/',
     'proces-tworzenia-strony-internetowej-dla-firmy-uslugowej' => '/strony-internetowe/tworzenie-stron-internetowych-profesjonalny-proces-od-strategii-do-wdrozenia/',
     'projektowanie-logo-katowice-proces-tworzenia-logo-dla-firmy' => '/logo-branding/projektowanie-logo-jak-powstaje-znak-ktory-dziala-w-internecie-druku-i-sprzedazy/',
+    'reklama-na-instagramie-a-facebook-ads-roznice' => '/meta-ads/reklama-na-instagramie-a-facebook-ads/',
+    'seo-dla-strony-uslugowej-jak-ulozyc-strukture-zeby-google-rozumialo-oferte' => '/seo-i-konwersja/struktura-podstrony-uslugowej-premium/',
     'silna-identyfikacja-wizualna-firmy' => '/logo-branding/identyfikacja-wizualna-firmy/',
+    'sklep-internetowy-ktory-sprzedaje-12-elementow-ktorych-nie-warto-pomijac' => '/sklepy-internetowe/jakie-funkcje-sklepu-internetowego-zwiekszaja-sprzedaz/',
     'sklep-woocommerce-dla-malej-firmy-ile-kosztuje' => '/seo-i-konwersja/ile-kosztuje-sklep-internetowy-woocommerce-w-2026-roku/',
     'spojny-branding-firmy-logo-strona-reklamy' => '/seo-i-konwersja/jak-polaczyc-branding-strone-reklamy-i-seo-w-jeden-system/',
+    'strona-firmowa-czy-landing-page-co-wybrac-gdy-zalezy-ci-na-zapytaniach' => '/kampanie-reklamowe-meta-ads/landing-page-czy-strona-internetowa-co-wybrac-pod-kampanie/',
     'tworzenie-sklepow-internetowych-od-pomyslu-na-oferte-do-gotowego-sklepu-online' => '/tworzenie-sklepow-internetowych/',
     'tworzenie-sklepow-internetowych-od-pomyslu-na-oferte-do-gotowego-sklepu-online-2' => '/tworzenie-sklepow-internetowych/',
   ],

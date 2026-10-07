@@ -837,7 +837,7 @@ return [
 <p>Każda specjalizacja wymaga trochę innej strony:</p>
 <ul><li><strong>Gabinet lekarski lub przychodnia</strong> potrzebuje listy specjalistów z godzinami przyjęć, jasnej informacji, które wizyty są prywatne, a które w ramach NFZ, oraz prostej rejestracji. Strona internetowa dla gabinetu lekarskiego powinna też podpowiadać, jak przygotować się do badania.</li><li><strong>Gabinet stomatologiczny</strong> pokazuje zakres zabiegów, cennik, wyposażenie i przebieg pierwszej wizyty. Pacjenci dentysty często porównują ceny, więc rzetelny cennik oszczędza wielu telefonów.</li><li><strong>Psycholog i psychoterapeuta</strong> potrzebuje strony spokojnej i dyskretnej: z opisem nurtu i form pracy, informacją o sesjach online i stacjonarnych, czasie i cenie spotkania oraz możliwością zapisu bez opisywania problemu w formularzu. Strona internetowa dla psychologa to często pierwszy kontakt osoby, która długo zbierała się do tej decyzji.</li></ul>
 <h2 id="rejestracja-online-i-przypomnienia">Rejestracja online i przypomnienia</h2>
-<p>Rejestracja online odciąża recepcję i pozwala pacjentom umawiać się wieczorem, kiedy gabinet jest zamknięty. Dla Apartamentu Piękna, marki z obszaru beauty i medycyny estetycznej, zaprojektowaliśmy autorski system rezerwacji z przypomnieniami SMS. Po wdrożeniu przez stronę spływa średnio 96 rezerwacji miesięcznie (średnia z trzech miesięcy), a liczba kliknięć z Google w pierwszych sześciu miesiącach wzrosła o 212% w porównaniu z poprzednią stroną. Jeśli korzystasz już z zewnętrznego systemu rejestracji, osadzamy go na stronie tak, żeby nie wybijał pacjenta z projektu.</p>
+<p>Rejestracja online odciąża recepcję i pozwala pacjentom umawiać się wieczorem, kiedy gabinet jest zamknięty. Dla Apartamentu Piękna, marki z obszaru beauty i medycyny estetycznej, zaprojektowaliśmy autorski system rezerwacji z przypomnieniami SMS. Po wdrożeniu przez stronę spływa średnio 96 rezerwacji miesięcznie (średnia z trzech miesięcy), a liczba kliknięć z Google w pierwszych sześciu miesiącach wzrosła o 212% w porównaniu z poprzednią stroną. Jeśli korzystasz już z zewnętrznego systemu rejestracji, osadzamy go na stronie tak, żeby nie wybijał pacjenta z projektu. Gotowe narzędzia, wtyczki i systemy dedykowane porównujemy w poradniku o tym, jak wybrać <a class="zpSeoLink" href="/strony-internetowe/system-rezerwacji-online/">system rezerwacji online</a>.</p>
 <h2 id="spojna-marka-gabinetu">Spójna marka gabinetu</h2>
 <p>Pacjent ocenia gabinet także po tym, jak wygląda jego strona, oznakowanie i dokumenty. Dla Medical Friend zaprojektowaliśmy przyjazną identyfikację z sercem i uśmiechem, z oznakowaniem gabinetów i materiałami dla pacjentów. Dla kliniki medycyny estetycznej EVA Aesthetics powstała elegancka identyfikacja w palecie nude &amp; gold. Jeśli placówka zmienia wizerunek, warto zacząć od <a class="zpSeoLink" href="/identyfikacja-wizualna/">identyfikacji wizualnej</a>, a stronę zaprojektować już w nowej estetyce.</p>
 <h2 id="ile-kosztuje-strona-internetowa-dla-lekarza">Ile kosztuje strona internetowa dla lekarza</h2>
@@ -1270,6 +1270,911 @@ return [
       'kicker' => 'Następny krok',
       'title' => 'Planujesz kampanię? <strong class="gradient-text">Zacznij od strony, na którą trafi ruch.</strong>',
       'text' => 'Napisz, co reklamujesz, do kogo i w jakim kanale. Przygotujemy propozycję landing page z zakresem, terminem i planem pomiaru.',
+      'buttons' => [
+        [
+          'label' => 'Przejdź do Studia Wyceny',
+          'href' => '/studio-wyceny/?zpbs_service=web#zpbsUltimate',
+        ],
+        [
+          'label' => 'Zadzwoń: 501 054 253',
+          'href' => 'tel:+48501054253',
+        ],
+      ],
+    ],
+  ],
+  // 2.8.0: industry pages from tresci/paczka-4 (beauty, personal trainers, photographers, restaurants, hotels).
+  '/strony-internetowe-dla-fotografow/' => [
+    'variant' => 'content-strony-internetowe-dla-fotografow',
+    'kind' => 'strony',
+    'title' => 'Strony internetowe dla fotografów',
+    'schema' => [
+      'name' => 'Strony internetowe dla fotografów',
+      'serviceType' => 'Projektowanie stron internetowych i portfolio dla fotografów',
+    ],
+    'drop' => [
+      'manifesto',
+      'oferta',
+      'pakiety',
+      'realizacje',
+      'branze',
+      'pointing',
+      'analityka',
+      'team-section',
+      'zasieg',
+    ],
+    'order' => [
+      'hero',
+      'zakres',
+      'portfolio',
+      'proces',
+      'client-trust',
+      'opinie',
+      'guide',
+      'faq',
+      'cta',
+    ],
+    'hero' => [
+      'eyebrow' => 'Strony dla fotografów • śluby, portrety, rodziny, produkty',
+      'h1' => 'Strona internetowa dla fotografa: <strong class="gradient-text">portfolio, które prowadzi do zapytań</strong>',
+      'lead' => 'Strona internetowa dla fotografa ma w kilka sekund pokazać Twój styl i doprowadzić oglądającego do pytania o termin. Projektujemy portfolio w kategoriach, <strong>galerie, które szybko wczytują się na telefonie</strong>, ofertę sesji i formularz zapytania z datą, rodzajem sesji i miejscem.',
+      'cta' => [
+        [
+          'label' => 'Wyceń stronę fotografa',
+          'href' => '/studio-wyceny/?zpbs_service=web#zpbsUltimate',
+        ],
+        [
+          'label' => 'Zobacz realizacje',
+          'href' => '#portfolio',
+        ],
+      ],
+      'pills' => [
+        'portfolio w kategoriach',
+        'zapytania o termin',
+        'widoczność w Google',
+      ],
+    ],
+    'scope' => [
+      'kicker' => 'Co projektujemy',
+      'title' => 'Strona dla fotografa: od pierwszego kadru <strong>do zapytania o termin.</strong>',
+      'aside' => 'Para młoda, rodzic czy właściciel sklepu często ogląda portfolio na telefonie, w przerwie od innych zajęć. Ma szybko ocenić Twoje zdjęcia, sprawdzić, co obejmuje sesja, i zapytać o wolny termin.',
+      'items' => [
+        [
+          'label' => '01 / portfolio',
+          'title' => 'Portfolio w kategoriach',
+          'text' => 'Śluby, portrety, rodziny, produkty i biznes na osobnych podstronach, z wybranymi sesjami i krótkim opisem. Klient od razu trafia na zdjęcia podobne do tych, których szuka.',
+        ],
+        [
+          'label' => '02 / szybkość',
+          'title' => 'Szybkie galerie bez utraty jakości',
+          'text' => 'Zdjęcia w formacie WebP, w kilku rozmiarach pod różne ekrany, z leniwym ładowaniem dalszych kadrów. Na telefonie galeria wczytuje się szybko, a na monitorze nadal widać ostrość.',
+        ],
+        [
+          'label' => '03 / oferta',
+          'title' => 'Oferta i pakiety sesji',
+          'text' => 'Każdy pakiet z jasnym opisem: ile trwa sesja, ile zdjęć dostaje klient, kiedy je oddajesz i czy dojazd jest w cenie. Ceny „od” odpowiadają na pierwsze pytanie, zanim klient napisze.',
+        ],
+        [
+          'label' => '04 / zapytania',
+          'title' => 'Formularz zapytania o termin',
+          'text' => 'Data, rodzaj sesji i miejsce w kilku krótkich polach, bez zbędnych pytań. Już z pierwszej wiadomości wiesz, czy masz wolny termin, i możesz odpisać z konkretną propozycją.',
+        ],
+        [
+          'label' => '05 / blog',
+          'title' => 'Blog z sesji pod SEO',
+          'text' => 'Wybrane sesje opisane jako wpisy: miejsce, pora roku, przebieg, opisy i teksty alternatywne zdjęć. Takie treści mogą pojawiać się w Google na zapytania o plenery i rodzaje sesji.',
+        ],
+        [
+          'label' => '06 / klienci',
+          'title' => 'Galerie klientów, vouchery i odbitki',
+          'text' => 'Galeria dla klienta zabezpieczona hasłem albo połączenie z serwisem galerii, z którego już korzystasz. Jeśli chcesz sprzedawać vouchery na sesję i odbitki, dokładamy sklep z płatnościami online.',
+        ],
+      ],
+    ],
+    'reuse' => [
+      'portfolio' => [
+        'kicker' => 'Realizacje',
+        'title' => 'Strony z innych branż, w których <strong>obraz gra główną rolę.</strong>',
+        'lead' => 'Zwróć uwagę na salon beauty i sklepy internetowe: tam też zdjęcia muszą szybko się wczytać i dobrze wyglądać na telefonie.',
+      ],
+      'proces' => [
+        'kicker' => 'Jak pracujemy',
+        'title' => 'Jak powstaje strona fotografa. <strong>Od selekcji zdjęć do publikacji.</strong>',
+        'lead' => 'Zaczynamy od rodzajów sesji, które chcesz sprzedawać częściej, i od selekcji zdjęć do portfolio. Zdjęcia i opis swojego stylu przynosisz Ty, a my układamy z nich strukturę, projekt i prostą drogę do zapytania.',
+      ],
+    ],
+    'guide' => [
+      'kicker' => 'Poradnik',
+      'title' => 'Strona internetowa dla fotografa. <strong>Selekcja, szybkość, Google i zgody.</strong>',
+      'lead' => 'Jak ułożyć portfolio fotografa, utrzymać szybkość galerii, zbierać zapytania i zadbać o zgody osób na zdjęciach.',
+      'id' => 'poradnik-strony-dla-fotografow',
+      'body' => '<h2 id="portfolio-fotografa-wybor-zamiast-archiwum">Portfolio fotografa: wybór zamiast archiwum</h2>
+<p>Portfolio to jeden z <a class="zpSeoLink" href="/strony-internetowe/rodzaje-stron-internetowych/">rodzajów stron internetowych</a>: ma pokazać, jak fotografujesz, i doprowadzić do rozmowy, a nie pomieścić całe archiwum. Osoba szukająca fotografa na ślub nie będzie przeglądać sesji produktowych, żeby trafić na zdjęcia z wesela. Dlatego portfolio dzielimy na kategorie według rodzajów sesji, a w każdej zostają kadry, z których jesteś dumny i których chcesz robić więcej.</p>
+<p>Pierwszy ekran to jedno mocne zdjęcie z takiej sesji, jaką chcesz sprzedawać najczęściej, krótkie zdanie o tym, co fotografujesz, i przycisk zapytania. W kategorii ślubnej lepiej pokazać kilka pełnych reportaży niż najlepsze ujęcia z wielu wesel, bo para młoda chce zobaczyć cały dzień. Media społecznościowe (np. Instagram) układają kadry według daty publikacji, a na stronie o kolejności decydujesz Ty.</p>
+<h2 id="jakosc-zdjec-a-szybkosc-strony">Jakość zdjęć a szybkość strony</h2>
+<p>Dobra strona internetowa dla fotografa nie każe wybierać między jakością a szybkością. Zdjęcia zapisujemy w formacie WebP, który przy tej samej widocznej jakości waży zwykle mniej niż JPG. WordPress tworzy z każdego pliku kilka rozmiarów, a przeglądarka pobiera ten, który pasuje do ekranu, więc telefon nie ściąga wersji pod duży monitor. Dalsze kadry ładują się leniwie, czyli dopiero przy przewijaniu. Pierwsze zdjęcie wczytuje się od razu, bo to ono decyduje, jak szybko strona wydaje się gotowa.</p>
+<p>Ty odpowiadasz za eksport: profil sRGB i rozmiar pod ekran, a nie plik prosto z aparatu. Google bierze pod uwagę szybkość stron mierzoną u prawdziwych użytkowników (Core Web Vitals), a klient oglądający portfolio w tramwaju nie będzie czekał na galerię.</p>
+<h2 id="jak-strona-internetowa-dla-fotografa-buduje-widocznosc-w-google">Jak strona internetowa dla fotografa buduje widoczność w Google</h2>
+<p>Google rozumie zdjęcia także dzięki tekstowi wokół nich: nagłówkom, opisom, nazwom plików i tekstom alternatywnym. Strona fotograficzna złożona z samych galerii daje wyszukiwarce niewiele do czytania, dlatego każda kategoria dostaje kilka zdań o tym, co fotografujesz, jak wygląda sesja i gdzie pracujesz.</p>
+<p>Najwięcej nowych treści dają wpisy z sesji. Każdy opisuje jedną sesję: rodzaj, miejsce (park, studio, plener w górach), porę roku i przebieg. Tekst alternatywny mówi, co widać na zdjęciu, np. „rodzice z córką na spacerze w jesiennym parku”, a plik nazywa się „sesja-rodzinna-jesien-park.webp”, a nie „IMG_4821.jpg”. Uzupełnieniem jest Profil Firmy w Google z obszarem działania i linkiem do strony.</p>
+<p>Blog i strukturę SEO pod frazy lokalne projektowaliśmy między innymi dla Apartamentu Piękna, salonu beauty i medycyny estetycznej. W pierwszych sześciu miesiącach nowa strona salonu miała o 212% więcej kliknięć z Google niż poprzednia.</p>
+<h2 id="oferta-ceny-i-formularz-zapytania">Oferta, ceny i formularz zapytania</h2>
+<p>Klient, który polubił Twoje zdjęcia, zadaje dwa pytania: ile to kosztuje i czy masz wolny termin. Na pierwsze odpowiadają ceny „od” i opis pakietów: czas sesji, liczba zdjęć po obróbce, termin oddania i koszt dojazdu. Taka informacja oszczędza wymiany maili z osobami, które szukały czegoś innego.</p>
+<p>Formularz zapytania pyta o datę, rodzaj sesji i miejsce, a resztę zostawia na rozmowę. Fotograf ślubny zwykle obsługuje jeden ślub dziennie, więc data jest pierwszym polem. Fotograf rodzinny czy biznesowy często jedzie do klienta, dlatego miejsce jest równie ważne. Podobną logikę zaprojektowaliśmy dla Krawca z dojazdem, pracowni krawiectwa miarowego, która umawia wizyty u klienta przez autorski system. Przy mini sesjach z zapisami na godziny sprawdzi się <a class="zpSeoLink" href="/strony-internetowe/system-rezerwacji-online/">system rezerwacji online</a>.</p>
+<h2 id="zgody-i-prawa-do-zdjec">Zgody i prawa do zdjęć</h2>
+<p>Strona internetowa fotografa pokazuje ludzi, a według art. 81 ustawy o prawie autorskim i prawach pokrewnych publikacja wizerunku wymaga zgody osoby, która jest na zdjęciu. Zgodę na wykorzystanie zdjęć w portfolio, na blogu i w mediach społecznościowych najprościej zapisać w umowie z klientem. Przy sesjach z dziećmi zgodę podpisują rodzice, a zgoda pary młodej nie obejmuje gości, których pokazujesz na zbliżeniach.</p>
+<p>Blokada prawego przycisku myszy nie chroni zdjęć, bo każdy może zrobić zrzut ekranu, za to przeszkadza zwykłym odwiedzającym. Rozsądniej publikować pliki w rozdzielczości pod ekran, za małej na duży wydruk, ewentualnie z dyskretnym podpisem w rogu. Duży znak wodny na środku kadru chroni niewiele więcej, a psuje odbiór portfolio.</p>
+<h2 id="ile-kosztuje-strona-www-dla-fotografa">Ile kosztuje strona www dla fotografa</h2>
+<p>Projekt strony z portfolio zaczyna się od 3 999 zł i trwa zwykle 2–4 tygodnie. Zakres pakietów opisujemy przy <a class="zpSeoLink" href="/tworzenie-stron-internetowych/">tworzeniu stron internetowych</a>.</p>
+<p>Sprzedaż voucherów na sesję i odbitek z płatnością online to już sklep WooCommerce, od 6 499 zł. Jak działają płatności online, wyjaśniamy w artykule o <a class="zpSeoLink" href="/sklepy-internetowe/bramka-platnicza/">bramce płatniczej</a>. Odbitki drukujesz Ty albo Twoje laboratorium, a sklep przyjmuje zamówienie i płatność.</p>
+<p>Jeśli dopiero budujesz markę, zacznij od znaku, który pasuje do charakteru Twoich zdjęć i sprawdzi się jako podpis w rogu kadru. Pakiety i ceny opisujemy na stronie <a class="zpSeoLink" href="/projektowanie-logo/">projektowanie logo</a>. Dokładną kwotę za całość podamy po wypełnieniu <a class="zpSeoLink" href="/studio-wyceny/">Studia Wyceny</a>.</p>',
+    ],
+    'faq' => [
+      'kicker' => 'FAQ / strony dla fotografów',
+      'title' => 'Pytania fotografów o <strong>portfolio, galerie i ceny.</strong>',
+      'lead' => 'O dodawaniu sesji, szybkości galerii, cenie, ochronie zdjęć, voucherach i logo.',
+      'items' => [
+        [
+          'Czy sam dodam nowe sesje do portfolio?',
+          'Tak. Strony internetowe dla fotografów budujemy na <a class="zpSeoLink" href="/strony-wordpress/">WordPressie</a>, więc nową sesję dodajesz w panelu: wgrywasz zdjęcia, wybierasz kategorię i dopisujesz krótki opis. Nie potrzebujesz do tego programisty ani znajomości kodu.',
+        ],
+        [
+          'Czy duże zdjęcia nie spowolnią strony?',
+          'Nie muszą. Ustawiamy stronę tak, żeby zamieniała zdjęcia na WebP, tworzyła kilka rozmiarów każdego pliku i wczytywała dalsze kadry przy przewijaniu. Ty wgrywasz jedno zdjęcie w dobrej jakości, a odwiedzający dostaje wersję dopasowaną do swojego ekranu.',
+        ],
+        [
+          'Ile kosztuje strona internetowa dla fotografa?',
+          'Stronę fotografa zaprojektujemy i wdrożymy od 3 999 zł, a prace trwają zwykle 2–4 tygodnie. Dłużej trwa i więcej kosztuje projekt z dodatkami, takimi jak sklep z voucherami, wersje językowe czy rozbudowany blog. Dokładną kwotę podajemy po wypełnieniu Studia Wyceny.',
+        ],
+        [
+          'Czy galerie dla klientów mogą być chronione hasłem?',
+          'Tak. Galeria na stronie może być widoczna tylko dla osób z sesji, po wpisaniu hasła. Jeśli korzystasz z zewnętrznego serwisu galerii, podlinkujemy go albo osadzimy, gdy serwis na to pozwala. Pliki w pełnej rozdzielczości wygodniej przekazywać przez taki serwis niż trzymać na hostingu strony.',
+        ],
+        [
+          'Jak chronić zdjęcia przed kopiowaniem?',
+          'W pełni się nie da, bo to, co widać na ekranie, można zapisać. Publikuj pliki w rozmiarze pod ekran, ewentualnie z dyskretnym podpisem. Prawa autorskie przysługują Ci bez rejestracji, więc gdy ktoś użyje Twoich zdjęć bez zgody, możesz domagać się ich usunięcia.',
+        ],
+        [
+          'Czy blog z sesji ma sens?',
+          'Ma, jeśli wpisy są konkretne. Opis jednej sesji, jej pleneru i przebiegu może pojawić się w Google na zapytania, na które portfolio nie odpowie, a przyszłemu klientowi pokazuje, jak pracujesz. Wystarczą wpisy po wybranych sesjach.',
+        ],
+        [
+          'Czy mogę sprzedawać vouchery na sesję?',
+          'Tak. Najprostsza wersja to formularz zamówienia i płatność przelewem. Jeśli klient ma zapłacić online i od razu dostać voucher, najwygodniej zrobić to w <a class="zpSeoLink" href="/tworzenie-sklepow-internetowych/">sklepie internetowym</a> z płatnościami, od 6 499 zł. Przez ten sam sklep sprzedasz też odbitki z Twojego laboratorium.',
+        ],
+        [
+          'Czy zaprojektujecie też logo fotografa?',
+          'Tak. Logo projektujemy w pakietach za 999 zł, 1 499 zł i 2 999 zł. Dla Pracowni Urody, gabinetu kosmetologii, powstał delikatny znak z linearną ilustracją twarzy. Logo fotografa pracuje też jako podpis na zdjęciach, więc warto mieć jego prostą, małą wersję.',
+        ],
+      ],
+    ],
+    'cta' => [
+      'kicker' => 'Następny krok',
+      'title' => 'Pokaż najlepsze sesje <strong class="gradient-text">na stronie, która nie każe czekać.</strong>',
+      'text' => 'Opisz w Studiu Wyceny, jakie sesje robisz, ile kategorii chcesz pokazać i skąd dziś przychodzą zapytania. Zaproponujemy układ portfolio, formularz zapytania i dodatki, takie jak galerie dla klientów czy vouchery.',
+      'buttons' => [
+        [
+          'label' => 'Przejdź do Studia Wyceny',
+          'href' => '/studio-wyceny/?zpbs_service=web#zpbsUltimate',
+        ],
+        [
+          'label' => 'Zadzwoń: 501 054 253',
+          'href' => 'tel:+48501054253',
+        ],
+      ],
+    ],
+  ],
+  '/strony-internetowe-dla-hoteli/' => [
+    'variant' => 'content-strony-internetowe-dla-hoteli',
+    'kind' => 'strony',
+    'title' => 'Strony internetowe dla hoteli',
+    'schema' => [
+      'name' => 'Strony internetowe dla hoteli i pensjonatów',
+      'serviceType' => 'Projektowanie stron internetowych dla hoteli, pensjonatów i obiektów noclegowych',
+    ],
+    'drop' => [
+      'manifesto',
+      'oferta',
+      'pakiety',
+      'portfolio',
+      'branze',
+      'pointing',
+      'analityka',
+      'team-section',
+      'zasieg',
+    ],
+    'order' => [
+      'hero',
+      'zakres',
+      'realizacje',
+      'proces',
+      'client-trust',
+      'opinie',
+      'guide',
+      'faq',
+      'cta',
+    ],
+    'hero' => [
+      'eyebrow' => 'Branża noclegowa • hotele, pensjonaty, apartamenty',
+      'h1' => 'Strony internetowe dla hoteli, <strong class="gradient-text">które zbierają rezerwacje bezpośrednie</strong>',
+      'lead' => 'Projektujemy strony internetowe dla hoteli, pensjonatów i apartamentów na wynajem, na których gość ogląda pokoje, sprawdza ceny na swój termin i <strong>rezerwuje bezpośrednio u Ciebie</strong>. Podłączamy silnik rezerwacyjny, z którego korzysta obiekt, i przygotowujemy podstrony ofert pod kampanie oraz wersje językowe dla gości z zagranicy.',
+      'cta' => [
+        [
+          'label' => 'Wyceń stronę obiektu',
+          'href' => '/studio-wyceny/?zpbs_service=web#zpbsUltimate',
+        ],
+        [
+          'label' => 'Zobacz case study',
+          'href' => '#realizacje',
+        ],
+      ],
+      'pills' => [
+        'rezerwacje bezpośrednie',
+        'silnik rezerwacyjny',
+        'wersje językowe',
+      ],
+    ],
+    'scope' => [
+      'kicker' => 'Co projektujemy',
+      'title' => 'Od pierwszego zdjęcia pokoju <strong>do potwierdzonej rezerwacji.</strong>',
+      'aside' => 'Gość zwykle porównuje kilka obiektów naraz, często na telefonie. Strona ma mu szybko pokazać pokój, cenę na wybrany termin i powód, żeby zarezerwować bezpośrednio.',
+      'items' => [
+        [
+          'label' => '01 / pokoje',
+          'title' => 'Pokoje i apartamenty z galerią',
+          'text' => 'Każdy typ pokoju dostaje własny opis: metraż, liczbę osób, układ łóżek, udogodnienia i galerię prawdziwych zdjęć. Gość od razu widzi, czym standard różni się od apartamentu.',
+        ],
+        [
+          'label' => '02 / rezerwacje',
+          'title' => 'Silnik rezerwacyjny na stronie',
+          'text' => 'Booking engine z dostępnością i cenami na wybrany termin, podłączony do systemu, którego używa obiekt. Channel manager synchronizuje terminy z portalami, żeby ten sam pokój nie został sprzedany dwa razy.',
+        ],
+        [
+          'label' => '03 / oferty',
+          'title' => 'Oferty i pakiety pod kampanie',
+          'text' => 'Pakiety weekendowe, rodzinne, sezonowe i z SPA jako osobne podstrony z warunkami, terminami i przyciskiem rezerwacji. Każdą ofertę możesz promować w Meta Ads albo Google Ads.',
+        ],
+        [
+          'label' => '04 / usługi',
+          'title' => 'Restauracja, SPA, konferencje i wesela',
+          'text' => 'Osobne podstrony dla restauracji, strefy SPA, sal konferencyjnych i przyjęć, każda z własnym formularzem zapytania: data i liczba gości przy weselu, sala i sprzęt przy szkoleniu.',
+        ],
+        [
+          'label' => '05 / języki',
+          'title' => 'Wersje językowe dla gości',
+          'text' => 'Angielska, niemiecka albo inna wersja z opisami pokoi, ofert i zasad pobytu. Każdy język ma osobne adresy dla Google, a przycisk rezerwacji prowadzi do tej samej wersji.',
+        ],
+        [
+          'label' => '06 / okolica',
+          'title' => 'Okolica, dojazd i atrakcje',
+          'text' => 'Podstrony o tym, co jest w pobliżu: atrakcje, trasy, wydarzenia, dojazd i parking. Odpowiadają na pytania przed przyjazdem i pomagają trafić z Google do osób planujących wyjazd w Twoją okolicę.',
+        ],
+      ],
+    ],
+    'reuse' => [
+      'realizacje' => [
+        'kicker' => 'Case study',
+        'title' => 'Rezerwacje przez własną stronę i ruch z Google. <strong>Wyniki z innych branż.</strong>',
+        'lead' => '',
+      ],
+      'proces' => [
+        'kicker' => 'Jak pracujemy',
+        'title' => 'Jak powstaje strona hotelu. <strong>Od listy pokoi do działających rezerwacji.</strong>',
+        'lead' => 'Zaczynamy od typów pokoi, ofert, systemu rezerwacji i tego, skąd dziś przychodzą goście. Przed publikacją przechodzimy z Tobą ścieżkę rezerwacji na telefonie i komputerze, w każdym języku.',
+      ],
+    ],
+    'guide' => [
+      'kicker' => 'Poradnik',
+      'title' => 'Strona internetowa dla hotelu. <strong>Rezerwacje bezpośrednie obok portali.</strong>',
+      'lead' => 'Jak zaplanować strony www dla hoteli i pensjonatów, które pokazują ofertę, współpracują z silnikiem rezerwacyjnym i zachęcają do rezerwacji bezpośredniej.',
+      'id' => 'poradnik-strony-dla-hoteli',
+      'body' => '<h2 id="rezerwacje-bezposrednie-a-portale-rezerwacyjne">Rezerwacje bezpośrednie a portale rezerwacyjne</h2>
+<p>Portale rezerwacyjne, np. Booking.com, przyprowadzają gości, do których obiekt sam by nie dotarł. Od każdej rezerwacji pobierają jednak prowizję, a kontakt z gościem do dnia przyjazdu zwykle przechodzi przez portal. Portal warto więc traktować jako kanał pozyskiwania gości, a własną stronę jako miejsce, w którym rezerwują kolejny pobyt.</p>
+<p>Żeby gość zarezerwował bezpośrednio, strona musi dać mu konkretny powód:</p>
+<ul><li><strong>najlepszą dostępną ofertę</strong>: cenę nie wyższą niż w portalu albo lepsze warunki, np. śniadanie w cenie, późniejsze wymeldowanie czy łagodniejsze zasady anulacji,</li><li><strong>pakiety dostępne tylko na stronie</strong>, np. weekend z kolacją albo pobyt rodzinny,</li><li><strong>kontakt z obiektem</strong>: telefon i e-mail, pod którymi gość zapyta o łóżeczko dla dziecka, psa czy późny przyjazd.</li></ul>
+<p>Zanim zróżnicujesz ceny w poszczególnych kanałach, sprawdź warunki umów z portalami.</p>
+<h2 id="silnik-rezerwacyjny-i-channel-manager">Silnik rezerwacyjny i channel manager</h2>
+<p>Silnik rezerwacyjny (booking engine) to moduł, w którym gość wybiera daty, widzi wolne pokoje z cenami i potwierdza rezerwację, często z przedpłatą albo gwarancją kartą. Channel manager rozsyła dostępność i ceny do portali, a po każdej rezerwacji, także tej ze strony, aktualizuje je we wszystkich kanałach. Dzięki temu system rezerwacji hotelowej, portale i strona pokazują ten sam stan pokoi.</p>
+<p>Nie musisz zmieniać narzędzi. Podłączamy system, którego obiekt już używa: osadzamy jego moduł na stronie albo prowadzimy gościa do ścieżki rezerwacji w kolorach i typografii Twojej marki, żeby nie poczuł, że trafił na obcą stronę. Jeśli dopiero wybierasz system rezerwacji dla hotelu, sprawdź, czy łączy się z channel managerem i portalami, z których korzystasz. Jak wybrać <a class="zpSeoLink" href="/strony-internetowe/system-rezerwacji-online/">system rezerwacji online</a>, piszemy w osobnym artykule.</p>
+<p>Przykład spoza hotelarstwa: Apartament Piękna to salon beauty i medycyny estetycznej, dla którego zaprojektowaliśmy stronę z autorskim systemem rezerwacji wizyt. Średnia z trzech miesięcy to 96 rezerwacji online na miesiąc, a ruch z Google, mierzony kliknięciami, wzrósł w pierwszym półroczu o 212% względem poprzedniej wersji strony. To salon, nie hotel, ale zasada jest ta sama: czytelna oferta, widoczny przycisk i krótka droga do potwierdzenia.</p>
+<h2 id="co-musi-miec-strona-internetowa-hotelu">Co musi mieć strona internetowa hotelu</h2>
+<p>Gość z wyszukiwarki albo z portalu chce szybko sprawdzić, czy obiekt do niego pasuje. Dobre strony internetowe dla hoteli odpowiadają na to bez szukania po menu:</p>
+<ul><li><strong>pokoje</strong> z metrażem, liczbą osób, układem łóżek, udogodnieniami i galerią,</li><li><strong>ceny i dostępność</strong> pobierane z silnika rezerwacyjnego, a nie przepisywane ręcznie,</li><li><strong>zdjęcia</strong> prawdziwych pokoi, łazienek, śniadań i otoczenia zamiast zdjęć stockowych,</li><li><strong>lokalizacja</strong>: mapa, dojazd, parking i odległości do najbliższych atrakcji,</li><li><strong>zasady pobytu</strong>: zameldowanie, wymeldowanie, polityka anulacji, dzieci i zwierzęta,</li><li><strong>kontakt</strong>: telefon i e-mail widoczne na każdej podstronie, także w wersji mobilnej,</li><li><strong>wersje językowe</strong>, jeśli przyjmujesz gości z zagranicy.</li></ul>
+<p>Sesji zdjęciowych nie robimy: zdjęcia dostarczasz Ty albo fotograf, z którym współpracujesz. My wybieramy kadry, układamy galerie i zapisujemy pliki w lekkich formatach, żeby strona ładowała się szybko także przy słabym zasięgu. Każdy układ sprawdzamy na telefonie, bo tam najłatwiej zgubić przycisk rezerwacji.</p>
+<h2 id="oferty-pakiety-i-kampanie">Oferty, pakiety i kampanie</h2>
+<p>Pakiet weekendowy, pobyt z kolacją, ferie z dziećmi albo oferta poza sezonem działają najlepiej jako osobne podstrony: z opisem, warunkami, terminami i przyciskiem, który prowadzi prosto do rezerwacji. Taki adres wstawisz do reklamy, newslettera albo posta, a gość nie musi szukać pakietu w menu.</p>
+<p>Na takie podstrony kierujemy <a class="zpSeoLink" href="/kampanie-reklamowe/">kampanie reklamowe</a> w Meta Ads i Google Ads, które prowadzimy od 1 200 zł/mies. Google Ads trafia do osób, które już szukają noclegu, a Meta Ads pozwala pokazać pakiet sezonowy tym, którzy wyjazdu jeszcze nie planują.</p>
+<h2 id="restauracja-spa-konferencje-i-wesela">Restauracja, SPA, konferencje i wesela</h2>
+<p>Jeśli obiekt ma restaurację, strefę SPA, sale konferencyjne albo organizuje wesela, każda z tych usług potrzebuje własnej podstrony. Para planująca wesele, organizator szkolenia i ktoś, kto szuka kolacji w okolicy, wpisują w Google zupełnie inne zapytania.</p>
+<ul><li><strong>Konferencje</strong>: sale z układami ustawień, wyposażenie techniczne, przerwy kawowe i noclegi dla uczestników.</li><li><strong>Wesela i przyjęcia</strong>: galeria sali, przykładowe menu i formularz z datą oraz liczbą gości.</li><li><strong>Restauracja</strong> otwarta dla gości z zewnątrz: menu, godziny otwarcia i rezerwacja stolika, podobnie jak na <a class="zpSeoLink" href="/strony-internetowe-dla-restauracji/">stronach internetowych dla restauracji</a>.</li><li><strong>SPA</strong>: zabiegi z czasem trwania i ceną. Jeśli przyjmuje gości spoza hotelu, jego podstrona działa jak <a class="zpSeoLink" href="/strony-internetowe-dla-salonow-beauty/">strona salonu beauty</a>.</li></ul>
+<h2 id="ile-kosztuja-strony-internetowe-dla-hoteli">Ile kosztują strony internetowe dla hoteli</h2>
+<p>Strony internetowe dla hoteli projektujemy od 3 999 zł. Kwotę zmieniają głównie trzy rzeczy: sposób integracji z systemem rezerwacji, liczba wersji językowych oraz liczba podstron ofert i usług dodatkowych. Strona pensjonatu z kilkoma pokojami w jednym języku to mniejszy projekt niż serwis hotelu z restauracją, SPA i salami konferencyjnymi w trzech językach.</p>
+<p>Strona powstaje zwykle w 2–4 tygodnie, a wersje językowe i rozbudowane integracje wydłużają projekt. Pakiety opisujemy przy <a class="zpSeoLink" href="/tworzenie-stron-internetowych/">tworzeniu stron internetowych</a>, a kwotę dla Twojego obiektu podamy po wypełnieniu <a class="zpSeoLink" href="/studio-wyceny/">Studia Wyceny</a>.</p>',
+    ],
+    'faq' => [
+      'kicker' => 'FAQ / strony dla hoteli',
+      'title' => 'Pytania o stronę hotelu, <strong>pensjonatu i apartamentów.</strong>',
+      'lead' => 'O silniku rezerwacyjnym, portalach, cenie, językach, ofertach i opiniach gości.',
+      'items' => [
+        [
+          'Czy podłączycie silnik rezerwacyjny, z którego już korzystamy?',
+          'Zwykle tak. Silniki rezerwacyjne udostępniają najczęściej widżet do osadzenia na stronie albo osobną stronę rezerwacji, której wygląd można zbliżyć do Twojej witryny. Przed wyceną sprawdzamy możliwości Twojego dostawcy i mówimy wprost, co da się zrobić.',
+        ],
+        [
+          'Czy strona zastąpi portale rezerwacyjne?',
+          'Nie i nie musi. Strony internetowe dla hoteli działają najlepiej obok portali: portal przyprowadza nowych gości, a strona daje im powód, żeby kolejny pobyt zarezerwować bezpośrednio. Celem jest większy udział rezerwacji bezpośrednich, ale konkretnych liczb nie obiecujemy.',
+        ],
+        [
+          'Ile kosztuje strona internetowa hotelu?',
+          'Strona obiektu noclegowego kosztuje od 3 999 zł. Zakres rozszerzają głównie integracja z systemem rezerwacji, kolejne języki, duża liczba ofert i podstrony restauracji, SPA czy sal. Dokładną kwotę podajemy po wypełnieniu Studia Wyceny.',
+        ],
+        [
+          'Czy strona może działać w kilku językach?',
+          'Tak. Każda wersja językowa ma własne adresy i przetłumaczone opisy pokoi, ofert i zasad pobytu, a znaczniki hreflang podpowiadają Google, którą wersję pokazać gościowi. Moduły rezerwacji zwykle mają własne tłumaczenia. Kto przygotuje teksty w innych językach, ustalamy przy wycenie.',
+        ],
+        [
+          'Czy zaprojektujecie stronę pensjonatu albo apartamentów na wynajem?',
+          'Tak. Strona internetowa dla pensjonatu ma zwykle mniej podstron niż serwis hotelu, za to więcej miejsca na gospodarzy, klimat domu i okolicę. Przy apartamentach każdy lokal dostaje własną podstronę z wyposażeniem, zasadami przyjazdu i kalendarzem wolnych terminów.',
+        ],
+        [
+          'Czy przygotujecie podstrony ofert i pakietów pod kampanie?',
+          'Tak. Każdy pakiet może mieć własną podstronę z warunkami, terminami i przyciskiem rezerwacji, a reklama prowadzi prosto na nią. Podłączamy GA4 i Meta Pixel, a jeśli system rezerwacji przekazuje dane o zakończonych rezerwacjach, widać, która kampania je przyniosła.',
+        ],
+        [
+          'Jak pokazać na stronie opinie gości?',
+          'Najlepiej przy pokojach i ofertach, których dotyczą, z imieniem gościa (za jego zgodą) i miesiącem pobytu. Możesz też pokazać opinie z Profilu Firmy w Google. Strona powinna informować, czy i jak sprawdzasz, że opinie pochodzą od prawdziwych gości: tego wymagają przepisy o nieuczciwych praktykach rynkowych.',
+        ],
+        [
+          'Czy sam zmienię ceny i oferty na stronie?',
+          'Ceny i dostępność zwykle pochodzą z silnika rezerwacyjnego, więc zmieniasz je tam, gdzie dotąd, a strona pokazuje aktualne dane. Opisy pokoi, pakiety i galerie edytujesz sam w panelu, bo budujemy <a class="zpSeoLink" href="/strony-wordpress/">strony na WordPressie</a>. Aktualizacje i kopie zapasowe może przejąć <a class="zpSeoLink" href="/opieka-wordpress/">opieka WordPress</a>.',
+        ],
+      ],
+    ],
+    'cta' => [
+      'kicker' => 'Następny krok',
+      'title' => 'Zaplanujmy stronę obiektu <strong class="gradient-text">razem ze ścieżką rezerwacji.</strong>',
+      'text' => 'Opisz w Studiu Wyceny obiekt, typy pokoi, system rezerwacji, z którego korzystasz, i języki, w jakich chcesz obsługiwać gości. Zaproponujemy strukturę strony, sposób podłączenia silnika rezerwacyjnego i zakres podstron ofert.',
+      'buttons' => [
+        [
+          'label' => 'Przejdź do Studia Wyceny',
+          'href' => '/studio-wyceny/?zpbs_service=web#zpbsUltimate',
+        ],
+        [
+          'label' => 'Zadzwoń: 501 054 253',
+          'href' => 'tel:+48501054253',
+        ],
+      ],
+    ],
+  ],
+  '/strony-internetowe-dla-restauracji/' => [
+    'variant' => 'content-strony-internetowe-dla-restauracji',
+    'kind' => 'strony',
+    'title' => 'Strony internetowe dla restauracji',
+    'schema' => [
+      'name' => 'Strony internetowe dla restauracji',
+      'serviceType' => 'Projektowanie stron internetowych dla restauracji, kawiarni i gastronomii',
+    ],
+    'drop' => [
+      'manifesto',
+      'oferta',
+      'pakiety',
+      'portfolio',
+      'branze',
+      'pointing',
+      'analityka',
+      'team-section',
+      'zasieg',
+    ],
+    'order' => [
+      'hero',
+      'zakres',
+      'realizacje',
+      'proces',
+      'client-trust',
+      'opinie',
+      'guide',
+      'faq',
+      'cta',
+    ],
+    'hero' => [
+      'eyebrow' => 'Strony dla gastronomii • restauracje, kawiarnie, piekarnie',
+      'h1' => 'Strona internetowa dla restauracji: <strong class="gradient-text">menu, stoliki i zamówienia online</strong>',
+      'lead' => 'Dobra strona internetowa dla restauracji pokazuje gościowi na ekranie telefonu, <strong>co zje, do której lokal jest czynny i czy znajdzie wolny stolik.</strong> Projektujemy strony restauracji, kawiarni, bistro, piekarni i cukierni z menu online, rezerwacją stolika i zamówieniami na wynos.',
+      'cta' => [
+        [
+          'label' => 'Wyceń stronę lokalu',
+          'href' => '/studio-wyceny/?zpbs_service=web#zpbsUltimate',
+        ],
+        [
+          'label' => 'Zobacz case study',
+          'href' => '#realizacje',
+        ],
+      ],
+      'pills' => [
+        'menu online',
+        'rezerwacja stolika',
+        'widoczność w mapach',
+      ],
+    ],
+    'scope' => [
+      'kicker' => 'Co projektujemy',
+      'title' => 'Strona, na której gość <strong>sprawdzi kartę, godziny i wolny stolik.</strong>',
+      'aside' => 'Gość często wybiera lokal na telefonie, w drodze albo tuż przed wyjściem. Jeśli szybko nie znajdzie karty, godzin i dojazdu, wybierze lokal obok.',
+      'items' => [
+        [
+          'label' => '01 / menu',
+          'title' => 'Menu online zamiast PDF',
+          'text' => 'Karta jako tekst na stronie, z opisami dań i alergenami. Gość wygodnie czyta ją na telefonie, a Ty zmieniasz ceny i dania dnia w panelu.',
+        ],
+        [
+          'label' => '02 / rezerwacje',
+          'title' => 'Rezerwacja stolika online',
+          'text' => 'Formularz z datą, godziną i liczbą osób, z potwierdzeniem dla gościa. Jeśli masz już system rezerwacji, osadzimy go na stronie, żeby obsługa nie pilnowała dwóch kalendarzy.',
+        ],
+        [
+          'label' => '03 / zamówienia',
+          'title' => 'Zamówienia na wynos i z dowozem',
+          'text' => 'Koszyk z wyborem odbioru albo dowozu, godziny i formy płatności. Zamówienia przez stronę działają obok portali z dowozem, a stali goście mogą zamawiać bezpośrednio u Ciebie.',
+        ],
+        [
+          'label' => '04 / mapy',
+          'title' => 'Lokalne SEO i mapy Google',
+          'text' => 'Adres, godziny otwarcia, dojazd, parking i mapa w jednym miejscu. Dbamy, żeby te informacje zgadzały się z Profilem Firmy w Google, i dodajemy dane strukturalne lokalu.',
+        ],
+        [
+          'label' => '05 / zdjęcia',
+          'title' => 'Prawdziwe zdjęcia dań i wnętrza',
+          'text' => 'Galeria dań, sali i ogródka na prawdziwych zdjęciach, nie ze stocku. Zdjęcia dostarczasz Ty albo Twój fotograf, a my wybieramy kadry i przygotowujemy je do szybkiego ładowania.',
+        ],
+        [
+          'label' => '06 / przyjęcia',
+          'title' => 'Przyjęcia, eventy i catering',
+          'text' => 'Podstrona dla przyjęć okolicznościowych, spotkań firmowych i cateringu. Formularz pyta o termin, liczbę gości, rodzaj wydarzenia i wymagania dietetyczne, więc ofertę przygotujesz bez dopytywania o podstawy.',
+        ],
+      ],
+    ],
+    'reuse' => [
+      'realizacje' => [
+        'kicker' => 'Case study',
+        'title' => 'Rezerwacje przez stronę i ruch z Google. <strong>Liczby z salonu beauty i kancelarii.</strong>',
+        'lead' => '',
+      ],
+      'proces' => [
+        'kicker' => 'Jak pracujemy',
+        'title' => 'Jak powstaje strona lokalu. <strong>Od karty dań do publikacji.</strong>',
+        'lead' => 'Zaczynamy od Twojej karty, godzin otwarcia i tego, jak dziś goście rezerwują stoliki i zamawiają jedzenie. Ty decydujesz o daniach i cenach, a my o tym, jak menu, rezerwacja i dojazd układają się na ekranie telefonu.',
+      ],
+    ],
+    'guide' => [
+      'kicker' => 'Poradnik',
+      'title' => 'Strona dla restauracji krok po kroku. <strong>Od menu po mapy Google.</strong>',
+      'lead' => 'Co pokazać na stronie restauracji, kawiarni lub piekarni, jak podać menu i alergeny, kiedy wystarczy formularz rezerwacji, a kiedy przyda się system zamówień.',
+      'id' => 'poradnik-strony-dla-restauracji',
+      'body' => '<h2 id="co-musi-miec-strona-internetowa-dla-restauracji">Co musi mieć strona internetowa dla restauracji</h2>
+<p>Gość wchodzi na stronę lokalu z prostymi pytaniami: czy jesteście dziś otwarci, co macie w karcie, ile to kosztuje i czy znajdzie się stolik. Na pierwszym ekranie telefonu umieść więc godziny otwarcia, adres i klikalny numer, a pod nimi przyciski do menu i rezerwacji. Niżej pokaż:</p>
+<ul><li>dojazd z mapą i informacją, gdzie zaparkować,</li><li>menu z cenami i oznaczeniem alergenów,</li><li>rezerwację stolika albo informację, że przyjmujesz gości bez rezerwacji,</li><li>prawdziwe zdjęcia dań, sali i ogródka,</li><li>przyjęcia, eventy i catering, jeśli je prowadzisz.</li></ul>
+<p>Strona internetowa dla gastronomii różni się w szczegółach. Kawiarnia pokaże śniadania i ciasta, piekarnia listę wypieków i godzinę, od której są na półkach, a cukiernia formularz zamówienia tortu z datą odbioru.</p>
+<h2 id="menu-online-czytelne-na-telefonie">Menu online czytelne na telefonie</h2>
+<p>Menu w PDF dobrze wygląda na wydruku, ale na telefonie trzeba je powiększać i przesuwać na boki. Trudno je też aktualizować: każda zmiana ceny to nowy plik, a stara wersja długo jeszcze krąży w sieci.</p>
+<p>Menu online w HTML to zwykły tekst na stronie. Gość czyta je bez pobierania pliku, Google odczytuje nazwy dań, a ceny i dania dnia zmieniasz w panelu.</p>
+<p>To również dobre miejsce na informację o alergenach, którą i tak musisz przekazywać gościom. Wymaga tego unijne rozporządzenie nr 1169/2011 także przy daniach podawanych bez opakowania, na przykład na sali (art. 44). Rozporządzenie wymienia 14 grup alergenów, w tym zboża zawierające gluten, mleko, jaja, orzechy i seler. Numer alergenu przy daniu, z legendą pod kartą, pozwala gościowi sprawdzić skład przed wizytą i ułatwia rozmowę z obsługą.</p>
+<h2 id="rezerwacja-stolika-online-formularz-czy-system">Rezerwacja stolika online: formularz czy system</h2>
+<p>Najprostsza rezerwacja stolika online to formularz z datą, godziną, liczbą osób i polem na uwagi, na przykład o krzesełku dla dziecka. Gość dostaje potwierdzenie zgłoszenia, a Ty decydujesz, czy masz dla niego stolik. To wystarczy przy kilku rezerwacjach dziennie. Przy większym ruchu przydaje się system z limitem miejsc na godzinę i przypomnieniami, a jeśli lokal już go ma, podłączymy go do strony.</p>
+<p>Przykład z naszej pracy, choć z innej branży: w Apartamencie Piękna, salonie beauty i medycyny estetycznej, klienci rezerwują wizyty w zaprojektowanym przez nas systemie z powiadomieniami SMS. Przez stronę trafia tam średnio 96 rezerwacji online miesięcznie (średnia z trzech miesięcy). W restauracji zasada jest ta sama: gość może zarezerwować stolik także wtedy, gdy lokal jest zamknięty. Jak wybrać rozwiązanie, wyjaśniamy w artykule o tym, jak działa <a class="zpSeoLink" href="/strony-internetowe/system-rezerwacji-online/">system rezerwacji online</a>.</p>
+<h2 id="zamowienia-online-wlasny-system-czy-portal">Zamówienia online: własny system czy portal</h2>
+<p>Portale z dowozem dają zasięg, ale gość składa tam zamówienie w aplikacji portalu, a nie u Ciebie. Własny system zamówień online dla restauracji nie musi ich zastępować. Może działać obok: nowi goście poznają lokal przez portal, a stali zamawiają bezpośrednio przez stronę.</p>
+<p>Taki system to koszyk z daniami i dodatkami, wybór odbioru albo dowozu, godzina realizacji, strefy dostawy i płatność online. Informacja o alergenach powinna być widoczna, zanim gość złoży zamówienie. Jak działa <a class="zpSeoLink" href="/sklepy-internetowe/bramka-platnicza/">bramka płatnicza</a> i co przygotować przed jej podłączeniem, wyjaśniamy w osobnym artykule. Przy niewielkiej liczbie zamówień na start wystarczy formularz zamówienia na wynos z płatnością przy odbiorze.</p>
+<h2 id="widocznosc-w-mapach-google">Widoczność w mapach Google</h2>
+<p>Gość, który szuka miejsca na obiad w okolicy, często zaczyna od mapy Google. Profil Firmy w Google i strona powinny więc podawać te same dane: nazwę, adres, telefon i godziny otwarcia, również świąteczne. W profilu dodaj link do menu i rezerwacji, a na stronie umieść mapę z dojazdem i dane strukturalne, czyli opis lokalu zapisany w kodzie dla wyszukiwarki. Odpowiadaj też na opinie o kuchni i obsłudze, także krytyczne.</p>
+<p>Dla Piekarni Marysia zaprojektowaliśmy stronę celowo minimalistyczną: menu, galeria produktów, kontakt z mapą Google i SEO lokalne. Mała piekarnia nie potrzebuje rozbudowanego serwisu, tylko strony, która jasno mówi, co można kupić, gdzie i w jakich godzinach.</p>
+<h2 id="ile-kosztuje-strona-www-dla-restauracji">Ile kosztuje strona www dla restauracji</h2>
+<p>Cena strony zaczyna się od 3 999 zł, a projekt trwa zwykle 2–4 tygodnie. Prosta strona internetowa dla restauracji z menu, galerią i mapą powstaje szybciej niż serwis z rezerwacjami i zamówieniami. Własny system rezerwacji albo wersje językowe dla turystów wydłużają projekt i zmieniają kwotę. Zamówienia z płatnościami online to zakres bliższy sklepowi: <a class="zpSeoLink" href="/tworzenie-sklepow-internetowych/">sklepy internetowe</a> na WooCommerce realizujemy od 6 499 zł.</p>
+<p>Jeśli odświeżasz markę lokalu, zadbaj, żeby logo, karta, szyld i strona wyglądały spójnie. Pakiety <a class="zpSeoLink" href="/projektowanie-logo/">projektowania logo</a> kosztują 999 zł, 1 499 zł albo 2 999 zł. Kwotę dla Twojego lokalu podamy po wypełnieniu <a class="zpSeoLink" href="/studio-wyceny/">Studia Wyceny</a>.</p>',
+    ],
+    'faq' => [
+      'kicker' => 'FAQ / strony dla restauracji',
+      'title' => 'Pytania restauratorów <strong>i właścicieli kawiarni.</strong>',
+      'lead' => 'O menu, alergenach, rezerwacjach, zamówieniach bez portali, cenie i mapach Google.',
+      'items' => [
+        [
+          'Czy menu w PDF wystarczy?',
+          'Jako dodatkowy plik tak, ale strona internetowa dla restauracji powinna pokazywać kartę przede wszystkim jako tekst. Taki tekst czyta się wygodnie na telefonie, Google go odczytuje, a zmiany cen wprowadzasz w panelu bez nowego pliku.',
+        ],
+        [
+          'Czy goście zarezerwują stolik przez stronę?',
+          'Tak, jeśli przycisk rezerwacji widać od razu, a formularz zajmuje chwilę. Gość podaje datę, godzinę i liczbę osób, a Ty dostajesz powiadomienie. Możemy też podłączyć system rezerwacji, z którego lokal już korzysta.',
+        ],
+        [
+          'Czy mogę przyjmować zamówienia online bez portali?',
+          'Tak. Strona może mieć własny koszyk z odbiorem albo dowozem, wyborem godziny i płatnością online. Portali z dowozem nie musisz przy tym wyłączać: oba kanały mogą działać równolegle.',
+        ],
+        [
+          'Ile kosztuje strona internetowa dla restauracji?',
+          'Strony internetowe dla restauracji realizujemy od 3 999 zł, zwykle w 2–4 tygodnie. Więcej kosztuje strona z własnym systemem rezerwacji, wersjami językowymi albo zamówieniami z płatnościami online, bliższa zakresem sklepowi (sklepy od 6 499 zł). Różnice między pakietami opisujemy przy usłudze <a class="zpSeoLink" href="/tworzenie-stron-internetowych/">tworzenie stron internetowych</a>.',
+        ],
+        [
+          'Czy sam zmienię menu i ceny?',
+          'Tak. Menu przygotowujemy w panelu WordPress jako listę dań z cenami, opisami i alergenami. Nowe danie dnia, zmiana ceny czy sezonowa karta nie wymagają programisty ani grafika.',
+        ],
+        [
+          'Jak pokazać alergeny na stronie?',
+          'Najczytelniej przy każdym daniu, numerami albo ikonami z legendą pod kartą. Obowiązek informowania gości o alergenach wynika z unijnego rozporządzenia nr 1169/2011. Menu online nie zwalnia z niego w lokalu, ale pozwala sprawdzić skład przed wizytą albo zamówieniem.',
+        ],
+        [
+          'Czy strona pomoże w mapach Google?',
+          'Strona internetowa restauracji wspiera Profil Firmy w Google, ale go nie zastępuje. Pomagają spójne informacje o lokalu, aktualne godziny, link do menu w profilu i dane strukturalne. Pozycji nie obiecujemy: kolejność w mapach zależy też od odległości i opinii gości.',
+        ],
+        [
+          'Czy robicie strony dla kawiarni, piekarni i cukierni?',
+          'Tak. Zaprojektowaliśmy stronę Piekarni Marysia z menu, galerią produktów i mapą Google. Kawiarni lub cukierni zaproponujemy podobnie lekki układ, na przykład z formularzem zamówienia tortu. Jeśli restauracja działa przy hotelu, zobacz, jak projektujemy <a class="zpSeoLink" href="/strony-internetowe-dla-hoteli/">strony internetowe dla hoteli</a>.',
+        ],
+      ],
+    ],
+    'cta' => [
+      'kicker' => 'Następny krok',
+      'title' => 'Pokaż gościom kartę, <strong class="gradient-text">zanim usiądą przy stoliku.</strong>',
+      'text' => 'Opisz w Studiu Wyceny swój lokal, kartę i to, jak dziś przyjmujesz rezerwacje oraz zamówienia. Zaproponujemy układ strony i sposób rezerwacji stolików, a także podpowiemy, czy zamówienia online warto uruchomić od razu.',
+      'buttons' => [
+        [
+          'label' => 'Przejdź do Studia Wyceny',
+          'href' => '/studio-wyceny/?zpbs_service=web#zpbsUltimate',
+        ],
+        [
+          'label' => 'Zadzwoń: 501 054 253',
+          'href' => 'tel:+48501054253',
+        ],
+      ],
+    ],
+  ],
+  '/strony-internetowe-dla-salonow-beauty/' => [
+    'variant' => 'content-strony-internetowe-dla-salonow-beauty',
+    'kind' => 'strony',
+    'title' => 'Strony internetowe dla salonów beauty',
+    'schema' => [
+      'name' => 'Strony internetowe dla salonów beauty i gabinetów kosmetycznych',
+      'serviceType' => 'Projektowanie stron internetowych dla salonów kosmetycznych, gabinetów kosmetologii i medycyny estetycznej',
+    ],
+    'drop' => [
+      'manifesto',
+      'oferta',
+      'pakiety',
+      'portfolio',
+      'branze',
+      'pointing',
+      'analityka',
+      'team-section',
+      'zasieg',
+    ],
+    'order' => [
+      'hero',
+      'zakres',
+      'realizacje',
+      'proces',
+      'client-trust',
+      'opinie',
+      'guide',
+      'faq',
+      'cta',
+    ],
+    'hero' => [
+      'eyebrow' => 'Strony dla salonów beauty • kosmetologia, stylizacja, medycyna estetyczna',
+      'h1' => 'Strona internetowa dla salonu kosmetycznego <strong class="gradient-text">i gabinetu beauty</strong>',
+      'lead' => 'Strona internetowa dla salonu kosmetycznego powinna wyglądać tak starannie jak Twoje wnętrze i <strong>prowadzić klientkę prosto do rezerwacji</strong>. Opisy zabiegów, czytelny cennik, prawdziwe efekty i kalendarz wizyt online układamy w jedną, spokojną ścieżkę. Projektujemy dla salonów, gabinetów kosmetologii, studiów paznokci, brwi i rzęs oraz klinik medycyny estetycznej.',
+      'cta' => [
+        [
+          'label' => 'Wyceń stronę salonu',
+          'href' => '/studio-wyceny/?zpbs_service=web#zpbsUltimate',
+        ],
+        [
+          'label' => 'Zobacz case study',
+          'href' => '#realizacje',
+        ],
+      ],
+      'pills' => [
+        'rezerwacje online',
+        'przejrzysty cennik',
+        'lokalne SEO',
+      ],
+    ],
+    'scope' => [
+      'kicker' => 'Co projektujemy',
+      'title' => 'Strona salonu, która <strong>prowadzi od zabiegu do terminu.</strong>',
+      'aside' => 'Klientka zwykle porównuje kilka salonów na telefonie, w przerwie w pracy albo wieczorem. Zostaje tam, gdzie szybko znajdzie zabieg, cenę, prawdziwe efekty i wolny termin.',
+      'items' => [
+        [
+          'label' => '01 / zabiegi',
+          'title' => 'Opisy zabiegów bez obietnic',
+          'text' => 'Dla kogo jest zabieg, ile trwa, jak przebiega, jakie ma przeciwwskazania i jak się do niego przygotować. Piszemy konkretnie i zrozumiale, bez zapewnień o efekcie, którego nikt uczciwie nie zagwarantuje.',
+        ],
+        [
+          'label' => '02 / cennik',
+          'title' => 'Cennik czytelny na telefonie',
+          'text' => 'Ceny pogrupowane tak jak w salonie: twarz, ciało, dłonie i stopy, brwi i rzęsy. Przy każdej pozycji czas zabiegu i przycisk rezerwacji, a pakiety i serie zabiegów opisane bez drobnego druku.',
+        ],
+        [
+          'label' => '03 / rezerwacje',
+          'title' => 'Rezerwacje online o każdej porze',
+          'text' => 'Własny kalendarz z potwierdzeniem i przypomnieniem SMS albo podłączenie aplikacji rezerwacyjnej, z której salon już korzysta. Klientka wybiera zabieg, osobę i godzinę bez telefonu, który odrywa Cię od pracy.',
+        ],
+        [
+          'label' => '04 / efekty',
+          'title' => 'Galeria prawdziwych efektów',
+          'text' => 'Zdjęcia przed i po z Twojego gabinetu, w tym samym świetle i kadrze, publikowane za zgodą klientek. Galerię dzielimy na zabiegi i projektujemy tak, żeby szybko ładowała się na telefonie.',
+        ],
+        [
+          'label' => '05 / vouchery',
+          'title' => 'Vouchery i kosmetyki online',
+          'text' => 'Vouchery podarunkowe z płatnością online i sklep z kosmetykami, które polecasz po zabiegach. Klientka kupi prezent albo krem do pielęgnacji domowej także wtedy, gdy salon jest zamknięty.',
+        ],
+        [
+          'label' => '06 / Google',
+          'title' => 'Lokalne SEO i Mapy Google',
+          'text' => 'Osobna podstrona dla każdego ważnego zabiegu, dane strukturalne salonu i informacje zgodne z Profilem Firmy w Google. Na tym opiera się widoczność, gdy ktoś szuka zabiegu w swojej okolicy.',
+        ],
+      ],
+    ],
+    'reuse' => [
+      'realizacje' => [
+        'kicker' => 'Case study',
+        'title' => 'Salon beauty z rezerwacjami online. <strong>Liczby po wdrożeniu.</strong>',
+        'lead' => '',
+      ],
+      'proces' => [
+        'kicker' => 'Jak pracujemy',
+        'title' => 'Jak powstaje strona salonu. <strong>Od karty zabiegów do kalendarza.</strong>',
+        'lead' => 'Zaczynamy od Twojej karty zabiegów, cennika i tego, jak dziś umawiają się klientki: przez telefon, w wiadomościach czy w aplikacji. Opisy zabiegów i przeciwwskazania zatwierdzasz Ty, a my odpowiadamy za strukturę, projekt i drogę do rezerwacji.',
+      ],
+    ],
+    'guide' => [
+      'kicker' => 'Poradnik',
+      'title' => 'Strona dla salonu beauty. <strong>Od pierwszego wejścia do rezerwacji.</strong>',
+      'lead' => 'Struktura, rezerwacje, zdjęcia efektów, zabiegi lekarskie, marka i koszt: co zaplanować, zanim zaczniemy projektować stronę Twojego salonu.',
+      'id' => 'poradnik-strony-dla-salonow-beauty',
+      'body' => '<h2 id="co-musi-miec-strona-internetowa-dla-salonu-kosmetycznego">Co musi mieć strona internetowa dla salonu kosmetycznego</h2>
+<p>Klientka wchodzi na stronę salonu z trzema pytaniami: czy wykonujesz zabieg, którego szuka, kiedy masz wolny termin i czy może Ci zaufać. Projektując strony internetowe dla salonów kosmetycznych, odpowiadamy na nie w kilku stałych miejscach:</p>
+<ul><li><strong>podstrony zabiegów</strong> z opisem, czasem trwania, ceną i przeciwwskazaniami,</li><li><strong>cennik</strong> pogrupowany tak jak karta zabiegów w salonie,</li><li><strong>zespół</strong> z kwalifikacjami i szkoleniami osób, które wykonują zabiegi,</li><li><strong>galeria i opinie</strong> jako dowód Twojej pracy,</li><li><strong>kontakt</strong> z mapą, godzinami otwarcia i wskazówkami dojazdu.</li></ul>
+<p>Przycisk rezerwacji jest widoczny na każdej podstronie, a cała ścieżka wygodnie działa na telefonie. Strona internetowa dla kosmetologa, który pracuje sam, może być krótsza, ale ta zasada się nie zmienia. Więcej o samych sekcjach piszemy we wpisie o tym, <a class="zpSeoLink" href="/sklepy-internetowe/strona-internetowa-dla-branzy-beauty-jakie-sekcje-zwiekszaja-zapytania/">jakie sekcje strony dla branży beauty zwiększają zapytania</a>.</p>
+<p>Dobrze zaplanowana strona internetowa dla salonu kosmetycznego pracuje też na widoczność w Google. Strona Apartamentu Piękna ma strukturę pod frazy lokalne i blog. Porównanie pierwszych sześciu miesięcy z poprzednią stroną: +212% kliknięć z Google.</p>
+<h2 id="rezerwacja-online-wlasny-kalendarz-czy-aplikacja-rezerwacyjna">Rezerwacja online: własny kalendarz czy aplikacja rezerwacyjna</h2>
+<p>Rezerwacja online pozwala umówić wizytę wieczorem, w weekend i wtedy, gdy masz ręce zajęte zabiegiem. Masz do wyboru dwie drogi.</p>
+<p><strong>Własny kalendarz na stronie</strong> pokazuje wolne terminy, prowadzi przez wybór zabiegu i osoby, a potem wysyła potwierdzenie i przypomnienie SMS. Wygląda jak reszta strony, a dane klientek zostają u Ciebie. Taki autorski system rezerwacji, razem z nową stroną, zaprojektowaliśmy dla Apartamentu Piękna, salonu beauty i medycyny estetycznej. Średnia z trzech miesięcy: 96 rezerwacji online miesięcznie.</p>
+<p><strong>Aplikacja rezerwacyjna (np. Booksy)</strong>, z której już korzystasz, może zostać. Podłączymy ją przyciskiem przy zabiegach albo osadzonym widżetem, jeśli aplikacja go udostępnia. Strona dodaje wtedy to, czego profil w aplikacji nie pokaże: pełne opisy zabiegów, markę salonu i własną widoczność w Google. Sposoby wdrożenia i funkcje warte sprawdzenia porównujemy w artykule <a class="zpSeoLink" href="/strony-internetowe/system-rezerwacji-online/">system rezerwacji online</a>.</p>
+<h2 id="zdjecia-przed-i-po-opinie-i-zgody-klientek">Zdjęcia przed i po, opinie i zgody klientek</h2>
+<p>Zdjęcia efektów mówią więcej niż najstaranniejszy opis, pod warunkiem że są prawdziwe. Publikacja wizerunku klientki wymaga jej zgody: tak stanowi art. 81 ustawy o prawie autorskim i prawach pokrewnych. Zgodę najlepiej mieć na piśmie lub mailowo, z informacją, gdzie zdjęcie się pojawi. Gdy twarzy nie widać, jak przy stylizacji paznokci, i tak warto zapytać.</p>
+<p>Uczciwe zdjęcia „przed i po” mają to samo światło, kadr i odległość, bez filtrów i bez retuszu efektu. Poprawiony rezultat wprowadza w błąd, a różnicę klientka i tak zobaczy w lustrze. Zdjęcia robisz Ty albo Twój fotograf, a my projektujemy galerię z podziałem na zabiegi. Opinie pokazuj tylko prawdziwe i z podanym źródłem, najlepiej z Profilu Firmy w Google.</p>
+<h2 id="salon-kosmetyczny-czy-medycyna-estetyczna">Salon kosmetyczny czy medycyna estetyczna</h2>
+<p>Jeśli w Twoim salonie zabiegi wykonuje też lekarz, oddziel na stronie kosmetologię od medycyny estetycznej. Zabiegi kosmetyczne opisujesz jak usługi, z pakietami i voucherami. Zabiegi wykonywane przez lekarza traktuj jak świadczenia zdrowotne: informacja o nich nie może mieć cech reklamy (art. 14 ustawy o działalności leczniczej). Zostaje rzeczowy opis, kwalifikacje lekarza, przeciwwskazania i cena, bez rabatów, superlatywów i galerii metamorfoz.</p>
+<p>Najprościej zrobić osobną zakładkę medycyny estetycznej z profilem lekarza, bo klientka powinna wiedzieć, kto wykona zabieg i jakie ma uprawnienia. Zasady pisania takich treści opisujemy szerzej przy usłudze <a class="zpSeoLink" href="/strony-internetowe-dla-lekarzy/">strony internetowe dla lekarzy</a>.</p>
+<h2 id="marka-salonu-logo-kolory-typografia">Marka salonu: logo, kolory, typografia</h2>
+<p>Klientka salonu premium ocenia go po detalach, także na ekranie telefonu. Logo, kolory, typografia i styl zdjęć powinny tworzyć jeden obraz, od strony po voucher i profil w aplikacji rezerwacyjnej. Premium nie musi oznaczać złota. Częściej to wolna przestrzeń, spokojna typografia i prawdziwe zdjęcia wnętrza.</p>
+<p>Jeśli znak salonu się zestarzał, odśwież go razem ze stroną. Tak było w Apartamencie Piękna: odświeżenie logo i oprawy wizualnej przeprowadziliśmy w jednym projekcie z pełnym redesignem strony. Dla Pracowni Urody, gabinetu kosmetologii, zaprojektowaliśmy identyfikację bez strony: delikatne, eleganckie logo z linearną ilustracją twarzy i jasne materiały drukowane. Kierunki stylu i kolory omawiamy na przykładach w artykule <a class="zpSeoLink" href="/logo-branding/logo-salonu-kosmetycznego/">logo salonu kosmetycznego</a>.</p>
+<h2 id="ile-kosztuje-strona-internetowa-salonu-kosmetycznego">Ile kosztuje strona internetowa salonu kosmetycznego</h2>
+<p>Za stronę salonu zapłacisz od 3 999 zł, a od briefu do publikacji mijają zwykle 2–4 tygodnie. Ostateczna kwota zależy od tego, co ma robić Twoja strona poza prezentacją oferty. Strona internetowa dla gabinetu kosmetycznego z kilkoma zabiegami i przyciskiem do aplikacji rezerwacyjnej to prostszy projekt niż serwis salonu z zespołem, własnym kalendarzem i blogiem. Zakres zmieniają przede wszystkim własny system rezerwacji, wersje językowe oraz sprzedaż voucherów i kosmetyków (sklep na WooCommerce to koszt od 6 499 zł). Nie wszystko musi powstać od razu: sklep z kosmetykami czy kolejne podstrony zabiegów mogą dojść później.</p>
+<p>Pakiety opisujemy przy usłudze <a class="zpSeoLink" href="/tworzenie-stron-internetowych/">tworzenie stron internetowych</a>, a dokładną kwotę dla Twojego salonu przygotujemy po wypełnieniu <a class="zpSeoLink" href="/studio-wyceny/">Studia Wyceny</a>.</p>',
+    ],
+    'faq' => [
+      'kicker' => 'FAQ / strony dla salonów beauty',
+      'title' => 'Pytania, które słyszymy <strong>od salonów i gabinetów.</strong>',
+      'lead' => 'O rezerwacjach, cennikach, zdjęciach efektów, logo, voucherach i Mapach Google.',
+      'items' => [
+        [
+          'Czy klientki mogą rezerwować wizyty bezpośrednio na stronie?',
+          'Tak. Strona internetowa dla salonu kosmetycznego może mieć własny kalendarz, w którym klientka wybiera zabieg, osobę i godzinę, a potem dostaje potwierdzenie i przypomnienie SMS. System układamy pod Twój grafik i czas trwania zabiegów. Tak działa autorski system rezerwacji w Apartamencie Piękna.',
+        ],
+        [
+          'Korzystam z aplikacji rezerwacyjnej. Czy mogę przy niej zostać?',
+          'Tak. Jeśli zespół i klientki znają już aplikację rezerwacyjną (np. Booksy), połączymy ją ze stroną: przyciskiem przy zabiegach albo osadzonym widżetem, gdy aplikacja na to pozwala. Strona dopełnia wtedy aplikację opisami zabiegów, galerią, marką salonu i widocznością w Google.',
+        ],
+        [
+          'Ile kosztuje strona internetowa dla salonu kosmetycznego?',
+          'Strony www dla salonów kosmetycznych zaczynają się od 3 999 zł, a ich przygotowanie trwa zwykle 2–4 tygodnie. Kwotę i czas zmieniają własny system rezerwacji, sklep z kosmetykami, wersje językowe i liczba podstron zabiegów. Dokładną wycenę przygotujemy po wypełnieniu Studia Wyceny.',
+        ],
+        [
+          'Czy na stronie salonu warto pokazywać cennik?',
+          'Tak. Cena to jedna z pierwszych informacji, których klientka szuka, zanim się umówi. Jeśli koszt zabiegu zależy od konsultacji, podaj cenę „od” i napisz, od czego zależy. Jasny cennik oszczędza Ci też wielu pytań w wiadomościach.',
+        ],
+        [
+          'Czy mogę publikować zdjęcia przed i po zabiegu?',
+          'Tak, za zgodą klientki, bo rozpowszechnianie wizerunku wymaga zezwolenia osoby, która jest na zdjęciu (art. 81 ustawy o prawie autorskim i prawach pokrewnych). Zgodę warto mieć na piśmie. Zdjęcia rób w tym samym świetle i kadrze, bez retuszu efektu.',
+        ],
+        [
+          'Czy zaprojektujecie też logo salonu?',
+          'Tak. Logo projektujemy w trzech pakietach: najmniejszy kosztuje 999 zł, średni 1 499 zł, a najszerszy 2 999 zł. Szczegóły każdego pakietu znajdziesz przy usłudze <a class="zpSeoLink" href="/projektowanie-logo/">projektowanie logo</a>. Jeśli zamawiasz logo i stronę razem, obie rzeczy powstają w jednej estetyce.',
+        ],
+        [
+          'Czy przez stronę mogę sprzedawać vouchery i kosmetyki?',
+          'Tak. Vouchery podarunkowe i sklep z kosmetykami, z płatnościami online, budujemy na WooCommerce. Cena sklepu zaczyna się od 6 499 zł, a więcej o tej usłudze przeczytasz na stronie <a class="zpSeoLink" href="/tworzenie-sklepow-internetowych/">tworzenie sklepów internetowych</a>.',
+        ],
+        [
+          'Jak strona wpływa na widoczność salonu w Mapach Google?',
+          'Pozycja salonu w Mapach Google zależy głównie od Profilu Firmy w Google, a strona go wspiera: podstronami zabiegów i danymi strukturalnymi salonu. Zadbaj, żeby nazwa, adres, telefon i godziny były identyczne w obu miejscach, a link z profilu prowadził do strony z rezerwacją.',
+        ],
+      ],
+    ],
+    'cta' => [
+      'kicker' => 'Następny krok',
+      'title' => 'Zaprojektujmy stronę, <strong class="gradient-text">która umawia wizyty, gdy Ty pracujesz.</strong>',
+      'text' => 'Opisz w Studiu Wyceny swój salon, najważniejsze zabiegi i to, jak dziś umawiają się klientki. Zaproponujemy układ strony, sposób rezerwacji online i oprawę dopasowaną do charakteru salonu.',
+      'buttons' => [
+        [
+          'label' => 'Przejdź do Studia Wyceny',
+          'href' => '/studio-wyceny/?zpbs_service=web#zpbsUltimate',
+        ],
+        [
+          'label' => 'Zadzwoń: 501 054 253',
+          'href' => 'tel:+48501054253',
+        ],
+      ],
+    ],
+  ],
+  '/strony-internetowe-dla-trenerow-personalnych/' => [
+    'variant' => 'content-strony-internetowe-dla-trenerow-personalnych',
+    'kind' => 'strony',
+    'title' => 'Strony internetowe dla trenerów personalnych',
+    'schema' => [
+      'name' => 'Strony internetowe dla trenerów personalnych',
+      'serviceType' => 'Projektowanie stron internetowych dla trenerów personalnych i studiów treningowych',
+    ],
+    'drop' => [
+      'manifesto',
+      'oferta',
+      'pakiety',
+      'portfolio',
+      'branze',
+      'pointing',
+      'analityka',
+      'team-section',
+      'zasieg',
+    ],
+    'order' => [
+      'hero',
+      'zakres',
+      'realizacje',
+      'proces',
+      'client-trust',
+      'opinie',
+      'guide',
+      'faq',
+      'cta',
+    ],
+    'hero' => [
+      'eyebrow' => 'Strony dla trenerów • siłownia, studio, dojazd, online',
+      'h1' => 'Strona internetowa dla trenera personalnego, <strong class="gradient-text">która prowadzi do pierwszego treningu</strong>',
+      'lead' => 'Strona internetowa dla trenera personalnego pokazuje ofertę, pakiety i wolne terminy, a klient <strong>zapisuje się na pierwszy trening bez wymiany wiadomości</strong>. Projektujemy takie strony dla trenerów, którzy pracują na siłowni, we własnym studiu, z dojazdem albo online i którym sam Instagram już nie wystarcza.',
+      'cta' => [
+        [
+          'label' => 'Wyceń stronę trenera',
+          'href' => '/studio-wyceny/?zpbs_service=web#zpbsUltimate',
+        ],
+        [
+          'label' => 'Zobacz case study',
+          'href' => '#realizacje',
+        ],
+      ],
+      'pills' => [
+        'zapisy online',
+        'płatność za pakiet',
+        'lokalne SEO',
+      ],
+    ],
+    'scope' => [
+      'kicker' => 'Co projektujemy',
+      'title' => 'Wszystko, o co klienci pytają w wiadomościach, <strong>jest już na stronie.</strong>',
+      'aside' => 'Przyszły podopieczny chce wiedzieć, gdzie trenujesz, ile to kosztuje i kiedy może zacząć. Jeśli znajdzie to na stronie, może zapisać się od razu, zamiast czekać, aż odpiszesz.',
+      'items' => [
+        [
+          'label' => '01 / oferta',
+          'title' => 'Formy współpracy opisane osobno',
+          'text' => 'Trening 1:1, w parach, z dojazdem do klienta, online i plany treningowe. Każda forma ma krótki opis: dla kogo jest, jak przebiega i ile trwa.',
+        ],
+        [
+          'label' => '02 / pakiety',
+          'title' => 'Pakiety, cennik i płatność online',
+          'text' => 'Pojedynczy trening, pakiety wejść i współpraca miesięczna w czytelnym cenniku. Klient wybiera pakiet i płaci BLIK-iem albo kartą, bez pytania Cię o numer konta.',
+        ],
+        [
+          'label' => '03 / zapisy',
+          'title' => 'Zapisy na pierwszy trening',
+          'text' => 'Kalendarz z Twoimi wolnymi godzinami, w którym klient sam wybiera termin pierwszego treningu albo konsultacji. Potwierdzenie i przypomnienie wychodzą automatycznie, a zasady odwoływania klient zna przed zapisem.',
+        ],
+        [
+          'label' => '04 / kwalifikacje',
+          'title' => 'Kwalifikacje i specjalizacje trenera',
+          'text' => 'Certyfikaty, doświadczenie i specjalizacje, np. redukcja, siła albo trening seniorów, do tego prawdziwe zdjęcia z treningów. Zanim ktoś się zapisze, chce wiedzieć, z kim będzie trenować.',
+        ],
+        [
+          'label' => '05 / metamorfozy',
+          'title' => 'Metamorfozy i opinie za zgodą',
+          'text' => 'Zdjęcia przed i po oraz opinie podopiecznych, publikowane za ich zgodą i z kontekstem: ile trwała współpraca, co się zmieniło. Bez obietnic, że każdy osiągnie to samo.',
+        ],
+        [
+          'label' => '06 / Google',
+          'title' => 'Widoczność w Twojej okolicy',
+          'text' => 'Opisane miejsca treningów, obszar dojazdu i dane spójne z Profilem Firmy w Google. Tak łatwiej znajdą Cię osoby szukające trenera blisko domu albo pracy.',
+        ],
+      ],
+    ],
+    'reuse' => [
+      'realizacje' => [
+        'kicker' => 'Case study',
+        'title' => 'Zapisy online w praktyce. <strong>Liczby z innych branż.</strong>',
+        'lead' => '',
+      ],
+      'proces' => [
+        'kicker' => 'Jak pracujemy',
+        'title' => 'Jak powstaje strona trenera. <strong>Od oferty do pierwszego zapisu.</strong>',
+        'lead' => 'Zaczynamy od Twojej oferty: form współpracy, pakietów, miejsc treningów i tego, jak dziś umawiasz pierwsze spotkanie. Opisy metody i specjalizacji zatwierdzasz Ty, a my układamy z nich ścieżkę do zapisu wygodną na telefonie.',
+      ],
+    ],
+    'guide' => [
+      'kicker' => 'Poradnik',
+      'title' => 'Strona dla trenera personalnego. <strong>Od Instagrama do własnych zapisów.</strong>',
+      'lead' => 'Czego szukają przyszli podopieczni, jak przyjmować zapisy i płatności online, jak umawiać treningi z dojazdem i co wolno pokazać w metamorfozach.',
+      'id' => 'poradnik-strony-dla-trenerow',
+      'body' => '<h2 id="trener-personalny-strona-internetowa-czy-sam-instagram">Trener personalny: strona internetowa czy sam Instagram?</h2>
+<p>Instagram dobrze pokazuje Twoją pracę i buduje relację z obserwującymi. Na profil trafiają jednak głównie osoby, które już Cię znają albo dostały polecenie. Ktoś, kto dopiero szuka trenera, wpisuje zapytanie w Google i porównuje strony oraz profile firm w mapach.</p>
+<p>Własna strona na własnej domenie:</p>
+<ul><li>nie zależy od algorytmu ani od tego, czy platforma zablokuje konto,</li><li>odpowiada na pytania o cenę, miejsce i terminy, zanim ktoś napisze wiadomość,</li><li>pozwala zapisać się i zapłacić za pakiet bez wymiany DM-ów,</li><li>daje jeden adres, który wstawiasz do linku w bio, do Profilu Firmy w Google i na wizytówkę.</li></ul>
+<p>Instagram nadal służy do codziennego kontaktu z obserwującymi. Strona internetowa dla trenera personalnego przejmuje to, co w wiadomościach zabiera najwięcej czasu: powtarzalne pytania, zapisy i płatności.</p>
+<h2 id="co-musi-miec-strona-internetowa-dla-trenera-personalnego">Co musi mieć strona internetowa dla trenera personalnego</h2>
+<p>Każda podstrona prowadzi do jednego celu: zapisu na pierwszy trening albo konsultację. Strony internetowe dla trenerów personalnych projektujemy wokół takiej struktury:</p>
+<ol><li><strong>Strona główna</strong>: z kim pracujesz, gdzie trenujesz i przycisk zapisu widoczny bez przewijania.</li><li><strong>Oferta</strong>: formy współpracy, każda z opisem przebiegu i tego, dla kogo jest.</li><li><strong>Cennik i pakiety</strong>: ceny pojedynczych treningów i pakietów, okres ważności i zasady odwoływania.</li><li><strong>O mnie</strong>: kwalifikacje, specjalizacje i Twoja droga do zawodu.</li><li><strong>Metamorfozy i opinie</strong>: tylko za zgodą podopiecznych.</li><li><strong>Pierwszy trening krok po kroku</strong>: co zabrać, jak wyglądają wywiad i pomiary, ile trwa spotkanie.</li><li><strong>Zapisy i kontakt</strong>: kalendarz, mapa dojazdu albo obszar, w którym dojeżdżasz do klientów.</li></ol>
+<p>Ruch z Instagrama to ruch z telefonu, dlatego przycisk zapisu zostaje pod ręką na każdej podstronie. Zdjęcia też mają znaczenie: prawdziwe ujęcia z Twoich treningów, nawet z telefonu w dobrym świetle, budują więcej zaufania niż stockowe sylwetki z siłowni.</p>
+<h2 id="zapisy-pakiety-i-platnosci-online">Zapisy, pakiety i płatności online</h2>
+<p>Kalendarz na stronie pokazuje tylko godziny, które chcesz oddać nowym klientom. Przy treningach w parach albo w małej grupie pilnuje limitu miejsc, a przed treningiem wysyła przypomnienie SMS lub e-mail. Jeśli zapisy prowadzisz już w aplikacji rezerwacyjnej (np. Booksy), podłączymy ją do strony. Gotowe aplikacje i rozwiązania szyte na miarę porównujemy w artykule o tym, jak wybrać <a class="zpSeoLink" href="/strony-internetowe/system-rezerwacji-online/">system rezerwacji online</a>.</p>
+<p>Za pakiet klient może zapłacić od razu przy zapisie. Płatność przechodzi przez <a class="zpSeoLink" href="/sklepy-internetowe/bramka-platnicza/">bramkę płatniczą</a>, więc działa BLIK, karta i szybki przelew, a opłacone pakiety widzisz w jednym panelu. Sprzedaż planów treningowych do pobrania albo współpracy online z dostępem do materiałów to już mały sklep. <a class="zpSeoLink" href="/tworzenie-sklepow-internetowych/">Sklepy internetowe</a> na WooCommerce projektujemy od 6 499 zł.</p>
+<p>Najbliższy przykład z naszych realizacji to Apartament Piękna, salon beauty i medycyny estetycznej z autorskim systemem rezerwacji wizyt i powiadomieniami SMS. Przez stronę wpada tam średnio 96 rezerwacji online w miesiącu (to średnia z trzech miesięcy). Jak takie zapisy działają w salonach, pokazujemy w ofercie <a class="zpSeoLink" href="/strony-internetowe-dla-salonow-beauty/">stron internetowych dla salonów beauty</a>.</p>
+<h2 id="trening-z-dojazdem-do-klienta">Trening z dojazdem do klienta</h2>
+<p>Jeśli trenujesz z podopiecznymi w ich domach albo w parku, strona internetowa dla trenera personalnego potrzebuje kalendarza, który zna adres i czas przejazdu. Klient podaje adres przy zapisie, widzi terminy, na które zdążysz dojechać, i od razu sprawdza, czy mieszka w obszarze, który obsługujesz.</p>
+<p>Autorski system umawiania wizyt z dojazdem do klienta zaprojektowaliśmy dla marki Krawiec z dojazdem, która szyje na miarę i dojeżdża do klientów. Powstał razem z nową stroną na WordPressie i lokalnym SEO. Dla trenera zaprojektujemy podobny system pod Twój obszar dojazdu, długość treningu i przerwy między klientami.</p>
+<h2 id="metamorfozy-opinie-i-zgody">Metamorfozy, opinie i zgody</h2>
+<p>Zdjęcia przed i po to mocny argument, ale pokazują konkretną osobę. Art. 81 ustawy o prawie autorskim i prawach pokrewnych mówi jasno: żeby rozpowszechniać wizerunek podopiecznego, potrzebujesz jego zezwolenia. Zgodę najlepiej zebrać na piśmie albo e-mailem, z listą miejsc publikacji: strona, Instagram, reklamy.</p>
+<p>Przy każdej metamorfozie dodaj kontekst: jak długo trwała współpraca, jak często trenowaliście i co zmieniło się poza wagą. Unikaj obietnic w rodzaju „-10 kg w miesiąc”. Efekt zależy od zdrowia, diety i regularności, więc taka obietnica wprowadza w błąd każdego, u kogo będzie inaczej. Publikuj tylko prawdziwe opinie, z imieniem autora za jego zgodą. Możesz też pokazać na stronie opinie z Profilu Firmy w Google.</p>
+<h2 id="ile-kosztuje-strona-dla-trenera-personalnego">Ile kosztuje strona dla trenera personalnego</h2>
+<p>Stronę trenera personalnego wyceniamy od 3 999 zł, a jej projekt i wdrożenie zajmują zwykle 2–4 tygodnie. Punktem wyjścia jest strona z ofertą, cennikiem, podstroną o Tobie i formularzem kontaktu. Kalendarz zapisów, płatności za pakiety i sprzedaż planów treningowych zmieniają zakres: wydłużają projekt i podnoszą wycenę. Co obejmują pakiety, sprawdzisz na stronie <a class="zpSeoLink" href="/tworzenie-stron-internetowych/">tworzenie stron internetowych</a>. Kwotę dla strony z Twoją ofertą i zapisami podamy po wypełnieniu <a class="zpSeoLink" href="/studio-wyceny/">Studia Wyceny</a>.</p>',
+    ],
+    'faq' => [
+      'kicker' => 'FAQ / strony dla trenerów',
+      'title' => 'O co pytają trenerzy <strong>przed projektem strony.</strong>',
+      'lead' => 'O Instagramie, zapisach i płatnościach, cenach, metamorfozach podopiecznych i widoczności w okolicy.',
+      'items' => [
+        [
+          'Czy potrzebuję strony, skoro mam Instagram?',
+          'Instagram buduje relację z osobami, które już Cię obserwują. Strona odpowiada tym, którzy dopiero szukają trenera w Google, i pozwala zapisać się bez pisania wiadomości. Dobra strona www dla trenera nie zastępuje profilu, tylko go uzupełnia: link w bio prowadzi do oferty i kalendarza.',
+        ],
+        [
+          'Czy klient zapisze się i zapłaci online?',
+          'Tak. Klient wybiera termin w kalendarzu i płaci za pakiet przez bramkę płatniczą, na przykład BLIK-iem albo kartą. Dostaje potwierdzenie i przypomnienie, a Ty widzisz zapis i płatność w jednym miejscu. Aplikację do zapisów, z której już korzystasz, możemy połączyć ze stroną.',
+        ],
+        [
+          'Ile kosztuje strona internetowa dla trenera personalnego?',
+          'Ceny stron zaczynają się od 3 999 zł, a prosta strona trenera powstaje zwykle w 2–4 tygodnie. Zapisy z kalendarzem, płatności online i sklep z planami treningowymi wydłużają projekt i podnoszą kwotę. Dokładną wycenę przygotujemy, gdy opiszesz swoją ofertę w Studiu Wyceny.',
+        ],
+        [
+          'Czy mogę sprzedawać plany treningowe i współpracę online?',
+          'Tak. Pojedynczy plan albo miesięczną współpracę online można sprzedawać jako produkt opłacany przez bramkę płatniczą. Przy kilku planach, kodach rabatowych i automatycznej wysyłce plików lepiej sprawdzi się mały sklep na WooCommerce, który projektujemy od 6 499 zł. Podobnie sprzedasz też wspólny pakiet z dietetykiem sportowym.',
+        ],
+        [
+          'Czy podawać ceny pakietów na stronie?',
+          'Zwykle tak. Cena to częste pierwsze pytanie w wiadomościach, więc podana na stronie oszczędza czas Tobie i klientowi. Jeśli kwota zależy od miejsca treningu albo dojazdu, podaj ceny „od” i wyjaśnij, co na nie wpływa.',
+        ],
+        [
+          'Czy mogę publikować metamorfozy podopiecznych?',
+          'Tak, jeśli podopieczny się na to zgodzi. Rozpowszechnianie wizerunku wymaga zezwolenia osoby ze zdjęcia (art. 81 ustawy o prawie autorskim i prawach pokrewnych), więc zgodę zbierz na piśmie albo e-mailem. Opisz też czas i przebieg współpracy, bez obietnic, że każdy osiągnie ten sam wynik.',
+        ],
+        [
+          'Czy strona będzie widoczna w Google w mojej okolicy?',
+          'Strona może w tym pomóc. Opisy miejsc, w których trenujesz, obszar dojazdu, dane strukturalne i spójny Profil Firmy w Google pokazują wyszukiwarce, gdzie i z kim pracujesz. Konkretnych pozycji nikt uczciwie nie zagwarantuje, a na start można dołożyć <a class="zpSeoLink" href="/kampanie-reklamowe/">kampanie reklamowe</a> w Google Ads.',
+        ],
+        [
+          'Czy zaprojektujecie logo i markę osobistą?',
+          'Tak. Trener pracujący pod własnym nazwiskiem też potrzebuje znaku i kolorów, które połączą stronę, Instagram i odzież treningową. Logo projektujemy w trzech pakietach (999, 1 499 albo 2 999 zł), opisanych na stronie <a class="zpSeoLink" href="/projektowanie-logo/">projektowanie logo</a>. Sesji zdjęciowych nie robimy, ale podpowiemy, jakich ujęć potrzebuje strona.',
+        ],
+      ],
+    ],
+    'cta' => [
+      'kicker' => 'Następny krok',
+      'title' => 'Zaplanujmy stronę, <strong class="gradient-text">przez którą klient zapisze się sam.</strong>',
+      'text' => 'Opisz w Studiu Wyceny, gdzie i jak trenujesz, jakie pakiety sprzedajesz i jak dziś umawiasz pierwszy trening. Zaproponujemy układ strony, sposób zapisów i płatności za pakiety oraz zakres treści.',
       'buttons' => [
         [
           'label' => 'Przejdź do Studia Wyceny',
