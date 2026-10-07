@@ -1,6 +1,6 @@
 {
  "format": 1,
- "zaktualizowano": "2026-10-07T23:22:30+02:00",
+ "zaktualizowano": "2026-10-07T23:45:59+02:00",
  "wpisy": [
   {
    "slug": "papier-firmowy",
@@ -51,6 +51,12 @@
    "do": "/strony-internetowe/kreatory-stron-internetowych/"
   },
   {
+   "we_wpisie": "/strony-internetowe/wordpress-wix-czy-webflow/",
+   "fragment": "Wybierz kreator, gdy priorytetem jest szybkie uruchomienie",
+   "slowa": "kreator",
+   "do": "/strony-internetowe/kreatory-stron-internetowych/"
+  },
+  {
    "we_wpisie": "/logo-branding/logo-logotyp-sygnet-roznice/",
    "fragment": "firma remontowa o nazwie",
    "slowa": "firma remontowa",
@@ -75,9 +81,21 @@
    "do": "/logo-branding/papier-firmowy/"
   },
   {
+   "we_wpisie": "/logo-branding/identyfikacja-wizualna-firmy/",
+   "fragment": "ikonografię, szablony dokumentów",
+   "slowa": "szablony dokumentów",
+   "do": "/logo-branding/papier-firmowy/"
+  },
+  {
    "we_wpisie": "/sklepy-internetowe/sklep-b2b/",
    "fragment": "Karty produktów mogą wtedy zdobywać pozycje w Google",
    "slowa": "zdobywać pozycje w Google",
+   "do": "/sklepy-internetowe/seo-sklepu-internetowego/"
+  },
+  {
+   "we_wpisie": "/sklepy-internetowe/kategorie-produktow-w-sklepie-internetowym/",
+   "fragment": "Automatyczne dopisywanie treści SEO",
+   "slowa": "treści SEO",
    "do": "/sklepy-internetowe/seo-sklepu-internetowego/"
   }
  ],
