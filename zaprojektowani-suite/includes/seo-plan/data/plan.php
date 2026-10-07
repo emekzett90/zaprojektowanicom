@@ -1456,4 +1456,19 @@ return [
       ['text' => 'rodzaje stron internetowych', 'path' => '/strony-internetowe/rodzaje-stron-internetowych/'],
     ],
   ],
+  // 2.9.0: content batch 5 (the batch's articles come through the content channel, feed.php).
+  '/agencja-reklamowa-katowice/' => [
+    'kind' => 'page',
+    'focus' => 'agencja reklamowa katowice, agencja marketingowa katowice, agencja reklamowa śląsk, marketing internetowy katowice, agencja marketingowa śląsk',
+    'title' => 'Agencja reklamowa Katowice i Śląsk | Zaprojektowani',
+    'description' => 'Agencja reklamowa Katowice: strony internetowe, sklepy WooCommerce, logo i kampanie Meta Ads i Google Ads w jednym studiu. Zobacz realizacje i opinie klientów.',
+    'h1' => 'Agencja reklamowa w Katowicach: strony, branding i kampanie',
+    'editorial_title' => '',
+    'editorial_description' => '',
+    'links' => [
+      ['text' => 'Strony internetowe w Katowicach', 'path' => '/strony-internetowe-katowice/'],
+      ['text' => 'Sklepy internetowe w Katowicach', 'path' => '/sklepy-internetowe-katowice/'],
+      ['text' => 'Logo i branding w Katowicach', 'path' => '/logo-branding-katowice/'],
+    ],
+  ],
 ];

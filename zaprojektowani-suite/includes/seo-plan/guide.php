@@ -28,6 +28,7 @@ function zp_seo_guide_setup(string $path): array {
     '/strony-internetowe-dla-fotografow/'   => ['team-duo', 'marta'],
     '/strony-internetowe-dla-restauracji/'  => ['team-trio', 'stanislaw'],
     '/strony-internetowe-dla-hoteli/'       => ['team-laptop', 'mateusz'],
+    '/agencja-reklamowa-katowice/'         => ['team-trio', 'mateusz'],
     '/tworzenie-sklepow-internetowych/'     => ['team-tablet', 'mateusz'],
   ];
   $s = $map[$path] ?? ['team-tablet', 'mateusz'];

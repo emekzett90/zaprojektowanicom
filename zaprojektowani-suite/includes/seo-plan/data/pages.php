@@ -2187,4 +2187,195 @@ return [
       ],
     ],
   ],
+  // 2.9.0: content batch 5, local page (variant ending -local: schema areaServed Katowice + śląskie).
+  '/agencja-reklamowa-katowice/' => [
+    'variant' => 'content-agencja-reklamowa-katowice-local',
+    'kind' => 'strony',
+    'title' => 'Agencja reklamowa Katowice',
+    'schema' => [
+      'name' => 'Agencja reklamowa Zaprojektowani w Katowicach',
+      'serviceType' => 'Agencja reklamowa i marketingowa: strony internetowe, sklepy, branding i kampanie Meta Ads i Google Ads',
+    ],
+    'drop' => [
+      'manifesto',
+      'oferta',
+      'pakiety',
+      'branze',
+      'pointing',
+      'proces',
+      'analityka',
+    ],
+    'order' => [
+      'hero',
+      'zakres',
+      'realizacje',
+      'portfolio',
+      'client-trust',
+      'opinie',
+      'team-section',
+      'zasieg',
+      'guide',
+      'faq',
+      'cta',
+    ],
+    'hero' => [
+      'eyebrow' => 'Agencja reklamowa Katowice • Śląsk i online',
+      'h1' => 'Agencja reklamowa w Katowicach: <strong class="gradient-text">strony, branding i kampanie</strong>',
+      'lead' => 'Zaprojektowani to agencja reklamowa z Katowic, która projektuje logo i identyfikację, buduje strony i sklepy WooCommerce oraz prowadzi kampanie Meta Ads i Google Ads. Masz <strong>jedną firmę od marki, strony i reklam</strong>, z którą spotkasz się w studiu przy Modelarskiej albo omówisz wszystko online. Zanim zdecydujesz, sprawdź realizacje, opinie klientów i ceny poniżej.',
+      'cta' => [
+        [
+          'label' => 'Wyceń projekt',
+          'href' => '/studio-wyceny/',
+        ],
+        [
+          'label' => 'Zobacz realizacje',
+          'href' => '#realizacje',
+        ],
+      ],
+      'pills' => [
+        'strony i sklepy',
+        'logo i branding',
+        'Meta Ads i Google Ads',
+      ],
+    ],
+    'scope' => [
+      'kicker' => 'Co robimy',
+      'title' => 'Logo, strona, sklep i reklamy. <strong>Jeden zespół, jeden plan.</strong>',
+      'aside' => 'Możesz zlecić jedną usługę albo całość. Gdy marka, strona i kampanie powstają razem, reklama prowadzi na stronę, która wygląda i mówi tak samo jak reszta firmy.',
+      'items' => [
+        [
+          'label' => '01 / kampanie',
+          'title' => 'Kampanie Meta Ads i Google Ads',
+          'text' => 'Prowadzimy <a class="zpSeoLink" href="/kampanie-reklamowe/">kampanie reklamowe</a> na Facebooku, Instagramie i w Google, kierowane na Katowice, Śląsk albo całą Polskę. Obsługa od 1 200 zł/mies., a budżet reklamowy płacisz bezpośrednio platformie.',
+        ],
+        [
+          'label' => '02 / strony',
+          'title' => 'Strony internetowe dla firm',
+          'text' => 'Projektujemy <a class="zpSeoLink" href="/strony-internetowe-katowice/">strony internetowe w Katowicach</a> i dla firm z całej Polski: od 3 999 zł, zwykle w 2–4 tygodnie. Domena i hosting są w cenie strony, a treści zmieniasz sam w WordPressie.',
+        ],
+        [
+          'label' => '03 / sklepy',
+          'title' => 'Sklepy internetowe na WooCommerce',
+          'text' => 'Karty produktów, płatności online, dostawy i panel, w którym sam dodajesz towar. <a class="zpSeoLink" href="/sklepy-internetowe-katowice/">Sklepy internetowe w Katowicach</a> i dla klientów z innych regionów budujemy na WooCommerce, od 6 499 zł.',
+        ],
+        [
+          'label' => '04 / logo',
+          'title' => 'Logo w trzech pakietach',
+          'text' => 'Projektujemy logo w wersjach na stronę, social media i druk. Pakiety: Logo Startowe 999 zł, Mini Branding 1 499 zł, Branding Premium 2 999 zł. Porównasz je na stronie <a class="zpSeoLink" href="/logo-branding-katowice/">logo i branding w Katowicach</a>.',
+        ],
+        [
+          'label' => '05 / marka',
+          'title' => 'Identyfikacja wizualna i materiały firmowe',
+          'text' => 'Wizytówka, stopka e-mail, papier firmowy, teczka i brandbook z zasadami kolorów oraz typografii. <a class="zpSeoLink" href="/identyfikacja-wizualna/">Identyfikację wizualną</a> oddajemy z plikami gotowymi do druku, a drukarnię wybierasz sam.',
+        ],
+        [
+          'label' => '06 / pomiar',
+          'title' => 'Landing page pod kampanię',
+          'text' => '<a class="zpSeoLink" href="/tworzenie-landing-page/">Landing page</a> to osobna strona pod jedną ofertę, na którą kierujemy reklamę. Podłączamy GA4, Meta Pixel i zliczanie formularzy, żeby było widać, ile zapytań przyniosła kampania.',
+        ],
+      ],
+    ],
+    'reuse' => [
+      'realizacje' => [
+        'kicker' => 'Case study',
+        'title' => 'Marka i strona zaprojektowane razem. <strong>Wyniki po wdrożeniu.</strong>',
+        'lead' => '',
+      ],
+      'portfolio' => [
+        'kicker' => 'Portfolio',
+        'title' => 'Strony i sklepy, <strong>które zaprojektowaliśmy.</strong>',
+        'lead' => 'Strony firmowe i sklepy WooCommerce, m.in. strona Gravii z modułem kariery dla biura projektów infrastrukturalnych i Świat Grilli, gdzie marka i sklep powstały od podstaw.',
+      ],
+      'opinie' => [
+        'kicker' => 'Opinie klientów',
+        'title' => 'Co piszą o współpracy <strong>klienci z Google i Facebooka.</strong>',
+        'lead' => 'Średnia 5,0 ze 120 opinii. Najczęściej wracają w nich komunikacja, czytelny proces, terminowość i szybkie poprawki.',
+      ],
+      'zasieg' => [
+        'kicker' => 'Katowice • Śląsk • online',
+        'title' => 'Spotkanie w Katowicach <strong>albo cały projekt online.</strong>',
+        'lead' => 'Na rozmowę o projekcie możesz przyjść do studia przy ul. Modelarskiej 18/2 w Katowicach. Jeśli wolisz pracę zdalną, brief, prezentacje kierunków, konsultacje i przekazanie plików prowadzimy online.',
+      ],
+    ],
+    'guide' => [
+      'kicker' => 'Poradnik',
+      'title' => 'Agencja reklamowa w Katowicach. <strong>Od czego zacząć i jak wybrać.</strong>',
+      'lead' => 'Czym zajmuje się agencja reklamowa, co zlecić najpierw, jak ocenić ofertę i ile kosztuje współpraca z naszym studiem.',
+      'id' => 'poradnik-agencja-reklamowa-katowice',
+      'body' => '<h2 id="agencja-reklamowa-a-agencja-marketingowa">Agencja reklamowa a agencja marketingowa</h2>
+<p>Agencja reklamowa kojarzy się zwykle z kreacją: hasłem, wyglądem kampanii, reklamą w prasie albo na billboardzie. Agencja marketingowa częściej odpowiada za kanały w internecie, czyli stronę, reklamy w Google i w social mediach oraz pomiar wyników. Granica jest płynna i wiele firm używa obu nazw zamiennie. Ważniejsze od nazwy jest to, kto wykona konkretną pracę: logo, stronę, sklep albo kampanię, i czy te elementy będą do siebie pasować.</p>
+<p>U nas obie nazwy opisują to samo połączenie: projekt marki, strony i sklepy oraz kampanie Meta Ads i Google Ads. Jeśli szukasz agencji marketingowej w Katowicach albo na Śląsku do reklamy w telewizji albo radiu, potrzebny będzie inny partner, bo tych kanałów nie prowadzimy.</p>
+<h2 id="agencja-reklamowa-katowice-od-czego-zaczac">Agencja reklamowa Katowice: od czego zacząć</h2>
+<p>Firmy z Katowic i z całego Śląska mogą zlecić nam jedną usługę albo cały pakiet. Kolejność prac zależy od tego, co już masz i co dziś najbardziej hamuje sprzedaż:</p>
+<ul><li><strong>Nie masz logo albo marka wygląda niespójnie</strong>: zacznij od znaku i identyfikacji, bo strona i reklamy przejmą ich kolory, typografię i ton.</li><li><strong>Masz markę, ale strona jest przestarzała albo nie zbiera zapytań</strong>: zacznij od strony, bo reklama kierująca na słabą stronę płaci za wizyty, które rzadko kończą się kontaktem.</li><li><strong>Masz dobrą stronę albo sklep</strong>: możesz od razu planować kampanie. Najpierw sprawdzamy pomiar i stronę docelową.</li></ul>
+<p>Przy większych zmianach robimy to w jednym projekcie: najpierw logo, potem strona w nowej estetyce, na końcu kampania kierująca na gotowe podstrony.</p>
+<h2 id="kampanie-meta-ads-i-google-ads-dla-lokalnej-firmy">Kampanie Meta Ads i Google Ads dla lokalnej firmy</h2>
+<p>Lokalny marketing internetowy w Katowicach opieramy na dwóch kanałach. W Google Ads pokazujemy reklamę osobom, które już szukają Twojej usługi w mieście i okolicy. W Meta Ads docieramy do mieszkańców wybranego obszaru, którzy jeszcze nie szukają, ale mogą potrzebować tego, co oferujesz. Kiedy zasięg lokalny wystarczy, a kiedy warto wyjść poza region, opisujemy w tekście o tym, <a class="zpSeoLink" href="/kampanie-reklamowe/google-ads-cala-polska-czy-lokalnie/">czy Google Ads kierować lokalnie, czy na całą Polskę</a>. Więcej o reklamie na Facebooku znajdziesz w poradniku <a class="zpSeoLink" href="/meta-ads/facebook-ads-dla-firm-lokalnych/">Facebook Ads dla firm lokalnych</a>.</p>
+<p>Każda kampania potrzebuje strony docelowej, która odpowiada na reklamę: ta sama oferta, ta sama cena, widoczny telefon i krótki formularz. Przed startem podłączamy pomiar, żeby w raporcie było widać zapytania, a nie tylko kliknięcia. Wyników sprzedażowych nie obiecujemy. Pokazujemy, które reklamy przynoszą kontakty, i na tej podstawie zmieniamy kampanię.</p>
+<h2 id="jak-wybrac-agencje-reklamowa-w-katowicach">Jak wybrać agencję reklamową w Katowicach</h2>
+<p>Zanim podpiszesz umowę z firmą reklamową z Katowic albo spoza miasta, sprawdź kilka rzeczy. Ta lista przyda się przy każdej ofercie, nie tylko naszej:</p>
+<ul><li><strong>Realizacje</strong>: czy agencja pokazuje konkretne projekty z opisem zakresu, a nie same zrzuty ekranu. Nasze znajdziesz w <a class="zpSeoLink" href="/realizacje/">realizacjach</a>.</li><li><strong>Opinie</strong>: ile ich jest, gdzie są publikowane i o czym piszą klienci.</li><li><strong>Kto prowadzi projekt</strong>: z kim rozmawiasz na co dzień i kto odpowiada za grafikę, treści, wdrożenie i kampanie.</li><li><strong>Własność kont, domeny i plików</strong>: konto reklamowe, domena, dostęp do strony i pliki logo powinny należeć do Ciebie albo być jasno opisane w umowie.</li><li><strong>Raporty</strong>: co zawiera raport z kampanii, jak często go dostajesz i czy liczy zapytania, czy tylko kliknięcia.</li><li><strong>Umowa</strong>: zakres prac, terminy, liczba poprawek i okres wypowiedzenia przy obsłudze kampanii.</li></ul>
+<h2 id="spotkanie-w-katowicach-albo-praca-online">Spotkanie w Katowicach albo praca online</h2>
+<p>Nasze studio mieści się w Katowicach przy ul. Modelarskiej 18/2. Jeśli wolisz rozmawiać przy jednym stole, umówimy spotkanie na miejscu, np. na start projektu albo prezentację kierunków logo. Szukasz agencji reklamowej na Śląsku, ale nie masz czasu na dojazdy? Cały proces poprowadzimy online: brief, prezentacje, konsultacje i przekazanie finalnych plików. Oba tryby można też łączyć, np. pierwsze spotkanie w studiu, a kolejne konsultacje przez wideorozmowę.</p>
+<p>Na pierwszą rozmowę warto przygotować obecne logo i adres strony (jeśli je masz), dostęp do kont reklamowych, kilka marek, które Ci się podobają, i informację, skąd dziś przychodzą klienci.</p>
+<h2 id="ile-kosztuje-wspolpraca-z-agencja-reklamowa">Ile kosztuje współpraca z agencją reklamową</h2>
+<p>Podajemy ceny od razu, żeby łatwiej było porównać oferty:</p>
+<ul><li><strong>strona internetowa</strong> od 3 999 zł, zwykle gotowa w 2–4 tygodnie, z domeną i hostingiem w cenie strony,</li><li><strong>sklep internetowy WooCommerce</strong> od 6 499 zł,</li><li><strong>logo</strong>: Logo Startowe 999 zł, Mini Branding 1 499 zł (m.in. wizytówka, stopka e-mail i teczka firmowa), Branding Premium 2 999 zł (m.in. brandbook i papier firmowy),</li><li><strong>obsługa kampanii Meta Ads i Google Ads</strong> od 1 200 zł/mies., a budżet reklamowy płacisz osobno, bezpośrednio platformie.</li></ul>
+<p>Dokładna kwota zależy od zakresu, dlatego podajemy ją po wypełnieniu <a class="zpSeoLink" href="/studio-wyceny/">Studia Wyceny</a>. Możesz też zadzwonić pod numer 501 054 253 i opowiedzieć o firmie.</p>',
+    ],
+    'faq' => [
+      'kicker' => 'FAQ / agencja reklamowa',
+      'title' => 'Pytania, które słyszymy <strong>przed pierwszą rozmową.</strong>',
+      'lead' => 'O cenach, spotkaniach w Katowicach, kampaniach, prawach do plików i o tym, czego nie robimy.',
+      'items' => [
+        [
+          'Agencja reklamowa Katowice: ile kosztuje współpraca?',
+          'Strona internetowa kosztuje u nas od 3 999 zł, sklep WooCommerce od 6 499 zł, logo od 999 zł, a obsługa kampanii Meta Ads i Google Ads od 1 200 zł/mies. Do kampanii dochodzi budżet reklamowy, który płacisz bezpośrednio platformie. Kwotę dla Twojej firmy podamy po Studiu Wyceny.',
+        ],
+        [
+          'Czy można umówić spotkanie w Katowicach?',
+          'Tak. Studio mieści się przy ul. Modelarskiej 18/2 w Katowicach i tam możemy porozmawiać o projekcie albo pokazać Ci kierunki logo i strony. Termin ustalamy telefonicznie lub mailowo. Jeśli nie chcesz dojeżdżać, cały proces poprowadzimy online.',
+        ],
+        [
+          'Czy pracujecie z firmami spoza Katowic i Śląska?',
+          'Tak. Pracujemy z firmami z całej Polski i wtedy cały proces prowadzimy online: brief, prezentacje kierunków, konsultacje i przekazanie plików. Siedziba w Katowicach przydaje się firmom ze Śląska, które wolą rozmawiać na miejscu, ale nie jest warunkiem współpracy.',
+        ],
+        [
+          'Czy do kampanii reklamowej potrzebna jest nowa strona?',
+          'Nie zawsze. Najpierw sprawdzamy obecną stronę: czy szybko działa na telefonie, czy oferta z reklamy jest łatwa do znalezienia i czy da się zmierzyć zapytania. Jeśli brakuje tylko jednej podstrony, przygotowujemy landing page pod kampanię. Nową stronę proponujemy dopiero wtedy, gdy obecnej nie opłaca się poprawiać.',
+        ],
+        [
+          'Kto jest właścicielem kont reklamowych, domeny i plików?',
+          'Konta reklamowe Meta i Google powinny należeć do Twojej firmy: zakładamy je na Ciebie albo pracujemy na tych, które już masz, z nadanym nam dostępem. Po zakończeniu projektu dostajesz finalne pliki logo i materiałów. Zasady dotyczące domeny, strony i praw do projektów zapisujemy w umowie przed rozpoczęciem pracy.',
+        ],
+        [
+          'Jak szybko można uruchomić kampanię Meta Ads albo Google Ads?',
+          'To zależy od tego, co już masz. Gdy działa strona docelowa, konto reklamowe i pomiar, przygotowujemy ustawienia kampanii, kreacje i teksty, a reklamy przechodzą jeszcze weryfikację platformy. Jeśli trzeba zbudować nową stronę, doliczasz jej czas, zwykle 2–4 tygodnie. Termin startu podamy przy wycenie.',
+        ],
+        [
+          'Czy drukujecie wizytówki i materiały firmowe?',
+          'Nie drukujemy. Projektujemy wizytówki, papier firmowy, teczki i inne materiały, a potem przygotowujemy pliki do druku dla drukarni, którą wybierzesz. Nie robimy też sesji zdjęciowych ani reklamy w telewizji i radiu. Zajmujemy się marką, stronami i kampaniami w internecie.',
+        ],
+        [
+          'Czy prowadzicie pozycjonowanie SEO?',
+          'Nie sprzedajemy stałego pozycjonowania w abonamencie. Każdą stronę i sklep przygotowujemy pod Google już przy budowie: struktura podstron, nagłówki, szybkość ładowania i treści, które odpowiadają na pytania klientów. Jak pozyskiwać klientów z miasta, opisujemy w tekście o <a class="zpSeoLink" href="/sklepy-internetowe/seo-lokalne-w-katowicach-jak-pozyskiwac-klientow-z-miasta-i-okolic/">SEO lokalnym w Katowicach</a>.',
+        ],
+      ],
+    ],
+    'cta' => [
+      'kicker' => 'Następny krok',
+      'title' => 'Opowiedz o firmie. <strong class="gradient-text">Zaproponujemy, od czego zacząć.</strong>',
+      'text' => 'Opisz w Studiu Wyceny swoją firmę, to, co już masz (logo, stronę, konta reklamowe), i cel na najbliższe miesiące. Zaproponujemy kolejność prac, zakres i koszt, a jeśli wolisz, omówimy to na spotkaniu w Katowicach.',
+      'buttons' => [
+        [
+          'label' => 'Przejdź do Studia Wyceny',
+          'href' => '/studio-wyceny/',
+        ],
+        [
+          'label' => 'Zadzwoń: 501 054 253',
+          'href' => 'tel:+48501054253',
+        ],
+      ],
+    ],
+  ],
 ];
