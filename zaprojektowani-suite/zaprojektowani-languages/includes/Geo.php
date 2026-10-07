@@ -344,6 +344,7 @@ final class Geo {
     private static function is_bot(): bool {
         $ua = strtolower((string) ($_SERVER['HTTP_USER_AGENT'] ?? ''));
         if ($ua === '') { return false; }
-        return (bool) preg_match('~(?:bot|crawler|spider|slurp|bingpreview|facebookexternalhit|whatsapp|telegrambot|twitterbot|linkedinbot|pinterest|chrome-lighthouse|lighthouse|pagespeed|google-inspectiontool|googleother)~i', $ua);
+        // AI fetchers without "bot" in their name (Claude-User, Perplexity-User…) get the address they asked for too.
+        return (bool) preg_match('~(?:bot|crawler|spider|slurp|bingpreview|facebookexternalhit|whatsapp|telegrambot|twitterbot|linkedinbot|pinterest|chrome-lighthouse|lighthouse|pagespeed|google-inspectiontool|googleother|chatgpt-user|claude-user|perplexity-user|mistralai-user|meta-external|cohere-ai)~i', $ua);
     }
 }

@@ -36,7 +36,7 @@ if (!defined('ABSPATH')) { exit; }
  * Narzędzia → Plan SEO shows the migration log and can undo the database changes.
  */
 
-define('ZP_SEO_PLAN_VERSION', '2.9.0');
+define('ZP_SEO_PLAN_VERSION', '2.9.1');
 
 /** The plan is on unless an administrator paused it (Narzędzia → Plan SEO). */
 function zp_seo_plan_active(): bool {
@@ -87,6 +87,7 @@ require_once __DIR__ . '/posts.php';
 require_once __DIR__ . '/redirects.php';
 require_once __DIR__ . '/indexation.php';
 require_once __DIR__ . '/schema.php';
+require_once __DIR__ . '/ai.php';
 require_once __DIR__ . '/links.php';
 require_once __DIR__ . '/menu.php';
 require_once __DIR__ . '/stats.php';

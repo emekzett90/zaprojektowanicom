@@ -3,9 +3,10 @@ if (!defined('ABSPATH')) { exit; }
 
 /** ZP Suite → Publikacja wpisów: switch, mode, e-mail, buttons, the feed's posts and the log. */
 
+// After the menu clean-up (admin-menu-consolidation-186.php, 9999), which removes other items, like Tłumacz EN.
 add_action('admin_menu', function () {
   add_submenu_page('zp-suite', 'Publikacja wpisów', 'Publikacja wpisów', 'manage_options', 'zp-suite-publikacja', 'zp_feed_admin_page');
-}, 40);
+}, 10000);
 
 add_action('admin_post_zp_feed', function () {
   if (!current_user_can('manage_options')) { wp_die('Brak uprawnień.'); }
