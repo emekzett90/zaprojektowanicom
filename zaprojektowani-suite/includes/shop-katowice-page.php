@@ -164,6 +164,23 @@ add_action('init', function(){
   }
 }, 13);
 
+/* v2.8.0: zapisana kopia sekcji „Trust / opinie” trzymała stare liczby (54 opinie w Trustindex)
+ * i stary adres Facebooka. Poprawiamy tylko te fragmenty, pozostałe edycje z CMS zostają. */
+add_action('init', function(){
+  $ver_key = 'zp_suite_shop_katowice_trust_280_version';
+  if (get_option($ver_key) === '2.8.0') { return; }
+  $sections = get_option('zp_suite_shop_katowice_sections', []);
+  if (is_array($sections) && !empty($sections['trust'])) {
+    $trust = preg_replace('~<b>\d+ opini(?:e|i) klientów</b>(<em>średnia ocena w Trustindex</em>)~u', '<b>120 opinii klientów</b>$1', (string) $sections['trust']);
+    $sections['trust'] = strtr((string) $trust, [
+      'href="https://www.facebook.com/zaprojektowani"' => 'href="https://www.facebook.com/zaprojektowanicom"',
+      '<b>Rekomendacje klientów</b><em>kontakt, wdrożenia i projekty marek</em>' => '<b>60 opinii klientów</b><em>rekomendacje i kontakt na Facebooku</em>',
+    ]);
+    update_option('zp_suite_shop_katowice_sections', $sections, false);
+  }
+  update_option($ver_key, '2.8.0', false);
+}, 14);
+
 /* v2.2.819: pakiety sklepów premium — rozbudowany zakres, zdjęcia zespołu,
  * pełny zakres hover/tap i przeniesienie sekcji nad portfolio. */
 add_action('init', function(){
