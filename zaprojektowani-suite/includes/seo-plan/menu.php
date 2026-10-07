@@ -7,11 +7,12 @@ if (!defined('ABSPATH')) { exit; }
  * The new links reuse the mega menu's own items. Only two things are new: the
  * "Strony dla branż" group, whose items carry no description, and its label in the mobile
  * menu, set like the menu's other small caps labels. Since 2.8.0 (eight industries, Mat
- * 7.10: "sekcja w mega menu z fajnymi ikonami lucide") the group is its own section: a soft
- * panel under "Strony & sklepy", "Sprzedaż" and the promo card, its items lined up with those
- * three columns, with tinted icon tiles (the lucide icons the menu already loads). The space
- * under "Start marki" stays free for Mateusz. In the mobile menu the same group gets the
- * tinted tiles too. On short laptop screens the mega menu gets slightly tighter spacing, and
+ * 7.10: "sekcja w mega menu z fajnymi ikonami lucide") the group is its own section under
+ * "Strony & sklepy", "Sprzedaż" and the promo card, its items lined up with those three
+ * columns, with the lucide icons the menu already loads. Since 2.8.1 (Mat: simpler, no frames
+ * around the icons) it is a plain row under a thin divider with bare icons in the menu's
+ * accent colour, and the mobile group uses the menu's own plain icons. The space under
+ * "Start marki" stays free for Mateusz. On short laptop screens the mega menu gets slightly tighter spacing, and
  * it scrolls inside when it is still taller than the window, so its bottom bar is never cut off.
  */
 add_action('wp_head', function () {
@@ -21,27 +22,24 @@ add_action('wp_head', function () {
     . '.zpNewNav__megaList.zpNewNav__megaList--branze{gap:2px 61px!important}'
     // Row 2 of the grid, columns 2-4; its own columns match the content width of the three
     // columns above (each has 30px padding on both sides and a 1px divider, the last is 340px).
-    // The panel's content box starts where the content of "Strony & sklepy" starts (6px margin,
-    // 1px border, 24px padding = the column's 1px divider and 30px padding; .zpNewNav__megaGrid in
-    // the selector outweighs the columns' own "+ column" padding and divider rule) and ends with the
-    // promo card's content, so the 3 inner columns line up with the 3 columns above.
+    // Its content starts where the content of "Strony & sklepy" starts (31px = the column's 1px
+    // divider and 30px padding; .zpNewNav__megaGrid in the selector outweighs the columns' own
+    // "+ column" padding and divider rule) and ends with the promo card's content, so the 3 inner
+    // columns line up with the 3 columns above.
     . '@media (min-width:1101px){'
-    . 'html body .zpNewNav__mega .zpNewNav__megaGrid .zpNewNav__megaCol.zpNewNav__megaCol--branze{grid-column:2 / -1;margin:26px 5px 0 6px;padding:20px 24px 12px!important;border:1px solid rgba(143,184,234,.18)!important;border-radius:24px;background:linear-gradient(135deg,rgba(143,184,234,.085) 0%,rgba(255,255,255,.018) 100%)}'
-    . 'html body .zpNewNav__mega.is-light-menu .zpNewNav__megaGrid .zpNewNav__megaCol.zpNewNav__megaCol--branze{border-color:rgba(28,71,122,.1)!important;background:linear-gradient(135deg,#f2f7fe 0%,#fafcff 100%)}'
+    . 'html body .zpNewNav__mega .zpNewNav__megaGrid .zpNewNav__megaCol.zpNewNav__megaCol--branze{grid-column:2 / -1;margin:26px 0 0!important;padding:22px 30px 12px 31px!important;border:0!important;border-top:1px solid rgba(255,255,255,.08)!important;border-radius:0;background:none!important}'
+    . 'html body .zpNewNav__mega.is-light-menu .zpNewNav__megaGrid .zpNewNav__megaCol.zpNewNav__megaCol--branze{border-left:0!important;border-top-color:rgba(7,20,38,.08)!important}'
     . 'html body .zpNewNav__mega .zpNewNav__megaList.zpNewNav__megaList--branze{grid-template-columns:repeat(2,calc((100% - 279px) / 2 - 61px)) 279px}'
-    . 'html body .zpNewNav__mega .zpNewNav__megaGrid .zpNewNav__megaCol.zpNewNav__megaCol--branze .zpNewNav__megaLink .zpNewNav__megaIco.zpNewNav__megaIco{background:linear-gradient(150deg,rgba(143,184,234,.36) 0%,rgba(59,110,168,.24) 100%)!important;border-color:rgba(143,184,234,.5)!important;color:#e6f1ff!important}'
-    . 'html body .zpNewNav__mega .zpNewNav__megaGrid .zpNewNav__megaCol.zpNewNav__megaCol--branze .zpNewNav__megaLink .zpNewNav__megaIco.zpNewNav__megaIco svg{stroke:#e6f1ff!important;color:#e6f1ff!important}'
-    . 'html body .zpNewNav__mega .zpNewNav__megaGrid .zpNewNav__megaCol.zpNewNav__megaCol--branze .zpNewNav__megaLink:hover .zpNewNav__megaIco.zpNewNav__megaIco,html body .zpNewNav__mega .zpNewNav__megaGrid .zpNewNav__megaCol.zpNewNav__megaCol--branze .zpNewNav__megaLink:focus-visible .zpNewNav__megaIco.zpNewNav__megaIco{background:#8fb8ea!important;border-color:#8fb8ea!important}'
-    . 'html body .zpNewNav__mega .zpNewNav__megaGrid .zpNewNav__megaCol.zpNewNav__megaCol--branze .zpNewNav__megaLink:hover .zpNewNav__megaIco.zpNewNav__megaIco svg,html body .zpNewNav__mega .zpNewNav__megaGrid .zpNewNav__megaCol.zpNewNav__megaCol--branze .zpNewNav__megaLink:focus-visible .zpNewNav__megaIco.zpNewNav__megaIco svg{stroke:#071426!important;color:#071426!important}'
-    . 'html body .zpNewNav__mega.is-light-menu .zpNewNav__megaGrid .zpNewNav__megaCol.zpNewNav__megaCol--branze .zpNewNav__megaLink .zpNewNav__megaIco.zpNewNav__megaIco{background:linear-gradient(150deg,#e6f0fe 0%,#d8e7fa 100%)!important;border-color:rgba(28,71,122,.16)!important;color:#1c477a!important;box-shadow:none!important}'
+    // Plain icons (Mat 7.10 after 2.8.0: "bez obramowania dookoła ikonek, same ikonki").
+    . 'html body .zpNewNav__mega .zpNewNav__megaGrid .zpNewNav__megaCol.zpNewNav__megaCol--branze .zpNewNav__megaLink .zpNewNav__megaIco.zpNewNav__megaIco{width:26px!important;height:26px!important;min-width:26px!important;flex:0 0 26px!important;background:none!important;border:0!important;border-radius:0!important;box-shadow:none!important;color:#8fb8ea!important}'
+    . 'html body .zpNewNav__mega .zpNewNav__megaGrid .zpNewNav__megaCol.zpNewNav__megaCol--branze .zpNewNav__megaLink .zpNewNav__megaIco.zpNewNav__megaIco svg{width:22px!important;height:22px!important;stroke:#8fb8ea!important;color:#8fb8ea!important;transition:stroke .2s ease!important}'
+    . 'html body .zpNewNav__mega .zpNewNav__megaGrid .zpNewNav__megaCol.zpNewNav__megaCol--branze .zpNewNav__megaLink:hover .zpNewNav__megaIco.zpNewNav__megaIco svg,html body .zpNewNav__mega .zpNewNav__megaGrid .zpNewNav__megaCol.zpNewNav__megaCol--branze .zpNewNav__megaLink:focus-visible .zpNewNav__megaIco.zpNewNav__megaIco svg{stroke:#fff!important;color:#fff!important}'
+    . 'html body .zpNewNav__mega.is-light-menu .zpNewNav__megaGrid .zpNewNav__megaCol.zpNewNav__megaCol--branze .zpNewNav__megaLink .zpNewNav__megaIco.zpNewNav__megaIco{background:none!important;border:0!important;color:#1c477a!important}'
     . 'html body .zpNewNav__mega.is-light-menu .zpNewNav__megaGrid .zpNewNav__megaCol.zpNewNav__megaCol--branze .zpNewNav__megaLink .zpNewNav__megaIco.zpNewNav__megaIco svg{stroke:#1c477a!important;color:#1c477a!important}'
-    . 'html body .zpNewNav__mega.is-light-menu .zpNewNav__megaGrid .zpNewNav__megaCol.zpNewNav__megaCol--branze .zpNewNav__megaLink:hover .zpNewNav__megaIco.zpNewNav__megaIco,html body .zpNewNav__mega.is-light-menu .zpNewNav__megaGrid .zpNewNav__megaCol.zpNewNav__megaCol--branze .zpNewNav__megaLink:focus-visible .zpNewNav__megaIco.zpNewNav__megaIco{background:#1c477a!important;border-color:#1c477a!important}'
-    . 'html body .zpNewNav__mega.is-light-menu .zpNewNav__megaGrid .zpNewNav__megaCol.zpNewNav__megaCol--branze .zpNewNav__megaLink:hover .zpNewNav__megaIco.zpNewNav__megaIco svg,html body .zpNewNav__mega.is-light-menu .zpNewNav__megaGrid .zpNewNav__megaCol.zpNewNav__megaCol--branze .zpNewNav__megaLink:focus-visible .zpNewNav__megaIco.zpNewNav__megaIco svg{stroke:#fff!important;color:#fff!important}'
+    . 'html body .zpNewNav__mega.is-light-menu .zpNewNav__megaGrid .zpNewNav__megaCol.zpNewNav__megaCol--branze .zpNewNav__megaLink:hover .zpNewNav__megaIco.zpNewNav__megaIco svg,html body .zpNewNav__mega.is-light-menu .zpNewNav__megaGrid .zpNewNav__megaCol.zpNewNav__megaCol--branze .zpNewNav__megaLink:focus-visible .zpNewNav__megaIco.zpNewNav__megaIco svg{stroke:#071426!important;color:#071426!important}'
     . 'html body .zpNewNav__mega--portal.is-portal-open .zpNewNav__megaCol--branze{transition-delay:.29s}'
     . '}'
-    // Mobile menu: the industry group's icons get the same tinted tiles.
-    . 'html body header#zpNewNav .zpNewNav__drawer .zpNewNav__mItem--branze .zpNewNav__mSub--cards .zpNewNav__mSubIcon.zpNewNav__mSubIcon,html body .zpNewNav__drawer.is-open .zpNewNav__mItem--branze .zpNewNav__mSub--cards .zpNewNav__mSubIcon.zpNewNav__mSubIcon{width:34px!important;height:34px!important;min-width:34px!important;flex:0 0 34px!important;border-radius:11px!important;background:linear-gradient(150deg,#e6f0fe 0%,#d8e7fa 100%)!important;border:1px solid rgba(28,71,122,.14)!important;color:#1c477a!important}'
-    . 'html body header#zpNewNav .zpNewNav__drawer .zpNewNav__mItem--branze .zpNewNav__mSub--cards .zpNewNav__mSubIcon.zpNewNav__mSubIcon svg,html body .zpNewNav__drawer.is-open .zpNewNav__mItem--branze .zpNewNav__mSub--cards .zpNewNav__mSubIcon.zpNewNav__mSubIcon svg{width:18px!important;height:18px!important;stroke:#1c477a!important;color:#1c477a!important}'
+    // (The mobile industry group uses the menu's own plain icons, so it needs no rules here.)
     . '.zpNewNav__megaList--branze .zpNewNav__megaLink{align-items:center!important;padding-top:6px!important;padding-bottom:6px!important}'
     . '.zpNewNav__megaList--branze .zpNewNav__megaTitle{margin:0!important;font-size:17px!important}'
     . '.zpNewNav__mSub .zpNewNav__mSubHead{margin:16px 0 0;padding:0 0 0 6px;font-size:11px;font-weight:800;line-height:1.4;letter-spacing:.14em;text-transform:uppercase;color:rgba(7,20,38,.5)}'
