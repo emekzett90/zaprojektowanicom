@@ -1,0 +1,5 @@
+Zaprojektowani Suite 2.7.5
+
+- Wpisy / Wiedza: sekcja „Powiązane usługi i poradniki” ma teraz full-bleed dark background na desktopie i mobile.
+- Karty w sekcji powiązanych materiałów są większe: 2 duże karty widoczne na desktopie, większe tytuły i większy padding.
+- Zachowane zabezpieczenie przed poziomym scrollowaniem całej strony na single post.

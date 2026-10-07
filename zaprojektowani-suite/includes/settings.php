@@ -67,7 +67,7 @@ function zp_suite_defaults() {
     'stats' => [
       'projects_count' => '114',
       'facebook_rating' => '5.0',
-      'facebook_reviews' => '43',
+      'facebook_reviews' => '60',
       'google_rating' => '5.0',
       'google_reviews' => '22',
       'recommendations' => '120',
@@ -170,7 +170,7 @@ function zp_suite_defaults() {
       'review_card_scale_mobile' => '1',
       'line_height' => '1.04',
       'letter_spacing' => '-0.036',
-      'fb_reviews' => '43',
+      'fb_reviews' => '60',
       'google_reviews' => '22',
       'projects_count' => '114',
     ],

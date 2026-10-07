@@ -36,6 +36,10 @@ add_action('wp_enqueue_scripts', function(){
 add_action('wp_head', function(){
   if (!zp_suite_strony_internetowe_katowice_v2_request()) { return; }
   $hero = ZP_SUITE_URL . 'assets/strony-internetowe/hero-laptop.webp';
+  if (function_exists('zp_seo_service_hero_image')) {
+    $requested_hero = zp_seo_service_hero_image(zp_seo_service_hero_path());
+    if ($requested_hero !== '') { $hero = $requested_hero; }
+  }
   echo "\n<style id=\"zp-si-v2-first-paint-lock\">"
     . "#zp-strony-internetowe-katowice{visibility:hidden;min-height:100vh;background:#030407;color:#fff}"
     . "body.zp-home-bg-boot .elementor-shortcode:has(#zp-strony-internetowe-katowice){min-height:100vh;background:#030407}"

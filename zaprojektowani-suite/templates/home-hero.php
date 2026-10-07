@@ -639,6 +639,13 @@ pointer-events:auto!important;
 /* v2.2.584 — hero opinie: style 5.0 przeniesione do jednego bloku "zp-suite-584-rating-watermark"
    na końcu pliku (naprawa skoku kerningu + duże 5.0 wtopione w tło karty). */
 
+
+/* v2.7.12 — home hero: restore original vertical rhythm after Meta Verified + lift Spline */
+@media(min-width:1101px){
+  .zh:not(.zh--logoBranding) .zh__stage{top:-36px!important;bottom:36px!important;}
+  .zh:not(.zh--logoBranding) .zh__side{top:calc(50% + 108px)!important;}
+}
+
 </style>
 <!-- v2.2.547: hero poster preload moved to <head> (zp_suite_2547 in optimizer.php) for earlier LCP discovery. -->
 
@@ -792,6 +799,7 @@ pointer-events:auto!important;
 </nav>
 <div class="zh__inner">
 <div class="zh__copy">
+<?php if (function_exists('zp_suite_meta_verified_markup')) { echo zp_suite_meta_verified_markup('dark', 'home'); } ?>
 <p class="zh__eb"><span class="dot"></span>Studio projektowe i technologiczne • Katowice</p>
 <h1 class="zh__title">Strony internetowe, <span class="zh__grad">sklepy WooCommerce i branding</span> dla firm z całej Polski</h1>
 <p class="zh__svcRot" aria-hidden="true">Projektujemy
@@ -820,13 +828,13 @@ pointer-events:auto!important;
 <a class="zh__rev" href="https://www.trustindex.io/reviews/zaprojektowani.com" target="_blank" rel="noopener nofollow">
 <span class="zh__rl">Certyfikat opinii</span>
 <span class="zh__sc"><strong>5.0</strong><em>★★★★★</em></span>
-<span class="zh__rt">69 opinii klientów<span>średnia ocena w Trustindex</span></span>
+<span class="zh__rt">120 opinii klientów<span>średnia ocena w Trustindex</span></span>
 <span class="zh__rlogo"><img src="https://zaprojektowani.com/wp-content/uploads/2026/05/trustindex_logo_wieksze.webp" alt="Trustindex"></span>
 </a>
 <a class="zh__rev" href="https://www.facebook.com/zaprojektowanicom/reviews" target="_blank" rel="noopener nofollow">
 <span class="zh__rl">Facebook</span>
 <span class="zh__sc"><strong>5.0</strong><em>★★★★★</em></span>
-<span class="zh__rt">54 opinie klientów<span>rekomendacje i kontakt</span></span>
+<span class="zh__rt">60 opinii klientów<span>rekomendacje i kontakt</span></span>
 <span class="zh__rlogo"><img src="https://zaprojektowani.com/wp-content/uploads/2026/05/facebook_duze_logo.webp" alt="Facebook"></span>
 </a>
 </div>
@@ -1144,7 +1152,7 @@ html body .zh:not(.zh--logoBranding) .zh__rev .zh__rlogo{position:absolute!impor
 @media (min-width:1101px){
   html body #zhHero .zh__title{
     font-size:clamp(46px,5.2vw,96px)!important;
-    line-height:.91!important;
+    line-height:.93!important;
     letter-spacing:-.046em!important;
     overflow:visible!important;
     padding-bottom:.06em!important;
@@ -1165,7 +1173,7 @@ html body .zh:not(.zh--logoBranding) .zh__rev .zh__rlogo{position:absolute!impor
 @media (min-width:601px) and (max-width:1100px){
   html body #zhHero .zh__title{
     font-size:clamp(38px,7.8vw,64px)!important;
-    line-height:.94!important;
+    line-height:.96!important;
     overflow:visible!important;
     padding-bottom:.04em!important;
   }
@@ -1179,8 +1187,8 @@ html body .zh:not(.zh--logoBranding) .zh__rev .zh__rlogo{position:absolute!impor
 }
 @media (max-width:600px){
   html body #zhHero .zh__title{
-    font-size:clamp(34px,9.8vw,44px)!important;
-    line-height:.97!important;
+    font-size:calc(clamp(34px,9.8vw,44px) - 2px)!important;
+    line-height:.99!important;
     overflow:visible!important;
     padding-bottom:.03em!important;
   }
@@ -1194,3 +1202,44 @@ html body .zh:not(.zh--logoBranding) .zh__rev .zh__rlogo{position:absolute!impor
 }
 </style>
 
+
+
+<style id="zp-suite-719-home-h1-balance">
+/* v2.7.19 — HOME H1: równiej wypełnione wiersze na mobile + luźniejszy desktop. */
+@media (min-width:1101px){
+  html body #zhHero .zh__title{
+    line-height:.98!important;
+  }
+}
+@media (max-width:600px){
+  html body #zhHero .zh__title{
+    width:calc(100% + 22px)!important;
+    max-width:calc(100% + 22px)!important;
+    margin-left:-4px!important;
+    margin-right:-18px!important;
+    letter-spacing:-.052em!important;
+    text-wrap:pretty!important;
+  }
+}
+</style>
+
+
+<style id="zp-suite-720-home-h1-mobile-stability">
+/* v2.7.20 — HOME mobile H1: stabilne łamanie w Safari + 1 px mniejszy font. */
+@media (max-width:600px){
+  html body #zhHero .zh__title{
+    font-size:calc(clamp(34px,9.8vw,44px) - 3px)!important;
+    text-wrap:wrap!important;
+  }
+  html body #zhHero .zh__title .zh__grad{
+    animation:none!important;
+    background-position:14% 0!important;
+    background-size:100% 100%!important;
+    -webkit-box-decoration-break:clone!important;
+    box-decoration-break:clone!important;
+    will-change:auto!important;
+    transform:none!important;
+    filter:none!important;
+  }
+}
+</style>

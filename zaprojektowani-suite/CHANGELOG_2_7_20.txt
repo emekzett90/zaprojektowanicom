@@ -1,0 +1,6 @@
+Changelog 2.7.20
+
+- Home mobile: naprawiono dublowanie/rozmywanie słowa „branding” po kilku sekundach.
+- Wyłączono animowane przesuwanie gradientu H1 na mobile i ustabilizowano wieloliniowe background-clip w Safari.
+- Home mobile: zmniejszono H1 dodatkowo o 1 px.
+- Desktop pozostawiono bez zmian.

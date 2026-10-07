@@ -15,7 +15,7 @@ final class Source {
     public static function fetch(string $path, int $post_id = 0): array {
         $out = ['ok' => false, 'html' => '', 'code' => 0, 'error' => '', 'gone' => false, 'redirect' => '', 'via' => 'http'];
         $res = wp_remote_get(home_url($path), [
-            'timeout' => 45,
+            'timeout' => min(8, max(1, OpenAI::remaining() - 3)),
             'redirection' => 0,
             'user-agent' => 'Zaprojektowani-Tlumacz-EN/' . ZPTE_VERSION . '; ' . home_url('/'),
             // zpl_lang_pref=pl: a manual language choice, so the GEO redirect never sends this request to /en/.
@@ -63,13 +63,22 @@ final class Source {
             return $out;
         }
         $content = (string) $post->post_content;
+        // Shortcodes and builders depend on the frontend route/query. Rendering them inside admin/cron
+        // can silently select another service variant; never certify that as the source page.
+        if (preg_match('~\[[a-z][a-z0-9_-]*(?:\s|\])~i', $content) || get_post_meta($post->ID, '_elementor_data', true)) {
+            $out['error'] = 'Nie udało się pobrać pełnej strony (loopback): ' . $out['error'] . '. Ta strona używa szablonu lub kreatora — wymagane jest prawidłowe pobranie jej publicznego adresu';
+            return $out;
+        }
+        $previous = $GLOBALS['post'] ?? null;
         try {
             $GLOBALS['post'] = $post;
             setup_postdata($post);
             $content = (string) apply_filters('the_content', $content);
-            wp_reset_postdata();
         } catch (\Throwable $e) {
             $content = wpautop((string) $post->post_content);
+        } finally {
+            wp_reset_postdata();
+            $GLOBALS['post'] = $previous;
         }
         $title = get_the_title($post);
         $desc = (string) get_post_meta($post->ID, 'rank_math_description', true);

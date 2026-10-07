@@ -1,0 +1,44 @@
+/* 2.7.7: WordPress ecosystem below the hero proof, and the new landscape shop mockup. */
+#zp-strony-internetowe-katowice .zpWpTech,#zp-strony-internetowe-katowice .zpWpTech *{font-family:"Plus Jakarta Sans Local","Plus Jakarta Sans",system-ui,sans-serif!important}
+#zp-strony-internetowe-katowice [data-zp-wordpress-hero] .zpWpTech{font-family:"Plus Jakarta Sans Local","Plus Jakarta Sans",system-ui,sans-serif;width:100%;max-width:640px;margin-top:34px;padding-top:24px;border-top:1px solid rgba(142,200,247,.16)}
+#zp-strony-internetowe-katowice .zpWpTech__head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:17px}
+#zp-strony-internetowe-katowice .zpWpTech__head p{margin:0;color:#93a5bd;font-size:10px;line-height:1.4;font-weight:700;letter-spacing:.12em;text-transform:uppercase}
+#zp-strony-internetowe-katowice .zpWpTech__window{width:100%;overflow:hidden}
+#zp-strony-internetowe-katowice .zpWpTech__track{width:100%;display:flex}
+#zp-strony-internetowe-katowice .zpWpTech__group{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));width:100%;flex:0 0 100%;gap:10px}
+#zp-strony-internetowe-katowice .zpWpTech__logo{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;min-width:0;min-height:96px;padding:14px 8px;border:1px solid rgba(142,200,247,.1);border-radius:16px;background:linear-gradient(150deg,rgba(12,25,41,.96),rgba(6,15,26,.86));color:#cfdae8;font-size:11px;font-weight:650;line-height:1.2;letter-spacing:-.015em}
+#zp-strony-internetowe-katowice .zpWpTech__logo img{display:block;width:40px;height:40px;max-width:none;object-fit:contain;filter:none;opacity:1}
+#zp-strony-internetowe-katowice .zpWpTech__mark{display:flex;align-items:center;justify-content:center;width:100%;height:42px;overflow:hidden}
+#zp-strony-internetowe-katowice .zpWpTech__logo--woocommerce img{width:100%;max-width:110px;height:auto;aspect-ratio:1}
+#zp-strony-internetowe-katowice .zpWpTech__logo--php img{width:68px;height:68px}
+#zp-strony-internetowe-katowice .zpWpTech__logo--elementor img{width:112px;height:42px;filter:brightness(0) invert(1);opacity:.86}
+#zp-strony-internetowe-katowice .zpWpTech__group--duplicate,#zp-strony-internetowe-katowice .zpWpTech__pause{display:none}
+#zp-strony-internetowe-katowice .zpWpTech__pause{align-items:center;justify-content:center;flex:0 0 auto;min-height:30px;padding:5px 10px;border:1px solid rgba(142,200,247,.2);border-radius:999px;background:rgba(142,200,247,.05);color:#cfdae8;font:inherit;font-size:10px;line-height:1.2;cursor:pointer}
+#zp-strony-internetowe-katowice .zpWpTech__pause:focus-visible{outline:2px solid #8ec8f7;outline-offset:3px}
+#zp-strony-internetowe-katowice .zpWpTech [data-zp-wp-tech-resume],#zp-strony-internetowe-katowice .zpWpTech.is-paused [data-zp-wp-tech-pause]{display:none}
+#zp-strony-internetowe-katowice .zpWpTech.is-paused [data-zp-wp-tech-resume]{display:inline}
+@media(max-width:680px){
+  #zp-strony-internetowe-katowice [data-zp-wordpress-hero] .zpWpTech{max-width:100%;margin-top:26px;padding-top:20px}
+  #zp-strony-internetowe-katowice .zpWpTech__head p{font-size:9px;letter-spacing:.09em}
+  #zp-strony-internetowe-katowice .zpWpTech__head{margin-bottom:12px;min-height:30px}
+  #zp-strony-internetowe-katowice .zpWpTech__window{-webkit-mask-image:linear-gradient(90deg,transparent,#000 10px,#000 calc(100% - 10px),transparent);mask-image:linear-gradient(90deg,transparent,#000 10px,#000 calc(100% - 10px),transparent)}
+  #zp-strony-internetowe-katowice .zpWpTech__track{width:max-content;animation:zpWpTechMarquee 26s linear infinite;will-change:transform}
+  #zp-strony-internetowe-katowice .zpWpTech__group{display:flex;gap:10px;width:auto;flex:0 0 auto;padding-right:10px}
+  #zp-strony-internetowe-katowice .zpWpTech__logo{flex:0 0 120px;min-height:96px;padding:14px 12px}
+  #zp-strony-internetowe-katowice .zpWpTech.is-ready .zpWpTech__pause{display:inline-flex}
+  #zp-strony-internetowe-katowice .zpWpTech.is-paused .zpWpTech__track{animation-play-state:paused}
+  #zp-strony-internetowe-katowice .zpWpTech:not(.is-ready) .zpWpTech__track{width:100%;animation:none}
+  #zp-strony-internetowe-katowice .zpWpTech:not(.is-ready) .zpWpTech__group{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));width:100%;padding:0}
+  #zp-strony-internetowe-katowice .zpWpTech:not(.is-ready) .zpWpTech__group--duplicate{display:none}
+}
+@keyframes zpWpTechMarquee{to{transform:translate3d(-50%,0,0)}}
+@media(prefers-reduced-motion:reduce){
+  #zp-strony-internetowe-katowice .zpWpTech__window{overflow:visible;-webkit-mask-image:none;mask-image:none}
+  #zp-strony-internetowe-katowice .zpWpTech__track{width:100%;animation:none;transform:none;will-change:auto}
+  #zp-strony-internetowe-katowice .zpWpTech__group{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));width:100%;padding:0}
+  #zp-strony-internetowe-katowice .zpWpTech__group--duplicate,#zp-strony-internetowe-katowice .zpWpTech.is-ready .zpWpTech__pause{display:none}
+  @media(max-width:480px){#zp-strony-internetowe-katowice .zpWpTech__group{grid-template-columns:repeat(2,minmax(0,1fr))}}
+}
+/* The supplied shop image is 1717 × 916. Keep its natural ratio in both render branches. */
+html body #zp-sklepy-internetowe-katowice #zhHero[data-zp-service-visual="shops"] .zh__brandMock,
+html body #zp-sklepy-internetowe-katowice #zhHero[data-zp-service-visual="shops"] .zh__mobileBrandMock>img{height:auto!important;aspect-ratio:1717/916!important;object-fit:contain!important}

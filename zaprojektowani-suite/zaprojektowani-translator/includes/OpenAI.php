@@ -11,6 +11,14 @@ if (!defined('ABSPATH')) { exit; }
  *   retry — temporary (network, rate limit, server error): try again on the next run.
  */
 final class OpenAI {
+    private static $deadline = 0;
+
+    public static function deadline(int $deadline): void { self::$deadline = $deadline; }
+
+    public static function remaining(): int {
+        return self::$deadline ? max(0, self::$deadline - time()) : 30;
+    }
+
     public static function base(): string {
         // ZPTE_OPENAI_BASE (wp-config.php) points the module at a compatible endpoint or a test server.
         $b = defined('ZPTE_OPENAI_BASE') && is_string(ZPTE_OPENAI_BASE) && ZPTE_OPENAI_BASE !== '' ? ZPTE_OPENAI_BASE : 'https://api.openai.com/v1';
@@ -18,7 +26,7 @@ final class OpenAI {
     }
 
     private static function result(array $r): array {
-        return array_merge(['ok' => false, 'data' => null, 'error' => '', 'fatal' => false, 'retry' => false, 'truncated' => false, 'in' => 0, 'out' => 0], $r);
+        return array_merge(['ok' => false, 'data' => null, 'error' => '', 'fatal' => false, 'retry' => false, 'truncated' => false, 'deferred' => false, 'in' => 0, 'out' => 0], $r);
     }
 
     /** Reasoning models (o-series, gpt-5) reject a custom temperature. */
@@ -40,10 +48,12 @@ final class OpenAI {
             'max_completion_tokens' => $max_tokens,
         ];
         if (self::takes_temperature($model)) { $body['temperature'] = 0.2; }
+        if (preg_match('~^gpt-5\.4(?:-|$)~', $model)) { $body['reasoning_effort'] = 'none'; }
 
         for ($attempt = 0; $attempt < 3; $attempt++) {
+            if (self::remaining() < 5) { return self::result(['error' => 'Koniec bieżącego kroku — kontynuuję w następnym.', 'deferred' => true]); }
             $res = wp_remote_post(self::base() . '/chat/completions', [
-                'timeout' => 150,
+                'timeout' => min(25, max(1, self::remaining() - 2)),
                 'headers' => ['Authorization' => 'Bearer ' . $key, 'Content-Type' => 'application/json'],
                 'body' => wp_json_encode($body),
                 'data_format' => 'body',
@@ -87,7 +97,7 @@ final class OpenAI {
                 return self::result(['error' => 'Błąd po stronie OpenAI (' . $code . ') — ponowię przy następnym uruchomieniu.', 'retry' => true]);
             }
             if ($code !== 200 || !is_array($json)) {
-                return self::result(['error' => 'OpenAI: błąd ' . $code . ($msg !== '' ? ' — ' . self::short($msg) : '')]);
+                return self::result(['error' => 'OpenAI: błąd ' . $code . ($msg !== '' ? ' — ' . self::short($msg) : ''), 'fatal' => $code >= 400 && $code < 500]);
             }
 
             $choice = $json['choices'][0] ?? [];

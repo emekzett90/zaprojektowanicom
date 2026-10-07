@@ -152,6 +152,18 @@ add_action('init', function(){
 }, 12);
 
 
+/* v2.7.8: odśwież hero po dodaniu badge Meta Verified, żeby zapisany HTML z CMS nie blokował nowej wersji. */
+add_action('init', function(){
+  $ver_key = 'zp_suite_shop_katowice_meta_verified_278_version';
+  if (get_option($ver_key) !== '2.7.8') {
+    $sections = get_option('zp_suite_shop_katowice_sections', []);
+    if (!is_array($sections)) { $sections = []; }
+    $sections['hero'] = zp_suite_shop_katowice_default_section('hero');
+    update_option('zp_suite_shop_katowice_sections', $sections, false);
+    update_option($ver_key, '2.7.8', false);
+  }
+}, 13);
+
 /* v2.2.819: pakiety sklepów premium — rozbudowany zakres, zdjęcia zespołu,
  * pełny zakres hover/tap i przeniesienie sekcji nad portfolio. */
 add_action('init', function(){
@@ -250,6 +262,7 @@ function zp_suite_shop_katowice_get_section($key){
 
 function zp_suite_shop_katowice_clean_html($html){
   $html = str_replace('http://zaprojektowani.com/', 'https://zaprojektowani.com/', (string)$html);
+  if (function_exists('zp_suite_meta_verified_tokens')) { $html = zp_suite_meta_verified_tokens($html); }
   $html = preg_replace('#<script\s+src=["\'][^"\']*lucide\.min\.js[^"\']*["\']\s*></script>#i', '', $html);
   if (strpos($html, 'zh--shops') === false && strpos($html, 'zpShopHeroUnified') === false) {
     $html = preg_replace('#<style\b[^>]*>.*?</style>#is', '', $html);

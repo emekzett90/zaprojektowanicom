@@ -21,6 +21,7 @@ $zp_lb_html = file_exists($zp_lb_body_file) ? file_get_contents($zp_lb_body_file
 
 /* Assety strony leżą we wtyczce — token zamieniamy na realny URL instalacji. */
 $zp_lb_html = str_replace('%%ZPLB%%', ZP_SUITE_URL . 'assets/logo-branding/', $zp_lb_html);
+if (function_exists('zp_suite_meta_verified_tokens')) { $zp_lb_html = zp_suite_meta_verified_tokens($zp_lb_html); }
 ?>
 <script id="zp-lb-assets-base">window.ZP_LB_ASSETS=<?php echo wp_json_encode(ZP_SUITE_URL . 'assets/logo-branding/'); ?>;</script>
 <main id="zp-logo-branding-katowice" class="zpLogoBrandingKatPage" data-zp-logo-branding-katowice>

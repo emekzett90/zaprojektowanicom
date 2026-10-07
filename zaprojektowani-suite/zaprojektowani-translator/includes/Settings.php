@@ -7,7 +7,7 @@ if (!defined('ABSPATH')) { exit; }
 final class Settings {
     const OPTION = 'zpte_settings';
     const KEY_OPTION = 'zpte_api_key';
-    const DEFAULT_MODEL = 'gpt-4.1';
+    const DEFAULT_MODEL = 'gpt-5.4-mini';
 
     public static function defaults(): array {
         return [
@@ -38,6 +38,18 @@ final class Settings {
 
     public static function update(array $values): void {
         update_option(self::OPTION, array_merge(self::all(), $values), true);
+    }
+
+    /** Upgrade the former default once; keep custom models and every other setting/key. */
+    public static function migrate(): void {
+        if (get_option('zpte_model_migrated') === '1.1.0') { return; }
+        $saved = get_option(self::OPTION, []);
+        if (!is_array($saved)) { $saved = []; }
+        if (!isset($saved['model']) || $saved['model'] === 'gpt-4.1') {
+            $saved['model'] = self::DEFAULT_MODEL;
+            update_option(self::OPTION, $saved, true);
+        }
+        update_option('zpte_model_migrated', '1.1.0', false);
     }
 
     /** First run: new content = published during the last 7 days or later. */

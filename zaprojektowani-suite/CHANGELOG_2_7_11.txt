@@ -1,0 +1,5 @@
+Changelog 2.7.11
+
+- Strona główna: skorygowano pozycję badge Meta Verified.
+- Badge wrócił obok ekipy i został przesunięty konkretnie na prawo od Stanisława, zamiast na prawą stronę całego hero.
+- Mobile: dopasowano pozycję, aby badge był obok zdjęcia, nie nad nim.

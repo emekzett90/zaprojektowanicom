@@ -8,6 +8,7 @@ final class Sync {
     const DONE = 'done';
     const PARTIAL = 'partial';     // ran out of time or daily budget: continues on the next run
     const RETRY = 'retry';         // OpenAI temporarily unavailable: stop this run
+    const LIMIT = 'limit';
     const FATAL = 'fatal';         // key/credit/model problem: stop until the administrator fixes it
 
     /** @param object $row zpte_paths row */
@@ -92,14 +93,16 @@ final class Sync {
         }
         $context = Source::title($src['html']) ?: Source::h1($src['html']) ?: $path;
         $failed = [];
+        Store::path_update($id, ['keys_total' => count($units), 'keys_ai' => count($ids)]);
+        Worker::page_progress($path, count($units), count($units) - count($todo));
         if ($todo) {
             Store::path_update($id, ['status' => in_array($row->status, ['published', 'draft'], true) ? $row->status : 'working']);
             foreach (Translator::batches($todo) as $batch) {
-                if (time() >= $deadline || Log::over_limit()) {
+                if (time() >= $deadline - 5 || Log::over_limit()) {
                     // Progress is kept: the next run finds these fragments in the translation memory.
                     Store::links_add($id, array_values($ids));
                     Store::path_update($id, ['message' => Log::over_limit() ? 'Dzienny limit znaków wyczerpany — dokończę jutro.' : 'W trakcie tłumaczenia — dokończę przy następnym uruchomieniu.']);
-                    return self::PARTIAL;
+                    return Log::over_limit() ? self::LIMIT : self::PARTIAL;
                 }
                 $res = Translator::translate($batch, $context);
                 foreach ($res['ok'] as $pl => $en) {
@@ -107,6 +110,10 @@ final class Sync {
                     if ($sid) { $ids[(string) $pl] = $sid; }
                 }
                 foreach ($res['failed'] as $pl) { $failed[(string) $pl] = true; }
+                Store::links_add($id, array_values($ids));
+                Store::path_update($id, ['keys_ai' => count($ids), 'keys_failed' => count($failed), 'message' => 'Zapisano ' . count($ids) . ' tłumaczeń; kontynuuję stronę.']);
+                Worker::page_progress($path, count($units), count($units) - count($need) + count($ids));
+                if (!empty($res['deferred']) || !empty($res['limit'])) { return !empty($res['limit']) ? self::LIMIT : self::PARTIAL; }
                 if ($res['fatal']) {
                     Store::links_add($id, array_values($ids));
                     Store::path_update($id, ['message' => $res['error']]);
@@ -121,18 +128,8 @@ final class Sync {
                 }
                 if ($res['error'] !== '') { Log::add($path . ': ' . $res['error'], 'warning'); }
             }
-            // One more try for fragments the model got wrong (smaller batches, separate context).
-            if ($failed && time() < $deadline - 20 && !Log::over_limit()) {
-                $again = array_intersect_key($todo, $failed);
-                foreach (array_chunk($again, 8, true) as $batch) {
-                    $res = Translator::translate($batch, $context);
-                    foreach ($res['ok'] as $pl => $en) {
-                        $sid = Store::string_save((string) $pl, (string) $en, (string) ($batch[$pl] ?? 'text'), Settings::model());
-                        if ($sid) { $ids[(string) $pl] = $sid; unset($failed[(string) $pl]); }
-                    }
-                    if ($res['fatal'] || $res['retry'] || time() >= $deadline) { break; }
-                }
-            }
+            // Validation failures get a later bounded retry; do not hide fatal errors in a second pass.
+
         }
 
         // 6. The page uses exactly these fragments now (fragments that disappeared from the page are unlinked).
@@ -164,12 +161,20 @@ final class Sync {
             $stats['message'] = 'Szkic czeka na akceptację.';
             $stats['tries'] = 0;
         } else {
+            if (time() >= $deadline - 5 && Bridge::route($path) === '') {
+                Store::links_add($id, array_values($ids));
+                Store::path_update($id, ['message' => 'Treść zapisana — kończę publikację w następnym kroku.']);
+                return self::PARTIAL;
+            }
             $route = self::ensure_route($row, $path, $src['html'], $post);
             $stats = array_merge($stats, $route);
             $stats['status'] = 'published';
             // Leftover fragments are retried by the daily check (up to 4 times).
             $stats['tries'] = $failed ? (int) $row->tries + 1 : 0;
             $stats['message'] = $failed ? 'Opublikowano; ' . count($failed) . ' fragm. czeka na ponowne tłumaczenie.' : ($todo ? 'Przetłumaczono ' . count($todo) . ' fragm.' : 'Bez zmian.');
+        }
+        if (!empty($stats['keys_failed']) && (int) ($stats['tries'] ?? 0) >= 4) {
+            $stats['message'] = 'Pozostało ' . (int) $stats['keys_failed'] . ' fragm. po 4 próbach. Sprawdź Dziennik i wybierz „Przetłumacz ponownie”, aby wznowić.';
         }
         Store::path_update($id, $stats);
 

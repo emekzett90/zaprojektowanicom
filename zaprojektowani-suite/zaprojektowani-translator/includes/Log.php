@@ -59,6 +59,11 @@ final class Log {
         return $sum;
     }
 
+    public static function can_send(int $chars): bool {
+        $limit = (int) Settings::get('daily_chars');
+        return $limit <= 0 || self::usage()['chars'] + $chars <= $limit;
+    }
+
     public static function over_limit(): bool {
         $limit = (int) Settings::get('daily_chars');
         return $limit > 0 && self::usage()['chars'] >= $limit;
