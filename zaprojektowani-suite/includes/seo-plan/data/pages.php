@@ -1021,7 +1021,7 @@ return [
 <h2 id="strona-wordpress-cena-i-od-czego-zalezy">Strona WordPress — cena i od czego zależy</h2>
 <p>Strony internetowe realizujemy od 3 999 zł, a typowy projekt trwa od 2 do 4 tygodni. Na końcową cenę strony WordPress najmocniej wpływają:</p>
 <ol><li>liczba podstron i sekcji do zaprojektowania,</li><li>teksty, czyli czy dostarczasz gotowe treści, czy piszemy je od podstaw,</li><li>funkcje, na przykład rezerwacje, kalkulator, wyszukiwarka, strefa klienta albo wersje językowe,</li><li>integracje z CRM, systemem rezerwacji, newsletterem lub programem do faktur,</li><li>przeniesienie treści i adresów ze starej strony.</li></ol>
-<p>Do kosztów stałych należą domena, hosting, licencje płatnych wtyczek, jeśli są potrzebne, i opieka techniczna. Scenariusze cenowe opisaliśmy w poradniku <a class="zpSeoLink" href="/strony-www/ile-kosztuje-stworzenie-strony-internetowej-dla-firmy/">ile kosztuje strona internetowa dla firmy</a>, a wydatki po publikacji w tekście <a class="zpSeoLink" href="/seo-i-konwersja/ile-kosztuje-utrzymanie-strony-internetowej/">ile kosztuje utrzymanie strony internetowej</a>.</p>
+<p>Domenę i hosting masz u nas w cenie strony. Do kosztów stałych mogą dojść licencje płatnych wtyczek, jeśli są potrzebne, i opieka techniczna. Scenariusze cenowe opisaliśmy w poradniku <a class="zpSeoLink" href="/strony-www/ile-kosztuje-stworzenie-strony-internetowej-dla-firmy/">ile kosztuje strona internetowa dla firmy</a>, a wydatki po publikacji w tekście <a class="zpSeoLink" href="/seo-i-konwersja/ile-kosztuje-utrzymanie-strony-internetowej/">ile kosztuje utrzymanie strony internetowej</a>.</p>
 <h2 id="przeniesienie-strony-na-wordpress-bez-utraty-pozycji">Przeniesienie strony na WordPress bez utraty pozycji</h2>
 <p>Jeśli Twoja obecna strona działa na innym systemie, przeniesienie na WordPress planujemy razem z mapą przekierowań 301. Każdy stary adres, który ma ruch albo linki z innych stron, dostaje odpowiednik na nowej stronie, a tytuły, opisy i nagłówki przenosimy lub poprawiamy. Po publikacji sprawdzamy w Search Console, czy Google poprawnie odczytał zmiany. Cały proces opisaliśmy w poradniku <a class="zpSeoLink" href="/strony-internetowe/przebudowa-strony-bez-utraty-widocznosci-w-google/">przebudowa strony bez utraty widoczności w Google</a>.</p>
 <h2 id="strona-firmowa-na-wordpress-wizytowka-czy-sklep">Strona firmowa na WordPress, wizytówka czy sklep</h2>
@@ -1062,7 +1062,7 @@ return [
         ],
         [
           'Na jakim hostingu będzie działać strona?',
-          'Najlepiej na hostingu i domenie zarejestrowanych na Twoją firmę, bo wtedy masz pełną kontrolę nad usługami. Pomagamy dobrać hosting do wielkości strony i ruchu, a gotową stronę publikujemy na Twojej domenie.',
+          'Na hostingu dobranym do wielkości strony i ruchu. Domenę i hosting masz u nas w cenie strony, więc nie kupujesz ich osobno. Jeśli firma ma już domenę, publikujemy stronę pod tym adresem.',
         ],
       ],
     ],
