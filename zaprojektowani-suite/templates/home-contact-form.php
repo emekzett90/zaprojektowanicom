@@ -217,6 +217,7 @@ $form_html = '<div id="formularz-kontaktowy" style="position:relative;top:-92px;
           .then(function(r){ return r.json().catch(function(){ return {success:false,data:{title:'Błąd',messages:['Nie udało się odczytać odpowiedzi serwera.']}}; }); })
           .then(function(res){
             if(res && res.success){
+              try{ sessionStorage.setItem('zpLeadSent','1'); }catch(err){}
               pushContactSubmit(res, mode, selectedServices());
               showModal(res.data.title || 'Dziękujemy', '<p>' + escapeHtml(res.data.message || 'Wiadomość została wysłana.') + '</p>', 'success');
               form.reset();

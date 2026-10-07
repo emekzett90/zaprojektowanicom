@@ -1624,3 +1624,6 @@ require_once ZP_SUITE_PATH . 'includes/css-min.php';
 require_once ZP_SUITE_PATH . 'includes/footer-v3.php';
 // Ciemny pas CTA stopki: zdjęcie zespołu z opisem i srcset, liczby zaufania, układ bez nachodzenia na tekst.
 require_once ZP_SUITE_PATH . 'includes/footer-cta.php';
+
+/* 2.8.0: przyjaźniejszy długi formularz kontaktowy (angielskie wersje nowych tekstów). */
+require_once ZP_SUITE_PATH . 'includes/contact-form-280.php';
