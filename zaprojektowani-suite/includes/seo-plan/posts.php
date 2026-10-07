@@ -14,7 +14,9 @@ if (!defined('ABSPATH')) { exit; }
  *    (it redirects to a post about shops) and the "ampanie-…" typo address,
  *  - photos in the article are marked as article images, so they load in full size,
  *  - links from articles the plugin published to newer articles (2.8.0),
- *  - text fixes in articles the plugin published (2.8.2).
+ *  - text fixes in articles the plugin published (2.8.2),
+ *  - from the feed (feed.php, 2.9.0): new sections and links to new articles in older posts, and
+ *    links to feed articles that are not published yet shown as plain text.
  * English pages are left alone.
  */
 
@@ -83,7 +85,7 @@ function zp_seo_posts_transform(string $html): string {
   }
 
   // New sections and their table of contents links.
-  foreach ((array) (zp_seo_plan_data('sections')[$path] ?? []) as $s) {
+  foreach (array_merge((array) (zp_seo_plan_data('sections')[$path] ?? []), zp_feed_sections_for($path)) as $s) {
     $sid = (string) $s['id'];
     if (strpos($html, 'id="' . $sid . '"') !== false || ($range = zp_seo_html_section_range($html, 'zpArticleNew__section')) === null) { continue; }
     $first = preg_match('~\bid="([^"]+)"~', substr($html, $range[0], 300), $fm) ? $fm[1] : '';
@@ -106,6 +108,15 @@ function zp_seo_posts_transform(string $html): string {
     $linked = (string) preg_replace('~' . preg_quote($words, '~') . '~u', '<a href="' . esc_url(home_url($to)) . '">' . $words . '</a>', $text, 1);
     $html = substr_replace($html, $linked, $at, strlen($text));
   }
+
+  // Links to articles from the feed: only where the exact fragment is still in the post.
+  foreach (zp_feed_links_for($path) as $link) {
+    [$text, $words, $to] = $link;
+    if ($to === $path || !zp_seo_plan_link_is_live($to) || ($at = strpos($html, $text)) === false) { continue; }
+    $linked = zp_feed_link_fragment($text, $words, $to);
+    if ($linked !== null) { $html = substr_replace($html, $linked, $at, strlen($text)); }
+  }
+  $html = zp_feed_unlink_pending($html);
 
   // Text fixes in published articles.
   foreach ((array) (zp_seo_posts_text_fixes()[$path] ?? []) as $fix) {
