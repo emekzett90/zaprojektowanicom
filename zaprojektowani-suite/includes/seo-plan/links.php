@@ -280,6 +280,11 @@ function zp_seo_plan_remap_html(string $html): string {
   $map = zp_seo_plan_link_map();
   if (!$map) { return $html; }
   $slugs = implode('|', array_map(static function ($s) { return preg_quote($s, '~'); }, array_keys($map)));
+  // 2.8.0: a link whose text names Katowice or Śląsk (e.g. "strony internetowe Katowice" in a post)
+  // keeps the local page, where that phrase is the keyword.
+  $html = (string) preg_replace_callback('~<a\b(?![^>]*data-zp-local)([^>]*\shref=["\'](?:https?://(?:www\.)?zaprojektowani\.com)?/(?:' . $slugs . ')/[^>]*)>(.{0,400}?)</a>~is', static function ($m) {
+    return preg_match('~katowic|śląsk|slask~iu', wp_strip_all_tags($m[2])) ? '<a data-zp-local="1"' . $m[1] . '>' . $m[2] . '</a>' : $m[0];
+  }, $html);
   $href = '~(\shref=)(["\'])(?:https?://(?:www\.)?zaprojektowani\.com)?/(' . $slugs . ')/(#[^"\']*)?\2~i';
   $out = preg_replace_callback('~<a\b[^>]*>~i', static function ($m) use ($map, $href) {
     $tag = $m[0];

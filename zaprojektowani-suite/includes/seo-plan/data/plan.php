@@ -214,7 +214,7 @@ return [
     'kind' => 'post',
     'focus' => 'ile kosztuje strona internetowa, strony internetowe cena, strona internetowa cena, ile kosztuje zrobienie strony internetowej, ile kosztuje stworzenie strony internetowej',
     'title' => 'Ile kosztuje strona internetowa w 2026? Ceny i przykłady',
-    'description' => 'Ile kosztuje strona internetowa w 2026? Widełki cen strony wizytówki, firmowej i rozbudowanej, od czego zależy koszt i ile kosztuje utrzymanie.',
+    'description' => 'Ile kosztuje strona internetowa w 2026? Strony dla firm od 3 999 zł: od czego zależy koszt projektu i ile kosztuje utrzymanie strony.',
     'h1' => 'Ile kosztuje strona internetowa dla firmy w 2026 roku?',
     'editorial_title' => 'Ile kosztuje strona internetowa? Ceny i zakres w 2026',
     'editorial_description' => 'Sprawdź, ile kosztuje strona internetowa i co obejmuje wycena. Porównaj zakres projektu, wdrożenia, treści oraz późniejsze koszty utrzymania strony.',
