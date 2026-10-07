@@ -1016,7 +1016,7 @@ add_action('wp_footer', function(){
       'use strict';
       function toast(title,msg){
         var el=document.querySelector('.zpContactToast22102');
-        if(!el){ el=document.createElement('div'); el.className='zpContactToast22102'; el.setAttribute('role','status'); el.setAttribute('aria-live','polite'); el.innerHTML='<strong></strong><span></span>'; document.body.appendChild(el); }
+        if(!el){ el=document.createElement('div'); el.className='zpContactToast22102'; el.setAttribute('role','status'); el.setAttribute('aria-live','polite'); el.appendChild(document.createElement('strong')); el.appendChild(document.createElement('span')); document.body.appendChild(el); } /* 2.8.0: elementy tworzone w JS, bo filtr HTML strony głównej usuwał pusty znacznik strong z tego kodu i toast się wywracał */
         el.querySelector('strong').textContent=title||'Wiadomość wysłana';
         el.querySelector('span').textContent=msg||'Dziękujemy — zgłoszenie dotarło. Odezwemy się z konkretną odpowiedzią.';
         el.classList.add('is-on');
@@ -1045,8 +1045,9 @@ add_action('wp_footer', function(){
           var isContact=false;
           try{
             var body=init&&init.body;
-            // 2.8.0: krótki formularz kontaktowy pokazuje podziękowanie w miejscu formularza, więc bez dodatkowego toastu.
-            if(body && typeof FormData!=='undefined' && body instanceof FormData){ isContact=body.get('action')==='zp_suite_contact' && body.get('contact_mode')!=='short'; }
+            // 2.8.0: bez dodatkowego toastu, gdy formularz sam pokazuje podziękowanie (krótki formularz w miejscu
+            // formularza, długi w oknie „Dziękujemy” — zp_feedback=modal).
+            if(body && typeof FormData!=='undefined' && body instanceof FormData){ isContact=body.get('action')==='zp_suite_contact' && body.get('contact_mode')!=='short' && !body.get('zp_feedback'); }
           }catch(e){}
           var p=originalFetch.apply(this,arguments);
           if(isContact){
