@@ -13,6 +13,49 @@ final class Admin {
         add_action('admin_menu', [self::class, 'menu'], 10000);
         add_action('admin_post_zpte', [self::class, 'handle']);
         add_action('admin_notices', [self::class, 'notices']);
+        add_action('wp_ajax_zpte_status', [self::class, 'ajax_status']);
+        add_action('wp_ajax_zpte_step', [self::class, 'ajax_step']);
+        add_action('admin_enqueue_scripts', [self::class, 'assets']);
+    }
+
+    public static function assets(): void {
+        if (($_GET['page'] ?? '') !== self::SLUG || !current_user_can('manage_options')) { return; }
+        wp_enqueue_style('zpte-admin', plugins_url('assets/admin.css', ZPTE_DIR . 'translator.php'), [], ZPTE_VERSION);
+        if (($_GET['tab'] ?? 'status') !== 'status') { return; }
+        wp_enqueue_script('zpte-admin', plugins_url('assets/admin.js', ZPTE_DIR . 'translator.php'), [], ZPTE_VERSION, true);
+        wp_localize_script('zpte-admin', 'zpteAdmin', ['url' => admin_url('admin-ajax.php'), 'nonce' => wp_create_nonce('zpte_progress')]);
+    }
+
+    private static function ajax_authorize(): void {
+        if (!current_user_can('manage_options')) { wp_send_json_error(['message' => 'Brak uprawnień.'], 403); }
+        check_ajax_referer('zpte_progress', 'nonce');
+        if (!Bridge::hooks_ready()) { wp_send_json_error(['message' => 'Moduł językowy wymaga aktualizacji.'], 409); }
+        Store::install();
+    }
+
+    public static function ajax_status(): void {
+        self::ajax_authorize();
+        wp_send_json_success(['progress' => Worker::progress(), 'nonce' => wp_create_nonce('zpte_progress')]);
+    }
+
+    /** Browser fallback: works even when hosting blocks wp-cron loopback requests. */
+    public static function ajax_step(): void {
+        self::ajax_authorize();
+        Worker::work();
+        wp_send_json_success(['progress' => Worker::progress(), 'nonce' => wp_create_nonce('zpte_progress')]);
+    }
+
+    private static function progress_panel(): void {
+        $s = Worker::progress();
+        echo '<section class="zpte-box zpte-progress" id="zpte-progress" data-state="' . esc_attr($s['state']) . '" aria-labelledby="zpte-progress-title">'
+            . '<div class="zpte-progress-head"><h2 id="zpte-progress-title">Postęp tłumaczenia</h2><strong data-zpte="percent">' . (int) $s['percent'] . '%</strong></div>'
+            . '<div class="zpte-progress-track" role="progressbar" aria-label="Postęp sprawdzania i tłumaczenia stron" aria-valuemin="0" aria-valuemax="100" aria-valuenow="' . (int) $s['percent'] . '"><span style="width:' . (int) $s['percent'] . '%"></span></div>'
+            . '<p class="zpte-progress-message" data-zpte="message" role="status" aria-live="polite">' . esc_html($s['message']) . '</p>'
+            . '<div class="zpte-progress-counts"><span><strong data-zpte="done">' . (int) $s['done'] . '</strong> z <strong data-zpte="total">' . (int) $s['total'] . '</strong> stron zakończonych</span>'
+            . '<span><strong data-zpte="queued">' . (int) $s['queued'] . '</strong> w kolejce</span><span><strong data-zpte="errors">' . (int) $s['errors'] . '</strong> wymaga uwagi</span></div>'
+            . '<p class="zpte-progress-current" data-zpte="current"></p><p class="description" data-zpte="retry"></p>'
+            . '<p class="description" id="zpte-poll-status">Postęp odświeża się automatycznie. Otwarty panel może przetwarzać kolejkę, gdy wywołania WP-Cron są blokowane.</p>'
+            . '<noscript><p>Włącz JavaScript, aby zobaczyć postęp na żywo i uruchomić przetwarzanie z panelu. Harmonogram WP-Cron działa niezależnie.</p></noscript></section>';
     }
 
     public static function menu(): void {
@@ -84,19 +127,20 @@ final class Admin {
         $month = Log::month();
         $limit = (int) Settings::get('daily_chars');
         $queued = Store::queued_count();
+        self::progress_panel();
 
         $problems = [];
         if (!$hooks) { $problems[] = 'Moduł językowy w tej wersji Suite nie ma haków dla tłumacza (potrzebny zaprojektowani-languages 1.0.13 lub nowszy).'; }
         if (!$key) { $problems[] = Settings::key_unreadable() ? 'Zapisanego klucza nie da się odczytać (zmieniły się klucze bezpieczeństwa WordPressa) — wklej klucz ponownie.' : 'Brak klucza API OpenAI — wklej go w zakładce Ustawienia.'; }
         if (!$enabled) { $problems[] = 'Codzienne sprawdzanie jest wyłączone w ustawieniach.'; }
-        if (defined('DISABLE_WP_CRON') && DISABLE_WP_CRON) { $problems[] = 'WP-Cron jest wyłączony w wp-config.php (DISABLE_WP_CRON) — tłumacz ruszy tylko, jeśli serwer sam wywołuje wp-cron.php.'; }
+        if (defined('DISABLE_WP_CRON') && DISABLE_WP_CRON) { $problems[] = 'WP-Cron jest wyłączony w wp-config.php (DISABLE_WP_CRON). Codzienna praca po zamknięciu panelu wymaga zadania cron na hostingu. Otwarty panel nadal przetwarza kolejkę.'; }
         $alert = Log::current_alert();
         if ($alert) { $problems[] = (string) $alert['m']; }
 
         echo '<div class="zpte-box">';
         echo $problems
             ? '<p class="zpte-bad"><strong>Wymaga uwagi:</strong></p><ul style="list-style:disc;padding-left:20px">' . implode('', array_map(static function ($p) { return '<li>' . esc_html($p) . '</li>'; }, $problems)) . '</ul>'
-            : '<p class="zpte-ok"><strong>Działa.</strong> Codziennie o 3:00 sprawdzam nowe treści i braki w wersji angielskiej.</p>';
+            : '<p class="zpte-ok"><strong>Codzienny harmonogram włączony.</strong> Sprawdzenie nowych treści i wszystkich stron EN zaplanowane na 3:00. WP-Cron uruchamia je przy najbliższym wejściu na stronę; dokładna godzina wymaga zadania cron na hostingu.</p>';
         echo '<table class="widefat striped" style="max-width:760px"><tbody>';
         $rows = [
             'Klucz API OpenAI' => $key ? 'zapisany (' . esc_html(Settings::key_hint()) . ')' . (Settings::key_source() === 'constant' ? ' — z wp-config.php' : '') : '<span class="zpte-bad">brak</span>',
@@ -105,8 +149,8 @@ final class Admin {
             'Nowe = opublikowane od' => esc_html((string) Settings::get('since')) . (Settings::get('older') ? ' (starsze też)' : ' (starsze tylko po włączeniu w ustawieniach)'),
             'Następne sprawdzenie' => $next ? esc_html(wp_date('Y-m-d H:i', $next)) : '—',
             'Ostatnie sprawdzenie' => ($t = (int) get_option('zpte_last_plan')) ? esc_html(wp_date('Y-m-d H:i', $t)) : '—',
-            'W kolejce' => number_format_i18n($queued) . (Worker::running() ? ' — <em>tłumaczę teraz</em>' : ''),
-            'Dziś wysłano do OpenAI' => number_format_i18n((int) $usage['chars']) . ' znaków' . ($limit > 0 ? ' z ' . number_format_i18n($limit) . ' (limit dzienny)' : '') . ', zapytań: ' . number_format_i18n((int) $usage['requests']),
+            'W kolejce' => '<span data-zpte="queued">' . number_format_i18n($queued) . '</span>',
+            'Dziś wysłano do OpenAI' => '<span data-zpte="chars">' . number_format_i18n((int) $usage['chars']) . '</span> znaków' . ($limit > 0 ? ' z ' . number_format_i18n($limit) . ' (limit dzienny)' : '') . ', zapytań: <span data-zpte="requests">' . number_format_i18n((int) $usage['requests']) . '</span>',
             'W tym miesiącu' => number_format_i18n((int) $month['chars']) . ' znaków, tokeny: ' . number_format_i18n((int) $month['in']) . ' wejście / ' . number_format_i18n((int) $month['out']) . ' wyjście',
         ];
         foreach ($rows as $k => $v) { echo '<tr><th style="width:260px">' . esc_html($k) . '</th><td>' . $v . '</td></tr>'; }
@@ -121,11 +165,12 @@ final class Admin {
         $counts = [
             'Opublikowane wersje EN nowych treści' => Store::count_paths(['kind' => ['new', 'older'], 'status' => 'published']),
             'Szkice do akceptacji' => Store::count_paths(['status' => 'draft']),
-            'Z błędem (ponowię)' => Store::count_paths(['status' => 'error']),
+            'Strony wymagające uwagi' => Store::count_paths(['attention' => true]),
             'Istniejące strony EN z uzupełnionymi brakami' => Store::count_paths(['kind' => 'existing', 'ai' => true]),
         ];
         echo '<div class="zpte-box"><h2 style="margin-top:0">Wersje angielskie</h2><table class="widefat striped" style="max-width:760px"><tbody>';
-        foreach ($counts as $k => $v) { echo '<tr><th style="width:360px">' . esc_html($k) . '</th><td>' . number_format_i18n($v) . '</td></tr>'; }
+        $count_keys = ['published_new', 'drafts', 'error_pages', 'filled_existing']; $count_index = 0;
+        foreach ($counts as $k => $v) { echo '<tr><th style="width:360px">' . esc_html($k) . '</th><td data-zpte="' . esc_attr($count_keys[$count_index++]) . '">' . number_format_i18n($v) . '</td></tr>'; }
         echo '</tbody></table><p><a href="' . esc_url(self::url(['tab' => 'pages'])) . '">Lista stron →</a></p>';
         echo '<p class="description">Jak to działa: nowa polska treść dostaje angielski adres (np. /en/websites/…), przetłumaczony tytuł, opis, treść i dane dla Google, a wersje PL i EN wskazują się nawzajem (hreflang). Słownik dostarczony z wtyczką i ręczne poprawki z Ustawienia → Języki PL/EN zawsze mają pierwszeństwo przed tłumaczeniem maszynowym.</p></div>';
     }
@@ -139,7 +184,7 @@ final class Admin {
         $filters = [
             'new' => ['Nowe i starsze treści', ['kind' => ['new', 'older']]],
             'draft' => ['Szkice', ['status' => 'draft']],
-            'error' => ['Błędy', ['status' => 'error']],
+            'error' => ['Wymaga uwagi', ['attention' => true]],
             'existing' => ['Istniejące strony EN', ['kind' => 'existing']],
             'all' => ['Wszystkie', []],
         ];
@@ -237,15 +282,15 @@ final class Admin {
 
         echo '<div class="zpte-box"><h2 style="margin-top:0">Tłumaczenie</h2><table class="form-table" role="presentation"><tbody>';
         echo '<tr><th>Codzienne sprawdzanie</th><td><label><input type="checkbox" name="enabled" value="1"' . checked(!empty($s['enabled']), true, false) . '> Codziennie o 3:00 szukaj nowych treści i braków w wersji angielskiej</label></td></tr>';
-        echo '<tr><th><label for="zpte-model">Model OpenAI</label></th><td><input id="zpte-model" name="model" list="zpte-models" class="regular-text code" value="' . esc_attr((string) $s['model']) . '"><datalist id="zpte-models"><option value="gpt-4.1"><option value="gpt-4.1-mini"><option value="gpt-4o"><option value="gpt-4o-mini"><option value="gpt-5"><option value="gpt-5-mini"></datalist><p class="description">Domyślnie gpt-4.1: bardzo dobra jakość tekstów marketingowych przy niskim koszcie (zwykle 10–20 groszy za wpis). „Sprawdź połączenie” na zakładce Status pokaże, czy model jest dostępny dla Twojego klucza.</p></td></tr>';
+        echo '<tr><th><label for="zpte-model">Model OpenAI</label></th><td><input id="zpte-model" name="model" list="zpte-models" class="regular-text code" value="' . esc_attr((string) $s['model']) . '"><datalist id="zpte-models"><option value="gpt-5.4-mini"><option value="gpt-5.4"><option value="gpt-5-mini"><option value="gpt-5"></datalist><p class="description">Domyślnie gpt-5.4-mini. Koszt zależy od liczby tokenów i aktualnego cennika OpenAI. „Sprawdź połączenie” na zakładce Status pokaże, czy model jest dostępny dla Twojego klucza.</p></td></tr>';
         echo '<tr><th>Nowe treści</th><td><label><input type="radio" name="mode" value="publish"' . checked($s['mode'] !== 'draft', true, false) . '> publikuj wersję angielską automatycznie</label><br><label><input type="radio" name="mode" value="draft"' . checked($s['mode'] === 'draft', true, false) . '> zapisz jako szkic — opublikuję ręcznie (Strony → Opublikuj)</label></td></tr>';
         echo '<tr><th>Rodzaje treści</th><td>';
         foreach ($types as $name => $label) { echo '<label style="margin-right:14px"><input type="checkbox" name="types[]" value="' . esc_attr($name) . '"' . checked(in_array($name, (array) $s['types'], true), true, false) . '> ' . esc_html($label) . '</label>'; }
         echo '</td></tr>';
         echo '<tr><th><label for="zpte-since">Nowe treści = opublikowane od</label></th><td><input id="zpte-since" type="date" name="since" value="' . esc_attr((string) $s['since']) . '"></td></tr>';
         echo '<tr><th>Starsze treści</th><td><label><input type="checkbox" name="older" value="1"' . checked(!empty($s['older']), true, false) . '> Tłumacz także starsze wpisy i strony, które nie mają jeszcze wersji angielskiej</label><p class="description">Dziś takie strony są pod adresem /en/… z polską treścią i noindex. Po tłumaczeniu dostają angielski adres, a stary /en/… przekierowuje na nowy.</p></td></tr>';
-        echo '<tr><th>Braki na stronach EN</th><td><label><input type="checkbox" name="gaps" value="1"' . checked(!empty($s['gaps']), true, false) . '> Uzupełniaj nieprzetłumaczone fragmenty istniejących stron angielskich (nowe sekcje, stopka, menu)</label><p class="description">Codziennie sprawdzam ' . (int) Worker::ROTATION . ' stron EN, a po każdej aktualizacji ZP Suite — wszystkie.</p></td></tr>';
-        echo '<tr><th><label for="zpte-limit">Dzienny limit</label></th><td><input id="zpte-limit" type="number" min="0" step="10000" name="daily_chars" value="' . (int) $s['daily_chars'] . '" class="small-text" style="width:120px"> znaków polskiego tekstu dziennie <p class="description">Bezpiecznik kosztów: 400 000 znaków to ok. 50 długich wpisów (przy gpt-4.1 ok. 1,5 USD). 0 = bez limitu.</p></td></tr>';
+        echo '<tr><th>Braki na stronach EN</th><td><label><input type="checkbox" name="gaps" value="1"' . checked(!empty($s['gaps']), true, false) . '> Uzupełniaj nieprzetłumaczone fragmenty istniejących stron angielskich (nowe sekcje, stopka, menu)</label><p class="description">Codziennie sprawdzam wszystkie istniejące strony EN. Gotowe fragmenty pobieram ze słownika i pamięci tłumaczeń; do API wysyłam tylko brakujące.</p></td></tr>';
+        echo '<tr><th><label for="zpte-limit">Dzienny limit</label></th><td><input id="zpte-limit" type="number" min="0" step="10000" name="daily_chars" value="' . (int) $s['daily_chars'] . '" class="small-text" style="width:120px"> znaków polskiego tekstu dziennie <p class="description">Limit polskiego tekstu wysłanego w rozliczonych odpowiedziach; faktyczny koszt zależy też od tokenów odpowiedzi i ponowień. Przed każdą partią sprawdzam dostępny limit. 0 = bez limitu.</p></td></tr>';
         echo '<tr><th><label for="zpte-instr">Dodatkowe instrukcje</label></th><td><textarea id="zpte-instr" name="instructions" rows="4" placeholder="np. Zwracaj się do klienta per you. „Wycena” tłumacz jako „quote”.">' . esc_textarea((string) $s['instructions']) . '</textarea></td></tr>';
         echo '</tbody></table></div>';
         submit_button('Zapisz ustawienia');
@@ -313,6 +358,8 @@ final class Admin {
                     }
                 }
                 unset($key);
+                Log::clear_alert();
+                Worker::resume();
                 Worker::maintain();
                 if ($saved) {
                     // Check the key at once, and start the very first check so new content is translated today.
@@ -340,7 +387,7 @@ final class Admin {
             case 'run':
                 $back = ['tab' => 'status'];
                 $summary = Worker::plan('admin');
-                $msg = $summary . (Store::queued_count() > 0 ? ' Tłumaczę w tle — odśwież tę stronę za kilka minut.' : '');
+                $msg = $summary . (Store::queued_count() > 0 ? ' Postęp i wynik będą aktualizowane automatycznie poniżej.' : '');
                 break;
             case 'clear_alert':
                 $back = ['tab' => 'status'];
@@ -363,7 +410,7 @@ final class Admin {
                     if ($row->status === 'off' || $row->status === 'skipped') { Store::path_update((int) $row->id, ['status' => $row->kind === 'existing' ? 'published' : 'queued', 'tries' => 0]); }
                     Store::queue((int) $row->id, 5);
                     Worker::kick(0);
-                    $msg = 'Dodano do kolejki: ' . $path . '. Tłumaczę w tle — odśwież za kilka minut.';
+                    $msg = 'Dodano do kolejki: ' . $path . '. Postęp zobaczysz na zakładce Status.';
                 }
                 break;
             case 'queue':
@@ -373,7 +420,7 @@ final class Admin {
                     Store::path_update($id, ['source_modified' => null]);
                     Store::queue($id, 5);
                     Worker::kick(0);
-                    $msg = 'Dodano do kolejki. Tłumaczę w tle — odśwież za kilka minut.';
+                    $msg = 'Dodano do kolejki. Postęp zobaczysz na zakładce Status.';
                 }
                 break;
             case 'publish':
@@ -432,6 +479,8 @@ final class Admin {
                 foreach (Store::paths(['kind' => ['new', 'older']]) as $row) {
                     if ((int) $row->route_added && (string) $row->en_path !== '') { Bridge::remove_route((string) $row->path, (string) $row->en_path); }
                 }
+                Worker::unschedule();
+                delete_option(Worker::STATE);
                 Store::drop_all();
                 Store::install();
                 delete_option(Bridge::INDEX);

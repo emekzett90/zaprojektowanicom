@@ -1,0 +1,5 @@
+Changelog 2.7.16
+
+- Home hero: obniżono pozycję Meta Verified na desktopie.
+- Pozycja pozioma bez zmian; pionowo badge wrócił z headera na wysokość bliższą głowie Stanisława.
+- Mobile pozostawiono bez zmian.

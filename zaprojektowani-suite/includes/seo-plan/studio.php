@@ -2,14 +2,15 @@
 if (!defined('ABSPATH')) { exit; }
 
 /**
- * ZP Suite 2.7.1 — Studio wyceny as the price list page (keyword plan: "wycena strony internetowej",
+ * ZP Suite 2.7.2 — Studio wyceny as the price list page (keyword plan: "wycena strony internetowej",
  * "strona internetowa cennik", "strony internetowe cennik").
  *
  * What a visitor sees first is the chooser, a separate document in an iframe, and the contact form, so the
  * page itself had almost no text about prices and its H1 sat in the hidden brief. Now:
- *  - below the contact form there is a price list in the layout of the "Poradnik" sections on the service
+ *  - below the chooser there is a price list in the layout of the "Poradnik" sections on the service
  *    pages (guide.php): the prices Mat confirmed, what they include, what the quote depends on, how the
- *    quote works and questions about prices, with links to the cost guides and the service pages; it hides
+ *    quote works and questions about prices, with links to the cost guides and the service pages. The contact
+ *    form follows this section; both hide
  *    while the brief is open, like the contact form,
  *  - those questions go into the schema as FAQPage,
  *  - the H1 keeps the plan's wording until the visitor opens the brief (the brief still names the service),
@@ -164,9 +165,10 @@ add_filter('do_shortcode_tag', function ($output, $tag) {
   if (function_exists('zp_seo_plan_projects_count')) {
     $output = (string) preg_replace('~(chooser-v19\.html\?v=[^"\'&#\s]+)~', '${1}&#038;n=' . zp_seo_plan_projects_count(), $output, 1);
   }
-  // The price list goes right after the contact form (its stylesheet follows the form), else at the end.
+  // 2.7.2: pricing must come before Contact. Insert immediately before the chooser contact
+  // wrapper; if that optional form is unavailable, keep the section at the end as a safe fallback.
   $section = zp_seo_studio_section();
-  $marker = '<style id="zp-studio-chooser-contact-v2619">';
+  $marker = '<div class="zpStudioChooserContact"';
   $pos = strpos($output, $marker);
   return $pos === false ? $output . $section : substr($output, 0, $pos) . $section . substr($output, $pos);
 }, 20, 2);

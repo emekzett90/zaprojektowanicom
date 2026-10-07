@@ -180,6 +180,7 @@ final class Store {
             $parts[] = $col . ' IN (' . implode(',', array_fill(0, count($vals), '%s')) . ')';
             foreach ($vals as $v) { $args[] = (string) $v; }
         }
+        if (!empty($where['attention'])) { $parts[] = "(status = 'error' OR keys_failed > 0 OR tries > 0)"; }
         if (!empty($where['post'])) { $parts[] = 'post_id > 0'; }
         if (!empty($where['ai'])) { $parts[] = 'keys_ai > 0'; }
         if (isset($where['queued'])) { $parts[] = 'queued = ' . ((int) $where['queued'] ? 1 : 0); }

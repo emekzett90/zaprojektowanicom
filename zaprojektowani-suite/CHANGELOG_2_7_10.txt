@@ -1,0 +1,5 @@
+Changelog 2.7.10
+
+- Strona główna: badge Meta Verified przeniesiony na prawą stronę zdjęcia Stanisława.
+- Dodano odsunięcie od zdjęcia, aby badge nie nachodził na ekipę.
+- Mobile: badge ustawiony obok zdjęcia, a nie nad nim.

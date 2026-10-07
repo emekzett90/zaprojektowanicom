@@ -1,0 +1,5 @@
+Changelog 2.7.15
+
+- Home hero desktop: Meta Verified pozostawione dokładnie w tej samej pozycji poziomej.
+- Home hero desktop: badge podniesione na wysokość górnej krawędzi zdjęcia Stanisława.
+- Mobile bez zmian.

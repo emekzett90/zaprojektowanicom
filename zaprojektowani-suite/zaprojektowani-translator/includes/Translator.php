@@ -5,8 +5,8 @@ if (!defined('ABSPATH')) { exit; }
 
 /** Polish → English translation of page fragments (keys of the language module) and English URL slugs. */
 final class Translator {
-    const MAX_ITEMS = 30;
-    const MAX_CHARS = 7000;
+    const MAX_ITEMS = 10;
+    const MAX_CHARS = 2400;
     const MAX_KEY = 8000; // longer fragments are left for a manual translation
 
     /** Split [key => kind] into request-sized batches (document order kept). @return array<int,array<string,string>> */
@@ -75,7 +75,7 @@ TXT;
      * 'fatal' => bool, 'retry' => bool]. A batch cut off by the token limit is split in two and retried.
      */
     public static function translate(array $batch, string $context): array {
-        $out = ['ok' => [], 'failed' => [], 'error' => '', 'fatal' => false, 'retry' => false];
+        $out = ['ok' => [], 'failed' => [], 'error' => '', 'fatal' => false, 'retry' => false, 'deferred' => false, 'limit' => false];
         $ids = [];
         $items = [];
         $n = 0;
@@ -84,6 +84,9 @@ TXT;
             $ids[$id] = (string) $k;
             $items[] = ['id' => $id, 'type' => $kind, 'text' => (string) $k];
         }
+        $chars = array_sum(array_map(static function ($k) { return function_exists('mb_strlen') ? mb_strlen((string) $k) : strlen((string) $k); }, array_keys($batch)));
+        if (!Log::can_send($chars)) { $out['limit'] = true; return $out; }
+        if (OpenAI::remaining() < 5) { $out['deferred'] = true; return $out; }
         $user = wp_json_encode(['page' => $context, 'items' => $items], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
         $res = OpenAI::json([
             ['role' => 'system', 'content' => self::system_prompt()],
@@ -93,10 +96,11 @@ TXT;
         if ($res['in'] || $res['out'] || $res['ok']) { Log::count($chars, (int) $res['in'], (int) $res['out']); }
 
         if (!$res['ok']) {
+            if (!empty($res['deferred'])) { $out['deferred'] = true; return $out; }
             if ($res['truncated'] && count($batch) > 1) {
                 $half = (int) ceil(count($batch) / 2);
                 $a = self::translate(array_slice($batch, 0, $half, true), $context);
-                if ($a['fatal'] || $a['retry']) { return $a; }
+                if ($a['fatal'] || $a['retry'] || $a['deferred'] || $a['limit']) { return $a; }
                 $b = self::translate(array_slice($batch, $half, null, true), $context);
                 $b['ok'] = $a['ok'] + $b['ok'];
                 $b['failed'] = array_merge($a['failed'], $b['failed']);

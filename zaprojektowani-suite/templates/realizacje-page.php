@@ -67,6 +67,8 @@ window.zpRealizacjeProjects = <?php echo wp_json_encode($zp_real_projects, JSON_
         <h1 id="zpRealizacjeTitle">Realizacje, które łączą <em>design, technologię i wynik.</em></h1>
         <p>Strony internetowe, sklepy WooCommerce i branding projektowane jako jeden system — od strategii i UX po wdrożenie, SEO i sprzedaż. Zobacz konkretne projekty, zakres prac i decyzje, które stały za efektem.</p>
 
+        <?php if (function_exists('zp_suite_meta_verified_markup')) { echo zp_suite_meta_verified_markup('light', 'realizacje'); } ?>
+
         <div class="heroActions">
           <a class="heroBtn heroBtn--primary" href="#portfolio-realizacji"><span>Zobacz case studies</span><i data-lucide="arrow-down"></i></a>
           <a class="heroBtn" href="<?php echo esc_url(home_url('/studio-wyceny/')); ?>"><span>Wyceń podobny projekt</span><i data-lucide="arrow-up-right"></i></a>
@@ -79,7 +81,7 @@ window.zpRealizacjeProjects = <?php echo wp_json_encode($zp_real_projects, JSON_
             </span>
             <span class="heroTrust__meta">
               <strong>5.0 / 5</strong>
-              <small>51 opinii klientów · zweryfikowane w Trustindex</small>
+              <small>120 opinii klientów · zweryfikowane w Trustindex</small>
             </span>
             <span class="heroTrust__score">★★★★★</span>
           </a>

@@ -1,0 +1,7 @@
+.zpte .zpte-box.zpte-progress{background:linear-gradient(125deg,#071322,#122b48);border:1px solid #243e59;border-radius:16px;color:#edf6ff;padding:24px;box-shadow:0 8px 30px #07132212}
+.zpte-progress-head{display:flex;align-items:center;justify-content:space-between;gap:20px}
+.zpte-progress-head h2{color:#fff!important;margin:0 0 18px;font-size:20px}.zpte-progress-head>strong{font-size:28px;line-height:1;margin-bottom:18px;font-variant-numeric:tabular-nums}
+.zpte-progress-track{height:10px;background:#ffffff1c;border-radius:99px;overflow:hidden}.zpte-progress-track>span{display:block;height:100%;border-radius:inherit;background:linear-gradient(90deg,#61a7ed,#a9d8ff);transition:width .5s ease}
+.zpte-progress-message{font-size:15px!important;margin:18px 0!important}.zpte-progress-counts{display:flex;gap:10px 24px;flex-wrap:wrap;color:#b7cadc;font-size:13px}.zpte-progress-counts strong{color:#fff;font-variant-numeric:tabular-nums}.zpte-progress .description{color:#b7cadc!important}.zpte-progress-current{overflow-wrap:anywhere;color:#c8e6ff}.zpte-progress[data-state=completed] .zpte-progress-track>span{background:#73dcb1}.zpte-progress[data-state=blocked] .zpte-progress-message,.zpte-progress[data-state=completed_errors] .zpte-progress-message{color:#ffd49d}
+@media(max-width:600px){.zpte .zpte-box.zpte-progress{padding:18px}.zpte-progress-counts{display:grid;gap:8px}.zpte-progress-head h2{font-size:18px}}
+@media(prefers-reduced-motion:reduce){.zpte-progress-track>span{transition:none}}

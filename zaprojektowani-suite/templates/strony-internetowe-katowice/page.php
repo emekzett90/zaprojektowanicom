@@ -27,6 +27,7 @@ $zp_si_html = file_exists($zp_si_body_file) ? file_get_contents($zp_si_body_file
    Kolejność ma znaczenie: najpierw token z '../', potem zwykły. */
 $zp_si_html = str_replace('%%ZPSI%%../', ZP_SUITE_URL . 'assets/', $zp_si_html);
 $zp_si_html = str_replace('%%ZPSI%%', ZP_SUITE_URL . 'assets/strony-internetowe/', $zp_si_html);
+if (function_exists('zp_suite_meta_verified_tokens')) { $zp_si_html = zp_suite_meta_verified_tokens($zp_si_html); }
 ?>
 <script id="zp-si-assets-base">window.ZP_SI_ASSETS=<?php echo wp_json_encode(ZP_SUITE_URL . 'assets/strony-internetowe/'); ?>;</script>
 <main id="zp-strony-internetowe-katowice" class="zpStronyKatowicePage" data-zp-strony-internetowe-katowice>

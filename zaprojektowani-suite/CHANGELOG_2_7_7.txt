@@ -1,0 +1,13 @@
+Zaprojektowani Suite 2.7.7 — 04.10.2026
+
+- Wiedza: „Usługi, które mogą Cię zainteresować” z prawdziwymi okładkami podstron usługowych, krótkimi opisami i przyciskami „Poznaj usługę”. Dobór obejmuje wyłącznie opublikowane usługi; powiązane artykuły zachowują osobną sekcję.
+- Wiedza: jednolite granatowe tło sekcji na pełną szerokość; responsywne karty z przewijaniem na mniejszych ekranach.
+- Tworzenie stron internetowych: hero z dostarczonym obrazem Polerstone, wraz z preloadem i źródłami responsywnymi.
+- Tworzenie sklepów internetowych: hero z dostarczonym obrazem Świata Grilli na desktopie i mobile, z właściwymi proporcjami.
+- Strony WordPress: WordPress, WooCommerce, PHP i Elementor pod czipami; płynne przewijanie mobile, pauza/wznowienie i statyczny wariant przy ograniczeniu ruchu.
+- Tłumacz EN 1.1.0: pasek postępu, aktualna strona i fragmenty, liczniki na żywo, stany zakończenia, błędów, ponowienia oraz limitu dziennego.
+- Tłumacz EN: krótkie wznawialne etapy pracy, zapis po każdej partii, odzyskiwanie porzuconej blokady i przetwarzanie z otwartego panelu jako wsparcie WP-Cron.
+- Tłumacz EN: codzienne sprawdzanie nowych/zmienionych treści i wszystkich kwalifikujących się istniejących stron EN; paginowane wyszukiwanie wpisów.
+- Tłumacz EN: domyślny model gpt-5.4-mini, zgodne parametry API i jednorazowa migracja dawnego ustawienia gpt-4.1 z zachowaniem klucza i pozostałych ustawień.
+
+Automatyczna praca po zamknięciu panelu zależy od WP-Cron albo zadania cron na hostingu. Błędy pobierania wyrenderowanych stron, klucza API i limitów są pokazywane jawnie.

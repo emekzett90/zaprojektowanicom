@@ -1,0 +1,6 @@
+Zaprojektowani Suite 2.7.6
+
+- Powiązane: full-bleed naprawiony po obu stronach bez zależności od położenia kontenera artykułu.
+- Powiązane: blok uzupełnia listę do 4 materiałów (najpierw plan linków, potem wpisy z tej samej kategorii, na końcu najnowsze wpisy).
+- Powiązane: nadal 2 duże karty widoczne jednocześnie, ale pozostałe dostępne są w poziomym scrollu z widocznym paskiem.
+- Kicker „Warto sprawdzić” zaczyna się dokładnie w tej samej osi co heading; dekoracyjna kreska przeniesiona na prawo od tekstu.

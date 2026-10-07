@@ -55,6 +55,12 @@ final class ZPSSEO_Editorial {
     public static function related($content) {
         if (!self::enabled() || is_admin() || !is_main_query() || !in_the_loop() || !is_singular('post') || strpos($content,'zpu-related')!==false) { return $content; }
         $r=self::rule(); if (!$r || empty($r['links'])) { return $content; }
+        // 2.7.2: when the keyword-plan module is present, reuse its image-led cards so the
+        // legacy repair mode never falls back to the old unstyled bullet list.
+        if (function_exists('zp_seo_related_render')) {
+            $related = zp_seo_related_render((array) $r['links'], (string) ($r['path'] ?? ''));
+            return $related !== '' ? $content . $related : $content;
+        }
         $items='';foreach($r['links'] as $l){$link=self::link($l['path'],$l['text']);if($link){$items.='<li>'.$link.'</li>';}}
         return $items ? $content.'<section class="zpu-related" aria-label="Powiązane materiały"><h2>Powiązane usługi i poradniki</h2><ul>'.$items.'</ul></section>' : $content;
     }

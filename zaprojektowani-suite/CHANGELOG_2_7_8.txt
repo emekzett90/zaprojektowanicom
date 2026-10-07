@@ -1,0 +1,8 @@
+Zaprojektowani Suite 2.7.8
+
+- Dodano komponent Meta Verified z logo w wariancie jasnym i ciemnym.
+- Hover/focus na desktopie oraz klik/tap na mobile otwiera małe okno z linkami do Facebooka i Instagrama.
+- Badge dodano do hero strony głównej, hero współdzielonych podstron stron WWW / logo / sklepów, O nas i Realizacje.
+- Badge dodano do desktopowego mega menu i mobilnego drawer menu.
+- Linki: facebook.com/zaprojektowanicom oraz instagram.com/zaprojektowanicom.
+- Style i zachowanie są w osobnych, lekkich assetach meta-verified.css / meta-verified.js.
