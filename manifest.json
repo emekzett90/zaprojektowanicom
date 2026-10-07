@@ -1,0 +1,85 @@
+{
+ "format": 1,
+ "zaktualizowano": "2026-10-07T23:22:30+02:00",
+ "wpisy": [
+  {
+   "slug": "papier-firmowy",
+   "sciezka": "/logo-branding/papier-firmowy/",
+   "plik": "wpisy/papier-firmowy.json",
+   "sha256": "8d89a0513044d5bd67ea500d367d566a2113a418a2d1030180cfef7c2990ad1a",
+   "publikacja": "2026-10-15T08:00:00+02:00",
+   "paczka": 5
+  },
+  {
+   "slug": "kreatory-stron-internetowych",
+   "sciezka": "/strony-internetowe/kreatory-stron-internetowych/",
+   "plik": "wpisy/kreatory-stron-internetowych.json",
+   "sha256": "35b6ad1f11922b20beac6dd1e870a47caadb932729ec2cc138ffe747b91cdb0c",
+   "publikacja": "2026-10-19T08:00:00+02:00",
+   "paczka": 5
+  },
+  {
+   "slug": "mockup-co-to-jest",
+   "sciezka": "/logo-branding/mockup-co-to-jest/",
+   "plik": "wpisy/mockup-co-to-jest.json",
+   "sha256": "6e2c53be6eccfb052343beddd5757bea1509ece919040104830e69101ab9f5ff",
+   "publikacja": "2026-10-21T08:00:00+02:00",
+   "paczka": 5
+  },
+  {
+   "slug": "seo-sklepu-internetowego",
+   "sciezka": "/sklepy-internetowe/seo-sklepu-internetowego/",
+   "plik": "wpisy/seo-sklepu-internetowego.json",
+   "sha256": "b85fc3e52da7ebb4feeecfbd8b41b68afd10014b115d2322bb9dc1e2889a5cf4",
+   "publikacja": "2026-10-23T08:00:00+02:00",
+   "paczka": 5
+  },
+  {
+   "slug": "logo-firmy-budowlanej",
+   "sciezka": "/logo-branding/logo-firmy-budowlanej/",
+   "plik": "wpisy/logo-firmy-budowlanej.json",
+   "sha256": "07e13973b8880683f9326088decb492444fbc33e2c1a8167f48f5c809d160ac4",
+   "publikacja": "2026-10-27T08:00:00+01:00",
+   "paczka": 5
+  }
+ ],
+ "linki": [
+  {
+   "we_wpisie": "/strony-internetowe/jak-stworzyc-strone-internetowa/",
+   "fragment": "Kreator to platforma, na której wybierasz szablon",
+   "slowa": "Kreator",
+   "do": "/strony-internetowe/kreatory-stron-internetowych/"
+  },
+  {
+   "we_wpisie": "/logo-branding/logo-logotyp-sygnet-roznice/",
+   "fragment": "firma remontowa o nazwie",
+   "slowa": "firma remontowa",
+   "do": "/logo-branding/logo-firmy-budowlanej/"
+  },
+  {
+   "we_wpisie": "/logo-branding/logo-salonu-kosmetycznego/",
+   "fragment": "Pomagają w tym mockupy, czyli wizualizacje logo w realnym otoczeniu",
+   "slowa": "mockupy",
+   "do": "/logo-branding/mockup-co-to-jest/"
+  },
+  {
+   "we_wpisie": "/logo-branding/projekt-wizytowki/",
+   "fragment": "pokazujemy je na mockupach",
+   "slowa": "mockupach",
+   "do": "/logo-branding/mockup-co-to-jest/"
+  },
+  {
+   "we_wpisie": "/logo-branding/projekt-wizytowki/",
+   "fragment": "Dlatego wizytówka powinna korzystać z tych samych elementów co papier firmowy",
+   "slowa": "papier firmowy",
+   "do": "/logo-branding/papier-firmowy/"
+  },
+  {
+   "we_wpisie": "/sklepy-internetowe/sklep-b2b/",
+   "fragment": "Karty produktów mogą wtedy zdobywać pozycje w Google",
+   "slowa": "zdobywać pozycje w Google",
+   "do": "/sklepy-internetowe/seo-sklepu-internetowego/"
+  }
+ ],
+ "sekcje": []
+}
