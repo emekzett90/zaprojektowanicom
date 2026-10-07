@@ -481,7 +481,7 @@ return [
 <h2 id="doswiadczenie-z-otoczenia-budownictwa">Doświadczenie z otoczenia budownictwa</h2>
 <p>Projektowaliśmy dla firm z branży budowlanej i architektonicznej: techniczną stronę biura projektów infrastrukturalnych Gravia z rozbudowanym portfolio realizacji, stronę B2B dla firmy budowlanej Inusti, serwis ShotHome z ofertą drzwi, podłóg i wykończeń oraz konfiguratorem wyceny, a także identyfikację biura Vista Architekci. Na strony inwestycji przenosimy to, czego nauczyły nas te projekty: porządkowanie dużej ilości danych technicznych i prowadzenie odwiedzającego do zapytania.</p>
 <h2 id="ile-kosztuje-strona-internetowa-dla-dewelopera">Ile kosztuje strona internetowa dla dewelopera</h2>
-<p>Strony internetowe realizujemy od 3 999 zł, ale strona inwestycji z wyszukiwarką lokali, kartami mieszkań i historią cen to zwykle projekt indywidualny. Na cenę wpływają liczba inwestycji i lokali, sposób zarządzania danymi (ręcznie, import z arkusza albo integracja z CRM), interaktywny wybór mieszkania z wizualizacji, wersje językowe i liczba podstron. Zakres pakietów opisujemy na stronie <a class="zpSeoLink" href="/tworzenie-stron-internetowych/">tworzenie stron internetowych</a>, a wycenę przygotujemy po wypełnieniu <a class="zpSeoLink" href="/studio-wyceny/">Studia Wyceny</a>.</p>',
+<p>Strony internetowe realizujemy od 3 999 zł z domeną i hostingiem w cenie, ale strona inwestycji z wyszukiwarką lokali, kartami mieszkań i historią cen to zwykle projekt indywidualny. Na cenę wpływają liczba inwestycji i lokali, sposób zarządzania danymi (ręcznie, import z arkusza albo integracja z CRM), interaktywny wybór mieszkania z wizualizacji, wersje językowe i liczba podstron. Zakres pakietów opisujemy na stronie <a class="zpSeoLink" href="/tworzenie-stron-internetowych/">tworzenie stron internetowych</a>, a wycenę przygotujemy po wypełnieniu <a class="zpSeoLink" href="/studio-wyceny/">Studia Wyceny</a>.</p>',
     ],
     'reuse' => [
       'portfolio' => [
@@ -506,7 +506,7 @@ return [
         ],
         [
           'Ile kosztuje strona internetowa dla dewelopera?',
-          'Strony internetowe realizujemy od 3 999 zł, ale strona inwestycji z wyszukiwarką lokali i historią cen to zwykle projekt indywidualny. Cena zależy od liczby lokali, sposobu zarządzania danymi i integracji. Wycenę podajemy po wypełnieniu Studia Wyceny.',
+          'Strony internetowe realizujemy od 3 999 zł z domeną i hostingiem w cenie, ale strona inwestycji z wyszukiwarką lokali i historią cen to zwykle projekt indywidualny. Cena zależy od liczby lokali, sposobu zarządzania danymi i integracji. Wycenę podajemy po wypełnieniu Studia Wyceny.',
         ],
         [
           'Czy zrobicie osobną stronę dla jednej inwestycji?',
@@ -666,7 +666,7 @@ return [
 <h2 id="wizerunek-spokoj-zamiast-krzykliwosci">Wizerunek: spokój zamiast krzykliwości</h2>
 <p>Kancelarie najlepiej wypadają w stonowanej kolorystyce, z dużą ilością światła w układzie i typografią, która wygląda poważnie także na telefonie. Prawdziwe zdjęcia zespołu i biura działają lepiej niż stockowe wagi i młotki sędziowskie. Jeśli kancelaria nie ma jeszcze spójnego znaku, warto zacząć od <a class="zpSeoLink" href="/identyfikacja-wizualna/">identyfikacji wizualnej</a>. Tak było w projekcie dla kancelarii adwokackiej Piotra Mazura, gdzie monogram w formie tarczy i wytyczne do strony powstały razem.</p>
 <h2 id="ile-kosztuje-strona-internetowa-dla-kancelarii">Ile kosztuje strona internetowa dla kancelarii</h2>
-<p>Strony internetowe realizujemy od 3 999 zł, jednak strona kancelarii z kilkoma specjalizacjami, profilami prawników i treściami eksperckimi to zwykle projekt z pakietu Premium albo projekt indywidualny. Na cenę wpływają liczba podstron specjalizacji, zakres tekstów, wersje językowe i system umawiania konsultacji. Pakiety opisujemy na stronie <a class="zpSeoLink" href="/tworzenie-stron-internetowych/">tworzenie stron internetowych</a>, a dokładną wycenę przygotujemy po wypełnieniu <a class="zpSeoLink" href="/studio-wyceny/">Studia Wyceny</a>.</p>',
+<p>Strony internetowe realizujemy od 3 999 zł z domeną i hostingiem w cenie, jednak strona kancelarii z kilkoma specjalizacjami, profilami prawników i treściami eksperckimi to zwykle projekt z pakietu Premium albo projekt indywidualny. Na cenę wpływają liczba podstron specjalizacji, zakres tekstów, wersje językowe i system umawiania konsultacji. Pakiety opisujemy na stronie <a class="zpSeoLink" href="/tworzenie-stron-internetowych/">tworzenie stron internetowych</a>, a dokładną wycenę przygotujemy po wypełnieniu <a class="zpSeoLink" href="/studio-wyceny/">Studia Wyceny</a>.</p>',
     ],
     'faq' => [
       'kicker' => 'FAQ / strony dla kancelarii',
@@ -679,7 +679,7 @@ return [
         ],
         [
           'Ile kosztuje strona internetowa dla kancelarii?',
-          'Strony internetowe realizujemy od 3 999 zł. Strona z kilkoma specjalizacjami, profilami prawników i blogiem eksperckim to zwykle pakiet Premium lub projekt indywidualny. Dokładną kwotę podajemy po wypełnieniu Studia Wyceny.',
+          'Strony internetowe dla kancelarii realizujemy od 3 999 zł z domeną i hostingiem w cenie. Strona z kilkoma specjalizacjami, profilami prawników i blogiem eksperckim to zwykle pakiet Premium lub projekt indywidualny. Dokładną kwotę podajemy po wypełnieniu Studia Wyceny.',
         ],
         [
           'Ile podstron powinna mieć strona kancelarii?',
@@ -841,7 +841,7 @@ return [
 <h2 id="spojna-marka-gabinetu">Spójna marka gabinetu</h2>
 <p>Pacjent ocenia gabinet także po tym, jak wygląda jego strona, oznakowanie i dokumenty. Dla Medical Friend zaprojektowaliśmy przyjazną identyfikację z sercem i uśmiechem, z oznakowaniem gabinetów i materiałami dla pacjentów. Dla kliniki medycyny estetycznej EVA Aesthetics powstała elegancka identyfikacja w palecie nude &amp; gold. Jeśli placówka zmienia wizerunek, warto zacząć od <a class="zpSeoLink" href="/identyfikacja-wizualna/">identyfikacji wizualnej</a>, a stronę zaprojektować już w nowej estetyce.</p>
 <h2 id="ile-kosztuje-strona-internetowa-dla-lekarza">Ile kosztuje strona internetowa dla lekarza</h2>
-<p>Strony internetowe realizujemy od 3 999 zł. Strona jednoosobowego gabinetu z kilkoma usługami mieści się zwykle w mniejszych pakietach, a serwis kliniki z wieloma specjalistami, rejestracją online i blogiem to projekt z pakietu Premium albo indywidualny. Zakres pakietów znajdziesz na stronie <a class="zpSeoLink" href="/tworzenie-stron-internetowych/">tworzenie stron internetowych</a>, a kwotę dla Twojej placówki podamy po wypełnieniu <a class="zpSeoLink" href="/studio-wyceny/">Studia Wyceny</a>.</p>',
+<p>Strony internetowe realizujemy od 3 999 zł, a domena i hosting są w cenie strony. Strona jednoosobowego gabinetu z kilkoma usługami mieści się zwykle w mniejszych pakietach, a serwis kliniki z wieloma specjalistami, rejestracją online i blogiem to projekt z pakietu Premium albo indywidualny. Zakres pakietów znajdziesz na stronie <a class="zpSeoLink" href="/tworzenie-stron-internetowych/">tworzenie stron internetowych</a>, a kwotę dla Twojej placówki podamy po wypełnieniu <a class="zpSeoLink" href="/studio-wyceny/">Studia Wyceny</a>.</p>',
     ],
     'faq' => [
       'kicker' => 'FAQ / strony medyczne',
@@ -862,7 +862,7 @@ return [
         ],
         [
           'Ile kosztuje strona internetowa dla lekarza?',
-          'Strony internetowe realizujemy od 3 999 zł. Na cenę wpływają liczba usług i specjalistów, rejestracja online, wersje językowe i zakres tekstów. Dokładną kwotę podajemy po wypełnieniu Studia Wyceny.',
+          'Strony internetowe dla lekarzy realizujemy od 3 999 zł z domeną i hostingiem w cenie. Na cenę wpływają liczba usług i specjalistów, rejestracja online, wersje językowe i zakres tekstów. Dokładną kwotę podajemy po wypełnieniu Studia Wyceny.',
         ],
         [
           'Czy robicie strony dla psychologów i psychoterapeutów?',
@@ -1404,7 +1404,7 @@ return [
 <p>Strona internetowa fotografa pokazuje ludzi, a według art. 81 ustawy o prawie autorskim i prawach pokrewnych publikacja wizerunku wymaga zgody osoby, która jest na zdjęciu. Zgodę na wykorzystanie zdjęć w portfolio, na blogu i w mediach społecznościowych najprościej zapisać w umowie z klientem. Przy sesjach z dziećmi zgodę podpisują rodzice, a zgoda pary młodej nie obejmuje gości, których pokazujesz na zbliżeniach.</p>
 <p>Blokada prawego przycisku myszy nie chroni zdjęć, bo każdy może zrobić zrzut ekranu, za to przeszkadza zwykłym odwiedzającym. Rozsądniej publikować pliki w rozdzielczości pod ekran, za małej na duży wydruk, ewentualnie z dyskretnym podpisem w rogu. Duży znak wodny na środku kadru chroni niewiele więcej, a psuje odbiór portfolio.</p>
 <h2 id="ile-kosztuje-strona-www-dla-fotografa">Ile kosztuje strona www dla fotografa</h2>
-<p>Projekt strony z portfolio zaczyna się od 3 999 zł i trwa zwykle 2–4 tygodnie. Zakres pakietów opisujemy przy <a class="zpSeoLink" href="/tworzenie-stron-internetowych/">tworzeniu stron internetowych</a>.</p>
+<p>Projekt strony z portfolio zaczyna się od 3 999 zł i trwa zwykle 2–4 tygodnie. Domena i hosting są w cenie strony. Zakres pakietów opisujemy przy <a class="zpSeoLink" href="/tworzenie-stron-internetowych/">tworzeniu stron internetowych</a>.</p>
 <p>Sprzedaż voucherów na sesję i odbitek z płatnością online to już sklep WooCommerce, od 6 499 zł. Jak działają płatności online, wyjaśniamy w artykule o <a class="zpSeoLink" href="/sklepy-internetowe/bramka-platnicza/">bramce płatniczej</a>. Odbitki drukujesz Ty albo Twoje laboratorium, a sklep przyjmuje zamówienie i płatność.</p>
 <p>Jeśli dopiero budujesz markę, zacznij od znaku, który pasuje do charakteru Twoich zdjęć i sprawdzi się jako podpis w rogu kadru. Pakiety i ceny opisujemy na stronie <a class="zpSeoLink" href="/projektowanie-logo/">projektowanie logo</a>. Dokładną kwotę za całość podamy po wypełnieniu <a class="zpSeoLink" href="/studio-wyceny/">Studia Wyceny</a>.</p>',
     ],
@@ -1423,7 +1423,7 @@ return [
         ],
         [
           'Ile kosztuje strona internetowa dla fotografa?',
-          'Stronę fotografa zaprojektujemy i wdrożymy od 3 999 zł, a prace trwają zwykle 2–4 tygodnie. Dłużej trwa i więcej kosztuje projekt z dodatkami, takimi jak sklep z voucherami, wersje językowe czy rozbudowany blog. Dokładną kwotę podajemy po wypełnieniu Studia Wyceny.',
+          'Stronę fotografa zaprojektujemy i wdrożymy od 3 999 zł z domeną i hostingiem w cenie, a prace trwają zwykle 2–4 tygodnie. Dłużej trwa i więcej kosztuje projekt z dodatkami, takimi jak sklep z voucherami, wersje językowe czy rozbudowany blog. Dokładną kwotę podajemy po wypełnieniu Studia Wyceny.',
         ],
         [
           'Czy galerie dla klientów mogą być chronione hasłem?',
@@ -1587,7 +1587,7 @@ return [
 <p>Jeśli obiekt ma restaurację, strefę SPA, sale konferencyjne albo organizuje wesela, każda z tych usług potrzebuje własnej podstrony. Para planująca wesele, organizator szkolenia i ktoś, kto szuka kolacji w okolicy, wpisują w Google zupełnie inne zapytania.</p>
 <ul><li><strong>Konferencje</strong>: sale z układami ustawień, wyposażenie techniczne, przerwy kawowe i noclegi dla uczestników.</li><li><strong>Wesela i przyjęcia</strong>: galeria sali, przykładowe menu i formularz z datą oraz liczbą gości.</li><li><strong>Restauracja</strong> otwarta dla gości z zewnątrz: menu, godziny otwarcia i rezerwacja stolika, podobnie jak na <a class="zpSeoLink" href="/strony-internetowe-dla-restauracji/">stronach internetowych dla restauracji</a>.</li><li><strong>SPA</strong>: zabiegi z czasem trwania i ceną. Jeśli przyjmuje gości spoza hotelu, jego podstrona działa jak <a class="zpSeoLink" href="/strony-internetowe-dla-salonow-beauty/">strona salonu beauty</a>.</li></ul>
 <h2 id="ile-kosztuja-strony-internetowe-dla-hoteli">Ile kosztują strony internetowe dla hoteli</h2>
-<p>Strony internetowe dla hoteli projektujemy od 3 999 zł. Kwotę zmieniają głównie trzy rzeczy: sposób integracji z systemem rezerwacji, liczba wersji językowych oraz liczba podstron ofert i usług dodatkowych. Strona pensjonatu z kilkoma pokojami w jednym języku to mniejszy projekt niż serwis hotelu z restauracją, SPA i salami konferencyjnymi w trzech językach.</p>
+<p>Strony internetowe dla hoteli projektujemy od 3 999 zł, a domena i hosting są w cenie strony. Kwotę zmieniają głównie trzy rzeczy: sposób integracji z systemem rezerwacji, liczba wersji językowych oraz liczba podstron ofert i usług dodatkowych. Strona pensjonatu z kilkoma pokojami w jednym języku to mniejszy projekt niż serwis hotelu z restauracją, SPA i salami konferencyjnymi w trzech językach.</p>
 <p>Strona powstaje zwykle w 2–4 tygodnie, a wersje językowe i rozbudowane integracje wydłużają projekt. Pakiety opisujemy przy <a class="zpSeoLink" href="/tworzenie-stron-internetowych/">tworzeniu stron internetowych</a>, a kwotę dla Twojego obiektu podamy po wypełnieniu <a class="zpSeoLink" href="/studio-wyceny/">Studia Wyceny</a>.</p>',
     ],
     'faq' => [
@@ -1605,7 +1605,7 @@ return [
         ],
         [
           'Ile kosztuje strona internetowa hotelu?',
-          'Strona obiektu noclegowego kosztuje od 3 999 zł. Zakres rozszerzają głównie integracja z systemem rezerwacji, kolejne języki, duża liczba ofert i podstrony restauracji, SPA czy sal. Dokładną kwotę podajemy po wypełnieniu Studia Wyceny.',
+          'Strona obiektu noclegowego kosztuje od 3 999 zł, a domena i hosting są w cenie. Zakres rozszerzają głównie integracja z systemem rezerwacji, kolejne języki, duża liczba ofert i podstrony restauracji, SPA czy sal. Dokładną kwotę podajemy po wypełnieniu Studia Wyceny.',
         ],
         [
           'Czy strona może działać w kilku językach?',
@@ -1767,7 +1767,7 @@ return [
 <p>Gość, który szuka miejsca na obiad w okolicy, często zaczyna od mapy Google. Profil Firmy w Google i strona powinny więc podawać te same dane: nazwę, adres, telefon i godziny otwarcia, również świąteczne. W profilu dodaj link do menu i rezerwacji, a na stronie umieść mapę z dojazdem i dane strukturalne, czyli opis lokalu zapisany w kodzie dla wyszukiwarki. Odpowiadaj też na opinie o kuchni i obsłudze, także krytyczne.</p>
 <p>Dla Piekarni Marysia zaprojektowaliśmy stronę celowo minimalistyczną: menu, galeria produktów, kontakt z mapą Google i SEO lokalne. Mała piekarnia nie potrzebuje rozbudowanego serwisu, tylko strony, która jasno mówi, co można kupić, gdzie i w jakich godzinach.</p>
 <h2 id="ile-kosztuje-strona-www-dla-restauracji">Ile kosztuje strona www dla restauracji</h2>
-<p>Cena strony zaczyna się od 3 999 zł, a projekt trwa zwykle 2–4 tygodnie. Prosta strona internetowa dla restauracji z menu, galerią i mapą powstaje szybciej niż serwis z rezerwacjami i zamówieniami. Własny system rezerwacji albo wersje językowe dla turystów wydłużają projekt i zmieniają kwotę. Zamówienia z płatnościami online to zakres bliższy sklepowi: <a class="zpSeoLink" href="/tworzenie-sklepow-internetowych/">sklepy internetowe</a> na WooCommerce realizujemy od 6 499 zł.</p>
+<p>Cena strony z domeną i hostingiem zaczyna się od 3 999 zł, a projekt trwa zwykle 2–4 tygodnie. Prosta strona internetowa dla restauracji z menu, galerią i mapą powstaje szybciej niż serwis z rezerwacjami i zamówieniami. Własny system rezerwacji albo wersje językowe dla turystów wydłużają projekt i zmieniają kwotę. Zamówienia z płatnościami online to zakres bliższy sklepowi: <a class="zpSeoLink" href="/tworzenie-sklepow-internetowych/">sklepy internetowe</a> na WooCommerce realizujemy od 6 499 zł.</p>
 <p>Jeśli odświeżasz markę lokalu, zadbaj, żeby logo, karta, szyld i strona wyglądały spójnie. Pakiety <a class="zpSeoLink" href="/projektowanie-logo/">projektowania logo</a> kosztują 999 zł, 1 499 zł albo 2 999 zł. Kwotę dla Twojego lokalu podamy po wypełnieniu <a class="zpSeoLink" href="/studio-wyceny/">Studia Wyceny</a>.</p>',
     ],
     'faq' => [
@@ -1789,7 +1789,7 @@ return [
         ],
         [
           'Ile kosztuje strona internetowa dla restauracji?',
-          'Strony internetowe dla restauracji realizujemy od 3 999 zł, zwykle w 2–4 tygodnie. Więcej kosztuje strona z własnym systemem rezerwacji, wersjami językowymi albo zamówieniami z płatnościami online, bliższa zakresem sklepowi (sklepy od 6 499 zł). Różnice między pakietami opisujemy przy usłudze <a class="zpSeoLink" href="/tworzenie-stron-internetowych/">tworzenie stron internetowych</a>.',
+          'Strony internetowe dla restauracji realizujemy od 3 999 zł z domeną i hostingiem w cenie, zwykle w 2–4 tygodnie. Więcej kosztuje strona z własnym systemem rezerwacji, wersjami językowymi albo zamówieniami z płatnościami online, bliższa zakresem sklepowi (sklepy od 6 499 zł). Różnice między pakietami opisujemy przy usłudze <a class="zpSeoLink" href="/tworzenie-stron-internetowych/">tworzenie stron internetowych</a>.',
         ],
         [
           'Czy sam zmienię menu i ceny?',
@@ -1948,7 +1948,7 @@ return [
 <p>Klientka salonu premium ocenia go po detalach, także na ekranie telefonu. Logo, kolory, typografia i styl zdjęć powinny tworzyć jeden obraz, od strony po voucher i profil w aplikacji rezerwacyjnej. Premium nie musi oznaczać złota. Częściej to wolna przestrzeń, spokojna typografia i prawdziwe zdjęcia wnętrza.</p>
 <p>Jeśli znak salonu się zestarzał, odśwież go razem ze stroną. Tak było w Apartamencie Piękna: odświeżenie logo i oprawy wizualnej przeprowadziliśmy w jednym projekcie z pełnym redesignem strony. Dla Pracowni Urody, gabinetu kosmetologii, zaprojektowaliśmy identyfikację bez strony: delikatne, eleganckie logo z linearną ilustracją twarzy i jasne materiały drukowane. Kierunki stylu i kolory omawiamy na przykładach w artykule <a class="zpSeoLink" href="/logo-branding/logo-salonu-kosmetycznego/">logo salonu kosmetycznego</a>.</p>
 <h2 id="ile-kosztuje-strona-internetowa-salonu-kosmetycznego">Ile kosztuje strona internetowa salonu kosmetycznego</h2>
-<p>Za stronę salonu zapłacisz od 3 999 zł, a od briefu do publikacji mijają zwykle 2–4 tygodnie. Ostateczna kwota zależy od tego, co ma robić Twoja strona poza prezentacją oferty. Strona internetowa dla gabinetu kosmetycznego z kilkoma zabiegami i przyciskiem do aplikacji rezerwacyjnej to prostszy projekt niż serwis salonu z zespołem, własnym kalendarzem i blogiem. Zakres zmieniają przede wszystkim własny system rezerwacji, wersje językowe oraz sprzedaż voucherów i kosmetyków (sklep na WooCommerce to koszt od 6 499 zł). Nie wszystko musi powstać od razu: sklep z kosmetykami czy kolejne podstrony zabiegów mogą dojść później.</p>
+<p>Za stronę salonu zapłacisz od 3 999 zł z domeną i hostingiem w cenie, a od briefu do publikacji mijają zwykle 2–4 tygodnie. Ostateczna kwota zależy od tego, co ma robić Twoja strona poza prezentacją oferty. Strona internetowa dla gabinetu kosmetycznego z kilkoma zabiegami i przyciskiem do aplikacji rezerwacyjnej to prostszy projekt niż serwis salonu z zespołem, własnym kalendarzem i blogiem. Zakres zmieniają przede wszystkim własny system rezerwacji, wersje językowe oraz sprzedaż voucherów i kosmetyków (sklep na WooCommerce to koszt od 6 499 zł). Nie wszystko musi powstać od razu: sklep z kosmetykami czy kolejne podstrony zabiegów mogą dojść później.</p>
 <p>Pakiety opisujemy przy usłudze <a class="zpSeoLink" href="/tworzenie-stron-internetowych/">tworzenie stron internetowych</a>, a dokładną kwotę dla Twojego salonu przygotujemy po wypełnieniu <a class="zpSeoLink" href="/studio-wyceny/">Studia Wyceny</a>.</p>',
     ],
     'faq' => [
@@ -1966,7 +1966,7 @@ return [
         ],
         [
           'Ile kosztuje strona internetowa dla salonu kosmetycznego?',
-          'Strony www dla salonów kosmetycznych zaczynają się od 3 999 zł, a ich przygotowanie trwa zwykle 2–4 tygodnie. Kwotę i czas zmieniają własny system rezerwacji, sklep z kosmetykami, wersje językowe i liczba podstron zabiegów. Dokładną wycenę przygotujemy po wypełnieniu Studia Wyceny.',
+          'Strony www dla salonów kosmetycznych zaczynają się od 3 999 zł z domeną i hostingiem w cenie, a ich przygotowanie trwa zwykle 2–4 tygodnie. Kwotę i czas zmieniają własny system rezerwacji, sklep z kosmetykami, wersje językowe i liczba podstron zabiegów. Dokładną wycenę przygotujemy po wypełnieniu Studia Wyceny.',
         ],
         [
           'Czy na stronie salonu warto pokazywać cennik?',
@@ -2130,7 +2130,7 @@ return [
 <p>Zdjęcia przed i po to mocny argument, ale pokazują konkretną osobę. Art. 81 ustawy o prawie autorskim i prawach pokrewnych mówi jasno: żeby rozpowszechniać wizerunek podopiecznego, potrzebujesz jego zezwolenia. Zgodę najlepiej zebrać na piśmie albo e-mailem, z listą miejsc publikacji: strona, Instagram, reklamy.</p>
 <p>Przy każdej metamorfozie dodaj kontekst: jak długo trwała współpraca, jak często trenowaliście i co zmieniło się poza wagą. Unikaj obietnic w rodzaju „-10 kg w miesiąc”. Efekt zależy od zdrowia, diety i regularności, więc taka obietnica wprowadza w błąd każdego, u kogo będzie inaczej. Publikuj tylko prawdziwe opinie, z imieniem autora za jego zgodą. Możesz też pokazać na stronie opinie z Profilu Firmy w Google.</p>
 <h2 id="ile-kosztuje-strona-dla-trenera-personalnego">Ile kosztuje strona dla trenera personalnego</h2>
-<p>Stronę trenera personalnego wyceniamy od 3 999 zł, a jej projekt i wdrożenie zajmują zwykle 2–4 tygodnie. Punktem wyjścia jest strona z ofertą, cennikiem, podstroną o Tobie i formularzem kontaktu. Kalendarz zapisów, płatności za pakiety i sprzedaż planów treningowych zmieniają zakres: wydłużają projekt i podnoszą wycenę. Co obejmują pakiety, sprawdzisz na stronie <a class="zpSeoLink" href="/tworzenie-stron-internetowych/">tworzenie stron internetowych</a>. Kwotę dla strony z Twoją ofertą i zapisami podamy po wypełnieniu <a class="zpSeoLink" href="/studio-wyceny/">Studia Wyceny</a>.</p>',
+<p>Stronę trenera personalnego wyceniamy od 3 999 zł z domeną i hostingiem w cenie, a jej projekt i wdrożenie zajmują zwykle 2–4 tygodnie. Punktem wyjścia jest strona z ofertą, cennikiem, podstroną o Tobie i formularzem kontaktu. Kalendarz zapisów, płatności za pakiety i sprzedaż planów treningowych zmieniają zakres: wydłużają projekt i podnoszą wycenę. Co obejmują pakiety, sprawdzisz na stronie <a class="zpSeoLink" href="/tworzenie-stron-internetowych/">tworzenie stron internetowych</a>. Kwotę dla strony z Twoją ofertą i zapisami podamy po wypełnieniu <a class="zpSeoLink" href="/studio-wyceny/">Studia Wyceny</a>.</p>',
     ],
     'faq' => [
       'kicker' => 'FAQ / strony dla trenerów',
@@ -2147,7 +2147,7 @@ return [
         ],
         [
           'Ile kosztuje strona internetowa dla trenera personalnego?',
-          'Ceny stron zaczynają się od 3 999 zł, a prosta strona trenera powstaje zwykle w 2–4 tygodnie. Zapisy z kalendarzem, płatności online i sklep z planami treningowymi wydłużają projekt i podnoszą kwotę. Dokładną wycenę przygotujemy, gdy opiszesz swoją ofertę w Studiu Wyceny.',
+          'Strony wyceniamy od 3 999 zł z domeną i hostingiem w cenie, a prosta strona trenera powstaje zwykle w 2–4 tygodnie. Zapisy z kalendarzem, płatności online i sklep z planami treningowymi wydłużają projekt i podnoszą kwotę. Dokładną wycenę przygotujemy, gdy opiszesz swoją ofertę w Studiu Wyceny.',
         ],
         [
           'Czy mogę sprzedawać plany treningowe i współpracę online?',
@@ -2221,7 +2221,7 @@ return [
     'hero' => [
       'eyebrow' => 'Agencja reklamowa Katowice • Śląsk i online',
       'h1' => 'Agencja reklamowa w Katowicach: <strong class="gradient-text">strony, branding i kampanie</strong>',
-      'lead' => 'Zaprojektowani to agencja reklamowa z Katowic, która projektuje logo i identyfikację, buduje strony i sklepy WooCommerce oraz prowadzi kampanie Meta Ads i Google Ads. Masz <strong>jedną firmę od marki, strony i reklam</strong>, z którą spotkasz się w studiu przy Modelarskiej albo omówisz wszystko online. Zanim zdecydujesz, sprawdź realizacje, opinie klientów i ceny poniżej.',
+      'lead' => 'Zaprojektowani to agencja reklamowa z Katowic, która projektuje logo i identyfikację, buduje strony i sklepy WooCommerce oraz prowadzi kampanie Meta Ads i Google Ads. Masz <strong>jedną firmę od marki, strony i reklam</strong>, z którą spotkasz się w studiu przy Modelarskiej albo omówisz wszystko online. Strona kosztuje u nas od 3 999 zł z domeną i hostingiem w cenie, sklep od 6 499 zł, logo od 999 zł, a kampanie od 1 200 zł miesięcznie. Mamy za sobą ponad 114 projektów, a realizacje i opinie klientów znajdziesz poniżej.',
       'cta' => [
         [
           'label' => 'Wyceń projekt',
