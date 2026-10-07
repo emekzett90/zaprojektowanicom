@@ -36,6 +36,32 @@ function zp_seo_articles_media(string $name, string $alt = ''): int {
   return (int) $id;
 }
 
+/**
+ * 2.8.1: covers cropped to their collage ("-kadr"; Mat 7.10: on /wiedza/ the new articles' images
+ * did not fill the card and left a light band under the picture). Articles the plan already
+ * published get the cropped cover as their featured image, but only while they still show the
+ * plan's old cover (or none), so a featured image Mat picked himself stays.
+ */
+function zp_seo_articles_refresh_featured(): array {
+  $log = [];
+  $map = (array) get_option('zp_seo_plan_media', []);
+  foreach (zp_seo_plan_data('articles') as $path => $a) {
+    $new = (string) ($a['featured'] ?? '');
+    if (substr($new, -5) !== '-kadr') { continue; }
+    $id = zp_seo_plan_find_post($path);
+    if (!$id || !get_post_meta($id, '_zp_seo_plan_created', true)) { continue; }
+    $current = (int) get_post_thumbnail_id($id);
+    $old = (int) ($map[substr($new, 0, -5)] ?? 0);
+    if ($current && $current !== $old) { continue; }
+    $thumb = zp_seo_articles_media($new, (string) $a['title']);
+    if ($thumb && $thumb !== $current) {
+      set_post_thumbnail($id, $thumb);
+      $log[] = 'Artykuł ' . $path . ': przycięta okładka (wypełnia miniaturę na liście wpisów).';
+    }
+  }
+  return $log;
+}
+
 /** Article HTML with {{IMG:name}} replaced by media library URLs (alt taken from the figure). */
 function zp_seo_articles_html(string $slug): string {
   $file = __DIR__ . '/data/articles/' . basename($slug) . '.html';

@@ -111,6 +111,8 @@ function zp_seo_plan_migrate(): void {
   $log = array_merge($log, zp_seo_service_create_pages());
   // 1b. New articles from the content thread (2.5.0, 2.6.0), before their titles and links are written below.
   $log = array_merge($log, zp_seo_articles_create());
+  // 1c. Cropped covers for articles published before 2.8.1.
+  $log = array_merge($log, zp_seo_articles_refresh_featured());
 
   // 2. The shop post's content moves to /tworzenie-sklepow-internetowych/; remember it before drafting.
   $shop_path = '/sklepy-internetowe/tworzenie-sklepow-internetowych-od-pomyslu-na-oferte-do-gotowego-sklepu-online/';
