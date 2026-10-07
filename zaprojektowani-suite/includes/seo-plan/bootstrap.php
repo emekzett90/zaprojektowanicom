@@ -87,6 +87,7 @@ require_once __DIR__ . '/posts.php';
 require_once __DIR__ . '/redirects.php';
 require_once __DIR__ . '/indexation.php';
 require_once __DIR__ . '/schema.php';
+require_once __DIR__ . '/ai.php';
 require_once __DIR__ . '/links.php';
 require_once __DIR__ . '/menu.php';
 require_once __DIR__ . '/stats.php';

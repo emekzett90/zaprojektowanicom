@@ -14,7 +14,8 @@ if (!defined('ABSPATH')) { exit; }
 function zp_seo_plan_business_node(): array {
   $site = home_url('/');
   $logo = 'https://zaprojektowani.com/wp-content/uploads/2026/05/zaproktowani_znak_wodny_czarny.png';
-  return [
+  // Filtered by ai.php (prices as offers, team, more profiles).
+  return (array) apply_filters('zp_seo_plan_business_node', [
     '@type' => 'ProfessionalService',
     '@id' => $site . '#organization',
     'name' => 'Zaprojektowani',
@@ -45,7 +46,7 @@ function zp_seo_plan_business_node(): array {
       'closes' => '17:00',
     ]],
     'sameAs' => ['https://www.instagram.com/zaprojektowanicom', 'https://www.facebook.com/zaprojektowanicom'],
-  ];
+  ]);
 }
 
 /** Service node for the current service page, or null. */
@@ -71,7 +72,7 @@ function zp_seo_plan_service_node(): ?array {
   $local = substr($variant, -6) === '-local';
   $url = home_url($path);
   $site = home_url('/');
-  return [
+  return (array) apply_filters('zp_seo_plan_service_node', [
     '@type' => 'Service',
     '@id' => $url . '#service',
     'name' => $names[$variant][0],
@@ -82,7 +83,7 @@ function zp_seo_plan_service_node(): ?array {
     'areaServed' => $local
       ? [['@type' => 'City', 'name' => 'Katowice'], ['@type' => 'AdministrativeArea', 'name' => 'województwo śląskie']]
       : ['@type' => 'Country', 'name' => 'Polska'],
-  ];
+  ], $variant);
 }
 
 /** Keeps one business entity in a graph and adds the Service node. */
