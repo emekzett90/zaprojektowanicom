@@ -2221,7 +2221,7 @@ return [
     'hero' => [
       'eyebrow' => 'Agencja reklamowa Katowice • Śląsk i online',
       'h1' => 'Agencja reklamowa w Katowicach: <strong class="gradient-text">strony, branding i kampanie</strong>',
-      'lead' => 'Zaprojektowani to agencja reklamowa z Katowic, która projektuje logo i identyfikację, buduje strony i sklepy WooCommerce oraz prowadzi kampanie Meta Ads i Google Ads. Masz <strong>jedną firmę od marki, strony i reklam</strong>, z którą spotkasz się w studiu przy Modelarskiej albo omówisz wszystko online. Strona kosztuje u nas od 3 999 zł z domeną i hostingiem w cenie, sklep od 6 499 zł, logo od 999 zł, a kampanie od 1 200 zł miesięcznie. Mamy za sobą ponad 114 projektów, a realizacje i opinie klientów znajdziesz poniżej.',
+      'lead' => 'Zaprojektowani to agencja reklamowa z Katowic, która projektuje logo i identyfikację, buduje strony i sklepy WooCommerce oraz prowadzi kampanie Meta Ads i Google Ads. Masz <strong>jedną firmę od marki, strony i reklam</strong>, z którą spotkasz się w studiu przy Modelarskiej albo omówisz wszystko online. Strona kosztuje u nas od 3 999 zł z domeną i hostingiem w cenie, sklep od 6 499 zł, logo od 999 zł, a kampanie od 1 200 zł miesięcznie. Mamy za sobą ponad 110 projektów stron, sklepów, logo i identyfikacji, a realizacje i opinie klientów znajdziesz poniżej.',
       'cta' => [
         [
           'label' => 'Wyceń projekt',
