@@ -38,12 +38,7 @@ function zp_seo_faq_category_titles(): array {
 function zp_seo_faq_rewrites(): array {
   $L = 'zp_seo_plan_live_link';
   $local = 'data-zp-local="1"';
-  $branches = array_filter([
-    zp_seo_plan_path_is_live('/strony-internetowe-dla-kancelarii/') ? $L('/strony-internetowe-dla-kancelarii/', 'strony internetowe dla kancelarii') : '',
-    zp_seo_plan_path_is_live('/strony-internetowe-dla-lekarzy/') ? $L('/strony-internetowe-dla-lekarzy/', 'strony internetowe dla lekarzy') : '',
-    zp_seo_plan_path_is_live('/strony-internetowe-dla-deweloperow/') ? $L('/strony-internetowe-dla-deweloperow/', 'strony internetowe dla deweloperów') : '',
-  ]);
-  $branch_list = count($branches) > 1 ? implode(', ', array_slice($branches, 0, -1)) . ' i ' . end($branches) : implode('', $branches);
+  $b = static function (string $slug, string $text) use ($L): string { return $L('/strony-internetowe-dla-' . $slug . '/', $text); };
   $fb_ads = '/meta-ads/ile-kosztuje-reklama-na-facebooku/';
   return [
     0 => ['', '<p>Zaprojektowani.com to studio kreatywne z Katowic, które od 2022 roku projektuje strony internetowe, sklepy WooCommerce, logo, identyfikacje wizualne i kampanie reklamowe dla firm z całej Polski. Pomagamy firmom wyglądać profesjonalnie w internecie i budować ścieżkę od pierwszego kontaktu do sprzedaży. Nasz zespół poznasz na stronie ' . $L('/o-nas/', 'O nas') . '.</p>'],
@@ -52,9 +47,7 @@ function zp_seo_faq_rewrites(): array {
     6 => ['', '<p>Najczęściej warto zaplanować stronę główną, ofertę, realizacje, kontakt, FAQ oraz osobną podstronę dla każdej ważnej usługi. Dzięki temu klient od razu trafia na odpowiedź, a Google wie, czego dotyczy każda podstrona. U nas tak działają np. strony ' . $L('/tworzenie-stron-internetowych/', 'tworzenie stron internetowych') . ' i ' . $L('/tworzenie-sklepow-internetowych/', 'tworzenie sklepów internetowych') . '.</p>'],
     7 => ['', '<p>Tak. Osobny landing page lepiej odpowiada na konkretną potrzebę klienta i na konkretne zapytanie w Google albo reklamę. Inaczej buduje się stronę pod kampanię jednej usługi, a inaczej stronę dla kancelarii, gabinetu lekarskiego czy dewelopera.'
       . (zp_seo_plan_path_is_live('/tworzenie-landing-page/') ? ' Jak to robimy, opisujemy na stronie ' . $L('/tworzenie-landing-page/', 'tworzenie landing page') . '.' : '') . '</p>'],
-    8 => ['', '<p>Tak. Projektujemy strony dla kancelarii, gabinetów lekarskich, deweloperów, salonów beauty, producentów, firm usługowych i B2B.'
-      . ($branch_list !== '' ? ' Dla części branż mamy osobne opisy: ' . $branch_list . '.' : '')
-      . ' Strona branżowa lepiej odpowiada na pytania klientów, bo mówi ich językiem.</p>'],
+    8 => ['', '<p>Tak. Projektujemy strony dla ' . $b('kancelarii', 'kancelarii') . ', ' . $b('lekarzy', 'gabinetów lekarskich') . ', ' . $b('deweloperow', 'deweloperów') . ', ' . $b('salonow-beauty', 'salonów beauty') . ', ' . $b('trenerow-personalnych', 'trenerów personalnych') . ', ' . $b('fotografow', 'fotografów') . ', ' . $b('restauracji', 'restauracji') . ', ' . $b('hoteli', 'hoteli') . ', producentów, firm usługowych i B2B. Strona branżowa lepiej odpowiada na pytania klientów, bo mówi ich językiem.</p>'],
     12 => ['Czy tworzycie sklepy internetowe?', '<p>Tak. Projektujemy i wdrażamy sklepy WooCommerce dla firm z całej Polski: strukturę kategorii, karty produktów, koszyk, płatności, dostawy i elementy wspierające sprzedaż. Sklep internetowy kosztuje u nas od 6&nbsp;499&nbsp;zł. Więcej piszemy na stronie ' . $L('/tworzenie-sklepow-internetowych/', 'tworzenie sklepów internetowych') . ', a firmom z regionu polecamy też stronę ' . $L('/sklepy-internetowe-katowice/', 'sklepy internetowe Katowice', '', $local) . '.</p>'],
     26 => ['Czy projekt logo to osobna usługa?', '<p>Tak. Logo możesz zamówić osobno albo jako część większego pakietu z identyfikacją wizualną. Pakiety mają stałe ceny: Logo Startowe 999&nbsp;zł, Mini Branding 1&nbsp;499&nbsp;zł i Branding Premium 2&nbsp;999&nbsp;zł. Proces opisujemy na stronie ' . $L('/projektowanie-logo/', 'projektowanie logo') . ', a szerszy system marki na stronie ' . $L('/identyfikacja-wizualna/', 'identyfikacja wizualna') . '.</p>'],
     32 => ['Jak dobieracie frazy kluczowe dla strony?', '<p>Zaczynamy od tego, jak klienci naprawdę szukają Twojej usługi: sprawdzamy popularność fraz, konkurencję w wynikach Google i dane z Search Console, jeśli strona już działa. Każdej ważnej podstronie przypisujemy jedną główną frazę, żeby podstrony nie konkurowały ze sobą, a nagłówki, treść i linki wewnętrzne układamy wokół niej.</p>'],

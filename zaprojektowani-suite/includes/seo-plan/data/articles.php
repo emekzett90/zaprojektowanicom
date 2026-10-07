@@ -77,4 +77,40 @@ return [
     'source' => '/strony-internetowe/strona-internetowa-dla-firmy-co-powinna-zawierac/',
     'featured' => 'strona-pracowni-krawieckiej-okladka',
   ],
+  // 2.8.0: tresci/paczka-4.
+  '/sklepy-internetowe/bramka-platnicza/' => [
+    'slug' => 'bramka-platnicza',
+    'category' => 'sklepy-internetowe',
+    'title' => 'Bramka płatnicza w sklepie internetowym – jak wybrać i podłączyć do WooCommerce',
+    'source' => '/strony-internetowe/strona-internetowa-dla-firmy-co-powinna-zawierac/',
+    'featured' => 'platnosci-w-sklepie-okladka',
+  ],
+  '/logo-branding/logo-salonu-kosmetycznego/' => [
+    'slug' => 'logo-salonu-kosmetycznego',
+    'category' => 'logo-branding',
+    'title' => 'Logo salonu kosmetycznego – style, kolory i przykłady z naszych realizacji',
+    'source' => '/logo-branding/projektowanie-logo-jak-powstaje-znak-ktory-dziala-w-internecie-druku-i-sprzedazy/',
+    'featured' => 'logo-salonow-beauty-okladka',
+  ],
+  '/logo-branding/projekt-wizytowki/' => [
+    'slug' => 'projekt-wizytowki',
+    'category' => 'logo-branding',
+    'title' => 'Projekt wizytówki firmowej – wymiary, treść i przygotowanie do druku',
+    'source' => '/logo-branding/projektowanie-logo-jak-powstaje-znak-ktory-dziala-w-internecie-druku-i-sprzedazy/',
+    'featured' => 'wizytowki-z-realizacji-okladka',
+  ],
+  '/sklepy-internetowe/sklep-b2b/' => [
+    'slug' => 'sklep-b2b',
+    'category' => 'sklepy-internetowe',
+    'title' => 'Sklep B2B i hurtownia internetowa – funkcje, platformy i wdrożenie',
+    'source' => '/strony-internetowe/strona-internetowa-dla-firmy-co-powinna-zawierac/',
+    'featured' => 'sklep-b2b-okladka',
+  ],
+  '/strony-internetowe/system-rezerwacji-online/' => [
+    'slug' => 'system-rezerwacji-online',
+    'category' => 'strony-internetowe',
+    'title' => 'System rezerwacji online na stronie internetowej – jak wybrać i wdrożyć',
+    'source' => '/strony-internetowe/strona-internetowa-dla-firmy-co-powinna-zawierac/',
+    'featured' => 'system-rezerwacji-okladka',
+  ],
 ];

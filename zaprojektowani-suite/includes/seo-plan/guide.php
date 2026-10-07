@@ -23,6 +23,11 @@ function zp_seo_guide_setup(string $path): array {
     '/strony-internetowe-dla-kancelarii/'   => ['team-duo', 'mateusz'],
     '/strony-internetowe-dla-lekarzy/'      => ['team-laptop', 'marta'],
     '/strony-internetowe-dla-deweloperow/'  => ['team-trio', 'mateusz'],
+    '/strony-internetowe-dla-salonow-beauty/' => ['team-pencil', 'marta'],
+    '/strony-internetowe-dla-trenerow-personalnych/' => ['team-tablet', 'stanislaw'],
+    '/strony-internetowe-dla-fotografow/'   => ['team-duo', 'marta'],
+    '/strony-internetowe-dla-restauracji/'  => ['team-trio', 'stanislaw'],
+    '/strony-internetowe-dla-hoteli/'       => ['team-laptop', 'mateusz'],
     '/tworzenie-sklepow-internetowych/'     => ['team-tablet', 'mateusz'],
   ];
   $s = $map[$path] ?? ['team-tablet', 'mateusz'];

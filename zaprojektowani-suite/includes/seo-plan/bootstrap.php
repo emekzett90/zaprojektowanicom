@@ -29,11 +29,14 @@ if (!defined('ABSPATH')) { exit; }
  *       with plan entries for O nas and FAQ. The plan version must be new on the site, so the entries are written.
  *       The same release lists the English page and post sitemaps in the index next to the Polish ones and
  *       redirects /english-sitemap.xml (indexation.php), and adds the dark footer band (includes/footer-cta.php).
+ * 2.8.0 builds on Mat's own 2.7.20 and adds content batch 4 (5 industry pages, 5 articles), English versions
+ *       of the nationwide pages, noindex for client pages, redirects for old 404 URLs and the price section
+ *       of the website price post.
  *
  * Narzędzia → Plan SEO shows the migration log and can undo the database changes.
  */
 
-define('ZP_SEO_PLAN_VERSION', '2.7.1');
+define('ZP_SEO_PLAN_VERSION', '2.8.0');
 
 /** The plan is on unless an administrator paused it (Narzędzia → Plan SEO). */
 function zp_seo_plan_active(): bool {

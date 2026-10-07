@@ -12,7 +12,8 @@ if (!defined('ABSPATH')) { exit; }
  *    table of contents,
  *  - links in posts that pointed to the wrong page: the old /wiedza/ landing page address
  *    (it redirects to a post about shops) and the "ampanie-…" typo address,
- *  - photos in the article are marked as article images, so they load in full size.
+ *  - photos in the article are marked as article images, so they load in full size,
+ *  - links from articles the plugin published to newer articles (2.8.0).
  * English pages are left alone.
  */
 
@@ -23,6 +24,22 @@ function zp_seo_posts_link_map(): array {
   ];
   if (zp_seo_plan_link_is_live('/tworzenie-landing-page/')) { $map['/wiedza/landing-page-pod-kampanie-meta-ads/'] = '/tworzenie-landing-page/'; }
   return $map;
+}
+
+/**
+ * Links inside articles the plugin published (data/articles/), to articles from later
+ * content batches: path => [[exact text in the article, the words that become the link, target]].
+ * Nothing changes when the text was edited in WordPress or the target is not published.
+ */
+function zp_seo_posts_inline_links(): array {
+  return [
+    '/strony-internetowe/rodzaje-stron-internetowych/' => [
+      ['<li>wizyty i noclegi: strona z systemem rezerwacji,</li>', 'systemem rezerwacji', '/strony-internetowe/system-rezerwacji-online/'],
+    ],
+    '/logo-branding/logo-wektorowe-pliki-logo/' => [
+      ['Do ulotek, wizytówek, katalogów', 'wizytówek', '/logo-branding/projekt-wizytowki/'],
+    ],
+  ];
 }
 
 function zp_seo_posts_transform(string $html): string {
@@ -62,6 +79,14 @@ function zp_seo_posts_transform(string $html): string {
   // e.g. "logo" was given the size hint of a small client logo (72px), so browsers loaded a
   // blurry thumbnail. Only the class is added; it carries no styles.
   $html = (string) preg_replace('~(<figure\b[^>]*\bzpArticleNew__imageBlock\b[^>]*>\s*)<img\b(?![^>]*\bclass=)~i', '$1<img class="zpArticleNew__img"', $html);
+
+  // Links to newer articles.
+  foreach ((array) (zp_seo_posts_inline_links()[$path] ?? []) as $link) {
+    [$text, $words, $to] = $link;
+    if (!zp_seo_plan_link_is_live($to) || ($at = strpos($html, $text)) === false) { continue; }
+    $linked = (string) preg_replace('~' . preg_quote($words, '~') . '~u', '<a href="' . esc_url(home_url($to)) . '">' . $words . '</a>', $text, 1);
+    $html = substr_replace($html, $linked, $at, strlen($text));
+  }
 
   // Links to the wrong page.
   foreach (zp_seo_posts_link_map() as $from => $to) {

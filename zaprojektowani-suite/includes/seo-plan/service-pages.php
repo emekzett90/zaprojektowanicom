@@ -55,14 +55,10 @@ function zp_seo_service_variant(): string {
   }
   if ($path === '') { $path = zp_seo_plan_path(); }
   $reg = zp_seo_service_registry();
-  if (zp_seo_plan_is_en() && (empty($reg[$path]['source']) || !zp_seo_service_has_en($path))) { return ''; }
+  // English requests: copied pages show their own content (translated by their page dictionary, or by
+  // Tłumacz EN for pages newer than the shipped dictionary); the Katowice originals keep their templates.
+  if (zp_seo_plan_is_en() && empty($reg[$path]['source'])) { return ''; }
   return $reg[$path]['variant'] ?? '';
-}
-
-/** The page has an English version of its own (not the Katowice page it was copied from). */
-function zp_seo_service_has_en(string $path): bool {
-  if (!class_exists('\ZPL\Router')) { return false; }
-  return isset(\ZPL\Router::routes()[$path]);
 }
 
 add_filter('do_shortcode_tag', function ($output, $tag) {
@@ -195,7 +191,9 @@ function zp_seo_html_insert_after_section(string $html, string $marker, string $
 
 /**
  * Rebuild a FAQ list. $items: ['keep', n] keeps the template's n-th question (1-based),
- * ['new', question, answer_html] adds one. Numbers are rewritten in order.
+ * ['keep', n, sentence_html] keeps it and adds a sentence at the end of its answer (2.8.0;
+ * an empty sentence changes nothing), ['new', question, answer_html] adds one. Numbers are
+ * rewritten in order.
  */
 function zp_seo_faq_rebuild(string $html, array $items, string $style): string {
   $re = $style === 'shop'
@@ -208,7 +206,12 @@ function zp_seo_faq_rebuild(string $html, array $items, string $style): string {
   $end = (int) $lastBlock[1] + strlen($lastBlock[0]);
   $out = [];
   foreach ($items as $item) {
-    if ($item[0] === 'keep' && isset($blocks[$item[1] - 1])) { $out[] = $blocks[$item[1] - 1]; }
+    if ($item[0] === 'keep' && isset($blocks[$item[1] - 1])) {
+      $block = $blocks[$item[1] - 1];
+      $add = (string) ($item[2] ?? '');
+      if ($add !== '' && ($at = strrpos($block, '</p>')) !== false) { $block = rtrim(substr($block, 0, $at)) . ' ' . $add . substr($block, $at); }
+      $out[] = $block;
+    }
     if ($item[0] === 'new') { $out[] = zp_seo_faq_item($style, $item[1], $item[2]); }
   }
   $n = 0;
@@ -323,7 +326,7 @@ function zp_seo_service_spec(string $variant): ?array {
           ['<h2 class="section-title">Od briefu do publikacji. <strong>Bez chaosu między etapami.</strong></h2>', '<h2 class="section-title">Etapy tworzenia strony internetowej. <strong>Od briefu do publikacji.</strong></h2>'],
           ['<strong>jasny zakres, terminy i kryterium akceptacji.</strong></p>', '<strong>jasny zakres, terminy i kryterium akceptacji.</strong> Szczegółowo opisujemy je w poradniku ' . $L('/strony-internetowe/tworzenie-stron-internetowych-profesjonalny-proces-od-strategii-do-wdrozenia/', 'etapy tworzenia strony internetowej') . '.</p>'],
           ['<h2 class="section-title">Nie tylko wygląd. <strong>Cały system strony.</strong></h2>', '<h2 class="section-title">Projektowanie stron www. <strong>UX, treści i design w jednym systemie.</strong></h2>'],
-          ['Tak. Inaczej projektuje się stronę kancelarii, inaczej dewelopera, salonu beauty, lekarza czy producenta.', 'Tak. Inaczej projektuje się stronę ' . $L('/strony-internetowe-dla-kancelarii/', 'kancelarii') . ', inaczej ' . $L('/strony-internetowe-dla-deweloperow/', 'dewelopera') . ', salonu beauty, ' . $L('/strony-internetowe-dla-lekarzy/', 'lekarza') . ' czy producenta.'],
+          ['Tak. Inaczej projektuje się stronę kancelarii, inaczej dewelopera, salonu beauty, lekarza czy producenta.', 'Tak. Inaczej projektuje się stronę ' . $L('/strony-internetowe-dla-kancelarii/', 'kancelarii') . ', inaczej ' . $L('/strony-internetowe-dla-deweloperow/', 'dewelopera') . ', ' . $L('/strony-internetowe-dla-salonow-beauty/', 'salonu beauty') . ', ' . $L('/strony-internetowe-dla-lekarzy/', 'lekarza') . ' czy producenta. Osobno opisujemy też strony dla ' . $L('/strony-internetowe-dla-trenerow-personalnych/', 'trenerów personalnych') . ', ' . $L('/strony-internetowe-dla-fotografow/', 'fotografów') . ', ' . $L('/strony-internetowe-dla-restauracji/', 'restauracji') . ' i ' . $L('/strony-internetowe-dla-hoteli/', 'hoteli') . '.'],
           ['<p>Aktualizacje, kopie zapasowe, drobne zmiany i rozwój: nowe sekcje, podstrony SEO, landing pages pod kampanie.</p>', '<p>Aktualizacje, kopie zapasowe i drobne zmiany w ramach usługi ' . $L('/opieka-wordpress/', 'opieka nad stroną WordPress') . ', a do tego rozwój: nowe sekcje, podstrony SEO, landing pages pod kampanie.</p>'],
           ['<p class="section-kicker">Katowice • Śląsk • cała Polska</p>', '<p class="section-kicker">Cała Polska • siedziba w Katowicach</p>'],
           ['Z Katowic projektujemy marki dla firm z całej Polski. Brief, prezentacje kierunków, konsultacje i przekazanie plików możemy przeprowadzić online — etap po etapie.', 'Pracujemy z firmami z całej Polski, a nasze studio mieści się w Katowicach. Brief, makiety, prezentacje projektu, konsultacje i odbiór strony prowadzimy online — etap po etapie. Firmy ze Śląska zapraszamy też do biura: ' . $local('strony-katowice', 'strony internetowe w Katowicach') . '.'],
@@ -363,7 +366,10 @@ function zp_seo_service_spec(string $variant): ?array {
           ['new', 'Czy tworzycie sklepy internetowe dla firm z całej Polski?', 'Tak. Projektujemy i wdrażamy <strong>sklepy internetowe dla firm z całej Polski</strong>. Najczęściej pracujemy na WordPressie i WooCommerce, ponieważ daje to dużą elastyczność przy sprzedaży produktów, usług, zapytań B2B, konfiguratorów, płatności, dostaw, SEO oraz późniejszym rozwoju sklepu. Firmy ze Śląska zapraszamy też do biura — zobacz ' . $local('sklepy-katowice', 'sklepy internetowe w Katowicach') . '.'],
           ['keep', 2], ['keep', 3], ['keep', 4], ['keep', 5],
           ['new', 'Ile kosztuje stworzenie sklepu internetowego?', 'Cena zależy od zakresu: liczby produktów i kategorii, projektu graficznego, treści, integracji płatności i dostaw, wariantów, filtrów, automatyzacji i SEO. Orientacyjne kwoty opisujemy w poradniku ' . $L('/seo-i-konwersja/ile-kosztuje-sklep-internetowy-woocommerce-w-2026-roku/', 'ile kosztuje sklep internetowy') . ', a dokładną ' . $L('/studio-wyceny/', 'wycenę sklepu internetowego') . ' przygotujemy po kilku pytaniach w Studio Wyceny.'],
-          ['keep', 7], ['keep', 8], ['keep', 9], ['keep', 10], ['keep', 11], ['keep', 12],
+          // 2.8.0: payments and B2B answers point to the articles from content batch 4.
+          ['keep', 7, $AS('/sklepy-internetowe/bramka-platnicza/', 'Jak wybrać operatora i podłączyć go do WooCommerce, wyjaśniamy w poradniku o tym, jak działa ', 'bramka płatnicza', '.')],
+          ['keep', 8, $AS('/sklepy-internetowe/sklep-b2b/', 'Funkcje i platformy opisujemy w poradniku o tym, jak zbudować ', 'sklep B2B', '.')],
+          ['keep', 9], ['keep', 10], ['keep', 11], ['keep', 12],
           ['new', 'Czy projektujecie sklepy WooCommerce pod konkretne branże?', 'Tak. Sklep dla producenta, marki premium, firmy B2B, salonu, dystrybutora albo marki lokalnej powinien mieć inną strukturę kategorii, kart produktów, filtrów i ścieżki zakupu. Dlatego dopasowujemy WooCommerce do produktu, marży, sposobu sprzedaży i dalszego SEO e-commerce.'],
           ['new', 'Czy przenosicie istniejące sklepy na WooCommerce?', 'Tak. Przenosimy produkty, kategorie, klientów i zamówienia, a przede wszystkim adresy URL i przekierowania, żeby sklep nie stracił widoczności w Google. Jak wygląda taki proces, opisujemy w poradniku ' . $L('/strony-internetowe/migracja-sklepu-na-woocommerce/', 'migracja sklepu na WooCommerce') . '.'],
           ['keep', 14], ['keep', 15],
@@ -456,7 +462,7 @@ function zp_seo_service_spec(string $variant): ?array {
           ['<h2 class="section-title"> Wybierz zakres dopasowany do <strong>etapu Twojej marki.</strong> </h2>', '<h2 class="section-title">Ile kosztuje identyfikacja wizualna? <strong>Wybierz zakres.</strong></h2>'],
           ['z pełną księgą znaku i zasadami wdrożenia.', 'z pełną księgą znaku i zasadami wdrożenia. Ceny logo i identyfikacji wizualnej opisujemy w poradniku ' . $L($cost_logo, 'ile kosztuje identyfikacja wizualna') . '.'],
           ['<h2 class="section-title"> Logo otwiera system. <strong class="gradient-text" >Branding pilnuje spójności.</strong > </h2>', '<h2 class="section-title">Co obejmuje identyfikacja wizualna? <strong class="gradient-text">Cały system marki.</strong></h2>'],
-          ['na dokumentach, wizytówkach, stronie i materiałach firmowych.', 'na dokumentach, wizytówkach, stronie i materiałach firmowych. Punktem wyjścia jest zawsze znak — zobacz, jak wygląda ' . $L('/projektowanie-logo/', 'projektowanie logo') . '.'],
+          ['na dokumentach, wizytówkach, stronie i materiałach firmowych.', 'na dokumentach, wizytówkach, stronie i materiałach firmowych. Punktem wyjścia jest zawsze znak — zobacz, jak wygląda ' . $L('/projektowanie-logo/', 'projektowanie logo') . '.' . $AS('/logo-branding/projekt-wizytowki/', ' Jak przygotować ', 'projekt wizytówki', ' do druku, pokazujemy w osobnym poradniku.')],
           ['<h2 class="section-title"> Różne branże. <strong>Żadnego jednego stylu na wszystko.</strong> </h2>', '<h2 class="section-title">Realizacje brandingowe. <strong>Żadnego jednego stylu na wszystko.</strong></h2>'],
           ['<h2 class="section-title"> Od briefu do plików <strong>gotowych do wdrożenia.</strong> </h2>', '<h2 class="section-title">Proces: od strategii marki <strong>do wdrożenia.</strong></h2>'],
           ['<h2> System gotowy do pracy. <strong class="gradient-text">Nie pojedynczy plik.</strong> </h2>', '<h2>Księga znaku i brandbook. <strong class="gradient-text">System gotowy do pracy.</strong></h2>'],
