@@ -17,7 +17,10 @@ if (!defined('ABSPATH')) { exit; }
  */
 
 function zp_seo_posts_link_map(): array {
-  $map = ['/meta-ads/ampanie-reklamowe-facebook-i-instagram-najczestsze-bledy/' => '/meta-ads/kampanie-reklamowe-facebook-i-instagram-najczestsze-bledy/'];
+  $map = [
+    '/meta-ads/ampanie-reklamowe-facebook-i-instagram-najczestsze-bledy/' => '/meta-ads/kampanie-reklamowe-facebook-i-instagram-najczestsze-bledy/',
+    '/wiedza/jak-przygotowac-brief-do-projektowania-strony-internetowej/' => '/strony-www/jak-przygotowac-brief-do-projektowania-strony-internetowej/',
+  ];
   if (zp_seo_plan_link_is_live('/tworzenie-landing-page/')) { $map['/wiedza/landing-page-pod-kampanie-meta-ads/'] = '/tworzenie-landing-page/'; }
   return $map;
 }
