@@ -185,6 +185,7 @@ function zp_suite_home_sections_map(){
     'trust_logos' => ['label'=>'Logotypy', 'shortcode'=>'[zp_trust_logos]', 'visibility'=>'trust_logos'],
     'services_path' => ['label'=>'Zakres usług', 'shortcode'=>'[zp_services_path]', 'visibility'=>'services_path'],
     'featured_packages' => ['label'=>'Polecane pakiety', 'shortcode'=>'[zp_home_featured_packages]', 'visibility'=>null],
+    'quick_contact' => ['label'=>'Krótki formularz kontaktowy', 'shortcode'=>'[zp_quick_contact context="home"]', 'visibility'=>'quick_contact'],
     'showcase_portfolio' => ['label'=>'Portfolio', 'shortcode'=>'[zp_showcase_portfolio]', 'visibility'=>'showcase_portfolio'],
     'laptop_showcase' => ['label'=>'Laptop showcase', 'shortcode'=>'[zp_laptop_showcase]', 'visibility'=>'laptop_showcase'],
     'about_experience' => ['label'=>'O Zaprojektowani', 'shortcode'=>'[zp_about_experience]', 'visibility'=>'about_experience'],
@@ -214,6 +215,7 @@ function zp_suite_home_order(){
   $out = [];
   foreach ($order as $key) { if (isset($map[$key]) && !in_array($key, $out, true)) $out[] = $key; }
   $featured_was_saved = in_array('featured_packages', $order, true);
+  $quick_was_saved = in_array('quick_contact', $order, true);
   foreach (array_keys($map) as $key) { if (!in_array($key, $out, true)) $out[] = $key; }
 
   // Nowa sekcja ma wejść po "Zakres usług" także na instalacjach,
@@ -226,6 +228,19 @@ function zp_suite_home_order(){
     } else {
       array_splice($out, $services_index + 1, 0, ['featured_packages']);
     }
+  }
+
+  // 2.8.0: krótki formularz kontaktowy w środku strony, pod polecanymi pakietami
+  // (nie pod samym hero i nie przy pełnym formularzu na dole), także przy zapisanej
+  // wcześniej własnej kolejności sekcji.
+  if (!$quick_was_saved && in_array('quick_contact', $out, true)) {
+    $out = array_values(array_diff($out, ['quick_contact']));
+    $after = false;
+    foreach (['featured_packages', 'services_path', 'home_hero'] as $anchor_key) {
+      $after = array_search($anchor_key, $out, true);
+      if ($after !== false) { break; }
+    }
+    array_splice($out, $after === false ? 0 : $after + 1, 0, ['quick_contact']);
   }
 
   return $out ?: zp_suite_home_default_order();

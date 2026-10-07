@@ -386,6 +386,9 @@ function zp_suite_handle_contact() {
   $is_phone = in_array($contact_mode, ['phone','call','Prośba o oddzwonienie'], true);
   $is_brief = in_array($contact_mode, ['brief','Pełny brief projektu'], true);
   $is_quick = in_array($contact_mode, ['quick','Szybki kontakt','form','email',''], true);
+  // 2.8.0: krótki formularz w środku strony — imię, telefon albo e-mail i temat, bez opisu.
+  $is_short = $contact_mode === 'short';
+  if ($is_short) { $mode_label = 'Krótki formularz'; }
   if ($contact_mode === 'phone') { $mode_label = 'Prośba o oddzwonienie'; }
   if ($contact_mode === 'brief') { $mode_label = 'Pełny brief projektu'; }
   if ($contact_mode === 'quick' || $contact_mode === 'form' || !$contact_mode) { $mode_label = 'Szybki kontakt'; }
@@ -403,6 +406,10 @@ function zp_suite_handle_contact() {
   if ($is_phone) {
     if (mb_strlen($phone) < 5) { $errors[] = 'Podaj numer telefonu, na który mamy oddzwonić.'; }
     if (mb_strlen($message) < 3) { $message = 'Prośba o telefon z formularza kontaktowego.'; }
+  } elseif ($is_short) {
+    if (!$phone && !$email) { $errors[] = 'Podaj telefon albo adres e-mail, żebyśmy mogli się odezwać.'; }
+    if ($phone && strlen(preg_replace('/\D+/', '', $phone)) < 9) { $errors[] = 'Numer telefonu wygląda na niepełny — wpisz 9 cyfr.'; }
+    if (mb_strlen($message) < 3) { $message = 'Prośba o kontakt z szybkiego formularza' . ($services ? ' — temat: ' . $services : '') . '.'; }
   } else {
     if (!$phone && !$email) { $errors[] = 'Podaj telefon albo adres e-mail, żebyśmy mogli wrócić z odpowiedzią.'; }
     if (mb_strlen($message) < 10) { $errors[] = 'Dopisz krótki opis projektu — wystarczy kilka zdań.'; }
@@ -425,6 +432,7 @@ function zp_suite_handle_contact() {
   $subject = $is_phone ? zp_suite_opt('email_templates.admin_subject_phone','Prośba o telefon — Zaprojektowani.com') : zp_suite_opt('email_templates.admin_subject_form','Nowe zapytanie — Zaprojektowani.com');
   if ($is_brief) { $subject = 'Nowy pełny brief — Zaprojektowani.com'; }
   if ($is_quick && !$is_phone) { $subject = 'Szybkie zapytanie — Zaprojektowani.com'; }
+  if ($is_short) { $subject = 'Prośba o kontakt: ' . $name . ($phone ? ', tel. ' . $phone : ', ' . $email) . ' — Zaprojektowani.com'; }
 
   $file_links = '—';
   if ($files_meta) {
@@ -452,6 +460,19 @@ function zp_suite_handle_contact() {
   ];
 
   $admin_body = zp_suite_email_template('Nowe zapytanie ze strony', 'Ktoś wysłał formularz kontaktowy Zaprojektowani.com.', $admin_rows, $logo);
+  if ($is_short) {
+    // 2.8.0: krótki formularz — tylko dane do kontaktu, telefon i e-mail do kliknięcia (np. z telefonu).
+    $tel = preg_replace('/\D+/', '', $phone);
+    if (strlen($tel) === 9) { $tel = '+48' . $tel; } elseif (strpos(trim($phone), '+') === 0 || (strlen($tel) === 11 && strpos($tel, '48') === 0)) { $tel = '+' . $tel; }
+    $short_rows = ['Imię' => esc_html($name)];
+    if ($phone) { $short_rows['Telefon'] = '<a href="tel:' . esc_attr($tel) . '" style="color:#102a4f;font-weight:700">' . esc_html($phone) . '</a>'; }
+    if ($email) { $short_rows['E-mail'] = '<a href="mailto:' . esc_attr($email) . '" style="color:#102a4f;font-weight:700">' . esc_html($email) . '</a>'; }
+    $short_rows['Prośba'] = $phone ? 'Oddzwonić' : 'Odpisać mailem';
+    $short_rows['Czego dotyczy'] = $services ? esc_html($services) : 'Nie wybrano tematu';
+    $short_rows['Strona'] = esc_html($source ?: 'Krótki formularz');
+    $short_rows['Wysłano'] = esc_html(wp_date('j.m.Y, H:i'));
+    $admin_body = zp_suite_email_template('Prośba o kontakt', 'Ktoś zostawił kontakt w krótkim formularzu na stronie. Na stronie obiecujemy odezwać się zwykle w ciągu 1 dnia roboczego.', $short_rows, $logo);
+  }
 
   $headers = ['Content-Type: text/html; charset=UTF-8', 'From: '.$from_name.' <'.$from_email.'>'];
   if ($email) { $headers[] = 'Reply-To: '.$name.' <'.$email.'>'; }
@@ -477,18 +498,20 @@ function zp_suite_handle_contact() {
   $sent = zp_suite_send_html_mail_resilient($admin_recipients, $subject, $admin_body, $headers, $attachments);
 
   if ($email) {
-    $client_body = zp_suite_email_template('Dziękujemy za wiadomość', zp_suite_opt('email_templates.client_intro','Otrzymaliśmy Twoje zapytanie. Wrócimy z odpowiedzią i propozycją dalszych kroków.'), [
+    $client_rows = [
       'Tryb kontaktu' => $mode_label ?: '—',
       'Wybrane usługi' => $services ?: '—',
-      'Co dalej?' => 'Przejrzymy opis projektu i odezwiemy się możliwie szybko. Jeżeli sprawa jest pilna, możesz też odpisać na tę wiadomość albo zadzwonić pod numer 501 054 253.',
-    ], $logo);
+      'Co dalej?' => ($is_short ? 'Odezwiemy się zwykle w ciągu 1 dnia roboczego.' : 'Przejrzymy opis projektu i odezwiemy się możliwie szybko.') . ' Jeżeli sprawa jest pilna, możesz też odpisać na tę wiadomość albo zadzwonić pod numer 501 054 253.',
+    ];
+    if ($is_short) { unset($client_rows['Tryb kontaktu']); }
+    $client_body = zp_suite_email_template('Dziękujemy za wiadomość', zp_suite_opt('email_templates.client_intro','Otrzymaliśmy Twoje zapytanie. Wrócimy z odpowiedzią i propozycją dalszych kroków.'), $client_rows, $logo);
     wp_mail($email, zp_suite_opt('email_templates.client_subject','Potwierdzenie zapytania — Zaprojektowani.com'), $client_body, ['Content-Type: text/html; charset=UTF-8', 'From: '.$from_name.' <'.$from_email.'>']);
   }
 
   if (!$sent) { wp_send_json_error(['title'=>'Nie udało się wysłać wiadomości', 'messages'=>['Serwer pocztowy nie przyjął wiadomości. Spróbuj ponownie albo napisz na kontakt@zaprojektowani.com.']], 500); }
   wp_send_json_success([
-    'title'=>($is_phone ? 'Przyjęliśmy prośbę o telefon.' : zp_suite_opt('contact.success_title','Dziękujemy, zapytanie zostało wysłane.')),
-    'message'=>($is_phone ? 'Oddzwonimy możliwie szybko. Jeśli chcesz doprecyzować projekt, możesz też wysłać pełny formularz.' : zp_suite_opt('contact.success_text','Otrzymaliśmy wiadomość i wrócimy z konkretną odpowiedzią.')),
+    'title'=>($is_phone ? 'Przyjęliśmy prośbę o telefon.' : ($is_short ? 'Dziękujemy! Zgłoszenie dotarło.' : zp_suite_opt('contact.success_title','Dziękujemy, zapytanie zostało wysłane.'))),
+    'message'=>($is_phone ? 'Oddzwonimy możliwie szybko. Jeśli chcesz doprecyzować projekt, możesz też wysłać pełny formularz.' : ($is_short ? 'Odezwiemy się zwykle w ciągu 1 dnia roboczego.' : zp_suite_opt('contact.success_text','Otrzymaliśmy wiadomość i wrócimy z konkretną odpowiedzią.'))),
     'lead_id'=> isset($lead['id']) ? $lead['id'] : '',
     'source'=> $source ?: ($is_phone ? 'Prośba o telefon — kontakt' : 'Formularz kontaktowy — kontakt'),
     'contact_mode'=> $mode_label ?: $contact_mode,

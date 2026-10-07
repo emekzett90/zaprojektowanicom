@@ -1045,7 +1045,8 @@ add_action('wp_footer', function(){
           var isContact=false;
           try{
             var body=init&&init.body;
-            if(body && typeof FormData!=='undefined' && body instanceof FormData){ isContact=body.get('action')==='zp_suite_contact'; }
+            // 2.8.0: krótki formularz kontaktowy pokazuje podziękowanie w miejscu formularza, więc bez dodatkowego toastu.
+            if(body && typeof FormData!=='undefined' && body instanceof FormData){ isContact=body.get('action')==='zp_suite_contact' && body.get('contact_mode')!=='short'; }
           }catch(e){}
           var p=originalFetch.apply(this,arguments);
           if(isContact){
@@ -1627,3 +1628,5 @@ require_once ZP_SUITE_PATH . 'includes/footer-cta.php';
 
 /* 2.8.0: przyjaźniejszy długi formularz kontaktowy (angielskie wersje nowych tekstów). */
 require_once ZP_SUITE_PATH . 'includes/contact-form-280.php';
+/* 2.8.0: krótki formularz kontaktowy w środku strony, pod pakietami z cenami (główna, podstrony usług, kampanie). */
+require_once ZP_SUITE_PATH . 'includes/contact-quick.php';

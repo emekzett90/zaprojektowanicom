@@ -73,6 +73,8 @@ function zp_suite_defaults() {
       'recommendations' => '120',
     ],
     'visibility' => [
+      'quick_contact' => '1',
+      'quick_contact_pages' => '1',
       'trust_logos' => '1',
       'services_path' => '1',
       'showcase_portfolio' => '1',
