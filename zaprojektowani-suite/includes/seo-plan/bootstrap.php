@@ -36,7 +36,7 @@ if (!defined('ABSPATH')) { exit; }
  * Narzędzia → Plan SEO shows the migration log and can undo the database changes.
  */
 
-define('ZP_SEO_PLAN_VERSION', '2.8.1');
+define('ZP_SEO_PLAN_VERSION', '2.9.0');
 
 /** The plan is on unless an administrator paused it (Narzędzia → Plan SEO). */
 function zp_seo_plan_active(): bool {
@@ -65,10 +65,11 @@ function zp_seo_plan_path($uri = null): string {
   return $path;
 }
 
-/** Plan entry (title, description, focus, h1, links) for a path, or null. */
+/** Plan entry (title, description, focus, h1, links) for a path, or null. Articles from the feed (feed.php) count too. */
 function zp_seo_plan_entry(string $path): ?array {
   $plan = zp_seo_plan_data('plan');
-  return isset($plan[$path]) ? $plan[$path] : null;
+  if (isset($plan[$path])) { return $plan[$path]; }
+  return function_exists('zp_feed_entry') ? zp_feed_entry($path) : null;
 }
 
 /** True when the visitor sees the English version (zaprojektowani-languages). */
@@ -95,3 +96,5 @@ require_once __DIR__ . '/faq.php';
 require_once __DIR__ . '/about.php';
 require_once __DIR__ . '/migration.php';
 require_once __DIR__ . '/admin.php';
+require_once __DIR__ . '/feed.php';
+require_once __DIR__ . '/feed-admin.php';

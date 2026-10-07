@@ -2,7 +2,8 @@
 if (!defined('ABSPATH')) { exit; }
 /* Generated from tresci/paczka-2/paczka-2.json (content_add) — 2.5.0. New sections in existing posts:
  * inserted after the post's first article section, with a link in its table of contents.
- * 2.8.0: "W liczbach" in the website price post (audyt-po-wdrozeniu, 7.10), only prices Mat confirmed. */
+ * 2.8.0: "W liczbach" in the website price post (audyt-po-wdrozeniu, 7.10), only prices Mat confirmed.
+ * 2.8.2: the website price includes the domain and hosting (Mat, 7.10). */
 return [
   '/meta-ads/ile-kosztuje-reklama-na-facebooku/' => [
     ['id' => 'w-liczbach', 'toc' => 'W liczbach', 'html' => '<section id="w-liczbach" class="zpArticleNew__section"><p class="zpArticleNew__label">Konkretne kwoty</p><h2>Ile kosztuje reklama na Facebooku w liczbach?</h2>
@@ -14,7 +15,7 @@ return [
   ],
   '/strony-www/ile-kosztuje-stworzenie-strony-internetowej-dla-firmy/' => [
     ['id' => 'w-liczbach', 'toc' => 'W liczbach', 'html' => '<section id="w-liczbach" class="zpArticleNew__section"><p class="zpArticleNew__label">Konkretne kwoty</p><h2>Ile kosztuje strona internetowa w Zaprojektowani?</h2>
-<p>Stronę internetową dla firmy projektujemy od <strong>3&nbsp;999&nbsp;zł</strong>, zwykle w 2–4 tygodnie. Ostateczna cena zależy od zakresu: liczby podstron, indywidualnego projektu, treści, formularzy, animacji, SEO i integracji.</p>
+<p>Stronę internetową dla firmy projektujemy od <strong>3&nbsp;999&nbsp;zł</strong>, zwykle w 2–4 tygodnie. Ostateczna cena zależy od zakresu: liczby podstron, indywidualnego projektu, treści, formularzy, animacji, SEO i integracji. Domena i hosting są w cenie.</p>
 <p>Sklep internetowy na WooCommerce kosztuje u nas od <strong>6&nbsp;499&nbsp;zł</strong>. Logo ma stałe ceny pakietów: Logo Startowe 999&nbsp;zł, Mini Branding 1&nbsp;499&nbsp;zł i Branding Premium 2&nbsp;999&nbsp;zł.</p>
 <p>Kwotę dla swojego zakresu sprawdzisz w <a class="zpSeoLink" href="/studio-wyceny/">Studio Wyceny</a>. Od czego zależy cena i ile kosztuje utrzymanie strony, wyjaśniamy w dalszej części poradnika.</p>
 </section>'],

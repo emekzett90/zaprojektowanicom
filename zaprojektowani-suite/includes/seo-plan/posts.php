@@ -13,7 +13,10 @@ if (!defined('ABSPATH')) { exit; }
  *  - links in posts that pointed to the wrong page: the old /wiedza/ landing page address
  *    (it redirects to a post about shops) and the "ampanie-…" typo address,
  *  - photos in the article are marked as article images, so they load in full size,
- *  - links from articles the plugin published to newer articles (2.8.0).
+ *  - links from articles the plugin published to newer articles (2.8.0),
+ *  - text fixes in articles the plugin published (2.8.2),
+ *  - from the feed (feed.php, 2.9.0): new sections and links to new articles in older posts, and
+ *    links to feed articles that are not published yet shown as plain text.
  * English pages are left alone.
  */
 
@@ -42,6 +45,24 @@ function zp_seo_posts_inline_links(): array {
   ];
 }
 
+/**
+ * Text fixes in articles the plugin already published (data/articles/ is used only when a post
+ * is created): path => [[exact old text, new text]]. 2.8.2: the website price includes the domain
+ * and hosting (Mat, 7.10). Nothing changes when the text was edited in WordPress.
+ */
+function zp_seo_posts_text_fixes(): array {
+  return [
+    '/strony-internetowe/jak-stworzyc-strone-internetowa/' => [
+      // Cost table, row "Agencja lub freelancer" (cell by cell: WordPress puts line breaks between cells).
+      ['<td>projekt, u nas od 3 999 zł</td>', '<td>projekt, u nas od 3 999 zł z domeną i hostingiem</td>'],
+      ['<td>domena, hosting i opcjonalnie opieka techniczna</td>', '<td>zwykle domena i hosting (u nas w cenie strony), opcjonalnie opieka techniczna</td>'],
+      // FAQ "Ile kosztuje stworzenie strony internetowej?" (answer and JSON-LD).
+      ['u nas projekty zaczynają się od 3 999 zł. Szczegóły opisuje poradnik',
+       'u nas projekty zaczynają się od 3 999 zł, z domeną i hostingiem w cenie. Szczegóły opisuje poradnik'],
+    ],
+  ];
+}
+
 function zp_seo_posts_transform(string $html): string {
   static $busy = false;
   if ($busy || $html === '' || !zp_seo_plan_active() || zp_seo_plan_is_en() || is_admin() || !is_singular('post')) { return $html; }
@@ -64,7 +85,7 @@ function zp_seo_posts_transform(string $html): string {
   }
 
   // New sections and their table of contents links.
-  foreach ((array) (zp_seo_plan_data('sections')[$path] ?? []) as $s) {
+  foreach (array_merge((array) (zp_seo_plan_data('sections')[$path] ?? []), zp_feed_sections_for($path)) as $s) {
     $sid = (string) $s['id'];
     if (strpos($html, 'id="' . $sid . '"') !== false || ($range = zp_seo_html_section_range($html, 'zpArticleNew__section')) === null) { continue; }
     $first = preg_match('~\bid="([^"]+)"~', substr($html, $range[0], 300), $fm) ? $fm[1] : '';
@@ -86,6 +107,20 @@ function zp_seo_posts_transform(string $html): string {
     if (!zp_seo_plan_link_is_live($to) || ($at = strpos($html, $text)) === false) { continue; }
     $linked = (string) preg_replace('~' . preg_quote($words, '~') . '~u', '<a href="' . esc_url(home_url($to)) . '">' . $words . '</a>', $text, 1);
     $html = substr_replace($html, $linked, $at, strlen($text));
+  }
+
+  // Links to articles from the feed: only where the exact fragment is still in the post.
+  foreach (zp_feed_links_for($path) as $link) {
+    [$text, $words, $to] = $link;
+    if ($to === $path || !zp_seo_plan_link_is_live($to) || ($at = strpos($html, $text)) === false) { continue; }
+    $linked = zp_feed_link_fragment($text, $words, $to);
+    if ($linked !== null) { $html = substr_replace($html, $linked, $at, strlen($text)); }
+  }
+  $html = zp_feed_unlink_pending($html);
+
+  // Text fixes in published articles.
+  foreach ((array) (zp_seo_posts_text_fixes()[$path] ?? []) as $fix) {
+    $html = str_replace($fix[0], $fix[1], $html);
   }
 
   // Links to the wrong page.

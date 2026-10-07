@@ -68,7 +68,12 @@ add_filter('do_shortcode_tag', function ($output, $tag) {
   if ($variant === '') { return $output; }
   $spec = zp_seo_service_spec($variant);
   if (!$spec || $spec['kind'] !== $kinds[$tag]) { return $output; }
-  if (!empty($spec['content'])) { return zp_seo_service_remap_links(zp_seo_content_transform($output, $spec['content'])); }
+  if (!empty($spec['content'])) {
+    $html = zp_seo_content_transform($output, $spec['content']);
+    // 2.9.0: a local content page (variant ending -local) keeps the #zasieg links on the Katowice pages.
+    if (substr($variant, -6) === '-local') { $html = zp_seo_content_in_section($html, 'id="zasieg"', 'zp_seo_service_keep_local'); }
+    return zp_seo_service_remap_links($html);
+  }
   return zp_seo_service_transform($output, $spec, $variant);
 }, 20, 2);
 
@@ -147,14 +152,20 @@ function zp_seo_ws_replace(string $html, string $old, string $new): string {
   return is_string($out) ? $out : $html;
 }
 
-/** Katowice service URLs inside the templates point to the nationwide pages. */
+/** Marks the links to the Katowice service pages as deliberate (data-zp-local), so no remap moves them. */
+function zp_seo_service_keep_local(string $html): string {
+  $out = preg_replace('~<a\b(?![^>]*data-zp-local)([^>]*\shref=["\'](?:https?://(?:www\.)?zaprojektowani\.com)?/(?:strony-internetowe-katowice|sklepy-internetowe-katowice|logo-branding-katowice)/)~i', '<a data-zp-local="1"$1', $html);
+  return is_string($out) ? $out : $html;
+}
+
+/** Katowice service URLs inside the templates point to the nationwide pages (links marked data-zp-local stay). */
 function zp_seo_service_remap_links(string $html): string {
   $map = [
     'strony-internetowe-katowice' => '/tworzenie-stron-internetowych/',
     'sklepy-internetowe-katowice' => '/tworzenie-sklepow-internetowych/',
     'logo-branding-katowice'      => '/projektowanie-logo/',
   ];
-  $out = preg_replace_callback('~href=(["\'])(?:https?://(?:www\.)?zaprojektowani\.com)?/(strony-internetowe-katowice|sklepy-internetowe-katowice|logo-branding-katowice)/(#[^"\']*)?\1~i', static function ($m) use ($map) {
+  $out = preg_replace_callback('~(?<!data-zp-local="1" )href=(["\'])(?:https?://(?:www\.)?zaprojektowani\.com)?/(strony-internetowe-katowice|sklepy-internetowe-katowice|logo-branding-katowice)/(#[^"\']*)?\1~i', static function ($m) use ($map) {
     return 'href=' . $m[1] . esc_url(home_url($map[strtolower($m[2])])) . ($m[3] ?? '') . $m[1];
   }, $html);
   return is_string($out) ? $out : $html;
@@ -341,7 +352,7 @@ function zp_seo_service_spec(string $variant): ?array {
         'h1' => 'Strony internetowe <strong class="gradient-text">w Katowicach i na Śląsku</strong>',
         'faq' => [
           ['new', 'Czy możemy spotkać się w Katowicach?', 'Tak. Nasze biuro mieści się w Katowicach przy <strong>ul. Modelarskiej 18/2</strong>. Na spotkaniu omawiamy brief, cele strony i zakres prac. Kolejne etapy — makiety, projekt i odbiory — prowadzimy w biurze albo online, jak wygodniej.'],
-          ['new', 'Czy tworzycie strony internetowe dla firm z całego Śląska?', 'Tak. Pracujemy z firmami z Katowic i całego województwa śląskiego, a także z innych regionów Polski. Firmom działającym lokalnie układamy strukturę treści pod <strong>wyszukiwania lokalne</strong> i łączymy stronę z Profilem Firmy w Google.'],
+          ['new', 'Czy tworzycie strony internetowe dla firm z całego Śląska?', 'Tak. Pracujemy z firmami z Katowic i całego województwa śląskiego, a także z innych regionów Polski. Firmom działającym lokalnie układamy strukturę treści pod <strong>wyszukiwania lokalne</strong> i łączymy stronę z Profilem Firmy w Google.' . $AS('/agencja-reklamowa-katowice/', ' Jeśli oprócz strony potrzebujesz logo i reklam, zobacz, co robi nasza ', 'agencja reklamowa w Katowicach', '.')],
           ['keep', 2],
           ['new', 'Ile kosztuje strona internetowa w Katowicach?', 'Cena zależy od zakresu, a nie od miasta: liczby podstron, poziomu projektu, treści i funkcji. Od czego zależy cena, wyjaśniamy w poradniku ' . $L($cost_www, 'ile kosztuje strona internetowa') . ', a dokładną wycenę przygotujemy po uzupełnieniu ' . $L('/studio-wyceny/', 'Studia Wyceny') . '.'],
           ['keep', 3],
@@ -370,7 +381,7 @@ function zp_seo_service_spec(string $variant): ?array {
           ['keep', 7, $AS('/sklepy-internetowe/bramka-platnicza/', 'Jak wybrać operatora i podłączyć go do WooCommerce, wyjaśniamy w poradniku o tym, jak działa ', 'bramka płatnicza', '.')],
           ['keep', 8, $AS('/sklepy-internetowe/sklep-b2b/', 'Funkcje i platformy opisujemy w poradniku o tym, jak zbudować ', 'sklep B2B', '.')],
           ['keep', 9], ['keep', 10], ['keep', 11], ['keep', 12],
-          ['new', 'Czy projektujecie sklepy WooCommerce pod konkretne branże?', 'Tak. Sklep dla producenta, marki premium, firmy B2B, salonu, dystrybutora albo marki lokalnej powinien mieć inną strukturę kategorii, kart produktów, filtrów i ścieżki zakupu. Dlatego dopasowujemy WooCommerce do produktu, marży, sposobu sprzedaży i dalszego SEO e-commerce.'],
+          ['new', 'Czy projektujecie sklepy WooCommerce pod konkretne branże?', 'Tak. Sklep dla producenta, marki premium, firmy B2B, salonu, dystrybutora albo marki lokalnej powinien mieć inną strukturę kategorii, kart produktów, filtrów i ścieżki zakupu. Dlatego dopasowujemy WooCommerce do produktu, marży, sposobu sprzedaży i dalszego SEO e-commerce.' . $AS('/sklepy-internetowe/seo-sklepu-internetowego/', ' Jak przygotować sklep pod Google już przy budowie, opisujemy w poradniku ', 'SEO sklepu internetowego', '.')],
           ['new', 'Czy przenosicie istniejące sklepy na WooCommerce?', 'Tak. Przenosimy produkty, kategorie, klientów i zamówienia, a przede wszystkim adresy URL i przekierowania, żeby sklep nie stracił widoczności w Google. Jak wygląda taki proces, opisujemy w poradniku ' . $L('/strony-internetowe/migracja-sklepu-na-woocommerce/', 'migracja sklepu na WooCommerce') . '.'],
           ['keep', 14], ['keep', 15],
         ],
@@ -405,7 +416,7 @@ function zp_seo_service_spec(string $variant): ?array {
         'h1' => 'Sklepy internetowe <span class="zh__grad">w Katowicach i na Śląsku</span>',
         'faq' => [
           ['new', 'Czy tworzycie sklepy internetowe dla firm z Katowic?', 'Tak. Projektujemy i wdrażamy <strong>sklepy internetowe dla firm z Katowic i całego Śląska</strong>. Zapraszamy do naszego biura przy ul. Modelarskiej 18/2 w Katowicach — tam omówimy model sprzedaży, produkty i zakres wdrożenia. Pełny zakres usług opisujemy na stronie ' . $L('/tworzenie-sklepow-internetowych/', 'tworzenie sklepów internetowych') . '.'],
-          ['new', 'Czy prowadzicie projekt sklepu w biurze, czy online?', 'Jak wygodniej. Brief i warsztat sprzedażowy możemy zrobić w biurze w Katowicach, a projekt, wdrożenie i odbiory prowadzić online. Po starcie sklepu pomagamy w rozbudowie, treściach i kampaniach.'],
+          ['new', 'Czy prowadzicie projekt sklepu w biurze, czy online?', 'Jak wygodniej. Brief i warsztat sprzedażowy możemy zrobić w biurze w Katowicach, a projekt, wdrożenie i odbiory prowadzić online. Po starcie sklepu pomagamy w rozbudowie, treściach i kampaniach.' . $AS('/agencja-reklamowa-katowice/', ' Sklep, logo i kampanie może prowadzić jedna ', 'agencja reklamowa w Katowicach i na Śląsku', '.')],
           ['new', 'Ile kosztuje sklep internetowy?', 'Cena zależy od zakresu: liczby produktów, integracji płatności i dostaw, projektu i SEO. Orientacyjne kwoty opisujemy w poradniku ' . $L('/seo-i-konwersja/ile-kosztuje-sklep-internetowy-woocommerce-w-2026-roku/', 'ile kosztuje sklep internetowy') . ', a dokładną wycenę przygotujemy w ' . $L('/studio-wyceny/', 'Studio Wyceny') . '.'],
           ['keep', 7], ['keep', 9], ['keep', 15],
         ],
@@ -428,7 +439,7 @@ function zp_seo_service_spec(string $variant): ?array {
           ['<p class="hero-eyebrow">Logo &amp; branding • Katowice</p>', '<p class="hero-eyebrow">Projektowanie logo • cała Polska</p>'],
           ['Tworzymy <strong>logo, identyfikacje wizualne i brandbooki</strong>, które dobrze wyglądają nie tylko na prezentacji. Projektujemy system gotowy na stronę internetową, social media, druk, opakowania i materiały sprzedażowe.', 'Projektujemy <strong>logo i logotypy dla firm z całej Polski</strong> — od strategii i koncepcji, przez warianty znaku, po komplet plików do druku i internetu. Każdy projekt sprawdzamy na stronie, w social mediach, w druku i na materiałach sprzedażowych.'],
           ['z pełną księgą znaku i zasadami wdrożenia.', 'z pełną księgą znaku i zasadami wdrożenia. Orientacyjne kwoty opisujemy w poradniku ' . $L($cost_logo, 'ile kosztuje logo') . '.'],
-          ['na dokumentach, wizytówkach, stronie i materiałach firmowych.', 'na dokumentach, wizytówkach, stronie i materiałach firmowych. Gdy znak potrzebuje całego systemu, zajmujemy się też projektem, jakim jest ' . $L('/identyfikacja-wizualna/', 'identyfikacja wizualna') . '.'],
+          ['na dokumentach, wizytówkach, stronie i materiałach firmowych.', 'na dokumentach, wizytówkach, stronie i materiałach firmowych. Gdy znak potrzebuje całego systemu, zajmujemy się też projektem, jakim jest ' . $L('/identyfikacja-wizualna/', 'identyfikacja wizualna') . '.' . $AS('/logo-branding/mockup-co-to-jest/', ' Jak oceniać logo na wizualizacjach, wyjaśniamy w poradniku ', 'mockup – co to jest', '.')],
           ['<h2 class="section-title"> Różne branże. <strong>Żadnego jednego stylu na wszystko.</strong> </h2>', '<h2 class="section-title">Realizacje logo. <strong>Żadnego jednego stylu na wszystko.</strong></h2>'],
           ['<h2 class="section-title"> Od briefu do plików <strong>gotowych do wdrożenia.</strong> </h2>', '<h2 class="section-title">Jak projektujemy logo: <strong>od briefu do plików.</strong></h2>'],
           ['Wiesz, nad czym pracujemy, po co i co wydarzy się dalej.', 'Wiesz, nad czym pracujemy, po co i co wydarzy się dalej. Krok po kroku opisujemy to w poradniku ' . $L('/logo-branding/projektowanie-logo-jak-powstaje-znak-ktory-dziala-w-internecie-druku-i-sprzedazy/', 'jak zaprojektować logo') . '.'],
@@ -462,7 +473,7 @@ function zp_seo_service_spec(string $variant): ?array {
           ['<h2 class="section-title"> Wybierz zakres dopasowany do <strong>etapu Twojej marki.</strong> </h2>', '<h2 class="section-title">Ile kosztuje identyfikacja wizualna? <strong>Wybierz zakres.</strong></h2>'],
           ['z pełną księgą znaku i zasadami wdrożenia.', 'z pełną księgą znaku i zasadami wdrożenia. Ceny logo i identyfikacji wizualnej opisujemy w poradniku ' . $L($cost_logo, 'ile kosztuje identyfikacja wizualna') . '.'],
           ['<h2 class="section-title"> Logo otwiera system. <strong class="gradient-text" >Branding pilnuje spójności.</strong > </h2>', '<h2 class="section-title">Co obejmuje identyfikacja wizualna? <strong class="gradient-text">Cały system marki.</strong></h2>'],
-          ['na dokumentach, wizytówkach, stronie i materiałach firmowych.', 'na dokumentach, wizytówkach, stronie i materiałach firmowych. Punktem wyjścia jest zawsze znak — zobacz, jak wygląda ' . $L('/projektowanie-logo/', 'projektowanie logo') . '.' . $AS('/logo-branding/projekt-wizytowki/', ' Jak przygotować ', 'projekt wizytówki', ' do druku, pokazujemy w osobnym poradniku.')],
+          ['na dokumentach, wizytówkach, stronie i materiałach firmowych.', 'na dokumentach, wizytówkach, stronie i materiałach firmowych. Punktem wyjścia jest zawsze znak — zobacz, jak wygląda ' . $L('/projektowanie-logo/', 'projektowanie logo') . '.' . $AS('/logo-branding/projekt-wizytowki/', ' Jak przygotować ', 'projekt wizytówki', ' do druku, pokazujemy w osobnym poradniku.') . $AS('/logo-branding/papier-firmowy/', ' Co powinien zawierać ', 'wzór papieru firmowego', ', opisujemy w poradniku o papierze firmowym.')],
           ['<h2 class="section-title"> Różne branże. <strong>Żadnego jednego stylu na wszystko.</strong> </h2>', '<h2 class="section-title">Realizacje brandingowe. <strong>Żadnego jednego stylu na wszystko.</strong></h2>'],
           ['<h2 class="section-title"> Od briefu do plików <strong>gotowych do wdrożenia.</strong> </h2>', '<h2 class="section-title">Proces: od strategii marki <strong>do wdrożenia.</strong></h2>'],
           ['<h2> System gotowy do pracy. <strong class="gradient-text">Nie pojedynczy plik.</strong> </h2>', '<h2>Księga znaku i brandbook. <strong class="gradient-text">System gotowy do pracy.</strong></h2>'],
@@ -486,7 +497,7 @@ function zp_seo_service_spec(string $variant): ?array {
           ['keep', 3],
           ['new', 'Czy możemy zrobić warsztat marki w Katowicach?', 'Tak. Warsztat marki prowadzimy w naszym biurze przy <strong>ul. Modelarskiej 18/2 w Katowicach</strong>. Omawiamy charakter firmy, odbiorców, konkurencję i miejsca użycia znaku. Kolejne etapy — prezentacje i odbiory — mogą odbywać się w biurze albo online.'],
           ['keep', 8], ['keep', 9],
-          ['new', 'Gdzie znajdę więcej o logo i identyfikacji wizualnej?', 'Pakiety, proces i pliki, które otrzymujesz, pokazujemy wyżej na tej stronie. Więcej o samym znaku i o całym systemie marki piszemy na stronach ' . $L('/projektowanie-logo/', 'projektowanie logo') . ' oraz ' . $L('/identyfikacja-wizualna/', 'identyfikacja wizualna') . '.'],
+          ['new', 'Gdzie znajdę więcej o logo i identyfikacji wizualnej?', 'Pakiety, proces i pliki, które otrzymujesz, pokazujemy wyżej na tej stronie. Więcej o samym znaku i o całym systemie marki piszemy na stronach ' . $L('/projektowanie-logo/', 'projektowanie logo') . ' oraz ' . $L('/identyfikacja-wizualna/', 'identyfikacja wizualna') . '.' . $AS('/agencja-reklamowa-katowice/', ' Stronę i reklamy w nowej estetyce przygotuje ta sama ', 'agencja reklamowa z siedzibą w Katowicach', '.')],
         ],
         'replace' => [
           ['Tworzymy <strong>logo, identyfikacje wizualne i brandbooki</strong>, które dobrze wyglądają nie tylko na prezentacji. Projektujemy system gotowy na stronę internetową, social media, druk, opakowania i materiały sprzedażowe.', 'Studio z Katowic, ul. Modelarska 18/2. Projektujemy <strong>logo i identyfikację wizualną</strong> dla firm z Katowic i Śląska — z warsztatem marki w naszym biurze albo w pełni online.'],

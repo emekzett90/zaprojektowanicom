@@ -57,7 +57,7 @@ function zp_seo_studio_faq(): array {
     ['Czy wycena jest bezpłatna?', 'Tak. Wycena strony internetowej, sklepu albo kampanii jest bezpłatna i nie zobowiązuje do zamówienia. Pakiety logo mają stałe ceny, więc w ich przypadku od razu wysyłasz zgłoszenie zamówienia, a my potwierdzamy szczegóły.'],
     ['Jak szybko dostanę wycenę?', 'W ciągu 48–72 godzin od wysłania briefu. Jeśli zostawisz numer telefonu, możemy też oddzwonić i doprecyzować zakres w rozmowie.'],
     ['Dlaczego ceny w cenniku są podane „od”?', 'Bo strona wizytówka i serwis z kilkudziesięcioma podstronami to zupełnie inna ilość pracy. Cena „od” to najmniejszy kompletny projekt danego typu, a końcową kwotę ustalamy na podstawie zakresu z briefu, zanim zaczniemy pracę.'],
-    ['Czy cena strony obejmuje domenę i hosting?', 'Nie. Domena i hosting to koszty stałe, które opłacasz osobno, najlepiej na dane swojej firmy, żeby mieć do nich pełny dostęp. Pomożemy je wybrać i skonfigurować, a stronę publikujemy na Twojej domenie i przekazujemy z pełnymi dostępami.'],
+    ['Czy cena strony obejmuje domenę i hosting?', 'Tak. Cena strony internetowej obejmuje domenę i hosting. Pomożemy wybrać adres domeny, a gotową stronę publikujemy i przekazujemy z pełnymi dostępami.'],
     ['Czy mogę zamówić stronę, logo i kampanię w jednym projekcie?', 'Tak. Przygotujemy wtedy jedną wycenę i kolejność prac, żeby logo, strona i reklamy powstały w jednym stylu. Wybierz w Studio Wyceny główną usługę i dopisz resztę w opisie albo napisz do nas przez formularz kontaktowy.'],
   ];
 }
@@ -91,8 +91,8 @@ function zp_seo_studio_guide_body(): string {
     . '<li>podstawy SEO technicznego: nagłówki, adresy podstron, szybkość i mapa witryny,</li>'
     . '<li>formularze, analityka i publikacja na Twojej domenie z pełnymi dostępami.</li>'
     . '</ul>'
-    . '<p>Poza ceną projektu zostają domena, hosting i ewentualna ' . $L('/opieka-wordpress/', 'opieka nad stroną WordPress')
-    . '. Ile to kosztuje w skali roku, liczymy w poradniku '
+    . '<p>Cena strony internetowej obejmuje też domenę i hosting. Osobno możesz zamówić ' . $L('/opieka-wordpress/', 'opiekę nad stroną WordPress')
+    . ', a z czego składa się utrzymanie strony, opisujemy w poradniku '
     . $L('/seo-i-konwersja/ile-kosztuje-utrzymanie-strony-internetowej/', 'ile kosztuje utrzymanie strony internetowej') . '.</p>'
 
     . '<h2 id="od-czego-zalezy-wycena">Od czego zależy wycena strony internetowej?</h2>'
