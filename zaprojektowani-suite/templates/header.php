@@ -289,7 +289,7 @@ $zp_menu_250_industry = [
   ['/strony-internetowe-dla-kancelarii/', 'scale', 'Kancelarie i prawnicy', 'Specjalizacje, zespół i kontakt'],
   ['/strony-internetowe-dla-lekarzy/', 'stethoscope', 'Lekarze i gabinety', 'Usługi, cennik i rejestracja'],
   ['/strony-internetowe-dla-deweloperow/', 'building-2', 'Deweloperzy i inwestycje', 'Inwestycje, mieszkania i zapytania'],
-  ['/strony-internetowe-dla-salonow-beauty/', 'sparkles', 'Salony beauty', 'Zabiegi, cennik i rezerwacje'],
+  ['/strony-internetowe-dla-salonow-beauty/', 'flower-2', 'Salony beauty', 'Zabiegi, cennik i rezerwacje'],
   ['/strony-internetowe-dla-trenerow-personalnych/', 'dumbbell', 'Trenerzy personalni', 'Oferta, pakiety i zapisy'],
   ['/strony-internetowe-dla-fotografow/', 'camera', 'Fotografowie', 'Portfolio, sesje i zapytania'],
   ['/strony-internetowe-dla-restauracji/', 'utensils-crossed', 'Restauracje i kawiarnie', 'Menu, rezerwacje i dojazd'],
