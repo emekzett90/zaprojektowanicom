@@ -69,7 +69,10 @@ final class Rest {
         $rk = self::reporting_key();
         $n = self::reporting_count();
         if ($n > 30) {
-            $res = new \WP_REST_Response(['ok' => false, 'reportAfter' => HOUR_IN_SECONDS], 429);
+            // Over the limit the report is dropped with a plain 200 and reportAfter, which zpl.js reads to wait an
+            // hour: a 429 would still show as a red "Failed to load resource" line in the visitor's Chrome console
+            // when several browsers share one address (an office network).
+            $res = new \WP_REST_Response(['ok' => false, 'reportAfter' => HOUR_IN_SECONDS], 200);
             $res->header('Retry-After', (string) HOUR_IN_SECONDS);
             $res->header('Cache-Control', 'no-store');
             return $res;
