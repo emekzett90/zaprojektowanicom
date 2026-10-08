@@ -867,7 +867,11 @@ function zp_ai_changed_at_display(array $paths, string $why, bool $ping = true):
   $changed = (array) get_option('zp_ai_changed', []);
   $urls = [];
   foreach (array_unique($paths) as $path) {
-    $id = function_exists('zp_seo_related_object_id') ? zp_seo_related_object_id($path) : (int) url_to_postid(home_url($path));
+    if ($path === '/') {
+      $id = get_option('show_on_front') === 'page' ? (int) get_option('page_on_front') : 0;
+    } else {
+      $id = function_exists('zp_seo_related_object_id') ? zp_seo_related_object_id($path) : (int) url_to_postid(home_url($path));
+    }
     $post = $id ? get_post($id) : null;
     if (!$post instanceof WP_Post || $post->post_status !== 'publish' || !($u = zp_ai_post_urls($post))) { continue; }
     $changed['paths'][zp_seo_plan_path($u[0])] = time();
@@ -879,6 +883,8 @@ function zp_ai_changed_at_display(array $paths, string $why, bool $ping = true):
   $changed['paths'] = array_slice($changed['paths'], -300, null, true);
   update_option('zp_ai_changed', $changed, false);
   if (class_exists('\RankMath\Sitemap\Cache')) { \RankMath\Sitemap\Cache::invalidate_storage(); }
+  // The English maps cache their entries until a post date changes, which these changes do not do (2.9.8).
+  if (method_exists('ZPL\\Sitemap', 'forget')) { \ZPL\Sitemap::forget(); }
   if ($ping) { zp_ai_indexnow_queue($urls); }
   zp_ai_log(sprintf('Zmiany przy wyświetlaniu (%s), liczba wpisów: %d. Nowa data w mapie witryny%s.', $why, count($urls), $ping ? ' i zgłoszenie do IndexNow' : ''));
 }

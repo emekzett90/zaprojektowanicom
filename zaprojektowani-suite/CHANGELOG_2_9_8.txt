@@ -21,7 +21,13 @@ zmienia:
   Google i modeli AI bierze się z Twojego cennika we wtyczce,
 - /llms.txt: lista poradników urywała się na 40 pozycjach, więc starsze wpisy wypadały z niej, gdy
   moduł „Publikacja wpisów” dodawał nowe. Teraz jest na niej każdy opublikowany poradnik, od
-  najnowszego.
+  najnowszego,
+- mapa witryny: strony, które zmieniały wydania 2.9.x (strona główna, 8 stron branż, Tworzenie stron
+  internetowych, Strona wizytówka, Strony WordPress, Landing page, Strony internetowe Katowice,
+  Agencja reklamowa Katowice, Kontakt, Studio wyceny, FAQ), miały w mapie stare daty, np. strona
+  główna 14.06. Po wgraniu dostają datę wgrania (wersje angielskie też) i idą do IndexNow, tak jak
+  wpisy zmieniane przez moduł „Publikacja wpisów”. Każde kolejne wydanie odświeża datę tylko tych
+  stron, które samo zmienia, żeby Google dalej ufał tym datom.
 
 Po wgraniu:
 1. Wejdź raz na dowolną stronę.

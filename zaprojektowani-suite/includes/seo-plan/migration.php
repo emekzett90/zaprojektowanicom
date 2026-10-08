@@ -114,6 +114,26 @@ function zp_seo_plan_set_title(array &$backup, int $id, string $title): string {
   return 'written';
 }
 
+/**
+ * Pages whose content a release changed in code, so their post date never moved (2.9.8). Their date in
+ * the sitemap (and the English page's, which takes the Polish date) becomes the install date, and they go
+ * to IndexNow, the way posts changed by the content feed do. A list per release, not every page, so the
+ * dates stay worth trusting. 2.9.8 lists what 2.9.0–2.9.7 changed (thread 10 found / dated 14.06 and the
+ * industry pages 3.10) and what it changes itself: the home page, the agency page and the industry pages.
+ */
+function zp_seo_plan_changed_pages(): array {
+  return [
+    '2.9.8' => [
+      '/', '/agencja-reklamowa-katowice/', '/strony-internetowe-katowice/',
+      '/strony-internetowe-dla-kancelarii/', '/strony-internetowe-dla-lekarzy/', '/strony-internetowe-dla-deweloperow/',
+      '/strony-internetowe-dla-salonow-beauty/', '/strony-internetowe-dla-trenerow-personalnych/', '/strony-internetowe-dla-fotografow/',
+      '/strony-internetowe-dla-restauracji/', '/strony-internetowe-dla-hoteli/',
+      '/tworzenie-stron-internetowych/', '/strona-wizytowka/', '/strony-wordpress/', '/tworzenie-landing-page/',
+      '/kontakt/', '/studio-wyceny/', '/najczesciej-zadawane-pytania/',
+    ],
+  ];
+}
+
 function zp_seo_plan_migrate(): void {
   $log = ['Start migracji planu SEO ' . ZP_SEO_PLAN_VERSION . '.'];
   $backup = zp_seo_plan_backup();
@@ -238,6 +258,13 @@ function zp_seo_plan_migrate(): void {
   if (class_exists('ZPL\\Cleanup')) {
     $off = \ZPL\Cleanup::deactivate();
     $log[] = $off ? 'Wyłączono stare wtyczki tłumaczeń: ' . implode(', ', $off) . '. Ich dane zostały.' : 'Żadna stara wtyczka tłumaczeń nie była włączona.';
+  }
+
+  // 7c. Pages this release changed in code get a fresh sitemap date (2.9.8).
+  $changed = (array) (zp_seo_plan_changed_pages()[ZP_SEO_PLAN_VERSION] ?? []);
+  if ($changed && function_exists('zp_ai_changed_at_display')) {
+    zp_ai_changed_at_display($changed, 'strony zmienione w ' . ZP_SEO_PLAN_VERSION);
+    $log[] = 'Nowa data w mapie witryny i zgłoszenie do IndexNow dla stron zmienionych w tej wersji: ' . count($changed) . '.';
   }
 
   // 8. Caches.
