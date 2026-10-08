@@ -7,6 +7,9 @@ if (!defined('ABSPATH')) { exit; }
  * The hero sections had "120+ projektów" hard-coded while the trust widget and the about
  * section used "Liczba realizacji" from the plugin settings (114). The service heroes and
  * the logo section now read the same setting, so the number is changed in one place.
+ * 2.9.6: the strip under the website template's hero ("60+ projektów online", e.g. on
+ * /strony-internetowe-katowice/ and /agencja-reklamowa-katowice/) reads it as well. The page
+ * said 60+, "ponad 110" and 114+ at once, and AI answers repeat whichever number they find.
  */
 
 function zp_seo_plan_projects_count(): int {
@@ -21,6 +24,7 @@ function zp_seo_plan_apply_projects_count(string $html): string {
     return '<b data-count="' . $n . '" data-suffix="+">' . ($m[1] === '0' ? '0' : $n . '+') . '</b><span>projektów</span>';
   }, $html);
   $html = str_replace(['ponad <em>114 marek</em>', '<strong>114+</strong>'], ['ponad <em>' . $n . ' marek</em>', '<strong>' . $n . '+</strong>'], $html);
+  $html = str_replace('<strong data-count="60" data-suffix="+">60+</strong><span>projektów online</span>', '<strong data-count="' . $n . '" data-suffix="+">' . $n . '+</strong><span>projektów</span>', $html);
   return $html;
 }
 
