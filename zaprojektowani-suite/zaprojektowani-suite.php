@@ -1622,6 +1622,9 @@ require_once ZP_SUITE_PATH . 'includes/ultimate-seo/bootstrap.php';
 // v2.3.0 — keyword plan: Rank Math values, nationwide service pages, redirects, schema and indexation.
 require_once ZP_SUITE_PATH . 'includes/seo-plan/bootstrap.php';
 
+// v2.9.4 — home page: a tile for every industry page, and a looser layout for the SEO section above the footer.
+require_once ZP_SUITE_PATH . 'includes/home-294.php';
+
 // v2.4.0 — minified stylesheets (assets/*.min.css, tools/minify_css.py).
 require_once ZP_SUITE_PATH . 'includes/css-min.php';
 
