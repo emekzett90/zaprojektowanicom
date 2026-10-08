@@ -64,7 +64,7 @@ function zp_suite_contact_team_pick(array $exclude, string $key): string {
   $all = array_keys(zp_suite_contact_team_pool());
   $free = array_values(array_diff($all, $exclude));
   if (!$free) { $free = $all; }
-  return $free[crc32($key . '#8') % count($free)];
+  return $free[(int) sprintf('%u', crc32($key . '#8')) % count($free)];
 }
 
 function zp_suite_contact_team_img(string $slug): string {
