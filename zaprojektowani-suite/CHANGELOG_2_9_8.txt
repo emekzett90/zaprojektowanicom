@@ -36,6 +36,18 @@ prostokąt i błąd 404 w przeglądarce. Teraz karta bierze zdjęcie Apartamentu
 samo, które pokazuje /realizacje/), a gdy go zabraknie, pomija to miejsce. Domyślne zdjęcie tego
 projektu w Stronie głównej CMS też wskazuje istniejący plik.
 
+Strony branżowe i główna, tylko na komputerze (Twoje prośby z 8.10, 16:48); na telefonie bez zmian:
+- hero 8 stron branż: zdjęcie o 10% większe, a hero kończy się 270 px pod tekstem zamiast stałej
+  wysokości, więc jest krótsze (na Twoim ekranie 1943×817 o 33–164 px; salony beauty mają tę samą
+  wysokość, ale mniej pustego miejsca, a trenerzy tylko większe zdjęcie),
+- trenerzy, „Jak pracujemy”: zdjęcie o 30% większe, nagłówek szerszy (3 linijki zamiast 5),
+- karty branż na głównej wyglądają jak karty na podstronach, a po najechaniu pokazują trzy hasła
+  branży, „Od 3 999 zł, domena i hosting w cenie” i „Zobacz ofertę”,
+- FAQ na głównej: siedzący Mateusz na karcie po lewej i cztery nowe pytania (agencja interaktywna czy
+  kreatywna, co jest w cenie strony, przebudowa bez utraty pozycji, samodzielna edycja treści). Są we
+  wtyczce, nie w formularzu Strony głównej CMS, więc formularz zapisuje się jak dotąd,
+- wersje angielskie nowych tekstów i 12 haseł branż, których brakowało na stronach angielskich.
+
 Po wgraniu:
 1. Wejdź raz na dowolną stronę.
 2. Napisz w wątku „wgrane”.
