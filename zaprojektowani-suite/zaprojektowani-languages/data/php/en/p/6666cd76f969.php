@@ -148,7 +148,7 @@ return [
 'Przewiń'=>'Scroll',
 'projektów'=>'projects',
 'średnia ocena'=>'average rating',
-'lat doświadczenia'=>'years of experience',
+'lat doświadczenia zespołu'=>'years of team experience',
 'Zaufali nam'=>'They trusted us',
 'Firmy, dla których projektowaliśmy strony, sklepy i branding'=>'Companies we\'ve designed websites, stores and branding for',
 'Zakres usług Zaprojektowani'=>'Zaprojektowani services',

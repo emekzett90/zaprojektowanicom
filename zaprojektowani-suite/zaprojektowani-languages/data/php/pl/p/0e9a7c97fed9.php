@@ -776,7 +776,7 @@ return [
 'well-being'=>'well-being',
 'wellness'=>'wellness',
 'working model'=>'model pracy',
-'years of experience'=>'lat doświadczenia',
+'years of team experience'=>'lat doświadczenia zespołu',
 '~10 min read'=>'~10 min czytania',
 '~11 min read'=>'~11 min czytania',
 '~13 min read'=>'~13 min czytania',

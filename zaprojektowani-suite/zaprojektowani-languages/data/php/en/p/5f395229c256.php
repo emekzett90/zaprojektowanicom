@@ -811,7 +811,7 @@ return [
 'koszyk i płatności'=>'cart and payments',
 'krótkie wdrożenie w obsługę WordPress'=>'short WordPress onboarding',
 'landing pod kampanie'=>'campaign landing pages',
-'lat doświadczenia'=>'years of experience',
+'lat doświadczenia zespołu'=>'years of team experience',
 'lazy loading'=>'lazy loading',
 'lazy loading obrazów'=>'image lazy loading',
 'liczby / przewagi / argumenty sprzedażowe'=>'numbers / advantages / sales arguments',

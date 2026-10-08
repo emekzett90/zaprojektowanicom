@@ -130,7 +130,7 @@ return [
 'Store design results'=>'Wyniki projektowania sklepów',
 'projects'=>'projektów',
 'average rating'=>'średnia ocena',
-'years of experience'=>'lat doświadczenia',
+'years of team experience'=>'lat doświadczenia zespołu',
 'Scroll'=>'Przewiń',
 'Zaprojektowani.com — Google Ads logo'=>'Zaprojektowani.com — google ads logo',
 'Zaprojektowani.com — ManageWP logo'=>'Zaprojektowani.com — manage wp logo',

@@ -652,7 +652,7 @@ return [
 'kolory HEX / RGB / CMYK + Pantone'=>'HEX / RGB / CMYK + Pantone colors',
 'kompletny zestaw AI, EPS, SVG, PDF, PNG i JPG'=>'complete set of AI, EPS, SVG, PDF, PNG and JPG files',
 'kontakt'=>'contact',
-'lat doświadczenia'=>'years of experience',
+'lat doświadczenia zespołu'=>'years of team experience',
 'logo'=>'logo',
 'logo + sygnet / monogram / znak pomocniczy'=>'logo + logomark / monogram / secondary mark',
 'logo główne'=>'primary logo',

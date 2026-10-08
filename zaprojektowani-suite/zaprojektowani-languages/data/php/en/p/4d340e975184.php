@@ -459,7 +459,7 @@ return [
 'gotowe do dalszego wzrostu'=>'ready for further growth',
 'jeden proces, spójny wygląd i gotowość pod dalszy marketing'=>'one process, a consistent look and readiness for further marketing',
 'kontakt'=>'contact',
-'lat doświadczenia'=>'years of experience',
+'lat doświadczenia zespołu'=>'years of team experience',
 'liczba godzin na zmiany treści w miesiącu,'=>'the number of hours for content changes per month,',
 'liczba wtyczek i integracji, które trzeba aktualizować i testować,'=>'the number of plugins and integrations that need updating and testing,',
 'logo'=>'logo',

@@ -596,7 +596,7 @@ return [
 'kontrola indeksacji po publikacji'=>'post-launch indexing check',
 'kopia zapasowa przed publikacją'=>'backup before launch',
 'krótkie wdrożenie w obsługę WordPress'=>'short WordPress onboarding',
-'lat doświadczenia'=>'years of experience',
+'lat doświadczenia zespołu'=>'years of team experience',
 'lazy loading'=>'lazy loading',
 'lazy loading obrazów'=>'image lazy loading',
 'liczba wersji, na przykład osobne landingi dla kilku usług albo warianty do testów,'=>'number of versions, for example separate landing pages for several services or variants for testing,',

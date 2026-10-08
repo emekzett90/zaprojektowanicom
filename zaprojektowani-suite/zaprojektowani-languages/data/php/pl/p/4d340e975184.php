@@ -482,7 +482,7 @@ return [
 'up to PLN 3,000'=>'do 3 000 zł',
 'updates and backups'=>'aktualizacje i kopie zapasowe',
 'websites'=>'strony',
-'years of experience'=>'lat doświadczenia',
+'years of team experience'=>'lat doświadczenia zespołu',
 '~10 min read'=>'~10 min czytania',
 '~11 min read'=>'~11 min czytania',
 '~13 min read'=>'~13 min czytania',

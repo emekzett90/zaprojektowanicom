@@ -620,7 +620,7 @@ return [
 'up to PLN 3,000'=>'do 3 000 zł',
 'websites'=>'strony',
 'wishlist'=>'wishlista',
-'years of experience'=>'lat doświadczenia',
+'years of team experience'=>'lat doświadczenia zespołu',
 '~10 min read'=>'~10 min czytania',
 '~11 min read'=>'~11 min czytania',
 '~13 min read'=>'~13 min czytania',

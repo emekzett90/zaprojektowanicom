@@ -738,7 +738,7 @@ return [
 'website launch'=>'publikacja strony',
 'website user guide in PDF'=>'instrukcja obsługi strony w PDF',
 'websites'=>'strony www',
-'years of experience'=>'lat doświadczenia',
+'years of team experience'=>'lat doświadczenia zespołu',
 '~10 min read'=>'~10 min czytania',
 '~11 min read'=>'~11 min czytania',
 '~13 min read'=>'~13 min czytania',

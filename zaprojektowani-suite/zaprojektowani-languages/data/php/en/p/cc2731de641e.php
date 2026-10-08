@@ -612,7 +612,7 @@ return [
 'kontrola indeksacji po publikacji'=>'post-launch indexing check',
 'kopia zapasowa przed publikacją'=>'backup before launch',
 'krótkie wdrożenie w obsługę WordPress'=>'short WordPress onboarding',
-'lat doświadczenia'=>'years of experience',
+'lat doświadczenia zespołu'=>'years of team experience',
 'lazy loading'=>'lazy loading',
 'lazy loading obrazów'=>'image lazy loading',
 'liczby / przewagi / argumenty sprzedażowe'=>'numbers / advantages / sales arguments',
