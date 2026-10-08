@@ -42,7 +42,7 @@ unset($zpl_class);
 register_activation_hook(ZPL_HOST, static function () {
     $off = \ZPL\Cleanup::deactivate();
     flush_rewrite_rules(false);
-    if ($off) { set_transient('zpl_notice', 'Wyłączono poprzednie wtyczki tłumaczące: ' . implode(', ', $off) . '. Możesz je usunąć w Ustawienia → Języki PL/EN → Stare wtyczki.', 120); }
+    if ($off) { set_transient('zpl_notice', 'Wyłączono poprzednie wtyczki tłumaczące: ' . implode(', ', $off) . '. Możesz je usunąć w ZP Suite → Języki PL/EN → Stare wtyczki.', 120); }
 });
 
 add_action('plugins_loaded', ['ZPL\\Runtime', 'boot'], PHP_INT_MIN);

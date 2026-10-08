@@ -78,7 +78,8 @@ final class Rest {
 
     /** Country-only GEO endpoint for the first visit when the CDN exposes no country header. */
     public static function geo(\WP_REST_Request $r) {
-        $country = Geo::country_remote();
+        // Robots never get a country: no remote lookup and no redirect for them.
+        $country = Geo::is_bot() ? null : Geo::country_remote();
         if ($country !== null) { Geo::remember_country($country); }
         $res = new \WP_REST_Response(['country' => $country ?: '']);
         $res->header('Cache-Control', 'private, no-store, max-age=0');

@@ -8,17 +8,47 @@ if (!defined('ABSPATH')) { exit; }
  *
  * Goals:
  * - Poland => keep Polish URLs by default.
- * - Any other detected country => redirect Polish URLs to their /en/ equivalent.
+ * - Any other detected country => redirect Polish URLs to their /en/ equivalent (only pages that have
+ *   a real English version, the same ones that get hreflang).
  * - Never geo-redirect crawlers / Lighthouse / PageSpeed.
- * - Prefer CDN/hosting country headers (zero extra request).
- * - If the server exposes no country header, use a tiny same-origin REST lookup once,
- *   cache the result in a first-party cookie, and only then redirect.
+ * - Prefer CDN/hosting country headers (zero extra request); otherwise the bundled list of Polish IP
+ *   ranges (data/geo, tools/geo_pl_ranges.py) decides on the server, before any HTML is sent.
+ * - Only if the visitor's address is unknown (private/proxy IP): a tiny same-origin REST lookup once,
+ *   cached in a first-party cookie.
+ * - A browser whose main language is Polish stays on Polish pages (Poles abroad), setting "polish_stays".
+ * - Logged-in WordPress users are never redirected (previews and editing keep working).
  * - Explicit manual language choice disables automatic geo redirection.
  */
 final class Geo {
     const COUNTRY_COOKIE = 'zpl_geo_country';
     const PREF_COOKIE = 'zpl_lang_pref';
     const COOKIE_TTL = 604800; // 7 days
+    const SETTINGS = 'zpl_geo';        // ['enabled' => 0|1, 'polish_stays' => 0|1], both on by default
+    const STATS = 'zpl_geo_stats';     // ['Y-m-d' => server-side redirects that day], last 60 days
+
+    const REASONS = [
+        'off' => 'Przekierowanie wyłączone w ustawieniach.',
+        'en' => 'Adres jest już angielski.',
+        'bot' => 'Robot lub narzędzie (Google, Bing, Lighthouse, PageSpeed…): nigdy nie przekierowujemy.',
+        'method' => 'To nie jest zwykłe wejście na stronę (np. wysłanie formularza).',
+        'pref' => 'Gość sam wybrał język przełącznikiem PL/EN.',
+        'logged-in' => 'Zalogowany użytkownik WordPressa: bez przekierowania (podgląd i edycja działają normalnie).',
+        'switch' => 'Gość przeszedł z wersji angielskiej na polską: zapamiętujemy wybór polskiego.',
+        'no-en' => 'Ta strona nie ma jeszcze wersji angielskiej.',
+        'polish-browser' => 'Główny język przeglądarki to polski: zostaje po polsku.',
+        'unknown' => 'Nie udało się ustalić kraju: zostaje po polsku.',
+        'pl' => 'Gość z Polski: zostaje po polsku.',
+        'redirect' => 'Gość spoza Polski: przekierowanie na wersję angielską.',
+    ];
+
+    public static function settings(): array {
+        $o = get_option(self::SETTINGS, []);
+        $o = is_array($o) ? $o : [];
+        return [
+            'enabled' => !array_key_exists('enabled', $o) || !empty($o['enabled']),
+            'polish_stays' => !array_key_exists('polish_stays', $o) || !empty($o['polish_stays']),
+        ];
+    }
 
     /** A manual PL/EN selection made with the language switcher. */
     public static function preference(): ?string {
@@ -35,6 +65,13 @@ final class Geo {
         if ($header !== null) {
             self::remember_country($header);
             return $header;
+        }
+
+        // Bundled Polish IP ranges: PL or ZZ (anywhere else), decided on the server with no remote call.
+        $local = self::local_country(self::ip());
+        if ($local !== null) {
+            self::remember_country($local);
+            return $local;
         }
 
         // WooCommerce/MaxMind, when already available on the site. No remote fallback here.
@@ -83,18 +120,134 @@ final class Geo {
     }
 
     /** Server-side redirect decision. Only redirects PL => EN. */
-    public static function redirect_target(string $lang, string $source): ?string {
-        if ($lang !== 'pl') { return null; }
-        if (self::is_bot()) { return null; }
-        if (!in_array(strtoupper((string) ($_SERVER['REQUEST_METHOD'] ?? 'GET')), ['GET', 'HEAD'], true)) { return null; }
+    public static function redirect_target(string $lang, string $source, ?bool $mapped = null): ?string {
+        $d = self::decide($lang, $source, $mapped, true);
+        return $d['target'];
+    }
+
+    /**
+     * Why a request does (not) go to /en/. With $live the real request is used (cookies, headers, IP) and the
+     * country is looked up only when everything else allows a redirect; the admin tester passes $ctx instead.
+     * Returns ['target' => EN path|null, 'reason' => key of REASONS, 'country' => ?string].
+     */
+    public static function decide(string $lang, string $source, ?bool $mapped, bool $live, array $ctx = []): array {
+        $out = static function (string $reason, ?string $target = null, ?string $country = null): array {
+            return ['target' => $target, 'reason' => $reason, 'country' => $country];
+        };
+        $set = self::settings();
+        if (!$set['enabled']) { return $out('off'); }
+        if ($lang !== 'pl') { return $out('en'); }
+        $ua = $live ? (string) ($_SERVER['HTTP_USER_AGENT'] ?? '') : (string) ($ctx['ua'] ?? '');
+        if (self::is_bot_ua($ua)) { return $out('bot'); }
+        $method = $live ? strtoupper((string) ($_SERVER['REQUEST_METHOD'] ?? 'GET')) : 'GET';
+        if (!in_array($method, ['GET', 'HEAD'], true)) { return $out('method'); }
 
         // A conscious switch is stronger than automatic country routing.
-        if (self::preference() !== null) { return null; }
+        $pref = $live ? self::preference() : null;
+        if ($pref !== null) { return $out('pref'); }
 
-        $country = self::country();
-        if ($country === null || $country === 'PL') { return null; }
+        if ($mapped === null) { $mapped = isset(Router::routes()[Router::norm_path($source)]); }
+        if (!$mapped || !Dict::has_page($source)) { return $out('no-en'); }
 
-        return Router::en_path($source);
+        if ($live && function_exists('is_user_logged_in') && is_user_logged_in()) { return $out('logged-in'); }
+
+        // Coming from our own English page to this Polish one = the switch without JavaScript.
+        if ($live && self::from_english_page()) {
+            self::set_preference_cookie('pl');
+            return $out('switch');
+        }
+
+        $accept = $live ? (string) ($_SERVER['HTTP_ACCEPT_LANGUAGE'] ?? '') : (string) ($ctx['accept'] ?? '');
+        if ($set['polish_stays'] && self::prefers_polish($accept)) { return $out('polish-browser'); }
+
+        $country = $live ? self::country() : (isset($ctx['ip']) ? self::country_for_ip((string) $ctx['ip']) : null);
+        if ($country === null) { return $out('unknown'); }
+        if ($country === 'PL') { return $out('pl', null, 'PL'); }
+
+        return $out('redirect', Router::en_path($source), $country);
+    }
+
+    /** Country for an IP address without cookies (admin tester): header-free, local ranges, then WooCommerce. */
+    public static function country_for_ip(string $ip): ?string {
+        $local = self::local_country($ip);
+        if ($local !== null) { return $local; }
+        return null;
+    }
+
+    /** True when Polish (pl, pl-PL…) is the browser's main language: the highest q in Accept-Language, first on a tie. */
+    public static function prefers_polish(string $header): bool {
+        $best = null;
+        $bestQ = 0.0;
+        foreach (explode(',', $header) as $part) {
+            $bits = explode(';', trim($part));
+            $tag = strtolower(trim((string) $bits[0]));
+            if ($tag === '' || $tag === '*') { continue; }
+            $q = 1.0;
+            foreach (array_slice($bits, 1) as $p) {
+                if (preg_match('~^\s*q\s*=\s*([0-9.]+)~i', $p, $m)) { $q = (float) $m[1]; }
+            }
+            if ($q > $bestQ) { $best = $tag; $bestQ = $q; }
+        }
+        return $best !== null && ($best === 'pl' || strpos($best, 'pl-') === 0);
+    }
+
+    /** Same-site referrer on an English page (/en/...). */
+    private static function from_english_page(): bool {
+        $ref = (string) ($_SERVER['HTTP_REFERER'] ?? '');
+        if ($ref === '') { return false; }
+        $p = wp_parse_url($ref);
+        $home = wp_parse_url(home_url('/'));
+        if (!is_array($p) || empty($p['host']) || !is_array($home)) { return false; }
+        $h = strtolower((string) $p['host']);
+        $hh = strtolower((string) ($home['host'] ?? ''));
+        if ($h !== $hh && $h !== 'www.' . $hh && 'www.' . $h !== $hh) { return false; }
+        $rel = Router::norm_path(Router::rel((string) ($p['path'] ?? '/')));
+        return $rel === '/en/' || strpos($rel, '/en/') === 0;
+    }
+
+    /**
+     * PL when the address is in the bundled Polish ranges, ZZ for any other public address,
+     * null for private/invalid addresses or when the data files are missing.
+     */
+    public static function local_country(string $ip): ?string {
+        if ($ip === '' || !filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE)) { return null; }
+        $bin = @inet_pton($ip);
+        if ($bin === false) { return null; }
+        if (strlen($bin) === 16 && substr($bin, 0, 12) === str_repeat("\0", 10) . "\xff\xff") { $bin = substr($bin, 12); }
+        $file = ZPL_DIR . 'data/geo/' . (strlen($bin) === 4 ? 'pl-v4.bin' : 'pl-v6.bin');
+        static $cache = [];
+        if (!isset($cache[$file])) { $cache[$file] = is_readable($file) ? (string) file_get_contents($file) : ''; }
+        $data = $cache[$file];
+        $w = strlen($bin);
+        if ($data === '' || strlen($data) % (2 * $w) !== 0) { return null; }
+        $lo = 0;
+        $hi = intdiv(strlen($data), 2 * $w) - 1;
+        while ($lo <= $hi) {
+            $mid = ($lo + $hi) >> 1;
+            $start = substr($data, $mid * 2 * $w, $w);
+            if (strcmp($bin, $start) < 0) { $hi = $mid - 1; continue; }
+            $end = substr($data, $mid * 2 * $w + $w, $w);
+            if (strcmp($bin, $end) > 0) { $lo = $mid + 1; continue; }
+            return 'PL';
+        }
+        return 'ZZ';
+    }
+
+    /** Info about the bundled ranges for the admin page. */
+    public static function data_info(): array {
+        $f = ZPL_DIR . 'data/geo/meta.php';
+        $m = is_file($f) ? (array) include $f : [];
+        return ['built' => (string) ($m['built'] ?? ''), 'v4' => (int) ($m['v4'] ?? 0), 'v6' => (int) ($m['v6'] ?? 0)];
+    }
+
+    /** One more server-side geo redirect today (non-autoloaded option, last 60 days). */
+    public static function count_redirect(): void {
+        $s = get_option(self::STATS, []);
+        $s = is_array($s) ? $s : [];
+        $day = function_exists('wp_date') ? wp_date('Y-m-d') : gmdate('Y-m-d');
+        $s[$day] = (int) ($s[$day] ?? 0) + 1;
+        krsort($s);
+        update_option(self::STATS, array_slice($s, 0, 60, true), false);
     }
 
     /**
@@ -103,6 +256,9 @@ final class Geo {
      */
     public static function inject_client(string $html, string $lang, string $source): string {
         if ($lang !== 'pl' || self::preference() !== null || self::is_bot()) { return $html; }
+        $set = self::settings();
+        if (!$set['enabled'] || !Router::$mapped || !Dict::has_page($source)) { return $html; }
+        if ($set['polish_stays'] && self::prefers_polish((string) ($_SERVER['HTTP_ACCEPT_LANGUAGE'] ?? ''))) { return $html; }
         if (self::country() !== null) { return $html; }
         if (stripos($html, '</head>') === false) { return $html; }
 
@@ -110,10 +266,10 @@ final class Geo {
         $target = Router::base() . Router::en_path($source);
         $restJs = wp_json_encode($rest, JSON_UNESCAPED_SLASHES | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT);
         $targetJs = wp_json_encode($target, JSON_UNESCAPED_SLASHES | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT);
-
-        // Keep a wrong-language Cookiebot banner hidden while the one-time geo lookup is pending.
+        $polish = $set['polish_stays'] ? 'if(/^pl(?:-|$)/i.test((navigator.languages&&navigator.languages[0])||navigator.language||""))return;' : '';
+        // An unknown country is remembered as "--" for a day, so a failed lookup is not repeated on every page.
         $tag = '<style id="zpl-geo-pending-css">html.zpl-geo-pending #CybotCookiebotDialog{visibility:hidden!important}</style>'
-            . '<script id="zpl-geo-boot">(function(){try{var d=document.documentElement;if(document.cookie.indexOf("' . self::COUNTRY_COOKIE . '=")!==-1||document.cookie.indexOf("' . self::PREF_COOKIE . '=")!==-1)return;d.classList.add("zpl-geo-pending");var c=new AbortController(),t=setTimeout(function(){c.abort()},2200);fetch(' . $restJs . ',{credentials:"same-origin",cache:"no-store",signal:c.signal}).then(function(r){return r.ok?r.json():null}).then(function(x){clearTimeout(t);var cc=x&&typeof x.country==="string"?x.country.toUpperCase():"";if(/^[A-Z]{2}$/.test(cc)){document.cookie="' . self::COUNTRY_COOKIE . '="+cc+";path=/;max-age=' . self::COOKIE_TTL . ';SameSite=Lax;Secure";if(cc!=="PL"){location.replace(' . $targetJs . '+location.search+location.hash);return}}d.classList.remove("zpl-geo-pending")}).catch(function(){clearTimeout(t);d.classList.remove("zpl-geo-pending")})}catch(e){document.documentElement.classList.remove("zpl-geo-pending")}})();</script>';
+            . '<script id="zpl-geo-boot">(function(){try{var d=document.documentElement,k=document.cookie;if(k.indexOf("' . self::COUNTRY_COOKIE . '=")!==-1||k.indexOf("' . self::PREF_COOKIE . '=")!==-1)return;if(/bot|crawl|spider|lighthouse|pagespeed|headless/i.test(navigator.userAgent||""))return;' . $polish . 'd.classList.add("zpl-geo-pending");var c=new AbortController(),t=setTimeout(function(){c.abort()},2200);fetch(' . $restJs . ',{credentials:"same-origin",cache:"no-store",signal:c.signal}).then(function(r){return r.ok?r.json():null}).then(function(x){clearTimeout(t);var cc=x&&typeof x.country==="string"?x.country.toUpperCase():"",v=/^[A-Z]{2}$/.test(cc)?cc:"--";document.cookie="' . self::COUNTRY_COOKIE . '="+v+";path=/;max-age="+(v==="--"?86400:' . self::COOKIE_TTL . ')+";SameSite=Lax"+(location.protocol==="https:"?";Secure":"");if(v!=="--"&&v!=="PL"){location.replace(' . $targetJs . '+location.search+location.hash);return}d.classList.remove("zpl-geo-pending")}).catch(function(){clearTimeout(t);d.classList.remove("zpl-geo-pending")})}catch(e){document.documentElement.classList.remove("zpl-geo-pending")}})();</script>';
 
         return preg_replace('~<head\b[^>]*>~i', '$0' . $tag, $html, 1) ?? $html;
     }
@@ -303,7 +459,8 @@ final class Geo {
         return preg_match('~^[A-Z]{2}$~', $v) ? $v : null;
     }
 
-    private static function header_country(): ?string {
+    /** Country from CDN/hosting headers (Cloudflare, CloudFront…), null when the server sends none. */
+    public static function header_country(): ?string {
         $keys = [
             'HTTP_CF_IPCOUNTRY',                 // Cloudflare
             'HTTP_CLOUDFRONT_VIEWER_COUNTRY',    // AWS CloudFront
@@ -324,6 +481,9 @@ final class Geo {
         return null;
     }
 
+    /** Visitor address as seen by the geo check (shown on the admin page). */
+    public static function visitor_ip(): string { return self::ip(); }
+
     private static function ip(): string {
         $candidates = [];
         foreach (['HTTP_CF_CONNECTING_IP', 'HTTP_TRUE_CLIENT_IP', 'HTTP_X_REAL_IP', 'REMOTE_ADDR'] as $k) {
@@ -341,10 +501,14 @@ final class Geo {
         return '';
     }
 
-    private static function is_bot(): bool {
-        $ua = strtolower((string) ($_SERVER['HTTP_USER_AGENT'] ?? ''));
+    public static function is_bot(): bool {
+        return self::is_bot_ua((string) ($_SERVER['HTTP_USER_AGENT'] ?? ''));
+    }
+
+    public static function is_bot_ua(string $ua): bool {
+        $ua = strtolower($ua);
         if ($ua === '') { return false; }
         // AI fetchers without "bot" in their name (Claude-User, Perplexity-User…) get the address they asked for too.
-        return (bool) preg_match('~(?:bot|crawler|spider|slurp|bingpreview|facebookexternalhit|whatsapp|telegrambot|twitterbot|linkedinbot|pinterest|chrome-lighthouse|lighthouse|pagespeed|google-inspectiontool|googleother|chatgpt-user|claude-user|perplexity-user|mistralai-user|meta-external|cohere-ai)~i', $ua);
+        return (bool) preg_match('~(?:bot|crawl|spider|slurp|bingpreview|facebookexternalhit|whatsapp|lighthouse|pagespeed|headless|google-inspectiontool|googleother|google-site-verification|mediapartners-google|feedfetcher|google-read-aloud|apis-google|chatgpt-user|claude-user|claude-web|anthropic|perplexity|mistralai-user|meta-external|cohere-ai|gptbot|ccbot|gtmetrix|pingdom|uptime|ptst|validator|curl/|wget/|python-|go-http-client|okhttp|axios/|node-fetch|java/|libwww|httpclient|scrapy)~i', $ua);
     }
 }

@@ -172,7 +172,7 @@ final class Admin {
         $count_keys = ['published_new', 'drafts', 'error_pages', 'filled_existing']; $count_index = 0;
         foreach ($counts as $k => $v) { echo '<tr><th style="width:360px">' . esc_html($k) . '</th><td data-zpte="' . esc_attr($count_keys[$count_index++]) . '">' . number_format_i18n($v) . '</td></tr>'; }
         echo '</tbody></table><p><a href="' . esc_url(self::url(['tab' => 'pages'])) . '">Lista stron →</a></p>';
-        echo '<p class="description">Jak to działa: nowa polska treść dostaje angielski adres (np. /en/websites/…), przetłumaczony tytuł, opis, treść i dane dla Google, a wersje PL i EN wskazują się nawzajem (hreflang). Słownik dostarczony z wtyczką i ręczne poprawki z Ustawienia → Języki PL/EN zawsze mają pierwszeństwo przed tłumaczeniem maszynowym.</p></div>';
+        echo '<p class="description">Jak to działa: nowa polska treść dostaje angielski adres (np. /en/websites/…), przetłumaczony tytuł, opis, treść i dane dla Google, a wersje PL i EN wskazują się nawzajem (hreflang). Słownik dostarczony z wtyczką i ręczne poprawki z ZP Suite → Języki PL/EN zawsze mają pierwszeństwo przed tłumaczeniem maszynowym.</p></div>';
     }
 
     private static function status_label(string $status): string {

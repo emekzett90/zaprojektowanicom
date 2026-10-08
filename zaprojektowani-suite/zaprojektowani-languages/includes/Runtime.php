@@ -40,9 +40,15 @@ final class Runtime {
         // GEO: Poland stays on PL. A detected non-PL visitor entering a Polish URL
         // gets the equivalent /en/ URL. 302 is intentional: this is visitor-specific,
         // not a permanent SEO redirect. Manual language choice disables GEO routing.
-        $geoTarget = Geo::redirect_target($lang, $source);
-        if ($geoTarget !== null) {
-            self::redirect(Router::base() . $geoTarget . ($query !== '' ? '?' . $query : ''), 302);
+        // Decided at plugins_loaded 21, after Tłumacz EN (20) has said which new posts have an English version.
+        if ($lang === 'pl') {
+            add_action('plugins_loaded', static function () use ($source, $mapped, $query) {
+                $geoTarget = Geo::redirect_target('pl', $source, $mapped);
+                if ($geoTarget === null) { return; }
+                if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'GET') { Geo::count_redirect(); }
+                if (!headers_sent()) { nocache_headers(); }
+                self::redirect(Router::base() . $geoTarget . ($query !== '' ? '?' . $query : ''), 302);
+            }, 21);
         }
 
         Router::$lang = $lang;
