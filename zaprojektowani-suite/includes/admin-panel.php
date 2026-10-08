@@ -110,6 +110,8 @@ a.zpxRow:hover,a.zpxRow:focus{border-color:#aebbd0;color:var(--ink)}
 .zpxPill.is-ok{background:var(--okbg);color:var(--ok)}
 .zpxPill.is-warn{background:var(--warnbg);color:var(--warn)}
 .zpxPill.is-off{background:#f0f1f3;color:#6b7280}
+.zpxPill.is-quote{background:#eef2ff;color:#3730a3}
+.zpxPill.is-spam{background:#fef3f2;color:var(--bad)}
 .zpxMore{display:inline-block;margin-top:12px;font-weight:700;text-decoration:none}
 .zpxForm label{display:flex;gap:10px;align-items:flex-start;margin:0 0 12px;line-height:1.45}
 .zpxForm label input[type=checkbox]{margin-top:2px}
@@ -129,8 +131,9 @@ a.zpxRow:hover,a.zpxRow:focus{border-color:#aebbd0;color:var(--ink)}
 .zpxBulk .zpxAll{display:flex;gap:6px;align-items:center;font-weight:700;margin-right:6px}
 .zpxList{display:grid;gap:12px;margin-top:12px}
 .zpxItem{background:#fff;border:1px solid var(--line);border-radius:18px;padding:16px 18px;min-width:0}
-.zpxItem.is-new{border-left:5px solid var(--ink)}
+.zpxItem.is-new{border-color:#9fb0c8;box-shadow:inset 4px 0 0 var(--ink)}
 .zpxItem:target{box-shadow:0 0 0 3px rgba(28,71,122,.35)}
+.zpxItem.is-new:target{box-shadow:inset 4px 0 0 var(--ink),0 0 0 3px rgba(28,71,122,.35)}
 .zpxTop{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:12px;align-items:start}
 .zpxTop input[type=checkbox]{margin-top:4px}
 .zpxWho b{display:block;font-size:16px;line-height:1.3;overflow-wrap:anywhere}
@@ -159,8 +162,16 @@ a.zpxRow:hover,a.zpxRow:focus{border-color:#aebbd0;color:var(--ink)}
 .zpxLog{margin:0;padding:0;list-style:none;display:grid;gap:4px;color:var(--muted);font-size:12px}
 .zpxDelete{color:var(--bad)!important;border-color:#f3c7c2!important;background:#fff!important}
 .zpxPager{display:flex;gap:8px;align-items:center;justify-content:center;margin:16px 0 4px;color:var(--muted)}
+.zpxHint{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;margin:12px 0 0;padding:12px 14px;border:1px solid #fed7aa;border-radius:14px;background:var(--warnbg);color:var(--warn);line-height:1.5}
+.zpxHint span{flex:1 1 320px}
+.zpxCount{margin-left:auto;color:var(--muted);font-variant-numeric:tabular-nums}
+.zpxBackLink{margin:14px 0 0}
+.zpxBackLink a{font-weight:700;text-decoration:none}
+.zpxId{margin:12px 0 0;color:var(--muted);font-size:12px;overflow-wrap:anywhere}
+.zpxQuick .button{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.zpxWhat strong{color:var(--ink)}
 @media(max-width:1100px){.zpxStats{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:960px){.zpxGrid,.zpxBody{grid-template-columns:1fr}}
-@media(max-width:782px){.zpx{margin:12px 12px 0 0}.zpxHead{padding:20px 18px;border-radius:20px}.zpx .zpxHead h1{font-size:24px}.zpxStat strong{font-size:20px}.zpxTop{grid-template-columns:auto minmax(0,1fr)}.zpxMeta{grid-column:1/-1;justify-content:flex-start}.zpxDl{grid-template-columns:1fr}.zpxTools input[type=search]{min-width:0;width:100%}.zpxTools label{flex:1 1 100%}.zpxQuick .button{flex:1 1 auto;justify-content:center}}
+@media(max-width:782px){.zpx{margin:12px 12px 0 0}.zpxHead{padding:20px 18px;border-radius:20px}.zpx .zpxHead h1{font-size:24px}.zpxStat strong{font-size:20px}.zpxTop{grid-template-columns:auto minmax(0,1fr)}.zpxMeta{grid-column:1/-1;justify-content:flex-start}.zpxDl{grid-template-columns:1fr}.zpxTools input[type=search]{min-width:0;width:100%}.zpxTools label,.zpxTools .zpxGrow{flex:1 1 100%}.zpxCount{flex-basis:100%;margin-left:0}.zpxQuick .button{flex:1 1 auto;justify-content:center}}
 CSS;
 }

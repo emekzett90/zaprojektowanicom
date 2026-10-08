@@ -2,12 +2,12 @@
 if (!defined('ABSPATH')) { exit; }
 
 add_action('admin_menu', function () {
-  $new = function_exists('zp_suite_leads_new_count') ? (int) zp_suite_leads_new_count() : 0;
+  // Badge: inquiries with status "Nowe" from the contact forms and Studio wyceny (includes/zapytania.php).
+  $new = function_exists('zp_inbox_new_count') ? zp_inbox_new_count() : 0;
   $badge = $new > 0 ? ' <span class="awaiting-mod"><span class="pending-count">'.esc_html($new).'</span></span>' : '';
   add_menu_page('Zaprojektowani Suite','ZP Suite'.$badge,'manage_options','zp-suite','zp_suite_render_command_center_page','dashicons-art',58);
   add_submenu_page('zp-suite','Command Center','Command Center','manage_options','zp-suite','zp_suite_render_command_center_page');
   add_submenu_page('zp-suite','Strona główna CMS','Strona główna CMS','manage_options','zp-suite-home-cms','zp_suite_render_admin_page');
-  add_submenu_page('zp-suite','Formularze / leady','Formularze / leady'.$badge,'manage_options','zp-suite-leads','zp_suite_render_leads_page');
 });
 
 add_action('admin_enqueue_scripts', function($hook){
@@ -18,19 +18,6 @@ add_action('admin_enqueue_scripts', function($hook){
   wp_add_inline_script('jquery', zp_suite_admin_js());
 });
 
-
-add_action('admin_init', function(){
-  if (!current_user_can('manage_options')) return;
-  if (!empty($_GET['page']) && $_GET['page']==='zp-suite-leads' && !empty($_GET['zp_leads_csv']) && check_admin_referer('zp_suite_leads_csv')) {
-    $leads = function_exists('zp_suite_leads_all') ? zp_suite_leads_all() : [];
-    header('Content-Type: text/csv; charset=utf-8');
-    header('Content-Disposition: attachment; filename=zp-suite-leads-'.gmdate('Ymd-His').'.csv');
-    $out = fopen('php://output','w');
-    fputcsv($out, ['data','status','imie','telefon','email','uslugi','zrodlo','wiadomosc']);
-    foreach($leads as $l){ fputcsv($out, [$l['created_at']??'', $l['status']??'', $l['name']??'', $l['phone']??'', $l['email']??'', $l['services']??'', $l['source']??'', $l['message']??'']); }
-    fclose($out); exit;
-  }
-});
 
 add_action('admin_head', function(){
   $screen = function_exists('get_current_screen') ? get_current_screen() : null;
@@ -254,222 +241,5 @@ function zp_suite_render_admin_page(){
       <div class="zpSave"><button class="button button-primary button-large">Zapisz wszystkie ustawienia</button></div>
     </form>
     <template id="zpTplLogo"><?php echo zp_logo_row('__i__', []); ?></template><template id="zpTplPortfolioWeb"><?php echo zp_portfolio_row('web','__i__', []); ?></template><template id="zpTplPortfolioLogo"><?php echo zp_portfolio_row('logo','__i__', []); ?></template><template id="zpTplReview"><?php echo zp_review_row('__i__', []); ?></template><template id="zpTplFaq"><?php echo zp_faq_row('__i__', []); ?></template><template id="zpTplIndustry"><?php echo zp_industry_row('__i__', []); ?></template>
-  </div>
-<?php }
-
-function zp_suite_render_leads_page(){
-  if (!current_user_can('manage_options')) { return; }
-
-  $statuses = [
-    'new'      => 'Nowe',
-    'read'     => 'Przeczytane',
-    'progress' => 'W trakcie',
-    'offer'    => 'Oferta wysłana',
-    'closed'   => 'Zamknięte',
-    'spam'     => 'Spam',
-  ];
-
-  $leads = function_exists('zp_suite_leads_all') ? zp_suite_leads_all() : [];
-  if (!is_array($leads)) { $leads = []; }
-
-  $notice = '';
-
-  if (!empty($_POST['zp_leads_simple_action']) && check_admin_referer('zp_suite_leads_simple_action')) {
-    $action  = sanitize_key(wp_unslash($_POST['zp_leads_simple_action']));
-    $lead_id = sanitize_text_field(wp_unslash($_POST['lead_id'] ?? ''));
-    $before  = count($leads);
-
-    if ($action === 'delete' && $lead_id !== '') {
-      $leads = array_values(array_filter($leads, function($lead) use ($lead_id){
-        return (string)($lead['id'] ?? '') !== $lead_id;
-      }));
-      update_option('zp_suite_leads', $leads, false);
-      $notice = 'Usunięto zgłoszenie.';
-    }
-
-    if ($action === 'save' && $lead_id !== '') {
-      $new_status = sanitize_key(wp_unslash($_POST['lead_status'] ?? 'read'));
-      $note = sanitize_textarea_field(wp_unslash($_POST['lead_note'] ?? ''));
-      foreach ($leads as $i => $lead) {
-        if ((string)($lead['id'] ?? '') === $lead_id) {
-          $leads[$i]['status'] = isset($statuses[$new_status]) ? $new_status : 'read';
-          $leads[$i]['note'] = $note;
-          $leads[$i]['updated_at'] = current_time('mysql');
-          break;
-        }
-      }
-      update_option('zp_suite_leads', $leads, false);
-      $notice = 'Zapisano status i notatkę.';
-    }
-
-    if ($action === 'clear_closed') {
-      $leads = array_values(array_filter($leads, function($lead){
-        return !in_array(($lead['status'] ?? 'new'), ['closed','spam'], true);
-      }));
-      update_option('zp_suite_leads', $leads, false);
-      $notice = 'Usunięto ' . max(0, $before - count($leads)) . ' zamkniętych/spam zgłoszeń.';
-    }
-
-    if ($action === 'clear_all') {
-      $leads = [];
-      update_option('zp_suite_leads', $leads, false);
-      $notice = 'Wyczyszczono wszystkie zgłoszenia.';
-    }
-
-    if (!headers_sent()) {
-      wp_safe_redirect(add_query_arg('zp_notice', rawurlencode($notice), admin_url('admin.php?page=zp-suite-leads')));
-      exit;
-    }
-  }
-
-  // Backward compatibility for old action links.
-  if (!empty($_GET['zp_lead_action']) && !empty($_GET['lead_id']) && check_admin_referer('zp_suite_lead_action')) {
-    $action = sanitize_key(wp_unslash($_GET['zp_lead_action']));
-    $lead_id = sanitize_text_field(wp_unslash($_GET['lead_id']));
-    foreach ($leads as $i => $lead) {
-      if ((string)($lead['id'] ?? '') === $lead_id) {
-        if ($action === 'delete') { unset($leads[$i]); }
-        elseif ($action === 'new') { $leads[$i]['status'] = 'new'; }
-        elseif ($action === 'read') { $leads[$i]['status'] = 'read'; }
-        elseif (isset($statuses[$action])) { $leads[$i]['status'] = $action; }
-        break;
-      }
-    }
-    update_option('zp_suite_leads', array_values($leads), false);
-    wp_safe_redirect(admin_url('admin.php?page=zp-suite-leads'));
-    exit;
-  }
-
-  $filter_status = sanitize_key(wp_unslash($_GET['lead_status'] ?? ''));
-  $filter_q = sanitize_text_field(wp_unslash($_GET['lead_q'] ?? ''));
-
-  $all_leads = $leads;
-  if ($filter_status || $filter_q) {
-    $leads = array_values(array_filter($leads, function($lead) use ($filter_status, $filter_q){
-      if ($filter_status && ($lead['status'] ?? 'new') !== $filter_status) { return false; }
-      if ($filter_q) {
-        $hay = strtolower(wp_json_encode($lead, JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES));
-        if (strpos($hay, strtolower($filter_q)) === false) { return false; }
-      }
-      return true;
-    }));
-  }
-
-  $counts = ['all' => count($all_leads)];
-  foreach ($statuses as $key => $label) { $counts[$key] = 0; }
-  foreach ($all_leads as $lead) {
-    $st = $lead['status'] ?? 'new';
-    if (isset($counts[$st])) { $counts[$st]++; }
-  }
-
-  $notice = isset($_GET['zp_notice']) ? sanitize_text_field(wp_unslash($_GET['zp_notice'])) : '';
-
-  ?>
-  <div class="wrap zpLeadsSimple">
-    <style>.zpLeadsSimple{max-width:1440px}.zpLeadsHero{margin:18px 0 18px;padding:26px 28px;border-radius:22px;background:linear-gradient(135deg,#05070b,#071426 55%,#102a4f);color:#fff}.zpLeadsHero h1{margin:0 0 8px;font-size:30px;line-height:1.05;letter-spacing:-.035em;color:#fff}.zpLeadsHero p{margin:0;color:rgba(255,255,255,.72);font-size:14px;line-height:1.6;max-width:860px}.zpLeadsStats{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}.zpLeadsStat{border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.06);border-radius:16px;padding:11px 14px;min-width:130px}.zpLeadsStat strong{display:block;font-size:20px;line-height:1;color:#fff}.zpLeadsStat span{display:block;margin-top:4px;font-size:10px;text-transform:uppercase;letter-spacing:.12em;color:rgba(255,255,255,.58)}.zpLeadsToolbar{display:flex;gap:10px;align-items:end;flex-wrap:wrap;background:#fff;border:1px solid #dcdcde;border-radius:18px;padding:14px;margin-bottom:14px}.zpLeadsToolbar label{font-weight:700;color:#1d2327;font-size:12px}.zpLeadsToolbar select,.zpLeadsToolbar input[type=search]{min-height:36px;min-width:190px}.zpLeadList{display:grid;gap:14px}.zpLeadCard{background:#fff;border:1px solid #dcdcde;border-radius:20px;overflow:hidden;box-shadow:0 10px 28px rgba(7,20,38,.05)}.zpLeadCard.is-new{border-color:#1c477a;box-shadow:0 0 0 1px rgba(28,71,122,.18),0 10px 28px rgba(7,20,38,.07)}.zpLeadTop{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:18px;align-items:start;padding:18px 20px;border-bottom:1px solid #eef0f3;background:#fbfcfe}.zpLeadTitle h2{margin:0 0 5px;font-size:20px;line-height:1.15;color:#071426}.zpLeadTitle small{display:block;color:#667085}.zpLeadBadge{display:inline-flex;align-items:center;border-radius:999px;padding:6px 9px;font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;background:#eaf2ff;color:#0b3b75}.zpLeadBody{display:grid;grid-template-columns:minmax(0,1fr) 310px;gap:18px;padding:18px 20px}.zpLeadContact{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-bottom:14px}.zpLeadContactBox{border:1px solid #e3e7ed;border-radius:14px;padding:11px 12px;background:#fff}.zpLeadContactBox span{display:block;font-size:10px;text-transform:uppercase;letter-spacing:.12em;font-weight:800;color:#7a8493;margin-bottom:5px}.zpLeadContactBox strong{display:block;color:#071426;word-break:break-word;font-size:14px}.zpLeadMessage{white-space:pre-wrap;background:#f7f9fc;border:1px solid #e7ebf1;border-radius:14px;padding:14px;color:#273142;line-height:1.55;margin:0 0 14px}.zpLeadDetails{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.zpLeadDetail{border:1px solid #edf0f4;border-radius:12px;padding:10px;background:#fff}.zpLeadDetail span{display:block;color:#7a8493;font-size:10px;letter-spacing:.1em;text-transform:uppercase;font-weight:800;margin-bottom:4px}.zpLeadDetail strong{display:block;color:#111827;font-size:13px;line-height:1.45;word-break:break-word}.zpLeadDetail--full{grid-column:1/-1}.zpLeadSide{border-left:1px solid #edf0f4;padding-left:18px}.zpLeadActions{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}.zpLeadActions .button{margin:0}.zpLeadDelete{color:#b42318!important;border-color:#f3b8b2!important}.zpLeadNote textarea{width:100%;min-height:90px;margin:8px 0}.zpLeadFiles a{display:block;margin:4px 0}@media(max-width:1100px){.zpLeadBody{grid-template-columns:1fr}.zpLeadSide{border-left:0;border-top:1px solid #edf0f4;padding-left:0;padding-top:16px}.zpLeadContact{grid-template-columns:1fr}.zpLeadDetails{grid-template-columns:1fr}}</style>
-
-    <div class="zpLeadsHero">
-      <h1>Leady i formularze</h1>
-      <p>Uproszczony panel: wszystkie dane z formularzy/briefów w jednym miejscu, szybki podgląd kontaktu, status, notatka i działające usuwanie.</p>
-      <div class="zpLeadsStats">
-        <div class="zpLeadsStat"><strong><?php echo esc_html($counts['all']); ?></strong><span>wszystkie</span></div>
-        <div class="zpLeadsStat"><strong><?php echo esc_html($counts['new']); ?></strong><span>nowe</span></div>
-        <div class="zpLeadsStat"><strong><?php echo esc_html($counts['progress']); ?></strong><span>w trakcie</span></div>
-      </div>
-    </div>
-
-    <?php if ($notice) : ?><div class="notice notice-success is-dismissible"><p><?php echo esc_html($notice); ?></p></div><?php endif; ?>
-
-    <form class="zpLeadsToolbar" method="get">
-      <input type="hidden" name="page" value="zp-suite-leads">
-      <label>Status<br><select name="lead_status"><option value="">Wszystkie</option><?php foreach($statuses as $k=>$v): ?><option value="<?php echo esc_attr($k); ?>" <?php selected($filter_status,$k); ?>><?php echo esc_html($v); ?></option><?php endforeach; ?></select></label>
-      <label>Szukaj<br><input type="search" name="lead_q" value="<?php echo esc_attr($filter_q); ?>" placeholder="imię, telefon, e-mail, usługa..."></label>
-      <button class="button button-primary">Filtruj</button>
-      <a class="button" href="<?php echo esc_url(admin_url('admin.php?page=zp-suite-leads')); ?>">Wyczyść filtr</a>
-      <a class="button" href="<?php echo esc_url(wp_nonce_url(admin_url('admin.php?page=zp-suite-leads&zp_leads_csv=1'), 'zp_suite_leads_csv')); ?>">Eksport CSV</a>
-      <span style="flex:1"></span>
-    </form>
-
-    <div class="zpLeadsToolbar" style="justify-content:flex-end">
-      <form method="post" onsubmit="return confirm('Usunąć zgłoszenia zamknięte oraz spam?')"><?php wp_nonce_field('zp_suite_leads_simple_action'); ?><button class="button" name="zp_leads_simple_action" value="clear_closed">Usuń zamknięte/spam</button></form>
-      <form method="post" onsubmit="return confirm('Na pewno usunąć WSZYSTKIE zgłoszenia? Tej akcji nie da się cofnąć.')"><?php wp_nonce_field('zp_suite_leads_simple_action'); ?><button class="button zpLeadDelete" name="zp_leads_simple_action" value="clear_all">Wyczyść wszystkie</button></form>
-    </div>
-
-    <?php if (empty($leads)) : ?>
-      <div class="zpLeadCard"><div class="zpLeadTop"><div class="zpLeadTitle"><h2>Brak zgłoszeń</h2><small>Nowe leady pojawią się tutaj automatycznie.</small></div></div></div>
-    <?php else : ?>
-      <div class="zpLeadList">
-        <?php foreach ($leads as $lead) :
-          $id = (string)($lead['id'] ?? '');
-          $status = $lead['status'] ?? 'new';
-          $name = $lead['name'] ?? ($lead['company'] ?? 'Bez nazwy');
-          $email = $lead['email'] ?? '';
-          $phone = $lead['phone'] ?? '';
-          $message = $lead['message'] ?? ($lead['Brief'] ?? '');
-          $source = $lead['source'] ?? 'Formularz';
-          $created = $lead['created_at'] ?? '';
-          $skip = ['id','created_at','updated_at','status','note','ip','user_agent','name','company','phone','email','message','files'];
-        ?>
-        <article class="zpLeadCard <?php echo $status === 'new' ? 'is-new' : ''; ?>">
-          <div class="zpLeadTop">
-            <div class="zpLeadTitle">
-              <h2><?php echo esc_html($name); ?></h2>
-              <small><?php echo esc_html($created); ?> · <?php echo esc_html($source); ?> · ID: <?php echo esc_html($id); ?></small>
-            </div>
-            <span class="zpLeadBadge"><?php echo esc_html($statuses[$status] ?? $status); ?></span>
-          </div>
-          <div class="zpLeadBody">
-            <main>
-              <div class="zpLeadContact">
-                <div class="zpLeadContactBox"><span>Telefon</span><strong><?php echo esc_html($phone ?: '—'); ?></strong></div>
-                <div class="zpLeadContactBox"><span>E-mail</span><strong><?php echo esc_html($email ?: '—'); ?></strong></div>
-                <div class="zpLeadContactBox"><span>Firma / usługi</span><strong><?php echo esc_html(($lead['company'] ?? '') ?: ($lead['services'] ?? '—')); ?></strong></div>
-              </div>
-
-              <?php if ($message) : ?><p class="zpLeadMessage"><?php echo esc_html($message); ?></p><?php endif; ?>
-
-              <div class="zpLeadDetails">
-                <?php foreach ($lead as $k => $v) :
-                  if (in_array($k, $skip, true) || $v === '' || $v === null || is_array($v)) { continue; }
-                  $full = in_array($k, ['services','source','website','budget','deadline','contact_mode','callback_time','callback_topic'], true) ? '' : '';
-                ?>
-                  <div class="zpLeadDetail <?php echo esc_attr($full); ?>"><span><?php echo esc_html($k); ?></span><strong><?php echo nl2br(esc_html((string)$v)); ?></strong></div>
-                <?php endforeach; ?>
-                <?php if (!empty($lead['files']) && is_array($lead['files'])) : ?>
-                  <div class="zpLeadDetail zpLeadDetail--full zpLeadFiles"><span>Załączniki</span><strong>
-                    <?php foreach($lead['files'] as $file) : if(empty($file['url'])) continue; ?>
-                      <a href="<?php echo esc_url($file['url']); ?>" target="_blank" rel="noopener"><?php echo esc_html($file['name'] ?? 'plik'); ?></a>
-                    <?php endforeach; ?>
-                  </strong></div>
-                <?php endif; ?>
-              </div>
-            </main>
-
-            <aside class="zpLeadSide">
-              <div class="zpLeadActions">
-                <?php if ($email) : ?><a class="button button-primary" href="mailto:<?php echo esc_attr($email); ?>">Odpisz</a><?php endif; ?>
-                <?php if ($phone) : ?><a class="button" href="tel:<?php echo esc_attr(preg_replace('/[^0-9+]/', '', $phone)); ?>">Zadzwoń</a><?php endif; ?>
-                <?php if (!empty($lead['website'])) : ?><a class="button" target="_blank" rel="noopener" href="<?php echo esc_url($lead['website']); ?>">Otwórz link</a><?php endif; ?>
-              </div>
-
-              <form method="post" class="zpLeadNote">
-                <?php wp_nonce_field('zp_suite_leads_simple_action'); ?>
-                <input type="hidden" name="lead_id" value="<?php echo esc_attr($id); ?>">
-                <label><strong>Status</strong><br><select name="lead_status"><?php foreach($statuses as $k=>$v): ?><option value="<?php echo esc_attr($k); ?>" <?php selected($status,$k); ?>><?php echo esc_html($v); ?></option><?php endforeach; ?></select></label>
-                <textarea name="lead_note" placeholder="Notatka wewnętrzna po rozmowie / wycenie..."><?php echo esc_textarea($lead['note'] ?? ''); ?></textarea>
-                <p><button class="button button-primary" name="zp_leads_simple_action" value="save">Zapisz</button></p>
-              </form>
-
-              <form method="post" onsubmit="return confirm('Usunąć to zgłoszenie?')">
-                <?php wp_nonce_field('zp_suite_leads_simple_action'); ?>
-                <input type="hidden" name="lead_id" value="<?php echo esc_attr($id); ?>">
-                <button class="button zpLeadDelete" name="zp_leads_simple_action" value="delete">Usuń zgłoszenie</button>
-              </form>
-            </aside>
-          </div>
-        </article>
-        <?php endforeach; ?>
-      </div>
-    <?php endif; ?>
   </div>
 <?php }

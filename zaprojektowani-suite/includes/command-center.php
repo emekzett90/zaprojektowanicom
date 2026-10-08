@@ -131,16 +131,18 @@ add_action('wp_footer', function(){
  * ---------------------------------------------------------------------------------------------- */
 
 /** One-time clean-up after the stats removal: the old page-view and click data (nothing reads it any more)
- *  goes, so the option read on every page view is small again. Redirects and popup settings stay. */
+ *  goes, so the option read on every page view is small again, and so does the old "unread orders" counter
+ *  (the Zapytania badge counts status "Nowe"). Redirects and popup settings stay. */
 add_action('admin_init', function () {
-  if (get_option('zp_suite_panel_cleanup') === '1') { return; }
+  if ((int) get_option('zp_suite_panel_cleanup', 0) >= 2) { return; }
   $cc = get_option('zp_suite_command_center', null);
   if (is_array($cc)) {
     unset($cc['events'], $cc['cta'], $cc['scroll'], $cc['sections'], $cc['404']);
     update_option('zp_suite_command_center', $cc, false);
   }
   delete_option('zp_suite_analytics');
-  update_option('zp_suite_panel_cleanup', '1', false);
+  delete_option('zp_studio_wyceny_unread_orders');
+  update_option('zp_suite_panel_cleanup', '2', false);
 });
 
 add_action('admin_post_zp_cc_settings', function () {
@@ -259,7 +261,7 @@ function zp_suite_render_command_center_page(){
           <div class="zpxRows">
             <?php foreach (array_slice($inbox, 0, 6) as $it) : ?>
               <a class="zpxRow" href="<?php echo esc_url(zp_inbox_item_url($it)); ?>">
-                <span><b><?php echo esc_html($it['name']); ?></b><small><?php echo esc_html(zp_inbox_type_label($it['type']) . ($it['service'] !== '' ? ' · ' . $it['service'] : '')); ?></small></span>
+                <span><b><?php echo esc_html($it['name']); ?></b><small><?php echo esc_html(implode(' · ', array_filter([$it['kind'], $it['service']], 'strlen'))); ?></small></span>
                 <span class="zpxRowEnd"><?php echo zp_inbox_status_pill($it['status']); ?><small><?php echo esc_html(zp_inbox_date($it['ts'])); ?></small></span>
               </a>
             <?php endforeach; ?>

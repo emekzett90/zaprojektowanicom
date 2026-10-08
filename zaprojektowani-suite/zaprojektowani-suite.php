@@ -50,6 +50,8 @@ require_once ZP_SUITE_PATH . 'includes/mobile-sticky-cta.php';
 require_once ZP_SUITE_PATH . 'includes/admin.php';
 // Panel clean-up: menu order, Command Center and Zapytania look, landing for links to removed screens.
 require_once ZP_SUITE_PATH . 'includes/admin-panel.php';
+// One inbox for the contact forms and Studio wyceny (replaces "Formularze / leady" and "Zamówienia").
+require_once ZP_SUITE_PATH . 'includes/zapytania.php';
 require_once ZP_SUITE_PATH . 'includes/seo.php';
 require_once ZP_SUITE_PATH . 'includes/seobility-fixes-753.php';
 require_once ZP_SUITE_PATH . 'includes/forms.php';
@@ -1078,52 +1080,6 @@ add_action('wp_head', function(){
   <style id="zp-suite-22103-global-fixes">html body .zpMiniChat__visual h3,html body .zpMiniChat__formTitle{letter-spacing:-.018em!important;word-spacing:.03em!important;text-wrap:balance!important}@media(max-width:760px){html body .zpMiniChat__person{display:none!important;visibility:hidden!important;opacity:0!important}html body .zpMiniChat__visual{min-height:auto!important;padding:24px 22px 18px!important}html body .zpMiniChat__visual h3{font-size:clamp(32px,10vw,40px)!important;line-height:1.02!important;letter-spacing:-.012em!important;max-width:100%!important}html body .zpMiniChat__formTitle{font-size:clamp(27px,8.7vw,32px)!important;line-height:1.04!important;letter-spacing:-.012em!important}html body .zpMiniChat__chips{margin-top:18px!important;max-width:100%!important}}html body .zpTrustedLogos__logoCard,html body .zpbsHomeTrust__logo{overflow:visible!important}html body .zpTrustedLogos__logoCard img,html body .zpbsHomeTrust__logo img{display:block!important;width:auto!important;height:auto!important;max-width:92%!important;max-height:82px!important;object-fit:contain!important;filter:brightness(0) invert(1) grayscale(1) contrast(1.08)!important;opacity:.94!important;mix-blend-mode:normal!important;background:transparent!important}html body .zpTrustPinned__logo{overflow:visible!important}html body .zpTrustPinned__logo img,html body .zpTrustPinned__logoImg{object-fit:contain!important;filter:grayscale(1) brightness(0) contrast(1.18)!important;mix-blend-mode:multiply!important}@media(max-width:760px){html body .zpTrustPinned__logo img,html body .zpTrustPinned__logoImg{max-width:96%!important;max-height:150px!important}html body .zpTrustedLogos__logoCard img,html body .zpbsHomeTrust__logo img{max-width:94%!important;max-height:72px!important}html body.zpbs-studio-page #zpbsUltimate,html body #zpbsUltimate{padding-bottom:0!important;margin-bottom:0!important}html body #zpbsUltimate .zpbsChoose{padding-bottom:34px!important}html body #zpbsUltimate .zpbsBrief{padding-bottom:34px!important}html body #zpbsUltimate + *,html body .elementor-widget-shortcode:has(#zpbsUltimate){margin-bottom:0!important;padding-bottom:0!important}html body .zpTrustPinned{padding-bottom:0!important;margin-bottom:0!important}html body .zpTrustPinned__inner{padding-bottom:clamp(28px,7vw,42px)!important}html body .zpTrustPinned__stats{margin-bottom:14px!important}html body .zpTrustPinned__progress{margin-bottom:8px!important}html body .zpTrustPinned__scene{min-height:240px!important;height:240px!important;margin-top:0!important;margin-bottom:0!important;align-items:center!important}html body .zpTrustPinned__logos{height:228px!important;min-height:228px!important;margin-top:0!important;margin-bottom:0!important}html body .zpTrustPinned__logo,html body .zpTrustPinned__logo.is-mobile-prev,html body .zpTrustPinned__logo.is-mobile-next,html body .zpTrustPinned__logo.is-mobile-active{width:min(90vw,330px)!important;height:188px!important;padding:18px!important;top:50%!important;overflow:visible!important}html body .zpTrustPinned__logo img,html body .zpTrustPinned__logoImg,html body .zpTrustPinned__logo--wide img,html body .zpTrustPinned__logo--compact img,html body .zpTrustPinned__logo--scale115 img,html body .zpTrustPinned__logo--scale090 img{width:100%!important;height:96px!important;max-width:224px!important;max-height:96px!important;object-fit:contain!important;transform:none!important;--zp-logo-scale:1!important}html body .zpTrustPinned__logo--wide img{max-width:276px!important;height:78px!important;max-height:78px!important}html body .zpTrustPinned__logo--compact img{max-width:196px!important;height:104px!important;max-height:104px!important}}@media(max-width:420px){html body .zpTrustPinned__scene{height:220px!important;min-height:220px!important}html body .zpTrustPinned__logos{height:210px!important;min-height:210px!important}html body .zpTrustPinned__logo,html body .zpTrustPinned__logo.is-mobile-active,html body .zpTrustPinned__logo.is-mobile-prev,html body .zpTrustPinned__logo.is-mobile-next{height:176px!important;width:min(92vw,318px)!important;padding:16px!important}html body .zpTrustPinned__logo img,html body .zpTrustPinned__logoImg,html body .zpTrustPinned__logo--wide img,html body .zpTrustPinned__logo--compact img{max-width:210px!important;height:90px!important;max-height:90px!important}html body .zpTrustPinned__logo--wide img{max-width:258px!important;height:74px!important;max-height:74px!important}html body .zpTrustPinned__logo--compact img{max-width:184px!important;height:98px!important;max-height:98px!important}}</style>
   <?php
 }, PHP_INT_MAX);
-
-add_action('admin_init', function(){
-  if (!is_admin() || !current_user_can('manage_options')) { return; }
-  if (empty($_GET['page']) || $_GET['page'] !== 'zp-suite-leads') { return; }
-
-  $leads = function_exists('zp_suite_leads_all') ? zp_suite_leads_all() : get_option('zp_suite_leads', []);
-  if (!is_array($leads)) { $leads = []; }
-
-  // Twarde usuwanie pojedynczego leada przez POST — omija problemy z linkami GET/cache/URL encoding.
-  if (!empty($_POST['zp_lead_delete_post'])) {
-    check_admin_referer('zp_suite_lead_delete_post');
-    $lead_id = sanitize_text_field(wp_unslash($_POST['lead_id'] ?? ''));
-    $before = count($leads);
-    $leads = array_values(array_filter($leads, function($lead) use ($lead_id){
-      return (string)($lead['id'] ?? '') !== $lead_id;
-    }));
-    update_option('zp_suite_leads', $leads, false);
-    wp_cache_delete('zp_suite_leads', 'options');
-    $removed = max(0, $before - count($leads));
-    wp_safe_redirect(admin_url('admin.php?page=zp-suite-leads&deleted='.(int)$removed));
-    exit;
-  }
-
-  // Twarde czyszczenie masowe — dodatkowy handler, niezależny od renderowania listy.
-  if (!empty($_POST['zp_leads_cleanup_hard'])) {
-    check_admin_referer('zp_suite_leads_cleanup_hard');
-    $cleanup = sanitize_key(wp_unslash($_POST['zp_leads_cleanup_hard'] ?? ''));
-    $before = count($leads);
-    if ($cleanup === 'done') {
-      $leads = array_values(array_filter($leads, function($lead){ return !in_array(($lead['status'] ?? 'new'), ['closed','spam'], true); }));
-    } elseif ($cleanup === 'old30') {
-      $limit = strtotime('-30 days', current_time('timestamp'));
-      $leads = array_values(array_filter($leads, function($lead) use ($limit){
-        $ts = !empty($lead['created_at']) ? strtotime($lead['created_at']) : current_time('timestamp');
-        return $ts >= $limit;
-      }));
-    } elseif ($cleanup === 'all') {
-      $leads = [];
-    }
-    update_option('zp_suite_leads', $leads, false);
-    wp_cache_delete('zp_suite_leads', 'options');
-    $removed = max(0, $before - count($leads));
-    wp_safe_redirect(admin_url('admin.php?page=zp-suite-leads&cleaned='.(int)$removed));
-    exit;
-  }
-}, 1);
 
 function zp_suite_22103_logo_set(){
   return [
