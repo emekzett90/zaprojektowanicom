@@ -100,7 +100,7 @@ final class Page {
             return $tr;
         };
 
-        $onAttr = static function (array $el, ?array $a) use (&$tags, &$edits, $html, $lookup, $url, $lang, $locale) {
+        $onAttr = static function (array $el, ?array $a) use (&$tags, &$edits, $html, $lookup, $t, $url, $lang, $locale) {
             $tag = substr($html, $el['s'], $el['te'] - $el['s']);
             if ($a === null) { $a = Html::attrs($tag); }
             $name = $el['n'];
@@ -146,6 +146,22 @@ final class Page {
                 $prop = strtolower($a['property'] ?? '');
                 if ($prop === 'og:locale' && isset($a['content'])) { $set['content'] = $locale; }
                 elseif ($prop === 'og:url' && isset($a['content'])) { $set['content'] = $url($a['content']); }
+                elseif ($lang === 'en' && isset($a['content'])) {
+                    // Link previews (2.9.5): Rank Math's site name and reading-time labels stay Polish on /en/.
+                    // Looked up without $lookup, so the bare brand name never lands on the missing list.
+                    $key = $prop !== '' ? $prop : strtolower($a['name'] ?? '');
+                    $v = Html::norm($a['content']);
+                    if ($key === 'og:site_name' || $key === 'twitter:label1' || $key === 'twitter:label2') {
+                        $tr = $t($v, 'meta');
+                        if (is_string($tr) && $tr !== '' && $tr !== $v) { $set['content'] = $tr; }
+                    } elseif ($key === 'twitter:data2') {
+                        if (preg_match('~^(\d+)\s*minut(?:/y|y|a)?$~u', $v, $m)) {
+                            $set['content'] = $m[1] . ((int) $m[1] === 1 ? ' minute' : ' minutes');
+                        } elseif (preg_match('~^mniej niż minut[aę]$~iu', $v)) {
+                            $set['content'] = 'Less than a minute';
+                        }
+                    }
+                }
             }
             if (isset($a['lang']) && preg_match('~^pl\b~i', $a['lang'])) { $set['lang'] = $lang; }
             if ($set) { $tags[$el['s']] = [$el['te'], Html::set_attrs($tag, $set)]; }

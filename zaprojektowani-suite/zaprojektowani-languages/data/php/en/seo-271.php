@@ -1827,4 +1827,7 @@ return [
 'Tak, i często to najlepszy wybór: logo, kolory, typografia i strona powstają jako jeden system, więc marka wygląda tak samo na stronie, w social mediach i w reklamach. Zwykle zaczynamy od logo i identyfikacji wizualnej, a potem przenosimy je na stronę lub sklep. Cały zakres i kolejność prac dostajesz w jednej wycenie.'=>'Yes, and it is often the best choice: the logo, colours, typography and website are created as one system, so the brand looks the same on the website, on social media and in ads. We usually start with the logo and visual identity and then carry them over to the website or store. You get the whole scope and order of work in a single quote.',
 'Jak zamówić wycenę strony internetowej?'=>'How do I get a quote for a website?',
 'Najprościej przez <1>Studio Wyceny</1>: wybierasz usługę, zaznaczasz zakres i wysyłasz krótki brief. Bezpłatną i niezobowiązującą wycenę z proponowanym zakresem dostajesz w 48–72 godziny. Możesz też zadzwonić pod numer +48 501 054 253 albo napisać na kontakt@zaprojektowani.com.'=>'The easiest way is the <1>Quote Studio</1>: choose a service, tick the scope and send a short brief. You get a free, no-obligation quote with a proposed scope within 48–72 hours. You can also call +48 501 054 253 or write to kontakt@zaprojektowani.com.',
+// 2.9.5: link previews on /en/ posts (Rank Math's twitter:label1/label2; og:site_name is in common.php).
+'Napisane przez'=>'Written by',
+'Czas czytania'=>'Time to read',
 ];
