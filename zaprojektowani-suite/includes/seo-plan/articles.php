@@ -313,6 +313,8 @@ function zp_seo_articles_fix_excerpts(array &$backup): array {
       $path = zp_seo_plan_path((string) get_permalink($id));
       $own = trim((string) get_post_meta($id, 'rank_math_description', true));
       if ($own === '') { $own = trim((string) ((zp_seo_plan_entry($path) ?? [])['description'] ?? '')); }
+      // A Rank Math variable template (%%excerpt%%) would put the copied text back.
+      if (strpos($own, '%%') !== false) { $own = trim((string) ((zp_seo_plan_entry($path) ?? [])['description'] ?? '')); }
       if ($own === '' || strpos($own, $needle) !== false) { $log[] = 'UWAGA: wpis ' . $path . ' ma zajawkę innego artykułu, a nie ma własnego opisu — bez zmiany.'; continue; }
       if (!isset($backup['excerpt'][$id])) { $backup['excerpt'][$id] = ['old' => $excerpt]; }
       $backup['excerpt'][$id]['written'] = $own;

@@ -1,0 +1,35 @@
+ZAPROJEKTOWANI SUITE 2.9.8
+
+Zawiera całą 2.9.7 (a w niej 2.9.6, 2.9.5, 2.9.4 i wcześniejsze, z Twoją 2.7.20). Wgraj tę wersję
+zamiast 2.9.7.
+
+Poprawki z kontroli 2.9.7 na żywej stronie (wątek „Audyt po wdrożeniu”, 8.10). Wygląd strony się nie
+zmienia:
+- wpisy o Google Ads (Search czy Performance Max, Google Ads czy Meta Ads, cała Polska czy lokalnie)
+  powstały z kopii artykułu o koszcie sklepu i zostały z jego zajawką, więc box „Rozwiń ten temat”
+  i karty wpisów opisywały je jako poradnik o cenie sklepu WooCommerce; teraz każdy ma swój opis,
+- wpis „Ile kosztuje Google Ads”: czas czytania był raz „~10 min”, raz „11 min”, a 3 000 zł ÷ 30,4
+  to około 99 zł, nie 98 (po polsku i po angielsku),
+- strony angielskie: w podglądzie linku czas czytania „Mniej niż minuta” był po polsku, a przyciski
+  udostępniania (Facebook, LinkedIn, X, WhatsApp, e-mail) wysyłały polski adres i polski tytuł;
+  teraz prowadzą do wersji angielskiej z angielskim tytułem,
+- liczba projektów: pierwszy akapit strony Agencja reklamowa Katowice i pierwsza odpowiedź w FAQ na
+  stronie głównej mówiły „ponad 110”, reszta strony 114+; obie czytają teraz ustawienie, więc
+  zmieniasz liczbę w jednym miejscu (ZP Suite → Strona główna CMS),
+- dane strukturalne strony głównej: stara usługa „Strony internetowe Katowice, sklepy internetowe
+  i branding” zapisana w Rank Math (oferty bez nazwy i ceny) nie trafia już do kodu strony. Ceny dla
+  Google i modeli AI bierze się z Twojego cennika we wtyczce,
+- /llms.txt: lista poradników urywała się na 40 pozycjach, więc starsze wpisy wypadały z niej, gdy
+  moduł „Publikacja wpisów” dodawał nowe. Teraz jest na niej każdy opublikowany poradnik, od
+  najnowszego.
+
+Po wgraniu:
+1. Wejdź raz na dowolną stronę.
+2. Napisz w wątku „wgrane”.
+
+Jeśli nie zrobiłeś tego po 2.9.7: w Cloudflare Turnstile → widżet zaprojektowani.com → Settings →
+„Rotate secret key”, a nowy klucz tajny wklej w ZP Suite → Strona główna CMS → Formularze i e-maile
+→ „Turnstile: klucz tajny”. Formularze działają także bez tego, ale bez ochrony Turnstile.
+
+Gdy będziesz mieć nowy klucz OpenAI: ZP Suite → Tłumacz EN → Ustawienia, wklej klucz i zapisz, potem
+zakładka Strony → „Przetłumacz wszystkie”.
