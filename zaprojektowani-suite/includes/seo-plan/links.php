@@ -104,6 +104,9 @@ function zp_seo_related_fallback_image(string $path): string {
     $image = zp_seo_service_hero_image($path);
     if ($image !== '') { return $image; }
   }
+  // 2.9.7: an industry page shows its cover photo, not the laptop its hero no longer has (industries.php).
+  $industry = function_exists('zp_seo_industry_key') ? zp_seo_industry_key($path) : '';
+  if ($industry !== '') { return zp_seo_industry_img($industry . '-cover-1100.webp'); }
   $registry = zp_seo_service_registry();
   $kind = $registry[$path]['kind'] ?? '';
   if ($path === '/kampanie-reklamowe/') { return ZP_SUITE_URL . 'assets/campaigns/team-hero.webp'; }

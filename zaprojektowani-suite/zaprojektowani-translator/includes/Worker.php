@@ -302,7 +302,7 @@ final class Worker {
         ];
         $s['usage'] = Log::usage();
         $s['next_daily'] = ($next = wp_next_scheduled(self::DAILY)) ? wp_date('Y-m-d H:i', $next) : '—';
-        $s['retry_label'] = $s['retry_at'] ? wp_date('Y-m-d H:i:s', (int) $s['retry_at']) : '';
+        $s['retry_label'] = $s['retry_at'] ? Admin::day_time((int) $s['retry_at']) : '';
         if (!Bridge::hooks_ready() || Settings::api_key() === '') {
             $s['state'] = 'blocked'; $s['message'] = 'Uzupełnij klucz API i sprawdź moduł językowy w ustawieniach.';
         } elseif ($alert = Log::current_alert()) {

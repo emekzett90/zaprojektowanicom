@@ -11,7 +11,8 @@ if (!defined('ABSPATH')) { exit; }
  * "Strony & sklepy", "Sprzedaż" and the promo card, its items lined up with those three
  * columns, with the lucide icons the menu already loads. Since 2.8.1 (Mat: simpler, no frames
  * around the icons) it is a plain row under a thin divider with bare icons in the menu's
- * accent colour, and the mobile group uses the menu's own plain icons. The space under
+ * accent colour, and the mobile group uses the menu's own plain icons. Since 2.9.7 the computer row shows each
+ * industry's cover photo in a small circle instead of the icon (Mat 8.10); the phone menu keeps its icons. The space under
  * "Start marki" stays free for Mateusz. On short laptop screens the mega menu gets slightly tighter spacing, and
  * it scrolls inside when it is still taller than the window, so its bottom bar is never cut off.
  */
@@ -38,7 +39,15 @@ add_action('wp_head', function () {
     . 'html body .zpNewNav__mega.is-light-menu .zpNewNav__megaGrid .zpNewNav__megaCol.zpNewNav__megaCol--branze .zpNewNav__megaLink .zpNewNav__megaIco.zpNewNav__megaIco svg{stroke:#1c477a!important;color:#1c477a!important}'
     . 'html body .zpNewNav__mega.is-light-menu .zpNewNav__megaGrid .zpNewNav__megaCol.zpNewNav__megaCol--branze .zpNewNav__megaLink:hover .zpNewNav__megaIco.zpNewNav__megaIco svg,html body .zpNewNav__mega.is-light-menu .zpNewNav__megaGrid .zpNewNav__megaCol.zpNewNav__megaCol--branze .zpNewNav__megaLink:focus-visible .zpNewNav__megaIco.zpNewNav__megaIco svg{stroke:#071426!important;color:#071426!important}'
     . 'html body .zpNewNav__mega--portal.is-portal-open .zpNewNav__megaCol--branze{transition-delay:.29s}'
+    // 2.9.7 (Mat 8.10: "zamiast ikonek lucide ... w kółeczkach te zdjęcia z coverów z kart"): each industry's cover
+    // photo in a small circle with a thin ring in the accent colour, a little larger on hover.
+    . 'html body .zpNewNav__mega .zpNewNav__megaGrid .zpNewNav__megaCol.zpNewNav__megaCol--branze .zpNewNav__megaLink .zpNewNav__megaIco.zpNewNav__megaIco--photo{width:36px!important;height:36px!important;min-width:36px!important;flex:0 0 36px!important;overflow:hidden!important;border-radius:50%!important;border:1px solid rgba(143,184,234,.34)!important;background:#0d1a2c!important;box-shadow:0 6px 16px rgba(0,0,0,.26)!important;transition:border-color .2s ease,transform .2s ease!important}'
+    . 'html body .zpNewNav__mega .zpNewNav__megaGrid .zpNewNav__megaCol.zpNewNav__megaCol--branze .zpNewNav__megaLink .zpNewNav__megaIco--photo img{display:block!important;width:100%!important;height:100%!important;max-width:none!important;margin:0!important;object-fit:cover!important;border-radius:50%!important}'
+    . 'html body .zpNewNav__mega .zpNewNav__megaGrid .zpNewNav__megaCol.zpNewNav__megaCol--branze .zpNewNav__megaLink:hover .zpNewNav__megaIco.zpNewNav__megaIco--photo,html body .zpNewNav__mega .zpNewNav__megaGrid .zpNewNav__megaCol.zpNewNav__megaCol--branze .zpNewNav__megaLink:focus-visible .zpNewNav__megaIco.zpNewNav__megaIco--photo{border-color:#fff!important;transform:scale(1.06)!important}'
+    . 'html body .zpNewNav__mega.is-light-menu .zpNewNav__megaGrid .zpNewNav__megaCol.zpNewNav__megaCol--branze .zpNewNav__megaLink .zpNewNav__megaIco.zpNewNav__megaIco--photo{border-color:rgba(28,71,122,.26)!important;background:#e9eef5!important;box-shadow:0 6px 14px rgba(7,20,38,.12)!important}'
+    . 'html body .zpNewNav__mega.is-light-menu .zpNewNav__megaGrid .zpNewNav__megaCol.zpNewNav__megaCol--branze .zpNewNav__megaLink:hover .zpNewNav__megaIco.zpNewNav__megaIco--photo,html body .zpNewNav__mega.is-light-menu .zpNewNav__megaGrid .zpNewNav__megaCol.zpNewNav__megaCol--branze .zpNewNav__megaLink:focus-visible .zpNewNav__megaIco.zpNewNav__megaIco--photo{border-color:#1c477a!important}'
     . '}'
+    . '@media (min-width:1101px) and (prefers-reduced-motion:reduce){html body .zpNewNav__mega .zpNewNav__megaGrid .zpNewNav__megaCol.zpNewNav__megaCol--branze .zpNewNav__megaLink:hover .zpNewNav__megaIco.zpNewNav__megaIco--photo,html body .zpNewNav__mega .zpNewNav__megaGrid .zpNewNav__megaCol.zpNewNav__megaCol--branze .zpNewNav__megaLink:focus-visible .zpNewNav__megaIco.zpNewNav__megaIco--photo{transform:none!important}}'
     // (The mobile industry group uses the menu's own plain icons, so it needs no rules here.)
     . '.zpNewNav__megaList--branze .zpNewNav__megaLink{align-items:center!important;padding-top:6px!important;padding-bottom:6px!important}'
     . '.zpNewNav__megaList--branze .zpNewNav__megaTitle{margin:0!important;font-size:17px!important}'

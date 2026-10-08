@@ -1207,66 +1207,6 @@ function zp_suite_realizacje_categories(){
   }
   return !empty($out) ? $out : zp_suite_realizacje_default_categories();
 }
-function zp_suite_realizacje_sanitize_rows($rows){ return function_exists('zp_suite_sanitize_repeater') ? zp_suite_sanitize_repeater($rows) : []; }
-add_action('admin_menu', function(){ add_submenu_page('zp-suite','Realizacje CMS','Realizacje','manage_options','zp-suite-realizacje','zp_suite_render_realizacje_cms_page'); }, 30);
-function zp_realizacje_admin_input($name,$label,$value='',$type='text',$wide=false){
-  if (function_exists('zp_admin_input')) { zp_admin_input($name,$label,$value,$type,$wide); return; }
-}
-function zp_suite_realizacje_project_row($i,$item=[]){ ob_start();
-  $title=$item['brand']??'Nowa realizacja'; $sub=$item['sub']??($item['type']??''); $img=$item['img']??''; $cat=$item['cat']??'web';
-  $meta=$item['meta']??''; $scope=$item['scope']??''; if(is_array($meta)){$meta=implode('|',$meta);} if(is_array($scope)){$scope=implode('|',$scope);} ?>
-  <div class="zpRepeatItem zpRepeatItem--portfolio zpRepeatItem--realizacje"><details><summary><span class="zpRepeatSummaryTitle"><?php if($img): ?><img class="zpRepeatThumb" src="<?php echo esc_url($img); ?>" alt=""><?php endif; ?><span class="zpRepeatSummaryText"><strong><?php echo esc_html($title); ?></strong><span>Realizacja • <?php echo esc_html($cat); ?><?php echo $sub ? ' • '.esc_html($sub) : ''; ?></span></span></span><span class="zpRepeatChevron">›</span></summary><div class="zpRepeatTop"><strong>Projekt do podstrony Realizacje</strong><button class="button zpRemoveRow">Usuń</button></div><div class="zpRepeatGrid">
-    <?php zp_realizacje_admin_input("zp_realizacje[projects][$i][visible]",'Pokaż? 1/0',$item['visible']??'1'); ?>
-    <?php zp_realizacje_admin_input("zp_realizacje[projects][$i][featured]",'Wyróżniona? 1/0',$item['featured']??'0'); ?>
-    <?php zp_realizacje_admin_input("zp_realizacje[projects][$i][cat]",'Kategorie/filtry, np. web shop branding',$cat); ?>
-    <?php zp_realizacje_admin_input("zp_realizacje[projects][$i][brand]",'Nazwa projektu',$item['brand']??''); ?>
-    <?php zp_realizacje_admin_input("zp_realizacje[projects][$i][sub]",'Krótki opis do karty',$item['sub']??''); ?>
-    <?php zp_realizacje_admin_input("zp_realizacje[projects][$i][type]",'Typ / podpis',$item['type']??''); ?>
-    <?php zp_realizacje_admin_input("zp_realizacje[projects][$i][year]",'Rok',$item['year']??''); ?>
-    <?php zp_realizacje_admin_input("zp_realizacje[projects][$i][tag]",'Branża / tag główny',$item['tag']??''); ?>
-    <?php zp_realizacje_admin_input("zp_realizacje[projects][$i][live]",'Link live',$item['live']??''); ?>
-    <?php zp_realizacje_admin_input("zp_realizacje[projects][$i][img]",'Zdjęcie / mockup',$item['img']??'','media',true); ?>
-    <?php zp_realizacje_admin_input("zp_realizacje[projects][$i][client]",'Klient',$item['client']??''); ?>
-    <?php zp_realizacje_admin_input("zp_realizacje[projects][$i][services]",'Usługi / zakres główny',$item['services']??''); ?>
-    <?php zp_realizacje_admin_input("zp_realizacje[projects][$i][meta]",'Tagi na karcie, oddziel |',$meta,'text',true); ?>
-    <?php zp_realizacje_admin_input("zp_realizacje[projects][$i][desc]",'Opis szczegółowy do modalu',$item['desc']??'','textarea',true); ?>
-    <?php zp_realizacje_admin_input("zp_realizacje[projects][$i][scope]",'Zakres prac / punkty w modalu, oddziel |',$scope,'textarea',true); ?>
-  </div></details></div><?php return ob_get_clean(); }
-function zp_suite_realizacje_category_row($i,$item=[]){ ob_start(); ?>
-  <div class="zpRepeatItem"><div class="zpRepeatTop"><strong>Kategoria / filtr</strong><button class="button zpRemoveRow">Usuń</button></div><div class="zpRepeatGrid">
-    <?php zp_realizacje_admin_input("zp_realizacje[categories][$i][visible]",'Pokaż? 1/0',$item['visible']??'1'); ?>
-    <?php zp_realizacje_admin_input("zp_realizacje[categories][$i][name]",'Nazwa',$item['name']??''); ?>
-    <?php zp_realizacje_admin_input("zp_realizacje[categories][$i][slug]",'Slug filtra, np. web / shop / branding',$item['slug']??''); ?>
-    <?php zp_realizacje_admin_input("zp_realizacje[categories][$i][icon]",'Ikona Lucide',$item['icon']??'layout-grid'); ?>
-  </div></div><?php return ob_get_clean(); }
-function zp_suite_render_realizacje_cms_page(){
-  if (!current_user_can('manage_options')) { return; }
-  $home = function_exists('zp_suite_cms') ? zp_suite_cms() : [];
-  $real = zp_suite_realizacje_cms();
-  if (!empty($_POST['zp_realizacje_save']) && check_admin_referer('zp_suite_realizacje_save')) {
-    if (isset($_POST['zp_cms']) && is_array($_POST['zp_cms']) && function_exists('zp_suite_sanitize_repeater')) {
-      $raw_home = wp_unslash($_POST['zp_cms']); $current = function_exists('zp_suite_cms') ? zp_suite_cms() : [];
-      if (!isset($current['portfolio']) || !is_array($current['portfolio'])) { $current['portfolio']=['web'=>[],'logo'=>[]]; }
-      $current['portfolio']['web']=zp_suite_sanitize_repeater($raw_home['portfolio']['web'] ?? []);
-      $current['portfolio']['logo']=zp_suite_sanitize_repeater($raw_home['portfolio']['logo'] ?? []);
-      update_option('zp_suite_cms', $current, false);
-    }
-    $raw = isset($_POST['zp_realizacje']) && is_array($_POST['zp_realizacje']) ? wp_unslash($_POST['zp_realizacje']) : [];
-    $save = ['projects'=>zp_suite_realizacje_sanitize_rows($raw['projects'] ?? []),'categories'=>zp_suite_realizacje_sanitize_rows($raw['categories'] ?? [])];
-    if (empty($save['projects'])) { $save['projects']=zp_suite_realizacje_default_projects(); }
-    if (empty($save['categories'])) { $save['categories']=zp_suite_realizacje_default_categories(); }
-    update_option('zp_suite_realizacje_cms',$save,false); $home=function_exists('zp_suite_cms')?zp_suite_cms():[]; $real=zp_suite_realizacje_cms();
-    echo '<div class="notice notice-success is-dismissible"><p>Zapisano Realizacje CMS.</p></div>';
-  }
-  $home_web=$home['portfolio']['web']??[]; $home_logo=$home['portfolio']['logo']??[]; $projects=$real['projects']??[]; $categories=$real['categories']??[]; ?>
-  <div class="wrap zpSuiteAdmin zpSuiteRealizacjeAdmin"><div class="zpSuiteHero"><span class="zpSuiteBadge">ZAPROJEKTOWANI SUITE • REALIZACJE CMS</span><h1>Realizacje i portfolio w jednym miejscu.</h1><p>Zarządzasz osobno portfolio na stronie głównej i pełną podstroną Realizacje. Projekty z podstrony mają pełne dane do kart, filtrów i modalu szczegółów.</p><div class="zpStatus"><div class="zpStat"><strong><?php echo (int)count($home_web)+(int)count($home_logo); ?></strong><span>home portfolio</span></div><div class="zpStat"><strong><?php echo (int)count($projects); ?></strong><span>realizacje</span></div><div class="zpStat"><strong>[zp_realizacje]</strong><span>shortcode</span></div></div></div>
-  <form method="post"><?php wp_nonce_field('zp_suite_realizacje_save'); ?><input type="hidden" name="zp_realizacje_save" value="1"><div class="zpTabs"><button type="button" class="is-active" data-tab="zpRealTabHome">Portfolio strona główna</button><button type="button" data-tab="zpRealTabProjects">Portfolio realizacje</button><button type="button" data-tab="zpRealTabCats">Kategorie</button><button type="button" data-tab="zpRealTabShortcode">Shortcode</button></div>
-  <section id="zpRealTabHome" class="zpPanel is-active"><div class="zpGrid"><div class="zpCard"><h2>Strony / sklepy / systemy — strona główna</h2><p>To jest obecne portfolio z home.</p><div class="zpToolsBar"><button class="button zpExpandAll" data-target="#zpRealHomeWeb" type="button">Rozwiń wszystko</button><button class="button zpCollapseAll" data-target="#zpRealHomeWeb" type="button">Zwiń wszystko</button></div><div id="zpRealHomeWeb" class="zpRepeater"><?php foreach($home_web as $i=>$row) echo function_exists('zp_portfolio_row') ? zp_portfolio_row('web',$i,$row) : ''; ?></div><button class="button zpAddRow" data-repeater="#zpRealHomeWeb" data-template="#zpTplRealHomeWeb" type="button">Dodaj projekt WEB</button></div><div class="zpCard"><h2>Logo / branding — strona główna</h2><div class="zpToolsBar"><button class="button zpExpandAll" data-target="#zpRealHomeLogo" type="button">Rozwiń wszystko</button><button class="button zpCollapseAll" data-target="#zpRealHomeLogo" type="button">Zwiń wszystko</button></div><div id="zpRealHomeLogo" class="zpRepeater"><?php foreach($home_logo as $i=>$row) echo function_exists('zp_portfolio_row') ? zp_portfolio_row('logo',$i,$row) : ''; ?></div><button class="button zpAddRow" data-repeater="#zpRealHomeLogo" data-template="#zpTplRealHomeLogo" type="button">Dodaj projekt logo</button></div></div></section>
-  <section id="zpRealTabProjects" class="zpPanel"><div class="zpGrid zpGrid1"><div class="zpCard"><h2>Portfolio realizacje — podstrona</h2><p>Te pozycje zasilają shortcode <code>[zp_realizacje]</code>.</p><div class="zpToolsBar"><button class="button zpExpandAll" data-target="#zpRealProjects" type="button">Rozwiń wszystko</button><button class="button zpCollapseAll" data-target="#zpRealProjects" type="button">Zwiń wszystko</button></div><div id="zpRealProjects" class="zpRepeater"><?php foreach($projects as $i=>$row) echo zp_suite_realizacje_project_row($i,$row); ?></div><button class="button zpAddRow" data-repeater="#zpRealProjects" data-template="#zpTplRealProject" type="button">Dodaj realizację</button></div></div></section>
-  <section id="zpRealTabCats" class="zpPanel"><div class="zpGrid zpGrid1"><div class="zpCard"><h2>Kategorie i filtry</h2><p>Slug kategorii musi odpowiadać wartości wpisanej w polu „Kategorie/filtry” projektu.</p><div id="zpRealCats" class="zpRepeater"><?php foreach($categories as $i=>$row) echo zp_suite_realizacje_category_row($i,$row); ?></div><button class="button zpAddRow" data-repeater="#zpRealCats" data-template="#zpTplRealCat" type="button">Dodaj kategorię</button></div></div></section>
-  <section id="zpRealTabShortcode" class="zpPanel"><div class="zpGrid zpGrid1"><div class="zpCard"><h2>Shortcode</h2><pre>[zp_realizacje]</pre><p>Alias: <code>[zp_page_realizacje]</code></p></div></div></section><div class="zpSave"><button class="button button-primary button-large">Zapisz wszystkie realizacje</button></div></form>
-  <template id="zpTplRealHomeWeb"><?php echo function_exists('zp_portfolio_row') ? zp_portfolio_row('web','__i__', []) : ''; ?></template><template id="zpTplRealHomeLogo"><?php echo function_exists('zp_portfolio_row') ? zp_portfolio_row('logo','__i__', []) : ''; ?></template><template id="zpTplRealProject"><?php echo zp_suite_realizacje_project_row('__i__', []); ?></template><template id="zpTplRealCat"><?php echo zp_suite_realizacje_category_row('__i__', []); ?></template></div><?php
-}
 add_action('plugins_loaded', function(){
   if (get_option('zp_suite_realizacje_content_version') !== '2.2.48') {
     $saved=get_option('zp_suite_realizacje_cms',[]);

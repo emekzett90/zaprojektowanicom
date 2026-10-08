@@ -269,6 +269,11 @@ function zp_suite_verify_turnstile($token) {
   if ($code < 200 || $code >= 300 || !is_array($json)) {
     return new WP_Error('zp_turnstile_bad_response', 'Nie udało się sprawdzić zabezpieczenia antyspamowego. Spróbuj ponownie.');
   }
+  // A rotated or mistyped secret is our configuration, not a bot: treat it like an outage so fail-open keeps leads coming.
+  $codes = isset($json['error-codes']) ? (array) $json['error-codes'] : [];
+  if (empty($json['success']) && array_intersect($codes, ['missing-input-secret', 'invalid-input-secret'])) {
+    return new WP_Error('zp_turnstile_secret', 'Nie udało się sprawdzić zabezpieczenia antyspamowego. Spróbuj ponownie.');
+  }
   return !empty($json['success']);
 }
 

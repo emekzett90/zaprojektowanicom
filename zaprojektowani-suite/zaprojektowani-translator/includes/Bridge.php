@@ -8,7 +8,7 @@ if (!defined('ABSPATH')) { exit; }
  *  - zpl_dictionary: machine translations, asked for last (shipped dictionary and manual corrections win);
  *  - zpl_has_page:   a translated new page counts as having an English version (hreflang, no noindex);
  *  - zpl_sitemap_pages: translated new pages go into the English sitemaps (/english-page-sitemap.xml, /english-post-sitemap.xml);
- *  - English URLs are saved as ordinary routes in zpl_routes (visible in Ustawienia → Języki PL/EN → Adresy URL).
+ *  - English URLs are saved as ordinary routes in zpl_routes (visible in ZP Suite → Języki PL/EN → Adresy URL).
  */
 final class Bridge {
     const INDEX = 'zpte_index';

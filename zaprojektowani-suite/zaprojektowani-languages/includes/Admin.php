@@ -3,19 +3,27 @@ namespace ZPL;
 
 if (!defined('ABSPATH')) { exit; }
 
-/** Ustawienia → Języki PL/EN */
+/** ZP Suite → Języki PL/EN (Ustawienia → Języki PL/EN when the Suite menu is missing) */
 final class Admin {
     const SLUG = 'zpl-languages';
 
     public static function boot(): void {
-        add_action('admin_menu', static function () {
-            add_options_page('Języki PL/EN', 'Języki PL/EN', 'manage_options', self::SLUG, [self::class, 'page']);
-        });
+        // After the Suite trims its submenu (priority 9999), so this entry stays visible.
+        add_action('admin_menu', [self::class, 'menu'], 10000);
         add_action('admin_post_zpl_save', [self::class, 'save']);
         add_action('admin_notices', [self::class, 'notices']);
         add_filter('plugin_action_links_' . plugin_basename(ZPL_HOST), static function ($links) {
-            array_unshift($links, '<a href="' . esc_url(admin_url('options-general.php?page=' . self::SLUG)) . '">' . (ZPL_HOST === ZPL_FILE ? 'Ustawienia' : 'Języki PL/EN') . '</a>');
+            array_unshift($links, '<a href="' . esc_url(self::url()) . '">' . (ZPL_HOST === ZPL_FILE ? 'Ustawienia' : 'Języki PL/EN') . '</a>');
             return $links;
+        });
+        add_action('admin_page_access_denied', static function () {
+            // Old address (Ustawienia → Języki PL/EN) from bookmarks and earlier notes. WordPress refuses a page
+            // that is no longer registered there before admin_init runs, so the redirect sits on this hook.
+            global $pagenow;
+            if ($pagenow === 'options-general.php' && ($_GET['page'] ?? '') === self::SLUG && self::in_suite() && current_user_can('manage_options')) {
+                wp_safe_redirect(self::url(array_diff_key(wp_unslash($_GET), ['page' => 1])));
+                exit;
+            }
         });
         add_action('admin_init', static function () {
             // An old translator re-activated by hand would conflict with this plugin.
@@ -31,15 +39,28 @@ final class Admin {
         if ($n) { delete_transient('zpl_notice'); echo '<div class="notice notice-info is-dismissible"><p>' . esc_html($n) . '</p></div>'; }
     }
 
+    public static function menu(): void {
+        if (self::in_suite()) {
+            add_submenu_page('zp-suite', 'Języki PL/EN', 'Języki PL/EN', 'manage_options', self::SLUG, [self::class, 'page']);
+        } else {
+            add_options_page('Języki PL/EN', 'Języki PL/EN', 'manage_options', self::SLUG, [self::class, 'page']);
+        }
+    }
+
+    /** True when the Suite's own menu (ZP Suite) exists, so the page sits next to Tłumacz EN. */
+    private static function in_suite(): bool {
+        return defined('ZP_SUITE_VERSION');
+    }
+
     private static function url(array $args = []): string {
-        return add_query_arg(array_merge(['page' => self::SLUG], $args), admin_url('options-general.php'));
+        return add_query_arg(array_merge(['page' => self::SLUG], $args), admin_url(self::in_suite() ? 'admin.php' : 'options-general.php'));
     }
 
     public static function page(): void {
         if (!current_user_can('manage_options')) { return; }
         $tab = sanitize_key($_GET['tab'] ?? 'status');
-        $tabs = ['status' => 'Status', 'missing' => 'Brakujące tłumaczenia', 'overrides' => 'Poprawki tłumaczeń', 'routes' => 'Adresy URL', 'cleanup' => 'Stare wtyczki'];
-        echo '<div class="wrap"><h1>Języki PL/EN</h1>';
+        $tabs = ['status' => 'Status', 'geo' => 'Goście z zagranicy', 'missing' => 'Brakujące tłumaczenia', 'overrides' => 'Poprawki tłumaczeń', 'routes' => 'Adresy URL', 'cleanup' => 'Stare wtyczki'];
+        echo '<div class="wrap zpl-admin"><style>.zpl-admin textarea{max-width:100%;box-sizing:border-box}.zpl-admin table.widefat td,.zpl-admin table.widefat td a{overflow-wrap:anywhere}@media(max-width:782px){.zpl-admin .zpl-kv th,.zpl-admin .zpl-kv td{display:block;width:auto!important}.zpl-admin .zpl-kv th{padding-bottom:0}}</style><h1>Języki PL/EN</h1>';
         if (!empty($_GET['msg'])) { echo '<div class="notice notice-success"><p>' . esc_html(wp_unslash($_GET['msg'])) . '</p></div>'; }
         echo '<nav class="nav-tab-wrapper">';
         foreach ($tabs as $k => $label) { echo '<a class="nav-tab' . ($k === $tab ? ' nav-tab-active' : '') . '" href="' . esc_url(self::url(['tab' => $k])) . '">' . esc_html($label) . '</a>'; }
@@ -59,7 +80,7 @@ final class Admin {
         $m = Dict::meta();
         $missing = count(Missing::all());
         $ov = count(Dict::overrides('en'));
-        echo '<table class="widefat striped" style="max-width:760px"><tbody>';
+        echo '<table class="widefat striped zpl-kv" style="max-width:760px"><tbody>';
         $rows = [
             'Wersja wtyczki' => ZPL_VERSION,
             'Wersja słownika' => ($m['version'] ?? '—') . (isset($m['built']) ? ' (' . wp_date('Y-m-d H:i', (int) $m['built']) . ')' : ''),
@@ -85,6 +106,88 @@ final class Admin {
         $fx = ['zpl_extra_attrs' => 'Atrybuty tłumaczone dodatkowo', 'zpl_extra_schema' => 'Dodatkowe pola danych dla Google'];
         foreach ($fx as $opt => $label) { $v = get_option($opt, []); if (is_array($v) && $v) { echo '<p class="description">' . esc_html($label) . ': <code>' . esc_html(implode(', ', $v)) . '</code></p>'; } }
         echo '<p class="description">Sprawdź stronę jako administrator z parametrem <code>?zpl_debug=1</code> — nieprzetłumaczone fragmenty zostaną podświetlone, a lista trafi do zakładki „Brakujące tłumaczenia”.</p>';
+    }
+
+    private static function tab_geo(): void {
+        $set = Geo::settings();
+        $stats = get_option(Geo::STATS, []);
+        $stats = is_array($stats) ? $stats : [];
+        $sum = static function (int $days) use ($stats): int {
+            $n = 0;
+            for ($i = 0; $i < $days; $i++) { $n += (int) ($stats[wp_date('Y-m-d', time() - $i * DAY_IN_SECONDS)] ?? 0); }
+            return $n;
+        };
+        $where = static function (?string $c): string {
+            if ($c === 'PL') { return 'Polska'; }
+            if ($c === 'ZZ') { return 'poza Polską'; }
+            return $c === null ? 'nie wiadomo (adres prywatny lub brak listy)' : 'poza Polską (' . $c . ')';
+        };
+        echo '<div style="max-width:820px">';
+        echo '<p>Gość spoza Polski, który wchodzi na polską stronę mającą wersję angielską, od razu dostaje wersję angielską (np. z <code>/kontakt/</code> na <code>/en/contact/</code>). '
+            . 'Kraj rozpoznajemy na serwerze po adresie IP, z listy polskich adresów dołączonej do wtyczki, więc nic nie miga i nie wysyłamy adresów gości do zewnętrznych usług.</p>';
+        echo '<ul style="list-style:disc;padding-left:20px">'
+            . '<li>Roboty Google, Bing, ChatGPT i narzędzia typu PageSpeed nigdy nie są przekierowywane: polskie adresy w wynikach wyszukiwania i oznaczenia hreflang zostają bez zmian.</li>'
+            . '<li>Gość, który sam przełączy język (PL/EN), zostaje przy swoim wyborze przez rok: po wybraniu angielskiego polskie adresy (np. z Google) też otwierają mu się po angielsku. Przejście z wersji angielskiej na polską liczy się jako wybór polskiego.</li>'
+            . '<li>Strony bez wersji angielskiej zostają po polsku, tak samo adresy z własnymi parametrami (np. wyszukiwanie). Zalogowani do WordPressa nie są przekierowywani.</li>'
+            . '</ul>';
+        self::form_open('geo');
+        echo '<p><label><input type="checkbox" name="enabled" value="1"' . checked($set['enabled'], true, false) . '> <strong>Goście spoza Polski dostają wersję angielską</strong></label></p>';
+        echo '<p><label><input type="checkbox" name="polish_stays" value="1"' . checked($set['polish_stays'], true, false) . '> Zostaw wersję polską, gdy przeglądarka zna polski (np. Polacy mieszkający za granicą)</label></p>';
+        submit_button('Zapisz', 'primary', 'submit', false);
+        echo '</form>';
+
+        echo '<h2>Przekierowania na wersję angielską</h2>';
+        echo '<p>Dziś: <strong>' . esc_html(number_format_i18n($sum(1))) . '</strong> · ostatnie 7 dni: <strong>' . esc_html(number_format_i18n($sum(7))) . '</strong> · ostatnie 30 dni: <strong>' . esc_html(number_format_i18n($sum(30))) . '</strong></p>';
+        echo '<p class="description">Liczymy wejścia z przeglądarek, które serwer przekierował na wersję angielską (bez robotów). Dalej gość klika już w linki wersji angielskiej, więc kolejne strony nie są liczone.</p>';
+        // Pages without an English version stay Polish for everyone: the list and the button live in Tłumacz EN.
+        if (class_exists('\\ZPTE\\Admin') && method_exists('\\ZPTE\\Admin', 'missing_pages')) {
+            $missing = count(\ZPTE\Admin::missing_pages());
+            if ($missing > 0) {
+                echo '<p><strong>Polskie strony bez wersji angielskiej: ' . esc_html(number_format_i18n($missing)) . '.</strong> Goście z zagranicy widzą je po polsku. <a href="' . esc_url(admin_url('admin.php?page=zp-tlumacz-en&tab=pages&f=missing')) . '">Lista i tłumaczenie w Tłumaczu EN →</a></p>';
+            }
+        }
+
+        $info = Geo::data_info();
+        $ip = Geo::visitor_ip();
+        $header = Geo::header_country();
+        echo '<h2>Rozpoznawanie kraju</h2><table class="widefat striped zpl-kv" style="max-width:820px"><tbody>';
+        $stale = $info['built'] !== '' && strtotime($info['built']) < time() - 90 * DAY_IN_SECONDS;
+        echo '<tr><th style="width:300px">Lista polskich adresów IP</th><td>' . ($info['v4'] > 0
+            ? esc_html(number_format_i18n($info['v4']) . ' zakresów IPv4 i ' . number_format_i18n($info['v6']) . ' IPv6, z dnia ' . $info['built']) . '<br><small>Źródło: ip-location-db (domena publiczna). Aktualizacja przychodzi z nowymi wersjami wtyczki.</small>'
+                . ($stale ? '<br><strong style="color:#b32d2e">Lista ma ponad 3 miesiące: przy następnej wersji wtyczki trzeba ją odświeżyć (tools/geo_pl_ranges.py).</strong>' : '')
+            : '<strong>brak plików listy</strong>: przekierowanie działa tylko z krajem podanym przez serwer') . '</td></tr>';
+        echo '<tr><th>Kraj z nagłówków serwera (Cloudflare itp.)</th><td>' . esc_html($header !== null ? $header : 'serwer nie podaje kraju, decyduje lista adresów') . '</td></tr>';
+        echo '<tr><th>Twoje połączenie</th><td><code>' . esc_html($ip !== '' ? $ip : '—') . '</code>: ' . esc_html($where($header ?? Geo::country_for_ip($ip))) . '</td></tr>';
+        echo '</tbody></table>';
+
+        $tIp = isset($_GET['ip']) ? trim(sanitize_text_field(wp_unslash($_GET['ip']))) : '';
+        $tAccept = isset($_GET['accept']) ? trim(sanitize_text_field(wp_unslash($_GET['accept']))) : 'en-US,en;q=0.9';
+        $tPath = isset($_GET['path']) ? trim(sanitize_text_field(wp_unslash($_GET['path']))) : '/kontakt/';
+        $tPref = in_array($_GET['pref'] ?? '', ['pl', 'en'], true) ? (string) $_GET['pref'] : '';
+        $prefs = ['' => 'nie wybierał', 'pl' => 'wybrał polski', 'en' => 'wybrał angielski'];
+        echo '<h2>Sprawdź, co zobaczy gość</h2>';
+        echo '<form method="get" action="' . esc_url(admin_url(self::in_suite() ? 'admin.php' : 'options-general.php')) . '"><input type="hidden" name="page" value="' . esc_attr(self::SLUG) . '"><input type="hidden" name="tab" value="geo">';
+        echo '<table class="form-table" role="presentation"><tbody>'
+            . '<tr><th><label for="zpl-geo-ip">Adres IP gościa</label></th><td><input id="zpl-geo-ip" name="ip" class="regular-text code" value="' . esc_attr($tIp) . '" placeholder="np. 8.8.8.8 (USA) albo 83.0.0.1 (Polska)"></td></tr>'
+            . '<tr><th><label for="zpl-geo-accept">Języki przeglądarki</label></th><td><input id="zpl-geo-accept" name="accept" class="regular-text code" value="' . esc_attr($tAccept) . '"><p class="description">Np. <code>en-US,en;q=0.9</code> albo <code>pl-PL,pl;q=0.9,en;q=0.8</code></p></td></tr>'
+            . '<tr><th><label for="zpl-geo-path">Strona</label></th><td><input id="zpl-geo-path" name="path" class="regular-text code" value="' . esc_attr($tPath) . '"><p class="description">Można dopisać parametry, np. <code>/kontakt/?utm_source=google</code> albo <code>/?s=logo</code></p></td></tr>'
+            . '<tr><th><label for="zpl-geo-pref">Przełącznik PL/EN</label></th><td><select id="zpl-geo-pref" name="pref">';
+        foreach ($prefs as $k => $label) { echo '<option value="' . esc_attr($k) . '"' . selected($tPref, $k, false) . '>' . esc_html($label) . '</option>'; }
+        echo '</select></td></tr>'
+            . '</tbody></table>';
+        submit_button('Sprawdź', 'secondary', '', false);
+        echo '</form>';
+        if ($tIp !== '') {
+            [$lang, $source, $mapped, $redirect] = Router::resolve((string) (wp_parse_url($tPath, PHP_URL_PATH) ?: '/'));
+            if ($redirect !== null) { [$lang, $source, $mapped] = Router::resolve($redirect); }
+            $tQuery = (string) wp_parse_url($tPath, PHP_URL_QUERY);
+            $d = Geo::decide($lang, $source, $mapped, false, ['ip' => $tIp, 'accept' => $tAccept, 'ua' => 'Mozilla/5.0', 'query' => $tQuery, 'pref' => $tPref]);
+            $country = $d['country'] ?? Geo::country_for_ip($tIp);
+            echo '<div class="notice notice-' . ($d['target'] !== null ? 'success' : 'info') . ' inline" style="margin-top:14px"><p><strong>'
+                . esc_html($d['target'] !== null ? 'Wersja angielska: ' . home_url($d['target']) . ($tQuery !== '' ? '?' . $tQuery : '') : 'Wersja polska') . '</strong><br>'
+                . esc_html(Geo::REASONS[$d['reason']] ?? $d['reason']) . '<br><small>Kraj tego adresu IP: ' . esc_html($where($country)) . '</small></p></div>';
+        }
+        echo '</div>';
     }
 
     private static function tab_missing(): void {
@@ -187,6 +290,10 @@ final class Admin {
                 $opt = is_array($opt) ? $opt : [];
                 $opt['exclude'] = array_values(array_filter(array_map('trim', $ex)));
                 update_option('zpl_settings', $opt, true);
+                break;
+            case 'geo':
+                $tab = 'geo';
+                update_option(Geo::SETTINGS, ['enabled' => empty($_POST['enabled']) ? 0 : 1, 'polish_stays' => empty($_POST['polish_stays']) ? 0 : 1], true);
                 break;
             case 'missing':
                 $tab = 'missing';

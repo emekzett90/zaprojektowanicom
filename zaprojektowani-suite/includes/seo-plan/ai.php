@@ -18,7 +18,8 @@ if (!defined('ABSPATH')) { exit; }
  *    translated by the languages module,
  *  - IndexNow: Bing (ChatGPT, Copilot), Yandex, Seznam and Naver learn about new and changed pages within
  *    minutes (unless Rank Math's Instant Indexing module already sends them) and get the full list of
- *    addresses once after install,
+ *    addresses once after install. Posts that change at display time through the content feed (answer
+ *    sections, links to new articles) are sent too and get the date of the change in the sitemap (2.9.6),
  *  - Zaprojektowani Suite → Widoczność AI: visits of AI crawlers, visitors coming from ChatGPT, Gemini, Claude,
  *    Perplexity and Copilot (counted from the suite's own page-view beacon), the state of llms.txt and IndexNow,
  *    an access test with the crawlers' user agents and the profile links.
@@ -29,8 +30,10 @@ if (!defined('ABSPATH')) { exit; }
  * Bump to run the one-time setup again (full IndexNow submission, llms.txt file check).
  * 2: 2.9.6 corrected texts in older posts and the project count on the website pages; Bing gets every
  * address again so ChatGPT and Copilot read the new versions sooner. It also deletes /llms.txt.bak.
+ * 3: 2.9.6 also follows the posts changed by the content feed; the first run dates the answer sections and
+ * links the feed already shows, so their sitemap entries say they changed.
  */
-const ZP_AI_VERSION = '2';
+const ZP_AI_VERSION = '3';
 const ZP_AI_LOG = 'zp_ai_log';
 const ZP_AI_LLMS_MARK = '<!-- Zaprojektowani Suite: llms.txt -->';
 
@@ -805,6 +808,93 @@ add_action('wp_trash_post', function ($post_id) {
   if ($urls) { zp_ai_indexnow_queue($urls); }
 });
 
+/* ---------------------------------------------------------------------------------------------------------
+ * Posts changed by the content feed (feed.php), 2.9.6. Answer sections and links from the feed show in
+ * published posts at display time: nothing is saved, so neither the hooks above nor Rank Math's sitemap date
+ * notice the change. Such a post goes to IndexNow (Polish address only: the feed additions are not shown on
+ * /en/) and its sitemap entry gets the date of the change. The same happens to the posts that link to a feed
+ * article when it is published, because their links only then become clickable.
+ * ------------------------------------------------------------------------------------------------------ */
+
+/** Feed additions per post: path => fingerprint of its sections and links. */
+function zp_ai_feed_fingerprints(array $display): array {
+  $out = [];
+  foreach (['sections', 'links'] as $kind) {
+    foreach ((array) ($display[$kind] ?? []) as $path => $items) {
+      if (is_string($path) && $items) { $out[$path] = md5(($out[$path] ?? '') . $kind . serialize($items)); }
+    }
+  }
+  return $out;
+}
+
+/** Compares the feed additions with the previous check; the posts that changed get a date and go to IndexNow. */
+function zp_ai_feed_check(?array $display = null, bool $ping = true): void {
+  if (!zp_ai_on()) { return; }
+  $now = zp_ai_feed_fingerprints($display ?? (array) get_option('zp_feed_display', []));
+  $before = (array) get_option('zp_ai_feed_seen', []);
+  update_option('zp_ai_feed_seen', $now, false);
+  $paths = [];
+  foreach (array_keys($now + $before) as $path) {
+    if (($now[$path] ?? '') !== ($before[$path] ?? '')) { $paths[] = (string) $path; }
+  }
+  if ($paths) { zp_ai_changed_at_display($paths, 'sekcje i linki z kanału treści', $ping); }
+}
+
+/** Published posts whose text changed without a save: the date for the sitemap and, with $ping, IndexNow. */
+function zp_ai_changed_at_display(array $paths, string $why, bool $ping = true): void {
+  $changed = (array) get_option('zp_ai_changed', []);
+  $urls = [];
+  foreach (array_unique($paths) as $path) {
+    $id = function_exists('zp_seo_related_object_id') ? zp_seo_related_object_id($path) : (int) url_to_postid(home_url($path));
+    $post = $id ? get_post($id) : null;
+    if (!$post instanceof WP_Post || $post->post_status !== 'publish' || !($u = zp_ai_post_urls($post))) { continue; }
+    $changed['paths'][zp_seo_plan_path($u[0])] = time();
+    $changed['types'][$post->post_type] = time();
+    $urls[] = $u[0];
+  }
+  if (!$urls) { return; }
+  asort($changed['paths']);
+  $changed['paths'] = array_slice($changed['paths'], -300, null, true);
+  update_option('zp_ai_changed', $changed, false);
+  if (class_exists('\RankMath\Sitemap\Cache')) { \RankMath\Sitemap\Cache::invalidate_storage(); }
+  if ($ping) { zp_ai_indexnow_queue($urls); }
+  zp_ai_log(sprintf('Zmiany przy wyświetlaniu (%s), liczba wpisów: %d. Nowa data w mapie witryny%s.', $why, count($urls), $ping ? ' i zgłoszenie do IndexNow' : ''));
+}
+
+add_action('add_option_zp_feed_display', function ($option, $value) {
+  zp_ai_feed_check(is_array($value) ? $value : null);
+}, 10, 2);
+add_action('update_option_zp_feed_display', function ($old, $value) {
+  zp_ai_feed_check(is_array($value) ? $value : null);
+}, 10, 2);
+
+// A feed article goes live: the posts that link to it now show the link.
+add_action('transition_post_status', function ($new, $old, $post) {
+  if (!zp_ai_on() || !$post instanceof WP_Post || $new !== 'publish' || $old === 'publish' || $post->post_type !== 'post') { return; }
+  $to = zp_seo_plan_path((string) get_permalink($post));
+  $from = [];
+  foreach ((array) (((array) get_option('zp_feed_display', []))['links'] ?? []) as $in => $links) {
+    foreach ((array) $links as $l) {
+      if (($l[2] ?? '') === $to && $in !== $to) { $from[] = (string) $in; }
+    }
+  }
+  if ($from) { zp_ai_changed_at_display($from, 'linki do nowego wpisu ' . $to); }
+}, 30, 3);
+
+// The date of the change in Rank Math's sitemap: the post's own entry and the post sitemap in the index.
+add_filter('rank_math/sitemap/entry', function ($url, $type, $object) {
+  if (!is_array($url) || empty($url['loc']) || !zp_ai_on()) { return $url; }
+  $at = (int) (((array) get_option('zp_ai_changed', []))['paths'][zp_seo_plan_path((string) $url['loc'])] ?? 0);
+  if ($at > (int) strtotime((string) ($url['mod'] ?? ''))) { $url['mod'] = gmdate('Y-m-d H:i:s', $at); }
+  return $url;
+}, 20, 3);
+add_filter('rank_math/sitemap/index/entry', function ($item, $type, $post_type = '') {
+  if (!is_array($item) || $type !== 'post' || !zp_ai_on()) { return $item; }
+  $at = (int) (((array) get_option('zp_ai_changed', []))['types'][(string) $post_type] ?? 0);
+  if ($at > (int) strtotime((string) ($item['lastmod'] ?? ''))) { $item['lastmod'] = gmdate('Y-m-d H:i:s', $at); }
+  return $item;
+}, 20, 3);
+
 /** Every public address: the Polish and English sitemaps and the old addresses that now redirect. */
 function zp_ai_all_urls(): array {
   $urls = [home_url('/')];
@@ -869,6 +959,7 @@ function zp_ai_maybe_setup(): void {
     zp_ai_llms_forget();
     $state = zp_ai_llms_file_sync('instalacja');
     zp_ai_llms_backup_cleanup();
+    zp_ai_feed_check(null, false);
     if (!wp_next_scheduled('zp_ai_indexnow_bulk')) { wp_schedule_single_event(time() + 300, 'zp_ai_indexnow_bulk'); }
     if (!wp_next_scheduled('zp_ai_daily')) { wp_schedule_event(time() + HOUR_IN_SECONDS, 'daily', 'zp_ai_daily'); }
     zp_ai_log('Widoczność AI ' . ZP_AI_VERSION . ' włączona: robots.txt z robotami AI, /llms.txt (' . ($state === 'blocked' ? 'zablokowany starym plikiem' : 'aktualny') . '), ceny w danych strukturalnych, IndexNow (pełna lista za 5 minut).');

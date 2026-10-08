@@ -784,7 +784,37 @@ function zp_suite_cms_defaults(){
 function zp_suite_cms(){
   $saved = get_option('zp_suite_cms', []);
   if(!is_array($saved)) $saved = [];
-  return zp_suite_deep_merge(zp_suite_cms_defaults(), $saved);
+  $data = zp_suite_deep_merge(zp_suite_cms_defaults(), $saved);
+  // Lists saved in Strona główna CMS since the panel clean-up are used exactly as saved: the merge above
+  // would bring back a removed row from the defaults (same position) and fill moved rows with other rows' keys.
+  if (!empty($saved['_exact']) && is_array($saved['_exact'])) {
+    foreach (array_keys($saved['_exact']) as $path) {
+      $list = zp_suite_cms_path_get($saved, (string) $path);
+      if (is_array($list)) { zp_suite_cms_path_set($data, (string) $path, array_values($list)); }
+    }
+  }
+  unset($data['_exact']);
+  return $data;
+}
+
+/** Lists edited in Strona główna CMS, as paths in the zp_suite_cms option. */
+function zp_suite_cms_list_paths(){
+  return ['logos', 'portfolio.web', 'portfolio.logo', 'reviews', 'faq'];
+}
+function zp_suite_cms_path_get($data, $path){
+  foreach (explode('.', $path) as $part) {
+    if (!is_array($data) || !array_key_exists($part, $data)) { return null; }
+    $data = $data[$part];
+  }
+  return $data;
+}
+function zp_suite_cms_path_set(&$data, $path, $value){
+  $ref = &$data;
+  foreach (explode('.', $path) as $part) {
+    if (!isset($ref[$part]) || !is_array($ref[$part])) { $ref[$part] = []; }
+    $ref = &$ref[$part];
+  }
+  $ref = $value;
 }
 function zp_suite_cms_get($key, $default=[]){
   $data=zp_suite_cms();

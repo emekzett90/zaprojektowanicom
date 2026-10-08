@@ -1,17 +1,7 @@
 <?php
 if (!defined('ABSPATH')) { exit; }
-add_action('admin_menu', function(){
-  // Zostawiamy tylko główne pozycje. Narzędzia techniczne są dostępne z Command Center,
-  // ale nie zaśmiecają lewego menu WP Admina.
-  $keep = ['zp-suite','zp-suite-home-cms','zp-suite-realizacje','zp-suite-faq','zp-suite-pages','zp-suite-shop-katowice','zp-suite-leads','zp-studio-orders','zp-studio-packages'];
-  global $submenu;
-  if (empty($submenu['zp-suite']) || !is_array($submenu['zp-suite'])) return;
-  foreach ($submenu['zp-suite'] as $idx => $item) {
-    $slug = $item[2] ?? '';
-    if (!in_array($slug, $keep, true)) unset($submenu['zp-suite'][$idx]);
-  }
-  $submenu['zp-suite'] = array_values($submenu['zp-suite']);
-}, 9999);
+// The ZP Suite submenu used to be trimmed here to a keep-list; the hidden screens are gone (panel clean-up),
+// and includes/admin-panel.php now sets the order.
 
 add_action('wp_head', function(){
   if (is_admin()) return;

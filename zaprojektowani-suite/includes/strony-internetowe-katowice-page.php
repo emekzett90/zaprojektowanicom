@@ -44,6 +44,9 @@ add_action('wp_head', function(){
     . "#zp-strony-internetowe-katowice{visibility:hidden;min-height:100vh;background:#030407;color:#fff}"
     . "body.zp-home-bg-boot .elementor-shortcode:has(#zp-strony-internetowe-katowice){min-height:100vh;background:#030407}"
     . "</style>\n";
+  // 2.9.7: industry pages show their own photo instead of the laptop (includes/seo-plan/industries.php).
+  $industry_preload = function_exists('zp_seo_industry_hero_preload') ? zp_seo_industry_hero_preload() : '';
+  if ($industry_preload !== '') { echo $industry_preload; return; }
   printf(
     "<link rel=\"preload\" as=\"image\" href=\"%s\" type=\"image/webp\" fetchpriority=\"high\">\n",
     esc_url($hero)

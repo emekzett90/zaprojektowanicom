@@ -15,11 +15,11 @@
         bar.setAttribute('aria-valuenow', s.percent);
         bar.firstElementChild.style.width = s.percent + '%';
         set('message', s.message);
-        set('current', s.current ? s.current + (s.page_total ? ' · fragmenty: ' + s.page_done + ' / ' + s.page_total : '') : '');
+        set('current', s.current ? s.current + (s.page_total ? ' · teksty: ' + s.page_done + ' / ' + s.page_total : '') : '');
         set('retry', s.retry_label && (s.state === 'retry' || s.state === 'limit') ? 'Następna próba: ' + s.retry_label : '');
         if (s.counts) { Object.keys(s.counts).forEach(function (key) { set(key, formatter.format(s.counts[key])); }); }
         if (s.usage) { set('chars', formatter.format(s.usage.chars)); set('requests', formatter.format(s.usage.requests)); }
-        document.getElementById('zpte-poll-status').textContent = 'Status aktualny · ' + new Date().toLocaleTimeString('pl-PL') + '. Możesz zostawić ten panel otwarty, aby kontynuować kolejkę.';
+        document.getElementById('zpte-poll-status').textContent = 'Stan z ' + new Date().toLocaleTimeString('pl-PL') + '. Zostaw ten ekran otwarty, a tłumaczenie pójdzie dalej.';
     }
     async function request(action) {
         var controller = new AbortController(), timeout = setTimeout(function () { controller.abort(); }, action === 'zpte_step' ? 40000 : 15000);
@@ -40,7 +40,7 @@
         } finally { clearTimeout(timeout); }
     }
     function report(error) {
-        document.getElementById('zpte-poll-status').textContent = stopped ? error.message : 'Chwilowy brak odpowiedzi serwera. Ponawiam połączenie; ostatni pokazany postęp może być nieaktualny.';
+        document.getElementById('zpte-poll-status').textContent = stopped ? error.message : 'Chwilowy brak odpowiedzi serwera. Ponawiam; ostatni pokazany postęp może być nieaktualny.';
     }
     async function step() {
         if (working || stopped) return;

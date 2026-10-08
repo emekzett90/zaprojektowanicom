@@ -1579,7 +1579,8 @@ add_action('template_redirect', function () {
     $hero_seen = false;
     $html = preg_replace_callback('#<img\b[^>]*>#i', function ($m) use (&$hero_seen) {
       $tag = $m[0];
-      $is_hero = (stripos($tag, 'zh__brandMock') !== false || stripos($tag, 'zh__mobileBrandMock') !== false || stripos($tag, 'zpWebHeroKat__mock') !== false || stripos($tag, 'zpShopCockpit__mock') !== false || stripos($tag, 'zpBrandHeroSafe__mockImg') !== false);
+      // 2.9.7: zpIndHero is the industry photo in the hero of the eight industry pages (includes/seo-plan/industries.php).
+      $is_hero = (stripos($tag, 'zh__brandMock') !== false || stripos($tag, 'zh__mobileBrandMock') !== false || stripos($tag, 'zpWebHeroKat__mock') !== false || stripos($tag, 'zpShopCockpit__mock') !== false || stripos($tag, 'zpBrandHeroSafe__mockImg') !== false || stripos($tag, 'zpIndHero') !== false);
 
       // v2.2.537: /strony-internetowe-katowice/ mobile had a visible second hitch because
       // the desktop mockup appears before the mobile mockup in the HTML. The older optimizer

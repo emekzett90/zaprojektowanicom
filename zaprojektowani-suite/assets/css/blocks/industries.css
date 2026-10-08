@@ -1,0 +1,285 @@
+/* ZP Suite 2.9.7 — industry photos on the website template (includes/seo-plan/industries.php).
+   Loaded on the eight industry pages and on the website pages with the "Strony dla branż" cards.
+   The people are cut-outs, faded from the bottom like the team photos; every image keeps its
+   width and height attributes and CSS sets the size it is drawn at. */
+
+/* 1. Hero: the industry photo instead of the laptop. The chips described the laptop's page.
+   --zp-hero-ar (width / height of the photo) comes with the section from industries.php. */
+#zp-strony-internetowe-katowice .hero[data-zp-industry] .code-chip,
+#zp-strony-internetowe-katowice .hero[data-zp-industry] .vitals-pill,
+#zp-strony-internetowe-katowice .hero[data-zp-industry] .hero-value-chip { display: none !important; }
+
+#zp-strony-internetowe-katowice .hero[data-zp-industry] .hero-shot {
+  position: relative !important;
+  inset: auto !important;
+  display: block;
+  flex: none;
+  width: 100% !important;
+  height: auto !important;
+  max-width: none !important;
+  scale: 1 !important;
+  filter: none !important;
+  -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 60%, rgba(0,0,0,.5) 81%, transparent 100%);
+  mask-image: linear-gradient(to bottom, #000 0%, #000 60%, rgba(0,0,0,.5) 81%, transparent 100%);
+}
+
+/* Desktop: beside the copy, in a box that ends just below the first screen; a wide photo sits in
+   its middle. Faded from the bottom, and darker at the top left, where the heading can reach it. */
+@media (min-width: 1101px) {
+  #zp-strony-internetowe-katowice .hero[data-zp-industry] .hero-build {
+    left: auto !important;
+    right: clamp(8px, 2.2vw, 44px) !important;
+    top: calc(100% - 1150px) !important;
+    bottom: auto !important;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    width: min(52vw, 880px) !important;
+    height: 780px !important;
+    transform: none !important;
+  }
+  #zp-strony-internetowe-katowice .hero[data-zp-industry] .hero-shot {
+    width: min(100%, calc(var(--zp-hero-ar, 1.25) * 740px)) !important;
+    -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 60%, rgba(0,0,0,.5) 81%, transparent 100%), linear-gradient(90deg, rgba(0,0,0,.42) 0%, rgba(0,0,0,.76) 9%, #000 21%), linear-gradient(to bottom, transparent 0%, transparent 44%, #000 64%);
+    -webkit-mask-composite: source-in, source-over;
+    mask-image: linear-gradient(to bottom, #000 0%, #000 60%, rgba(0,0,0,.5) 81%, transparent 100%), linear-gradient(90deg, rgba(0,0,0,.42) 0%, rgba(0,0,0,.76) 9%, #000 21%), linear-gradient(to bottom, transparent 0%, transparent 44%, #000 64%);
+    mask-composite: intersect, add;
+  }
+  #zp-strony-internetowe-katowice .hero[data-zp-industry] .ps-badge {
+    left: -6% !important;
+    top: auto !important;
+    bottom: 26% !important;
+  }
+}
+
+/* Tablet and phone: under the copy. The hero keeps only the room the photo needs. */
+@media (max-width: 1100px) {
+  #zp-strony-internetowe-katowice .hero[data-zp-industry] {
+    --zp-hero-photo-w: min(86vw, calc(var(--zp-hero-ar, 1.25) * 560px));
+    --zp-hero-photo-bottom: 160px;
+    --zp-hero-photo-gap: -36px;
+    min-height: 0 !important;
+  }
+  #zp-strony-internetowe-katowice .hero[data-zp-industry] .hero-inner {
+    min-height: 0 !important;
+    padding-bottom: calc(var(--zp-hero-photo-w) / var(--zp-hero-ar, 1.25) + var(--zp-hero-photo-bottom) + var(--zp-hero-photo-gap)) !important;
+  }
+  #zp-strony-internetowe-katowice .hero[data-zp-industry] .hero-build {
+    left: 50% !important;
+    right: auto !important;
+    top: auto !important;
+    bottom: var(--zp-hero-photo-bottom) !important;
+    width: var(--zp-hero-photo-w) !important;
+    height: auto !important;
+    transform: translateX(-50%) !important;
+  }
+  #zp-strony-internetowe-katowice .hero[data-zp-industry] .ps-badge {
+    left: -2% !important;
+    top: auto !important;
+    bottom: 16% !important;
+  }
+}
+
+@media (max-width: 680px) {
+  #zp-strony-internetowe-katowice .hero[data-zp-industry] {
+    --zp-hero-photo-w: min(116vw, calc(var(--zp-hero-ar, 1.25) * 400px));
+    --zp-hero-photo-bottom: 112px;
+    --zp-hero-photo-gap: 0px;
+  }
+  #zp-strony-internetowe-katowice .hero[data-zp-industry] .ps-badge {
+    left: calc((var(--zp-hero-photo-w) - 100vw) / 2 + 16px) !important;
+    bottom: 14% !important;
+  }
+}
+
+/* 2. People over the band under the packages, like Mateusz over the guide's contact band.
+   --zp-band-r (height / width of the photo) comes from industries.php; the band moves down by
+   as much as the heads stand out above it, so they never cover the package buttons. */
+#zp-strony-internetowe-katowice .packages-bottom.packages-bottom--people {
+  --zp-band-w: clamp(220px, 19vw, 300px);
+  overflow: visible !important;
+  min-height: 176px;
+  margin-top: max(24px, calc(var(--zp-band-w) * var(--zp-band-r, 1) - 152px)) !important;
+  padding-left: calc(var(--zp-band-w) + 30px) !important;
+}
+#zp-strony-internetowe-katowice .packages-bottom--people .zpIndBand {
+  position: absolute !important;
+  z-index: 1 !important;
+  left: 18px;
+  bottom: 0;
+  width: var(--zp-band-w);
+  pointer-events: none;
+}
+#zp-strony-internetowe-katowice .zpIndBand img {
+  display: block;
+  width: 100%;
+  height: auto;
+  -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 60%, transparent 98%);
+  mask-image: linear-gradient(to bottom, #000 0%, #000 60%, transparent 98%);
+}
+@media (max-width: 680px) {
+  #zp-strony-internetowe-katowice .packages-bottom.packages-bottom--people {
+    --zp-band-w: min(250px, 72vw);
+    min-height: 0;
+    margin-top: 136px !important;
+    padding-top: 0 !important;
+    padding-left: 25px !important;
+  }
+  #zp-strony-internetowe-katowice .packages-bottom--people .zpIndBand {
+    position: relative !important;
+    left: auto;
+    bottom: auto;
+    margin: -112px auto 0;
+  }
+}
+
+/* 3. The cover photo fills the lower part of the first "Co projektujemy" card. */
+#zp-strony-internetowe-katowice .scope-card.scope-card--photo {
+  display: flex;
+  flex-direction: column;
+}
+#zp-strony-internetowe-katowice .zpIndScope {
+  position: relative !important;
+  display: block;
+  flex: 1 1 auto;
+  min-height: 240px;
+  margin: 30px -32px -32px;
+  overflow: hidden;
+  border-radius: 0 0 27px 27px;
+}
+#zp-strony-internetowe-katowice .zpIndScope img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: var(--zp-ind-pos, 50% 50%);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,.5) 22%, #000 50%);
+  mask-image: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,.5) 22%, #000 50%);
+}
+
+/* 4. Process: the industry pair stands where Mateusz sits on the other website pages. */
+#zp-strony-internetowe-katowice .process-person-stage.process-person-stage--industry {
+  right: 0;
+  top: -8px;
+  width: clamp(400px, 34vw, 560px);
+}
+#zp-strony-internetowe-katowice .process-person-stage--industry img {
+  height: auto;
+  filter: none;
+  -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 58%, transparent 97%);
+  mask-image: linear-gradient(to bottom, #000 0%, #000 58%, transparent 97%);
+}
+#zp-strony-internetowe-katowice .process-person-stage--industry figcaption {
+  right: auto;
+  left: -8%;
+  top: auto;
+  bottom: 30%;
+}
+
+/* 5. FAQ: the pair above the heading, not mirrored (they already face the questions). */
+#zp-strony-internetowe-katowice .faq-figure.faq-figure--industry { max-width: 420px; }
+#zp-strony-internetowe-katowice .faq-figure--industry img {
+  height: auto;
+  transform: none;
+}
+@media (max-width: 680px) {
+  #zp-strony-internetowe-katowice .faq-figure.faq-figure--industry { max-width: 300px; }
+}
+
+/* 6. "Strony dla branż": linked cover cards, four in a row (seven on an industry page: 4 + 3). */
+#zp-strony-internetowe-katowice .ind-grid.zpIndGrid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+#zp-strony-internetowe-katowice .ind-grid.zpIndGrid--7 { grid-template-columns: repeat(12, minmax(0, 1fr)); }
+#zp-strony-internetowe-katowice .zpIndGrid--7 .zpIndCard { grid-column: span 3; }
+#zp-strony-internetowe-katowice .zpIndGrid--7 .zpIndCard:nth-child(n+5) { grid-column: span 4; }
+#zp-strony-internetowe-katowice a.ind-card.zpIndCard {
+  min-height: 380px;
+  color: #fff;
+  text-decoration: none;
+}
+#zp-strony-internetowe-katowice .zpIndCard > img {
+  height: 100%;
+  object-position: var(--zp-ind-pos, 50% 50%);
+}
+#zp-strony-internetowe-katowice .zpIndCard .ind-body strong { color: #fff; }
+#zp-strony-internetowe-katowice .zpIndCard__go {
+  position: absolute;
+  z-index: 2;
+  left: 20px;
+  top: 18px;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border: 1px solid rgba(255,255,255,.28);
+  border-radius: 50%;
+  background: rgba(4,8,15,.38);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  transition: background .3s ease, border-color .3s ease;
+}
+#zp-strony-internetowe-katowice .zpIndCard__go svg {
+  width: 17px;
+  height: 17px;
+  fill: none;
+  stroke: #fff;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: stroke .3s ease, transform .3s ease;
+}
+#zp-strony-internetowe-katowice .zpIndCard:hover .zpIndCard__go,
+#zp-strony-internetowe-katowice .zpIndCard:focus-visible .zpIndCard__go {
+  border-color: #fff;
+  background: #fff;
+}
+#zp-strony-internetowe-katowice .zpIndCard:hover .zpIndCard__go svg,
+#zp-strony-internetowe-katowice .zpIndCard:focus-visible .zpIndCard__go svg {
+  stroke: #07111f;
+  transform: translate(1px, -1px);
+}
+#zp-strony-internetowe-katowice .zpIndCard:focus-visible {
+  outline: 3px solid rgba(116,168,239,.88);
+  outline-offset: 4px;
+}
+@media (max-width: 1100px) {
+  #zp-strony-internetowe-katowice .ind-grid.zpIndGrid,
+  #zp-strony-internetowe-katowice .ind-grid.zpIndGrid--7 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  #zp-strony-internetowe-katowice .zpIndGrid--7 .zpIndCard,
+  #zp-strony-internetowe-katowice .zpIndGrid--7 .zpIndCard:nth-child(n+5) { grid-column: auto; }
+  #zp-strony-internetowe-katowice .zpIndGrid--7 .zpIndCard:last-child { grid-column: 1 / -1; }
+  #zp-strony-internetowe-katowice a.ind-card.zpIndCard { min-height: 340px; }
+}
+@media (max-width: 680px) {
+  #zp-strony-internetowe-katowice .ind-grid.zpIndGrid { gap: 10px; }
+  #zp-strony-internetowe-katowice a.ind-card.zpIndCard {
+    min-height: 220px;
+    border-radius: 22px;
+  }
+  #zp-strony-internetowe-katowice .zpIndCard .ind-body { padding: 14px 14px 16px; }
+  #zp-strony-internetowe-katowice .zpIndCard .ind-body strong {
+    font-size: 16px;
+    line-height: 1.16;
+    letter-spacing: -.03em;
+  }
+  #zp-strony-internetowe-katowice .zpIndCard .ind-body p { display: none; }
+  #zp-strony-internetowe-katowice .zpIndCard__go {
+    left: 12px;
+    top: 12px;
+    width: 32px;
+    height: 32px;
+  }
+  #zp-strony-internetowe-katowice .zpIndCard__go svg {
+    width: 14px;
+    height: 14px;
+  }
+  #zp-strony-internetowe-katowice .zpIndCard .ind-num {
+    right: 14px;
+    top: 14px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #zp-strony-internetowe-katowice .zpIndCard__go,
+  #zp-strony-internetowe-katowice .zpIndCard__go svg { transition: none; }
+}

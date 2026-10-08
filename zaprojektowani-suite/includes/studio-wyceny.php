@@ -144,38 +144,6 @@ function zp_studio_normalize_public_copy($data){
   return $data;
 }
 
-function zp_studio_sanitize_packages($input){
-  $defaults = zp_studio_default_packages();
-  $out = [];
-  foreach ($defaults as $service => $data) {
-    $src = isset($input[$service]) && is_array($input[$service]) ? $input[$service] : [];
-    foreach (['kick','title','lead','subject','final','help','helpCopy'] as $field) {
-      $out[$service][$field] = isset($src[$field]) ? wp_kses_post(wp_unslash($src[$field])) : $data[$field];
-    }
-    $out[$service]['p'] = [];
-    $rows = isset($src['p']) && is_array($src['p']) ? $src['p'] : [];
-    foreach ($data['p'] as $i => $defrow) {
-      $r = isset($rows[$i]) && is_array($rows[$i]) ? $rows[$i] : [];
-      $price = isset($r['price']) && $r['price'] !== '' ? (int) preg_replace('/[^0-9]/','', (string) $r['price']) : null;
-      if ($service !== 'brand') { $price = null; }
-      $promo = isset($r['promo']) ? (int) preg_replace('/[^0-9]/','', (string) $r['promo']) : 0;
-      $tags = isset($r['tags']) ? array_filter(array_map('trim', explode(',', sanitize_text_field(wp_unslash($r['tags']))))) : $defrow[4];
-      $out[$service]['p'][$i] = [
-        sanitize_text_field(wp_unslash($r['name'] ?? $defrow[0])),
-        sanitize_text_field(wp_unslash($r['note'] ?? $defrow[1])),
-        $price,
-        sanitize_key($r['icon'] ?? $defrow[3]),
-        array_values($tags),
-        wp_kses_post(wp_unslash($r['desc'] ?? $defrow[5])),
-      ];
-      if ($service === 'brand' && $promo > 0) {
-        $out[$service]['p'][$i]['promo'] = $promo;
-      }
-    }
-  }
-  return $out;
-}
-
 function zp_studio_activate(){
   if (!get_option(ZP_STUDIO_OPT_PACKAGES)) { update_option(ZP_STUDIO_OPT_PACKAGES, zp_studio_default_packages(), false); }
   if (!get_option(ZP_STUDIO_OPT_ORDERS)) { update_option(ZP_STUDIO_OPT_ORDERS, [], false); }
@@ -599,7 +567,6 @@ function zp_studio_handle_submit(){
   $orders = get_option(ZP_STUDIO_OPT_ORDERS, []); if (!is_array($orders)) { $orders = []; }
   array_unshift($orders, $order); $orders = array_slice($orders, 0, 300);
   update_option(ZP_STUDIO_OPT_ORDERS, $orders, false);
-  update_option(ZP_STUDIO_OPT_UNREAD, max(0, (int) get_option(ZP_STUDIO_OPT_UNREAD, 0)) + 1, false);
   $sent = zp_studio_send_order_email($order);
   if (empty($sent['admin'])) {
     wp_send_json_error([
@@ -726,92 +693,24 @@ function zp_studio_send_order_email($order){
   $subject = 'Nowe zgłoszenie Studio Wyceny — ' . ($p['Pakiet'] ?? $order['id']);
   $attachments = []; // PDF attachments disabled by design.
   $admin_recipients = array_unique(array_filter([$admin, 'kontakt@zaprojektowani.com'], 'is_email'));
-  $admin_ok = zp_studio_send_html_mail_resilient($admin_recipients, $subject, zp_studio_build_email_body($order, 'admin'), zp_studio_email_headers(), $attachments);
-
-  $client_ok = false;
   $client = '';
   foreach (['E-mail','Email','email'] as $k) {
     if (!empty($p[$k]) && is_email($p[$k])) { $client = $p[$k]; break; }
   }
+  // "Odpowiedz" in the team's mail app goes straight to the client, as it already does for the contact forms.
+  $admin_headers = zp_studio_email_headers();
+  if ($client) {
+    // wp_mail splits Reply-To on commas, so the name loses commas, quotes and brackets.
+    $client_name = trim(str_replace(['"', ',', ';', "\r", "\n", '<', '>'], '', (string) ($p['Imię i nazwisko'] ?? '')));
+    $admin_headers[] = 'Reply-To: ' . ($client_name !== '' ? $client_name . ' ' : '') . '<' . $client . '>';
+  }
+  $admin_ok = zp_studio_send_html_mail_resilient($admin_recipients, $subject, zp_studio_build_email_body($order, 'admin'), $admin_headers, $attachments);
+
+  $client_ok = false;
   if ($client) {
     $client_ok = wp_mail($client, 'Potwierdzenie zgłoszenia — Studio Wyceny Zaprojektowani', zp_studio_build_email_body($order, 'client'), zp_studio_email_headers(), $attachments);
   }
   return ['admin'=>$admin_ok, 'client'=>$client_ok];
-}
-
-function zp_studio_status_label($status){
-  $map = zp_studio_statuses();
-  return $map[$status] ?? 'Nowe';
-}
-function zp_studio_status_class($status){
-  $classes = ['new'=>'new','contact'=>'progress','quote_sent'=>'quote','accepted'=>'accepted','payment_pending'=>'pay','production'=>'production','done'=>'done','archived'=>'arch'];
-  return $classes[$status] ?? 'new';
-}
-function zp_studio_status_mail_templates($status, $order){
-  $p = $order['payload'] ?? [];
-  $name = trim((string)($p['Imię i nazwisko'] ?? ''));
-  $hello = $name ? 'Dzień dobry '.$name.',' : 'Dzień dobry,';
-  $templates = [
-    'quote_sent' => ['Wycena projektu — Zaprojektowani', $hello."\n\nPrzygotowaliśmy wycenę projektu na podstawie przesłanego briefu. W kolejnej wiadomości lub w załączniku znajdziesz szczegóły zakresu, rekomendacje i koszt realizacji.\n\nW razie pytań jesteśmy do dyspozycji.\n\nZespół Zaprojektowani"],
-    'payment_pending' => ['Dane do płatności — Zaprojektowani', $hello."\n\nDziękujemy za akceptację zakresu. Poniżej możesz przesłać klientowi dane do płatności lub link do płatności. Po zaksięgowaniu płatności przechodzimy do realizacji.\n\nZespół Zaprojektowani"],
-    'production' => ['Projekt przekazany do realizacji — Zaprojektowani', $hello."\n\nProjekt został przekazany do realizacji. Będziemy informować o kolejnych etapach prac i w razie potrzeby poprosimy o dodatkowe materiały.\n\nZespół Zaprojektowani"],
-    'done' => ['Projekt zakończony — Zaprojektowani', $hello."\n\nDziękujemy za współpracę. Projekt został oznaczony jako zakończony. W razie potrzeby możesz odpowiedzieć na tę wiadomość.\n\nZespół Zaprojektowani"],
-  ];
-  return $templates[$status] ?? null;
-}
-function zp_studio_send_status_email($order, $status){
-  $p = $order['payload'] ?? [];
-  $client = '';
-  foreach(['E-mail','Email','email'] as $k){ if(!empty($p[$k]) && is_email($p[$k])){$client=$p[$k];break;} }
-  if(!$client) return false;
-  $tpl = zp_studio_status_mail_templates($status, $order);
-  if(!$tpl) return false;
-  [$subject,$body_text] = $tpl;
-  $logo = zp_studio_email_logo_url();
-  $body = '<!doctype html><html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"></head><body style="margin:0;padding:0;background:#f4f6f8;color:#071426;font-family:Arial,Helvetica,sans-serif"><table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="width:100%;background:#f4f6f8;border-collapse:collapse"><tr><td align="center" style="padding:26px 14px"><table role="presentation" width="720" cellspacing="0" cellpadding="0" border="0" style="width:100%;max-width:720px;border-collapse:separate;border-spacing:0;background:#fff;border:1px solid #e5e9ef;border-radius:24px;overflow:hidden"><tr><td style="padding:26px 28px;background:#05070b;background-image:linear-gradient(135deg,#05070b 0%,#071426 55%,#102a4f 100%);color:#fff"><img src="'.$logo.'" width="150" alt="Zaprojektowani" style="width:150px;max-width:150px;height:auto;display:block;border:0;margin:0 0 20px 0"><div style="font-size:11px;line-height:1.2;letter-spacing:.14em;text-transform:uppercase;color:#aeb8c7;font-weight:700">Studio Wyceny</div><h1 style="margin:8px 0 0;color:#fff;font-size:28px;line-height:1.08;letter-spacing:-.03em;font-weight:800">'.esc_html($subject).'</h1></td></tr><tr><td style="padding:26px 28px;background:#fff"><p style="white-space:pre-line;color:#071426;font-size:15px;line-height:1.72;margin:0">'.esc_html($body_text).'</p></td></tr><tr><td style="padding:0 28px 28px;background:#fff"><div style="padding:16px 18px;border-radius:16px;background:#f6f8fb;border:1px solid #edf0f4;color:#657285;font-size:13px;line-height:1.55"><strong style="color:#071426">Zaprojektowani.com</strong><br>Projektujemy marki online: strony, sklepy, branding i kampanie.</div></td></tr></table></td></tr></table></body></html>';
-  return wp_mail($client, $subject, $body, zp_studio_email_headers());
-}
-
-add_action('admin_menu', function(){
-  $unread = max(0, (int) get_option(ZP_STUDIO_OPT_UNREAD, 0));
-  $orders_label = 'Zamówienia' . ($unread ? ' <span class="update-plugins count-'.intval($unread).'"><span class="plugin-count">'.intval($unread).'</span></span>' : '');
-  add_submenu_page('zp-suite','Studio Wyceny — Zamówienia',$orders_label,'manage_options','zp-studio-orders','zp_studio_render_orders_page');
-  add_submenu_page('zp-suite','Studio Wyceny — Pakiety','Pakiety','manage_options','zp-studio-packages','zp_studio_render_packages_page');
-}, 40);
-
-function zp_studio_admin_css(){
-  echo '<style>.zpStudioWrap{max-width:1400px}.zpStudioHero{margin:18px 0 20px;padding:24px 26px;border-radius:26px;background:linear-gradient(135deg,#05070b,#071426 55%,#102a4f);color:#fff;display:flex;align-items:flex-end;justify-content:space-between;gap:22px;box-shadow:0 20px 54px rgba(5,10,18,.12)}.zpStudioHero h1{margin:0;font-size:34px;letter-spacing:-.04em}.zpStudioHero p{margin:8px 0 0;color:rgba(255,255,255,.72)}.zpStudioCard,.zpStudioOrder{background:#fff;border:1px solid #e6ebf0;border-radius:24px;box-shadow:0 14px 36px rgba(7,20,38,.06);overflow:hidden;margin:18px 0}.zpStudioCard{padding:22px}.zpStudioGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.zpStudioField label{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.08em;font-weight:900;color:#6b7685;margin-bottom:6px}.zpStudioField input,.zpStudioField textarea{width:100%;border:1px solid #dfe5ec;border-radius:14px;padding:10px 12px}.zpStudioPkg{border:1px solid #e8edf3;border-radius:18px;padding:16px;margin:12px 0;background:#fbfcfe}.zpStudioFilters{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 18px}.zpStudioFilter{display:inline-flex;align-items:center;gap:7px;padding:9px 12px;border-radius:999px;background:#fff;border:1px solid #dfe5ec;text-decoration:none;color:#071426;font-weight:800}.zpStudioFilter.is-on{background:#071426;color:#fff;border-color:#071426}.zpStudioOrderTop{display:grid;grid-template-columns:minmax(240px,.42fr) minmax(230px,.42fr) auto;gap:18px;align-items:center;padding:18px 20px;background:#fbfcfe;border-bottom:1px solid #e8edf3}.zpStudioOrderTitle strong{display:block;color:#071426;font-size:19px;line-height:1.15;letter-spacing:-.02em}.zpStudioOrderTitle code{display:inline-block;margin-top:6px;background:#eef3f8;border-radius:999px;padding:5px 9px;color:#42526a}.zpStudioClient{color:#42526a;line-height:1.45}.zpStudioClient b{color:#071426}.zpStudioStatusForm{display:flex;gap:8px;align-items:center;justify-content:flex-end;flex-wrap:wrap}.zpStudioStatusForm select{min-width:190px;border-radius:999px}.zpStudioStatusForm label{font-size:11px;color:#5c6878;font-weight:800}.zpStudioOrderBody{display:grid;grid-template-columns:minmax(0,1fr) 310px;gap:18px;padding:20px}.zpStudioDetails{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.zpStudioDetail{border:1px solid #edf1f5;border-radius:16px;padding:12px;background:#fff}.zpStudioDetail span{display:block;color:#7a8493;font-size:10px;text-transform:uppercase;letter-spacing:.09em;font-weight:900;margin-bottom:6px}.zpStudioDetail strong{display:block;color:#071426;font-size:13px;line-height:1.45;white-space:pre-wrap;word-break:break-word}.zpStudioDetail--full{grid-column:1/-1}.zpStudioFiles{border:1px solid #edf1f5;border-radius:18px;background:#fbfcfe;padding:14px}.zpStudioFiles h3{margin:0 0 10px;color:#071426;font-size:15px}.zpStudioFiles a.zpFile{display:grid;grid-template-columns:42px minmax(0,1fr);gap:10px;align-items:center;padding:9px 10px;background:#fff;border:1px solid #e8edf3;border-radius:12px;text-decoration:none;margin:7px 0;color:#071426}.zpThumb{width:42px;height:42px;border-radius:10px;background:#eef3f8;display:grid;place-items:center;overflow:hidden}.zpThumb img{width:100%;height:100%;object-fit:cover}.zpStudioBadge{display:inline-flex;padding:5px 10px;border-radius:999px;background:#071426;color:#fff;font-size:11px;font-weight:900;letter-spacing:.04em;text-transform:uppercase}.zpStudioBadge--new{background:#102a4f}.zpStudioBadge--progress{background:#1c477a}.zpStudioBadge--quote{background:#6a4cff}.zpStudioBadge--accepted{background:#14743c}.zpStudioBadge--pay{background:#b56b00}.zpStudioBadge--production{background:#0b6b8f}.zpStudioBadge--done{background:#14743c}.zpStudioBadge--arch{background:#667386}.zpStudioActions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.zpStudioSideBtns{display:grid;gap:8px;margin-top:12px}.zpStudioSideBtns a,.zpStudioSideBtns button{width:100%;text-align:center}.zpStatusLog{margin-top:12px;border-top:1px solid #e8edf3;padding-top:10px;color:#6b7685;font-size:12px;line-height:1.5}@media(max-width:900px){.zpStudioHero,.zpStudioOrderTop,.zpStudioOrderBody{display:block}.zpStudioStatusForm{justify-content:flex-start;margin-top:12px}.zpStudioDetails{grid-template-columns:1fr}.zpStudioGrid{grid-template-columns:1fr}}</style>';
-}
-
-function zp_studio_render_packages_page(){
-  if (!current_user_can('manage_options')) return;
-  if (!empty($_POST['zp_studio_save']) && check_admin_referer('zp_studio_packages')) {
-    update_option(ZP_STUDIO_OPT_PACKAGES, zp_studio_sanitize_packages($_POST['studio'] ?? []), false);
-    echo '<div class="notice notice-success"><p>Pakiety zapisane.</p></div>';
-  }
-  $data = zp_studio_packages(); zp_studio_admin_css();
-  echo '<div class="wrap zpStudioWrap"><div class="zpStudioHero"><div><h1>Studio Wyceny — Pakiety</h1><p>Edytuj pakiety jak karty: nazwę, opis, ikonę Lucide, korzyści, cenę i cenę promocyjną.</p></div><code>[zp_studio_wyceny]</code></div><form method="post">'; wp_nonce_field('zp_studio_packages');
-  foreach ($data as $service=>$cfg) {
-    echo '<div class="zpStudioCard"><h2>'.esc_html(strtoupper($service)).'</h2><div class="zpStudioGrid">';
-    foreach (['kick'=>'Kicker','title'=>'Tytuł HTML','lead'=>'Lead','subject'=>'Temat maila/podglądu','final'=>'Tytuł finału','help'=>'Boks pomocy','helpCopy'=>'Opis pomocy'] as $key=>$label) {
-      $is_textarea = in_array($key,['title','lead','helpCopy'],true);
-      echo '<div class="zpStudioField"><label>'.esc_html($label).'</label>';
-      if ($is_textarea) echo '<textarea rows="3" name="studio['.esc_attr($service).']['.esc_attr($key).']">'.esc_textarea($cfg[$key]).'</textarea>';
-      else echo '<input type="text" name="studio['.esc_attr($service).']['.esc_attr($key).']" value="'.esc_attr($cfg[$key]).'">';
-      echo '</div>';
-    }
-    echo '</div><h3>Pakiety / karty</h3>';
-    foreach ($cfg['p'] as $i=>$p) {
-      echo '<div class="zpStudioPkg"><h4>'.esc_html($p[0]).'</h4><div class="zpStudioGrid">';
-      $fields = ['name'=>$p[0], 'note'=>$p[1], 'icon'=>$p[3], 'tags'=>implode(', ', (array)$p[4])];
-      foreach($fields as $k=>$v){ echo '<div class="zpStudioField"><label>'.esc_html($k).'</label><input type="text" name="studio['.esc_attr($service).'][p]['.$i.']['.esc_attr($k).']" value="'.esc_attr($v).'"></div>'; }
-      if ($service==='brand') echo '<div class="zpStudioField"><label>Cena aktualna</label><input type="number" name="studio['.esc_attr($service).'][p]['.$i.'][price]" value="'.esc_attr($p[2]).'"></div><div class="zpStudioField"><label>Cena przekreślona / promocyjna</label><input type="number" name="studio['.esc_attr($service).'][p]['.$i.'][promo]" value="'.esc_attr($p['promo'] ?? '').'"></div>';
-      echo '<div class="zpStudioField" style="grid-column:1/-1"><label>Opis</label><textarea rows="3" name="studio['.esc_attr($service).'][p]['.$i.'][desc]">'.esc_textarea($p[5]).'</textarea></div>';
-      echo '</div></div>';
-    }
-    echo '</div>';
-  }
-  echo '<p><button class="button button-primary button-large" name="zp_studio_save" value="1">Zapisz pakiety</button></p></form></div>';
 }
 
 function zp_studio_get_order_by_id($id){
@@ -839,245 +738,3 @@ add_action('admin_post_zp_studio_order_pdf', function(){
   $pdf = zp_studio_build_pdf_binary_from_lines(zp_studio_pdf_text_lines($o));
   header('Content-Type: application/pdf'); header('Content-Disposition: attachment; filename="'.$id.'-podsumowanie.pdf"'); echo $pdf; exit;
 });
-
-
-function zp_studio_render_orders_page(){
-  if (!current_user_can('manage_options')) { return; }
-
-  update_option(ZP_STUDIO_OPT_UNREAD, 0, false);
-
-  $statuses = zp_studio_statuses();
-  $orders = get_option(ZP_STUDIO_OPT_ORDERS, []);
-  if (!is_array($orders)) { $orders = []; }
-
-  $notice = '';
-
-  if (!empty($_POST['zp_studio_simple_action']) && check_admin_referer('zp_studio_simple_action')) {
-    $action = sanitize_key(wp_unslash($_POST['zp_studio_simple_action']));
-    $order_id = sanitize_text_field(wp_unslash($_POST['order_id'] ?? ''));
-
-    if ($action === 'delete' && $order_id !== '') {
-      $before = count($orders);
-      $orders = array_values(array_filter($orders, function($order) use ($order_id){
-        return (string)($order['id'] ?? '') !== $order_id;
-      }));
-      update_option(ZP_STUDIO_OPT_ORDERS, $orders, false);
-      $notice = ($before > count($orders)) ? 'Usunięto zamówienie/brief.' : 'Nie znaleziono zamówienia do usunięcia.';
-    }
-
-    if ($action === 'save' && $order_id !== '') {
-      $status = sanitize_key(wp_unslash($_POST['status'] ?? 'new'));
-      if (!array_key_exists($status, $statuses)) { $status = 'new'; }
-      $note = sanitize_textarea_field(wp_unslash($_POST['admin_note'] ?? ''));
-      foreach ($orders as $i => $order) {
-        if ((string)($order['id'] ?? '') === $order_id) {
-          $orders[$i]['status'] = $status;
-          $orders[$i]['admin_note'] = $note;
-          if (empty($orders[$i]['status_log']) || !is_array($orders[$i]['status_log'])) { $orders[$i]['status_log'] = []; }
-          $orders[$i]['status_log'][] = [
-            'status' => $status,
-            'date' => current_time('mysql'),
-            'user' => wp_get_current_user()->display_name,
-          ];
-          break;
-        }
-      }
-      update_option(ZP_STUDIO_OPT_ORDERS, $orders, false);
-      $notice = 'Zapisano status/notatkę.';
-    }
-
-    if ($action === 'clear_closed') {
-      $before = count($orders);
-      $orders = array_values(array_filter($orders, function($order){
-        return !in_array(($order['status'] ?? 'new'), ['done','archived'], true);
-      }));
-      update_option(ZP_STUDIO_OPT_ORDERS, $orders, false);
-      $notice = 'Usunięto ' . max(0, $before - count($orders)) . ' zakończonych/archiwalnych zamówień.';
-    }
-
-    if ($action === 'clear_all') {
-      $orders = [];
-      update_option(ZP_STUDIO_OPT_ORDERS, $orders, false);
-      $notice = 'Wyczyszczono wszystkie zamówienia.';
-    }
-
-    wp_safe_redirect(add_query_arg('zp_notice', rawurlencode($notice), admin_url('admin.php?page=zp-studio-orders')));
-    exit;
-  }
-
-  // Backward compatibility with previous clear/status forms.
-  if (!empty($_POST['zp_studio_status']) && check_admin_referer('zp_studio_orders_status')) {
-    $id = sanitize_text_field(wp_unslash($_POST['order_id'] ?? ''));
-    $status = sanitize_key(wp_unslash($_POST['status'] ?? 'new'));
-    if (!array_key_exists($status, $statuses)) { $status = 'new'; }
-    foreach ($orders as $i => $order) {
-      if ((string)($order['id'] ?? '') === $id) { $orders[$i]['status'] = $status; break; }
-    }
-    update_option(ZP_STUDIO_OPT_ORDERS, $orders, false);
-    $notice = 'Status zamówienia zaktualizowany.';
-  }
-
-  if (!empty($_POST['zp_studio_clear']) && check_admin_referer('zp_studio_orders_clear')) {
-    $orders = [];
-    update_option(ZP_STUDIO_OPT_ORDERS, [], false);
-    $notice = 'Lista zamówień wyczyszczona.';
-  }
-
-  $filter = sanitize_key(wp_unslash($_GET['zp_status'] ?? 'all'));
-  $query = sanitize_text_field(wp_unslash($_GET['zp_q'] ?? ''));
-
-  $all_orders = $orders;
-
-  if ($filter !== 'all' || $query !== '') {
-    $orders = array_values(array_filter($orders, function($order) use ($filter, $query){
-      if ($filter !== 'all' && ($order['status'] ?? 'new') !== $filter) { return false; }
-      if ($query !== '') {
-        $hay = strtolower(wp_json_encode($order, JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES));
-        if (strpos($hay, strtolower($query)) === false) { return false; }
-      }
-      return true;
-    }));
-  }
-
-  $counts = ['all' => count($all_orders)];
-  foreach ($statuses as $key => $label) { $counts[$key] = 0; }
-  foreach ($all_orders as $order) {
-    $st = $order['status'] ?? 'new';
-    if (isset($counts[$st])) { $counts[$st]++; }
-  }
-
-  $notice = isset($_GET['zp_notice']) ? sanitize_text_field(wp_unslash($_GET['zp_notice'])) : $notice;
-
-  ?>
-  <div class="wrap zpOrdersSimple">
-    <style>.zpOrdersSimple{max-width:1440px}.zpOrdersHero{margin:18px 0 18px;padding:26px 28px;border-radius:22px;background:linear-gradient(135deg,#05070b,#071426 55%,#102a4f);color:#fff}.zpOrdersHero h1{margin:0 0 8px;font-size:30px;line-height:1.05;letter-spacing:-.035em;color:#fff}.zpOrdersHero p{margin:0;color:rgba(255,255,255,.72);font-size:14px;line-height:1.6;max-width:900px}.zpOrdersStats{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}.zpOrdersStat{border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.06);border-radius:16px;padding:11px 14px;min-width:130px}.zpOrdersStat strong{display:block;font-size:20px;line-height:1;color:#fff}.zpOrdersStat span{display:block;margin-top:4px;font-size:10px;text-transform:uppercase;letter-spacing:.12em;color:rgba(255,255,255,.58)}.zpOrdersToolbar{display:flex;gap:10px;align-items:end;flex-wrap:wrap;background:#fff;border:1px solid #dcdcde;border-radius:18px;padding:14px;margin-bottom:14px}.zpOrdersToolbar label{font-weight:700;color:#1d2327;font-size:12px}.zpOrdersToolbar select,.zpOrdersToolbar input[type=search]{min-height:36px;min-width:190px}.zpOrderList{display:grid;gap:14px}.zpOrderCard{background:#fff;border:1px solid #dcdcde;border-radius:20px;overflow:hidden;box-shadow:0 10px 28px rgba(7,20,38,.05)}.zpOrderCard.is-new{border-color:#1c477a;box-shadow:0 0 0 1px rgba(28,71,122,.18),0 10px 28px rgba(7,20,38,.07)}.zpOrderTop{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:18px;align-items:start;padding:18px 20px;border-bottom:1px solid #eef0f3;background:#fbfcfe}.zpOrderTitle h2{margin:0 0 5px;font-size:20px;line-height:1.15;color:#071426}.zpOrderTitle small{display:block;color:#667085}.zpOrderBadge{display:inline-flex;align-items:center;border-radius:999px;padding:6px 9px;font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;background:#eaf2ff;color:#0b3b75;white-space:nowrap}.zpOrderBody{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:18px;padding:18px 20px}.zpOrderContact{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-bottom:14px}.zpOrderContactBox{border:1px solid #e3e7ed;border-radius:14px;padding:11px 12px;background:#fff}.zpOrderContactBox span{display:block;font-size:10px;text-transform:uppercase;letter-spacing:.12em;font-weight:800;color:#7a8493;margin-bottom:5px}.zpOrderContactBox strong{display:block;color:#071426;word-break:break-word;font-size:14px}.zpOrderDetails{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.zpOrderDetail{border:1px solid #edf0f4;border-radius:12px;padding:10px;background:#fff}.zpOrderDetail span{display:block;color:#7a8493;font-size:10px;letter-spacing:.1em;text-transform:uppercase;font-weight:800;margin-bottom:4px}.zpOrderDetail strong{display:block;color:#111827;font-size:13px;line-height:1.45;word-break:break-word}.zpOrderDetail--full{grid-column:1/-1}.zpOrderSide{border-left:1px solid #edf0f4;padding-left:18px}.zpOrderActions{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}.zpOrderActions .button{margin:0}.zpOrderDelete{color:#b42318!important;border-color:#f3b8b2!important}.zpOrderNote textarea{width:100%;min-height:90px;margin:8px 0}.zpOrderFiles a{display:flex;gap:8px;align-items:center;margin:6px 0;text-decoration:none}.zpOrderFiles img{width:44px;height:44px;object-fit:cover;border-radius:8px;border:1px solid #e5e7eb}.zpStatusLog{margin-top:12px;color:#667085;font-size:12px;line-height:1.55}@media(max-width:1100px){.zpOrderBody{grid-template-columns:1fr}.zpOrderSide{border-left:0;border-top:1px solid #edf0f4;padding-left:0;padding-top:16px}.zpOrderContact{grid-template-columns:1fr}.zpOrderDetails{grid-template-columns:1fr}}</style>
-
-    <div class="zpOrdersHero">
-      <h1>Zamówienia i briefy ze Studio Wyceny</h1>
-      <p>Uproszczony panel: kontakt klienta, pełny brief, pliki, status, notatka i działające usuwanie w jednym miejscu.</p>
-      <div class="zpOrdersStats">
-        <div class="zpOrdersStat"><strong><?php echo esc_html($counts['all']); ?></strong><span>wszystkie</span></div>
-        <div class="zpOrdersStat"><strong><?php echo esc_html($counts['new'] ?? 0); ?></strong><span>nowe</span></div>
-        <div class="zpOrdersStat"><strong><?php echo esc_html(($counts['contact'] ?? 0) + ($counts['quote_sent'] ?? 0)); ?></strong><span>w obsłudze</span></div>
-      </div>
-    </div>
-
-    <?php if ($notice) : ?><div class="notice notice-success is-dismissible"><p><?php echo esc_html($notice); ?></p></div><?php endif; ?>
-
-    <form class="zpOrdersToolbar" method="get">
-      <input type="hidden" name="page" value="zp-studio-orders">
-      <label>Status<br><select name="zp_status"><option value="all">Wszystkie</option><?php foreach($statuses as $k=>$v): ?><option value="<?php echo esc_attr($k); ?>" <?php selected($filter,$k); ?>><?php echo esc_html($v); ?></option><?php endforeach; ?></select></label>
-      <label>Szukaj<br><input type="search" name="zp_q" value="<?php echo esc_attr($query); ?>" placeholder="imię, e-mail, telefon, pakiet..."></label>
-      <button class="button button-primary">Filtruj</button>
-      <a class="button" href="<?php echo esc_url(admin_url('admin.php?page=zp-studio-orders')); ?>">Wyczyść filtr</a>
-      <span style="flex:1"></span>
-    </form>
-
-    <div class="zpOrdersToolbar" style="justify-content:flex-end">
-      <form method="post" onsubmit="return confirm('Usunąć zamówienia zakończone oraz archiwalne?')"><?php wp_nonce_field('zp_studio_simple_action'); ?><button class="button" name="zp_studio_simple_action" value="clear_closed">Usuń zakończone/archiwalne</button></form>
-      <form method="post" onsubmit="return confirm('Na pewno usunąć WSZYSTKIE zamówienia i briefy? Tej akcji nie da się cofnąć.')"><?php wp_nonce_field('zp_studio_simple_action'); ?><button class="button zpOrderDelete" name="zp_studio_simple_action" value="clear_all">Wyczyść wszystkie</button></form>
-    </div>
-
-    <?php if (empty($orders)) : ?>
-      <div class="zpOrderCard"><div class="zpOrderTop"><div class="zpOrderTitle"><h2>Brak zamówień</h2><small>Nowe briefy ze Studio Wyceny pojawią się tutaj automatycznie.</small></div></div></div>
-    <?php else : ?>
-      <div class="zpOrderList">
-        <?php foreach ($orders as $order) :
-          $id = (string)($order['id'] ?? '');
-          $status = $order['status'] ?? 'new';
-          $payload = isset($order['payload']) && is_array($order['payload']) ? $order['payload'] : [];
-          $client = $payload['Imię i nazwisko'] ?? ($payload['Imię'] ?? 'Klient');
-          $email = $payload['E-mail'] ?? ($payload['Email'] ?? '');
-          $phone = $payload['Telefon'] ?? '';
-          $service = $payload['Usługa'] ?? 'Studio Wyceny';
-          $pkg = $payload['Pakiet'] ?? 'Brief';
-          $created = $order['created'] ?? ($order['created_at'] ?? '');
-          $skip = ['Usługa','Pakiet','Imię i nazwisko','Imię','E-mail','Email','Telefon'];
-        ?>
-        <article class="zpOrderCard <?php echo $status === 'new' ? 'is-new' : ''; ?>">
-          <div class="zpOrderTop">
-            <div class="zpOrderTitle">
-              <h2><?php echo esc_html($service . ' — ' . $pkg); ?></h2>
-              <small><?php echo esc_html($created); ?> · ID: <?php echo esc_html($id); ?></small>
-            </div>
-            <span class="zpOrderBadge"><?php echo esc_html($statuses[$status] ?? $status); ?></span>
-          </div>
-
-          <div class="zpOrderBody">
-            <main>
-              <div class="zpOrderContact">
-                <div class="zpOrderContactBox"><span>Klient</span><strong><?php echo esc_html($client ?: '—'); ?></strong></div>
-                <div class="zpOrderContactBox"><span>E-mail</span><strong><?php echo esc_html($email ?: '—'); ?></strong></div>
-                <div class="zpOrderContactBox"><span>Telefon</span><strong><?php echo esc_html($phone ?: '—'); ?></strong></div>
-              </div>
-
-              <div class="zpOrderDetails">
-                <?php
-                  $priority = ['Suma','Budżet','Termin','Dodatki','Dodatki suma','Funkcje','Materiały','Preferowana domena','Preferowane domeny','Pomysł na domenę','Branża','Cel','Podstrony','Płatności','Dostawy','Platformy','Cele','Zakres','Firma','Linki / inspiracje','Brief','message'];
-                  $shown = [];
-                  foreach ($priority as $key) {
-                    if (!isset($payload[$key]) || $payload[$key] === '') { continue; }
-                    $full = in_array($key, ['Dodatki','Funkcje','Materiały','Preferowana domena','Preferowane domeny','Brief','message','Linki / inspiracje'], true);
-                    echo '<div class="zpOrderDetail '.($full?'zpOrderDetail--full':'').'"><span>'.esc_html($key).'</span><strong>'.nl2br(esc_html((string)$payload[$key])).'</strong></div>';
-                    $shown[] = $key;
-                  }
-                  foreach ($payload as $key => $value) {
-                    if (in_array($key, $skip, true) || in_array($key, $shown, true) || $value === '' || is_array($value)) { continue; }
-                    echo '<div class="zpOrderDetail"><span>'.esc_html($key).'</span><strong>'.nl2br(esc_html((string)$value)).'</strong></div>';
-                  }
-                ?>
-              </div>
-            </main>
-
-            <aside class="zpOrderSide">
-              <div class="zpOrderActions">
-                <?php if ($email) : ?><a class="button button-primary" href="mailto:<?php echo esc_attr($email); ?>">Odpisz</a><?php endif; ?>
-                <?php if ($phone) : ?><a class="button" href="tel:<?php echo esc_attr(preg_replace('/[^0-9+]/', '', $phone)); ?>">Zadzwoń</a><?php endif; ?>
-                <?php if (!empty($order['files'])) : ?><a class="button" href="<?php echo esc_url(zp_studio_order_admin_url('zp_studio_files_zip', $id)); ?>">Pobierz pliki ZIP</a><?php endif; ?>
-                <a class="button" href="<?php echo esc_url(zp_studio_order_admin_url('zp_studio_order_pdf', $id)); ?>">PDF</a>
-              </div>
-
-              <?php if (!empty($order['files']) && is_array($order['files'])) : ?>
-                <div class="zpOrderFiles">
-                  <strong>Pliki klienta</strong>
-                  <?php foreach ($order['files'] as $file) :
-                    if (empty($file['url'])) { continue; }
-                    $is_img = preg_match('/\.(jpe?g|png|webp|gif)$/i', $file['url']);
-                  ?>
-                    <a target="_blank" rel="noopener" href="<?php echo esc_url($file['url']); ?>">
-                      <?php echo $is_img ? '<img src="'.esc_url($file['url']).'" alt="">' : '<span>📎</span>'; ?>
-                      <span><?php echo esc_html($file['name'] ?? 'plik'); ?></span>
-                    </a>
-                  <?php endforeach; ?>
-                </div>
-              <?php endif; ?>
-
-              <form method="post" class="zpOrderNote">
-                <?php wp_nonce_field('zp_studio_simple_action'); ?>
-                <input type="hidden" name="order_id" value="<?php echo esc_attr($id); ?>">
-                <label><strong>Status</strong><br><select name="status"><?php foreach($statuses as $k=>$v): ?><option value="<?php echo esc_attr($k); ?>" <?php selected($status,$k); ?>><?php echo esc_html($v); ?></option><?php endforeach; ?></select></label>
-                <textarea name="admin_note" placeholder="Notatka wewnętrzna po rozmowie / wycenie..."><?php echo esc_textarea($order['admin_note'] ?? ''); ?></textarea>
-                <p><button class="button button-primary" name="zp_studio_simple_action" value="save">Zapisz</button></p>
-              </form>
-
-              <form method="post" onsubmit="return confirm('Usunąć to zamówienie/brief?')">
-                <?php wp_nonce_field('zp_studio_simple_action'); ?>
-                <input type="hidden" name="order_id" value="<?php echo esc_attr($id); ?>">
-                <button class="button zpOrderDelete" name="zp_studio_simple_action" value="delete">Usuń zamówienie</button>
-              </form>
-
-              <?php if (!empty($order['status_log']) && is_array($order['status_log'])) : ?>
-                <div class="zpStatusLog"><strong>Historia</strong><br>
-                  <?php foreach(array_slice(array_reverse($order['status_log']), 0, 6) as $log) : ?>
-                    <?php echo esc_html(($log['date'] ?? '') . ' — ' . ($statuses[$log['status'] ?? 'new'] ?? ($log['status'] ?? ''))); ?><br>
-                  <?php endforeach; ?>
-                </div>
-              <?php endif; ?>
-            </aside>
-          </div>
-        </article>
-        <?php endforeach; ?>
-      </div>
-    <?php endif; ?>
-  </div>
-<?php }
