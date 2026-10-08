@@ -31,6 +31,8 @@ function zp_suite_strip_contact_visual_submit_bridge($html) {
 
 $form_html = zp_suite_contact_page_html(__DIR__ . '/contact-page/form.html');
 $form_html = zp_suite_strip_contact_visual_submit_bridge($form_html);
+// Prawa kolumna: zdjęcie zespołu nad kaflami kontaktu (includes/contact-team-photo.php).
+if (function_exists('zp_suite_contact_team_fill')) { $form_html = zp_suite_contact_team_fill($form_html); }
 
 // Home: używamy pełnego formularza z podstrony Kontakt, ale bez mapy Google.
 // Mapa zostaje tylko na /kontakt/, żeby główna szybciej się ładowała i nie robiła pustego bloku nad stopką.

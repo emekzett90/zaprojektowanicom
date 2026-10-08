@@ -10,7 +10,9 @@ if (!defined('ABSPATH')) { exit; }
  *  - robots.txt names the AI crawlers and lets them in on the same rules as search engines,
  *  - /llms.txt: a short, current description of the studio for language models (services, prices, deadlines,
  *    contact, key pages and guides, English pages), built from the plugin's own data. An old static llms.txt
- *    in the site root (it listed only the Katowice pages) is kept in the database and renamed to llms.txt.bak,
+ *    in the site root (it listed only the Katowice pages) is kept in the database and removed (2.9.1 renamed
+ *    it to llms.txt.bak, which stayed public; 2.9.6 deletes that copy). Guides that show another article's
+ *    text, and posts that redirect, are left out of the list (2.9.6),
  *  - structured data: the prices ("od 3 999 zł") as offers of the business and of each service page, the team
  *    as employees, more profiles in sameAs (Zaprojektowani Suite → Widoczność AI); English pages get them
  *    translated by the languages module,
@@ -23,8 +25,12 @@ if (!defined('ABSPATH')) { exit; }
  * Pausing the SEO plan (Narzędzia → Plan SEO) switches all of it off.
  */
 
-/** Bump to run the one-time setup again (full IndexNow submission, llms.txt file check). */
-const ZP_AI_VERSION = '1';
+/**
+ * Bump to run the one-time setup again (full IndexNow submission, llms.txt file check).
+ * 2: 2.9.6 corrected texts in older posts and the project count on the website pages; Bing gets every
+ * address again so ChatGPT and Copilot read the new versions sooner. It also deletes /llms.txt.bak.
+ */
+const ZP_AI_VERSION = '2';
 const ZP_AI_LOG = 'zp_ai_log';
 const ZP_AI_LLMS_MARK = '<!-- Zaprojektowani Suite: llms.txt -->';
 
@@ -256,6 +262,27 @@ function zp_ai_llms_link(string $path, string $label, string $text = ''): string
   return '- [' . $label . '](' . home_url($path) . ')' . ($text !== '' ? ': ' . $text : '') . "\n";
 }
 
+/**
+ * 2.9.6: posts that show another article's text under their own title (article review, widocznosc-ai/artykuly):
+ * path => the borrowed opening words (ASCII, so they match in Elementor's JSON too). They stay out of llms.txt
+ * while that text is in the post and come back on their own once their own article is published there.
+ */
+function zp_ai_other_article_posts(): array {
+  return [
+    '/kampanie-reklamowe/ile-kosztuje-google-ads/' => 'Search zwykle jest bezpieczniejszym wyborem',
+    '/sklepy-internetowe/karta-produktu-w-sklepie-internetowym/' => 'Brief do logo i identyfikacji wizualnej to dokument',
+    '/poradniki/jak-pisac-teksty-na-strone-zeby-nie-brzmialy-jak-katalog-uslug/' => 'WooCommerce ma sens wtedy, gdy sklep internetowy',
+  ];
+}
+
+function zp_ai_post_shows_other_article(string $path): bool {
+  $needle = zp_ai_other_article_posts()[$path] ?? '';
+  $id = $needle !== '' && function_exists('zp_seo_plan_find_post') ? zp_seo_plan_find_post($path) : 0;
+  if (!$id) { return false; }
+  return strpos((string) get_post_field('post_content', $id), $needle) !== false
+    || strpos((string) get_post_meta($id, '_elementor_data', true), $needle) !== false;
+}
+
 /** Title of a plan entry without the " | Zaprojektowani" suffix. */
 function zp_ai_plan_title(string $path, string $fallback = ''): string {
   $entry = zp_seo_plan_entry($path) ?? [];
@@ -384,10 +411,12 @@ function zp_ai_llms_build(): string {
   // Articles from the content feed (feed.php, 2.9.0) count like plan entries; the newest come first.
   $feed = function_exists('zp_feed_display') ? array_reverse((array) (zp_feed_display()['entries'] ?? []), true) : [];
   $paths = array_values(array_unique(array_merge($first, array_keys($feed), array_keys($plan))));
+  $redirected = (array) (zp_seo_plan_data('redirects')['exact'] ?? []);
   foreach ($paths as $path) {
     if ($count >= 40) { break; }
     $entry = zp_seo_plan_entry($path) ?? [];
     if (($entry['kind'] ?? '') !== 'post' || trim((string) ($entry['title'] ?? '')) === '') { continue; }
+    if (isset($redirected[$path]) || zp_ai_post_shows_other_article($path)) { continue; }
     $line = zp_ai_llms_link($path, zp_ai_plan_title($path), zp_ai_plan_description($path));
     if ($line === '') { continue; }
     $guides .= $line;
@@ -440,8 +469,9 @@ add_action('update_option_zp_ai_profiles', 'zp_ai_llms_forget');
 /**
  * A static llms.txt in the site root wins over WordPress (the web server serves it before WordPress runs). The
  * live one listed only the Katowice pages and no prices. Its text goes into the database once (shown in the
- * panel) and the file is renamed to llms.txt.bak, so /llms.txt comes from the plugin. If it cannot be renamed,
- * it is overwritten with the current text; if neither works, the panel says what to do.
+ * panel) and the file is renamed to llms.txt.bak, so /llms.txt comes from the plugin; since 2.9.6 that copy is
+ * deleted right away (zp_ai_llms_backup_cleanup). If it cannot be renamed, it is overwritten with the current
+ * text; if neither works, the panel says what to do.
  */
 function zp_ai_llms_file_sync(string $why): string {
   $file = ABSPATH . 'llms.txt';
@@ -454,6 +484,7 @@ function zp_ai_llms_file_sync(string $why): string {
     $backup = ABSPATH . 'llms.txt.bak';
     if (!file_exists($backup) && @rename($file, $backup)) {
       zp_ai_log('llms.txt: stary plik z katalogu strony zapisany w bazie i przemianowany na llms.txt.bak (' . $why . '); /llms.txt podaje teraz wtyczka.');
+      zp_ai_llms_backup_cleanup();
       update_option('zp_ai_llms_file_state', 'dynamic', false);
       return 'dynamic';
     }
@@ -468,6 +499,24 @@ function zp_ai_llms_file_sync(string $why): string {
   zp_ai_log('llms.txt: stary plik w katalogu strony zasłania nowy i nie da się go zmienić (brak uprawnień).');
   update_option('zp_ai_llms_file_state', 'blocked', false);
   return 'blocked';
+}
+
+/**
+ * 2.9.6: the old file renamed by 2.9.1 stayed public at /llms.txt.bak (old text, no prices). Its text is in
+ * zp_ai_llms_previous (stored first if it is not there yet), so the copy is deleted.
+ */
+function zp_ai_llms_backup_cleanup(): void {
+  $backup = ABSPATH . 'llms.txt.bak';
+  if (!file_exists($backup)) { return; }
+  $previous = get_option('zp_ai_llms_previous');
+  if (!is_array($previous) || trim((string) ($previous['text'] ?? '')) === '') {
+    update_option('zp_ai_llms_previous', ['at' => time(), 'text' => substr((string) @file_get_contents($backup), 0, 60000)], false);
+  }
+  if (@unlink($backup)) {
+    zp_ai_log('llms.txt.bak: usunięta kopia starego pliku (jego treść jest w bazie, widać ją w tym panelu).');
+  } else {
+    zp_ai_log('llms.txt.bak: nie udało się usunąć kopii starego pliku (brak uprawnień). Można ją skasować z katalogu strony.');
+  }
 }
 
 add_action('zp_ai_refresh', function () {
@@ -819,6 +868,7 @@ function zp_ai_maybe_setup(): void {
     zp_ai_indexnow_key();
     zp_ai_llms_forget();
     $state = zp_ai_llms_file_sync('instalacja');
+    zp_ai_llms_backup_cleanup();
     if (!wp_next_scheduled('zp_ai_indexnow_bulk')) { wp_schedule_single_event(time() + 300, 'zp_ai_indexnow_bulk'); }
     if (!wp_next_scheduled('zp_ai_daily')) { wp_schedule_event(time() + HOUR_IN_SECONDS, 'daily', 'zp_ai_daily'); }
     zp_ai_log('Widoczność AI ' . ZP_AI_VERSION . ' włączona: robots.txt z robotami AI, /llms.txt (' . ($state === 'blocked' ? 'zablokowany starym plikiem' : 'aktualny') . '), ceny w danych strukturalnych, IndexNow (pełna lista za 5 minut).');

@@ -38,6 +38,8 @@ if (function_exists('zp_suite_defer_hero_video_sources')) {
 }
 $form_html = zp_suite_contact_page_html(__DIR__ . '/contact-page/form.html');
 $form_html = zp_suite_strip_contact_visual_submit_bridge($form_html);
+// Prawa kolumna: zdjęcie zespołu nad kaflami kontaktu (includes/contact-team-photo.php).
+if (function_exists('zp_suite_contact_team_fill')) { $form_html = zp_suite_contact_team_fill($form_html); }
 
 // Hero: podpinamy scroll i telefon bez zmiany wyglądu.
 $hero_html = str_replace('href="tel:+48500000000"', 'href="tel:+48501054253"', $hero_html);

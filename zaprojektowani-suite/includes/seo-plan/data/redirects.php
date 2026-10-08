@@ -2,7 +2,8 @@
 if (!defined('ABSPATH')) { exit; }
 /* Generated from mapa-fraz.json (phase 1), audyt/polaczenia-wpisow.csv and editorial.json — 2.3.0.
  * 2.8.0: 'slugs' += 11 old addresses with Google impressions that returned 404 (audyt-po-wdrozeniu, 7.10).
- * Next: 'exact' += 8 and 'slugs' += 23 old addresses from the Search Console 404 report of 7.10 (data to 4.10). */
+ * Next: 'exact' += 8 and 'slugs' += 23 old addresses from the Search Console 404 report of 7.10 (data to 4.10).
+ * 2.9.6: the landing page post that showed the premium shop article → the landing page service page. */
 return [
   'exact' => [
     '/about-us/' => '/en/about-us/',
@@ -28,6 +29,7 @@ return [
     '/seo-i-konwersja/kiedy-strona-wymaga-przebudowy-a-kiedy-wystarczy-optymalizacja/' => '/strony-www/kiedy-warto-przebudowac-strone-internetowa-firmy/',
     '/sklep-internetowy-dla-marki-premium/' => '/sklepy-internetowe/sklep-internetowy-dla-marki-premium-jak-polaczyc-estetyke-ux-i-sprzedaz/',
     '/sklep-internetowy-dla-producenta/' => '/tworzenie-sklepow-internetowych/',
+    '/sklepy-internetowe/landing-page-pod-kampanie-meta-ads/' => '/tworzenie-landing-page/',
     '/sklepy-internetowe/tworzenie-sklepow-internetowych-od-pomyslu-na-oferte-do-gotowego-sklepu-online/' => '/tworzenie-sklepow-internetowych/',
     '/strony-internetowe/freelancer-czy-agencja-do-logo-i-identyfikacji/' => '/logo-branding/agencja-brandingowa-czy-freelancer/',
     '/strony-internetowe/ile-kosztuje-logo-dla-firmy-i-co-obejmuje-cena-2/' => '/logo-branding/ile-kosztuje-logo-dla-firmy-i-co-obejmuje-cena/',
@@ -50,6 +52,8 @@ return [
     '/wiedza/ile-kosztuje-stworzenie-strony-internetowej-dla-firmy/' => '/strony-www/ile-kosztuje-stworzenie-strony-internetowej-dla-firmy/',
   ],
   'slugs' => [
+    // 2.9.6: the post is drafted, so the old /wiedza/ address and other prefixes no longer find it by slug.
+    'landing-page-pod-kampanie-meta-ads' => '/tworzenie-landing-page/',
     'ampanie-reklamowe-facebook-i-instagram-najczestsze-bledy' => '/meta-ads/kampanie-reklamowe-facebook-i-instagram-najczestsze-bledy/',
     'brandbook-w-praktyce-jak-uporzadkowac-marke' => '/logo-branding/brandbook-co-powinien-zawierac-i-jak-go-czytac/',
     'branding-firmy-od-podstaw-kiedy-jest-potrzebny-sygnaly' => '/logo-branding/branding-firmy-od-podstaw/',
