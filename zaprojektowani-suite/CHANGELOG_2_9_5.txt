@@ -1,0 +1,22 @@
+ZAPROJEKTOWANI SUITE 2.9.5
+
+Zawiera całą 2.9.4 (a w niej 2.9.3, 2.9.2, 2.9.1, 2.9.0, 2.8.1, 2.8.0 i Twoją 2.7.20). Wgraj tę wersję
+zamiast 2.9.4 albo 2.9.3. Wygląd strony się nie zmienia.
+
+Szybkość: serwer składa każdą stronę z ok. 20 zapytaniami do bazy zamiast ok. 175 (łatka z wątku
+o przyspieszeniu strony).
+- ustawienia wtyczki, które każda strona czytała osobno, są czytane jednym zapytaniem,
+- odpowiedzi „czy linkowana strona jest opublikowana” są pamiętane między wczytaniami i czyszczone
+  przy każdym zapisie, publikacji, usunięciu wpisu lub strony, zmianie adresów, wtyczek lub motywu,
+  nowej wersji wtyczki i co 12 godzin,
+- kod HTML stron bez zmian; w kopii strony serwer odpowiadał o 35–47% szybciej,
+- wyłącznik ten sam co w 2.9.3: ZP Suite → Przyspieszenie (albo ?zp_speed=0 dla jednego wczytania),
+- diagnostyka: ?zp_timing=1 dodaje nagłówek Server-Timing z czasami i liczbą zapytań.
+
+Wersja angielska (/en/): podglądy linków (Facebook, Messenger, X, Slack) po angielsku. Nazwa strony
+„Zaprojektowani - We Build Online Brands” oraz „Written by” i „Time to read” z czasem czytania
+w minutach zamiast „Napisane przez”, „Czas czytania” i „8 minut/y”.
+
+Po wgraniu:
+1. Wejdź raz na dowolną stronę.
+2. Napisz w wątku „wgrane”.
