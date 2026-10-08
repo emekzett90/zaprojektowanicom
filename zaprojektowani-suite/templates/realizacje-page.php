@@ -115,7 +115,7 @@ window.zpRealizacjeProjects = <?php echo wp_json_encode($zp_real_projects, JSON_
 
 <div class="tools" id="portfolio-realizacji">
   <div class="toolsIn">
-    <label class="search" aria-label="Szukaj realizacji"><i data-lucide="search"></i><input type="search" placeholder="Szukaj projektu, branży, usługi…" data-search autocomplete="off"></label>
+    <label class="search" aria-label="Szukaj realizacji"><i data-lucide="search"></i><input type="search" name="zp_work_search" placeholder="Szukaj projektu, branży, usługi…" data-search autocomplete="off"></label>
     <div class="filterSwipeHint" aria-hidden="true"><span>Przesuń kategorie</span><i data-lucide="arrow-right"></i></div>
     <div class="filters" role="tablist" aria-label="Kategorie realizacji">
       <?php foreach ($zp_real_categories as $cat):

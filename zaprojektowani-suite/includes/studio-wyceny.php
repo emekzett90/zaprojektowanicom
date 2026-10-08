@@ -303,6 +303,34 @@ $zp_chooser_contact = '';
   $zp_boot_js = <<<'HTML'
 <script id="zp-studio-boot-v2631">
 (function(){
+  /* 2.9.9 — Chrome lists every form field that has neither an id nor a name ("A form field element
+     should have an id or name attribute"). The studio reads its fields by data-field and sends them
+     itself, so each such field only gets a neutral id (zpbs-field-1, -2, ...), also the fields the
+     studio adds later. Nothing reads these ids. */
+  var fieldNo=0;
+  function idFields(scope){
+    if(!scope||!scope.querySelectorAll) return;
+    var list=scope.querySelectorAll('input:not([id]):not([name]),select:not([id]):not([name]),textarea:not([id]):not([name])');
+    for(var i=0;i<list.length;i++){
+      var id;
+      do{ id='zpbs-field-'+(++fieldNo); }while(document.getElementById(id));
+      list[i].id=id;
+    }
+  }
+  var studio=document.getElementById('zpbsUltimate');
+  if(studio){
+    idFields(studio);
+    if('MutationObserver' in window){
+      try{
+        new MutationObserver(function(records){
+          for(var i=0;i<records.length;i++){
+            var added=records[i].addedNodes;
+            for(var j=0;j<added.length;j++){ if(added[j].nodeType===1){ idFields(studio); return; } }
+          }
+        }).observe(studio,{childList:true,subtree:true});
+      }catch(e){}
+    }
+  }
   var done=false;
   function boot(){
     if(done) return;

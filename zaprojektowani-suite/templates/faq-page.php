@@ -120,7 +120,7 @@ if (!function_exists('zp_faq_template_cluster_links')) {
 
         <label class="zpFaqHero__search" aria-label="Szukaj w FAQ">
           <i data-lucide="search" aria-hidden="true"></i>
-          <input type="search" placeholder="Np. koszt strony, WooCommerce, logo, SEO…" data-faq-search autocomplete="off">
+          <input type="search" name="zp_faq_search" placeholder="Np. koszt strony, WooCommerce, logo, SEO…" data-faq-search autocomplete="off">
           <kbd>/</kbd>
         </label>
 
