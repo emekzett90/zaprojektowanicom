@@ -33,7 +33,7 @@ if (!defined('ABSPATH')) { exit; }
  * 3: 2.9.6 also follows the posts changed by the content feed; the first run dates the answer sections and
  * links the feed already shows, so their sitemap entries say they changed.
  */
-const ZP_AI_VERSION = '3';
+const ZP_AI_VERSION = '4';
 const ZP_AI_LOG = 'zp_ai_log';
 const ZP_AI_LLMS_MARK = '<!-- Zaprojektowani Suite: llms.txt -->';
 
@@ -415,12 +415,34 @@ function zp_ai_llms_build(): string {
   $feed = function_exists('zp_feed_display') ? array_reverse((array) (zp_feed_display()['entries'] ?? []), true) : [];
   $paths = array_values(array_unique(array_merge($first, array_keys($feed), array_keys($plan))));
   $redirected = (array) (zp_seo_plan_data('redirects')['exact'] ?? []);
+  // 2.9.8: every published guide. The list stopped at 40, so older guides dropped out as the feed
+  // published new ones; 400 only bounds the file.
+  $max = 400;
   foreach ($paths as $path) {
-    if ($count >= 40) { break; }
+    if ($count >= $max) { break; }
     $entry = zp_seo_plan_entry($path) ?? [];
     if (($entry['kind'] ?? '') !== 'post' || trim((string) ($entry['title'] ?? '')) === '') { continue; }
     if (isset($redirected[$path]) || zp_ai_post_shows_other_article($path)) { continue; }
     $line = zp_ai_llms_link($path, zp_ai_plan_title($path), zp_ai_plan_description($path));
+    if ($line === '') { continue; }
+    $guides .= $line;
+    $count++;
+  }
+  // Published posts outside the plan and the feed (e.g. the Google Ads comparisons), newest first,
+  // with their own title and Rank Math description; noindex posts stay out.
+  $seen = array_flip($paths);
+  foreach (get_posts(['post_type' => 'post', 'post_status' => 'publish', 'numberposts' => $max, 'orderby' => 'date', 'order' => 'DESC', 'fields' => 'ids', 'suppress_filters' => true]) as $id) {
+    if ($count >= $max) { break; }
+    $path = zp_seo_plan_path((string) get_permalink($id));
+    if (isset($seen[$path]) || isset($redirected[$path])) { continue; }
+    $seen[$path] = true;
+    if (function_exists('zp_seo_plan_is_hidden_path') && zp_seo_plan_is_hidden_path($path)) { continue; }
+    if (in_array('noindex', (array) get_post_meta($id, 'rank_math_robots', true), true)) { continue; }
+    $title = trim(html_entity_decode(wp_strip_all_tags((string) get_the_title($id)), ENT_QUOTES | ENT_HTML5, 'UTF-8'));
+    if ($title === '') { continue; }
+    $desc = (string) get_post_meta($id, 'rank_math_description', true);
+    if ($desc === '' || strpos($desc, '%') !== false) { $desc = (string) get_post_field('post_excerpt', $id); }
+    $line = zp_ai_llms_link($path, $title, zp_ai_plain_description($desc));
     if ($line === '') { continue; }
     $guides .= $line;
     $count++;

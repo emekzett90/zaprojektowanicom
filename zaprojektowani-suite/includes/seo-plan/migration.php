@@ -51,7 +51,7 @@ function zp_seo_plan_log(array $lines): void {
 }
 
 function zp_seo_plan_backup(): array {
-  return array_merge(['meta' => [], 'title' => [], 'status' => [], 'slug' => [], 'option' => []], (array) get_option(ZP_SEO_PLAN_BACKUP, []));
+  return array_merge(['meta' => [], 'title' => [], 'status' => [], 'slug' => [], 'option' => [], 'excerpt' => []], (array) get_option(ZP_SEO_PLAN_BACKUP, []));
 }
 
 /** Published post or page at a path (0 if none). */
@@ -128,6 +128,9 @@ function zp_seo_plan_migrate(): void {
   $log = array_merge($log, zp_seo_articles_refresh_featured());
   // 1d. Posts that showed another article's text get their own article (2.9.6), before their titles below.
   $log = array_merge($log, zp_seo_articles_swap());
+  // 1e. Posts that kept another article's excerpt get their own (2.9.8).
+  $log = array_merge($log, zp_seo_articles_fix_excerpts($backup));
+  update_option(ZP_SEO_PLAN_BACKUP, $backup, false);
 
   // 2. The shop post's content moves to /tworzenie-sklepow-internetowych/; remember it before drafting.
   $shop_path = '/sklepy-internetowe/tworzenie-sklepow-internetowych-od-pomyslu-na-oferte-do-gotowego-sklepu-online/';
@@ -290,6 +293,13 @@ function zp_seo_plan_restore(): array {
     $n++;
   }
   $log[] = 'Przywrócono tytuły wpisów: ' . $n . '.';
+  $n = 0;
+  foreach ($backup['excerpt'] as $id => $x) {
+    if (get_post_field('post_excerpt', $id) !== ($x['written'] ?? null)) { continue; }
+    zp_seo_plan_update_post(['ID' => $id, 'post_excerpt' => (string) $x['old']]);
+    $n++;
+  }
+  if ($n) { $log[] = 'Przywrócono zajawki wpisów: ' . $n . '.'; }
   $n = 0;
   foreach ($backup['status'] as $id => $s) {
     if (get_post_status($id) !== 'draft') { continue; }

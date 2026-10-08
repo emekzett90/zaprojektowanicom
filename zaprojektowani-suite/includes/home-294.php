@@ -100,7 +100,8 @@ function zp_home_faq_294_new(): array {
   };
   return [
     ['q' => 'Czym zajmuje się Zaprojektowani?',
-     'a' => 'Zaprojektowani to studio projektowe z Katowic, które tworzy strony internetowe, sklepy WooCommerce, logo, identyfikację wizualną i kampanie reklamowe dla firm z całej Polski. Studio działa od 2022 roku, nasz zespół ma ponad 10 lat doświadczenia, a na koncie mamy ponad 110 zrealizowanych projektów.'],
+     'a' => 'Zaprojektowani to studio projektowe z Katowic, które tworzy strony internetowe, sklepy WooCommerce, logo, identyfikację wizualną i kampanie reklamowe dla firm z całej Polski. Studio działa od 2022 roku, nasz zespół ma ponad 10 lat doświadczenia, a na koncie mamy '
+       . (function_exists('zp_seo_plan_projects_count') ? zp_seo_plan_projects_count() : 114) . '+ zrealizowanych projektów.'],
     ['q' => 'Ile kosztuje strona internetowa dla firmy?',
      'a' => 'Strona internetowa dla firmy kosztuje u nas od 3 999 zł, a domena i hosting są w cenie. Gotowa strona powstaje zwykle w 2–4 tygodnie. Cena rośnie z liczbą podstron, treściami, animacjami, SEO i integracjami; zakres i przykłady opisujemy na stronie ' . $L('/tworzenie-stron-internetowych/', 'tworzenie stron internetowych') . '.'],
     ['q' => 'Ile trwa stworzenie strony internetowej?',
