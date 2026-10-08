@@ -111,7 +111,7 @@ function zp_suite_defaults() {
     'security' => [
       'turnstile_enabled' => '1',
       'turnstile_site_key' => '0x4AAAAAADwBPagTLXO_vS7j',
-      'turnstile_secret_key' => '0x4AAAAAADwBPUyhwkwUybJ4I-6v5A__-X0',
+      'turnstile_secret_key' => '',
       'turnstile_fail_open' => '1',
       'honeypot_enabled' => '1',
       'min_seconds_enabled' => '1',
@@ -386,7 +386,6 @@ add_action('init', function () {
   if (empty($opts['security']) || !is_array($opts['security'])) { $opts['security'] = []; }
   $opts['security']['turnstile_enabled'] = '1';
   $opts['security']['turnstile_site_key'] = '0x4AAAAAADwBPagTLXO_vS7j';
-  $opts['security']['turnstile_secret_key'] = '0x4AAAAAADwBPUyhwkwUybJ4I-6v5A__-X0';
   $opts['security']['turnstile_fail_open'] = '1';
   $opts['security']['honeypot_enabled'] = '1';
   $opts['security']['min_seconds_enabled'] = '1';
@@ -407,7 +406,6 @@ add_action('init', function () {
   if (empty($opts['security']) || !is_array($opts['security'])) { $opts['security'] = []; }
   $opts['security']['turnstile_enabled'] = '1';
   $opts['security']['turnstile_site_key'] = '0x4AAAAAADwBPagTLXO_vS7j';
-  $opts['security']['turnstile_secret_key'] = '0x4AAAAAADwBPUyhwkwUybJ4I-6v5A__-X0';
   $opts['security']['turnstile_fail_open'] = '1';
   $opts['security']['honeypot_enabled'] = '1';
   $opts['security']['min_seconds_enabled'] = '1';
@@ -426,7 +424,6 @@ add_action('init', function(){
   if (empty($opts['security']) || !is_array($opts['security'])) { $opts['security'] = []; }
   $opts['security']['turnstile_enabled'] = '1';
   $opts['security']['turnstile_site_key'] = '0x4AAAAAADwBPagTLXO_vS7j';
-  $opts['security']['turnstile_secret_key'] = '0x4AAAAAADwBPUyhwkwUybJ4I-6v5A__-X0';
   $opts['security']['turnstile_fail_open'] = '1';
   $opts['security']['honeypot_enabled'] = '1';
   $opts['security']['min_seconds_enabled'] = '1';

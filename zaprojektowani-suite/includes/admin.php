@@ -124,6 +124,8 @@ function zp_suite_save_admin(){
     foreach ($fields as $key => $val) {
       if (is_array($val)) { continue; }
       $key = sanitize_key($key);
+      // Pasted Turnstile keys lose stray spaces and line breaks, which Cloudflare would reject.
+      if ($section === 'security' && ($key === 'turnstile_secret_key' || $key === 'turnstile_site_key')) { $val = trim((string) $val); }
       // The Turnstile secret is never printed back into the page; an empty field keeps the saved one.
       if ($section === 'security' && $key === 'turnstile_secret_key' && trim((string) $val) === '') { continue; }
       $opts[$section][$key] = wp_kses_post((string) $val);
