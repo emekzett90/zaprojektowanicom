@@ -1,12 +1,12 @@
 {
  "format": 1,
- "zaktualizowano": "2026-10-08T00:04:24+02:00",
+ "zaktualizowano": "2026-10-08T11:24:58+02:00",
  "wpisy": [
   {
    "slug": "papier-firmowy",
    "sciezka": "/logo-branding/papier-firmowy/",
    "plik": "wpisy/papier-firmowy.json",
-   "sha256": "dca178696e2729a9e8ecb5905ff2a874579ace26c8539bc07415900abcbbac8a",
+   "sha256": "33b4bc57da95580f713d792615875a8e2d4a1a64b07d9804eeecbf1c04cf1504",
    "publikacja": "2026-10-15T08:00:00+02:00",
    "paczka": 5
   },
@@ -22,7 +22,7 @@
    "slug": "mockup-co-to-jest",
    "sciezka": "/logo-branding/mockup-co-to-jest/",
    "plik": "wpisy/mockup-co-to-jest.json",
-   "sha256": "4f10747ae00a8d3a9f54d18b7f7059f26ca5256e08ab2db03b93a001e1e70308",
+   "sha256": "cd85c8fa9d1a39d43007560464d019418fd1ca18d0ec47ff2893549824536fa6",
    "publikacja": "2026-10-21T08:00:00+02:00",
    "paczka": 5
   },
@@ -38,7 +38,7 @@
    "slug": "logo-firmy-budowlanej",
    "sciezka": "/logo-branding/logo-firmy-budowlanej/",
    "plik": "wpisy/logo-firmy-budowlanej.json",
-   "sha256": "adef8d379f16a27e313eeafe362e02c7ec3e54b21501d73ad7e02ce4e691436e",
+   "sha256": "8a4b7c86fb62d83a5068ffcb958f97bd8770cb7d3421e174c0ba0ca2dca44166",
    "publikacja": "2026-10-27T08:00:00+01:00",
    "paczka": 5
   }
@@ -99,5 +99,84 @@
    "do": "/sklepy-internetowe/seo-sklepu-internetowego/"
   }
  ],
- "sekcje": []
+ "sekcje": [
+  {
+   "we_wpisie": "/strony-internetowe/strona-internetowa-dla-firmy-co-powinna-zawierac/",
+   "id": "cena-strony-firmowej",
+   "toc": "Cena u nas",
+   "html": "<section id=\"cena-strony-firmowej\" class=\"zpArticleNew__section\"><p class=\"zpArticleNew__label\">W Zaprojektowani</p><h2>Ile kosztuje strona internetowa dla firmy z tymi elementami?</h2>\n<p>Stronę internetową dla firmy z elementami opisanymi w tym poradniku projektujemy w Zaprojektowani od <strong>3&nbsp;999&nbsp;zł</strong>, z domeną i hostingiem w cenie. Gotowa strona powstaje zwykle w 2–4 tygodnie od briefu, a cena rośnie z liczbą podstron, treściami, animacjami, SEO i integracjami.</p>\n<p>Każda strona firmowa, którą oddajemy, ma:</p>\n<ul><li>indywidualny projekt UX/UI i pełną wersję mobilną,</li><li>podstrony oferty, o firmie, realizacji i kontaktu,</li><li>formularz kontaktowy oraz widoczne przyciski telefonu i e-maila,</li><li>podstawy SEO: nagłówki, opisy meta, mapę witryny i szybkie ładowanie,</li><li>Google Analytics 4 i Search Console z pomiarem wysłanych formularzy,</li><li>WordPressa, w którym sam zmienisz teksty i zdjęcia.</li></ul>\n<p>Zakres i realizacje pokazujemy na stronie <a class=\"zpSeoLink\" href=\"/tworzenie-stron-internetowych/\">tworzenie stron internetowych</a>. Bezpłatną wycenę dla swojej firmy dostaniesz w 48–72 godziny przez <a class=\"zpSeoLink\" href=\"/studio-wyceny/\">Studio Wyceny</a>.</p>\n</section>"
+  },
+  {
+   "we_wpisie": "/logo-branding/brandbook-co-powinien-zawierac-i-jak-go-czytac/",
+   "id": "brandbook-w-pakietach",
+   "toc": "Brandbook w pakietach",
+   "html": "<section id=\"brandbook-w-pakietach\" class=\"zpArticleNew__section\"><p class=\"zpArticleNew__label\">W Zaprojektowani</p><h2>Ile kosztuje brandbook w Zaprojektowani?</h2>\n<p>Brandbook z pełną księgą znaku dostajesz w Zaprojektowani w pakiecie Branding Premium za <strong>2&nbsp;999&nbsp;zł</strong>, razem z plikami źródłowymi AI i EPS, papierem firmowym i grafikami do social mediów. Krótszą dokumentację, kartę stylu z kolorami, typografią i zasadami użycia logo, ma pakiet Mini Branding za 1&nbsp;499&nbsp;zł.</p>\n<div class=\"zpArticleNew__tableWrap\" role=\"region\" aria-label=\"Dokumentacja marki w pakietach Zaprojektowani\" tabindex=\"0\"><table><thead><tr><th>Pakiet</th><th>Cena</th><th>Dokumentacja marki</th><th>Co jeszcze dostajesz</th></tr></thead><tbody><tr><td>Logo Startowe</td><td>999&nbsp;zł</td><td>instrukcja użycia logo (PDF)</td><td>logo w wariantach, pliki do internetu i druku</td></tr><tr><td>Mini Branding</td><td>1&nbsp;499&nbsp;zł</td><td>karta stylu: kolory, typografia, zasady użycia logo</td><td>wizytówka, stopka e-mail, teczka firmowa</td></tr><tr><td>Branding Premium</td><td>2&nbsp;999&nbsp;zł</td><td>pełna księga znaku</td><td>pliki AI i EPS, papier firmowy, grafiki do social mediów</td></tr></tbody></table></div>\n<p>Projekt logo trwa u nas zwykle 7–14 dni. Pakiety i realizacje pokazujemy na stronie <a class=\"zpSeoLink\" href=\"/projektowanie-logo/\">projektowanie logo</a>, a to, czym brandbook różni się od księgi znaku i mini brandbooka, opisujemy w artykule <a class=\"zpSeoLink\" href=\"/logo-branding/ksiega-znaku-mini-brandbook-pelna-identyfikacja-wizualna-co-wybrac/\">księga znaku, mini brandbook czy pełna identyfikacja</a>.</p>\n</section>"
+  },
+  {
+   "we_wpisie": "/logo-branding/ksiega-znaku-co-to-jest-co-zawiera-i-kiedy-firma-jej-potrzebuje/",
+   "id": "ksiega-znaku-w-skrocie",
+   "toc": "W skrócie",
+   "html": "<section id=\"ksiega-znaku-w-skrocie\" class=\"zpArticleNew__section\"><p class=\"zpArticleNew__label\">W skrócie</p><h2>Co zawiera księga znaku?</h2>\n<p>Księga znaku to dokument z zasadami używania logo. Pokazuje jego wersje, pole ochronne, minimalne rozmiary, kolory i kroje pisma oraz przykłady poprawnego i błędnego użycia. Korzystają z niej pracownicy, drukarnie i agencje, żeby logo wyglądało tak samo na stronie, w social mediach, na wizytówce i na szyldzie.</p>\n<ul><li><strong>Wersje logo</strong>: główna, pozioma, pionowa i sam znak, w kolorze, w jednym kolorze i w negatywie.</li><li><strong>Pole ochronne</strong>: ile wolnego miejsca zostawić wokół logo.</li><li><strong>Minimalny rozmiar</strong>: od jakiej wielkości logo przestaje być czytelne w druku i na ekranie.</li><li><strong>Kolory</strong>: wartości HEX, RGB i CMYK, a przy druku firmowym także Pantone.</li><li><strong>Typografia</strong>: kroje pisma do nagłówków i tekstu.</li><li><strong>Błędne użycia</strong>: czego nie robić z logo, na przykładach.</li></ul>\n<p>W Zaprojektowani pełną księgę znaku robimy w pakiecie Branding Premium za 2&nbsp;999&nbsp;zł, a mniejszą kartę stylu w pakiecie Mini Branding za 1&nbsp;499&nbsp;zł. Pakiety opisujemy na stronie <a class=\"zpSeoLink\" href=\"/projektowanie-logo/\">projektowanie logo</a>.</p>\n</section>"
+  },
+  {
+   "we_wpisie": "/logo-branding/projektowanie-logo-jak-powstaje-znak-ktory-dziala-w-internecie-druku-i-sprzedazy/",
+   "id": "czas-i-cena-logo",
+   "toc": "Czas i cena projektu",
+   "html": "<section id=\"czas-i-cena-logo\" class=\"zpArticleNew__section\"><p class=\"zpArticleNew__label\">W Zaprojektowani</p><h2>Ile trwa i ile kosztuje projekt logo?</h2>\n<p>Projekt logo trwa w Zaprojektowani zwykle 7–14 dni i kosztuje od <strong>999&nbsp;zł</strong>. Pracujemy w pakietach o stałej cenie: Logo Startowe za 999&nbsp;zł, Mini Branding za 1&nbsp;499&nbsp;zł z kartą stylu i materiałami firmowymi oraz Branding Premium za 2&nbsp;999&nbsp;zł z pełną księgą znaku.</p>\n<ol><li><strong>Brief</strong>: pytamy o firmę, klientów, konkurencję i miejsca, w których logo będzie używane.</li><li><strong>Koncepcje</strong>: w Logo Startowe dostajesz 4 autorskie koncepcje logo, w Mini Branding 6, a w Branding Premium ich liczba nie ma limitu. Pokazujemy je na przykładach użycia, np. na stronie, w social mediach i na wizytówce.</li><li><strong>Poprawki</strong>: dopracowujemy wybrany kierunek, do 5 rund poprawek w Logo Startowe, 10 w Mini Branding i bez limitu w Branding Premium.</li><li><strong>Testy</strong>: sprawdzamy logo w małym rozmiarze, w jednym kolorze oraz na jasnym i ciemnym tle.</li><li><strong>Pliki</strong>: przekazujemy logo w wariantach i formatach do internetu i druku, z instrukcją użycia i przeniesieniem praw autorskich.</li></ol>\n<p>Pakiety i realizacje są na stronie <a class=\"zpSeoLink\" href=\"/projektowanie-logo/\">projektowanie logo</a>, a bezpłatną wycenę dostaniesz w 48–72 godziny przez <a class=\"zpSeoLink\" href=\"/studio-wyceny/\">Studio Wyceny</a>.</p>\n</section>"
+  },
+  {
+   "we_wpisie": "/logo-branding/identyfikacja-wizualna-firmy/",
+   "id": "cena-identyfikacji",
+   "toc": "Cena u nas",
+   "html": "<section id=\"cena-identyfikacji\" class=\"zpArticleNew__section\"><p class=\"zpArticleNew__label\">W Zaprojektowani</p><h2>Ile kosztuje identyfikacja wizualna firmy?</h2>\n<p>Identyfikację wizualną projektujemy w Zaprojektowani w dwóch pakietach. Mini Branding za <strong>1&nbsp;499&nbsp;zł</strong> to logo z kartą stylu (kolory, typografia, zasady użycia), wizytówką, stopką e-mail i teczką firmową. Branding Premium za <strong>2&nbsp;999&nbsp;zł</strong> to pełny system z księgą znaku, papierem firmowym, grafikami do social mediów i plikami źródłowymi AI i EPS.</p>\n<ul><li><strong>Logo Startowe (999&nbsp;zł)</strong>: gdy na start wystarczy sam znak z plikami i instrukcją użycia.</li><li><strong>Mini Branding (1&nbsp;499&nbsp;zł)</strong>: dla małej firmy, która chce od początku spójnych kolorów, typografii i materiałów firmowych.</li><li><strong>Branding Premium (2&nbsp;999&nbsp;zł)</strong>: gdy marka trafia na stronę, do reklam, ofert i druku, a pracuje z nią kilku wykonawców.</li></ul>\n<p>Zakres pakietów pokazujemy na stronach <a class=\"zpSeoLink\" href=\"/identyfikacja-wizualna/\">identyfikacja wizualna</a> i <a class=\"zpSeoLink\" href=\"/projektowanie-logo/\">projektowanie logo</a>.</p>\n</section>"
+  },
+  {
+   "we_wpisie": "/meta-ads/facebook-ads-dla-firm-lokalnych/",
+   "id": "koszt-kampanii-lokalnej",
+   "toc": "Koszt obsługi",
+   "html": "<section id=\"koszt-kampanii-lokalnej\" class=\"zpArticleNew__section\"><p class=\"zpArticleNew__label\">W Zaprojektowani</p><h2>Ile kosztuje prowadzenie lokalnej kampanii na Facebooku?</h2>\n<p>Obsługa kampanii Meta Ads na Facebooku i Instagramie kosztuje w Zaprojektowani od <strong>1&nbsp;200&nbsp;zł</strong> miesięcznie, a kampanię uruchamiamy zwykle w 7 dni. W tej kwocie są strategia, kreacje, konfiguracja pomiaru i bieżąca optymalizacja. Budżet na same reklamy płacisz Meta osobno.</p>\n<p>Lokalną kampanię zaczynamy od pięciu rzeczy:</p>\n<ul><li>jednego celu: wiadomości, formularza albo telefonu,</li><li>obszaru wokół firmy i opisu klientów, do których ma trafić reklama,</li><li>kreacji ze zdjęciami firmy, zespołu i realizacji,</li><li>strony albo landing page’a, na który prowadzi reklama,</li><li>pomiaru: Meta Pixel i zliczania zapytań z formularza.</li></ul>\n<p>Jak policzyć budżet na test, pokazujemy w artykule <a class=\"zpSeoLink\" href=\"/meta-ads/ile-kosztuje-reklama-na-facebooku/\">ile kosztuje reklama na Facebooku</a>, a zakres obsługi opisujemy na stronie <a class=\"zpSeoLink\" href=\"/kampanie-reklamowe/\">kampanie reklamowe</a>.</p>\n</section>"
+  },
+  {
+   "we_wpisie": "/meta-ads/reklama-na-instagramie-a-facebook-ads/",
+   "id": "instagram-czy-facebook-tabela",
+   "toc": "Porównanie w tabeli",
+   "html": "<section id=\"instagram-czy-facebook-tabela\" class=\"zpArticleNew__section\"><p class=\"zpArticleNew__label\">Porównanie</p><h2>Reklama na Instagramie czy na Facebooku: co wybrać?</h2>\n<p>Reklamy na Instagramie i na Facebooku kupuje się w jednym Menedżerze reklam Meta, a jedna kampania może wyświetlać się na obu platformach. Instagram lepiej sprawdza się przy markach, które sprzedają obrazem, a Facebook przy usługach lokalnych, wydarzeniach i formularzach kontaktowych. Na start warto puścić kampanię w obu miejscach i po kilku dniach zostawić budżet tam, gdzie zapytania są tańsze.</p>\n<div class=\"zpArticleNew__tableWrap\" role=\"region\" aria-label=\"Reklama na Instagramie i na Facebooku: porównanie\" tabindex=\"0\"><table><thead><tr><th></th><th>Instagram</th><th>Facebook</th></tr></thead><tbody><tr><td>Formaty</td><td>zdjęcia i wideo w feedzie, Stories, Reels</td><td>posty, karuzele, wideo, Stories, Reels, Marketplace</td></tr><tr><td>Najlepiej działa dla</td><td>beauty, moda, gastronomia, wnętrza, marki osobiste</td><td>usługi lokalne, wydarzenia, oferty dla starszych klientów</td></tr><tr><td>Typowy cel</td><td>zasięg, ruch na profil i stronę, wiadomości</td><td>formularze kontaktowe, telefony, wiadomości</td></tr><tr><td>Gdzie kupujesz</td><td>Menedżer reklam Meta</td><td>Menedżer reklam Meta</td></tr></tbody></table></div>\n<p>W Zaprojektowani prowadzimy kampanie Meta Ads na obu platformach od 1&nbsp;200&nbsp;zł miesięcznie: strategia, kreacje, pomiar i optymalizacja, a budżet reklamowy płacisz osobno. Zakres obsługi opisujemy na stronie <a class=\"zpSeoLink\" href=\"/kampanie-reklamowe/\">kampanie reklamowe</a>.</p>\n</section>"
+  },
+  {
+   "we_wpisie": "/strony-internetowe/tworzenie-stron-internetowych-profesjonalny-proces-od-strategii-do-wdrozenia/",
+   "id": "czas-i-cena-strony",
+   "toc": "Czas i cena u nas",
+   "html": "<section id=\"czas-i-cena-strony\" class=\"zpArticleNew__section\"><p class=\"zpArticleNew__label\">W Zaprojektowani</p><h2>Ile trwa i ile kosztuje stworzenie strony internetowej?</h2>\n<p>Stronę firmową tworzymy w Zaprojektowani zwykle w 2–4 tygodnie od briefu, a projekty zaczynają się od <strong>3&nbsp;999&nbsp;zł</strong>, z domeną i hostingiem w cenie. Sklep internetowy na WooCommerce powstaje w 3–6 tygodni i kosztuje od 6&nbsp;499&nbsp;zł. Dokładny harmonogram i cenę podajemy razem z bezpłatną wyceną w 48–72 godziny.</p>\n<ol><li><strong>Brief i wycena</strong>: zakres, cena i termin w 48–72 godziny.</li><li><strong>Struktura i projekt UX/UI</strong>: podstrony, ścieżka do kontaktu i wygląd strony.</li><li><strong>Wdrożenie</strong>: WordPress, wersja mobilna, formularze i treści.</li><li><strong>Testy i publikacja</strong>: SEO techniczne, Google Analytics 4, Search Console, szybkość.</li><li><strong>Po publikacji</strong>: opcjonalna stała opieka techniczna nad stroną.</li></ol>\n<p>Więcej o zakresie piszemy na stronie <a class=\"zpSeoLink\" href=\"/tworzenie-stron-internetowych/\">tworzenie stron internetowych</a>, a o opiece po publikacji na stronie <a class=\"zpSeoLink\" href=\"/opieka-wordpress/\">opieka WordPress</a>.</p>\n</section>"
+  },
+  {
+   "we_wpisie": "/seo-i-konwersja/ile-kosztuje-sklep-internetowy-woocommerce-w-2026-roku/",
+   "id": "cena-sklepu-u-nas",
+   "toc": "Cena sklepu u nas",
+   "html": "<section id=\"cena-sklepu-u-nas\" class=\"zpArticleNew__section\"><p class=\"zpArticleNew__label\">W Zaprojektowani</p><h2>Ile kosztuje sklep internetowy na WooCommerce w Zaprojektowani?</h2>\n<p>Sklep internetowy na WooCommerce kosztuje w Zaprojektowani od <strong>6&nbsp;499&nbsp;zł</strong> i powstaje zwykle w 3–6 tygodni. W projekcie są kategorie i karty produktów, koszyk, płatności online, dostawy, automatyczne e-maile i podstawy SEO. Cena rośnie z liczbą produktów, integracjami i funkcjami na zamówienie.</p>\n<p>Na końcową cenę sklepu najczęściej wpływają:</p>\n<ul><li>liczba produktów, wariantów i kategorii,</li><li>integracje: kurierzy, BaseLinker, ERP albo CRM,</li><li>funkcje na zamówienie: konfigurator produktu, sprzedaż B2B, kilka języków lub walut,</li><li>przygotowanie opisów i zdjęć produktów.</li></ul>\n<p>Zakres i realizacje pokazujemy na stronie <a class=\"zpSeoLink\" href=\"/tworzenie-sklepow-internetowych/\">tworzenie sklepów internetowych</a>, a wycenę swojego sklepu dostaniesz w 48–72 godziny przez <a class=\"zpSeoLink\" href=\"/studio-wyceny/\">Studio Wyceny</a>.</p>\n</section>"
+  },
+  {
+   "we_wpisie": "/strony-www/strona-internetowa-dla-malej-firmy/",
+   "id": "cena-dla-malej-firmy",
+   "toc": "Cena dla małej firmy",
+   "html": "<section id=\"cena-dla-malej-firmy\" class=\"zpArticleNew__section\"><p class=\"zpArticleNew__label\">W Zaprojektowani</p><h2>Ile kosztuje strona internetowa dla małej firmy?</h2>\n<p>Stronę dla małej firmy projektujemy w Zaprojektowani od <strong>3&nbsp;999&nbsp;zł</strong>, z domeną i hostingiem w cenie, a gotowa strona powstaje zwykle w 2–4 tygodnie. Na start często wystarcza strona wizytówka z 3–5 podstronami: ofertą, informacjami o firmie, realizacjami i kontaktem. Firmom, które chcą rosnąć w Google, robimy osobną podstronę dla każdej usługi.</p>\n<p>Porównanie wizytówki, one page i strony firmowej jest na stronie <a class=\"zpSeoLink\" href=\"/strona-wizytowka/\">strona wizytówka</a>, a wycenę dostaniesz w 48–72 godziny przez <a class=\"zpSeoLink\" href=\"/studio-wyceny/\">Studio Wyceny</a>.</p>\n</section>"
+  },
+  {
+   "we_wpisie": "/logo-branding/jakie-cechy-powinno-miec-dobre-logo-firmowe/",
+   "id": "jak-testujemy-logo",
+   "toc": "Jak testujemy logo",
+   "html": "<section id=\"jak-testujemy-logo\" class=\"zpArticleNew__section\"><p class=\"zpArticleNew__label\">W Zaprojektowani</p><h2>Jak sprawdzić, czy logo jest dobre, zanim trafi do druku?</h2>\n<p>Dobre logo przechodzi kilka prostych testów: jest czytelne w bardzo małym rozmiarze, działa w jednym kolorze, dobrze wygląda na jasnym i ciemnym tle oraz ma wersję poziomą i pionową. Takie testy robimy w Zaprojektowani przy każdym projekcie, zanim przekażemy pliki.</p>\n<ul><li><strong>Mały rozmiar</strong>: logo jako ikona w karcie przeglądarki i awatar w social mediach.</li><li><strong>Jeden kolor</strong>: wersja czarna i biała, np. do grawerunku albo pieczątki.</li><li><strong>Różne tła</strong>: jasne, ciemne i zdjęcie.</li><li><strong>Różne układy</strong>: wersja pozioma do nagłówka strony i pionowa do kwadratowych formatów.</li><li><strong>Druk i ekran</strong>: pliki wektorowe do druku i lekkie pliki do internetu.</li></ul>\n<p>Projekt logo kosztuje u nas od 999&nbsp;zł i trwa zwykle 7–14 dni. Pakiety i realizacje są na stronie <a class=\"zpSeoLink\" href=\"/projektowanie-logo/\">projektowanie logo</a>.</p>\n</section>"
+  },
+  {
+   "we_wpisie": "/strony-www/jak-przygotowac-brief-do-projektowania-strony-internetowej/",
+   "id": "brief-i-wycena",
+   "toc": "Brief i wycena",
+   "html": "<section id=\"brief-i-wycena\" class=\"zpArticleNew__section\"><p class=\"zpArticleNew__label\">W Zaprojektowani</p><h2>Jak wysłać brief i dostać wycenę strony?</h2>\n<p>Brief do strony możesz wypełnić w naszym <a class=\"zpSeoLink\" href=\"/studio-wyceny/\">Studiu Wyceny</a>: wybierasz usługę, zaznaczasz zakres i opisujesz firmę. Bezpłatną wycenę z proponowanym zakresem i terminem dostajesz w 48–72 godziny. Strona firmowa kosztuje u nas od 3&nbsp;999&nbsp;zł, z domeną i hostingiem w cenie.</p>\n<p>Przed wysłaniem briefu przygotuj:</p>\n<ul><li>adres obecnej strony i 2–3 strony konkurencji, które Ci się podobają,</li><li>listę usług i informację, która z nich jest najważniejsza,</li><li>materiały: logo, zdjęcia i teksty albo informację, że trzeba je przygotować,</li><li>termin, w którym strona ma być gotowa, i orientacyjny budżet,</li><li>osobę, która po stronie firmy akceptuje projekt.</li></ul>\n</section>"
+  },
+  {
+   "we_wpisie": "/sklepy-internetowe/ile-trwa-stworzenie-strony-internetowej/",
+   "id": "terminy-w-tabeli",
+   "toc": "Terminy w tabeli",
+   "html": "<section id=\"terminy-w-tabeli\" class=\"zpArticleNew__section\"><p class=\"zpArticleNew__label\">W Zaprojektowani</p><h2>Ile trwa stworzenie strony, sklepu i logo w Zaprojektowani?</h2>\n<p>Stronę firmową tworzymy w Zaprojektowani zwykle w 2–4 tygodnie, sklep internetowy na WooCommerce w 3–6 tygodni, a projekt logo w 7–14 dni. Terminy liczymy od briefu, a najczęściej wydłużają je teksty i zdjęcia, które przychodzą później niż projekt.</p>\n<div class=\"zpArticleNew__tableWrap\" role=\"region\" aria-label=\"Terminy i ceny w Zaprojektowani\" tabindex=\"0\"><table><thead><tr><th>Projekt</th><th>Zwykły czas</th><th>Cena</th></tr></thead><tbody><tr><td>Strona internetowa</td><td>2–4 tygodnie</td><td>od 3&nbsp;999&nbsp;zł, domena i hosting w cenie</td></tr><tr><td>Sklep internetowy WooCommerce</td><td>3–6 tygodni</td><td>od 6&nbsp;499&nbsp;zł</td></tr><tr><td>Projekt logo</td><td>7–14 dni</td><td>od 999&nbsp;zł</td></tr><tr><td>Kampania Meta Ads lub Google Ads</td><td>start w 7 dni</td><td>od 1&nbsp;200&nbsp;zł miesięcznie</td></tr></tbody></table></div>\n<p>Dokładny harmonogram podajemy razem z bezpłatną wyceną w 48–72 godziny przez <a class=\"zpSeoLink\" href=\"/studio-wyceny/\">Studio Wyceny</a>.</p>\n</section>"
+  }
+ ]
 }
