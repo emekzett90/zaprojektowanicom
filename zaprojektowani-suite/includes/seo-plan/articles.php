@@ -110,6 +110,7 @@ function zp_seo_articles_create(): array {
   $copy = ['_elementor_edit_mode', '_elementor_template_type', '_elementor_version', '_elementor_pro_version', '_elementor_page_settings', '_wp_page_template'];
   $made = 0;
   foreach (zp_seo_plan_data('articles') as $path => $a) {
+    if (!empty($a['swap'])) { continue; }
     $slug = (string) $a['slug'];
     if (zp_seo_plan_find_post($path)) { $log[] = 'Artykuł ' . $path . ' już jest na stronie — bez zmian.'; continue; }
     $mine = get_posts(['name' => $slug, 'post_type' => 'post', 'post_status' => ['draft', 'pending', 'private', 'future'], 'numberposts' => 1, 'suppress_filters' => true, 'meta_key' => '_zp_seo_plan_created']);
@@ -175,4 +176,125 @@ function zp_seo_articles_create(): array {
     try { \Elementor\Plugin::$instance->files_manager->clear_cache(); } catch (\Throwable $e) { /* not fatal */ }
   }
   return $log;
+}
+
+/** Post meta that holds a post's layout, kept by zp_seo_articles_swap() before it writes the new article. */
+function zp_seo_articles_layout_keys(): array {
+  return ['_elementor_data', '_elementor_edit_mode', '_elementor_template_type', '_elementor_version', '_elementor_pro_version', '_elementor_page_settings', '_wp_page_template'];
+}
+
+/**
+ * Whether $hay holds $needle, also when a space in it is a non-breaking space or a line break
+ * (in the post's HTML or in Elementor's JSON).
+ */
+function zp_seo_articles_has_text(string $hay, string $needle): bool {
+  if ($needle === '' || strpos($hay, $needle) !== false) { return $needle !== ''; }
+  $flat = str_replace(['&nbsp;', '&#160;', '\\u00a0', "\xc2\xa0", '\\n', '\\r', '\\t'], ' ', $hay);
+  return strpos((string) preg_replace('~\s+~', ' ', $flat), $needle) !== false;
+}
+
+/** Drops Elementor's cached render of a post after its layout changed outside the editor. */
+function zp_seo_articles_elementor_flush(array $ids): void {
+  foreach ($ids as $id) {
+    foreach (['_elementor_css', '_elementor_element_cache', '_elementor_page_assets'] as $key) { delete_post_meta((int) $id, $key); }
+  }
+  if ($ids && class_exists('\Elementor\Plugin') && isset(\Elementor\Plugin::$instance->files_manager)) {
+    try { \Elementor\Plugin::$instance->files_manager->clear_cache(); } catch (\Throwable $e) { /* not fatal */ }
+  }
+}
+
+/**
+ * 2.9.6: existing posts that showed another article's text get their own article (data/articles.php
+ * entries with 'swap'). It happens once, and only while the post still contains the fragment of the
+ * other text, so a post Mat fixed by hand stays as it is. The article goes into the post's own
+ * Elementor layout; when that layout has no article widget, the layout of 'source' is used, as for
+ * new articles (also when the post is no longer edited with Elementor). The previous content,
+ * excerpt, featured image and layout are kept in _zp_seo_plan_swap (restoring the plan puts them
+ * back). Title, SEO title and description come from the plan in the steps that follow.
+ */
+function zp_seo_articles_swap(): array {
+  $log = [];
+  $made = [];
+  foreach (zp_seo_plan_data('articles') as $path => $a) {
+    $needle = (string) ($a['swap'] ?? '');
+    if ($needle === '') { continue; }
+    $id = zp_seo_plan_find_post($path);
+    if (!$id) { $log[] = 'UWAGA: nie znaleziono wpisu ' . $path . ' — bez nowej treści.'; continue; }
+    $raw = get_post_meta($id, '_elementor_data', true);
+    $own = is_string($raw) ? $raw : (is_array($raw) ? (string) wp_json_encode($raw) : '');
+    $content = (string) get_post_field('post_content', $id);
+    if (!zp_seo_articles_has_text($content, $needle) && !zp_seo_articles_has_text($own, $needle)) {
+      if (!get_post_meta($id, '_zp_seo_plan_swap', true)) { $log[] = 'Wpis ' . $path . ' ma już własny tekst — bez podmiany.'; }
+      continue;
+    }
+    $article = zp_seo_articles_html((string) $a['slug']);
+    if ($article === '') { $log[] = 'BŁĄD: brak treści artykułu ' . $a['slug'] . '.'; continue; }
+
+    $notes = [];
+    $layout = $id;
+    $builder = get_post_meta($id, '_elementor_edit_mode', true) === 'builder';
+    $elementor = $own !== '' && $builder ? zp_seo_articles_elementor($id, $article, $notes) : null;
+    if ($elementor === null || zp_seo_articles_has_text($elementor, $needle)) {
+      // The other article is not in the post's article widget: take the layout of the source post.
+      $layout = zp_seo_plan_find_post((string) $a['source']);
+      $notes = [];
+      $elementor = $layout ? zp_seo_articles_elementor($layout, $article, $notes) : null;
+    }
+    if ($elementor === null) { $log[] = 'UWAGA: wpis ' . $path . ' bez podmiany treści (brak wpisu-wzoru z Elementorem ' . $a['source'] . ').'; continue; }
+
+    $post = get_post($id);
+    // The backup is written first and kept when it exists: a swap cut off halfway (the needle is
+    // still in the layout) must not replace the original with the half-written state.
+    $backup = get_post_meta($id, '_zp_seo_plan_swap', true);
+    if (!is_array($backup)) {
+      $backup = ['version' => ZP_SEO_PLAN_VERSION, 'post_content' => $post->post_content, 'post_excerpt' => $post->post_excerpt, 'thumbnail' => (int) get_post_thumbnail_id($id), 'meta' => []];
+      foreach (zp_seo_articles_layout_keys() as $key) {
+        if (metadata_exists('post', $id, $key)) { $backup['meta'][$key] = get_post_meta($id, $key, true); }
+      }
+      update_post_meta($id, '_zp_seo_plan_swap', wp_slash($backup));
+    }
+    $saved = zp_seo_plan_update_post([
+      'ID' => $id, 'post_content' => $article,
+      'post_excerpt' => (string) ((zp_seo_plan_entry($path) ?? [])['description'] ?? $post->post_excerpt),
+    ], true);
+    if (is_wp_error($saved) || !$saved) {
+      $log[] = 'BŁĄD: nie udało się zapisać nowej treści wpisu ' . $path . (is_wp_error($saved) ? ' — ' . $saved->get_error_message() : '');
+      continue;
+    }
+    $backup['written'] = md5($article);
+    update_post_meta($id, '_zp_seo_plan_swap', wp_slash($backup));
+    if ($layout !== $id) {
+      foreach (zp_seo_articles_layout_keys() as $key) {
+        if ($key === '_elementor_data') { continue; }
+        $value = get_post_meta($layout, $key, true);
+        if ($value !== '' && $value !== null) { update_post_meta($id, $key, wp_slash($value)); }
+      }
+    }
+    update_post_meta($id, '_elementor_data', wp_slash($elementor));
+    $thumb = !empty($a['featured']) ? zp_seo_articles_media((string) $a['featured'], (string) $a['title']) : 0;
+    if ($thumb) { set_post_thumbnail($id, $thumb); }
+    $made[] = $id;
+    $log[] = 'Wpis ' . $path . ' (ID ' . $id . ') ma nowy tekst zamiast cudzego artykułu' . ($thumb ? ' i nową okładkę' : '')
+      . ($layout !== $id ? ' (układ z ' . $a['source'] . ')' : '') . '; poprzednia treść jest w kopii planu.';
+  }
+  zp_seo_articles_elementor_flush($made);
+  return $log;
+}
+
+/** Undoes zp_seo_articles_swap() for posts whose content is still the article it wrote. */
+function zp_seo_articles_swap_restore(): array {
+  $done = [];
+  foreach (get_posts(['post_type' => 'post', 'post_status' => 'any', 'numberposts' => 20, 'fields' => 'ids', 'meta_key' => '_zp_seo_plan_swap', 'suppress_filters' => true]) as $id) {
+    $b = get_post_meta($id, '_zp_seo_plan_swap', true);
+    if (!is_array($b) || md5((string) get_post_field('post_content', $id)) !== ($b['written'] ?? '')) { continue; }
+    zp_seo_plan_update_post(['ID' => $id, 'post_content' => (string) $b['post_content'], 'post_excerpt' => (string) $b['post_excerpt']]);
+    foreach (zp_seo_articles_layout_keys() as $key) {
+      if (array_key_exists($key, (array) $b['meta'])) { update_post_meta($id, $key, wp_slash($b['meta'][$key])); } else { delete_post_meta($id, $key); }
+    }
+    if (!empty($b['thumbnail'])) { set_post_thumbnail($id, (int) $b['thumbnail']); } else { delete_post_thumbnail($id); }
+    delete_post_meta($id, '_zp_seo_plan_swap');
+    $done[] = $id;
+  }
+  zp_seo_articles_elementor_flush($done);
+  return $done ? ['Przywrócono poprzednią treść wpisów: ' . count($done) . '.'] : [];
 }

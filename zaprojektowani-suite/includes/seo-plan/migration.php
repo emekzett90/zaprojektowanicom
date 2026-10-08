@@ -90,6 +90,19 @@ function zp_seo_plan_set_meta(array &$backup, int $id, string $key, $value, bool
   return 'written';
 }
 
+/**
+ * wp_update_post() without the HTML filter. The migration may run on an ordinary visit, where the
+ * filter for users without unfiltered_html would strip <script> and other markup from the post's
+ * content even when only the title changes (2.9.6: the JSON-LD tags of a rewritten article).
+ */
+function zp_seo_plan_update_post(array $data, bool $wp_error = false) {
+  $kses = has_filter('content_save_pre', 'wp_filter_post_kses');
+  if ($kses) { kses_remove_filters(); }
+  $result = wp_update_post(wp_slash($data), $wp_error);
+  if ($kses) { kses_init_filters(); }
+  return $result;
+}
+
 function zp_seo_plan_set_title(array &$backup, int $id, string $title): string {
   $post = get_post($id);
   if (!$post || $title === '') { return 'same'; }
@@ -97,7 +110,7 @@ function zp_seo_plan_set_title(array &$backup, int $id, string $title): string {
   if ($post->post_title === $title) { return 'same'; }
   if (!isset($backup['title'][$id])) { $backup['title'][$id] = ['old' => $post->post_title]; }
   $backup['title'][$id]['written'] = $title;
-  wp_update_post(wp_slash(['ID' => $id, 'post_title' => $title]));
+  zp_seo_plan_update_post(['ID' => $id, 'post_title' => $title]);
   return 'written';
 }
 
@@ -113,6 +126,8 @@ function zp_seo_plan_migrate(): void {
   $log = array_merge($log, zp_seo_articles_create());
   // 1c. Cropped covers for articles published before 2.8.1.
   $log = array_merge($log, zp_seo_articles_refresh_featured());
+  // 1d. Posts that showed another article's text get their own article (2.9.6), before their titles below.
+  $log = array_merge($log, zp_seo_articles_swap());
 
   // 2. The shop post's content moves to /tworzenie-sklepow-internetowych/; remember it before drafting.
   $shop_path = '/sklepy-internetowe/tworzenie-sklepow-internetowych-od-pomyslu-na-oferte-do-gotowego-sklepu-online/';
@@ -271,7 +286,7 @@ function zp_seo_plan_restore(): array {
   $n = 0;
   foreach ($backup['title'] as $id => $t) {
     if (get_post_field('post_title', $id) !== ($t['written'] ?? null)) { continue; }
-    wp_update_post(wp_slash(['ID' => $id, 'post_title' => $t['old']]));
+    zp_seo_plan_update_post(['ID' => $id, 'post_title' => $t['old']]);
     $n++;
   }
   $log[] = 'Przywrócono tytuły wpisów: ' . $n . '.';
@@ -296,6 +311,7 @@ function zp_seo_plan_restore(): array {
     $n++;
   }
   $log[] = 'Nowe strony usług i artykuły przeniesione do szkiców: ' . $n . '.';
+  $log = array_merge($log, zp_seo_articles_swap_restore());
   delete_option(ZP_SEO_PLAN_BACKUP);
   delete_option('zp_seo_plan_migrated');
   zp_seo_plan_purge_caches();

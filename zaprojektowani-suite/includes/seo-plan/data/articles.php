@@ -4,6 +4,7 @@ if (!defined('ABSPATH')) { exit; }
  * New articles (content batch 2, tresci/paczka-2; 2.6.0: content batch 3, tresci/paczka-3). The article body is data/articles/<slug>.html;
  * {{IMG:name}} is a photo from assets/img/wpisy/, imported into the media library on publishing.
  * 'source' is the post whose Elementor layout and article styles are copied.
+ * 'swap' (2.9.6): the post exists with another article's text; see zp_seo_articles_swap().
 */
 return [
   '/strony-internetowe/jak-stworzyc-strone-internetowa/' => [
@@ -112,5 +113,23 @@ return [
     'title' => 'System rezerwacji online na stronie internetowej – jak wybrać i wdrożyć',
     'source' => '/strony-internetowe/strona-internetowa-dla-firmy-co-powinna-zawierac/',
     'featured' => 'system-rezerwacji-okladka-kadr',
+  ],
+  // 2.9.6: posts that already exist but showed another article's text (thread 13's review, 8.10).
+  // 'swap' is a fragment of that other text: the body is replaced once, only while the post still has it.
+  '/kampanie-reklamowe/ile-kosztuje-google-ads/' => [
+    'slug' => 'ile-kosztuje-google-ads',
+    'category' => 'kampanie-reklamowe',
+    'title' => 'Ile kosztuje Google Ads? Koszt kliknięcia, budżet testu i obsługa kampanii',
+    'source' => '/strony-internetowe/strona-internetowa-dla-firmy-co-powinna-zawierac/',
+    'featured' => 'ile-kosztuje-google-ads-okladka',
+    'swap' => 'Search zwykle jest bezpieczniejszym wyborem',
+  ],
+  '/sklepy-internetowe/karta-produktu-w-sklepie-internetowym/' => [
+    'slug' => 'karta-produktu-w-sklepie-internetowym',
+    'category' => 'sklepy-internetowe',
+    'title' => 'Karta produktu w sklepie internetowym – co musi zawierać, żeby klient kupił',
+    'source' => '/strony-internetowe/strona-internetowa-dla-firmy-co-powinna-zawierac/',
+    'featured' => 'karta-produktu-okladka',
+    'swap' => 'Brief do logo i identyfikacji wizualnej to dokument',
   ],
 ];
