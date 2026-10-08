@@ -181,6 +181,19 @@ add_action('init', function(){
   update_option($ver_key, '2.8.0', false);
 }, 14);
 
+/* Zapisana kopia hero miała „10+ lat doświadczenia”, a FAQ i O nas mówią „studio od 2022 roku”.
+ * Mat potwierdził (8.10.2026), że 10+ lat to doświadczenie zespołu: zmieniamy tylko ten podpis. */
+add_action('init', function(){
+  $ver_key = 'zp_suite_shop_katowice_team_years_version';
+  if (get_option($ver_key) === '1') { return; }
+  $sections = get_option('zp_suite_shop_katowice_sections', []);
+  if (is_array($sections) && !empty($sections['hero'])) {
+    $sections['hero'] = str_replace('<span>lat doświadczenia</span>', '<span>lat doświadczenia zespołu</span>', (string) $sections['hero']);
+    update_option('zp_suite_shop_katowice_sections', $sections, false);
+  }
+  update_option($ver_key, '1', false);
+}, 15);
+
 /* v2.2.819: pakiety sklepów premium — rozbudowany zakres, zdjęcia zespołu,
  * pełny zakres hover/tap i przeniesienie sekcji nad portfolio. */
 add_action('init', function(){

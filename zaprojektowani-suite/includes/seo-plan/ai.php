@@ -319,7 +319,7 @@ function zp_ai_llms_build(): string {
   if ($times) { $t .= '- Terminy: ' . implode('; ', $times) . ".\n"; }
   $t .= '- Wycena: bezpłatna i niezobowiązująca, w ciągu 48–72 godzin od wysłania briefu w Studio Wyceny (' . home_url('/studio-wyceny/') . ").\n";
   $t .= "- W cenie strony: indywidualny projekt UX/UI, wdrożenie na WordPressie z samodzielną edycją treści, wersja mobilna, podstawy SEO technicznego, formularze, analityka, domena i hosting oraz publikacja z pełnymi dostępami dla klienta.\n";
-  $t .= '- Doświadczenie: ' . (int) $projects . "+ zrealizowanych projektów: strony firmowe, sklepy internetowe, logo i identyfikacje wizualne.\n";
+  $t .= '- Doświadczenie: 10+ lat doświadczenia zespołu (studio działa od 2022 roku) i ' . (int) $projects . "+ zrealizowanych projektów: strony firmowe, sklepy internetowe, logo i identyfikacje wizualne.\n";
   if ($team) {
     $people = [];
     foreach ($team as $person) { $people[] = $person['name'] . ' (' . $person['job'] . ')'; }

@@ -759,7 +759,7 @@ return [
 'website user guide in PDF'=>'instrukcja obsługi strony w PDF',
 'websites'=>'strony',
 'whether you have ready copy and photos, or we prepare them along with the design,'=>'tego, czy masz gotowe teksty i zdjęcia, czy przygotowujemy je razem z projektem,',
-'years of experience'=>'lat doświadczenia',
+'years of team experience'=>'lat doświadczenia zespołu',
 'you have one main service or a narrow specialty,'=>'masz jedną główną usługę albo wąską specjalizację,',
 'you need a website for a specific event or campaign.'=>'potrzebujesz strony pod konkretne wydarzenie lub kampanię.',
 'you operate locally and clients search for you by name or by service plus city,'=>'działasz lokalnie, a klienci szukają Cię po nazwie albo po usłudze z nazwą miasta,',

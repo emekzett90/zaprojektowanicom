@@ -466,7 +466,7 @@ return [
 'jeden proces, spójny wygląd i gotowość pod dalszy marketing'=>'one process, a consistent look and readiness for further marketing',
 'każda pod osobne frazy SEO'=>'each targeting separate SEO keywords',
 'kontakt'=>'contact',
-'lat doświadczenia'=>'years of experience',
+'lat doświadczenia zespołu'=>'years of team experience',
 'logo'=>'logo',
 'lokalne SEO'=>'local SEO',
 'miesięcznie przez stronę'=>'per month via the website',

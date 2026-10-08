@@ -884,7 +884,7 @@ return [
 'website user guide in PDF'=>'instrukcja obsługi strony w PDF',
 'websites'=>'strony',
 'wishlist'=>'wishlista',
-'years of experience'=>'lat doświadczenia',
+'years of team experience'=>'lat doświadczenia zespołu',
 'you need a website for just a few weeks and don\'t plan to develop it, so a simple website builder is enough,'=>'potrzebujesz strony tylko na kilka tygodni i nie planujesz jej rozwijać, więc wystarczy prosty kreator,',
 'you\'re building an application with user accounts, its own database and server-side logic, so a dedicated framework will be a better fit.'=>'budujesz aplikację z kontami użytkowników, własną bazą danych i logiką po stronie serwera, więc lepszy będzie dedykowany framework.',
 '~10 min read'=>'~10 min czytania',

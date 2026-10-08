@@ -576,7 +576,7 @@ return [
 'katalog marek'=>'brand catalog',
 'katalog produktów'=>'product catalog',
 'kontakt'=>'contact',
-'lat doświadczenia'=>'years of experience',
+'lat doświadczenia zespołu'=>'years of team experience',
 'logo'=>'logo',
 'mobile UX'=>'mobile UX',
 'mobile commerce'=>'mobile commerce',

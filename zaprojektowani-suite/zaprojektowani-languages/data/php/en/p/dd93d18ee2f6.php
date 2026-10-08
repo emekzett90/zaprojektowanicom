@@ -929,7 +929,7 @@ return [
 'koszyk'=>'cart',
 'koszyk + checkout zoptymalizowany pod zakup'=>'cart + checkout optimized for purchase',
 'kupony rabatowe'=>'discount coupons',
-'lat doświadczenia'=>'years of experience',
+'lat doświadczenia zespołu'=>'years of team experience',
 'lazy loading'=>'lazy loading',
 'linkowanie wewnętrzne'=>'internal linking',
 'logo i branding'=>'logo and branding',

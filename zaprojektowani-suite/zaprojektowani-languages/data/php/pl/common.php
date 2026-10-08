@@ -784,7 +784,7 @@ return [
 'Zaprojektowani.com — Google Search Console logo'=>'Zaprojektowani.com — google search console logo',
 'projects'=>'realizacje',
 'average rating'=>'średnia ocena',
-'years of experience'=>'lat doświadczenia',
+'years of team experience'=>'lat doświadczenia zespołu',
 'They trusted us'=>'Zaufali nam',
 'Proof of trust'=>'Dowody zaufania',
 'Google'=>'Google',

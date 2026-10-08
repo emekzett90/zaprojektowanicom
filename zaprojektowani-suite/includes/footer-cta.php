@@ -8,7 +8,8 @@ if (!defined('ABSPATH')) { exit; }
  *   z imionami, wymiary (bez skoku układu) i srcset z rozmiarów WordPressa, gdy plik jest
  *   w bibliotece mediów, więc telefon nie pobiera pliku 2000 px.
  * - Liczby zaufania pod przyciskami biorą wartości z ustawień wtyczki (liczba realizacji,
- *   ocena Google) i te same „10+ lat doświadczenia” co hero strony głównej.
+ *   ocena Google) i te same „10+ lat doświadczenia zespołu” co hero strony głównej
+ *   (zespół ma ponad 10 lat praktyki, studio działa od 2022 roku).
  * - Słowo „zaprojektowani” w tle jest rysowane z CSS (data-zp-mark), więc nie jest tekstem strony.
  * - Układ: na komputerze zdjęcie stoi po prawej i wychodzi nad pas, a tekst ma zarezerwowane
  *   miejsce obok (wcześniej przy 1100–1600 px zdjęcie zasłaniało nagłówek i opis); na tablecie
@@ -65,7 +66,7 @@ function zp_footer_cta_proof(): array {
   $items = [];
   if ($projects > 0) { $items[] = ['value' => $projects . '+', 'label' => 'projektów']; }
   if ($rating !== '') { $items[] = ['value' => $rating, 'star' => true, 'label' => 'ocena w Google', 'href' => ZP_FOOTER_CTA_REVIEWS]; }
-  $items[] = ['value' => '10+', 'label' => 'lat doświadczenia'];
+  $items[] = ['value' => '10+', 'label' => 'lat doświadczenia zespołu'];
   return $items;
 }
 
@@ -77,7 +78,7 @@ function zp_footer_cta_en_strings(): array {
     'Zaprojektowani w liczbach' => 'Zaprojektowani in numbers',
     'projektów' => 'projects',
     'ocena w Google' => 'Google rating',
-    'lat doświadczenia' => 'years of experience',
+    'lat doświadczenia zespołu' => 'years of team experience',
   ];
 }
 
