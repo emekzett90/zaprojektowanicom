@@ -295,10 +295,17 @@ $zp_menu_250_industry = [
   ['/strony-internetowe-dla-restauracji/', 'utensils-crossed', 'Restauracje i kawiarnie', 'Menu, rezerwacje i dojazd'],
   ['/strony-internetowe-dla-hoteli/', 'bed-double', 'Hotele i pensjonaty', 'Pokoje, oferta i rezerwacje'],
 ];
+/* Suite 2.9.7 (Mat 8.10): on computers each industry shows its cover photo in a small circle instead of the icon
+   (assets/img/branze/<key>-krag.webp, includes/seo-plan/industries.php); the phone menu keeps its icons. */
+$zp_menu_297_item = static function (string $path, string $icon, string $title) use ($zp_menu_250, $zp_menu_250_item): string {
+  $key = function_exists('zp_seo_industry_key') ? zp_seo_industry_key($path) : '';
+  if ($key === '' || !$zp_menu_250($path)) { return $zp_menu_250_item($path, $icon, $title, ''); }
+  return '<a class="zpNewNav__megaLink" href="' . esc_url($path) . '"><span class="zpNewNav__megaIco zpNewNav__megaIco--photo"><img src="' . esc_url(zp_seo_industry_img($key . '-krag.webp')) . '" width="96" height="96" alt="" loading="lazy" decoding="async"></span><span><span class="zpNewNav__megaTitle">' . esc_html($title) . '</span></span></a>';
+};
 $zp_menu_250_ind_desk = '';
 $zp_menu_250_ind_mob = '';
 foreach ($zp_menu_250_industry as $zp_ind) {
-  $zp_menu_250_ind_desk .= $zp_menu_250_item($zp_ind[0], $zp_ind[1], $zp_ind[2], '');
+  $zp_menu_250_ind_desk .= $zp_menu_297_item($zp_ind[0], $zp_ind[1], $zp_ind[2]);
   $zp_menu_250_ind_mob .= $zp_menu_250_m($zp_ind[0], $zp_ind[1], $zp_ind[2], $zp_ind[3]);
 }
 /* Suite 2.6.0: items that pointed to the same address as another item now lead to their own

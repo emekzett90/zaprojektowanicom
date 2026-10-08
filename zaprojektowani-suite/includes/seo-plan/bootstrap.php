@@ -81,6 +81,7 @@ require_once __DIR__ . '/guide.php';
 require_once __DIR__ . '/content-pages.php';
 require_once __DIR__ . '/service-pages.php';
 require_once __DIR__ . '/service-heroes.php';
+require_once __DIR__ . '/industries.php';
 require_once __DIR__ . '/campaigns.php';
 require_once __DIR__ . '/articles.php';
 require_once __DIR__ . '/posts.php';

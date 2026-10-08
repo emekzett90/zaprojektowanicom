@@ -12,7 +12,11 @@ if (!defined('ABSPATH')) { exit; }
  */
 
 function zp_seo_content_pages(): array {
-  return zp_seo_plan_data('pages');
+  // 2.9.7: the price list and the industry cards take their places in the order (industries.php).
+  static $pages = null;
+  if ($pages !== null) { return $pages; }
+  if (!function_exists('zp_seo_industry_pages_layout')) { return zp_seo_plan_data('pages'); }
+  return $pages = zp_seo_industry_pages_layout(zp_seo_plan_data('pages'));
 }
 
 function zp_seo_content_page_by_variant(string $variant): ?array {
