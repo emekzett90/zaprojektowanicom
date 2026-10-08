@@ -1639,3 +1639,5 @@ require_once ZP_SUITE_PATH . 'includes/footer-cta.php';
 require_once ZP_SUITE_PATH . 'includes/contact-form-280.php';
 /* 2.8.0: krótki formularz kontaktowy w środku strony, pod pakietami z cenami (główna, podstrony usług, kampanie). */
 require_once ZP_SUITE_PATH . 'includes/contact-quick.php';
+/* Duży formularz: zdjęcie zespołu zamiast podglądu „Nowa wiadomość”, na każdej stronie inne niż reszta zdjęć zespołu na niej. */
+require_once ZP_SUITE_PATH . 'includes/contact-team-photo.php';
