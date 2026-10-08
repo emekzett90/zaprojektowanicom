@@ -34,7 +34,7 @@ usług (także na /en/) za laptopem jest miejsce na drugi, przygaszony zrzut. Wp
 apartamentpiekna_strona-scaled.webp nie istnieje na serwerze, więc na komputerze był tam pusty jasny
 prostokąt i błąd 404 w przeglądarce. Teraz karta bierze zdjęcie Apartamentu Piękna z Realizacji (to
 samo, które pokazuje /realizacje/), a gdy go zabraknie, pomija to miejsce. Domyślne zdjęcie tego
-projektu w Stronie głównej CMS też wskazuje istniejący plik. Zrzuty przed/po są na stronie wydania.
+projektu w Stronie głównej CMS też wskazuje istniejący plik.
 
 Po wgraniu:
 1. Wejdź raz na dowolną stronę.
