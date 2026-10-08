@@ -983,7 +983,7 @@ pointer-events:auto!important;
     if(url && !sp.getAttribute('url')) sp.setAttribute('url',url);
     loadViewerScript();
   }
-  /* 2.9.9 — the robot draws only while it can be seen. Below 1101 px the page hides it
+  /* 2.9.10 — the robot draws only while it can be seen. Below 1101 px the page hides it
      (display:none), and a scene started in a wider window (e.g. Chrome DevTools opened at the
      side) kept drawing into a 0x0 canvas: Chrome printed a WebGL error for every frame
      ("Framebuffer is incomplete: Attachment has zero size"). The scene now stops while the window

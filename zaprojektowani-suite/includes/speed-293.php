@@ -40,7 +40,7 @@
  */
 if (!defined('ABSPATH')) { exit; }
 
-define('ZP_SPEED_VERSION', '2.9.9');
+define('ZP_SPEED_VERSION', '2.9.10');
 
 function zp_speed_enabled(): bool {
   return get_option('zp_speed_off') !== '1';
@@ -504,7 +504,7 @@ function zp_speed_rewrite_has(string $css, array $plan): string {
 }
 
 /*
- * 2.9.9 — font preloads that a page never uses. Every page preloads the regular (400) Jakarta file
+ * 2.9.10 — font preloads that a page never uses. Every page preloads the regular (400) Jakarta file
  * (optimizer.php), but the legal pages and the FAQ (PL and EN) do not declare that face at all
  * (their text at 400 is drawn with the 500 file), so Chrome warned there that a preloaded font was
  * not used. The preload is left out only when nothing on the page names the file: no other mention
