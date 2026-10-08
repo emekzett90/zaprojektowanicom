@@ -3,8 +3,9 @@ ZAPROJEKTOWANI SUITE 2.9.5
 Zawiera całą 2.9.4 (a w niej 2.9.3, 2.9.2, 2.9.1, 2.9.0, 2.8.1, 2.8.0 i Twoją 2.7.20). Wgraj tę wersję
 zamiast 2.9.4 albo 2.9.3. Wygląd strony się nie zmienia.
 
-Szybkość: serwer składa każdą stronę z ok. 20 zapytaniami do bazy zamiast ok. 175 (łatka z wątku
-o przyspieszeniu strony).
+Szybkość: serwer składa każdą stronę z dużo mniejszą liczbą zapytań do bazy (łatka z wątku
+o przyspieszeniu strony; na żywej stronie, pomiar 8.10: strona główna 259 zamiast 428,
+Tworzenie stron internetowych 214 zamiast 384).
 - ustawienia wtyczki, które każda strona czytała osobno, są czytane jednym zapytaniem,
 - odpowiedzi „czy linkowana strona jest opublikowana” są pamiętane między wczytaniami i czyszczone
   przy każdym zapisie, publikacji, usunięciu wpisu lub strony, zmianie adresów, wtyczek lub motywu,

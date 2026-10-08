@@ -1,0 +1,25 @@
+ZAPROJEKTOWANI SUITE 2.9.9
+
+Zawiera całą 2.9.8 (a w niej 2.9.7 i wcześniejsze, z Twoją 2.7.20). Wgraj tę wersję zamiast tej, którą
+masz (2.9.7 albo 2.9.8). Jeśli nie wgrałeś jeszcze 2.9.8, wszystko z niej wejdzie razem z 2.9.9, także
+świeże daty w mapie witryny dla stron zmienionych w 2.9.x.
+
+Czysta konsola Chrome (wątek „Przyspieszenie strony”). Wygląd strony się nie zmienia:
+- strona główna: robot 3D nie rysuje, gdy jest ukryty (okno węższe niż 1101 px, np. z narzędziami
+  Chrome z boku) albo poza ekranem, więc znika lawina czerwonych błędów WebGL; rusza z tej samej
+  klatki, gdy znów go widać. Znika też żółte „updating from 114 to 117”,
+- formularze (szybki kontakt, okienko przy wyjściu, formularz telefoniczny, wycena) podpowiadają
+  telefon, imię i e-mail. Wysyłka na kontakt@zaprojektowani.com i zapis w Zapytaniach bez zmian,
+- wyszukiwarki (menu, FAQ, poradniki, realizacje, portfolio logo) i pola Studia wyceny mają nazwy,
+  więc Chrome nie zgłasza „pola bez id i name”,
+- dwie reguły „overflow: visible” na obrazkach usunięte; obrazki rysują się tak samo,
+- strony prawne i FAQ (PL i EN) nie wczytują zawczasu czcionki, której nie używają,
+- strony angielskie nie pokazują już czerwonego „Failed to load resource: 429”.
+
+Poprawka opisu 2.9.5: „ok. 20 zapytań do bazy zamiast ok. 175” to był pomiar na kopii strony. Na
+żywej stronie (8.10) strona główna ma 259 zapytań zamiast 428, a Tworzenie stron internetowych 214
+zamiast 384.
+
+Po wgraniu:
+1. Wejdź raz na dowolną stronę.
+2. Napisz w wątku „wgrane”.
