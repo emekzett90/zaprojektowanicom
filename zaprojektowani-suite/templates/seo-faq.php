@@ -2,6 +2,10 @@
 $zp_home_faq_items = array_values(array_filter(zp_suite_cms_get('faq', []), function($r){
   return !isset($r['visible']) || (string)$r['visible'] !== '0';
 }));
+// 2.9.4: questions and answers written for Google and AI assistants (includes/home-294.php).
+if (function_exists('zp_home_faq_294_items')) {
+  $zp_home_faq_items = zp_home_faq_294_items($zp_home_faq_items);
+}
 if (empty($zp_home_faq_items)) {
   return;
 }
@@ -20,9 +24,9 @@ Wygląd 1:1 z /strony-internetowe-katowice/ + treść FAQ z CMS home.
     <header class="zpHomeFaqKatNavy__head">
       <div class="zpHomeFaqKatNavy__copy">
         <span class="zpHomeFaqKatNavy__kicker">FAQ / Zaprojektowani</span>
-        <h2 id="zpHomeFaqKatNavyTitle">Najczęstsze pytania o strony, sklepy, branding i kampanie.</h2>
+        <h2 id="zpHomeFaqKatNavyTitle">Najczęstsze pytania o strony internetowe, sklepy, logo i kampanie.</h2>
       </div>
-      <p class="zpHomeFaqKatNavy__lead">Odpowiadamy konkretnie na pytania, które najczęściej pojawiają się przed rozpoczęciem współpracy: od wyceny i zakresu projektu po SEO, WooCommerce, branding oraz kampanie reklamowe.</p>
+      <p class="zpHomeFaqKatNavy__lead">W skrócie: strona internetowa od 3 999 zł z domeną i hostingiem w cenie, sklep WooCommerce od 6 499 zł, logo od 999 zł, a obsługa kampanii od 1 200 zł miesięcznie. Poniżej odpowiadamy na pytania, które słyszymy przed każdym projektem.</p>
     </header>
 
     <div class="zpHomeFaqKatNavy__layout">
@@ -57,7 +61,7 @@ Wygląd 1:1 z /strony-internetowe-katowice/ + treść FAQ z CMS home.
               <i data-lucide="plus"></i>
             </button>
             <div class="zpHomeFaqKatNavy__answer" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
-              <p itemprop="text"><?php echo esc_html($a); ?></p>
+              <p itemprop="text"><?php echo !empty($faq['html']) ? wp_kses($a, ['a' => ['href' => true, 'class' => true, 'data-zp-local' => true], 'strong' => []]) : esc_html($a); ?></p>
             </div>
           </article>
         <?php endforeach; ?>
