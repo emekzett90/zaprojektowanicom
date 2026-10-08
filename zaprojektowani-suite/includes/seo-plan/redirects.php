@@ -7,12 +7,13 @@ if (!defined('ABSPATH')) { exit; }
  * - the shop post and its "-2" copy → /tworzenie-sklepow-internetowych/,
  * - old prefixes (/wiedza/…, /poradniki/…, /kampanie-meta-ads/…) → current URLs,
  * - on 404 only: same slug under another category, "-2" copies, /de/ leftovers (301 or 410).
- * English URLs are handled by the languages router (data/routes.php "legacy").
+ * English aliases also use these source-path mappings; the language runtime
+ * localizes wp_redirect to the matching English target and preserves queries.
  */
 add_action('template_redirect', 'zp_seo_plan_redirect', -1000);
 
 function zp_seo_plan_redirect(): void {
-  if (!zp_seo_plan_active() || is_admin() || wp_doing_ajax() || is_preview() || zp_seo_plan_is_en()) { return; }
+  if (!zp_seo_plan_active() || is_admin() || wp_doing_ajax() || is_preview()) { return; }
   if (!in_array($_SERVER['REQUEST_METHOD'] ?? 'GET', ['GET', 'HEAD'], true)) { return; }
   $path = zp_seo_plan_path();
   $to = zp_seo_plan_redirect_target($path, is_404());

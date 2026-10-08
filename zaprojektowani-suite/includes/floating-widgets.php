@@ -52,10 +52,10 @@ add_action('wp_footer', function(){
         <form data-zp-mini-chat-form>
           <p class="zpMiniChat__msg" data-zp-mini-chat-msg></p>
           <label>Telefon
-            <input type="tel" name="phone" placeholder="Twój numer telefonu" required>
+            <input type="tel" name="phone" autocomplete="tel" placeholder="Twój numer telefonu" required>
           </label>
           <label>Imię / firma
-            <input type="text" name="name" placeholder="Jak się do Ciebie zwracać?">
+            <input type="text" name="name" autocomplete="name" placeholder="Jak się do Ciebie zwracać?">
           </label>
           <label>Krótko o projekcie
             <textarea name="message" placeholder="Strona, sklep, logo, branding, kampania..."></textarea>

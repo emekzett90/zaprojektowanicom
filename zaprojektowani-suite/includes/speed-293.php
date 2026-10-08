@@ -72,6 +72,7 @@ function zp_speed_buffer($chunk, $phase = 0) {
   $html = $buffer;
   $buffer = '';
   try {
+    if (function_exists('zp_suite_quality_html')) { $html = zp_suite_quality_html($html); }
     $out = zp_speed_should_process($html) ? zp_speed_process($html) : null;
   } catch (\Throwable $e) {
     $out = null;
@@ -173,6 +174,7 @@ function zp_speed_scan(string $html): ?array {
   $body_open = -1; // just after it
   $styles = [];    // [start, end, in body]
   $links = [];     // [start, end] of stylesheet links in <body>
+  $sheet_links = []; // stylesheet links in both head and body, for scoped asset checks
   $skip = [];      // [start, end] of text that is not markup, in order
   $pos = 0;
   $re = '~<!--|<(script|style|textarea|title|xmp|noscript|noembed|noframes|iframe|template|svg|math|link|body)(?=[\s/>])|</head\s*>~i';
@@ -201,8 +203,9 @@ function zp_speed_scan(string $html): ?array {
     }
     if ($name === 'link') {
       $tag = substr($html, $at, $gt + 1 - $at);
-      if ($body_open >= 0 && preg_match('~\srel\s*=\s*(["\']?)[^"\'>]*\bstylesheet\b~i', $tag)) {
-        $links[] = [$at, $gt + 1];
+      if (preg_match('~\srel\s*=\s*(["\']?)[^"\'>]*\bstylesheet\b~i', $tag)) {
+        $sheet_links[] = [$at, $gt + 1];
+        if ($body_open >= 0) { $links[] = [$at, $gt + 1]; }
       }
       $pos = $gt + 1;
       continue;
@@ -226,7 +229,7 @@ function zp_speed_scan(string $html): ?array {
     $pos = $end;
   }
   if ($body_open < 0) { return null; }
-  return ['body_tag' => $body_tag, 'body_open' => $body_open, 'styles' => $styles, 'links' => $links, 'skip' => $skip];
+  return ['body_tag' => $body_tag, 'body_open' => $body_open, 'styles' => $styles, 'links' => $links, 'sheet_links' => $sheet_links, 'skip' => $skip];
 }
 
 /** Whether $pos falls in one of the sorted, separate [start, end) stretches. */
@@ -247,6 +250,41 @@ function zp_speed_in_skip(array $skip, int $pos): bool {
 }
 
 /**
+ * These three legacy patches were printed on every page (head and footer), although
+ * every selector requires one of the components below. Check the final rendered DOM,
+ * rather than URL or post_content: it also covers Elementor, reusable shortcodes and EN.
+ * Keep all original copies and their cascade positions if any target is present.
+ * Only registered, static component styles are eligible; arbitrary CSS is untouched.
+ */
+function zp_speed_unused_styles(string $html, array $scan): array {
+  $rules = [
+    'zp-suite-front-fixes-303-faq-refinement' => ['front-fixes-303', ['.zpFaqPage']],
+    'zp-suite-front-fixes-304-contact-card' => ['front-fixes-304', ['.zpSSSignature', '#zpShowcaseServices', '.zpShowcaseServices']],
+    'zp-suite-front-fixes-305-brand-case-art' => ['front-fixes-305', ['#zp-logo-branding-katowice']],
+  ];
+  $present = [];
+  $unused = [];
+  foreach ($scan['sheet_links'] as $link) {
+    $tag = substr($html, $link[0], $link[1] - $link[0]);
+    if (!preg_match('~\sid\s*=\s*(["\'])([^"\']+)\1~i', $tag, $id) || !isset($rules[$id[2]])) { continue; }
+    $rule = $rules[$id[2]];
+    // Match the expected plugin-owned file too, so a reused id cannot remove other CSS.
+    if (!preg_match('~\shref\s*=\s*(["\'])[^"\']*/assets/css/' . preg_quote($rule[0], '~') . '(?:\.min)?\.css(?:\?[^"\']*)?\1~i', $tag)) { continue; }
+    if (!isset($present[$id[2]])) {
+      $present[$id[2]] = false;
+      foreach ($rule[1] as $selector) {
+        if (zp_speed_matching_tags($html, $scan, $selector, $scan['body_tag'], strlen($html))) {
+          $present[$id[2]] = true;
+          break;
+        }
+      }
+    }
+    if (!$present[$id[2]]) { $unused[$link[0]] = $link; }
+  }
+  return $unused;
+}
+
+/**
  * Builds the page. Styles printed in <body> before the page's first heading (<h1>) stay where they
  * are: they style the top of the page, which should appear as early as before, and restyling the
  * little above them is cheap. The other styles before the first stylesheet link in <body> are
@@ -263,12 +301,15 @@ function zp_speed_process(string $html): ?string {
   if ($scan === null) { return null; }
   $body_open = $scan['body_open'];
   $has = zp_speed_has_plan($html, $scan);
+  $unused_styles = zp_speed_unused_styles($html, $scan);
 
   $moves = []; // [start, end, 'style' | 'link'] in <body>, in order
   foreach ($scan['styles'] as $style) {
     if ($style[2]) { $moves[] = [$style[0], $style[1], 'style']; }
   }
-  foreach ($scan['links'] as $link) { $moves[] = [$link[0], $link[1], 'link']; }
+  foreach ($scan['links'] as $link) {
+    if (!isset($unused_styles[$link[0]])) { $moves[] = [$link[0], $link[1], 'link']; }
+  }
   usort($moves, function ($a, $b) { return $a[0] <=> $b[0]; });
   $first_link = count($moves);
   foreach ($moves as $i => $move) {
@@ -292,6 +333,7 @@ function zp_speed_process(string $html): ?string {
     return $el[2] === 'style' ? zp_speed_rewrite_has($part, $has) : $part;
   };
   $ops = []; // [start, end, replacement]
+  foreach ($unused_styles as $link) { $ops[] = [$link[0], $link[1], '']; }
   $moved = [];
   foreach ($moves as $move) { $moved[$move[0]] = true; }
   foreach ($scan['styles'] as $style) {

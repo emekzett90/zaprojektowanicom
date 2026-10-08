@@ -31,7 +31,13 @@
     var original = w.lucide.createIcons.bind(w.lucide);
 
     function pendingIcons(){
-      try{return d.querySelector('[data-lucide]:not(svg)')}catch(e){return null}
+      return Array.prototype.filter.call(d.querySelectorAll('[data-lucide]'), function(el){
+        // Lucide retains data-lucide on SVGs. Its default document scan would
+        // replace every finished SVG again whenever just one new icon appears.
+        // A changed icon name remains eligible (Studio Wyceny updates icons).
+        var name=el.getAttribute('data-lucide') || '';
+        return String(el.tagName).toLowerCase()!=='svg' || !el.classList.contains('lucide') || /\s/.test(name) || !el.classList.contains('lucide-'+name);
+      });
     }
 
     w.lucide.createIcons = function(options){
@@ -44,12 +50,25 @@
         return;
       }
 
-      if(!pendingIcons()){
-        d.documentElement.classList.add('zp-lucide-ready');
-        return;
+      var scanOptions=options;
+      // Explicit custom roots, icon sets, attributes and templates retain the API.
+      // Suite scans only supply these three stroke defaults; existing SVG attributes
+      // already take precedence over them in Lucide's own replacement routine.
+      var standardAttrs=!options.attrs || Object.keys(options.attrs).every(function(key){
+        return key==='stroke-width' || key==='stroke-linecap' || key==='stroke-linejoin';
+      });
+      if(!options.root && !options.nameAttr && !options.inTemplates && !options.icons && standardAttrs){
+        var pending=pendingIcons();
+        if(!pending.length && !d.querySelector('[icon-name]')){
+          d.documentElement.classList.add('zp-lucide-ready');
+          return;
+        }
+        scanOptions=Object.assign({},options,{root:{querySelectorAll:function(selector){
+          return selector==='[data-lucide]' ? pending : d.querySelectorAll(selector);
+        }}});
       }
 
-      var result = original(options);
+      var result = original(scanOptions);
       d.documentElement.classList.add('zp-lucide-ready');
       return result;
     };

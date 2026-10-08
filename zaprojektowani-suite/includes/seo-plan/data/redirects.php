@@ -6,6 +6,15 @@ if (!defined('ABSPATH')) { exit; }
  * 2.9.6: the landing page post that showed the premium shop article → the landing page service page. */
 return [
   'exact' => [
+    // 2.9.9: broken public links confirmed in the browser audit, same-topic successors.
+    '/privacy-policy/' => '/polityka-prywatnosci/',
+    '/wiedza/brandbook-co-powinien-zawierac/' => '/logo-branding/brandbook-co-powinien-zawierac-i-jak-go-czytac/',
+    '/wiedza/audyt-strony-internetowej-firmy/' => '/strony-www/audyt-strony-internetowej-firmy-przed-reklamami-i-seo/',
+    '/wiedza/formularz-kontaktowy-na-stronie-firmowej/' => '/ux-cro-analityka/formularz-kontaktowy-na-stronie-firmowej-jak-zwiekszyc-liczbe-zapytan/',
+    '/wiedza/strona-uslugowa-pod-google-ads/' => '/seo-content-marketing/strona-uslugowa-pod-google-ads-jak-przygotowac-oferte-i-landingi/',
+    '/wiedza/remarketing-dla-malej-firmy/' => '/logo-branding/remarketing-dla-malej-firmy-kiedy-ma-sens/',
+    '/wiedza/czy-warto-robic-audyt-strony/' => '/strony-www/audyt-strony-internetowej-firmy-przed-reklamami-i-seo/',
+    '/wiedza/jak-zaprojektowac-skuteczna-strone-firmowa/' => '/strony-internetowe/projektowanie-stron-internetowych-co-decyduje-o-zapytaniach/',
     '/about-us/' => '/en/about-us/',
     '/bez-kategorii/brandbook-w-praktyce-jak-uporzadkowac-marke/' => '/logo-branding/brandbook-co-powinien-zawierac-i-jak-go-czytac/',
     '/kampanie-meta-ads/jak-skrocic-formularz-kontaktowy-zeby-zwiekszyc-zapytania/' => '/ux-cro-analityka/formularz-kontaktowy-na-stronie-firmowej-jak-zwiekszyc-liczbe-zapytan/',

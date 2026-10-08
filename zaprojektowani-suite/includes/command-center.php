@@ -99,7 +99,7 @@ add_action('wp_footer', function(){
       <p>Zostaw numer telefonu. Krótko dopytamy o projekt i podpowiemy, czy lepiej zacząć od strony, sklepu, brandingu, SEO czy kampanii.</p>
       <form class="zpExitConsult__form" data-zp-exit-form>
         <input type="hidden" name="action" value="zp_suite_contact"><input type="hidden" name="nonce" value="<?php echo esc_attr($nonce); ?>"><input type="hidden" name="contact_mode" value="phone"><input type="hidden" name="name" value="Popup — darmowa konsultacja"><input type="hidden" name="email" value=""><input type="hidden" name="services" value="Bezpłatna konsultacja / exit popup"><input type="hidden" name="message" value="Prośba o darmową konsultację przed wyjściem ze strony."><input type="hidden" name="consent" value="1">
-        <label><span>Numer telefonu</span><input name="phone" type="tel" placeholder="np. 500 600 700" required></label>
+        <label><span>Numer telefonu</span><input name="phone" type="tel" autocomplete="tel" placeholder="np. 500 600 700" required></label>
         <button type="submit">Poproś o telefon</button>
       </form>
       <small>Bez spamu. Jeden krótki kontakt w sprawie Twojego projektu.</small>

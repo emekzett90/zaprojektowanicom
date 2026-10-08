@@ -258,7 +258,7 @@ final class Runtime {
             'rest' => esc_url_raw(rest_url('zpl/v1/')),
             'data' => ZPL_URL . 'data/json/',
             'v' => (string) ($meta['version'] ?? ZPL_VERSION),
-            'page' => Dict::has_page($source) ? Dict::page_id($source) : '',
+            'page' => Dict::client_page_id($source),
             'ov' => (string) get_option('zpl_overrides_version', ''),
             'ex' => Router::excludes(),
             'en' => Router::en_path($source),

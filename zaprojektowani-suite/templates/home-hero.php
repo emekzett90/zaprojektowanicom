@@ -782,7 +782,7 @@ pointer-events:auto!important;
 <div class="zh__halo"></div>
 <div class="zh__ring zh__ring--b"></div>
 <div class="zh__ring zh__ring--a"></div>
-<spline-viewer class="zh__spline" id="zhSpline" events-target="global" loading-anim-type="none" data-url="https://prod.spline.design/kZDDjO5HuC9GJUM2/scene.splinecode"></spline-viewer>
+<spline-viewer class="zh__spline" id="zhSpline" events-target="global" loading-anim-type="none" data-url="<?php echo esc_url(ZP_SUITE_URL . 'assets/spline/home-scene-117.splinecode'); ?>"></spline-viewer>
 <div class="zh__poster" id="zhPoster" style="--robot:url('https://zaprojektowani.com/wp-content/uploads/2026/06/robot_poster_desktop.webp')"></div>
 <div class="zh__splineMask"></div>
 </div>
@@ -899,28 +899,25 @@ pointer-events:auto!important;
   var sp=d.getElementById('zhSpline');
   if(!hero||!sp) return;
 
-  // v2.2.544 — stable desktop Spline for real users, poster-only for Lighthouse/headless.
-  // The poster is always first paint. Real desktop gets Spline immediately after first paint,
-  // not on mousemove. Synthetic/browser-lab runs are aggressively protected to avoid WebGL
-  // closing the Lighthouse target.
+  // The exact same policy is used for visitors and audits. Only explicit
+  // diagnostics or a device without hardware WebGL keep the existing poster.
+  var splineCapability;
   function shouldSkipSpline(){
+    if(splineCapability!==undefined)return splineCapability;
     try{
-      if(/[?&](zp_lh|zp_no_spline|zp_no_webgl)(?:=1)?(?:&|$)/.test(location.search||'')) return true;
-      var ua=navigator.userAgent||'';
-      if(navigator.webdriver===true) return true;
-      if(/HeadlessChrome|Chrome-Lighthouse|Lighthouse|PageSpeed|Speed Insights/i.test(ua)) return true;
-      /* Capability fallback: software WebGL renderers are exactly the environments where
-         the 3D scene can stall PSI/Lighthouse. Real visitors without hardware WebGL keep
-         the static poster instead of paying for a scene their device cannot render well. */
+      if(/[?&](zp_lh|zp_no_spline|zp_no_webgl)(?:=1)?(?:&|$)/.test(location.search||''))return true;
+      // Mobile never displays the 3D canvas; avoid creating a GPU context there.
+      if(mq&&mq('(max-width:1100px)').matches)return false;
       var c=d.createElement('canvas');
-      var gl=c.getContext('webgl2',{failIfMajorPerformanceCaveat:true})||c.getContext('webgl',{failIfMajorPerformanceCaveat:true})||c.getContext('experimental-webgl');
-      if(gl){
-        var ext=gl.getExtension('WEBGL_debug_renderer_info');
-        var renderer=ext?String(gl.getParameter(ext.UNMASKED_RENDERER_WEBGL)||''):String(gl.getParameter(gl.RENDERER)||'');
-        if(/SwiftShader|llvmpipe|software rasterizer|software renderer/i.test(renderer)) return true;
-      }
-    }catch(e){}
-    return false;
+      var gl=c.getContext('webgl2',{failIfMajorPerformanceCaveat:true})||c.getContext('webgl',{failIfMajorPerformanceCaveat:true});
+      if(!gl)return splineCapability=true;
+      var ext=gl.getExtension('WEBGL_debug_renderer_info');
+      var renderer=ext?String(gl.getParameter(ext.UNMASKED_RENDERER_WEBGL)||''):String(gl.getParameter(gl.RENDERER)||'');
+      var skip=/SwiftShader|llvmpipe|software rasterizer|software renderer/i.test(renderer);
+      var release=gl.getExtension('WEBGL_lose_context');
+      if(release)release.loseContext();
+      return splineCapability=skip;
+    }catch(e){return splineCapability=true;}
   }
 
   if(shouldSkipSpline()){
@@ -944,7 +941,6 @@ pointer-events:auto!important;
   function addPreconnect(){
     try{
       [
-        'https://prod.spline.design',
         'https://unpkg.com',
         'https://cdn.jsdelivr.net'
       ].forEach(function(host,i){
@@ -987,9 +983,9 @@ pointer-events:auto!important;
     if(url && !sp.getAttribute('url')) sp.setAttribute('url',url);
     loadViewerScript();
   }
-  /* v2.2.808 — real desktop visitors get Spline immediately after the first paint.
-     Lighthouse/headless is still stopped above by shouldSkipSpline(), so we can be
-     aggressive for humans without bringing the PSI timeout back. */
+  // Desktop visitors get the unchanged scene immediately after the first paint.
+  // It was migrated once with this pinned viewer's own migration code; no
+  // repeated client-side schema conversion is necessary.
   function startAfterFirstPaint(){
     if(mq&&mq('(max-width:1100px)').matches){armDesktopRetry();return;}
     addPreconnect();

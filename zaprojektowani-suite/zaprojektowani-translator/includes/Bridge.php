@@ -121,9 +121,9 @@ final class Bridge {
         if ($path === '' || $path === '/en/' || strpos($path, '/en/') === 0) { return 'adres angielski'; }
         if (\ZPL\Router::never($path)) { return 'adres techniczny'; }
         if (\ZPL\Router::is_excluded($path)) { return 'ścieżka wyłączona w Języki PL/EN'; }
-        if (defined('ZPL\\Router::ALIASES') && isset(\ZPL\Router::ALIASES[$path]) && !isset(\ZPL\Router::routes()[$path])) {
-            return 'wersję angielską zastępuje ' . \ZPL\Router::ALIASES[$path];
-        }
+        // A temporary English fallback must not exclude a real Polish page from
+        // translation. Source::fetch still rejects redirected/deleted Polish URLs;
+        // once a public page is translated, its own route overrides the fallback.
         if (strpos($path, '/dziekujemy') === 0 || strpos($path, '/page/') !== false) { return 'strona pomocnicza'; }
         // Pages made for one client (questionnaires, presentations) stay out of Google, so no English version.
         if (function_exists('zp_seo_plan_is_private_path') && zp_seo_plan_is_private_path($path)) { return 'strona dla klienta (noindex)'; }

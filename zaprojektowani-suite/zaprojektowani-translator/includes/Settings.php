@@ -16,7 +16,7 @@ final class Settings {
             'mode' => 'publish',        // publish | draft (new pages only)
             'types' => ['post', 'page'],
             'since' => '',              // Y-m-d; content published on/after this day counts as new
-            'older' => 0,               // also translate older content without an English version
+            'older' => 1,               // include all older public content without an English version
             'gaps' => 1,                // fill untranslated fragments on existing English pages
             'daily_chars' => 400000,    // characters of Polish text sent to OpenAI per day
             'instructions' => '',       // extra instructions for the translator (style, glossary)
@@ -40,16 +40,28 @@ final class Settings {
         update_option(self::OPTION, array_merge(self::all(), $values), true);
     }
 
-    /** Upgrade the former default once; keep custom models and every other setting/key. */
+    /** One-time upgrades; preserve API key, custom model, budget and schedule choice. */
     public static function migrate(): void {
-        if (get_option('zpte_model_migrated') === '1.1.0') { return; }
-        $saved = get_option(self::OPTION, []);
-        if (!is_array($saved)) { $saved = []; }
-        if (!isset($saved['model']) || $saved['model'] === 'gpt-4.1') {
-            $saved['model'] = self::DEFAULT_MODEL;
-            update_option(self::OPTION, $saved, true);
+        if (get_option('zpte_model_migrated') !== '1.1.0') {
+            $saved = get_option(self::OPTION, []);
+            if (!is_array($saved)) { $saved = []; }
+            if (!isset($saved['model']) || $saved['model'] === 'gpt-4.1') {
+                $saved['model'] = self::DEFAULT_MODEL;
+                update_option(self::OPTION, $saved, true);
+            }
+            update_option('zpte_model_migrated', '1.1.0', false);
         }
-        update_option('zpte_model_migrated', '1.1.0', false);
+        // Suite 2.9.9: the owner requested matching PL/EN coverage for every
+        // public page and post, including the backlog before the start date.
+        // Do this once, so later administrator choices are still respected.
+        if (get_option('zpte_coverage_migrated') !== '1.1.2') {
+            $saved = self::all();
+            $saved['older'] = 1;
+            $saved['types'] = array_values(array_unique(array_merge((array) $saved['types'], ['post', 'page'])));
+            update_option(self::OPTION, $saved, true);
+            update_option('zpte_coverage_migrated', '1.1.2', false);
+            update_option('zpte_coverage_rescan', '1', false);
+        }
     }
 
     /** First run: new content = published during the last 7 days or later. */

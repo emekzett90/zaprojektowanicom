@@ -49,19 +49,31 @@ final class Rest {
             $t = Dict::get(Html::norm($k), $lang, $src);
             if ($t !== null) { $map[$k] = $t; }
         }
-        $res = new \WP_REST_Response(['map' => (object) $map]);
+        $res = new \WP_REST_Response(['map' => (object) $map, 'reportAfter' => self::reporting_count() > 30 ? HOUR_IN_SECONDS : 0]);
         $res->header('Cache-Control', 'no-store');
         return $res;
+    }
+
+    private static function reporting_key(): string {
+        return 'zpl_rl_' . substr(md5((string) ($_SERVER['REMOTE_ADDR'] ?? '')), 0, 12);
+    }
+
+    private static function reporting_count(): int {
+        return (int) get_transient(self::reporting_key());
     }
 
     /** Anonymous reports of untranslated dynamic text (rate limited, capped, admin-reviewed). */
     public static function missing(\WP_REST_Request $r) {
         [$lang, $src, $keys] = self::input($r);
         if ($lang !== 'en' || !$keys) { return ['ok' => true]; }
-        $ip = (string) ($_SERVER['REMOTE_ADDR'] ?? '');
-        $rk = 'zpl_rl_' . substr(md5($ip), 0, 12);
-        $n = (int) get_transient($rk);
-        if ($n > 30) { return new \WP_REST_Response(['ok' => false], 429); }
+        $rk = self::reporting_key();
+        $n = self::reporting_count();
+        if ($n > 30) {
+            $res = new \WP_REST_Response(['ok' => false, 'reportAfter' => HOUR_IN_SECONDS], 429);
+            $res->header('Retry-After', (string) HOUR_IN_SECONDS);
+            $res->header('Cache-Control', 'no-store');
+            return $res;
+        }
         set_transient($rk, $n + 1, HOUR_IN_SECONDS);
         $rows = [];
         foreach (array_slice($keys, 0, 60) as $k) {
@@ -70,7 +82,7 @@ final class Rest {
             $rows[$k] = 'dynamic';
         }
         Missing::remember($rows, $src);
-        return ['ok' => true];
+        return ['ok' => true, 'reportAfter' => $n >= 30 ? HOUR_IN_SECONDS : 125];
     }
 
     public static function overrides(\WP_REST_Request $r) {
