@@ -60,7 +60,7 @@ final class Admin {
         if (!current_user_can('manage_options')) { return; }
         $tab = sanitize_key($_GET['tab'] ?? 'status');
         $tabs = ['status' => 'Status', 'geo' => 'Goście z zagranicy', 'missing' => 'Brakujące tłumaczenia', 'overrides' => 'Poprawki tłumaczeń', 'routes' => 'Adresy URL', 'cleanup' => 'Stare wtyczki'];
-        echo '<div class="wrap"><h1>Języki PL/EN</h1>';
+        echo '<div class="wrap zpl-admin"><style>.zpl-admin textarea{max-width:100%;box-sizing:border-box}.zpl-admin table.widefat td,.zpl-admin table.widefat td a{overflow-wrap:anywhere}@media(max-width:782px){.zpl-admin .zpl-kv th,.zpl-admin .zpl-kv td{display:block;width:auto!important}.zpl-admin .zpl-kv th{padding-bottom:0}}</style><h1>Języki PL/EN</h1>';
         if (!empty($_GET['msg'])) { echo '<div class="notice notice-success"><p>' . esc_html(wp_unslash($_GET['msg'])) . '</p></div>'; }
         echo '<nav class="nav-tab-wrapper">';
         foreach ($tabs as $k => $label) { echo '<a class="nav-tab' . ($k === $tab ? ' nav-tab-active' : '') . '" href="' . esc_url(self::url(['tab' => $k])) . '">' . esc_html($label) . '</a>'; }
@@ -80,7 +80,7 @@ final class Admin {
         $m = Dict::meta();
         $missing = count(Missing::all());
         $ov = count(Dict::overrides('en'));
-        echo '<table class="widefat striped" style="max-width:760px"><tbody>';
+        echo '<table class="widefat striped zpl-kv" style="max-width:760px"><tbody>';
         $rows = [
             'Wersja wtyczki' => ZPL_VERSION,
             'Wersja słownika' => ($m['version'] ?? '—') . (isset($m['built']) ? ' (' . wp_date('Y-m-d H:i', (int) $m['built']) . ')' : ''),
@@ -139,11 +139,18 @@ final class Admin {
         echo '<h2>Przekierowania na wersję angielską</h2>';
         echo '<p>Dziś: <strong>' . esc_html(number_format_i18n($sum(1))) . '</strong> · ostatnie 7 dni: <strong>' . esc_html(number_format_i18n($sum(7))) . '</strong> · ostatnie 30 dni: <strong>' . esc_html(number_format_i18n($sum(30))) . '</strong></p>';
         echo '<p class="description">Liczymy wejścia z przeglądarek, które serwer przekierował na wersję angielską (bez robotów). Dalej gość klika już w linki wersji angielskiej, więc kolejne strony nie są liczone.</p>';
+        // Pages without an English version stay Polish for everyone: the list and the button live in Tłumacz EN.
+        if (class_exists('\\ZPTE\\Admin') && method_exists('\\ZPTE\\Admin', 'missing_pages')) {
+            $missing = count(\ZPTE\Admin::missing_pages());
+            if ($missing > 0) {
+                echo '<p><strong>Polskie strony bez wersji angielskiej: ' . esc_html(number_format_i18n($missing)) . '.</strong> Goście z zagranicy widzą je po polsku. <a href="' . esc_url(admin_url('admin.php?page=zp-tlumacz-en&tab=pages&f=missing')) . '">Lista i tłumaczenie w Tłumaczu EN →</a></p>';
+            }
+        }
 
         $info = Geo::data_info();
         $ip = Geo::visitor_ip();
         $header = Geo::header_country();
-        echo '<h2>Rozpoznawanie kraju</h2><table class="widefat striped" style="max-width:820px"><tbody>';
+        echo '<h2>Rozpoznawanie kraju</h2><table class="widefat striped zpl-kv" style="max-width:820px"><tbody>';
         $stale = $info['built'] !== '' && strtotime($info['built']) < time() - 90 * DAY_IN_SECONDS;
         echo '<tr><th style="width:300px">Lista polskich adresów IP</th><td>' . ($info['v4'] > 0
             ? esc_html(number_format_i18n($info['v4']) . ' zakresów IPv4 i ' . number_format_i18n($info['v6']) . ' IPv6, z dnia ' . $info['built']) . '<br><small>Źródło: ip-location-db (domena publiczna). Aktualizacja przychodzi z nowymi wersjami wtyczki.</small>'

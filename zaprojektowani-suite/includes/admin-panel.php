@@ -1,6 +1,6 @@
 <?php
 /**
- * ZP Suite panel: menu order, shared look of the Command Center and Zapytania screens,
+ * ZP Suite panel: menu order, shared look of the Command Center, Zapytania, Strona główna CMS and Tłumacz EN screens,
  * and a soft landing for links to screens removed in the panel clean-up.
  */
 if (!defined('ABSPATH')) { exit; }
@@ -53,7 +53,7 @@ add_action('admin_menu', function () {
 /** True on the panel screens that use the shared zpx look. */
 function zp_panel_is_screen(): bool {
   $page = isset($_GET['page']) ? sanitize_key(wp_unslash($_GET['page'])) : '';
-  return is_admin() && in_array($page, ['zp-suite', 'zp-suite-zapytania', 'zp-suite-home-cms'], true);
+  return is_admin() && in_array($page, ['zp-suite', 'zp-suite-zapytania', 'zp-suite-home-cms', 'zp-tlumacz-en'], true);
 }
 
 add_action('admin_head', function () {

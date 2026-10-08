@@ -179,16 +179,13 @@ function zp_suite_cc_modules(): array {
     }
   }
 
-  if (class_exists('\ZPTE\Settings') && method_exists('\ZPTE\Settings', 'key_source')) {
-    $url = admin_url('admin.php?page=zp-tlumacz-en');
-    if (\ZPTE\Settings::key_source() === '') {
-      $rows[] = ['Tłumacz EN', 'Brak klucza OpenAI: nowe wpisy nie dostaną wersji angielskiej.', 'is-warn', 'wymaga klucza', $url];
-    } else {
-      $queued = class_exists('\ZPTE\Store') && method_exists('\ZPTE\Store', 'queued_count') ? (int) \ZPTE\Store::queued_count() : 0;
-      $errors = class_exists('\ZPTE\Store') && method_exists('\ZPTE\Store', 'count_paths') ? (int) \ZPTE\Store::count_paths(['attention' => true]) : 0;
-      $text = 'Tłumaczy nowe wpisy codziennie.' . ($queued ? ' W kolejce: ' . $queued . '.' : '') . ($errors ? ' Do sprawdzenia: ' . $errors . '.' : '');
-      $rows[] = ['Tłumacz EN', $text, $errors ? 'is-warn' : 'is-ok', $errors ? 'sprawdź' : 'działa', $url];
-    }
+  if (class_exists('\ZPTE\Admin') && method_exists('\ZPTE\Admin', 'headline') && \ZPTE\Bridge::ready()) {
+    // The same sentence as at the top of Tłumacz EN, plus how many Polish pages still have no English version.
+    [$level, $text] = \ZPTE\Admin::headline();
+    $missing = count(\ZPTE\Admin::missing_pages());
+    if ($missing) { $text .= ' Bez wersji angielskiej: ' . $missing . '.'; }
+    $pill = ['ok' => ['is-ok', 'działa'], 'warn' => ['is-warn', 'sprawdź'], 'bad' => ['is-warn', 'wymaga uwagi']][$level] ?? ['is-warn', 'sprawdź'];
+    $rows[] = ['Tłumacz EN', $text, $pill[0], $pill[1], admin_url('admin.php?page=zp-tlumacz-en')];
   }
 
   if (class_exists('\ZPL\Geo')) {

@@ -1,7 +1,75 @@
-.zpte .zpte-box.zpte-progress{background:linear-gradient(125deg,#071322,#122b48);border:1px solid #243e59;border-radius:16px;color:#edf6ff;padding:24px;box-shadow:0 8px 30px #07132212}
-.zpte-progress-head{display:flex;align-items:center;justify-content:space-between;gap:20px}
-.zpte-progress-head h2{color:#fff!important;margin:0 0 18px;font-size:20px}.zpte-progress-head>strong{font-size:28px;line-height:1;margin-bottom:18px;font-variant-numeric:tabular-nums}
-.zpte-progress-track{height:10px;background:#ffffff1c;border-radius:99px;overflow:hidden}.zpte-progress-track>span{display:block;height:100%;border-radius:inherit;background:linear-gradient(90deg,#61a7ed,#a9d8ff);transition:width .5s ease}
-.zpte-progress-message{font-size:15px!important;margin:18px 0!important}.zpte-progress-counts{display:flex;gap:10px 24px;flex-wrap:wrap;color:#b7cadc;font-size:13px}.zpte-progress-counts strong{color:#fff;font-variant-numeric:tabular-nums}.zpte-progress .description{color:#b7cadc!important}.zpte-progress-current{overflow-wrap:anywhere;color:#c8e6ff}.zpte-progress[data-state=completed] .zpte-progress-track>span{background:#73dcb1}.zpte-progress[data-state=blocked] .zpte-progress-message,.zpte-progress[data-state=completed_errors] .zpte-progress-message{color:#ffd49d}
-@media(max-width:600px){.zpte .zpte-box.zpte-progress{padding:18px}.zpte-progress-counts{display:grid;gap:8px}.zpte-progress-head h2{font-size:18px}}
+/* Tłumacz EN admin screen. Shares the ZP Suite panel look (.zpx, includes/admin-panel.php); the fallbacks keep it readable without it. */
+.zpte .zpte-gap{margin-top:16px}
+.zpte .zpte-ok{color:var(--ok,#166534)}.zpte .zpte-bad{color:var(--bad,#b42318)}.zpte .zpte-warn{color:var(--warn,#9a3412)}
+.zpte code{word-break:break-all}
+.zpte form.zpte-inline{display:inline}
+.zpte .zpxCard>summary{cursor:pointer;font-weight:800;font-size:15px;color:var(--ink,#071426)}
+.zpte details.zpxCard[open]>summary{margin-bottom:12px}
+
+/* One sentence: is it working */
+.zpteState{display:flex;flex-wrap:wrap;gap:12px 16px;align-items:center;justify-content:space-between;margin-top:16px;padding:16px 20px;border-radius:18px;border:1px solid var(--line,#dfe4ec);background:#fff}
+.zpteState p{flex:1 1 320px;margin:0;font-size:15px;font-weight:600;line-height:1.5;color:var(--ink,#071426)}
+.zpteDot{display:inline-block;width:10px;height:10px;border-radius:50%;margin:0 10px 1px 0;background:#16a34a;box-shadow:0 0 0 4px #dcfce7}
+.zpteState.is-warn{border-color:#fed7aa;background:var(--warnbg,#fff7ed)}.zpteState.is-warn .zpteDot{background:#ea580c;box-shadow:0 0 0 4px #ffedd5}
+.zpteState.is-bad{border-color:#fecaca;background:#fef3f2}.zpteState.is-bad .zpteDot{background:#dc2626;box-shadow:0 0 0 4px #fee2e2}
+.zpteActions{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.zpxCard .zpteActions{margin:14px 0 0}
+.zpxCard .zpteActions+.zpteList{margin-top:14px}
+.zpteActions .button{display:inline-flex;align-items:center;min-height:34px}
+
+/* Live progress */
+.zpte .zpte-progress{margin-top:16px}
+.zpte-progress-head{display:flex;align-items:baseline;justify-content:space-between;gap:20px}
+.zpte .zpte-progress-head h2{margin:0 0 12px}
+.zpte-progress-head>strong{font-size:26px;line-height:1;font-variant-numeric:tabular-nums;color:var(--ink,#071426)}
+.zpte-progress-track{height:10px;background:#e9eef6;border-radius:99px;overflow:hidden}
+.zpte-progress-track>span{display:block;height:100%;border-radius:inherit;background:linear-gradient(90deg,#1c477a,#4f86c6);transition:width .5s ease}
+.zpte .zpte-progress-message{font-size:15px;margin:14px 0 10px;color:var(--ink,#071426)}
+.zpte-progress-counts{display:flex;gap:8px 22px;flex-wrap:wrap;color:var(--muted,#5d6878);font-size:13px}
+.zpte-progress-counts strong{color:var(--ink,#071426);font-variant-numeric:tabular-nums}
+.zpte-progress-current{overflow-wrap:anywhere;color:var(--ink2,#102a4f)}
+.zpte-progress[data-state=completed] .zpte-progress-track>span{background:#16a34a}
+.zpte-progress[data-state=blocked] .zpte-progress-message,.zpte-progress[data-state=completed_errors] .zpte-progress-message{color:var(--warn,#9a3412)}
+
+/* Pages without English */
+.zpteNote{margin:0 0 12px;padding:10px 12px;border-radius:12px;background:var(--warnbg,#fff7ed);border:1px solid #fed7aa;color:var(--warn,#9a3412)}
+.zpteList{display:grid;gap:8px}
+.zpteItem{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px 14px;align-items:center;padding:11px 13px;border:1px solid var(--line,#dfe4ec);border-radius:14px;background:var(--soft,#f6f8fb)}
+.zpteItemMain{min-width:0}
+.zpteItemMain a{text-decoration:none}
+.zpteItemMain b{display:block;color:var(--ink,#071426);overflow-wrap:anywhere}
+.zpteItemMain small{display:block;margin-top:2px;color:var(--muted,#5d6878);overflow-wrap:anywhere}
+.zpteItemEnd{display:flex;flex-wrap:wrap;gap:6px;align-items:center;justify-content:flex-end}
+
+/* Details */
+.zpteDl{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:0}
+.zpteDl div{background:var(--soft,#f6f8fb);border:1px solid var(--line,#dfe4ec);border-radius:12px;padding:8px 10px;min-width:0}
+.zpteDl dt{font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--muted,#5d6878)}
+.zpteDl dd{margin:3px 0 0;overflow-wrap:anywhere}
+.zpteDl div:last-child:nth-child(odd){grid-column:1/-1}
+.zpteDl+p{margin-top:12px}
+
+/* Tables, settings */
+.zpte .zpte-table td,.zpte .zpte-table th{vertical-align:top}
+.zpte .zpte-actions form{margin:0 4px 4px 0}
+.zpte textarea{width:100%}
+.zpte .zpte-wide{width:100%;max-width:520px}
+.zpte .zpte-check{display:inline-block;margin:0 14px 6px 0}
+.zpte .zpte-form th{width:220px}
+.zpte .zpte-add label{display:block;margin-bottom:6px}
+.zpte .zpte-add span{display:flex;flex-wrap:wrap;gap:8px}
+.zpte .zpte-danger summary{color:var(--bad,#b42318)}
+
+@media(max-width:782px){
+  .zpteItem{grid-template-columns:1fr}
+  .zpteItemEnd{justify-content:flex-start}
+  .zpteDl{grid-template-columns:1fr}
+  .zpte .zpte-table thead{display:none}
+  .zpte .zpte-table,.zpte .zpte-table tbody,.zpte .zpte-table tr,.zpte .zpte-table td{display:block;width:100%!important;box-sizing:border-box}
+  .zpte .zpte-table tr{border-bottom:1px solid var(--line,#dfe4ec);padding:8px 0}
+  .zpte .zpte-table td{padding:4px 12px;overflow-wrap:anywhere}
+  .zpte .zpte-table td[data-label]::before{content:attr(data-label);display:block;font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--muted,#5d6878)}
+  .zpte .zpte-form th{width:auto}
+  .zpte .zpte-form select,.zpte .zpte-form input.regular-text{width:100%;max-width:100%}
+}
 @media(prefers-reduced-motion:reduce){.zpte-progress-track>span{transition:none}}
