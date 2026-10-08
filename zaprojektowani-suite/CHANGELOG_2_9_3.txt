@@ -24,6 +24,9 @@ Szybsza strona na telefonie i komputerze, bez zmian w wyglądzie i animacjach:
 - wygląd, układ, kolory, czcionki i animacje bez zmian: sprawdzone na 46 stronach (polskich
   i angielskich), na telefonie i komputerze.
 
+Strona /agencja-reklamowa-katowice/: w pierwszym akapicie „ponad 110 projektów stron, sklepów, logo
+i identyfikacji” zamiast „ponad 114 projektów” (poprawka z wątku treści).
+
 Wyłącznik: ZP Suite → Przyspieszenie (odznacz „Przyspieszenie włączone” i kliknij Zapisz).
 Jedna strona bez przyspieszenia, do porównania: dopisz do adresu ?zp_speed=0
 (wyłącznik nie dotyczy poprawki menu: to zmiana samych reguł CSS, z tym samym wyglądem).
