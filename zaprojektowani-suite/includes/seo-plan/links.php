@@ -33,7 +33,15 @@ function zp_seo_plan_category_service(int $post_id): ?array {
 
 function zp_seo_plan_link_is_live(string $path): bool {
   static $cache = [];
-  if (!isset($cache[$path])) { $cache[$path] = zp_seo_plan_published_path($path); }
+  if (!isset($cache[$path])) {
+    // Kept between page views by includes/speed-server.php (about 80 fewer queries per page).
+    $known = function_exists('zp_speed_live_get') ? zp_speed_live_get($path) : null;
+    if ($known === null) {
+      $known = zp_seo_plan_published_path($path);
+      if (function_exists('zp_speed_live_put')) { zp_speed_live_put($path, $known); }
+    }
+    $cache[$path] = $known;
+  }
   return $cache[$path];
 }
 

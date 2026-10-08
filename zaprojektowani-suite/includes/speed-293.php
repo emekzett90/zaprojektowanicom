@@ -72,12 +72,16 @@ function zp_speed_buffer($chunk, $phase = 0) {
   $html = $buffer;
   $buffer = '';
   try {
-    if (!zp_speed_should_process($html)) { return $html; }
-    $out = zp_speed_process($html);
-    return is_string($out) ? $out : $html;
+    $out = zp_speed_should_process($html) ? zp_speed_process($html) : null;
   } catch (\Throwable $e) {
-    return $html;
+    $out = null;
   }
+  // ?zp_timing=1 (includes/speed-server.php): sent from here, the outermost buffer, so it covers every HTML filter.
+  if (function_exists('zp_speed_timing_header') && !headers_sent()) {
+    $timing = zp_speed_timing_header();
+    if ($timing !== '') { header('Server-Timing: ' . $timing); }
+  }
+  return is_string($out) ? $out : $html;
 }
 
 function zp_speed_should_process(string $html): bool {
