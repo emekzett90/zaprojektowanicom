@@ -51,7 +51,9 @@ v8.6:
           </div>
           <div class="zpSSCard__visual" aria-hidden="true">
             <span class="zpSSMockAura zpSSMockAura--web"></span><span class="zpSSMockIcon zpSSMockIcon--web"><i data-lucide="layout-template"></i></span>
-            <div class="zpSSCard__mock zpSSCard__mock--side"><img src="https://zaprojektowani.com/wp-content/uploads/2026/05/apartamentpiekna_strona-scaled.webp" alt=""></div>
+<?php $zp_ss_side = function_exists('zp_suite_realizacje_project_img') ? zp_suite_realizacje_project_img('Apartament Piękna') : ''; if ($zp_ss_side !== '') : ?>
+            <div class="zpSSCard__mock zpSSCard__mock--side"><img src="<?php echo esc_url($zp_ss_side); ?>" alt="" loading="lazy" decoding="async"></div>
+<?php endif; ?>
             <div class="zpSSCard__mock zpSSCard__mock--webLaptop"><img src="https://zaprojektowani.com/wp-content/uploads/2026/05/apartament_piekna_pokaz-1536x1357.webp" alt="" loading="lazy" decoding="async"></div>
           </div>
         </div>

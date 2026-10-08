@@ -10,7 +10,7 @@ function zp_suite_cms_defaults(){
       'sub'=>'nowa strona, rezerwacje online, branding i SEO',
       'type'=>'Strona + Rezerwacje + SEO',
       'year'=>'2026',
-      'img'=>'https://zaprojektowani.com/wp-content/uploads/2026/05/apartamentpiekna_strona-scaled.webp',
+      'img'=>'https://zaprojektowani.com/wp-content/uploads/2026/05/apartament_realizacja_compressed.webp',
       'tag'=>'Beauty premium / medycyna estetyczna',
       'desc'=>'Dla marki Apartament Piękna z Tarnowa przygotowaliśmy kompleksowy redesign wizerunku online — od odświeżenia identyfikacji wizualnej, przez pełny projekt strony internetowej, aż po autorski system rezerwacji wizyt. Projekt połączył jasną, elegancką estetykę beauty premium z funkcjonalnością, lokalnym SEO, blogiem, analityką i optymalizacją konwersji.',
       'client'=>'Apartament Piękna — Tarnów',
