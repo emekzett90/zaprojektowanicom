@@ -52,6 +52,8 @@ return [
     '/wiedza/ile-kosztuje-stworzenie-strony-internetowej-dla-firmy/' => '/strony-www/ile-kosztuje-stworzenie-strony-internetowej-dla-firmy/',
   ],
   'slugs' => [
+    // 2.9.6: the post is drafted, so the old /wiedza/ address and other prefixes no longer find it by slug.
+    'landing-page-pod-kampanie-meta-ads' => '/tworzenie-landing-page/',
     'ampanie-reklamowe-facebook-i-instagram-najczestsze-bledy' => '/meta-ads/kampanie-reklamowe-facebook-i-instagram-najczestsze-bledy/',
     'brandbook-w-praktyce-jak-uporzadkowac-marke' => '/logo-branding/brandbook-co-powinien-zawierac-i-jak-go-czytac/',
     'branding-firmy-od-podstaw-kiedy-jest-potrzebny-sygnaly' => '/logo-branding/branding-firmy-od-podstaw/',

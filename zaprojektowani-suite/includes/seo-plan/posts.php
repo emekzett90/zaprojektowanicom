@@ -82,6 +82,26 @@ function zp_seo_posts_text_fixes(): array {
   ];
 }
 
+/**
+ * 2.9.6: the logo package fixes of these posts also apply on the English page, where seo-271.php has
+ * the English for the new texts. The older fixes stay Polish-only (their English comes from the
+ * dictionary entries of the old texts).
+ */
+function zp_seo_posts_text_fixes_en(string $html): string {
+  if ($html === '' || !zp_seo_plan_active() || !zp_seo_plan_is_en() || is_admin() || !is_singular('post')) { return $html; }
+  $id = (int) get_queried_object_id();
+  if (!$id || (in_the_loop() && get_the_ID() !== $id)) { return $html; }
+  $slug = (string) get_post_field('post_name', $id);
+  foreach (['/logo-branding/projekt-wizytowki/', '/logo-branding/logo-salonu-kosmetycznego/'] as $path) {
+    if (basename($path) !== $slug) { continue; }
+    foreach (zp_seo_posts_text_fixes()[$path] as $fix) { $html = str_replace($fix[0], $fix[1], $html); }
+  }
+  return $html;
+}
+
+add_filter('the_content', 'zp_seo_posts_text_fixes_en', 21);
+add_filter('elementor/frontend/the_content', 'zp_seo_posts_text_fixes_en', 21);
+
 function zp_seo_posts_transform(string $html): string {
   static $busy = false;
   if ($busy || $html === '' || !zp_seo_plan_active() || zp_seo_plan_is_en() || is_admin() || !is_singular('post')) { return $html; }
@@ -335,7 +355,7 @@ add_filter('elementor/frontend/the_content', 'zp_seo_posts_placeholders', 21);
  * 2.9.6: thirteen of Mat's September posts show "Ostatnia aktualizacja: 2026-09-16" under a
  * publication date of 17–21.09.2026, so a page looked updated before it was published. When the
  * shown date is earlier than the publication date, the line shows the post's last change in
- * WordPress (the date Rank Math gives as dateModified). Also runs on the English page, where
+ * WordPress, or the publication date for a post that was scheduled and not edited since. Also runs on the English page, where
  * "Last updated:" keeps the same date format.
  */
 function zp_seo_posts_update_date(string $html): string {
@@ -343,10 +363,11 @@ function zp_seo_posts_update_date(string $html): string {
   $id = (int) get_queried_object_id();
   if (!$id || (in_the_loop() && get_the_ID() !== $id)) { return $html; }
   $published = (string) get_the_date('Y-m-d', $id);
-  $modified = (string) get_the_modified_date('Y-m-d', $id);
-  if ($published === '' || $modified < $published) { return $html; }
-  return (string) preg_replace_callback('~(Ostatnia aktualizacja:\s*(?:</[a-z]+>)?(?:\s|&nbsp;|&#160;)*)(\d{4}-\d{2}-\d{2})~u', static function (array $m) use ($published, $modified): string {
-    return $m[2] < $published ? $m[1] . $modified : $m[0];
+  // A scheduled post keeps the modified date of its last save before publication: show the later date.
+  $shown = max($published, (string) get_the_modified_date('Y-m-d', $id));
+  if ($published === '') { return $html; }
+  return (string) preg_replace_callback('~(Ostatnia aktualizacja:\s*(?:</[a-z]+>)?(?:\s|&nbsp;|&#160;)*)(\d{4}-\d{2}-\d{2})~u', static function (array $m) use ($published, $shown): string {
+    return $m[2] < $published ? $m[1] . $shown : $m[0];
   }, $html);
 }
 

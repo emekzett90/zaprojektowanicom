@@ -36,6 +36,9 @@ final class Router {
         '/strony-internetowe-dla-deweloperow/' => '/strony-internetowe-katowice/',
         // suite 2.9.0: local page from content batch 5, Polish only.
         '/agencja-reklamowa-katowice/' => '/strony-internetowe-katowice/',
+        // suite 2.9.6: the landing page post (it showed the premium shop article) redirects to the service page.
+        '/sklepy-internetowe/landing-page-pod-kampanie-meta-ads/' => '/tworzenie-landing-page/',
+        '/wiedza/landing-page-pod-kampanie-meta-ads/' => '/tworzenie-landing-page/',
     ];
     const NEVER = '~^/(?:wp-admin|wp-login\.php|wp-json|wp-content|wp-includes|wp-cron\.php|xmlrpc\.php|feed|comments/feed|wp-sitemap|sitemap|[a-z0-9_-]+-sitemap\d*\.xml|sitemap_index\.xml|robots\.txt|favicon\.ico)(?:/|$|\?)~i';
 
