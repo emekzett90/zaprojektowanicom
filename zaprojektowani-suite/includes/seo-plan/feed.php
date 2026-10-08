@@ -914,11 +914,11 @@ add_action('shutdown', function () {
 
 /** Links from older posts to feed articles: path => [[exact fragment, words, target]]. */
 function zp_feed_links_for(string $path): array {
-  return (array) ((array) (zp_feed_display()['links'] ?? []))[$path] ?? [];
+  return (array) (((array) (zp_feed_display()['links'] ?? []))[$path] ?? []);
 }
 
 function zp_feed_sections_for(string $path): array {
-  return (array) ((array) (zp_feed_display()['sections'] ?? []))[$path] ?? [];
+  return (array) (((array) (zp_feed_display()['sections'] ?? []))[$path] ?? []);
 }
 
 /** The fragment with its words linked, outside tags and existing links; null when not possible. */
