@@ -30,8 +30,13 @@
   };
 
   function setLangPreference(lang) {
+    lang = lang === 'en' ? 'en' : 'pl';
     try {
-      document.cookie = 'zpl_lang_pref=' + (lang === 'en' ? 'en' : 'pl') + ';path=/;max-age=2592000;SameSite=Lax' + (location.protocol === 'https:' ? ';Secure' : '');
+      document.cookie = 'zpl_lang_pref=' + lang + ';path=/;max-age=31536000;SameSite=Lax' + (location.protocol === 'https:' ? ';Secure' : '');
+    } catch (e) {}
+    // The server sets the same cookie again: Safari keeps cookies written by scripts for 7 days only.
+    try {
+      fetch(cfg.rest + 'pref', { method: 'POST', credentials: 'same-origin', keepalive: true, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ lang: lang }) }).catch(function () {});
     } catch (e) {}
   }
 

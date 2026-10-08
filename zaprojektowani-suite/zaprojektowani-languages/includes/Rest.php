@@ -26,6 +26,11 @@ final class Rest {
             'permission_callback' => '__return_true',
             'callback' => [self::class, 'geo'],
         ]);
+        register_rest_route('zpl/v1', '/pref', [
+            'methods' => 'POST',
+            'permission_callback' => '__return_true',
+            'callback' => [self::class, 'pref'],
+        ]);
     }
 
     private static function input(\WP_REST_Request $r): array {
@@ -75,6 +80,21 @@ final class Rest {
         return $res;
     }
 
+
+    /**
+     * The visitor's PL/EN choice from the switch, set again by the server: Safari keeps cookies written by
+     * scripts for 7 days only, a cookie from the server for the full year.
+     */
+    public static function pref(\WP_REST_Request $r) {
+        $origin = (string) ($_SERVER['HTTP_ORIGIN'] ?? '');
+        $same = $origin === '' || strtolower((string) wp_parse_url($origin, PHP_URL_HOST)) === strtolower((string) wp_parse_url(home_url('/'), PHP_URL_HOST));
+        $lang = (string) $r->get_param('lang');
+        $ok = $same && in_array($lang, ['pl', 'en'], true);
+        if ($ok) { Geo::set_preference_cookie($lang); }
+        $res = new \WP_REST_Response(['ok' => $ok], $ok ? 200 : 400);
+        $res->header('Cache-Control', 'private, no-store, max-age=0');
+        return $res;
+    }
 
     /** Country-only GEO endpoint for the first visit when the CDN exposes no country header. */
     public static function geo(\WP_REST_Request $r) {
