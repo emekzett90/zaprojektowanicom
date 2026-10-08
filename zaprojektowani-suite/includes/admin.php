@@ -111,6 +111,11 @@ add_action('admin_post_zp_suite_home_cms', 'zp_suite_save_admin');
 function zp_suite_save_admin(){
   if (!current_user_can('manage_options')) { wp_die('Brak uprawnień.', 403); }
   check_admin_referer('zp_suite_save');
+  // PHP keeps only the first max_input_vars fields. Without the form's last field the lists below would be cut short.
+  if (empty($_POST['zp_cms_complete'])) {
+    wp_safe_redirect(add_query_arg(['page' => 'zp-suite-home-cms', 'zp_msg' => 'cut'], admin_url('admin.php')));
+    exit;
+  }
 
   // Only the posted fields are written; everything else keeps its stored or default value.
   $defaults = zp_suite_defaults();
@@ -380,6 +385,7 @@ function zp_suite_render_admin_page(){
       </div></section>
 
       <div class="zpSave"><button class="button button-primary button-large">Zapisz zmiany</button></div>
+      <input type="hidden" name="zp_cms_complete" value="1">
     </form>
     <template id="zpTplLogo"><?php echo zp_logo_row('__i__', []); ?></template><template id="zpTplPortfolioWeb"><?php echo zp_portfolio_row('web','__i__', []); ?></template><template id="zpTplPortfolioLogo"><?php echo zp_portfolio_row('logo','__i__', []); ?></template><template id="zpTplReview"><?php echo zp_review_row('__i__', []); ?></template><template id="zpTplFaq"><?php echo zp_faq_row('__i__', []); ?></template>
   </div>

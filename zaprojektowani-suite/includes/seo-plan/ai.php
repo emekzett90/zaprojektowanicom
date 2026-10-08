@@ -888,7 +888,7 @@ add_filter('rank_math/sitemap/entry', function ($url, $type, $object) {
   if ($at > (int) strtotime((string) ($url['mod'] ?? ''))) { $url['mod'] = gmdate('Y-m-d H:i:s', $at); }
   return $url;
 }, 20, 3);
-add_filter('rank_math/sitemap/index/entry', function ($item, $type, $post_type) {
+add_filter('rank_math/sitemap/index/entry', function ($item, $type, $post_type = '') {
   if (!is_array($item) || $type !== 'post' || !zp_ai_on()) { return $item; }
   $at = (int) (((array) get_option('zp_ai_changed', []))['types'][(string) $post_type] ?? 0);
   if ($at > (int) strtotime((string) ($item['lastmod'] ?? ''))) { $item['lastmod'] = gmdate('Y-m-d H:i:s', $at); }

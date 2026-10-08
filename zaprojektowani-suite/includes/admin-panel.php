@@ -72,6 +72,7 @@ function zp_panel_notice(): void {
     'bulk-deleted' => ['success', 'Usunięto zapytania: ' . $n . '.'],
     'none' => ['warning', 'Nie zaznaczono żadnego zapytania.'],
     'missing' => ['warning', 'Nie znaleziono tego zapytania. Mogło zostać usunięte w innym oknie.'],
+    'cut' => ['error', 'Nic nie zapisano: serwer przyjął tylko część formularza (limit max_input_vars w PHP), więc zapis mógłby skrócić listy. Poproś hosting o podniesienie max_input_vars, np. do 3000, i zapisz ponownie.'],
     'removed' => ['info', 'Tego ekranu już nie ma w ZP Suite. Treści stron, które edytował, zostały w bazie i wyglądają tak samo; zmiany w nich robimy teraz w kodzie wtyczki.'],
   ];
   if (!isset($texts[$msg])) { return; }
