@@ -200,7 +200,7 @@ function zp_seo_content_transform(string $html, array $page): string {
     $html = zp_seo_content_in_section($html, $markers['hero'], static function ($s) use ($h, $L) {
       $s = zp_seo_content_set_inner($s, '<p class="hero-eyebrow">', '</p>', $h['eyebrow']);
       $s = zp_seo_content_set_inner($s, '<h1\b[^>]*>', '</h1>', $h['h1']);
-      $s = zp_seo_content_set_inner($s, '<p class="hero-lead">', '</p>', $L($h['lead']));
+      $s = zp_seo_content_set_inner($s, '<p class="hero-lead">', '</p>', $L(function_exists('zp_seo_plan_apply_projects_count') ? zp_seo_plan_apply_projects_count($h['lead']) : $h['lead']));
       $s = zp_seo_content_in_div($s, 'hero-actions', static function ($d) use ($h) { return zp_seo_content_buttons($d, $h['cta']); });
       $i = 0;
       $s = preg_replace_callback('~(<span class="proof-pill"><i></i>)\s*[^<]*(</span>)~', static function ($m) use ($h, &$i) {

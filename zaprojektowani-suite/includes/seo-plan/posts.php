@@ -54,7 +54,9 @@ function zp_seo_posts_inline_links(): array {
  * is created): path => [[exact old text, new text]]. 2.8.2: the website price includes the domain
  * and hosting (Mat, 7.10). 2.9.6: the logo packages have as many concepts and revision rounds as
  * /projektowanie-logo/ and the Studio Wyceny list (4 and up to 5, 6 and 10, unlimited); two articles
- * still gave 4 and 6 concepts. Nothing changes when the text was edited in WordPress.
+ * still gave 4 and 6 concepts. 2.9.8: the Google Ads cost article said "~10 min" under the theme's
+ * "11 min", and 3 000 zł ÷ 30,4 is about 99 zł, not 98. Nothing changes when the text was edited in
+ * WordPress.
  */
 function zp_seo_posts_text_fixes(): array {
   return [
@@ -65,6 +67,11 @@ function zp_seo_posts_text_fixes(): array {
       // FAQ "Ile kosztuje stworzenie strony internetowej?" (answer and JSON-LD).
       ['u nas projekty zaczynają się od 3 999 zł. Szczegóły opisuje poradnik',
        'u nas projekty zaczynają się od 3 999 zł, z domeną i hostingiem w cenie. Szczegóły opisuje poradnik'],
+    ],
+    '/kampanie-reklamowe/ile-kosztuje-google-ads/' => [
+      ['<span>~10 min czytania</span><span>Google Ads • Budżet • Obsługa</span>', '<span>~11 min czytania</span><span>Google Ads • Budżet • Obsługa</span>'],
+      ['podziel tę kwotę przez 30,4. Wychodzi około 98 zł i taką kwotę', 'podziel tę kwotę przez 30,4. Wychodzi około 99 zł i taką kwotę'],
+      ['wynosi wtedy około 98 zł (3 000 zł ÷ 30,4)', 'wynosi wtedy około 99 zł (3 000 zł ÷ 30,4)'],
     ],
     '/logo-branding/projekt-wizytowki/' => [
       ['razem z 4 kierunkami logo, kartą stylu', 'razem z 6 koncepcjami logo, kartą stylu'],
@@ -84,15 +91,15 @@ function zp_seo_posts_text_fixes(): array {
 
 /**
  * 2.9.6: the logo package fixes of these posts also apply on the English page, where seo-271.php has
- * the English for the new texts. The older fixes stay Polish-only (their English comes from the
- * dictionary entries of the old texts).
+ * the English for the new texts (2.9.8: also the Google Ads cost article). The older fixes stay
+ * Polish-only (their English comes from the dictionary entries of the old texts).
  */
 function zp_seo_posts_text_fixes_en(string $html): string {
   if ($html === '' || !zp_seo_plan_active() || !zp_seo_plan_is_en() || is_admin() || !is_singular('post')) { return $html; }
   $id = (int) get_queried_object_id();
   if (!$id || (in_the_loop() && get_the_ID() !== $id)) { return $html; }
   $slug = (string) get_post_field('post_name', $id);
-  foreach (['/logo-branding/projekt-wizytowki/', '/logo-branding/logo-salonu-kosmetycznego/'] as $path) {
+  foreach (['/logo-branding/projekt-wizytowki/', '/logo-branding/logo-salonu-kosmetycznego/', '/kampanie-reklamowe/ile-kosztuje-google-ads/'] as $path) {
     if (basename($path) !== $slug) { continue; }
     foreach (zp_seo_posts_text_fixes()[$path] as $fix) { $html = str_replace($fix[0], $fix[1], $html); }
   }

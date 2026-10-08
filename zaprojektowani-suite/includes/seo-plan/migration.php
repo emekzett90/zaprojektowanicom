@@ -51,7 +51,7 @@ function zp_seo_plan_log(array $lines): void {
 }
 
 function zp_seo_plan_backup(): array {
-  return array_merge(['meta' => [], 'title' => [], 'status' => [], 'slug' => [], 'option' => []], (array) get_option(ZP_SEO_PLAN_BACKUP, []));
+  return array_merge(['meta' => [], 'title' => [], 'status' => [], 'slug' => [], 'option' => [], 'excerpt' => []], (array) get_option(ZP_SEO_PLAN_BACKUP, []));
 }
 
 /** Published post or page at a path (0 if none). */
@@ -114,6 +114,26 @@ function zp_seo_plan_set_title(array &$backup, int $id, string $title): string {
   return 'written';
 }
 
+/**
+ * Pages whose content a release changed in code, so their post date never moved (2.9.8). Their date in
+ * the sitemap (and the English page's, which takes the Polish date) becomes the install date, and they go
+ * to IndexNow, the way posts changed by the content feed do. A list per release, not every page, so the
+ * dates stay worth trusting. 2.9.8 lists what 2.9.0–2.9.7 changed (thread 10 found / dated 14.06 and the
+ * industry pages 3.10) and what it changes itself: the home page, the agency page and the industry pages.
+ */
+function zp_seo_plan_changed_pages(): array {
+  return [
+    '2.9.8' => [
+      '/', '/agencja-reklamowa-katowice/', '/strony-internetowe-katowice/',
+      '/strony-internetowe-dla-kancelarii/', '/strony-internetowe-dla-lekarzy/', '/strony-internetowe-dla-deweloperow/',
+      '/strony-internetowe-dla-salonow-beauty/', '/strony-internetowe-dla-trenerow-personalnych/', '/strony-internetowe-dla-fotografow/',
+      '/strony-internetowe-dla-restauracji/', '/strony-internetowe-dla-hoteli/',
+      '/tworzenie-stron-internetowych/', '/strona-wizytowka/', '/strony-wordpress/', '/tworzenie-landing-page/',
+      '/kontakt/', '/studio-wyceny/', '/najczesciej-zadawane-pytania/',
+    ],
+  ];
+}
+
 function zp_seo_plan_migrate(): void {
   $log = ['Start migracji planu SEO ' . ZP_SEO_PLAN_VERSION . '.'];
   $backup = zp_seo_plan_backup();
@@ -128,6 +148,9 @@ function zp_seo_plan_migrate(): void {
   $log = array_merge($log, zp_seo_articles_refresh_featured());
   // 1d. Posts that showed another article's text get their own article (2.9.6), before their titles below.
   $log = array_merge($log, zp_seo_articles_swap());
+  // 1e. Posts that kept another article's excerpt get their own (2.9.8).
+  $log = array_merge($log, zp_seo_articles_fix_excerpts($backup));
+  update_option(ZP_SEO_PLAN_BACKUP, $backup, false);
 
   // 2. The shop post's content moves to /tworzenie-sklepow-internetowych/; remember it before drafting.
   $shop_path = '/sklepy-internetowe/tworzenie-sklepow-internetowych-od-pomyslu-na-oferte-do-gotowego-sklepu-online/';
@@ -237,6 +260,13 @@ function zp_seo_plan_migrate(): void {
     $log[] = $off ? 'Wyłączono stare wtyczki tłumaczeń: ' . implode(', ', $off) . '. Ich dane zostały.' : 'Żadna stara wtyczka tłumaczeń nie była włączona.';
   }
 
+  // 7c. Pages this release changed in code get a fresh sitemap date (2.9.8).
+  $changed = (array) (zp_seo_plan_changed_pages()[ZP_SEO_PLAN_VERSION] ?? []);
+  if ($changed && function_exists('zp_ai_changed_at_display')) {
+    zp_ai_changed_at_display($changed, 'strony zmienione w ' . ZP_SEO_PLAN_VERSION);
+    $log[] = 'Nowa data w mapie witryny i zgłoszenie do IndexNow dla stron zmienionych w tej wersji: ' . count($changed) . '.';
+  }
+
   // 8. Caches.
   zp_seo_plan_purge_caches();
   $log[] = 'Wyczyszczono pamięć podręczną map witryny Rank Math' . (defined('LSCWP_V') ? ' i LiteSpeed.' : '.');
@@ -290,6 +320,13 @@ function zp_seo_plan_restore(): array {
     $n++;
   }
   $log[] = 'Przywrócono tytuły wpisów: ' . $n . '.';
+  $n = 0;
+  foreach ($backup['excerpt'] as $id => $x) {
+    if (get_post_field('post_excerpt', $id) !== ($x['written'] ?? null)) { continue; }
+    zp_seo_plan_update_post(['ID' => $id, 'post_excerpt' => (string) $x['old']]);
+    $n++;
+  }
+  if ($n) { $log[] = 'Przywrócono zajawki wpisów: ' . $n . '.'; }
   $n = 0;
   foreach ($backup['status'] as $id => $s) {
     if (get_post_status($id) !== 'draft') { continue; }

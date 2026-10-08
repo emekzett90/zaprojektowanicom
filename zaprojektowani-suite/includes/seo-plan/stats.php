@@ -10,6 +10,8 @@ if (!defined('ABSPATH')) { exit; }
  * 2.9.6: the strip under the website template's hero ("60+ projektów online", e.g. on
  * /strony-internetowe-katowice/ and /agencja-reklamowa-katowice/) reads it as well. The page
  * said 60+, "ponad 110" and 114+ at once, and AI answers repeat whichever number they find.
+ * 2.9.8: the hero lead of /agencja-reklamowa-katowice/ and the first home FAQ answer still said
+ * "ponad 110"; both show the setting now.
  */
 
 function zp_seo_plan_projects_count(): int {
@@ -25,6 +27,7 @@ function zp_seo_plan_apply_projects_count(string $html): string {
   }, $html);
   $html = str_replace(['ponad <em>114 marek</em>', '<strong>114+</strong>'], ['ponad <em>' . $n . ' marek</em>', '<strong>' . $n . '+</strong>'], $html);
   $html = str_replace('<strong data-count="60" data-suffix="+">60+</strong><span>projektów online</span>', '<strong data-count="' . $n . '" data-suffix="+">' . $n . '+</strong><span>projektów</span>', $html);
+  $html = str_replace('Mamy za sobą 114+ projektów', 'Mamy za sobą ' . $n . '+ projektów', $html);
   return $html;
 }
 

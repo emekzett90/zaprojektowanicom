@@ -1193,6 +1193,19 @@ function zp_suite_realizacje_projects(){
 
   return array_merge($priority, $out);
 }
+/* 2.9.8: zdjęcie projektu z danych Realizacji (to samo, które pokazuje /realizacje/), np. dla karty
+   „Strony internetowe” na stronie głównej. Pusty tekst, gdy projektu nie ma albo nie ma zdjęcia. */
+function zp_suite_realizacje_project_img($brand){
+  static $imgs = null;
+  if ($imgs === null) {
+    $imgs = [];
+    foreach (zp_suite_realizacje_projects() as $p) {
+      $key = sanitize_title((string)($p['brand'] ?? ''));
+      if ($key !== '' && !isset($imgs[$key])) { $imgs[$key] = trim((string)($p['img'] ?? '')); }
+    }
+  }
+  return $imgs[sanitize_title((string)$brand)] ?? '';
+}
 function zp_suite_realizacje_categories(){
   $cms = zp_suite_realizacje_cms();
   $cats = $cms['categories'] ?? [];

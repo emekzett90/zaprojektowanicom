@@ -96,6 +96,9 @@ function zp_seo_plan_filter_graph(array $graph): array {
     if (!is_array($node)) { $out[$key] = $node; continue; }
     $types = array_map('strval', (array) ($node['@type'] ?? []));
     $id = (string) ($node['@id'] ?? '');
+    // 2.9.8: a Service schema saved in Rank Math for the home page ("Strony internetowe Katowice, …",
+    // offers with no name or price) stood next to the business node's makesOffer with the real prices.
+    if (in_array('Service', $types, true) && (strpos((string) $key, 'schema-') === 0 || preg_match('~#schema-\d+$~', $id)) && is_front_page()) { continue; }
     $isBusiness = array_intersect($types, ['Organization', 'LocalBusiness', 'ProfessionalService', 'Corporation']) || preg_match('~#(organization|localbusiness|business)$~', $id);
     if ($isBusiness && (strpos($id, rtrim($site, '/')) === 0 || $id === '')) {
       if ($placed) { continue; }

@@ -281,6 +281,50 @@ function zp_seo_articles_swap(): array {
   return $log;
 }
 
+/**
+ * 2.9.8: posts made by copying the WooCommerce cost article kept its excerpt, so the theme's
+ * "Rozwiń ten temat" box and the footer cards described three Google Ads posts as a WooCommerce
+ * price guide. Such a post gets its own Rank Math description as the excerpt (the plan's description
+ * when it has none), once and only while the copied text is there; the old excerpt is kept in the
+ * plan backup and comes back when the plan is restored.
+ */
+function zp_seo_articles_copied_excerpts(): array {
+  return [
+    'Ile kosztuje sklep internetowy WooCommerce w 2026 roku?' => '/seo-i-konwersja/ile-kosztuje-sklep-internetowy-woocommerce-w-2026-roku/',
+  ];
+}
+
+function zp_seo_articles_fix_excerpts(array &$backup): array {
+  global $wpdb;
+  $log = [];
+  foreach (zp_seo_articles_copied_excerpts() as $needle => $owner_path) {
+    $owner = zp_seo_plan_find_post($owner_path);
+    // An empty excerpt is made from the start of the content, so a copied body counts as well.
+    $word = '%' . $wpdb->esc_like('WooCommerce') . '%';
+    $ids = $wpdb->get_col($wpdb->prepare(
+      "SELECT ID FROM {$wpdb->posts} WHERE post_type = 'post' AND post_status IN ('publish', 'future') AND (post_excerpt LIKE %s OR (post_excerpt = '' AND post_content LIKE %s))",
+      $word, $word
+    ));
+    foreach (array_map('intval', (array) $ids) as $id) {
+      if ($id === $owner || get_post_field('post_name', $id) === basename($owner_path)) { continue; }
+      $excerpt = (string) get_post_field('post_excerpt', $id);
+      $source = $excerpt !== '' ? $excerpt : mb_substr(wp_strip_all_tags((string) get_post_field('post_content', $id)), 0, 400);
+      if (!zp_seo_articles_has_text($source, $needle)) { continue; }
+      $path = zp_seo_plan_path((string) get_permalink($id));
+      $own = trim((string) get_post_meta($id, 'rank_math_description', true));
+      if ($own === '') { $own = trim((string) ((zp_seo_plan_entry($path) ?? [])['description'] ?? '')); }
+      // A Rank Math variable template (%%excerpt%%) would put the copied text back.
+      if (strpos($own, '%%') !== false) { $own = trim((string) ((zp_seo_plan_entry($path) ?? [])['description'] ?? '')); }
+      if ($own === '' || strpos($own, $needle) !== false) { $log[] = 'UWAGA: wpis ' . $path . ' ma zajawkę innego artykułu, a nie ma własnego opisu — bez zmiany.'; continue; }
+      if (!isset($backup['excerpt'][$id])) { $backup['excerpt'][$id] = ['old' => $excerpt]; }
+      $backup['excerpt'][$id]['written'] = $own;
+      zp_seo_plan_update_post(['ID' => $id, 'post_excerpt' => $own]);
+      $log[] = 'Wpis ' . $path . ' ma własną zajawkę zamiast zajawki artykułu o koszcie sklepu.';
+    }
+  }
+  return $log;
+}
+
 /** Undoes zp_seo_articles_swap() for posts whose content is still the article it wrote. */
 function zp_seo_articles_swap_restore(): array {
   $done = [];

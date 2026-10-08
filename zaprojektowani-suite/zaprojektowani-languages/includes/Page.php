@@ -78,6 +78,45 @@ final class Page {
     }
 
     /**
+     * Share buttons (2.9.8): the address and the e-mail subject sit in the link's query string, where
+     * the URL mapper does not look, so English posts were shared with the Polish address and title.
+     * Only known share endpoints and mailto: links with a query are touched.
+     */
+    private static function share_href(string $href, callable $url, callable $t): string {
+        $q = strpos($href, '?');
+        if ($q === false) { return $href; }
+        $base = substr($href, 0, $q);
+        $mail = stripos($base, 'mailto:') === 0;
+        if (!$mail && !preg_match('~^https?://(?:www\.)?(?:facebook\.com/sharer|linkedin\.com/(?:sharing|shareArticle)|(?:twitter|x)\.com/(?:intent|share)|wa\.me/|api\.whatsapp\.com/send|t\.me/share|pinterest\.com/pin/create)~i', $base)) { return $href; }
+        $query = substr($href, $q + 1);
+        $frag = '';
+        if (($hp = strpos($query, '#')) !== false) { $frag = substr($query, $hp); $query = substr($query, 0, $hp); }
+        $map = static function (string $v) use ($url): string {
+            return (string) preg_replace_callback('~https?://[^\s<>"]+~i', static function ($m) use ($url) { return $url($m[0]); }, $v);
+        };
+        $changed = false;
+        $pairs = explode('&', $query);
+        foreach ($pairs as $i => $pair) {
+            $eq = strpos($pair, '=');
+            if ($eq === false) { continue; }
+            $k = strtolower(substr($pair, 0, $eq));
+            $raw = substr($pair, $eq + 1);
+            $v = $mail ? rawurldecode($raw) : urldecode($raw);
+            if (in_array($k, ['subject', 'title', 'text'], true)) {
+                $n = Html::norm($v);
+                $tr = Html::human($n) ? $t($n, 'text') : null;
+                $new = is_string($tr) && $tr !== '' ? $tr : $map($v);
+            } elseif (in_array($k, ['u', 'url', 'body', 'link'], true)) {
+                $new = $map($v);
+            } else {
+                continue;
+            }
+            if ($new !== $v) { $pairs[$i] = substr($pair, 0, $eq + 1) . rawurlencode($new); $changed = true; }
+        }
+        return $changed ? $base . '?' . implode('&', $pairs) . $frag : $href;
+    }
+
+    /**
      * Render $html with $t(key, kind): ?string and $url(href): string.
      * $opts: lang (html lang), locale (og:locale).
      */
@@ -135,6 +174,7 @@ final class Page {
             }
             if (($name === 'a' || $name === 'area') && isset($a['href'])) {
                 $h = $url($a['href']);
+                if ($h === $a['href'] && $lang === 'en') { $h = self::share_href($a['href'], $url, $t); }
                 if ($h !== $a['href']) { $set['href'] = $h; }
             } elseif ($name === 'form' && isset($a['action']) && strtolower($a['method'] ?? 'get') === 'get') {
                 $h = $url($a['action']);
@@ -154,7 +194,9 @@ final class Page {
                     if ($key === 'og:site_name' || $key === 'twitter:label1' || $key === 'twitter:label2') {
                         $tr = $t($v, 'meta');
                         if (is_string($tr) && $tr !== '' && $tr !== $v) { $set['content'] = $tr; }
-                    } elseif ($key === 'twitter:data2') {
+                    } elseif ($key === 'twitter:data1' || $key === 'twitter:data2') {
+                        // data2 on posts (data1 is the author there); data1 on pages, which have no author line (2.9.8).
+                        // A name never matches the patterns below.
                         if (preg_match('~^(\d+)\s*minut(?:/y|y|a)?$~u', $v, $m)) {
                             $set['content'] = $m[1] . ((int) $m[1] === 1 ? ' minute' : ' minutes');
                         } elseif (preg_match('~^mniej niż minut[aę]$~iu', $v)) {

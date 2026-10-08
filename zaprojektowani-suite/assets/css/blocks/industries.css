@@ -23,33 +23,48 @@
   mask-image: linear-gradient(to bottom, #000 0%, #000 60%, rgba(0,0,0,.5) 81%, transparent 100%);
 }
 
-/* Desktop: beside the copy, in a box that ends just below the first screen; a wide photo sits in
-   its middle. Faded from the bottom, and darker at the top left, where the heading can reach it. */
+/* Desktop: beside the copy, centred between the top of the copy and the scroll cue. Faded from
+   the bottom, and darker at the top left, where the heading can reach it.
+   2.9.8 (Mat 8.10): the photo is 10% larger from 1366 px and the hero ends 270 px under the
+   copy instead of at a fixed 1300 px, so no empty band is left under the photo. It is never
+   taller than before (a longer copy keeps its 1300 px) and fills at least the first screen. */
 @media (min-width: 1101px) {
+  #zp-strony-internetowe-katowice .hero[data-zp-industry] {
+    --zp-hero-box-w: min(57.2vw, 968px, calc(var(--zp-hero-ar, 1.25) * 814px));
+    min-height: 100svh !important;
+    height: auto !important;
+    max-height: 1300px;
+  }
+  #zp-strony-internetowe-katowice .hero[data-zp-industry] .hero-inner { padding-bottom: 270px !important; }
   #zp-strony-internetowe-katowice .hero[data-zp-industry] .hero-build {
     left: auto !important;
     right: clamp(8px, 2.2vw, 44px) !important;
-    top: calc(100% - 1150px) !important;
+    top: calc(50% - 35px) !important;
     bottom: auto !important;
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    width: min(52vw, 880px) !important;
-    height: 780px !important;
-    transform: none !important;
+    display: block;
+    width: var(--zp-hero-box-w) !important;
+    height: auto !important;
+    transform: translateY(-50%) !important;
   }
   #zp-strony-internetowe-katowice .hero[data-zp-industry] .hero-shot {
-    width: min(100%, calc(var(--zp-hero-ar, 1.25) * 740px)) !important;
+    width: 100% !important;
     -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 60%, rgba(0,0,0,.5) 81%, transparent 100%), linear-gradient(90deg, rgba(0,0,0,.42) 0%, rgba(0,0,0,.76) 9%, #000 21%), linear-gradient(to bottom, transparent 0%, transparent 44%, #000 64%);
     -webkit-mask-composite: source-in, source-over;
     mask-image: linear-gradient(to bottom, #000 0%, #000 60%, rgba(0,0,0,.5) 81%, transparent 100%), linear-gradient(90deg, rgba(0,0,0,.42) 0%, rgba(0,0,0,.76) 9%, #000 21%), linear-gradient(to bottom, transparent 0%, transparent 44%, #000 64%);
     mask-composite: intersect, add;
   }
+  /* The badge hangs 6% out of the photo towards the copy, but stops 14 px short of the copy's
+     column (the template's --wrap and hero grid; 100vw stands in for the hero's width). */
   #zp-strony-internetowe-katowice .hero[data-zp-industry] .ps-badge {
-    left: -6% !important;
+    --zp-copy-wrap: min(1700px, 100vw - 96px);
+    left: max(-6%, calc((100vw - var(--zp-copy-wrap)) / 2 + min(760px, max(510px, (var(--zp-copy-wrap) - clamp(26px, 4vw, 72px)) * .44)) + 14px - (100vw - clamp(8px, 2.2vw, 44px) - var(--zp-hero-box-w)))) !important;
     top: auto !important;
-    bottom: 26% !important;
+    bottom: 22% !important;
   }
+}
+/* Smaller laptops keep the photo's 2.9.7 size, so it reaches no further under the copy. */
+@media (min-width: 1101px) and (max-width: 1365px) {
+  #zp-strony-internetowe-katowice .hero[data-zp-industry] { --zp-hero-box-w: min(52vw, 880px, calc(var(--zp-hero-ar, 1.25) * 740px)); }
 }
 
 /* Tablet and phone: under the copy. The hero keeps only the room the photo needs. */
@@ -175,6 +190,15 @@
   left: -8%;
   top: auto;
   bottom: 30%;
+}
+/* 2.9.8 (Mat 8.10): a wide photo (the trainers' trio) is 30% larger where the heading leaves room
+   for it, and the heading runs on up to 96 px before it instead of keeping its 700 px column. */
+@media (min-width: 1101px) {
+  #zp-strony-internetowe-katowice .process.process--wide-photo {
+    --zp-proc-w: max(clamp(400px, 34vw, 560px), min(728px, 44.2vw, 100% - 720px));
+  }
+  #zp-strony-internetowe-katowice .process--wide-photo .process-person-stage--industry { width: var(--zp-proc-w); }
+  #zp-strony-internetowe-katowice .process--wide-photo .process-headline { max-width: max(min(58%, 700px), calc(100% - var(--zp-proc-w) - 96px)); }
 }
 
 /* 5. FAQ: the pair above the heading, not mirrored (they already face the questions). */
