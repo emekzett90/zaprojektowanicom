@@ -104,12 +104,3 @@ add_action('wp_footer', function(){
   </script>
   <?php
 }, 121);
-
-add_action('admin_head', function(){
-  $screen = function_exists('get_current_screen') ? get_current_screen() : null;
-  $id = $screen ? $screen->id : '';
-  if (strpos($id, 'zp-suite') === false) return;
-  ?>
-  <style id="zp-suite-admin-polish-165">.zpSuiteAdmin{max-width:1540px}.zpSuiteAdmin .button-primary{background:#071426!important;border-color:#071426!important}.zpSuiteAdmin .button-primary:hover{background:#102a4f!important;border-color:#102a4f!important}.zpSuiteHero{border:1px solid rgba(255,255,255,.12)}.zpCard{box-shadow:0 18px 58px rgba(7,20,38,.055)!important}.zpTabs{gap:9px}.zpTabs button{transition:background .18s ease,color .18s ease,transform .18s ease}.zpTabs button:hover{transform:translateY(-1px)}.zpAdminAlerts{margin-top:18px}.zpAdminAlerts__grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}.zpAdminAlert{border:1px solid #e1e7f0;border-radius:18px;padding:15px;background:#f8fafc}.zpAdminAlert strong{display:block;font-size:14px;color:#071426;margin-bottom:6px}.zpAdminAlert span{display:block;color:#657084;font-size:12px;line-height:1.45}.zpAdminAlert.ok{background:#ecfdf5;border-color:#bbf7d0}.zpAdminAlert.warn{background:#fff7ed;border-color:#fed7aa}.zpAdminAlert.bad{background:#fef2f2;border-color:#fecaca}.zpKpi small{display:block;margin-top:7px;color:#6d7688;font-size:11px;line-height:1.3}.zpSpeedBox{display:flex;align-items:center;justify-content:space-between;gap:18px;border:1px solid #dfe6ef;background:linear-gradient(135deg,#071426,#102a4f);color:#fff;border-radius:22px;padding:20px;margin-bottom:16px}.zpSpeedBox strong{font-size:42px;letter-spacing:-.05em}.zpSpeedBox span{color:rgba(255,255,255,.72)}.zpMiniCharts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.zpMiniCharts h3{margin:0 0 10px;font-size:13px;text-transform:uppercase;letter-spacing:.1em;color:#536071}@media(max-width:1100px){.zpAdminAlerts__grid,.zpMiniCharts{grid-template-columns:1fr}.zpGrid{grid-template-columns:1fr!important}}</style>
-  <?php
-}, 99);

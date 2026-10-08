@@ -53,7 +53,7 @@ add_action('admin_menu', function () {
 /** True on the panel screens that use the shared zpx look. */
 function zp_panel_is_screen(): bool {
   $page = isset($_GET['page']) ? sanitize_key(wp_unslash($_GET['page'])) : '';
-  return is_admin() && in_array($page, ['zp-suite', 'zp-suite-zapytania'], true);
+  return is_admin() && in_array($page, ['zp-suite', 'zp-suite-zapytania', 'zp-suite-home-cms'], true);
 }
 
 add_action('admin_head', function () {
@@ -93,6 +93,9 @@ a.zpxStat:hover,a.zpxStat:focus{background:rgba(255,255,255,.13);color:#fff}
 .zpxStat span{display:block;margin-top:5px;font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:rgba(255,255,255,.66)}
 .zpxStat.is-hot{border-color:rgba(255,255,255,.6);background:rgba(255,255,255,.15)}
 .zpx .wp-header-end{margin:0;border:0;height:0}
+.zpx .button{border-radius:999px}
+.zpx .button-primary{background:var(--ink);border-color:var(--ink);color:#fff}
+.zpx .button-primary:hover,.zpx .button-primary:focus{background:var(--ink2);border-color:var(--ink2);color:#fff}
 .zpx>.notice{margin:14px 0 0}
 .zpxGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin-top:16px;align-items:start}
 .zpxCard{background:#fff;border:1px solid var(--line);border-radius:20px;padding:20px 22px;min-width:0}
