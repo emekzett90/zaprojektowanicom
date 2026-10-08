@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Zaprojektowani Suite
  * Description: Zaprojektowani Suite z wersją angielską strony (PL/EN, adresy /en/, przełącznik języka), automatycznymi naprawami SEO, nagłówków, zasobów i paginacji na podstawie audytu z 13.09.2026.
- * Version: 2.9.8
+ * Version: 2.9.10
  * Requires at least: 6.5
  * Requires PHP: 8.0
  * Author: Zaprojektowani.com
@@ -16,9 +16,11 @@ if (defined('ZP_SUITE_VERSION')) {
   return;
 }
 
-define('ZP_SUITE_VERSION', '2.9.8');
+define('ZP_SUITE_VERSION', '2.9.10');
 define('ZP_SUITE_PATH', plugin_dir_path(__FILE__));
 define('ZP_SUITE_URL', plugin_dir_url(__FILE__));
+
+require_once ZP_SUITE_PATH . 'includes/frontend-quality.php';
 
 // v2.9.3 — speed: style blocks printed in <body> are gathered (same order) and body:has() rules become a <body> attribute check (no visual change). Loads first.
 require_once ZP_SUITE_PATH . 'includes/speed-293.php';

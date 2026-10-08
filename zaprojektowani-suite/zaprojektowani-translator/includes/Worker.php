@@ -47,6 +47,13 @@ final class Worker {
             $next = $candidate;
         }
         if (!$next) { wp_schedule_single_event(self::next_daily(), self::DAILY); }
+        // Reconcile the newly included backlog once after this upgrade. Keep the
+        // flag while no API key is configured; the ordinary daily scan also remains.
+        if (get_option('zpte_coverage_rescan') === '1' && Settings::api_key() !== '') {
+            if (wp_next_scheduled(self::SCAN, ['cron']) || wp_schedule_single_event(time() + 60, self::SCAN, ['cron'])) {
+                delete_option('zpte_coverage_rescan');
+            }
+        }
         // A killed request must not strand the persisted queue. The work hook is also a watchdog.
         if (Store::queued_count() && !wp_next_scheduled(self::WORK) && !self::running() && !Log::current_alert()) {
             $state = self::state();

@@ -13,7 +13,7 @@
 if (!defined('ABSPATH')) { exit; }
 if (defined('ZPTE_VERSION')) { return; }
 
-define('ZPTE_VERSION', '1.1.1');
+define('ZPTE_VERSION', '1.1.2');
 define('ZPTE_DIR', __DIR__ . '/');
 
 foreach (['Settings', 'Store', 'Log', 'OpenAI', 'Translator', 'Bridge', 'Source', 'Sync', 'Worker', 'Admin'] as $zpte_class) {

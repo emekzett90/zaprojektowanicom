@@ -18,6 +18,16 @@ final class Dict {
 
     public static function page_id(string $source): string { return substr(md5($source), 0, 12); }
 
+    /** External/AI dictionaries exist in WordPress, not in shipped JSON files.
+     * Both directions must be present because the same page switches PL <-> EN.
+     * Missing static shards use the existing REST lookup without a doomed 404.
+     */
+    public static function client_page_id(string $source): string {
+        $id = self::page_id($source);
+        return is_file(ZPL_DIR . 'data/json/en/' . $id . '.json')
+            && is_file(ZPL_DIR . 'data/json/pl/' . $id . '.json') ? $id : '';
+    }
+
     public static function dir(string $lang): string { return ZPL_DIR . 'data/php/' . ($lang === 'pl' ? 'pl' : 'en') . '/'; }
 
     private static function shard(string $lang, string $name): array {

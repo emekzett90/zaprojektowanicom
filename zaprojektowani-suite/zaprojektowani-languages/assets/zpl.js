@@ -17,6 +17,8 @@
   var known = { en: new Set(), pl: new Set() };
   var negative = { en: new Set(), pl: new Set() };
   var reported = new Set();
+  var reportNext = 0;
+  var reportStorageKey = "zpl_missing_next:" + cfg.rest;
   var inflight = 0; // server lookups in progress (ZPL.whenIdle)
   var titleMem = null;
   var applying = false;
@@ -88,6 +90,7 @@
       if (timer) clearTimeout(timer);
       // A failed/slow request says nothing about the keys: only a real answer may mark them as untranslated.
       if (!j || typeof j.map !== 'object' || j.map === null) return {};
+      if (j.reportAfter > 0) postponeReport(j.reportAfter);
       var map = j.map, d = dicts[lang] || (dicts[lang] = new Map());
       keys.forEach(function (k) {
         if (Object.prototype.hasOwnProperty.call(map, k)) { d.set(k, map[k]); known[lang].add(C.norm(stripMarkers(map[k]))); }
@@ -96,12 +99,30 @@
       return map;
     });
   }
+  // Missing-text reports are optional diagnostics. Share a small request budget
+  // across tabs/pages instead of exhausting the server's per-IP hourly limit.
+  // Only a retry timestamp is stored; translation lookups remain unrestricted.
+  function nextReportAt() {
+    var next = reportNext;
+    try { next = Math.max(next, Number(window.localStorage.getItem(reportStorageKey)) || 0); } catch (e) {}
+    return next;
+  }
+  function postponeReport(seconds) {
+    seconds = Math.min(3600, Math.max(0, Number(seconds) || 0));
+    reportNext = Math.max(nextReportAt(), Date.now() + seconds * 1000);
+    try { window.localStorage.setItem(reportStorageKey, String(reportNext)); } catch (e) {}
+  }
   function report(keys) {
     var list = keys.filter(function (k) { return !reported.has(k) && POLISH.test(k); }).slice(0, 60);
-    if (!list.length || state.lang !== 'en') return;
+    if (!list.length || state.lang !== 'en' || Date.now() < nextReportAt()) return;
+    // Fewer than 30 batches/hour per browser, including reports from dynamic DOM.
+    postponeReport(125);
     list.forEach(function (k) { reported.add(k); });
     try {
-      fetch(cfg.rest + 'missing', { method: 'POST', credentials: 'omit', keepalive: true, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ lang: 'en', src: cfg.src, keys: list }) }).catch(function () {});
+      fetch(cfg.rest + 'missing', { method: 'POST', credentials: 'omit', keepalive: true, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ lang: 'en', src: cfg.src, keys: list }) }).then(function (r) {
+        if (r.status === 429) { postponeReport(Number(r.headers.get('Retry-After')) || 3600); return null; }
+        return r.ok ? r.json() : null;
+      }).then(function (j) { if (j && j.reportAfter > 0) postponeReport(j.reportAfter); }).catch(function () {});
     } catch (e) {}
   }
   function stripMarkers(s) { return String(s).replace(/<\/?\d+\/?>/g, ' '); }

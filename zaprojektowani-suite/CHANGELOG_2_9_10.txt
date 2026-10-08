@@ -1,0 +1,33 @@
+ZAPROJEKTOWANI SUITE 2.9.10
+
+Twoja 2.9.9 zrobiona przez Codexa (wszystkie jej zmiany zostają bez zmian) plus sześć moich poprawek
+konsoli Chrome, które wybrałeś (1–6). Zawiera też całą 2.9.8 i wcześniejsze, z Twoją 2.7.20. Wgraj tę
+wersję zamiast 2.9.9 od Codexa. Wygląd strony się nie zmienia.
+
+1. Robot 3D na stronie głównej rysuje się tylko wtedy, gdy go widać. Gdy okno ma 1100 px lub mniej
+   (np. konsola Chrome otwarta z boku) albo robot jest poza ekranem, scena się zatrzymuje, a potem
+   rusza od tej samej klatki. Wcześniej rysowała w niewidoczne pole i Chrome wypisywał błąd WebGL
+   „Framebuffer is incomplete” przy każdej klatce. Scena Codexa (zapisana już w nowym formacie)
+   zostaje bez zmian.
+2. Pola formularzy: formularz telefoniczny podpowiada imię i numer, wyszukiwarki w FAQ, Wiedzy,
+   Realizacjach i portfolio logo oraz sortowanie w Wiedzy mają nazwy, a pola Studia wyceny dostają
+   identyfikatory. Znikają ostrzeżenia „A form field element should have an id or name
+   attribute” w zakładce Issues. Okienka telefonu, wyceny i czatu oraz wyszukiwarka w menu zostały
+   tak, jak zrobił je Codex.
+3. Dwie reguły CSS nie dotyczą już obrazków, filmów i animacji (strona Strony internetowe Katowice
+   i stopka przy Studiu wyceny), więc znikają ostrzeżenia o overflow w zakładce Issues.
+4. Strony, które nie używają zwykłej grubości czcionki Plus Jakarta Sans (strony prawne i FAQ), nie
+   wczytują jej już na zapas. Znika ostrzeżenie „preloaded but not used”.
+5. Strony angielskie: zostaje sposób Codexa (przeglądarka rzadziej zgłasza brakujące teksty i czeka,
+   gdy serwer o to prosi), a ponad limitem serwer odpowiada zwykłą odpowiedzią zamiast błędu 429.
+   Czerwona linia nie wraca nawet wtedy, gdy kilka komputerów korzysta z jednej sieci.
+6. Mapa witryny: gdy ktoś pominie jakieś wydanie, strony zmienione w pominiętym wydaniu i tak dostają
+   nową datę. Ta wersja sama nie zmienia treści żadnej strony, więc żadna data się nie zmienia.
+
+Po wgraniu:
+1. Wejdź raz na dowolną stronę.
+2. Napisz w wątku „wgrane”.
+
+Gdy wkleisz nowy klucz OpenAI (ZP Suite → Tłumacz EN → Ustawienia), Tłumacz EN przetłumaczy też
+starsze strony i wpisy bez wersji angielskiej. Tak ustawił go Codex w 2.9.9. Limit to nadal 400 000
+znaków dziennie (lub Twój limit z ustawień).
