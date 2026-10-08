@@ -1,0 +1,59 @@
+ZAPROJEKTOWANI SUITE 2.9.7
+
+Zawiera całą 2.9.6 (a w niej 2.9.5, 2.9.4 i wcześniejsze, z Twoją 2.7.20). Wgraj tę wersję zamiast 2.9.6.
+
+Zdjęcia branż (Twoje 3 paczki zdjęć z 8.10, wątek „Zdjęcia i cenniki na stronach branżowych”):
+- na głównej każda z 8 kart branż ma okładkę (wcześniej zdjęcie miały 4 karty),
+- w mega menu na komputerze okładki branż są w małych kółkach zamiast ikon (telefon bez zmian),
+- 8 stron branż: własne zdjęcie w hero zamiast laptopa, wtopione od dołu; cennik pakietów zaraz pod
+  hero („od 3 999 zł”, domena i hosting w cenie); okładka w „Co projektujemy”; ludzie z branży przy
+  procesie, nad FAQ i nad paskiem pod pakietami; na dole karty pozostałych branż,
+- Strony internetowe Katowice i Tworzenie stron internetowych: 8 kart branż ze zdjęciami i linkami
+  (było 6 kart bez linków); Strona wizytówka, Strony WordPress i Landing page: nowa sekcja
+  „Dla jakiej branży potrzebujesz strony?” pod pakietami,
+- angielskie wersje stron dla kancelarii, lekarzy i deweloperów mają te same zmiany po angielsku,
+- zdjęcia są w WebP; hero ładuje się od razu, reszta dopiero przy przewijaniu.
+
+Panel ZP Suite (wątek „Porządki w panelu ZP Suite”, 8.10). Wygląd strony się nie zmienia:
+- menu ma 8 pozycji zamiast 14: Command Center, Zapytania, Strona główna CMS, Tłumacz EN, Języki PL/EN,
+  Publikacja wpisów, Widoczność AI, Przyspieszenie; stare ekrany (Statystyki, Podstrony, Sklepy Katowice,
+  Pakiety, FAQ, Realizacje i ukryte narzędzia starych wtyczek) zniknęły, a stare linki do nich prowadzą
+  do Command Center; treści, które pokazywały, zostają na stronie bez zmian,
+- statystyki nie zapisują się już do bazy przy każdym wejściu (stare dane są usuwane raz po wgraniu),
+- Command Center: ostatnie zapytania, stan modułów jednym zdaniem, popup „Zanim zamkniesz stronę”,
+- Zapytania: jedna skrzynka na formularze ze strony i zamówienia ze Studio wyceny, ze statusami
+  (Nowe, W kontakcie, Wycena wysłana, Zlecenie, Zamknięte, Spam), notatką, szukaniem także po telefonie
+  i eksportem do Excela; e-mail ze Studio wyceny ma „Odpowiedz” na adres klienta,
+- Strona główna CMS: 9 zakładek zamiast 14, tylko pola, które zmieniają stronę; usunięty wpis na liście
+  (logotypy, opinie, FAQ, portfolio) już nie wraca po zapisie; gdy serwer przyjmie tylko część
+  formularza (limit max_input_vars), nic się nie zapisuje, a panel mówi, co zrobić,
+- Tłumacz EN: na górze jedno zdanie o stanie i przycisk, który go naprawia; lista polskich stron bez
+  wersji angielskiej z „Przetłumacz” przy każdej i „Przetłumacz wszystkie”.
+
+Goście z zagranicy (Języki PL/EN → Goście z zagranicy):
+- gość spoza Polski od razu dostaje angielską wersję strony, bez mignięcia polskiej; kraj rozpoznaje
+  serwer (lista polskich adresów IP jest we wtyczce, bez zewnętrznych usług),
+- zostają po polsku: goście z Polski, przeglądarki ustawione na polski, roboty Google, Binga i AI,
+  PageSpeed, zalogowani i strony bez wersji angielskiej,
+- wybór PL/EN z przełącznika jest pamiętany przez rok,
+- parametry kampanii (utm, gclid, fbclid) przechodzą na wersję angielską.
+
+Klucz Cloudflare Turnstile: klucz tajny był wpisany w kod wtyczki, a kod jest publiczny. Wtyczka już go
+nie zawiera; strona dalej używa klucza zapisanego w panelu, aż wkleisz nowy (kroki niżej). Formularze
+wysyłają się także wtedy, gdy klucz jest pusty albo już nieważny, więc żadne zapytanie nie przepadnie
+między zmianą klucza w Cloudflare a wklejeniem go w panelu.
+
+Widoczność AI: wpisy, które moduł „Publikacja wpisów” uzupełnia o sekcje i linki, są zgłaszane
+w IndexNow (Bing, a przez niego ChatGPT i Copilot) i mają świeżą datę w mapie witryny. Tak samo wpisy,
+które linkują do nowego artykułu w dniu jego publikacji.
+
+Po wgraniu:
+1. Wejdź raz na dowolną stronę.
+2. W Cloudflare: Turnstile → widżet zaprojektowani.com → Settings → „Rotate secret key”. Skopiuj nowy
+   klucz tajny.
+3. ZP Suite → Strona główna CMS → Formularze i e-maile → „Turnstile: klucz tajny”: wklej nowy klucz
+   i zapisz. Wklej go tylko tam, nigdzie indziej.
+4. Napisz w wątku „wgrane”.
+
+Gdy będziesz mieć nowy klucz OpenAI: ZP Suite → Tłumacz EN → Ustawienia, wklej klucz i zapisz, potem
+zakładka Strony → „Przetłumacz wszystkie”.
