@@ -40,7 +40,7 @@
  */
 if (!defined('ABSPATH')) { exit; }
 
-define('ZP_SPEED_VERSION', '2.9.3');
+define('ZP_SPEED_VERSION', '2.9.9');
 
 function zp_speed_enabled(): bool {
   return get_option('zp_speed_off') !== '1';
@@ -317,6 +317,7 @@ function zp_speed_process(string $html): ?string {
     if ($i === $first_link) { $put = implode('', $late); }
     $ops[] = [$move[0], $move[1], $put];
   }
+  foreach (zp_speed_unused_font_preloads($html, $scan) as $op) { $ops[] = $op; }
   usort($ops, function ($a, $b) { return $a[0] <=> $b[0] ?: $a[1] <=> $b[1]; });
   $out = '';
   $last = 0;
@@ -458,6 +459,83 @@ function zp_speed_rewrite_has(string $css, array $plan): string {
     $last = $op[1];
   }
   return $out . substr($css, $last);
+}
+
+/*
+ * 2.9.9 — font preloads that a page never uses. Every page preloads the regular (400) Jakarta file
+ * (optimizer.php), but the legal pages and the FAQ (PL and EN) do not declare that face at all
+ * (their text at 400 is drawn with the 500 file), so Chrome warned there that a preloaded font was
+ * not used. The preload is left out only when nothing on the page names the file: no other mention
+ * in the page and none in any stylesheet the page names (read from disk). When a stylesheet cannot
+ * be read, is on another host or imports another one, the preload stays. Pages that use the face
+ * keep it, so no text changes.
+ */
+function zp_speed_unused_font_preloads(string $html, array $scan): array {
+  $ops = [];
+  foreach (['plus-jakarta-sans-v12-latin_latin-ext-regular.woff2'] as $file) {
+    if (strpos($html, $file) === false) { continue; }
+    $tags = [];
+    $in_tags = 0;
+    if (!preg_match_all('~<link\b[^>]*>~i', $html, $m, PREG_OFFSET_CAPTURE)) { continue; }
+    foreach ($m[0] as $tag) {
+      if (strpos($tag[0], $file) === false) { continue; }
+      if (!preg_match('~\srel\s*=\s*(["\']?)preload\1[\s/>]~i', $tag[0]) || zp_speed_in_skip($scan['skip'], $tag[1])) { continue 2; }
+      $tags[] = $tag;
+      $in_tags += substr_count($tag[0], $file);
+    }
+    if (!$tags || substr_count($html, $file) > $in_tags || zp_speed_css_names($html, $file)) { continue; }
+    foreach ($tags as $tag) {
+      $end = $tag[1] + strlen($tag[0]);
+      if (substr($html, $end, 1) === "\n") { $end++; }
+      $ops[] = [$tag[1], $end, ''];
+    }
+  }
+  return $ops;
+}
+
+/** Whether a stylesheet the page names mentions $needle (true also when one cannot be checked). */
+function zp_speed_css_names(string $html, string $needle): bool {
+  static $seen = [];
+  if (!preg_match_all('~[^"\'\s<>()=,]+\.css(?:\?[^"\'\s<>()]*)?(?=["\'\s<>()]|$)~i', $html, $m)) { return false; }
+  foreach (array_unique($m[0]) as $url) {
+    $plain = html_entity_decode(str_replace('\\/', '/', $url), ENT_QUOTES);
+    if (!preg_match('~^(?:https?:)?//|^/~i', $plain)) {
+      // A relative name (e.g. in a CSS comment) counts only as the address of a link.
+      if (preg_match('~\b(?:href|src)\s*=\s*["\']?' . preg_quote($url, '~') . '~i', $html)) { return true; }
+      continue;
+    }
+    $file = zp_speed_local_file($plain);
+    if ($file === '') { return true; }
+    if (!isset($seen[$file])) {
+      $css = @file_get_contents($file);
+      $seen[$file] = $css === false || stripos($css, '@import') !== false ? '' : $css;
+    }
+    if ($seen[$file] === '' || strpos($seen[$file], $needle) !== false) { return true; }
+  }
+  return false;
+}
+
+/** The file on this server behind a URL of this site, or '' (another host, not a file). */
+function zp_speed_local_file(string $url): string {
+  $home = (string) home_url('/');
+  if (preg_match('~^(?:https?:)?//([^/?#]+)(/[^?#]*)?~i', $url, $u)) {
+    if (!preg_match('~^(?:https?:)?//([^/?#]+)~i', $home, $h) || strcasecmp($u[1], $h[1]) !== 0) { return ''; }
+    $path = isset($u[2]) ? $u[2] : '/';
+  } elseif (preg_match('~^/(?!/)[^?#]*~', $url, $u)) {
+    $path = $u[0];
+  } else {
+    return '';
+  }
+  $path = rawurldecode($path);
+  if (strpos($path, '..') !== false || strpos($path, "\0") !== false) { return ''; }
+  foreach ([[content_url('/'), WP_CONTENT_DIR . '/'], [site_url('/'), ABSPATH]] as $map) {
+    $base = (string) wp_parse_url($map[0], PHP_URL_PATH);
+    if ($base !== '' && strpos($path, $base) === 0) {
+      $file = $map[1] . substr($path, strlen($base));
+      return is_file($file) ? $file : '';
+    }
+  }
+  return '';
 }
 
 /*

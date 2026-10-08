@@ -72,10 +72,10 @@ add_action('wp_footer', function(){
         <input type="hidden" name="nonce" value="<?php echo esc_attr($nonce); ?>">
         <input type="hidden" name="services" value="Bezpłatna wycena / sticky bar">
         <input type="hidden" name="contact_mode" value="form" data-zp-estimate-mode>
-        <label><span>Imię / firma</span><input name="name" type="text" placeholder="np. Mateusz / nazwa firmy" required></label>
+        <label><span>Imię / firma</span><input name="name" type="text" placeholder="np. Mateusz / nazwa firmy" autocomplete="name" required></label>
         <div class="zpEstimateModal__grid">
-          <label><span>Telefon</span><input name="phone" type="tel" placeholder="np. 500 600 700"></label>
-          <label><span>E-mail</span><input name="email" type="email" placeholder="np. kontakt@firma.pl"></label>
+          <label><span>Telefon</span><input name="phone" type="tel" placeholder="np. 500 600 700" autocomplete="tel"></label>
+          <label><span>E-mail</span><input name="email" type="email" placeholder="np. kontakt@firma.pl" autocomplete="email"></label>
         </div>
         <label><span>Krótko o projekcie</span><textarea name="message" placeholder="Np. potrzebujemy strony dla kancelarii, sklepu WooCommerce albo odświeżenia logo i brandingu." required></textarea></label>
         <div class="zpEstimateModal__choice" role="group" aria-label="Preferowany kontakt">

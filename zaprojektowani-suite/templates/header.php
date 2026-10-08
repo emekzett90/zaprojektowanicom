@@ -395,7 +395,7 @@ $zp_menu_260_promo = static function (string $key, string $href, string $img, st
       <div class="zpNewNav__drawerBody">
         <div class="zpNewNav__drawerSearch" role="search">
           <i data-lucide="search"></i>
-          <input type="search" placeholder="Szukaj usługi, np. strona, sklep, logo..." aria-label="Szukaj w menu">
+          <input type="search" name="zp_menu_search" placeholder="Szukaj usługi, np. strona, sklep, logo..." aria-label="Szukaj w menu">
         </div>
 
         

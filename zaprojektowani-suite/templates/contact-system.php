@@ -215,12 +215,12 @@ $zp_contact_privacy = zp_suite_opt('contact.privacy_text', 'Wyrażam zgodę na k
 
               <label class="zpContactSystemLight__full">
                 <span>Imię lub firma</span>
-                <input type="text" name="name" placeholder="Jak mamy się zwracać?" data-zp-phone-name>
+                <input type="text" name="name" placeholder="Jak mamy się zwracać?" autocomplete="name" data-zp-phone-name>
               </label>
 
               <label class="zpContactSystemLight__full">
                 <span>Telefon</span>
-                <input type="tel" name="phone" placeholder="Numer telefonu" data-zp-phone-input>
+                <input type="tel" name="phone" placeholder="Numer telefonu" autocomplete="tel" data-zp-phone-input>
               </label>
 
               <label class="zpContactSystemLight__full">

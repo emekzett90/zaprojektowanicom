@@ -987,6 +987,70 @@ pointer-events:auto!important;
     if(url && !sp.getAttribute('url')) sp.setAttribute('url',url);
     loadViewerScript();
   }
+  /* 2.9.9 — the robot draws only while it can be seen. Below 1101 px the page hides it
+     (display:none), and a scene started in a wider window (e.g. Chrome DevTools opened at the
+     side) kept drawing into a 0x0 canvas: Chrome printed a WebGL error for every frame
+     ("Framebuffer is incomplete: Attachment has zero size"). The scene now stops while the window
+     is 1100 px or narrower or the hero is off screen, and plays again from the same frame once
+     its canvas has a real size again (Spline resizes it a moment after the box shows).
+     The stop waits for "load-complete": Spline starts its drawing loop itself right after that. */
+  var mqNarrow=mq?mq('(max-width:1100px)'):null;
+  var heroInView=true,sceneReady=false,playTries=0;
+  function splineApp(){try{return sp._spline||null;}catch(e){return null;}}
+  function splineCanvas(){try{return sp.shadowRoot?sp.shadowRoot.querySelector('canvas'):null;}catch(e){return null;}}
+  function syncSplineRun(){
+    var app=splineApp();
+    if(!sceneReady||!app||typeof app.stop!=='function'||typeof app.play!=='function') return;
+    try{
+      if(!heroInView||(mqNarrow&&mqNarrow.matches)){ playTries=0; if(!app.isStopped) app.stop(); return; }
+      if(!app.isStopped) return;
+      var c=splineCanvas();
+      if(c&&c.width>0&&c.height>0){
+        playTries=0;
+        if('_lastTime' in app) app._lastTime=0; /* the first frame after a pause moves one frame, not the whole pause */
+        app.play();
+      }else if(playTries++<120){
+        w.requestAnimationFrame(syncSplineRun);
+      }
+    }catch(e){}
+  }
+  /* Spline notes in the console that it converts the scene file from an older format
+     ("updating from 114 to 117"); the scene works the same. Only that note is left out, only
+     while a scene loads (republishing the scene in Spline would remove it for good). */
+  var nativeWarn=null,quietWarn=null,quietTimer=0;
+  function quietSplineNote(on){
+    try{
+      if(on){
+        if(nativeWarn) return;
+        nativeWarn=console.warn;
+        quietWarn=function(first){ if(first==='updating from ') return; return nativeWarn.apply(console,arguments); };
+        console.warn=quietWarn;
+        quietTimer=setTimeout(function(){quietSplineNote(false);},30000);
+      }else if(nativeWarn){
+        if(console.warn===quietWarn) console.warn=nativeWarn;
+        nativeWarn=null;quietWarn=null;clearTimeout(quietTimer);
+      }
+    }catch(e){}
+  }
+  sp.addEventListener('load-start',function(){sceneReady=false;quietSplineNote(true);});
+  sp.addEventListener('load-complete',function(){
+    quietSplineNote(false);
+    sceneReady=true;
+    setTimeout(syncSplineRun,60);
+  });
+  if(mqNarrow){
+    if(mqNarrow.addEventListener) mqNarrow.addEventListener('change',syncSplineRun);
+    else if(mqNarrow.addListener) mqNarrow.addListener(syncSplineRun);
+  }
+  if('IntersectionObserver' in w){
+    try{
+      new IntersectionObserver(function(entries){
+        heroInView=entries[entries.length-1].isIntersecting;
+        syncSplineRun();
+      },{rootMargin:'200px 0px'}).observe(hero);
+    }catch(e){}
+  }
+
   /* v2.2.808 — real desktop visitors get Spline immediately after the first paint.
      Lighthouse/headless is still stopped above by shouldSkipSpline(), so we can be
      aggressive for humans without bringing the PSI timeout back. */

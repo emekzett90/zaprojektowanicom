@@ -61,7 +61,9 @@ final class Rest {
         $ip = (string) ($_SERVER['REMOTE_ADDR'] ?? '');
         $rk = 'zpl_rl_' . substr(md5($ip), 0, 12);
         $n = (int) get_transient($rk);
-        if ($n > 30) { return new \WP_REST_Response(['ok' => false], 429); }
+        // Over the limit the report is dropped with a plain 200: the script ignores the answer, and a 429 would show
+        // in the visitor's Chrome console as a red "Failed to load resource" error.
+        if ($n > 30) { return ['ok' => false]; }
         set_transient($rk, $n + 1, HOUR_IN_SECONDS);
         $rows = [];
         foreach (array_slice($keys, 0, 60) as $k) {

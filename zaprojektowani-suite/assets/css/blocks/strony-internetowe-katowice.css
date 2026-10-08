@@ -4784,9 +4784,6 @@
   z-index:12!important;
   overflow:visible!important;
 }
-#zp-strony-internetowe-katowice .package-team-visual img{
-  overflow:visible!important;
-}
 /* Otwarty panel nadal pozostaje nad sylwetką. */
 #zp-strony-internetowe-katowice .package-card.scope-open > .package-scope__panel--card{
   z-index:1000!important;
