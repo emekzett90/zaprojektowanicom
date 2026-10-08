@@ -1,6 +1,6 @@
 {
  "format": 1,
- "zaktualizowano": "2026-10-08T11:24:58+02:00",
+ "zaktualizowano": "2026-10-08T23:20:53+02:00",
  "wpisy": [
   {
    "slug": "papier-firmowy",
@@ -41,6 +41,38 @@
    "sha256": "8a4b7c86fb62d83a5068ffcb958f97bd8770cb7d3421e174c0ba0ca2dca44166",
    "publikacja": "2026-10-27T08:00:00+01:00",
    "paczka": 5
+  },
+  {
+   "slug": "ile-kosztuje-domena-i-hosting",
+   "sciezka": "/strony-internetowe/ile-kosztuje-domena-i-hosting/",
+   "plik": "wpisy/ile-kosztuje-domena-i-hosting.json",
+   "sha256": "0b81d96c21c06e6648de3396f4855d36809478e62edc3a8e8e4130850eb2d4fc",
+   "publikacja": "2026-10-30T08:00:00+01:00",
+   "paczka": 6
+  },
+  {
+   "slug": "inpost-woocommerce-integracje-sklepu",
+   "sciezka": "/sklepy-internetowe/inpost-woocommerce-integracje-sklepu/",
+   "plik": "wpisy/inpost-woocommerce-integracje-sklepu.json",
+   "sha256": "cff3687668bed42ad1965d06857502396a6376508ce3e9cfd4bcf0ba9832c3a0",
+   "publikacja": "2026-11-03T08:00:00+01:00",
+   "paczka": 6
+  },
+  {
+   "slug": "logo-restauracji-i-kawiarni",
+   "sciezka": "/logo-branding/logo-restauracji-i-kawiarni/",
+   "plik": "wpisy/logo-restauracji-i-kawiarni.json",
+   "sha256": "f23d92a8ed4cf940d45e07d35795f8d1f00a44b0adf7e9afcd945e146f3af40b",
+   "publikacja": "2026-11-10T08:00:00+01:00",
+   "paczka": 6
+  },
+  {
+   "slug": "nowoczesne-strony-internetowe",
+   "sciezka": "/strony-internetowe/nowoczesne-strony-internetowe/",
+   "plik": "wpisy/nowoczesne-strony-internetowe.json",
+   "sha256": "cc33905b6a83bd9efd72a41dab07f42c4d0d2719319cfdd56d91ae3adc5b5cd5",
+   "publikacja": "2026-11-13T08:00:00+01:00",
+   "paczka": 6
   }
  ],
  "linki": [
@@ -97,6 +129,48 @@
    "fragment": "Automatyczne dopisywanie treści SEO",
    "slowa": "treści SEO",
    "do": "/sklepy-internetowe/seo-sklepu-internetowego/"
+  },
+  {
+   "we_wpisie": "/seo-i-konwersja/ile-kosztuje-utrzymanie-strony-internetowej/",
+   "fragment": "Firma patrzy na koszt startowy domeny",
+   "slowa": "koszt startowy domeny",
+   "do": "/strony-internetowe/ile-kosztuje-domena-i-hosting/"
+  },
+  {
+   "we_wpisie": "/strony-internetowe/jak-stworzyc-strone-internetowa/",
+   "fragment": "porównuj ceny odnowienia",
+   "slowa": "porównuj ceny odnowienia",
+   "do": "/strony-internetowe/ile-kosztuje-domena-i-hosting/"
+  },
+  {
+   "we_wpisie": "/sklepy-internetowe/bramka-platnicza/",
+   "fragment": "Każdy z nich ma integrację z WooCommerce",
+   "slowa": "integrację z WooCommerce",
+   "do": "/sklepy-internetowe/inpost-woocommerce-integracje-sklepu/"
+  },
+  {
+   "we_wpisie": "/sklepy-internetowe/sklep-b2b/",
+   "fragment": "Faktury wystawia zwykle program księgowy lub ERP, który wysyła je do KSeF",
+   "slowa": "wysyła je do KSeF",
+   "do": "/sklepy-internetowe/inpost-woocommerce-integracje-sklepu/"
+  },
+  {
+   "we_wpisie": "/logo-branding/logo-firmy-budowlanej/",
+   "fragment": "niż logo kawiarni czy gabinetu",
+   "slowa": "logo kawiarni",
+   "do": "/logo-branding/logo-restauracji-i-kawiarni/"
+  },
+  {
+   "we_wpisie": "/logo-branding/mockup-co-to-jest/",
+   "fragment": "kawiarnia potrzebuje kubków i szyldu",
+   "slowa": "kawiarnia potrzebuje kubków i szyldu",
+   "do": "/logo-branding/logo-restauracji-i-kawiarni/"
+  },
+  {
+   "we_wpisie": "/strony-internetowe/makieta-strony-internetowej/",
+   "fragment": "zacznij od wersji mobilnej",
+   "slowa": "wersji mobilnej",
+   "do": "/strony-internetowe/nowoczesne-strony-internetowe/"
   }
  ],
  "sekcje": [
