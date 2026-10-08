@@ -77,6 +77,12 @@ add_action('wp_head', function () {
  *
  * Shown instead of the FAQ the plugin wrote earlier (cms.php defaults and the 2.2.107 / 2.2.109 lists,
  * recognised by their text): a question added or edited in ZP Suite → CMS stays, after the new ones.
+ *
+ * 2.9.8 (Mat 8.10: "popraw też FAQ na głównej pod SEO, może trochę rozwiń"): four more questions, for the home
+ * page's phrases "strony internetowe", "agencja interaktywna" and "agencja kreatywna": what the studio is, what
+ * the website price includes, rebuilding a website without losing Google rankings and editing it yourself. The
+ * facts are the ones /llms.txt and the service pages already give. They live here, not in the Strona główna CMS
+ * form, which is close to the host's max_input_vars limit (1000).
  * ------------------------------------------------------------------------------------------------------ */
 
 function zp_home_faq_294_norm(string $s): string {
@@ -102,8 +108,12 @@ function zp_home_faq_294_new(): array {
     ['q' => 'Czym zajmuje się Zaprojektowani?',
      'a' => 'Zaprojektowani to studio projektowe z Katowic, które tworzy strony internetowe, sklepy WooCommerce, logo, identyfikację wizualną i kampanie reklamowe dla firm z całej Polski. Studio działa od 2022 roku, nasz zespół ma ponad 10 lat doświadczenia, a na koncie mamy '
        . (function_exists('zp_seo_plan_projects_count') ? zp_seo_plan_projects_count() : 114) . '+ zrealizowanych projektów.'],
+    ['q' => 'Czy jesteście agencją interaktywną czy agencją kreatywną?',
+     'a' => 'Zaprojektowani łączy pracę agencji kreatywnej i agencji interaktywnej: projektujemy logo, identyfikację wizualną i kreacje reklamowe, a także tworzymy strony internetowe, sklepy WooCommerce i kampanie Meta Ads oraz Google Ads. Agencja kreatywna odpowiada za to, jak marka wygląda i co mówi, a agencja interaktywna za to, jak marka działa w internecie i zdobywa klientów. U nas oba etapy prowadzi jeden zespół z Katowic, więc logo, strona i reklamy tworzą jeden spójny system.'],
     ['q' => 'Ile kosztuje strona internetowa dla firmy?',
      'a' => 'Strona internetowa dla firmy kosztuje u nas od 3 999 zł, a domena i hosting są w cenie. Gotowa strona powstaje zwykle w 2–4 tygodnie. Cena rośnie z liczbą podstron, treściami, animacjami, SEO i integracjami; zakres i przykłady opisujemy na stronie ' . $L('/tworzenie-stron-internetowych/', 'tworzenie stron internetowych') . '.'],
+    ['q' => 'Co jest w cenie strony internetowej?',
+     'a' => 'W cenie strony internetowej od 3 999 zł są indywidualny projekt UX/UI, wdrożenie na WordPressie z samodzielną edycją treści, wersja mobilna, podstawy SEO technicznego, formularze, analityka, domena i hosting oraz publikacja z pełnymi dostępami dla klienta. Cena rośnie, gdy dochodzą kolejne podstrony, teksty, animacje, wersje językowe albo integracje, na przykład rezerwacje online czy płatności. Dokładny zakres i kwotę dostajesz w bezpłatnej wycenie w 48–72 godziny.'],
     ['q' => 'Ile trwa stworzenie strony internetowej?',
      'a' => 'Strona firmowa powstaje zwykle w 2–4 tygodnie od briefu, sklep internetowy w 3–6 tygodni, a projekt logo w 7–14 dni. Termin zależy głównie od zakresu i od tego, kiedy dostaniemy teksty i zdjęcia. Dokładny harmonogram podajemy razem z wyceną.'],
     ['q' => 'Ile kosztuje sklep internetowy?',
@@ -114,8 +124,12 @@ function zp_home_faq_294_new(): array {
      'a' => 'Stała obsługa kampanii Meta Ads na Facebooku i Instagramie albo Google Ads kosztuje u nas od 1 200 zł miesięcznie, a kampanię uruchamiamy zwykle w 7 dni. W tej kwocie są strategia, kreacje, konfiguracja pomiaru i bieżąca optymalizacja. Budżet na same reklamy płacisz osobno; zakres obsługi opisujemy na stronie ' . $L('/kampanie-reklamowe/', 'kampanie reklamowe') . '.'],
     ['q' => 'Czy strona będzie przygotowana pod SEO i Google?',
      'a' => 'Tak. Każdą stronę przygotowujemy pod SEO od pierwszego dnia: osobna podstrona dla każdej ważnej usługi, nagłówki z frazami, których używają klienci, szybkie ładowanie na telefonie, mapa witryny i dane strukturalne. Pierwsze efekty w Google widać zwykle po kilku tygodniach, a stabilne pozycje budują się przez kilka miesięcy.'],
+    ['q' => 'Czy możecie przebudować obecną stronę bez utraty pozycji w Google?',
+     'a' => 'Tak. Przy przebudowie strony przenosimy treści, przygotowujemy przekierowania 301 ze starych adresów i dbamy o tytuły, opisy oraz nagłówki, żeby nowa strona nie straciła pozycji w Google. Jeśli obecna strona działa na innym systemie, ' . $L('/strony-wordpress/', 'przeniesienie na WordPress') . ' planujemy razem z mapą przekierowań 301.'],
     ['q' => 'Czy strona będzie widoczna w ChatGPT i innych asystentach AI?',
      'a' => 'Projektujemy strony tak, żeby ChatGPT, Gemini, Claude i Copilot mogły je przeczytać i zacytować: najważniejsze treści są w kodzie strony, a nie tylko w skryptach, odpowiedzi stoją na początku sekcji, a ceny, adres i zakres usług są wszędzie takie same. Cytowania nikt nie gwarantuje, ale tak przygotowana strona ma na nie większą szansę.'],
+    ['q' => 'Czy po oddaniu strony mogę sam zmieniać treści?',
+     'a' => 'Tak. Strony wdrażamy na WordPressie z samodzielną edycją treści, a po publikacji dostajesz pełne dostępy, więc teksty, zdjęcia i wpisy zmienisz sam, bez programisty. Jeśli wolisz oddać to nam, w ramach ' . $L('/opieka-wordpress/', 'opieki WordPress') . ' dbamy o aktualizacje, kopie zapasowe, bezpieczeństwo i monitoring strony oraz pomagamy w zmianach treści.'],
     ['q' => 'Czy pracujecie z firmami z całej Polski?',
      'a' => 'Tak. Mamy siedzibę w Katowicach przy ul. Modelarskiej 18/2, ale strony, sklepy i logo projektujemy dla firm z całej Polski. Z firmami ze Śląska możemy spotkać się na miejscu (zobacz ' . $L('/strony-internetowe-katowice/', 'strony internetowe Katowice', 'data-zp-local="1"') . '), a z pozostałymi pracujemy zdalnie: brief, prezentacje projektu i odbiór robimy online.'],
     ['q' => 'Dla jakich branż tworzycie strony internetowe?',

@@ -153,6 +153,25 @@ function zp_seo_industry_hero_preload(): string {
 }
 
 /**
+ * 2.9.8 (Mat 8.10: "na hover trochę więcej info"): what a home tile adds when pointed at on a computer, the
+ * page's three hero chips, the price and "Zobacz ofertę". The tile's link already names the page, so this is
+ * aria-hidden; phones never show it (#zp-home-industries-297).
+ */
+function zp_seo_industry_tile_details(string $key): string {
+  $industry = zp_seo_industries()[$key] ?? null;
+  if (!$industry) { return ''; }
+  $pills = '';
+  foreach (array_slice((array) (zp_seo_content_pages()[$industry['path']]['hero']['pills'] ?? []), 0, 3) as $pill) {
+    $pills .= '<span class="zpHomeSeo__point">' . esc_html((string) $pill) . '</span>';
+  }
+  return '<div class="zpHomeSeo__details" aria-hidden="true"><div class="zpHomeSeo__detailsIn">'
+    . ($pills !== '' ? '<span class="zpHomeSeo__points">' . $pills . '</span>' : '')
+    . '<span class="zpHomeSeo__deal"><span class="zpHomeSeo__price"><b>Od 3&nbsp;999&nbsp;zł</b> domena i&nbsp;hosting w&nbsp;cenie</span>'
+    . '<span class="zpHomeSeo__offer">Zobacz ofertę<svg viewBox="0 0 24 24"><path d="M7 17 17 7M8 7h9v9"/></svg></span></span>'
+    . '</div></div>';
+}
+
+/**
  * Section order of the content pages (zp_seo_content_pages()). Industry pages: the price list right
  * after the hero and the other industries before the guide. Business card, WordPress and landing page:
  * the industries right after the packages. A head the content thread wrote itself wins.
@@ -275,10 +294,16 @@ function zp_seo_industry_page(string $html, string $key): string {
     return is_string($out) ? $out : $s;
   });
 
-  // Process: the industry pair stands where Mateusz sits on the other website pages.
-  $html = zp_seo_content_in_section($html, 'id="proces"', static function ($s) use ($key) {
-    $out = preg_replace_callback('~<figure class="process-person-stage([^"]*)"([^>]*)>\s*<img\b[^>]*>~', static function ($m) use ($key) {
-      return '<figure class="process-person-stage process-person-stage--industry' . $m[1] . '"' . $m[2] . '>' . zp_seo_industry_people($key, 'process', 'zpIndProcess', '(max-width:1100px) 56vw, 520px');
+  // Process: the industry pair stands where Mateusz sits on the other website pages. A wide photo (the
+  // trainers' trio) is drawn larger and the heading may run on up to it (industries.css, 2.9.8).
+  $html = zp_seo_content_in_section($html, 'id="proces"', static function ($s) use ($key, $industry) {
+    [$w, $h] = $industry['people'][$industry['slots']['process'] - 1];
+    $wide = $w / $h >= 1.3;
+    if ($wide && strpos($s, 'process--wide-photo') === false) {
+      $s = (string) preg_replace('~(<section\b[^>]*\bclass="[^"]*\bprocess)\b~', '$1 process--wide-photo', $s, 1);
+    }
+    $out = preg_replace_callback('~<figure class="process-person-stage([^"]*)"([^>]*)>\s*<img\b[^>]*>~', static function ($m) use ($key, $wide) {
+      return '<figure class="process-person-stage process-person-stage--industry' . $m[1] . '"' . $m[2] . '>' . zp_seo_industry_people($key, 'process', 'zpIndProcess', '(max-width:1100px) 56vw, ' . ($wide ? '728px' : '520px'));
     }, $s, 1);
     return is_string($out) ? $out : $s;
   });
@@ -318,6 +343,9 @@ add_action('wp_enqueue_scripts', static function () {
  * #zpHomeSeo selectors win over footer.css, which loads later (with the shortcode) and centres every tile photo.
  * Eight photo tiles: two rows on computers, the same swipeable row on phones, and lower tiles where there are two
  * columns.
+ * 2.9.8 (Mat 8.10): on computers the tiles look like the cards on the website pages (rounded, 16 px apart, brighter
+ * photos, an arrow circle) and, when pointed at, show the page's chips, the price and "Zobacz ofertę". Mice only
+ * (hover:hover), so a tap on a tablet still opens the page; the keyboard sees the same on :focus-visible.
  */
 add_action('wp_head', static function () {
   if (is_admin() || !is_front_page() || !zp_seo_plan_active()) { return; }
@@ -329,6 +357,41 @@ add_action('wp_head', static function () {
     . $tile . ':hover::before,' . $tile . ':focus-visible::before{background:linear-gradient(180deg,rgba(5,7,11,.24) 0%,rgba(5,7,11,.02) 20%,rgba(5,7,11,.08) 38%,rgba(5,7,11,.64) 72%,rgba(5,7,11,.94) 100%)!important}'
     . $tile . ' .zpHomeSeo__num{opacity:.9!important;color:rgba(255,255,255,.62)!important}'
     . '@media (min-width:981px) and (max-width:1180px){' . $tile . '{min-height:340px!important}}'
-    . '@media (prefers-reduced-motion:reduce){' . $tile . ':hover .zpHomeSeo__mock,' . $tile . ':focus-visible .zpHomeSeo__mock{transform:none!important}}'
+    . '@media (max-width:980px){' . $tile . ' > .zpHomeSeo__go,' . $tile . ' .zpHomeSeo__details{display:none!important}}'
+    . '@media (min-width:981px){'
+    . 'html body #zpHomeSeo .zpHomeSeo__grid{gap:16px!important;border:0!important;background:none!important}'
+    . $tile . '{border:1px solid rgba(255,255,255,.09)!important;border-radius:30px!important;transition:transform .35s cubic-bezier(.16,1,.3,1),box-shadow .35s ease,border-color .3s ease!important}'
+    . $tile . ':focus-visible{transform:translateY(-6px)!important;border-color:rgba(142,200,247,.34)!important;box-shadow:0 30px 70px rgba(0,0,0,.42)!important;outline:3px solid rgba(116,168,239,.88)!important;outline-offset:4px!important}'
+    . $tile . ' .zpHomeSeo__mock{opacity:1!important;filter:saturate(.94) brightness(.94)!important;transition:transform .9s cubic-bezier(.16,1,.3,1),filter .4s ease!important}'
+    . $tile . ':focus-visible .zpHomeSeo__mock{filter:saturate(1) brightness(1)!important;transform:scale(1.055)!important}'
+    . $tile . '::before,' . $tile . ':hover::before,' . $tile . ':focus-visible::before{background:linear-gradient(0deg,rgba(5,7,11,.94) 0%,rgba(5,7,11,.66) 30%,rgba(5,7,11,.16) 58%,rgba(5,7,11,.04) 100%)!important}'
+    . $tile . '::after{content:""!important;display:block!important;position:absolute!important;inset:0!important;height:auto!important;z-index:1!important;pointer-events:none!important;opacity:0;background:linear-gradient(0deg,rgba(5,7,11,.97) 0%,rgba(5,7,11,.86) 40%,rgba(5,7,11,.34) 66%,rgba(5,7,11,0) 88%)!important;transition:opacity .45s ease}'
+    . $tile . ':focus-visible::after{opacity:1}'
+    . $tile . ' > .zpHomeSeo__go{position:absolute!important;z-index:3!important;left:clamp(18px,1.7vw,26px);top:clamp(16px,1.5vw,22px);display:grid!important;place-items:center;width:40px;height:40px;max-width:none!important;border:1px solid rgba(255,255,255,.28);border-radius:50%;background:rgba(4,8,15,.38);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);transition:background .3s ease,border-color .3s ease}'
+    . $tile . ' > .zpHomeSeo__go svg{width:17px;height:17px;fill:none;stroke:#fff;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;transition:stroke .3s ease,transform .3s ease}'
+    . $tile . ':focus-visible > .zpHomeSeo__go{border-color:#fff;background:#fff}'
+    . $tile . ':focus-visible > .zpHomeSeo__go svg{stroke:#07111f;transform:translate(1px,-1px)}'
+    . $tile . ' .zpHomeSeo__details{position:relative;z-index:2;display:grid;grid-template-rows:0fr;margin-top:-12px;opacity:0;transition:grid-template-rows .5s cubic-bezier(.16,1,.3,1),opacity .3s ease}'
+    . $tile . ':focus-visible .zpHomeSeo__details{grid-template-rows:1fr;opacity:1}'
+    . $tile . ' .zpHomeSeo__detailsIn{min-height:0;overflow:hidden}'
+    . $tile . ' .zpHomeSeo__points{display:grid;gap:7px;margin-top:16px}'
+    . $tile . ' .zpHomeSeo__point{display:flex;align-items:flex-start;gap:9px;color:rgba(255,255,255,.9);font-size:12.5px;line-height:1.35;font-weight:560;letter-spacing:-.01em}'
+    . $tile . ' .zpHomeSeo__point::before{content:"";flex:none;width:16px;height:16px;border:1px solid rgba(142,200,247,.46);border-radius:50%;background:rgba(142,200,247,.14) url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 24 24%27 fill=%27none%27 stroke=%27%238ec8f7%27 stroke-width=%273.4%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27%3E%3Cpath d=%27m6 12.5 4 4 8-9%27/%3E%3C/svg%3E") 50% 50%/10px no-repeat}'
+    . $tile . ' .zpHomeSeo__deal{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:16px;padding-top:16px;border-top:1px solid rgba(255,255,255,.14)}'
+    . $tile . ' .zpHomeSeo__price{display:flex;flex-direction:column;gap:2px;min-width:0;color:rgba(255,255,255,.66);font-size:11px;line-height:1.35}'
+    . $tile . ' .zpHomeSeo__price b{color:#fff;font-size:16px;line-height:1.2;font-weight:760;letter-spacing:-.025em}'
+    . $tile . ' .zpHomeSeo__offer{display:inline-flex;align-items:center;gap:6px;flex:none;padding:9px 12px;border-radius:999px;background:#fff;color:#07111f;font-size:12px;line-height:1;font-weight:780;letter-spacing:-.01em;white-space:nowrap}'
+    . $tile . ' .zpHomeSeo__offer svg{width:13px;height:13px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}'
+    . '}'
+    . '@media (min-width:981px) and (hover:hover){'
+    . $tile . ':hover{transform:translateY(-6px)!important;border-color:rgba(142,200,247,.34)!important;box-shadow:0 30px 70px rgba(0,0,0,.42)!important}'
+    . $tile . ':hover .zpHomeSeo__mock{filter:saturate(1) brightness(1)!important;transform:scale(1.055)!important}'
+    . $tile . ':hover::after{opacity:1}'
+    . $tile . ':hover > .zpHomeSeo__go{border-color:#fff;background:#fff}'
+    . $tile . ':hover > .zpHomeSeo__go svg{stroke:#07111f;transform:translate(1px,-1px)}'
+    . $tile . ':hover .zpHomeSeo__details{grid-template-rows:1fr;opacity:1}'
+    . '}'
+    . '@media (prefers-reduced-motion:reduce){' . $tile . ':hover .zpHomeSeo__mock,' . $tile . ':focus-visible .zpHomeSeo__mock,' . $tile . ':hover,' . $tile . ':focus-visible{transform:none!important}'
+    . $tile . ',' . $tile . ' .zpHomeSeo__mock,' . $tile . ' .zpHomeSeo__details{transition:none!important}' . $tile . '::after{transition:none}}'
     . '</style>' . "\n";
 }, 61);

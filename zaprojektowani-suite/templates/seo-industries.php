@@ -22,6 +22,9 @@
       // photo ('key', includes/seo-plan/industries.php), so all eight are photo tiles. The photo
       // shows the industry, so the icon circle goes (it would cover faces). With the SEO plan
       // paused the 2.9.4 tiles come back.
+      // Suite 2.9.8 (Mat 8.10, "na podstronach jest ładnie"): on computers the tiles look like the
+      // cards on the website pages (rounded, apart, an arrow circle) and show the page's chips, the
+      // price and "Zobacz ofertę" when pointed at (zp_seo_industry_tile_details()). Phones as before.
       $zp_home_industries = [
         [
           'num' => '01',
@@ -111,11 +114,14 @@
           <span class="zpHomeSeo__tileBg" aria-hidden="true"></span>
           <?php if (!$zp_home_covers) : ?>
             <span class="zpHomeSeo__icon"><i data-lucide="<?php echo esc_attr($industry['icon']); ?>"></i></span>
+          <?php else : ?>
+            <span class="zpHomeSeo__go" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7 17 17 7M8 7h9v9"/></svg></span>
           <?php endif; ?>
           <span class="zpHomeSeo__num"><?php echo esc_html($industry['num']); ?></span>
           <strong><?php echo esc_html($industry['title']); ?></strong>
           <span><?php echo esc_html($industry['text']); ?></span>
           <?php if ($zp_home_covers) : ?>
+            <?php echo zp_seo_industry_tile_details($industry['key']); ?>
             <?php echo zp_seo_industry_cover($industry['key'], 'zpHomeSeo__mock', '(max-width:980px) 540px, (max-width:1180px) 50vw, 540px'); ?>
           <?php else : ?>
             <img class="zpHomeSeo__mock" src="<?php echo esc_url($industry['image']); ?>" alt="" loading="lazy" decoding="async">
