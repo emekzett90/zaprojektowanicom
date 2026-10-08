@@ -144,38 +144,6 @@ function zp_studio_normalize_public_copy($data){
   return $data;
 }
 
-function zp_studio_sanitize_packages($input){
-  $defaults = zp_studio_default_packages();
-  $out = [];
-  foreach ($defaults as $service => $data) {
-    $src = isset($input[$service]) && is_array($input[$service]) ? $input[$service] : [];
-    foreach (['kick','title','lead','subject','final','help','helpCopy'] as $field) {
-      $out[$service][$field] = isset($src[$field]) ? wp_kses_post(wp_unslash($src[$field])) : $data[$field];
-    }
-    $out[$service]['p'] = [];
-    $rows = isset($src['p']) && is_array($src['p']) ? $src['p'] : [];
-    foreach ($data['p'] as $i => $defrow) {
-      $r = isset($rows[$i]) && is_array($rows[$i]) ? $rows[$i] : [];
-      $price = isset($r['price']) && $r['price'] !== '' ? (int) preg_replace('/[^0-9]/','', (string) $r['price']) : null;
-      if ($service !== 'brand') { $price = null; }
-      $promo = isset($r['promo']) ? (int) preg_replace('/[^0-9]/','', (string) $r['promo']) : 0;
-      $tags = isset($r['tags']) ? array_filter(array_map('trim', explode(',', sanitize_text_field(wp_unslash($r['tags']))))) : $defrow[4];
-      $out[$service]['p'][$i] = [
-        sanitize_text_field(wp_unslash($r['name'] ?? $defrow[0])),
-        sanitize_text_field(wp_unslash($r['note'] ?? $defrow[1])),
-        $price,
-        sanitize_key($r['icon'] ?? $defrow[3]),
-        array_values($tags),
-        wp_kses_post(wp_unslash($r['desc'] ?? $defrow[5])),
-      ];
-      if ($service === 'brand' && $promo > 0) {
-        $out[$service]['p'][$i]['promo'] = $promo;
-      }
-    }
-  }
-  return $out;
-}
-
 function zp_studio_activate(){
   if (!get_option(ZP_STUDIO_OPT_PACKAGES)) { update_option(ZP_STUDIO_OPT_PACKAGES, zp_studio_default_packages(), false); }
   if (!get_option(ZP_STUDIO_OPT_ORDERS)) { update_option(ZP_STUDIO_OPT_ORDERS, [], false); }
@@ -776,43 +744,7 @@ add_action('admin_menu', function(){
   $unread = max(0, (int) get_option(ZP_STUDIO_OPT_UNREAD, 0));
   $orders_label = 'Zamówienia' . ($unread ? ' <span class="update-plugins count-'.intval($unread).'"><span class="plugin-count">'.intval($unread).'</span></span>' : '');
   add_submenu_page('zp-suite','Studio Wyceny — Zamówienia',$orders_label,'manage_options','zp-studio-orders','zp_studio_render_orders_page');
-  add_submenu_page('zp-suite','Studio Wyceny — Pakiety','Pakiety','manage_options','zp-studio-packages','zp_studio_render_packages_page');
 }, 40);
-
-function zp_studio_admin_css(){
-  echo '<style>.zpStudioWrap{max-width:1400px}.zpStudioHero{margin:18px 0 20px;padding:24px 26px;border-radius:26px;background:linear-gradient(135deg,#05070b,#071426 55%,#102a4f);color:#fff;display:flex;align-items:flex-end;justify-content:space-between;gap:22px;box-shadow:0 20px 54px rgba(5,10,18,.12)}.zpStudioHero h1{margin:0;font-size:34px;letter-spacing:-.04em}.zpStudioHero p{margin:8px 0 0;color:rgba(255,255,255,.72)}.zpStudioCard,.zpStudioOrder{background:#fff;border:1px solid #e6ebf0;border-radius:24px;box-shadow:0 14px 36px rgba(7,20,38,.06);overflow:hidden;margin:18px 0}.zpStudioCard{padding:22px}.zpStudioGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.zpStudioField label{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.08em;font-weight:900;color:#6b7685;margin-bottom:6px}.zpStudioField input,.zpStudioField textarea{width:100%;border:1px solid #dfe5ec;border-radius:14px;padding:10px 12px}.zpStudioPkg{border:1px solid #e8edf3;border-radius:18px;padding:16px;margin:12px 0;background:#fbfcfe}.zpStudioFilters{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 18px}.zpStudioFilter{display:inline-flex;align-items:center;gap:7px;padding:9px 12px;border-radius:999px;background:#fff;border:1px solid #dfe5ec;text-decoration:none;color:#071426;font-weight:800}.zpStudioFilter.is-on{background:#071426;color:#fff;border-color:#071426}.zpStudioOrderTop{display:grid;grid-template-columns:minmax(240px,.42fr) minmax(230px,.42fr) auto;gap:18px;align-items:center;padding:18px 20px;background:#fbfcfe;border-bottom:1px solid #e8edf3}.zpStudioOrderTitle strong{display:block;color:#071426;font-size:19px;line-height:1.15;letter-spacing:-.02em}.zpStudioOrderTitle code{display:inline-block;margin-top:6px;background:#eef3f8;border-radius:999px;padding:5px 9px;color:#42526a}.zpStudioClient{color:#42526a;line-height:1.45}.zpStudioClient b{color:#071426}.zpStudioStatusForm{display:flex;gap:8px;align-items:center;justify-content:flex-end;flex-wrap:wrap}.zpStudioStatusForm select{min-width:190px;border-radius:999px}.zpStudioStatusForm label{font-size:11px;color:#5c6878;font-weight:800}.zpStudioOrderBody{display:grid;grid-template-columns:minmax(0,1fr) 310px;gap:18px;padding:20px}.zpStudioDetails{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.zpStudioDetail{border:1px solid #edf1f5;border-radius:16px;padding:12px;background:#fff}.zpStudioDetail span{display:block;color:#7a8493;font-size:10px;text-transform:uppercase;letter-spacing:.09em;font-weight:900;margin-bottom:6px}.zpStudioDetail strong{display:block;color:#071426;font-size:13px;line-height:1.45;white-space:pre-wrap;word-break:break-word}.zpStudioDetail--full{grid-column:1/-1}.zpStudioFiles{border:1px solid #edf1f5;border-radius:18px;background:#fbfcfe;padding:14px}.zpStudioFiles h3{margin:0 0 10px;color:#071426;font-size:15px}.zpStudioFiles a.zpFile{display:grid;grid-template-columns:42px minmax(0,1fr);gap:10px;align-items:center;padding:9px 10px;background:#fff;border:1px solid #e8edf3;border-radius:12px;text-decoration:none;margin:7px 0;color:#071426}.zpThumb{width:42px;height:42px;border-radius:10px;background:#eef3f8;display:grid;place-items:center;overflow:hidden}.zpThumb img{width:100%;height:100%;object-fit:cover}.zpStudioBadge{display:inline-flex;padding:5px 10px;border-radius:999px;background:#071426;color:#fff;font-size:11px;font-weight:900;letter-spacing:.04em;text-transform:uppercase}.zpStudioBadge--new{background:#102a4f}.zpStudioBadge--progress{background:#1c477a}.zpStudioBadge--quote{background:#6a4cff}.zpStudioBadge--accepted{background:#14743c}.zpStudioBadge--pay{background:#b56b00}.zpStudioBadge--production{background:#0b6b8f}.zpStudioBadge--done{background:#14743c}.zpStudioBadge--arch{background:#667386}.zpStudioActions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.zpStudioSideBtns{display:grid;gap:8px;margin-top:12px}.zpStudioSideBtns a,.zpStudioSideBtns button{width:100%;text-align:center}.zpStatusLog{margin-top:12px;border-top:1px solid #e8edf3;padding-top:10px;color:#6b7685;font-size:12px;line-height:1.5}@media(max-width:900px){.zpStudioHero,.zpStudioOrderTop,.zpStudioOrderBody{display:block}.zpStudioStatusForm{justify-content:flex-start;margin-top:12px}.zpStudioDetails{grid-template-columns:1fr}.zpStudioGrid{grid-template-columns:1fr}}</style>';
-}
-
-function zp_studio_render_packages_page(){
-  if (!current_user_can('manage_options')) return;
-  if (!empty($_POST['zp_studio_save']) && check_admin_referer('zp_studio_packages')) {
-    update_option(ZP_STUDIO_OPT_PACKAGES, zp_studio_sanitize_packages($_POST['studio'] ?? []), false);
-    echo '<div class="notice notice-success"><p>Pakiety zapisane.</p></div>';
-  }
-  $data = zp_studio_packages(); zp_studio_admin_css();
-  echo '<div class="wrap zpStudioWrap"><div class="zpStudioHero"><div><h1>Studio Wyceny — Pakiety</h1><p>Edytuj pakiety jak karty: nazwę, opis, ikonę Lucide, korzyści, cenę i cenę promocyjną.</p></div><code>[zp_studio_wyceny]</code></div><form method="post">'; wp_nonce_field('zp_studio_packages');
-  foreach ($data as $service=>$cfg) {
-    echo '<div class="zpStudioCard"><h2>'.esc_html(strtoupper($service)).'</h2><div class="zpStudioGrid">';
-    foreach (['kick'=>'Kicker','title'=>'Tytuł HTML','lead'=>'Lead','subject'=>'Temat maila/podglądu','final'=>'Tytuł finału','help'=>'Boks pomocy','helpCopy'=>'Opis pomocy'] as $key=>$label) {
-      $is_textarea = in_array($key,['title','lead','helpCopy'],true);
-      echo '<div class="zpStudioField"><label>'.esc_html($label).'</label>';
-      if ($is_textarea) echo '<textarea rows="3" name="studio['.esc_attr($service).']['.esc_attr($key).']">'.esc_textarea($cfg[$key]).'</textarea>';
-      else echo '<input type="text" name="studio['.esc_attr($service).']['.esc_attr($key).']" value="'.esc_attr($cfg[$key]).'">';
-      echo '</div>';
-    }
-    echo '</div><h3>Pakiety / karty</h3>';
-    foreach ($cfg['p'] as $i=>$p) {
-      echo '<div class="zpStudioPkg"><h4>'.esc_html($p[0]).'</h4><div class="zpStudioGrid">';
-      $fields = ['name'=>$p[0], 'note'=>$p[1], 'icon'=>$p[3], 'tags'=>implode(', ', (array)$p[4])];
-      foreach($fields as $k=>$v){ echo '<div class="zpStudioField"><label>'.esc_html($k).'</label><input type="text" name="studio['.esc_attr($service).'][p]['.$i.']['.esc_attr($k).']" value="'.esc_attr($v).'"></div>'; }
-      if ($service==='brand') echo '<div class="zpStudioField"><label>Cena aktualna</label><input type="number" name="studio['.esc_attr($service).'][p]['.$i.'][price]" value="'.esc_attr($p[2]).'"></div><div class="zpStudioField"><label>Cena przekreślona / promocyjna</label><input type="number" name="studio['.esc_attr($service).'][p]['.$i.'][promo]" value="'.esc_attr($p['promo'] ?? '').'"></div>';
-      echo '<div class="zpStudioField" style="grid-column:1/-1"><label>Opis</label><textarea rows="3" name="studio['.esc_attr($service).'][p]['.$i.'][desc]">'.esc_textarea($p[5]).'</textarea></div>';
-      echo '</div></div>';
-    }
-    echo '</div>';
-  }
-  echo '<p><button class="button button-primary button-large" name="zp_studio_save" value="1">Zapisz pakiety</button></p></form></div>';
-}
 
 function zp_studio_get_order_by_id($id){
   $orders=get_option(ZP_STUDIO_OPT_ORDERS,[]); if(!is_array($orders)) return null;

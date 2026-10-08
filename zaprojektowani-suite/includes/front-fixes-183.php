@@ -303,55 +303,6 @@ add_action('wp_footer', function(){
   <?php
 }, 2147483000);
 
-/* Jeden uporządkowany ekran statystyk — usuwa stare duplikaty submenu i podmienia callback. */
-add_action('admin_menu', function(){
-  global $submenu;
-  if (isset($submenu['zp-suite']) && is_array($submenu['zp-suite'])) {
-    foreach($submenu['zp-suite'] as $i=>$item){
-      $slug = $item[2] ?? '';
-      $label = wp_strip_all_tags($item[0] ?? '');
-      if ($slug === 'zp-suite-stats' || $slug === 'zp-suite-stats-final' || stripos($label, 'Statystyki') !== false || stripos($label, 'szybkość') !== false) {
-        unset($submenu['zp-suite'][$i]);
-      }
-    }
-    $submenu['zp-suite'] = array_values($submenu['zp-suite']);
-  }
-  add_submenu_page('zp-suite','Statystyki','Statystyki','manage_options','zp-suite-stats','zp_suite_183_render_stats_page');
-}, 2147483000);
-
-function zp_suite_183_fmt_ms($v){ $v=(int)$v; return $v ? number_format($v/1000,2,',',' ').' s' : '—'; }
-function zp_suite_183_fmt_kb($v){ $v=(int)$v; if(!$v) return '—'; return $v>1024 ? number_format($v/1024,2,',',' ').' MB' : number_format($v,0,',',' ').' KB'; }
-function zp_suite_183_days($n){ $out=[]; for($i=$n-1;$i>=0;$i--){$out[]=date_i18n('Y-m-d', strtotime('-'.$i.' days'));} return $out; }
-function zp_suite_183_bars($labels,$values){ $max=max(1,max(array_map('intval',$values?:[1]))); ob_start(); ?><div class="zp183Bars"><?php foreach($labels as $i=>$l):$v=(int)($values[$i]??0);$h=max(4,round(($v/$max)*132));?><div class="zp183Bar"><i style="height:<?php echo esc_attr($h); ?>px"></i><strong><?php echo esc_html($v); ?></strong><span><?php echo esc_html($l); ?></span></div><?php endforeach;?></div><?php return ob_get_clean(); }
-function zp_suite_183_speed_score($load,$weight){ $score=100; $load=(int)$load; $weight=(int)$weight; if($load>1200)$score-=min(42,(int)ceil(($load-1200)/95)); if($weight>1600)$score-=min(34,(int)ceil(($weight-1600)/170)); return max(0,min(100,$score)); }
-
-function zp_suite_183_render_stats_page(){
-  if (!current_user_can('manage_options')) return;
-  if (!empty($_POST['zp_suite_clear_stats']) && check_admin_referer('zp_suite_clear_stats')) { delete_option('zp_suite_analytics'); echo '<div class="notice notice-success"><p>Statystyki ZP Suite zostały wyczyszczone.</p></div>'; }
-  $data = function_exists('zp_suite_analytics_get') ? zp_suite_analytics_get() : ['days'=>[],'pages'=>[],'recent'=>[],'perf'=>[]];
-  $days7=zp_suite_183_days(7); $days30=zp_suite_183_days(30);
-  $labels7=[]; $views7=[]; $uniq7=[]; $load7=[];
-  foreach($days7 as $d){$labels7[]=date_i18n('D d.m',strtotime($d)); $day=$data['days'][$d]??[]; $views7[]=(int)($day['views']??0); $uniq7[]=count($day['visitors']??[]); $s=max(1,(int)($day['samples']??0)); $load7[]=round(((int)($day['load_sum']??0))/$s);}
-  $labels30=[]; $views30=[];
-  foreach($days30 as $d){$labels30[]=date_i18n('d.m',strtotime($d)); $views30[]=(int)(($data['days'][$d]['views']??0));}
-  $pages=$data['pages']??[]; uasort($pages, fn($a,$b)=>($b['views']??0)<=>($a['views']??0));
-  $top=array_slice($pages,0,18,true);
-  $slow=$pages; uasort($slow,function($a,$b){$as=max(1,(int)($a['samples']??1));$bs=max(1,(int)($b['samples']??1));return (($b['load_sum']??0)/$bs)<=> (($a['load_sum']??0)/$as);}); $slow=array_slice($slow,0,10,true);
-  $perf=$data['perf']??[]; $samples=max(1,(int)($perf['samples']??0)); $avg_load=round(((int)($perf['load_sum']??0))/$samples); $avg_weight=round(((int)($perf['weight_sum']??0))/$samples); $score=zp_suite_183_speed_score($avg_load,$avg_weight);
-  $total_views=array_sum(array_map('intval',$views30)); $vis=[]; foreach(($data['days']??[]) as $day){foreach(($day['visitors']??[]) as $k=>$v){$vis[$k]=1;}}
-  ?>
-  <div class="zpSuiteAdmin zp183Stats">
-    <style>
-      .zp183Stats{max-width:1480px;margin:20px 22px 40px 0;font-family:"Plus Jakarta Sans",system-ui,sans-serif;color:#071426}.zp183Hero{border-radius:30px;background:radial-gradient(circle at 88% 0%,rgba(28,71,122,.45),transparent 35%),linear-gradient(135deg,#05070b,#071426 48%,#102a4f);color:#fff;padding:30px;box-shadow:0 26px 80px rgba(7,20,38,.14)}.zp183Hero h1{color:#fff!important;margin:8px 0 10px;font-size:clamp(32px,3vw,56px);line-height:.98;letter-spacing:-.055em}.zp183Hero p{color:rgba(255,255,255,.75);max-width:880px;font-size:14px;line-height:1.6}.zp183Badge{display:inline-flex;color:rgba(255,255,255,.72);font-size:10px;letter-spacing:.13em;text-transform:uppercase;font-weight:850}.zp183Kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-top:18px}.zp183Kpi{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);border-radius:20px;padding:16px}.zp183Kpi strong{display:block;color:#fff;font-size:30px;letter-spacing:-.05em}.zp183Kpi span{font-size:10px;text-transform:uppercase;letter-spacing:.12em;color:rgba(255,255,255,.62);font-weight:850}.zp183Grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;margin-top:18px}.zp183Card{background:#fff;border:1px solid #dfe5ee;border-radius:26px;padding:22px;box-shadow:0 16px 48px rgba(7,20,38,.055)}.zp183Card h2{color:#071426;font-size:22px;line-height:1.08;letter-spacing:-.04em;margin:0 0 16px}.zp183Bars{height:210px;display:flex;align-items:flex-end;gap:10px;border:1px solid #e2e8f0;background:linear-gradient(180deg,#f8fafc,#fff);border-radius:20px;padding:18px;overflow:auto}.zp183Bar{min-width:58px;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:6px}.zp183Bar i{display:block;width:30px;border-radius:999px 999px 5px 5px;background:linear-gradient(180deg,#1c477a,#071426)}.zp183Bar strong{font-size:13px;color:#071426}.zp183Bar span{font-size:10px;color:#697386;white-space:nowrap}.zp183Ring{--p:<?php echo esc_attr($score); ?>;width:154px;height:154px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(#16a34a calc(var(--p)*1%),#e7edf5 0);position:relative;margin:0 auto}.zp183Ring:before{content:"";position:absolute;inset:12px;border-radius:inherit;background:#fff}.zp183Ring strong{position:relative;font-size:42px;letter-spacing:-.06em;color:#071426}.zp183Table{border:1px solid #e4e9f1!important;border-radius:18px!important;overflow:hidden}.zp183Table code{background:#f4f7fb;border-radius:8px;padding:3px 6px}.zp183Actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}.zp183Btn{border-radius:999px!important;border:1px solid rgba(7,20,38,.16)!important;background:#fff!important;color:#071426!important;font-weight:800;padding:9px 15px!important;line-height:1!important;text-decoration:none!important}.zp183Btn:hover{background:linear-gradient(90deg,#05070b,#102a4f,#1c477a)!important;color:#fff!important}@media(max-width:1100px){.zp183Kpis,.zp183Grid{grid-template-columns:1fr}}
-    </style>
-    <div class="zp183Hero"><span class="zp183Badge">Zaprojektowani Suite • statystyki uporządkowane</span><h1>Statystyki ruchu, szybkości i jakości w jednym miejscu.</h1><p>Jeden finalny ekran bez duplikatów: tydzień, miesiąc, najczęściej odwiedzane podstrony, najwolniejsze URL-e i speed score.</p><div class="zp183Kpis"><div class="zp183Kpi"><strong><?php echo esc_html($total_views); ?></strong><span>odsłon / 30 dni</span></div><div class="zp183Kpi"><strong><?php echo esc_html(count($vis)); ?></strong><span>unikalni</span></div><div class="zp183Kpi"><strong><?php echo esc_html(zp_suite_183_fmt_ms($avg_load)); ?></strong><span>średni load</span></div><div class="zp183Kpi"><strong><?php echo esc_html($score); ?>/100</strong><span>speed score</span></div></div></div>
-    <div class="zp183Grid"><div class="zp183Card"><h2>Odsłony — ostatnie 7 dni</h2><?php echo zp_suite_183_bars($labels7,$views7); ?></div><div class="zp183Card"><h2>Unikalni — ostatnie 7 dni</h2><?php echo zp_suite_183_bars($labels7,$uniq7); ?></div></div>
-    <div class="zp183Grid"><div class="zp183Card"><h2>Odsłony — ostatnie 30 dni</h2><?php echo zp_suite_183_bars($labels30,$views30); ?></div><div class="zp183Card"><h2>Speed score</h2><div class="zp183Ring"><strong><?php echo esc_html($score); ?></strong></div><p>Średni load: <b><?php echo esc_html(zp_suite_183_fmt_ms($avg_load)); ?></b>, średnia waga: <b><?php echo esc_html(zp_suite_183_fmt_kb($avg_weight)); ?></b>.</p><form method="post" class="zp183Actions"><?php wp_nonce_field('zp_suite_clear_stats'); ?><button class="button zp183Btn" name="zp_suite_clear_stats" value="1" onclick="return confirm('Wyczyścić statystyki?')">Wyczyść statystyki</button></form></div></div>
-    <div class="zp183Grid"><div class="zp183Card"><h2>Najczęściej odwiedzane podstrony</h2><table class="widefat striped zp183Table"><thead><tr><th>URL</th><th>Odsłony</th><th>Unikalni</th><th>Load</th><th>Waga</th></tr></thead><tbody><?php foreach($top as $p):$sm=max(1,(int)($p['samples']??1)); ?><tr><td><code><?php echo esc_html($p['path']??''); ?></code><br><small><?php echo esc_html($p['title']??''); ?></small></td><td><strong><?php echo esc_html($p['views']??0); ?></strong></td><td><?php echo esc_html(count($p['visitors']??[])); ?></td><td><?php echo esc_html(zp_suite_183_fmt_ms(round(($p['load_sum']??0)/$sm))); ?></td><td><?php echo esc_html(zp_suite_183_fmt_kb(round(($p['weight_sum']??0)/max(1,(int)($p['views']??1))))); ?></td></tr><?php endforeach; ?></tbody></table></div><div class="zp183Card"><h2>Najwolniejsze URL-e</h2><table class="widefat striped zp183Table"><thead><tr><th>URL</th><th>Śr. load</th><th>Próbki</th></tr></thead><tbody><?php foreach($slow as $p):$sm=max(1,(int)($p['samples']??1)); ?><tr><td><code><?php echo esc_html($p['path']??''); ?></code></td><td><strong><?php echo esc_html(zp_suite_183_fmt_ms(round(($p['load_sum']??0)/$sm))); ?></strong></td><td><?php echo esc_html($sm); ?></td></tr><?php endforeach; ?></tbody></table></div></div>
-  </div>
-  <?php
-}
-
 
 /* ZAPROJEKTOWANI — v2.2.252 mobile dock final: one-line, bottom pinned, no chat bubble, styled back-to-top */
 add_action('wp_head', function(){
