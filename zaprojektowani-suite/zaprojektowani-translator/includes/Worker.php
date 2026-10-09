@@ -173,9 +173,16 @@ final class Worker {
         return $added;
     }
 
-    /** Pages whose post was edited since the last check (re-sync only translates the changed fragments). */
+    /**
+     * Pages whose post was edited since the last check (re-sync only translates the changed fragments).
+     * Suite 2.9.13: after a Suite update every machine-translated page is checked once too. The Suite changes Polish
+     * text without editing the post (prices, sections and links from the SEO plan), which left Polish sentences on
+     * the English pages; the regular English pages are checked daily anyway (plan_existing).
+     */
     private static function plan_changed(): int {
         $n = 0;
+        $suite = defined('ZP_SUITE_VERSION') ? (string) ZP_SUITE_VERSION : '';
+        $updated = $suite !== '' && $suite !== (string) get_option('zpte_suite_seen', '');
         foreach (Store::paths(['post' => true, 'status' => ['published', 'draft', 'error', 'working', 'queued']]) as $row) {
             if ((int) $row->queued) { continue; }
             $post = get_post((int) $row->post_id);
@@ -188,8 +195,13 @@ final class Worker {
                 if ((string) $post->post_modified_gmt > (string) $row->checked_at) { Store::path_update((int) $row->id, ['tries' => 0]); }
                 Store::queue((int) $row->id, $row->kind === 'existing' ? 30 : 20);
                 $n++;
+            } elseif ($updated && $row->kind !== 'existing' && in_array($row->status, ['published', 'draft'], true)) {
+                Store::path_update((int) $row->id, ['tries' => 0]);
+                Store::queue((int) $row->id, 45);
+                $n++;
             }
         }
+        if ($updated) { update_option('zpte_suite_seen', $suite, false); }
         return $n;
     }
 
