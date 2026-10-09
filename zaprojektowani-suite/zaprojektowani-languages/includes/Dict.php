@@ -34,7 +34,20 @@ final class Dict {
         $k = $lang . '/' . $name;
         if (!array_key_exists($k, self::$shards)) {
             $f = self::dir($lang) . $name . '.php';
-            self::$shards[$k] = is_file($f) ? (array) include $f : [];
+            if (is_file($f)) {
+                self::$shards[$k] = (array) include $f;
+            } elseif ($lang === 'pl' && is_file(self::dir('en') . $name . '.php')) {
+                // Suite 2.9.12: the SEO plan's texts (seo-230, seo-271: page titles, H1s, sections) ship in the
+                // PL => EN direction only, so on a page opened in English the switch to Polish left them in
+                // English (the home H1 among them). Polish for those is the English shard read backwards.
+                $rev = [];
+                foreach ((array) include self::dir('en') . $name . '.php' as $pl => $en) {
+                    $rev[Html::norm((string) $en)] = (string) $pl;
+                }
+                self::$shards[$k] = $rev;
+            } else {
+                self::$shards[$k] = [];
+            }
         }
         return self::$shards[$k];
     }
