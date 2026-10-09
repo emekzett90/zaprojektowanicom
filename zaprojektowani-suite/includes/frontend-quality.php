@@ -54,6 +54,23 @@ function zp_suite_quality_image_dimensions(string $src): array {
   return [];
 }
 
+/**
+ * 2.9.13: an article's image slot note ("<!-- ZP_IMAGE_SLOT_1 | file.webp | ALT: ... -->", where a draft said a picture
+ * goes) never reaches the page. On /sklepy-internetowe/ile-trwa-stworzenie-strony-internetowej/ readers saw
+ * "ZP_IMAGE_SLOT_1" in PL and EN; where the note is a plain comment it still carried a Polish ALT into the English
+ * page. That post already shows the named picture as its cover, so the note is removed, not turned into an image.
+ * Covers the note as a comment and as text escaped by an editor (with the dashes WordPress may have typeset).
+ */
+function zp_suite_strip_image_slots($html) {
+  if (!is_string($html) || strpos($html, 'ZP_IMAGE_SLOT') === false) { return $html; }
+  $dash = '(?:--|&#8211;|&#x2013;|&ndash;|\x{2013}|&#8212;|&mdash;|\x{2014})';
+  $note = '(?:<!--|(?:&lt;|&#60;)!' . $dash . ')\s*ZP_IMAGE_SLOT_\d+\b.*?(?:-->|' . $dash . '\s*(?:&gt;|&#62;))';
+  // A paragraph holding nothing but the note goes with it, so no empty line is left.
+  $html = preg_replace('~<p\b[^>]*>\s*' . $note . '\s*</p>~isu', '', $html) ?? $html;
+  return preg_replace('~' . $note . '~isu', '', $html) ?? $html;
+}
+add_filter('the_content', 'zp_suite_strip_image_slots', 999);
+
 /** Run on the final HTML, including early routes and late footer images. */
 function zp_suite_quality_html(string $html): string {
   if (is_admin() || !class_exists('WP_HTML_Tag_Processor') || stripos($html, '<html') === false || stripos($html, '<body') === false) { return $html; }
@@ -62,6 +79,7 @@ function zp_suite_quality_html(string $html): string {
     if (stripos($header, 'content-type:') === 0 && stripos($header, 'text/html') === false) { return $html; }
     if (stripos($header, 'content-encoding:') === 0) { return $html; }
   }
+  $html = zp_suite_strip_image_slots($html);
   $tags = new WP_HTML_Tag_Processor($html);
   $marked = 0;
   while ($tags->next_tag('IMG')) {
