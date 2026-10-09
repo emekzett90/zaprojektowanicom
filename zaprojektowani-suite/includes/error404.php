@@ -14,7 +14,9 @@ add_filter('pre_get_document_title', function($title){
 }, 20);
 
 function zp_suite_render_404_page() {
-  status_header(404);
+  // 2.9.13: an address the SEO plan marked as gone (seo-plan/redirects.php) keeps its 410 under the styled page;
+  // before, this 404 replaced it, so Google kept retrying those addresses.
+  status_header(http_response_code() === 410 ? 410 : 404);
   nocache_headers();
 
   if (function_exists('zp_suite_enqueue_global_assets')) {
