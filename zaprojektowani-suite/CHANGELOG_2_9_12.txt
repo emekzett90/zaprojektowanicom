@@ -1,0 +1,18 @@
+Zaprojektowani Suite 2.9.12 (9.10.2026)
+
+Tylko poprawka języka (moduł językowy 1.0.18). Wygląd stron i treści bez zmian.
+
+- Goście z Polski zostają na polskiej stronie. Jeśli przeglądarka lub telefon zna polski, polskie
+  adresy otwierają się po polsku, także wtedy, gdy ktoś wcześniej wybrał EN (choćby przypadkowym
+  dotknięciem przełącznika). Wcześniej taki wybór przenosił na wersję angielską przez rok. Angielski
+  dalej jest jednym dotknięciem przełącznika PL/EN.
+- Przełączenie z wersji angielskiej na polską otwiera prawdziwą polską stronę. Wcześniej strona
+  tłumaczyła się z powrotem na miejscu i część tekstów zostawała po angielsku, m.in. nagłówek (H1)
+  na stronie głównej i nagłówki dodane w planie SEO. Teraz polska wersja jest kompletna, taka sama
+  jak przy zwykłym wejściu.
+- Przełączenie z polskiego na angielski działa jak dotąd, bez przeładowania strony.
+- Goście spoza Polski z przeglądarką bez polskiego dostają wersję angielską jak dotąd.
+
+Po wgraniu:
+1. Wejdź raz na dowolną stronę.
+2. Napisz w wątku „wgrane”.

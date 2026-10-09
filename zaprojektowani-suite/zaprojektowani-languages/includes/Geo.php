@@ -19,7 +19,8 @@ if (!defined('ABSPATH')) { exit; }
  * - A browser that knows Polish (pl anywhere in Accept-Language) stays on Polish pages (Poles abroad),
  *   setting "polish_stays".
  * - Logged-in WordPress users are never redirected (previews and editing keep working).
- * - A manual language choice wins: PL keeps Polish pages, EN sends Polish addresses to their English version.
+ * - A manual language choice wins: PL keeps Polish pages, EN sends Polish addresses to their English version,
+ *   except in a browser that knows Polish (Suite 2.9.12).
  * - Only plain page views are redirected: no form posts, background fetches or addresses with their own
  *   parameters (search, feeds…); campaign tags such as utm_* and gclid go along to the English page.
  */
@@ -148,11 +149,14 @@ final class Geo {
             return $out('switch');
         }
 
-        // A conscious switch to English: Polish addresses (e.g. from Google) open in English too.
-        if ($pref === 'en') { return $out('pref-en', Router::en_path($source)); }
-
+        // A browser that reads Polish opens Polish pages, also after English was chosen once (Suite 2.9.12: a tap on
+        // EN, even by mistake, sent every Polish address of a Polish visitor to English for a year). The switch still
+        // gives English in one tap, and the rest of that visit follows it.
         $accept = $live ? (string) ($_SERVER['HTTP_ACCEPT_LANGUAGE'] ?? '') : (string) ($ctx['accept'] ?? '');
         if ($set['polish_stays'] && self::prefers_polish($accept)) { return $out('polish-browser'); }
+
+        // A conscious switch to English: Polish addresses (e.g. from Google) open in English too.
+        if ($pref === 'en') { return $out('pref-en', Router::en_path($source)); }
 
         $country = $live ? self::country() : (isset($ctx['ip']) ? self::country_for_ip((string) $ctx['ip']) : null);
         if ($country === null) { return $out('unknown'); }

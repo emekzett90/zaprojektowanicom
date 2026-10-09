@@ -127,7 +127,7 @@ final class Admin {
             . 'Kraj rozpoznajemy na serwerze po adresie IP, z listy polskich adresów dołączonej do wtyczki, więc nic nie miga i nie wysyłamy adresów gości do zewnętrznych usług.</p>';
         echo '<ul style="list-style:disc;padding-left:20px">'
             . '<li>Roboty Google, Bing, ChatGPT i narzędzia typu PageSpeed nigdy nie są przekierowywane: polskie adresy w wynikach wyszukiwania i oznaczenia hreflang zostają bez zmian.</li>'
-            . '<li>Gość, który sam przełączy język (PL/EN), zostaje przy swoim wyborze przez rok: po wybraniu angielskiego polskie adresy (np. z Google) też otwierają mu się po angielsku. Przejście z wersji angielskiej na polską liczy się jako wybór polskiego.</li>'
+            . '<li>Gość, który sam przełączy język (PL/EN), zostaje przy swoim wyborze przez rok: po wybraniu angielskiego polskie adresy (np. z Google) też otwierają mu się po angielsku, chyba że jego przeglądarka zna polski (wtedy wchodzi po polsku, a angielski ma jednym kliknięciem). Przejście z wersji angielskiej na polską liczy się jako wybór polskiego.</li>'
             . '<li>Strony bez wersji angielskiej zostają po polsku, tak samo adresy z własnymi parametrami (np. wyszukiwanie). Zalogowani do WordPressa nie są przekierowywani.</li>'
             . '</ul>';
         self::form_open('geo');

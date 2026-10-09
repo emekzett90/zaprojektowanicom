@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Zaprojektowani Languages (PL/EN)
  * Description: Angielska wersja frontendu zaprojektowani.com — adresy /en/, tłumaczenia dostarczone w pliku (bez AI), przełącznik PL/EN bez przeładowania strony, hreflang i mapa witryny EN. Zastępuje wcześniejsze wtyczki tłumaczące.
- * Version: 1.0.17
+ * Version: 1.0.18
  * Requires at least: 6.3
  * Requires PHP: 7.4
  * Author: Zaprojektowani
@@ -24,7 +24,8 @@ if (defined('ZPL_EMBEDDED')) {
 }
 if (defined('ZPL_VERSION')) { return; }
 
-define('ZPL_VERSION', '1.0.17');
+define('ZPL_VERSION', '1.0.18');
+// 1.0.18 (Suite 2.9.12): visitors whose browser reads Polish open Polish pages even after choosing English once; switching an English page to Polish opens the Polish address.
 // 1.0.17: missing-text reports share a browser cooldown and respect the server quota; static page dictionaries are requested only when present.
 // 1.0.16: geo checks the address on every visit, honours a chosen English, keeps search/feed addresses and browsers that know Polish on Polish; the switch's choice is set by the server for a year.
 // 1.0.15: English versions of the nationwide service and content pages (own routes and page dictionaries).

@@ -424,6 +424,16 @@
     if (to === state.lang || state.busy) return Promise.resolve(false);
     state.busy = true;
     setBusy(true, to);
+    // Suite 2.9.12: a page the server sent in English opens its Polish address instead of being translated back
+    // in place. Reading English back into Polish missed texts that only have a PL => EN entry (the home H1 among
+    // them); the Polish page from the server is always complete. Going from Polish to English stays in place.
+    if (to === 'pl' && servedEn) {
+      if (!opts.auto) { store.set('zpl_lang', to); setLangPreference(to); }
+      // Back from the Polish page (page restored from the back/forward cache): the switch works again.
+      window.addEventListener('pageshow', function (e) { if (e.persisted) { state.busy = false; setBusy(false); } }, { once: true });
+      location.assign(targetUrl(to));
+      return Promise.resolve(true);
+    }
     var col, miss = [], early = false;
     return loadDict(to).then(function () {
       col = collect(doc.body);
