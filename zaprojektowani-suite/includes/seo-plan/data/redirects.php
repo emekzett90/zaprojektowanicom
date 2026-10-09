@@ -4,7 +4,7 @@ if (!defined('ABSPATH')) { exit; }
  * 2.8.0: 'slugs' += 11 old addresses with Google impressions that returned 404 (audyt-po-wdrozeniu, 7.10).
  * Next: 'exact' += 8 and 'slugs' += 23 old addresses from the Search Console 404 report of 7.10 (data to 4.10).
  * 2.9.6: the landing page post that showed the premium shop article → the landing page service page.
- * 2.9.13: 'exact' += 23 and old listing pages past the last one → the listing, the 404s from that report still open after 2.9.12. */
+ * 2.9.13: 'exact' += 22 (14 moved, 8 gone) and old listing pages past the last one → the listing, the 404s from that report still open after 2.9.12. */
 return [
   'exact' => [
     // 2.9.13: the rest of the Search Console 404 report (data to 4.10) that still answered 404. Old German and

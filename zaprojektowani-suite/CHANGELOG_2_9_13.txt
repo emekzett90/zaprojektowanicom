@@ -6,7 +6,7 @@ Poprawki z planu SEO: błędy 404 z Search Console i widoczny znacznik w jednym 
   widoczny zamiast obrazka. Ten sam obrazek jest już okładką wpisu. Taka notatka nie trafi też na żadną
   inną stronę.
 - 404 z raportu Search Console, które jeszcze zostały:
-  - 16 starych adresów (niemieckie, angielskie, stare kategorie i strony listy) przekierowuje na stronę
+  - 14 starych adresów (niemieckie, angielskie, stare kategorie i strony listy) przekierowuje na stronę
     o tym samym temacie, np. /datenschutz/ na politykę prywatności, /de/uber-uns/ na O nas, a
     /angebotsstudio/ na Studio wyceny;
   - strony listy za ostatnią stroną (np. /page/4/) prowadzą na pierwszą stronę tej listy;
