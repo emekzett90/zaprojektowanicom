@@ -36,7 +36,7 @@ if (!defined('ABSPATH')) { exit; }
  * Narzędzia → Plan SEO shows the migration log and can undo the database changes.
  */
 
-define('ZP_SEO_PLAN_VERSION', '2.9.12');
+define('ZP_SEO_PLAN_VERSION', '2.9.13');
 
 /** The plan is on unless an administrator paused it (Narzędzia → Plan SEO). */
 function zp_seo_plan_active(): bool {

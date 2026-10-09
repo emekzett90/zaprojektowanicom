@@ -121,8 +121,8 @@ function zp_seo_plan_set_title(array &$backup, int $id, string $title): string {
  * dates stay worth trusting. 2.9.8 lists what 2.9.0–2.9.7 changed (thread 10 found / dated 14.06 and the
  * industry pages 3.10) and what it changes itself: the home page, the agency page and the industry pages.
  * A site that skips a release still gets its list (2.9.10: e.g. a site going from 2.9.7 straight to 2.9.10).
- * 2.9.9 (Mat's Codex build), 2.9.10, 2.9.11 and 2.9.12 change no page content (console, loading, indexing
- * and language-switch fixes only), so they list nothing.
+ * 2.9.9 (Mat's Codex build) to 2.9.13 change no page content (console, loading, indexing, language-switch and
+ * redirect fixes only), so they list nothing.
  */
 function zp_seo_plan_changed_pages(): array {
   return [
@@ -138,6 +138,7 @@ function zp_seo_plan_changed_pages(): array {
     '2.9.10' => [],
     '2.9.11' => [],
     '2.9.12' => [],
+    '2.9.13' => [],
   ];
 }
 

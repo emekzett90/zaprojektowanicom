@@ -3,9 +3,34 @@ if (!defined('ABSPATH')) { exit; }
 /* Generated from mapa-fraz.json (phase 1), audyt/polaczenia-wpisow.csv and editorial.json — 2.3.0.
  * 2.8.0: 'slugs' += 11 old addresses with Google impressions that returned 404 (audyt-po-wdrozeniu, 7.10).
  * Next: 'exact' += 8 and 'slugs' += 23 old addresses from the Search Console 404 report of 7.10 (data to 4.10).
- * 2.9.6: the landing page post that showed the premium shop article → the landing page service page. */
+ * 2.9.6: the landing page post that showed the premium shop article → the landing page service page.
+ * 2.9.13: 'exact' += 23 and old listing pages past the last one → the listing, the 404s from that report still open after 2.9.12. */
 return [
   'exact' => [
+    // 2.9.13: the rest of the Search Console 404 report (data to 4.10) that still answered 404. Old German and
+    // English addresses go to the page on the same topic; thank-you pages and removed client previews are gone (410).
+    '/angebotsstudio/' => '/studio-wyceny/',
+    '/de/angebotskonfigurator/' => '/studio-wyceny/',
+    '/datenschutz/' => '/polityka-prywatnosci/',
+    '/gdpr/' => '/polityka-prywatnosci/',
+    '/meta-ads-kampagnen/' => '/kampanie-reklamowe/',
+    '/de/online-werbung/' => '/kampanie-reklamowe/',
+    '/webseiten-fuer-aerzte/' => '/strony-internetowe-dla-lekarzy/',
+    '/de/webdesign-katowice/' => '/strony-internetowe-katowice/',
+    '/de/uber-uns/' => '/o-nas/',
+    '/wissen/' => '/wiedza/',
+    '/wiedza/category/kampanie-meta-ads/' => '/wiedza/',
+    '/logo-branding-/page/2/' => '/logo-branding/',
+    '/wiedza-logo-branding/' => '/wiedza/', // also /en/wiedza-logo-branding/ → /en/insights/
+    '/bransoletka24/' => '/realizacje/',
+    '/danke-fuer-ihre-logo-bestellung/' => '@410',
+    '/thank-you-for-your-logo-order/' => '@410',
+    '/thank-you-for-your-website-quote-request/' => '@410',
+    '/rutpoz_web/' => '@410',
+    '/rutpoz_web/konrad-rutecki/' => '@410',
+    '/rutpoz_web/marek-rutecki/' => '@410',
+    '/shothome_web/' => '@410',
+    '/zaprojektowani2/' => '@410',
     // 2.9.9: broken public links confirmed in the browser audit, same-topic successors.
     '/privacy-policy/' => '/polityka-prywatnosci/',
     '/wiedza/brandbook-co-powinien-zawierac/' => '/logo-branding/brandbook-co-powinien-zawierac-i-jak-go-czytac/',

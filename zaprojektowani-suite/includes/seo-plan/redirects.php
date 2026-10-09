@@ -54,6 +54,11 @@ function zp_seo_plan_redirect_target(string $path, bool $is404): ?string {
     $guess = zp_seo_plan_slug_target($rest, $r);
     return $guess ?? '@410';
   }
+  // 2.9.13: a listing page past the last one (old pagination in Search Console, e.g. /en/strony-internetowe/page/4/)
+  // → the listing's first page, when that one exists.
+  if (preg_match('~^(/.+/)page/\d+/$~', $path, $m) && (get_category_by_path(trim($m[1], '/'), false) || zp_seo_plan_published_path($m[1]))) {
+    return $m[1];
+  }
   return zp_seo_plan_slug_target($path, $r);
 }
 
