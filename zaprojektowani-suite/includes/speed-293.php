@@ -40,7 +40,7 @@
  */
 if (!defined('ABSPATH')) { exit; }
 
-define('ZP_SPEED_VERSION', '2.9.10');
+define('ZP_SPEED_VERSION', '2.9.11');
 
 function zp_speed_enabled(): bool {
   return get_option('zp_speed_off') !== '1';
@@ -229,7 +229,7 @@ function zp_speed_scan(string $html): ?array {
     $pos = $end;
   }
   if ($body_open < 0) { return null; }
-  return ['body_tag' => $body_tag, 'body_open' => $body_open, 'styles' => $styles, 'links' => $links, 'sheet_links' => $sheet_links, 'skip' => $skip];
+  return ['head_end' => $head_end, 'body_tag' => $body_tag, 'body_open' => $body_open, 'styles' => $styles, 'links' => $links, 'sheet_links' => $sheet_links, 'skip' => $skip];
 }
 
 /** Whether $pos falls in one of the sorted, separate [start, end) stretches. */
@@ -360,6 +360,9 @@ function zp_speed_process(string $html): ?string {
     $ops[] = [$move[0], $move[1], $put];
   }
   foreach (zp_speed_unused_font_preloads($html, $scan) as $op) { $ops[] = $op; }
+  if (function_exists('zp_speed_lazy_ratio_ops')) { // includes/speed-images.php
+    foreach (zp_speed_lazy_ratio_ops($html, $scan) as $op) { $ops[] = $op; }
+  }
   usort($ops, function ($a, $b) { return $a[0] <=> $b[0] ?: $a[1] <=> $b[1]; });
   $out = '';
   $last = 0;
@@ -511,9 +514,13 @@ function zp_speed_rewrite_has(string $css, array $plan): string {
  * in the page and none in any stylesheet the page names (read from disk). When a stylesheet cannot
  * be read, is on another host or imports another one, the preload stays. Pages that use the face
  * keep it, so no text changes.
+ * 2.9.11: only on pages. Posts use the face too, from a stylesheet that is not in their HTML (on the
+ * live site the file came at about 2 s on every post without the preload, at about 0.9 s with it), so
+ * posts, archives and the rest keep the preload as before 2.9.10.
  */
 function zp_speed_unused_font_preloads(string $html, array $scan): array {
   $ops = [];
+  if (!function_exists('is_page') || !is_page()) { return $ops; }
   foreach (['plus-jakarta-sans-v12-latin_latin-ext-regular.woff2'] as $file) {
     if (strpos($html, $file) === false) { continue; }
     $tags = [];

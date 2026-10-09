@@ -76,6 +76,23 @@ if (empty($zp_logo_light)) {
 if (strpos((string)$zp_logo_dark, 'logo_transparent') !== false || strpos((string)$zp_logo_dark, 'transparent') !== false) {
   $zp_logo_dark = $zp_logo_dark_default;
 }
+// 2.9.11: the header draws the logo about 46x36 px on computers and 56x44 px on phones (the menu panel about
+// 45x35), so it uses the 300x235 copies of the default logos (same proportions, not cropped) instead of the
+// full-size files (2560 px and wider, about 60 KB each); width and height give the box its real proportions
+// before the file arrives. Every header logo uses the same two small files, so each loads once. The dark one on
+// computers keeps the browser's own priority (fetchpriority="auto", so no high one is added later): pages with a
+// dark header hide it at the top, and Chrome raises it by itself where it shows. Any other logo URL is used as
+// before.
+$zp_mlogo_light = $zp_logo_light;
+$zp_mlogo_dark = $zp_logo_dark;
+$zp_mlogo_w = 150;
+$zp_mlogo_h = 150;
+if ($zp_logo_light === $zp_logo_light_default && $zp_logo_dark === $zp_logo_dark_default) {
+  $zp_mlogo_light = 'https://zaprojektowani.com/wp-content/uploads/2026/06/zp_sygnet-300x235.webp';
+  $zp_mlogo_dark = 'https://zaprojektowani.com/wp-content/uploads/2026/06/zp_sygnet_ciemny-300x235.webp';
+  $zp_mlogo_w = 300;
+  $zp_mlogo_h = 235;
+}
 $zp_header_overlay_class = (
   is_front_page()
   || is_home()
@@ -262,8 +279,8 @@ html body #zpNewNav.zpNewNav--knowledgeArchive:not(.is-mega-open){border-bottom:
   <div class="zpNewNav__shell">
     <div class="zpNewNav__inner">
       <a class="zpNewNav__brand" href="/" aria-label="Zaprojektowani.com">
-        <img class="zpNewNav__logo zpNewNav__logo--light" src="<?php echo esc_url($zp_logo_light); ?>" alt="Zaprojektowani.com" loading="eager" decoding="async" width="150" height="150" style="height:<?php echo max(18,min(96,$zp_logo_desktop_h)); ?>px!important;min-height:<?php echo max(18,min(96,$zp_logo_desktop_h)); ?>px!important;max-height:<?php echo max(18,min(96,$zp_logo_desktop_h)); ?>px!important;width:auto!important;">
-        <img class="zpNewNav__logo zpNewNav__logo--dark" src="<?php echo esc_url($zp_logo_dark); ?>" alt="Zaprojektowani.com" loading="eager" decoding="async" width="150" height="150" style="height:<?php echo max(18,min(96,$zp_logo_desktop_h)); ?>px!important;min-height:<?php echo max(18,min(96,$zp_logo_desktop_h)); ?>px!important;max-height:<?php echo max(18,min(96,$zp_logo_desktop_h)); ?>px!important;width:auto!important;">
+        <img class="zpNewNav__logo zpNewNav__logo--light" src="<?php echo esc_url($zp_mlogo_light); ?>" alt="Zaprojektowani.com" loading="eager" decoding="async" width="<?php echo (int) $zp_mlogo_w; ?>" height="<?php echo (int) $zp_mlogo_h; ?>" style="height:<?php echo max(18,min(96,$zp_logo_desktop_h)); ?>px!important;min-height:<?php echo max(18,min(96,$zp_logo_desktop_h)); ?>px!important;max-height:<?php echo max(18,min(96,$zp_logo_desktop_h)); ?>px!important;width:auto!important;">
+        <img class="zpNewNav__logo zpNewNav__logo--dark" src="<?php echo esc_url($zp_mlogo_dark); ?>" alt="Zaprojektowani.com" loading="eager" decoding="async" fetchpriority="auto" width="<?php echo (int) $zp_mlogo_w; ?>" height="<?php echo (int) $zp_mlogo_h; ?>" style="height:<?php echo max(18,min(96,$zp_logo_desktop_h)); ?>px!important;min-height:<?php echo max(18,min(96,$zp_logo_desktop_h)); ?>px!important;max-height:<?php echo max(18,min(96,$zp_logo_desktop_h)); ?>px!important;width:auto!important;">
       </a>
       
 
@@ -368,14 +385,14 @@ $zp_menu_260_promo = static function (string $key, string $href, string $img, st
     
 <div class="zpNewNav__mobileBar">
   <a class="zpNewNav__mobileCall" href="tel:+48501054253" aria-label="Konsultacja telefoniczna z Zaprojektowani">
-    <i data-lucide="phone"></i><span>Konsultacja</span>
+    <?php echo function_exists('zp_suite_header_first_icon') ? zp_suite_header_first_icon('phone') : '<i data-lucide="phone"></i>'; ?><span>Konsultacja</span>
   </a>
   <a class="zpNewNav__mobileBrand" href="/" aria-label="Zaprojektowani.com">
-    <img class="zpNewNav__mobileLogo zpNewNav__mobileLogo--light" src="<?php echo esc_url($zp_logo_light); ?>" alt="Zaprojektowani.com" loading="eager" decoding="async" width="150" height="150">
-    <img class="zpNewNav__mobileLogo zpNewNav__mobileLogo--dark" src="<?php echo esc_url($zp_logo_dark); ?>" alt="Zaprojektowani.com" loading="eager" decoding="async" width="150" height="150">
+    <img class="zpNewNav__mobileLogo zpNewNav__mobileLogo--light" src="<?php echo esc_url($zp_mlogo_light); ?>" alt="Zaprojektowani.com" loading="eager" decoding="async" width="<?php echo (int) $zp_mlogo_w; ?>" height="<?php echo (int) $zp_mlogo_h; ?>">
+    <img class="zpNewNav__mobileLogo zpNewNav__mobileLogo--dark" src="<?php echo esc_url($zp_mlogo_dark); ?>" alt="Zaprojektowani.com" loading="eager" decoding="async" width="<?php echo (int) $zp_mlogo_w; ?>" height="<?php echo (int) $zp_mlogo_h; ?>">
   </a>
   <div class="zpNewNav__mobileActions">
-    <button class="zpNewNav__burger" type="button" aria-label="Otwórz menu" aria-expanded="false" aria-controls="zpNewNavDrawer"><i data-lucide="menu"></i></button>
+    <button class="zpNewNav__burger" type="button" aria-label="Otwórz menu" aria-expanded="false" aria-controls="zpNewNavDrawer"><?php echo function_exists('zp_suite_header_first_icon') ? zp_suite_header_first_icon('menu') : '<i data-lucide="menu"></i>'; ?></button>
   </div>
 </div>
     <div class="zpHeaderStaticDivider" aria-hidden="true"></div>
@@ -386,8 +403,8 @@ $zp_menu_260_promo = static function (string $key, string $href, string $img, st
     <aside class="zpNewNav__drawerPanel zpNewNav__drawerPanel--pro" role="dialog" aria-modal="true" aria-label="Menu mobilne">
       <div class="zpNewNav__drawerTop">
         <a class="zpNewNav__drawerBrand" href="/" aria-label="Zaprojektowani.com">
-          <img class="zpNewNav__drawerLogo zpNewNav__drawerLogo--dark" src="https://zaprojektowani.com/wp-content/uploads/2026/06/zp_sygnet_ciemny-150x150.webp" alt="Zaprojektowani.com" loading="eager" decoding="async" width="150" height="150">
-          <img class="zpNewNav__drawerLogo zpNewNav__drawerLogo--light" src="https://zaprojektowani.com/wp-content/uploads/2026/06/zp_sygnet-150x150.webp" alt="Zaprojektowani.com" loading="eager" decoding="async" width="150" height="150">
+          <img class="zpNewNav__drawerLogo zpNewNav__drawerLogo--dark" src="<?php echo esc_url($zp_mlogo_dark); ?>" alt="Zaprojektowani.com" loading="eager" decoding="async" width="<?php echo (int) $zp_mlogo_w; ?>" height="<?php echo (int) $zp_mlogo_h; ?>">
+          <img class="zpNewNav__drawerLogo zpNewNav__drawerLogo--light" src="<?php echo esc_url($zp_mlogo_light); ?>" alt="Zaprojektowani.com" loading="eager" decoding="async" width="<?php echo (int) $zp_mlogo_w; ?>" height="<?php echo (int) $zp_mlogo_h; ?>">
         </a>
         <button class="zpNewNav__close" type="button" data-zpnn-close aria-label="Zamknij menu"><i data-lucide="x" aria-hidden="true"></i></button>
       </div>

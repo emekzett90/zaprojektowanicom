@@ -159,7 +159,9 @@ add_action('wp_footer', function () {
     imgs.forEach(function(img,i){
       try{
         img.decoding='async';
-        if(i>2 && !img.closest('.zpNewHero,.zpHero,.zpHomeHero,[data-hero]')){
+        // 2.9.11: images the page sends eager are already on their way here; made lazy now they only got a late
+        // look from Chrome's lazy-image check (the client logo strip has no CSS width, so it was listed under Issues).
+        if(i>2 && img.getAttribute('loading')!=='eager' && !img.closest('.zpNewHero,.zpHero,.zpHomeHero,[data-hero]')){
           img.loading='lazy';
           img.setAttribute('loading','lazy');
           img.setAttribute('decoding','async');
@@ -316,7 +318,11 @@ function zp_suite_2245_optimize_img_tag($tag) {
   // v2.2.60 — never let portfolio/logo cards use generated thumbnail URLs like -150x150.webp.
   // v2.2.705: the three knowledge-card classes intentionally keep responsive
   // derivatives and srcset; all other historical image guards stay unchanged.
-  if (!$is_knowledge_responsive) {
+  // 2.9.11: the header logos are drawn at most about 56x44 px (phones; computers about 46x36, the menu panel
+  // about 45x35); their 300x235 copy (same proportions, not cropped) is enough even at 5x pixel density, so it
+  // is not swapped for the full-size file.
+  $is_small_header_logo = preg_match('/zpnewnav__(?:mobilelogo|logo|drawerlogo)\b/', $class_l) && preg_match('/-300x235\.webp$/i', $src);
+  if (!$is_knowledge_responsive && !$is_small_header_logo) {
     $src_full = zp_suite_2260_full_upload_image_url($src);
     if ($src_full && $src_full !== $src) {
       $tag = zp_suite_2245_inject_or_replace_attr($tag, 'src', $src_full);
@@ -367,9 +373,12 @@ function zp_suite_2245_optimize_img_tag($tag) {
   }
 
   // Decorative / duplicate header logo states should not compete with LCP.
+  // 2.9.11: except the dark one (phones and computers) when it is the small 300x235 file: pages with a light
+  // header (O nas and others) show it at the top, so it loads with the header like the light one; on the other
+  // pages it waits at 0x0 px for the scrolled header, where Chrome lists a lazy one under Issues.
   if (
-    strpos($class_l, 'zpnewnav__logo--dark') !== false ||
-    strpos($class_l, 'zpnewnav__mobilelogo--dark') !== false ||
+    (strpos($class_l, 'zpnewnav__logo--dark') !== false && !$is_small_header_logo) ||
+    (strpos($class_l, 'zpnewnav__mobilelogo--dark') !== false && !$is_small_header_logo) ||
     strpos($class_l, 'zpnewnav__drawerlogo') !== false
   ) {
     $tag = zp_suite_2245_inject_or_replace_attr($tag, 'loading', 'lazy');
@@ -1617,6 +1626,19 @@ add_action('template_redirect', function () {
         return $tag;
       }
 
+      // 2.9.11: the header logos are at the top of every page, the light or the dark one depending on the page's
+      // header; they keep the template's eager loading, so the header is complete in the first frame (phones: the
+      // 300x235 files; computers: lazy, their box was unknown before the file arrived, which Chrome lists under Issues).
+      if ((preg_match('~\bclass=(["\'])(?:[^"\']*\s)?zpNewNav__mobileLogo--(?:light|dark)(?:\s[^"\']*)?\1~i', $tag) && preg_match('~-300x235\.webp~i', $tag))
+        || preg_match('~\bclass=(["\'])(?:[^"\']*\s)?zpNewNav__logo(?:\s[^"\']*)?\1~i', $tag)) {
+        return $tag;
+      }
+      // 2.9.11: the client logos of the hero strip (templates/strony-internetowe-katowice/body.html) come eager with a low
+      // priority. They lie within the first two screens on every width, so Chrome fetched them at once anyway; lazy, their
+      // box (natural size, no CSS width) was unknown before the files arrived, which Chrome lists under Issues.
+      if (preg_match('~\bclass=(["\'])(?:[^"\']*\s)?hero-client-logos__img(?:\s[^"\']*)?\1~i', $tag)) {
+        return $tag;
+      }
       if (stripos($tag, 'loading=') === false) { $tag = preg_replace('/<img\b/i', '<img loading="lazy"', $tag, 1); }
       else { $tag = preg_replace('/\sloading=("|\')eager\1/i', ' loading="lazy"', $tag); }
       if (stripos($tag, 'decoding=') === false) { $tag = preg_replace('/<img\b/i', '<img decoding="async"', $tag, 1); }
