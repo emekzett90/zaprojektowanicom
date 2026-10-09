@@ -158,7 +158,7 @@ v5.0:
                           <img
                             src="<?php echo esc_url($logo['image'] ?? ''); ?>"
                             alt=""
-                            loading="lazy"
+                            loading="eager"
                             decoding="async"
                             fetchpriority="low"
                           >

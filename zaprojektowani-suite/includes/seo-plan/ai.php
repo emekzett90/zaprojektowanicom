@@ -1155,6 +1155,7 @@ function zp_ai_admin_page(): void {
   echo '</tbody></table><p style="margin-top:10px">';
   $button('bulk', 'Wyślij teraz pełną listę adresów');
   echo '</p>';
+  do_action('zp_ai_screen_after_indexnow'); // indexing.php: Google, new posts (2.9.11)
 
   echo '<h2>Profile firmy w innych serwisach</h2><p style="max-width:860px">Linki trafiają do danych strukturalnych (sameAs) i do llms.txt, żeby wyszukiwarki i asystenci AI łączyli te profile ze stroną. Wklej po jednym linku w wierszu: LinkedIn, Behance, Dribbble, Oferteo, Sortlist, Aleo, Panorama Firm, PKT, Bing Places, Mapy Apple. Instagram, Facebook i Clutch są dodawane zawsze.</p>';
   echo '<form method="post" action="' . esc_url(admin_url('admin-post.php')) . '">';

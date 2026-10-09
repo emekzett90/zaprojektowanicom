@@ -52,7 +52,7 @@ function zp_speed_prime_options(): void {
     'can_compress_scripts', 'site_logo',
     'zpl_extra_attrs', 'zpl_extra_schema', 'zpl_overrides_version', 'zpl_routes', 'zpl_settings', 'zpte_model_migrated',
     'zp_ai_profiles', 'zp_ai_version', 'zp_feed_settings', 'zp_feed_status', 'zp_seo_plan_migrated', 'zp_seo_plan_paused',
-    'zp_speed_att_ids', 'zp_speed_live_paths',
+    'zp_speed_att_ids', 'zp_speed_img_sizes', 'zp_speed_live_paths',
     'zp_suite_campaigns_route_version', 'zp_suite_command_center', 'zp_suite_content_version', 'zp_suite_design_system',
     'zp_suite_front_fixes_181_done', 'zp_suite_front_fixes_182_done', 'zp_suite_front_fixes_183_done', 'zp_suite_front_fixes_237_v397',
     'zp_suite_home_faq_ai_seo_migration_2_2_109', 'zp_suite_home_faq_seo_migration_2_2_107', 'zp_suite_home_seo_migration_2_2_107',

@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Zaprojektowani Suite
  * Description: Zaprojektowani Suite z wersją angielską strony (PL/EN, adresy /en/, przełącznik języka), automatycznymi naprawami SEO, nagłówków, zasobów i paginacji na podstawie audytu z 13.09.2026.
- * Version: 2.9.10
+ * Version: 2.9.11
  * Requires at least: 6.5
  * Requires PHP: 8.0
  * Author: Zaprojektowani.com
@@ -16,7 +16,7 @@ if (defined('ZP_SUITE_VERSION')) {
   return;
 }
 
-define('ZP_SUITE_VERSION', '2.9.10');
+define('ZP_SUITE_VERSION', '2.9.11');
 define('ZP_SUITE_PATH', plugin_dir_path(__FILE__));
 define('ZP_SUITE_URL', plugin_dir_url(__FILE__));
 
@@ -26,6 +26,8 @@ require_once ZP_SUITE_PATH . 'includes/frontend-quality.php';
 require_once ZP_SUITE_PATH . 'includes/speed-293.php';
 // Speed, server side: per-page settings read in one query and published-page checks kept between page views (same HTML). Right after speed-293.php.
 require_once ZP_SUITE_PATH . 'includes/speed-server.php';
+// Lazy images keep their file's shape before the file arrives (Chrome: "Lazy-loaded images should have explicit dimensions").
+require_once ZP_SUITE_PATH . 'includes/speed-images.php';
 
 // v2.3.0 — nationwide service pages reuse the Katowice templates; gating helpers load first.
 require_once ZP_SUITE_PATH . 'includes/seo-plan/service-kind.php';
@@ -1565,6 +1567,8 @@ require_once ZP_SUITE_PATH . 'includes/front-fixes-316.php';
 require_once ZP_SUITE_PATH . 'includes/front-fixes-317.php';
 // v2.2.803 — hard mobile header-first gate and mobile crew another 30px higher.
 require_once ZP_SUITE_PATH . 'includes/front-fixes-318.php';
+// 2.9.11 — phones: the header starts finished (after the 318 gate's script, so it runs later in <head>).
+require_once ZP_SUITE_PATH . 'includes/header-first.php';
 // v2.2.804 — final crew positioning: mobile 20 px lower, desktop 30 px higher.
 require_once ZP_SUITE_PATH . 'includes/front-fixes-319.php';
 // v2.2.805 — authoritative crew positioning + desktop copy 50 px lower.

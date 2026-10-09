@@ -63,6 +63,7 @@ function zp_suite_quality_html(string $html): string {
     if (stripos($header, 'content-encoding:') === 0) { return $html; }
   }
   $tags = new WP_HTML_Tag_Processor($html);
+  $marked = 0;
   while ($tags->next_tag('IMG')) {
     $width = $tags->get_attribute('width');
     $height = $tags->get_attribute('height');
@@ -72,16 +73,31 @@ function zp_suite_quality_html(string $html): string {
     if (!is_string($src)) { continue; }
     $size = zp_suite_quality_image_dimensions($src);
     if (!$size) { continue; }
+    // data-zp-wh names the attributes added here. The rule printed below sets those
+    // dimensions back to auto, so the image keeps the size it had without them (a
+    // stylesheet that sets only the width no longer gets the file's height in pixels)
+    // and the attributes give only the ratio, which reserves the box before loading.
     if ($width === null && $height === null) {
       $tags->set_attribute('width', (string) $size[0]);
       $tags->set_attribute('height', (string) $size[1]);
+      $tags->set_attribute('data-zp-wh', 'w h');
+      $marked++;
     } elseif ($width !== null && ctype_digit((string) $width) && (int) $width > 0) {
       $tags->set_attribute('height', (string) max(1, (int) round((int) $width * $size[1] / $size[0])));
+      $tags->set_attribute('data-zp-wh', 'h');
+      $marked++;
     } elseif ($height !== null && ctype_digit((string) $height) && (int) $height > 0) {
       $tags->set_attribute('width', (string) max(1, (int) round((int) $height * $size[0] / $size[1])));
+      $tags->set_attribute('data-zp-wh', 'w');
+      $marked++;
     }
   }
-  return $tags->get_updated_html();
+  $html = $tags->get_updated_html();
+  if ($marked > 0) {
+    // First in <head> with zero specificity: it outranks only the attributes themselves.
+    $html = preg_replace('#<head\b[^>]*>#i', '$0<style id="zp-quality-img-wh">:where(img[data-zp-wh~="w"]){width:auto}:where(img[data-zp-wh~="h"]){height:auto}</style>', $html, 1);
+  }
+  return $html;
 }
 
 // The speed buffer calls quality_html even with ?zp_speed=0. Keep the fixes when
