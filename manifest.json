@@ -1,12 +1,12 @@
 {
  "format": 1,
- "zaktualizowano": "2026-10-08T23:31:23+02:00",
+ "zaktualizowano": "2026-10-09T11:34:27+02:00",
  "wpisy": [
   {
    "slug": "papier-firmowy",
    "sciezka": "/logo-branding/papier-firmowy/",
    "plik": "wpisy/papier-firmowy.json",
-   "sha256": "33b4bc57da95580f713d792615875a8e2d4a1a64b07d9804eeecbf1c04cf1504",
+   "sha256": "89c0bb596972981a1072421fbad648546d848b219a459a3b7c3f19d7f39d846d",
    "publikacja": "2026-10-15T08:00:00+02:00",
    "paczka": 5
   },
@@ -14,7 +14,7 @@
    "slug": "kreatory-stron-internetowych",
    "sciezka": "/strony-internetowe/kreatory-stron-internetowych/",
    "plik": "wpisy/kreatory-stron-internetowych.json",
-   "sha256": "89894d80e2a812615ceca32001dd1a3cdf19d69957919d6eb147bd9db1781848",
+   "sha256": "92ab0da9cf8dc8a01a91f6b23ee2bd7c0030766c25c2e0362d4fc34882c5f3d8",
    "publikacja": "2026-10-19T08:00:00+02:00",
    "paczka": 5
   },
@@ -22,7 +22,7 @@
    "slug": "mockup-co-to-jest",
    "sciezka": "/logo-branding/mockup-co-to-jest/",
    "plik": "wpisy/mockup-co-to-jest.json",
-   "sha256": "cd85c8fa9d1a39d43007560464d019418fd1ca18d0ec47ff2893549824536fa6",
+   "sha256": "1527cdd3f8f406268da898dd72421ec8a31f35452f6f0ea9ce977c2385bd21c2",
    "publikacja": "2026-10-21T08:00:00+02:00",
    "paczka": 5
   },
@@ -30,7 +30,7 @@
    "slug": "seo-sklepu-internetowego",
    "sciezka": "/sklepy-internetowe/seo-sklepu-internetowego/",
    "plik": "wpisy/seo-sklepu-internetowego.json",
-   "sha256": "59b66ea04ebe89a45c6652972aca5a6d23a9493fa21390e0cecc28c622cf3729",
+   "sha256": "d9b85da02afe30b26f5f19695b958a80a1832cd652e7d07f306f200c3ccd075c",
    "publikacja": "2026-10-23T08:00:00+02:00",
    "paczka": 5
   },
@@ -38,7 +38,7 @@
    "slug": "logo-firmy-budowlanej",
    "sciezka": "/logo-branding/logo-firmy-budowlanej/",
    "plik": "wpisy/logo-firmy-budowlanej.json",
-   "sha256": "8a4b7c86fb62d83a5068ffcb958f97bd8770cb7d3421e174c0ba0ca2dca44166",
+   "sha256": "41d5599d054a91aba2b17ae2a1b23edd006257eb0f21c3987ae22f2dda42fb14",
    "publikacja": "2026-10-27T08:00:00+01:00",
    "paczka": 5
   },
@@ -54,7 +54,7 @@
    "slug": "inpost-woocommerce-integracje-sklepu",
    "sciezka": "/sklepy-internetowe/inpost-woocommerce-integracje-sklepu/",
    "plik": "wpisy/inpost-woocommerce-integracje-sklepu.json",
-   "sha256": "cff3687668bed42ad1965d06857502396a6376508ce3e9cfd4bcf0ba9832c3a0",
+   "sha256": "e924abbb0a83f74aff8e56443ea30288cf93241f92749570ef3f064724d81589",
    "publikacja": "2026-11-03T08:00:00+01:00",
    "paczka": 6
   },
@@ -62,7 +62,7 @@
    "slug": "nowoczesne-strony-internetowe",
    "sciezka": "/strony-internetowe/nowoczesne-strony-internetowe/",
    "plik": "wpisy/nowoczesne-strony-internetowe.json",
-   "sha256": "3ef85547ffeec4bcfcccbadb370803eec9577749bf1befb034644528d1c1e8b3",
+   "sha256": "99f4b396233e36b435528ac00b58e316a0c8f09465f7cd0aa8eb4bbea0579600",
    "publikacja": "2026-11-06T08:00:00+01:00",
    "paczka": 6
   },
@@ -70,7 +70,7 @@
    "slug": "logo-restauracji-i-kawiarni",
    "sciezka": "/logo-branding/logo-restauracji-i-kawiarni/",
    "plik": "wpisy/logo-restauracji-i-kawiarni.json",
-   "sha256": "f23d92a8ed4cf940d45e07d35795f8d1f00a44b0adf7e9afcd945e146f3af40b",
+   "sha256": "ac024306b852db961989fa760837b4d4614bcd98297bc09fa432b729048f4e4f",
    "publikacja": "2026-11-10T08:00:00+01:00",
    "paczka": 6
   },
@@ -203,6 +203,18 @@
    "fragment": "zacznij od wersji mobilnej",
    "slowa": "wersji mobilnej",
    "do": "/strony-internetowe/nowoczesne-strony-internetowe/"
+  },
+  {
+   "we_wpisie": "/logo-branding/ksiega-znaku-co-to-jest-co-zawiera-i-kiedy-firma-jej-potrzebuje/",
+   "fragment": "Brandbook zwykle idzie szerzej.",
+   "slowa": "Brandbook",
+   "do": "/logo-branding/brandbook-co-powinien-zawierac-i-jak-go-czytac/"
+  },
+  {
+   "we_wpisie": "/logo-branding/brandbook-co-powinien-zawierac-i-jak-go-czytac/",
+   "fragment": "Księga znaku koncentruje się głównie na logo",
+   "slowa": "Księga znaku",
+   "do": "/logo-branding/ksiega-znaku-co-to-jest-co-zawiera-i-kiedy-firma-jej-potrzebuje/"
   }
  ],
  "sekcje": [
