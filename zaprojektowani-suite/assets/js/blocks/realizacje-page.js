@@ -19,51 +19,34 @@ const icons=()=>{try{window.lucide&&window.lucide.createIcons({attrs:{'stroke-wi
 const esc=s=>String(s||'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
 const slugify=s=>String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'').slice(0,90);
 
-/* On mobile the search/categories belong below the portfolio heading.
-   Move the existing toolbar instead of duplicating controls, so filtering state
-   and accessibility attributes stay perfectly synchronized. */
-const toolsBar=root.querySelector('.tools');
-const portfolioHead=root.querySelector('.head');
-const featuredSection=root.querySelector('.spot');
-const mobileToolsMq=window.matchMedia('(max-width:700px)');
-function placePortfolioTools(){
-  if(!toolsBar||!portfolioHead||!featuredSection)return;
-  if(mobileToolsMq.matches){
-    if(portfolioHead.nextElementSibling!==toolsBar)portfolioHead.insertAdjacentElement('afterend',toolsBar);
-  }else if(featuredSection.previousElementSibling!==toolsBar){
-    featuredSection.insertAdjacentElement('beforebegin',toolsBar);
-  }
-}
-placePortfolioTools();
-if(typeof mobileToolsMq.addEventListener==='function')mobileToolsMq.addEventListener('change',placePortfolioTools);
-else if(typeof mobileToolsMq.addListener==='function')mobileToolsMq.addListener(placePortfolioTools);
+
 
 const FEATURED_INDEXES=PROJECTS.map((p,i)=>p.featured?i:-1).filter(i=>i>-1).concat(PROJECTS.map((p,i)=>i)).filter((v,i,a)=>a.indexOf(v)===i).slice(0,Math.min(3,PROJECTS.length));
 const FEATURED=FEATURED_INDEXES.map(i=>PROJECTS[i]).filter(Boolean);
 const spotSlider=root.querySelector('[data-spot-slider]');
 const spotSlides=root.querySelector('[data-spot-slides]');
 const spotDots=root.querySelector('[data-spot-dots]');
-const spotSection=root.querySelector('.spot');
 let spotCurrent=0,spotTimer=null,spotPaused=false,spotAutoLock=0;
+/* label printed by the template in the page language (the EN dictionary of this page has no entry for it) */
+const LIVE_LABEL=esc((spotSlider&&spotSlider.dataset.labelLive)||'Zobacz live');
 const SPOT_DELAY=6000;
 const REDUCED_MOTION=window.matchMedia('(prefers-reduced-motion: reduce)');
 function spotlightMarkup(p,projectIndex,slideIndex){
   const points=(p.scope||[]).slice(0,3);
-  return `<article class="spotSlide${slideIndex===0?' is-active':''}" data-spot-slide data-project-index="${projectIndex}" data-open="${projectIndex}" data-no="${String(slideIndex+1).padStart(2,'0')}" tabindex="0" role="button" aria-label="${esc(p.brand)} — otwórz szczegóły projektu" aria-hidden="${slideIndex===0?'false':'true'}">
-    <img class="spotImg" src="${esc(p.img)}" alt="${esc(p.brand)} — ${esc(p.sub)}" ${slideIndex===0?'fetchpriority="high"':'loading="eager"'}>
-    <div class="spotShade" aria-hidden="true"></div>
+  return `<article class="spotSlide${slideIndex===0?' is-active':''}" data-spot-slide data-project-index="${projectIndex}" data-open="${projectIndex}" tabindex="0" role="button" aria-label="${esc(p.brand)} — otwórz szczegóły projektu" aria-hidden="${slideIndex===0?'false':'true'}">
+    <div class="spotMedia"><img class="spotImg" src="${esc(p.img)}" alt="${esc(p.brand)} — ${esc(p.sub)}" ${slideIndex===0?'fetchpriority="high"':'loading="eager"'} decoding="async"></div>
     <div class="spotCopy">
       <div class="spotBadges">
-        <span class="spotBadge"><i data-lucide="star" style="width:13px;height:13px"></i> Wyróżniona realizacja</span>
-        <span class="spotBadge"><i data-lucide="${catIcon(p.cat)}" style="width:13px;height:13px"></i> ${catLabel(p.cat)}</span>
+        <span class="spotBadge"><i data-lucide="star"></i> Wyróżniona realizacja</span>
+        <span class="spotBadge"><i data-lucide="${catIcon(p.cat)}"></i> ${catLabel(p.cat)}</span>
       </div>
       <h2>${esc(p.brand)}</h2>
       <div class="sub">${esc(p.sub)}</div>
       <p class="desc">${esc(p.desc)}</p>
       <ul class="spotList">${points.map(s=>`<li><i data-lucide="check"></i>${esc(s)}</li>`).join('')}</ul>
       <div class="spotActions">
-        <button class="btn btn--ghostD" data-open="${projectIndex}" type="button"><span>Zobacz case study</span><i data-lucide="arrow-up-right"></i></button>
-        ${p.live?`<a class="btn btn--ghostD" href="${esc(p.live)}" target="_blank" rel="noopener"><span>Zobacz live</span><i data-lucide="external-link"></i></a>`:''}
+        <button class="btn btn--light" data-open="${projectIndex}" type="button"><span>Zobacz case study</span><i data-lucide="arrow-up-right"></i></button>
+        ${p.live?`<a class="btn btn--ghostD" href="${esc(p.live)}" target="_blank" rel="noopener"><span>${LIVE_LABEL}</span><i data-lucide="external-link"></i></a>`:''}
       </div>
     </div>
   </article>`;
@@ -101,7 +84,7 @@ function stopSpotAuto(){
   if(spotTimer){window.clearTimeout(spotTimer);spotTimer=null;}
 }
 function advanceSpotAuto(){
-  if(spotPaused||document.hidden||REDUCED_MOTION.matches||FEATURED.length<2||spotSection.classList.contains('is-filter-hidden'))return;
+  if(spotPaused||document.hidden||REDUCED_MOTION.matches||FEATURED.length<2)return;
   const now=Date.now();
   if(now-spotAutoLock<700)return;
   spotAutoLock=now;
@@ -111,7 +94,7 @@ function advanceSpotAuto(){
 }
 function startSpotAuto(){
   stopSpotAuto();
-  if(spotPaused||document.hidden||REDUCED_MOTION.matches||FEATURED.length<2||spotSection.classList.contains('is-filter-hidden')){
+  if(spotPaused||document.hidden||REDUCED_MOTION.matches||FEATURED.length<2){
     restartSpotProgress();
     return;
   }
@@ -138,43 +121,32 @@ document.addEventListener('visibilitychange',()=>{if(document.hidden)stopSpotAut
 FEATURED.forEach(p=>{const preload=new Image();preload.src=p.img});
 startSpotAuto();
 
-const grid=root.querySelector('[data-grid]');
-function renderGrid(){
-  grid.innerHTML=PROJECTS.map((p,i)=>{
-    const slug=slugify((p.brand||'projekt')+'-'+(p.type||'case-study'));
-    return `
-  <article class="card" id="case-${slug}" data-cat="${esc(p.cat)}" data-i="${i}" data-project-slug="${slug}" tabindex="0" aria-label="${esc(p.brand)} — zobacz case study">
-    <div class="cardMedia"><img src="${esc(p.img)}" alt="${esc(p.brand)} — ${esc(p.sub)}" loading="lazy" decoding="async"><span class="cat"><i data-lucide="${catIcon(p.cat)}"></i>${catLabel(p.cat)}</span><span class="cardGo" aria-hidden="true"><i data-lucide="arrow-up-right"></i></span></div>
-    <div class="cardBody">
-      <div class="microRow"><span>${esc(p.type)}</span><b>${esc(p.year)}</b></div>
-      <h3>${esc(p.brand)}</h3>
-      <div class="cardSub">${esc(p.sub)}</div>
-      <p class="cardDesc">${esc(p.desc)}</p>
-      <div class="chips">${p.services.slice(0,3).map(s=>`<span>${esc(s)}</span>`).join('')}</div>
-      <div class="cardActions">
-        <a class="more" href="#case-${slug}" data-open="${i}"><span>Zobacz case study</span><i data-lucide="arrow-up-right"></i></a>
-        ${p.live?`<a class="livePill" href="${esc(p.live)}" target="_blank" rel="noopener" aria-label="Zobacz stronę live"><span>live</span> <i data-lucide="external-link"></i></a>`:''}
-      </div>
-    </div>
-  </article>`;
-  }).join('');
-}
-renderGrid();
+const groups=[...root.querySelectorAll('[data-group]')].map(el=>({
+  el,
+  grid:el.querySelector('[data-grid]'),
+  cards:[...el.querySelectorAll('.card')],
+  more:el.querySelector('[data-more]'),
+  countEl:el.querySelector('[data-group-count]'),
+  limit:parseInt(el.dataset.limit,10)||0,
+  open:false
+}));
+const allCards=groups.reduce((list,g)=>list.concat(g.cards),[]);
 icons();
 
 /* reveal wejścia (IO, stagger, reduced-motion aware) */
 (function(){
   const reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion:reduce)').matches;
-  const cards=[...grid.querySelectorAll('.card')];
+  const cards=allCards;
   const els=[root.querySelector('.spotIn'),root.querySelector('.head'),...cards].filter(Boolean);
   els.forEach(el=>el.classList.add('rv'));
   if(reduce||!('IntersectionObserver' in window)){els.forEach(el=>el.classList.add('is-in'));return;}
   const io=new IntersectionObserver(entries=>{entries.forEach(entry=>{if(!entry.isIntersecting)return;
     const el=entry.target;
-    const idx=cards.indexOf(el);
-    if(idx>-1){
-      const cols=window.innerWidth>1240?3:(window.innerWidth>700?2:1);
-      el.style.transitionDelay=((idx%cols)*85)+'ms';
+    if(el.classList.contains('card')){
+      const g=el.parentElement;
+      const cols=Math.max(1,(getComputedStyle(g).gridTemplateColumns||'').split(' ').filter(Boolean).length);
+      const idx=[...g.children].filter(c=>c.style.display!=='none').indexOf(el);
+      el.style.transitionDelay=((Math.max(0,idx)%cols)*70)+'ms';
     }
     requestAnimationFrame(()=>el.classList.add('is-in'));
     io.unobserve(el);
@@ -182,26 +154,38 @@ icons();
   els.forEach(el=>io.observe(el));
 })();
 
-/* filtr + szukajka + pusty stan */
+/* filtr + szukajka + pusty stan + „pokaż wszystkie” w grupach na telefonie */
 let activeF='all';
+const searchInput=root.querySelector('[data-search]');
 const applyFilter=()=>{
-  const q=(root.querySelector('[data-search]').value||'').trim().toLowerCase();
-  const hideFeatured=activeF!=='all'||q.length>0;
-  spotSection.classList.toggle('is-filter-hidden',hideFeatured);
-  spotSection.setAttribute('aria-hidden',hideFeatured?'true':'false');
-  if(hideFeatured){stopSpotAuto()}else if(!spotPaused){startSpotAuto()}
-  let n=0;
-  grid.querySelectorAll('.card').forEach(c=>{
-    const p=PROJECTS[+c.dataset.i];
-    const okF=activeF==='all'||c.dataset.cat.includes(activeF);
-    const okQ=!q||[p.brand,p.sub,p.type,p.tag,p.desc,p.services.join(' ')].join(' ').toLowerCase().includes(q);
-    c.style.display=(okF&&okQ)?'':'none'; if(okF&&okQ)n++;
+  const q=(searchInput.value||'').trim().toLowerCase();
+  const filtering=activeF!=='all'||q.length>0;
+  let total=0;
+  groups.forEach(g=>{
+    let n=0;
+    g.cards.forEach(c=>{
+      const p=PROJECTS[+c.dataset.i]||{};
+      const okF=activeF==='all'||String(c.dataset.cat||'').split(/\s+/).includes(activeF);
+      const okQ=!q||[p.brand,p.sub,p.type,p.tag,p.desc,(p.services||[]).join(' ')].join(' ').toLowerCase().includes(q);
+      const ok=okF&&okQ;
+      c.style.display=ok?'':'none';
+      if(ok)n++;
+      c.classList.toggle('is-extra',ok&&!filtering&&!g.open&&g.limit>0&&n>g.limit);
+    });
+    g.el.style.display=n?'':'none';
+    if(g.countEl)g.countEl.textContent=n;
+    if(g.more)g.more.hidden=filtering||g.open||!(g.limit>0&&n>g.limit);
+    total+=n;
   });
-  root.querySelector('[data-count]').textContent=n;
-  root.querySelector('[data-empty]').classList.toggle('is-on',n===0);
+  root.querySelector('[data-count]').textContent=total;
+  root.querySelector('[data-empty]').classList.toggle('is-on',total===0);
 };
+groups.forEach(g=>{
+  if(!g.more)return;
+  g.more.addEventListener('click',()=>{g.open=true;applyFilter();});
+});
 root.querySelector('[data-reset]').addEventListener('click',()=>{
-  root.querySelector('[data-search]').value='';
+  searchInput.value='';
   root.querySelectorAll('.filter').forEach(x=>{x.classList.toggle('is-on',x.dataset.f==='all');x.setAttribute('aria-selected',x.dataset.f==='all'?'true':'false')});
   activeF='all';applyFilter();
 });
@@ -209,12 +193,22 @@ root.querySelectorAll('.filter').forEach(b=>b.addEventListener('click',()=>{
   root.querySelectorAll('.filter').forEach(x=>{x.classList.remove('is-on');x.setAttribute('aria-selected','false')});
   b.classList.add('is-on');b.setAttribute('aria-selected','true');activeF=b.dataset.f;applyFilter();
 }));
-root.querySelector('[data-search]').addEventListener('input',applyFilter);
+searchInput.addEventListener('input',applyFilter);
+applyFilter();
 
 /* modal */
 const modal=root.querySelector('[data-modal]');
 const sheet=root.querySelector('[data-sheet]');
 let cur=0,lastFocus=null;
+function modalOrder(){
+  const shown=allCards.filter(c=>c.style.display!=='none').map(c=>+c.dataset.i);
+  return shown.length?shown:PROJECTS.map((p,i)=>i);
+}
+function stepModal(dir){
+  const order=modalOrder();
+  const at=order.indexOf(cur);
+  openModal(order[((at<0?0:at)+dir+order.length)%order.length]);
+}
 function processSteps(p){
   if(String(p.cat).includes('branding')&&!String(p.cat).includes('web')){
     return [
@@ -242,6 +236,8 @@ function processSteps(p){
 function openModal(i){
   cur=(i+PROJECTS.length)%PROJECTS.length;
   const p=PROJECTS[cur];
+  const order=modalOrder();
+  const pos=Math.max(0,order.indexOf(cur));
   const isBrandingCase=String(p.cat||'').split(/\s+/).includes('branding')&&!String(p.cat||'').split(/\s+/).includes('web')&&!String(p.cat||'').split(/\s+/).includes('shop');
   sheet.classList.toggle('is-branding-case',isBrandingCase);
   const projectSlug=slugify((p.brand||'projekt')+'-'+(p.type||'case-study'));
@@ -258,7 +254,7 @@ function openModal(i){
       <p class="desc">${esc(p.desc)}</p>
       <div class="introActions">
         <a class="btn btn--ink" href="/studio-wyceny/"><span>Wyceń podobny projekt</span><i data-lucide="arrow-up-right"></i></a>
-        ${p.live?`<a class="btn btn--ghost" href="${esc(p.live)}" target="_blank" rel="noopener"><span>Zobacz live</span><i data-lucide="external-link"></i></a>`:''}
+        ${p.live?`<a class="btn btn--ghost" href="${esc(p.live)}" target="_blank" rel="noopener"><span>${LIVE_LABEL}</span><i data-lucide="external-link"></i></a>`:''}
       </div>
     </div>
   </div>
@@ -287,7 +283,7 @@ function openModal(i){
         <button data-prev aria-label="Poprzedni projekt"><i data-lucide="arrow-left"></i></button>
         <button data-next aria-label="Następny projekt"><i data-lucide="arrow-right"></i></button>
       </div>
-      <span class="pnLabel">${String(cur+1).padStart(2,'0')} / ${String(PROJECTS.length).padStart(2,'0')} — ${esc(PROJECTS[(cur+1)%PROJECTS.length].brand)} dalej</span>
+      <span class="pnLabel">${String(pos+1).padStart(2,'0')} / ${String(order.length).padStart(2,'0')} — ${esc((PROJECTS[order[(pos+1)%order.length]]||p).brand)} dalej</span>
       <div class="footCtas">
         <a class="btn btn--ghost" href="/kontakt/"><span>Porozmawiajmy o projekcie</span><i data-lucide="phone"></i></a>
       </div>
@@ -297,16 +293,16 @@ function openModal(i){
     <button class="mobileModalBar__nav" type="button" data-mobile-prev aria-label="Poprzedni projekt"><i data-lucide="arrow-left"></i></button>
     <button class="mobileModalBar__close" type="button" data-mobile-close><i data-lucide="x"></i><span>Zamknij</span></button>
     <button class="mobileModalBar__nav" type="button" data-mobile-next aria-label="Następny projekt"><i data-lucide="arrow-right"></i></button>
-    ${p.live?`<a class="mobileModalBar__cta" href="${esc(p.live)}" target="_blank" rel="noopener"><span>Zobacz live</span><i data-lucide="external-link"></i></a>`:`<a class="mobileModalBar__cta" href="/studio-wyceny/"><span>Wyceń</span><i data-lucide="arrow-up-right"></i></a>`}
+    ${p.live?`<a class="mobileModalBar__cta" href="${esc(p.live)}" target="_blank" rel="noopener"><span>${LIVE_LABEL}</span><i data-lucide="external-link"></i></a>`:`<a class="mobileModalBar__cta" href="/studio-wyceny/"><span>Wyceń</span><i data-lucide="arrow-up-right"></i></a>`}
   </nav>`;
   icons();
-  sheet.querySelector('[data-prev]').addEventListener('click',()=>openModal(cur-1));
-  sheet.querySelector('[data-next]').addEventListener('click',()=>openModal(cur+1));
+  sheet.querySelector('[data-prev]').addEventListener('click',()=>stepModal(-1));
+  sheet.querySelector('[data-next]').addEventListener('click',()=>stepModal(1));
   const mobilePrev=sheet.querySelector('[data-mobile-prev]');
   const mobileNext=sheet.querySelector('[data-mobile-next]');
   const mobileClose=sheet.querySelector('[data-mobile-close]');
-  if(mobilePrev)mobilePrev.addEventListener('click',()=>openModal(cur-1));
-  if(mobileNext)mobileNext.addEventListener('click',()=>openModal(cur+1));
+  if(mobilePrev)mobilePrev.addEventListener('click',()=>stepModal(-1));
+  if(mobileNext)mobileNext.addEventListener('click',()=>stepModal(1));
   if(mobileClose)mobileClose.addEventListener('click',closeModal);
   modal.classList.add('is-open');modal.setAttribute('aria-hidden','false');
   document.body.style.overflow='hidden';
@@ -315,6 +311,8 @@ function openModal(i){
 }
 function closeModal(){modal.classList.remove('is-open');modal.setAttribute('aria-hidden','true');document.body.style.overflow='';if(location.hash.indexOf('#case-')===0&&history&&typeof history.replaceState==='function'){history.replaceState(null,'',location.pathname+location.search);}if(lastFocus)lastFocus.focus();}
 root.addEventListener('click',e=>{
+  const link=e.target.closest('a[href]');
+  if(link&&!link.hasAttribute('data-open'))return; /* live site, Studio wyceny, Kontakt: real links */
   const t=e.target.closest('[data-open]');
   if(t){
     e.preventDefault();
@@ -328,10 +326,10 @@ root.addEventListener('click',e=>{
 document.addEventListener('keydown',e=>{
   if(!modal.classList.contains('is-open'))return;
   if(e.key==='Escape')closeModal();
-  if(e.key==='ArrowRight')openModal(cur+1);
-  if(e.key==='ArrowLeft')openModal(cur-1);
+  if(e.key==='ArrowRight')stepModal(1);
+  if(e.key==='ArrowLeft')stepModal(-1);
 });
-grid.addEventListener('keydown',e=>{const c=e.target.closest('.card');if(c&&(e.key==='Enter'||e.key===' ')){e.preventDefault();openModal(+c.dataset.i);}});
+
 spotSlider.addEventListener('keydown',e=>{if(e.key==='ArrowRight'){e.preventDefault();showSpot(spotCurrent+1,1,true);return;}if(e.key==='ArrowLeft'){e.preventDefault();showSpot(spotCurrent-1,-1,true);return;}if((e.key==='Enter'||e.key===' ')&&e.target.closest('[data-spot-slide]')){e.preventDefault();openModal(FEATURED_INDEXES[spotCurrent]);}});
 /* deep link do case study: #case-nazwa-projektu + podgląd ?modal=N */
 const hashSlug=(location.hash||'').replace(/^#case-/,'');
