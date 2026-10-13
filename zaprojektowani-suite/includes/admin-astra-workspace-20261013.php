@@ -23,6 +23,8 @@ function zp_astra_groups(): array {
 }
 function zp_astra_open(string $title, string $active='dashboard', string $subtitle=''): void {
     if (!current_user_can('manage_options')) { return; }
+    // 3.0.0: every Suite screen uses the flat frame with the section bar (includes/suite3/admin-ui.php).
+    if (function_exists('zp_suite3_open')) { zp_suite3_open($title, $subtitle); return; }
     if ($active==='prepare' && ($_GET['page'] ?? '')==='zp-suite-article-photos') { $active='articlephotos'; }
     if (($_GET['page'] ?? '')==='zp-suite-home-cms') { $active='home'; }
     $groups=zp_astra_groups(); $group='dashboard';
@@ -42,6 +44,7 @@ function zp_astra_open(string $title, string $active='dashboard', string $subtit
     echo '</nav><p data-zp-command-empty hidden>Brak pasujących modułów.</p></dialog>';
 }
 function zp_astra_close(): void {
+    if (function_exists('zp_suite3_close')) { zp_suite3_close(); return; }
     do_action('zp_admin20_close');
     echo '<footer class="footer"><span>ZP Suite · '.esc_html((string) wp_parse_url(home_url('/'),PHP_URL_HOST)).'</span><span>Dane i harmonogram w Twoim WordPressie.</span></footer></main></div>';
 }
@@ -84,6 +87,7 @@ function zp_astra_metric(string $label,$value,string $source,string $note,string
 }
 function zp_astra_dashboard(): void {
     if (!current_user_can('manage_options')) { return; }
+    if (function_exists('zp_suite3_dashboard')) { zp_suite3_dashboard(); return; }
     $s=zp_astra_summary(); $data=$s['data']; $period=zp_admin20_period(); $ga4=$data['ga4']['periods'][$period]??[]; $ga4=is_array($ga4)?$ga4:[];
     $sources=zp_admin20_source_counts(!empty($data['ga4']['sourceHealth'][$period]['totals_usable']) && ($ga4['status']??'')!=='awaiting_data' ? zp_admin20_sources($data,$period) : null);
     zp_admin20_open('Pulpit','dashboard','Najważniejsze sprawy, w jednym miejscu.');
@@ -244,7 +248,8 @@ add_action('updated_option',static function($option,$old,$new):void{
     foreach(['daily_enabled'=>'Codzienny skan EN','auto_enabled'=>'Automatyczne tłumaczenie EN']as$key=>$label){zp_astra_audit($label,!empty($old[$key])?'Włączone':'Wyłączone',!empty($new[$key])?'Włączone':'Wyłączone');}
 },10,3);
 add_action('admin_head',static function():void{
-    if(!zp_astra_route()){return;}
+    // 3.0.0: assets/admin/zp-suite-3.css replaces this stylesheet when the new panel is loaded.
+    if(!zp_astra_route()||function_exists('zp_suite3_open')){return;}
     $file=__DIR__.'/../assets/admin-astra-workspace-20261013.css';
     if(is_readable($file)){echo '<style id="zp-astra-workspace-css">'.file_get_contents($file).'</style>';}
 },PHP_INT_MAX);

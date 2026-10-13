@@ -1602,7 +1602,11 @@ require_once ZP_SUITE_PATH . 'includes/seo-plan/bootstrap.php';
 // 3.0.0: the panel, reports and the article factory load only for wp-admin, cron, REST and WP-CLI requests.
 // A page view skips about 1.5 MB of PHP; the one front-end piece (article schema) loads per post below.
 require_once ZP_SUITE_PATH . 'includes/content-schema-front.php';
+// 3.0.0: 404 log and saved redirects (front end), the new panel frame and "Stan strony" (admin only).
+require_once ZP_SUITE_PATH . 'includes/suite3/monitor-404.php';
 if (zp_suite_backend_request()) {
+require_once ZP_SUITE_PATH . 'includes/suite3/admin-ui.php';
+require_once ZP_SUITE_PATH . 'includes/suite3/health.php';
 // Reviewed Senuto content package; posts are created only by the native admin review form.
 require_once ZP_SUITE_PATH . 'includes/content-batch-20261009.php';
 // Admin reports and calendar reuse native WordPress/Rank Math data.
