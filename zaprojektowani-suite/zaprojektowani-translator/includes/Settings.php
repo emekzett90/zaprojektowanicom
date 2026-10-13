@@ -3,23 +3,36 @@ namespace ZPTE;
 
 if (!defined('ABSPATH')) { exit; }
 
-/** Settings (option zpte_settings) and the OpenAI API key (option zpte_api_key, encrypted, never autoloaded). */
+/**
+ * Settings (option zpte2_settings) and the OpenAI API key. The key is the one already saved for the
+ * translator (option zpte_api_key, encrypted with the site salts, never autoloaded or shown again);
+ * wp-config.php can define ZPTE_OPENAI_API_KEY instead.
+ */
 final class Settings {
-    const OPTION = 'zpte_settings';
+    const OPTION = 'zpte2_settings';
     const KEY_OPTION = 'zpte_api_key';
-    const DEFAULT_MODEL = 'gpt-5.4-mini';
+    const DEFAULT_MODEL = 'gpt-6-luna';
+    const DEFAULT_EFFORT = 'high';
+    const EFFORTS = ['low' => 'niskie (najszybciej)', 'medium' => 'średnie', 'high' => 'wysokie (zalecane)'];
+
+    /** Prices per million tokens (USD) for the cost counter; other models count with the Luna rate. */
+    const PRICES = [
+        'gpt-6-luna' => ['in' => 0.10, 'out' => 0.50],
+        'gpt-6.1-sol' => ['in' => 2.00, 'out' => 10.00],
+    ];
 
     public static function defaults(): array {
         return [
-            'enabled' => 1,             // daily check on/off
+            'enabled' => 1,              // daily check at 03:00 (Europe/Warsaw)
+            'auto' => 1,                 // translate a post right after it is published or updated
             'model' => self::DEFAULT_MODEL,
-            'mode' => 'publish',        // publish | draft (new pages only)
+            'effort' => self::DEFAULT_EFFORT,
             'types' => ['post', 'page'],
-            'since' => '',              // Y-m-d; content published on/after this day counts as new
-            'older' => 1,               // include all older public content without an English version
-            'gaps' => 1,                // fill untranslated fragments on existing English pages
-            'daily_chars' => 400000,    // characters of Polish text sent to OpenAI per day
-            'instructions' => '',       // extra instructions for the translator (style, glossary)
+            'terms' => 1,                // category pages get English versions too
+            'recheck' => 1,              // the daily check reads every English page again (menus, footer, lists)
+            'daily_chars' => 1500000,    // Polish characters sent to OpenAI per day
+            'monthly_usd' => 20,         // spending cap per calendar month (0 = none)
+            'instructions' => '',        // extra instructions from the site owner
         ];
     }
 
@@ -40,53 +53,25 @@ final class Settings {
         update_option(self::OPTION, array_merge(self::all(), $values), true);
     }
 
-    /** One-time upgrades; preserve API key, custom model, budget and schedule choice. */
-    public static function migrate(): void {
-        if (get_option('zpte_model_migrated') !== '1.1.0') {
-            $saved = get_option(self::OPTION, []);
-            if (!is_array($saved)) { $saved = []; }
-            if (!isset($saved['model']) || $saved['model'] === 'gpt-4.1') {
-                $saved['model'] = self::DEFAULT_MODEL;
-                update_option(self::OPTION, $saved, true);
-            }
-            update_option('zpte_model_migrated', '1.1.0', false);
-        }
-        // Suite 2.9.9: the owner requested matching PL/EN coverage for every
-        // public page and post, including the backlog before the start date.
-        // Do this once, so later administrator choices are still respected.
-        if (get_option('zpte_coverage_migrated') !== '1.1.2') {
-            $saved = self::all();
-            $saved['older'] = 1;
-            $saved['types'] = array_values(array_unique(array_merge((array) $saved['types'], ['post', 'page'])));
-            update_option(self::OPTION, $saved, true);
-            update_option('zpte_coverage_migrated', '1.1.2', false);
-            update_option('zpte_coverage_rescan', '1', false);
-        }
-    }
-
-    /** First run: new content = published during the last 7 days or later. */
-    public static function ensure_since(): void {
-        if ((string) self::get('since') !== '') { return; }
-        self::update(['since' => wp_date('Y-m-d', time() - 7 * DAY_IN_SECONDS)]);
-    }
-
-    /** Start of the "new content" window in GMT (Y-m-d H:i:s). */
-    public static function since_gmt(): string {
-        $day = (string) self::get('since');
-        if (!preg_match('~^\d{4}-\d{2}-\d{2}$~', $day)) { $day = wp_date('Y-m-d', time() - 7 * DAY_IN_SECONDS); }
-        return get_gmt_from_date($day . ' 00:00:00');
-    }
-
     public static function model(): string {
         $m = trim((string) self::get('model'));
         return preg_match('~^[A-Za-z0-9._:-]{2,80}$~', $m) ? $m : self::DEFAULT_MODEL;
+    }
+
+    public static function effort(): string {
+        $e = (string) self::get('effort');
+        return isset(self::EFFORTS[$e]) ? $e : self::DEFAULT_EFFORT;
+    }
+
+    public static function price(string $model): array {
+        return self::PRICES[$model] ?? self::PRICES[self::DEFAULT_MODEL];
     }
 
     /** Post types offered in the settings: public, with their own URLs. */
     public static function public_types(): array {
         $out = [];
         foreach (get_post_types(['public' => true], 'objects') as $name => $obj) {
-            if ($name === 'attachment' || empty($obj->publicly_queryable) && $name !== 'page') { continue; }
+            if ($name === 'attachment' || (empty($obj->publicly_queryable) && $name !== 'page')) { continue; }
             $out[$name] = (string) ($obj->labels->name ?? $name);
         }
         return $out;
@@ -99,7 +84,6 @@ final class Settings {
 
     // ------------------------------------------------------------------ API key
 
-    /** wp-config.php can define ZPTE_OPENAI_API_KEY instead of saving the key in the database. */
     public static function key_source(): string {
         if (defined('ZPTE_OPENAI_API_KEY') && is_string(ZPTE_OPENAI_API_KEY) && trim(ZPTE_OPENAI_API_KEY) !== '') { return 'constant'; }
         return self::stored_key() !== '' ? 'option' : '';
@@ -115,7 +99,7 @@ final class Settings {
         return is_string($raw) && $raw !== '' ? self::decrypt($raw) : '';
     }
 
-    /** True when a key is saved but can no longer be decrypted (WordPress salts changed). */
+    /** A key is saved but can no longer be decrypted (WordPress salts changed). */
     public static function key_unreadable(): bool {
         $raw = get_option(self::KEY_OPTION, '');
         return is_string($raw) && $raw !== '' && self::decrypt($raw) === '';
@@ -127,7 +111,7 @@ final class Settings {
 
     public static function delete_key(): void { delete_option(self::KEY_OPTION); }
 
-    /** "sk-…a1B2" — enough to recognise the key, useless to anyone reading the screen. */
+    /** "sk-…a1B2": enough to recognise the key, useless to anyone reading the screen. */
     public static function key_hint(): string {
         $k = self::api_key();
         if ($k === '') { return ''; }

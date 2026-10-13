@@ -217,7 +217,12 @@
     if (NEVER.test(p) || (/\.[a-z0-9]{2,5}$/i.test(p) && !/\.html?$/i.test(p))) return href;
     p = normPath(p);
     var isEn = p === '/en/' || p.indexOf('/en/') === 0, np;
-    if (lang === 'en') { if (isEn || excluded(p)) return href; np = enPath(p); }
+    if (lang === 'en') {
+      if (isEn || excluded(p)) return href;
+      // Pages served in English carry the full route list: a page with no English version keeps its Polish address.
+      if (cfg.routes && !routes[p] && !(/^(.*\/)page\/(\d+)\/$/.exec(p) && routes[/^(.*\/)page\/(\d+)\/$/.exec(p)[1]])) return href;
+      np = enPath(p);
+    }
     else { if (!isEn) return href; np = plPath(p); }
     var out = base + np + u.search + u.hash;
     if (/^[a-z][a-z0-9+.-]*:\/\//i.test(s) || s.indexOf('//') === 0) out = u.protocol + '//' + u.host + out;
