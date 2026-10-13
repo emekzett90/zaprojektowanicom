@@ -5,8 +5,8 @@ add_action('admin_menu', function () {
   // Badge: inquiries with status "Nowe" from the contact forms and Studio wyceny (includes/zapytania.php).
   $new = function_exists('zp_inbox_new_count') ? zp_inbox_new_count() : 0;
   $badge = $new > 0 ? ' <span class="awaiting-mod"><span class="pending-count">'.esc_html($new).'</span></span>' : '';
-  add_menu_page('Zaprojektowani Suite','ZP Suite'.$badge,'manage_options','zp-suite','zp_suite_render_command_center_page','dashicons-art',58);
-  add_submenu_page('zp-suite','Command Center','Command Center','manage_options','zp-suite','zp_suite_render_command_center_page');
+  add_menu_page('Zaprojektowani Suite','ZP Suite'.$badge,'manage_options','zp-suite','zp_admin20_dashboard','dashicons-art',58);
+  add_submenu_page('zp-suite','Command Center','Command Center','manage_options','zp-suite','zp_admin20_dashboard');
   add_submenu_page('zp-suite','Strona główna CMS','Strona główna CMS','manage_options','zp-suite-home-cms','zp_suite_render_admin_page');
 });
 

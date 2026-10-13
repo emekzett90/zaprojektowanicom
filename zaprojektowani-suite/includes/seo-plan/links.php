@@ -233,7 +233,7 @@ add_action('wp_head', function () {
 }, 90);
 
 add_filter('the_content', function ($content) {
-  if (!zp_seo_plan_active() || is_admin() || zp_seo_plan_is_en() || !is_singular('post') || !in_the_loop() || !is_main_query()) { return $content; }
+  if (!zp_seo_plan_active() || is_admin() || !is_singular('post') || !in_the_loop() || !is_main_query()) { return $content; }
   if (strpos((string) $content, 'zpu-related') !== false) { return $content; }
   $id = get_the_ID();
   $self = zp_seo_plan_path((string) get_permalink($id));

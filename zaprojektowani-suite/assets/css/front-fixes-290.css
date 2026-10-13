@@ -361,3 +361,64 @@
     stroke-width:1.9!important;
   }
 }
+
+
+/* 2026-10-12: four requested service hero images, desktop only. */
+/* PROPOSAL ONLY — apply after the existing service styles; desktop only. */
+/* Existing transform/animation belongs to the source CSS and is preserved. */
+@media (min-width:1101px) {
+  /* Polerstone composition: move right without changing image size. */
+  html body.page-id-5372 #zp-strony-internetowe-katowice
+  #start.hero[data-zp-service-visual="websites"] .hero-build {
+    translate: clamp(24px, 3vw, 64px) 0 !important;
+  }
+
+  /* WordPress composition: move right, including its attached badges. */
+  html body.page-id-5392 #zp-strony-internetowe-katowice
+  #start.hero[data-zp-wordpress-hero="1"] .hero-build {
+    translate: clamp(24px, 3vw, 64px) 0 !important;
+  }
+
+  /* Branding: right shift on the static stage; 5% reduction on the photo. */
+  html body.page-id-5374 #zp-logo-branding-katowice
+  #start.hero .hero-stage {
+    translate: clamp(24px, 2vw, 48px) 0 !important;
+  }
+  html body.page-id-5374 #zp-logo-branding-katowice
+  #start.hero .hero-stage > .hero-team {
+    scale: .95 !important;
+  }
+
+  /* Shop mockup: move only the static mockup wrapper, preserving its float. */
+  html body.page-id-5373 #zp-sklepy-internetowe-katowice
+  #zhHero[data-zp-service-visual="shops"] .zh__brandMockWrap {
+    translate: calc(-1 * clamp(36px, 4vw, 80px)) 0 !important;
+  }
+  /* Fade the photo itself; attached badges and floating wrappers are unchanged. */
+  html body.page-id-5373 #zp-sklepy-internetowe-katowice
+  #zhHero[data-zp-service-visual="shops"] .zh__brandMockWrap > img.zh__brandMock {
+    -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 70%, transparent 100%) !important;
+    mask-image: linear-gradient(to bottom, #000 0%, #000 70%, transparent 100%) !important;
+    -webkit-mask-repeat: no-repeat !important;
+    mask-repeat: no-repeat !important;
+    -webkit-mask-size: 100% 100% !important;
+    mask-size: 100% 100% !important;
+  }
+}
+
+
+/* 2026-10-13 — O nas: image-only fixes, scoped to this page in PL and EN. */
+#zpAboutX .zpAboutX__heroPerson {
+  -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 74%, rgba(0,0,0,.94) 82%, rgba(0,0,0,.58) 92%, transparent 100%) !important;
+  mask-image: linear-gradient(to bottom, #000 0%, #000 74%, rgba(0,0,0,.94) 82%, rgba(0,0,0,.58) 92%, transparent 100%) !important;
+}
+#zpAboutX .zpAboutX__memberVisual > img {
+  transform: translateY(-8px) !important;
+}
+#zpAboutX .zpAboutX__processPhoto > img {
+  -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 74%, rgba(0,0,0,.94) 82%, rgba(0,0,0,.58) 92%, transparent 100%) !important;
+  mask-image: linear-gradient(to bottom, #000 0%, #000 74%, rgba(0,0,0,.94) 82%, rgba(0,0,0,.58) 92%, transparent 100%) !important;
+}
+@media (max-width:1180px) {
+  #zpAboutX .zpAboutX__teamGrid { row-gap:286px !important; }
+}

@@ -40,6 +40,27 @@ final class Router {
         '/sklepy-internetowe/landing-page-pod-kampanie-meta-ads/' => '/tworzenie-landing-page/',
         '/wiedza/landing-page-pod-kampanie-meta-ads/' => '/tworzenie-landing-page/',
     ];
+    /** Exact public aliases audited on 2026-10-11; source and target must still be the owned route. */
+    const AUDITED_LEGACY_EN = [
+        '/en/kampanie-reklamowe/jak-przygotowac-strone-pod-reklamy-facebook-i-instagram/' => ['/kampanie-reklamowe-meta-ads/jak-przygotowac-strone-pod-reklamy-facebook-i-instagram/', '/en/meta-ads-campaigns/how-to-prepare-your-website-for-facebook-and-instagram-ads/'],
+        '/en/wiedza/strona-internetowa-dla-firmy-co-powinna-zawierac/' => ['/strony-internetowe/strona-internetowa-dla-firmy-co-powinna-zawierac/', '/en/websites/business-website-essentials/'],
+        '/en/wiedza/jak-sprawdzic-czy-strona-internetowa-dziala-skutecznie/' => ['/strony-www/jak-sprawdzic-czy-strona-internetowa-dziala-skutecznie/', '/en/websites/how-to-measure-website-effectiveness/'],
+        '/en/wiedza/jak-przygotowac-brief-do-projektowania-strony-internetowej/' => ['/strony-www/jak-przygotowac-brief-do-projektowania-strony-internetowej/', '/en/websites/how-to-write-a-web-design-brief/'],
+        '/en/wiedza/jak-zwiekszyc-sprzedaz-dzieki-facebook-ads/' => ['/meta-ads/jak-zwiekszyc-sprzedaz-dzieki-facebook-ads/', '/en/meta-ads/how-to-increase-sales-with-facebook-ads/'],
+        '/en/wiedza/jak-mierzyc-konwersje-z-formularza-kontaktowego/' => ['/kampanie-reklamowe-meta-ads/jak-mierzyc-konwersje-z-formularza-kontaktowego/', '/en/meta-ads-campaigns/how-to-track-contact-form-conversions/'],
+        '/en/wiedza-strony-internetowe-seo-i-konwersja/dlaczego-strona-ma-ruch-ale-nie-generuje-zapytan/' => ['/seo-i-konwersja/dlaczego-strona-ma-ruch-ale-nie-generuje-zapytan/', '/en/seo-and-conversion/why-your-website-gets-traffic-but-no-inquiries/'],
+        '/en/wiedza/case-studies-na-stronie-firmowej-jak-pokazac-realizacje/' => ['/ux-cro-analityka/case-studies-na-stronie-firmowej-jak-pokazac-realizacje/', '/en/ux-cro-analytics/how-to-showcase-case-studies-on-your-website/'],
+        '/en/wiedza/dlaczego-profesjonalne-logo-ma-znaczenie-dla-firmy/' => ['/logo-branding/dlaczego-profesjonalne-logo-ma-znaczenie-dla-firmy/', '/en/logo-branding/why-a-professional-logo-matters-for-your-business/'],
+        '/en/wiedza/seo-lokalne-w-katowicach-jak-pozyskiwac-klientow-z-miasta-i-okolic/' => ['/sklepy-internetowe/seo-lokalne-w-katowicach-jak-pozyskiwac-klientow-z-miasta-i-okolic/', '/en/online-stores/local-seo-katowice-how-to-attract-customers/'],
+        '/en/wiedza/ile-kosztuje-logo-dla-firmy-i-co-obejmuje-cena/' => ['/logo-branding/ile-kosztuje-logo-dla-firmy-i-co-obejmuje-cena/', '/en/logo-branding/logo-design-costs-and-whats-included/'],
+        '/en/wiedza/ile-kosztuje-sklep-internetowy-woocommerce-w-2026-roku/' => ['/seo-i-konwersja/ile-kosztuje-sklep-internetowy-woocommerce-w-2026-roku/', '/en/seo-and-conversion/woocommerce-store-cost-2026/'],
+        '/en/wiedza-logo-branding/ksiega-znaku-mini-brandbook-pelna-identyfikacja-wizualna-co-wybrac/' => ['/logo-branding/ksiega-znaku-mini-brandbook-pelna-identyfikacja-wizualna-co-wybrac/', '/en/logo-branding/logo-guidelines-mini-brand-book-or-full-visual-identity/'],
+        '/en/wiedza-logo-branding/brandbook-co-powinien-zawierac-i-jak-go-czytac/' => ['/logo-branding/brandbook-co-powinien-zawierac-i-jak-go-czytac/', '/en/logo-branding/brand-book-essentials-and-how-to-use-it/'],
+        '/en/wiedza/jakie-cechy-powinno-miec-dobre-logo-firmowe/' => ['/logo-branding/jakie-cechy-powinno-miec-dobre-logo-firmowe/', '/en/logo-branding/qualities-of-a-good-company-logo/'],
+        '/en/wiedza/dlaczego-strona-ma-ruch-ale-nie-generuje-zapytan/' => ['/seo-i-konwersja/dlaczego-strona-ma-ruch-ale-nie-generuje-zapytan/', '/en/seo-and-conversion/why-your-website-gets-traffic-but-no-inquiries/'],
+        '/en/wiedza/projekt-logo-firmy-od-czego-zaczac-i-czego-unikac/' => ['/logo-branding/projekt-logo-firmy-od-czego-zaczac-i-czego-unikac/', '/en/logo-branding/company-logo-design-where-to-start-and-what-to-avoid/'],
+    ];
+
     const NEVER = '~^/(?:wp-admin|wp-login\.php|wp-json|wp-content|wp-includes|wp-cron\.php|xmlrpc\.php|feed|comments/feed|wp-sitemap|sitemap|[a-z0-9_-]+-sitemap\d*\.xml|sitemap_index\.xml|robots\.txt|favicon\.ico)(?:/|$|\?)~i';
 
     public static function data(): array {
@@ -57,7 +78,7 @@ final class Router {
             $r = (array) (self::data()['routes'] ?? []);
             $custom = get_option('zpl_routes', []);
             if (is_array($custom)) { foreach ($custom as $pl => $en) { if (is_string($pl) && is_string($en) && $en !== '') { $r[$pl] = $en; } } }
-            self::$routes = $r;
+            self::$routes = (array) apply_filters('zp_en_rewrite_routes', $r);
         }
         return self::$routes;
     }
@@ -114,7 +135,15 @@ final class Router {
      * Resolve an external (site-relative) path.
      * Returns [lang, source, mapped, redirect|null].
      */
-    public static function resolve(string $path): array {
+    public static function resolve(string $path, string $query = '', bool $publicRequest = false): array {
+        // Redirect only these literal public paths, without preview/private/query context.
+        // This precedes reverse matching so an old alias cannot render a duplicate English page.
+        if ($publicRequest && $query === '' && isset(self::AUDITED_LEGACY_EN[$path])) {
+            [$source, $target] = self::AUDITED_LEGACY_EN[$path];
+            if ((self::routes()[$source] ?? null) === $target && !self::is_excluded($source)) {
+                return ['en', '', false, $target];
+            }
+        }
         $path = self::norm_path($path);
         if ($path !== '/en/' && strpos($path, '/en/') !== 0) {
             return ['pl', $path, isset(self::routes()[$path]) || self::paged_en($path) !== null, null];

@@ -28,8 +28,8 @@ final class Runtime {
         Page::$extraSchema = self::opt_list('zpl_extra_schema', '~^[A-Za-z]{2,40}$~');
         if (preg_match('~\.[a-z0-9]{2,5}$~i', $rel) && !preg_match('~\.html?$~i', $rel)) { return; }
 
-        [$lang, $source, $mapped, $redirect] = Router::resolve($rel);
         $query = (string) wp_parse_url($uri, PHP_URL_QUERY);
+        [$lang, $source, $mapped, $redirect] = Router::resolve($rel, $query, in_array((string) ($_SERVER['REQUEST_METHOD'] ?? 'GET'), ['GET', 'HEAD'], true));
         if ($redirect !== null) { self::redirect(Router::base() . $redirect . ($query !== '' ? '?' . $query : ''), 301); }
         if (Router::is_excluded($source)) {
             if ($lang === 'en') { self::redirect(Router::base() . $source . ($query !== '' ? '?' . $query : ''), 302); }
@@ -205,7 +205,7 @@ final class Runtime {
         if ($lang === 'en' && $stats['miss'] > 0 && current_user_can('manage_options')) {
             Missing::remember(array_slice(Page::$missing, 0, 400, true), $source);
         }
-        return $html;
+        return (string) apply_filters('zp_en_public_price_html', $html, $lang, $source);
     }
 
     private static function seo(string $html, string $lang, string $source, array $stats): string {

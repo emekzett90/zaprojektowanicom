@@ -1,0 +1,1 @@
+2.9.15: końcowe porządkowanie danych Article na 6 audytowanych wpisach PL i EN. Weryfikacja rzeczywistego Rank Math i canonical w head, usunięcie wyłącznie potwierdzonych duplikatów w body. Wygląd, CSS, animacje i pozostałe typy schema bez zmian. Brak ponownego uruchomienia migracji metadanych 2.9.14.

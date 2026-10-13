@@ -1,0 +1,10 @@
+Zaprojektowani Suite 2.9.14 — audyt 9.10.2026
+
+- Strona główna: pomija sześć skryptów Elementora tylko przy rozpoznanym układzie trzech shortcode’ów dla użytkowników anonimowych. Zachowuje CSS, Spline i wszystkie animacje. Nieznane widgety, animacje Elementora lub zależności API przywracają oryginalny HTML. Zalogowani, edytory i parametr zp_keep_elementor pozostają przy pełnym runtime.
+- Schema: usuwa stare Article/BlogPosting z grafów JSON-LD w treści wpisów, zachowując FAQPage/HowTo i poprawne kanoniczne dane. Usługi z rejestru mają jeden Service; niewłaściwy Article i zapisane duplikaty Service są pomijane.
+- Rank Math: jednorazowa, zabezpieczona kopią naprawa powielonych fraz na 23 stronach i błędnych metadanych dwóch artykułów o Katowicach. Zachowuje ręczne zmiany. Dokłada dokładne tłumaczenia EN nowych tytułów/opisów.
+- Cztery zweryfikowane stare adresy dostają przekierowania 301 na odpowiedniki tematyczne.
+- Widoczność AI: llms.txt korzysta z aktualnych metadanych i nie pomija poradników bez tytułu w planie; test sprawdza treść, canonical i robots.txt oraz Claude-SearchBot/Googlebot. Liczniki jasno opisują ograniczenia User-Agent. Kolejka IndexNow nie gubi błędnych zgłoszeń i ponawia je z ograniczeniami.
+
+Wersja planu SEO pozostaje 2.9.13, więc aktualizacja nie uruchamia ponownie szerokiej migracji treści ani układu strony.
+Kopia metadanych: opcja zp_rankmath_repair_2914_backup. Raport: zp_rankmath_repair_2914_result.

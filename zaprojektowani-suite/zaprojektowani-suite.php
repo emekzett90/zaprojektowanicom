@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Zaprojektowani Suite
  * Description: Zaprojektowani Suite z wersją angielską strony (PL/EN, adresy /en/, przełącznik języka), automatycznymi naprawami SEO, nagłówków, zasobów i paginacji na podstawie audytu z 13.09.2026.
- * Version: 2.9.13
+ * Version: 2.9.66
  * Requires at least: 6.5
  * Requires PHP: 8.0
  * Author: Zaprojektowani.com
@@ -16,7 +16,7 @@ if (defined('ZP_SUITE_VERSION')) {
   return;
 }
 
-define('ZP_SUITE_VERSION', '2.9.13');
+define('ZP_SUITE_VERSION', '2.9.66');
 define('ZP_SUITE_PATH', plugin_dir_path(__FILE__));
 define('ZP_SUITE_URL', plugin_dir_url(__FILE__));
 
@@ -50,6 +50,7 @@ require_once ZP_SUITE_PATH . 'includes/meta-verified.php';
 require_once ZP_SUITE_PATH . 'includes/initial-bg-2275.php';
 require_once ZP_SUITE_PATH . 'includes/shortcodes.php';
 require_once ZP_SUITE_PATH . 'includes/optimizer.php';
+require_once ZP_SUITE_PATH . 'includes/performance-shortcode-home.php';
 require_once ZP_SUITE_PATH . 'includes/mobile-sticky-cta.php';
 require_once ZP_SUITE_PATH . 'includes/admin.php';
 // Panel clean-up: menu order, Command Center and Zapytania look, landing for links to removed screens.
@@ -1585,6 +1586,105 @@ require_once ZP_SUITE_PATH . 'includes/ultimate-seo/bootstrap.php';
 
 // v2.3.0 — keyword plan: Rank Math values, nationwide service pages, redirects, schema and indexation.
 require_once ZP_SUITE_PATH . 'includes/seo-plan/bootstrap.php';
+require_once ZP_SUITE_PATH . 'includes/rankmath-repair-2914.php';
+// Reviewed Senuto content package; posts are created only by the native admin review form.
+require_once ZP_SUITE_PATH . 'includes/content-batch-20261009.php';
+require_once ZP_SUITE_PATH . 'includes/cache-20261009.php';
+require_once ZP_SUITE_PATH . 'includes/gsc-quality-20261009.php';
+// Admin reports and calendar reuse native WordPress/Rank Math data.
+require_once ZP_SUITE_PATH . 'includes/gsc-quality-translation-20261009.php';
+require_once ZP_SUITE_PATH . 'includes/admin-stats-20261009.php';
+require_once ZP_SUITE_PATH . 'includes/admin-stats-presentation-20261010.php';
+require_once ZP_SUITE_PATH . 'includes/admin-translations-20261009.php';
+require_once ZP_SUITE_PATH . 'includes/admin-calendar-20261009.php';
+require_once ZP_SUITE_PATH . 'includes/article-google-20261010.php';
+ZP_Article_Google_20261010::register();
+require_once ZP_SUITE_PATH . 'includes/admin-lighthouse-20261010.php';
+require_once ZP_SUITE_PATH . 'includes/admin-experience-20261009.php';
+require_once ZP_SUITE_PATH . 'includes/admin-workspace-20261010.php';
+require_once ZP_SUITE_PATH . 'includes/admin-workspace-chrome-20261010.php';
+require_once ZP_SUITE_PATH . 'includes/admin-single-translator-20261010.php';
+ZP_Single_Translator_20261010::register();
+// Versioned EN rewrites reuse the existing Translator UI and server-side API key.
+require_once ZP_SUITE_PATH . 'includes/en-rewrite-transport-20261011.php';
+require_once ZP_SUITE_PATH . 'includes/en-source-guard-20261011.php';
+require_once ZP_SUITE_PATH . 'includes/en-rewrite-20261011.php';
+ZP_EN_Rewrite_20261011::register();
+require_once ZP_SUITE_PATH . 'includes/en-rewrite-diagnostics-20261011.php';
+ZP_EN_Rewrite_Diagnostics_20261011::register();
+require_once ZP_SUITE_PATH . 'includes/en-rewrite-local-repair-20261011.php';
+ZP_EN_Local_Repair_20261011::register();
+require_once ZP_SUITE_PATH . 'includes/en-serving-recovery-20261011.php';
+ZP_EN_Serving_Recovery_20261011::register();
+// Incremental Luna work starts only after the sealed full137 bootstrap.
+require_once ZP_SUITE_PATH . 'includes/en-rewrite-nightly-20261011.php';
+ZP_EN_Rewrite_Nightly_20261011::register();
+// Editor analysis only: native content and SEO fields are never rewritten.
+require_once ZP_SUITE_PATH . 'includes/rankmath-content-bridge-20261011.php';
+ZP_RankMath_Content_Bridge_20261011::register();
+require_once ZP_SUITE_PATH . 'includes/translator-approved-overlay-20261011.php';
+ZP_Translator_Approved_Overlay_20261011::register();
+// Rounded USD is a public presentation layer after verified full EN translation.
+require_once ZP_SUITE_PATH . 'includes/en-public-currency-20261011.php';
+ZP_EN_Public_Currency_20261011::register();
+require_once ZP_SUITE_PATH . 'includes/en-studio-budget-20261011.php';
+ZP_EN_Studio_Budget_20261011::register();
+// Senuto-backed topics, OpenAI drafts and reviewed native publication dates.
+require_once ZP_SUITE_PATH . 'includes/admin-content-preparation-20261010.php';
+require_once ZP_SUITE_PATH . 'includes/preparation-image-http-diagnostics-20261011.php';
+ZP_Preparation_Image_HTTP_Diagnostics_20261011::register();
+// Read-only current preparation and published-media diagnostics.
+require_once ZP_SUITE_PATH . 'includes/preparation-review-diagnostics-20261011.php';
+ZP_Preparation_Review_Diagnostics_20261011::register();
+require_once ZP_SUITE_PATH . 'includes/published-prepared-image-compression-20261011.php';
+ZP_Published_Prepared_Image_Compression_20261011::register();
+// Explicit, reversible photo replacement in already prepared native drafts.
+require_once ZP_SUITE_PATH . 'includes/content-preparation-photo-refresh-20261010.php';
+// Automatically select researched business topics, links, categories and primary sources.
+require_once ZP_SUITE_PATH . 'includes/content-preparation-auto-20261010.php';
+// Bounded extra Senuto research reuses the original corpus and existing background planner.
+require_once ZP_SUITE_PATH . 'includes/content-preparation-research-expansion-20261010.php';
+ZP_Preparation_Research_Expansion_20261010::register();
+require_once ZP_SUITE_PATH . 'includes/content-preparation-research-statistics-20261011.php';
+ZP_Preparation_Statistics_Research_20261011::register(false);
+// Reviewed photo refresh: native private workspace; starts only after an explicit form action.
+require_once ZP_SUITE_PATH . 'includes/managed-webp-20261010.php';
+require_once ZP_SUITE_PATH . 'includes/content-preparation-images-speed-20261010.php';
+require_once ZP_SUITE_PATH . 'includes/article-photo-refresh-20261010.php';
+ZP_Article_Photo_Refresh_20261010::register();
+require_once ZP_SUITE_PATH . 'includes/article-photo-metadata-diagnostics-20261011.php';
+ZP_Article_Photo_Metadata_Diagnostics_20261011::register();
+// Read-only provenance of existing generated article images.
+require_once ZP_SUITE_PATH . 'includes/prepared-image-compression-20261010.php';
+ZP_Prepared_Image_Compression_20261010::register();
+require_once ZP_SUITE_PATH . 'includes/article-photo-core-flags-reconciliation-20261011.php';
+ZP_Article_Photo_Core_Flags_Reconciliation_20261011::register();
+require_once ZP_SUITE_PATH . 'includes/published-prepared-image-compression-adapter-20261011.php';
+ZP_Published_Prepared_Compression_Adapter_20261011::register();
+// Keep one description when Rank Math has actually emitted its native tag.
+require_once ZP_SUITE_PATH . 'includes/content-preparation-seo-description-20261010.php';
+ZP_Preparation_SEO_Description_20261010::register();
+// Reviewed image replacement for the already published owned article.
+require_once ZP_SUITE_PATH . 'includes/published-prepared-photo-refresh-20261010.php';
+ZP_Published_Prepared_Photo_Refresh_20261010::register();
+require_once ZP_SUITE_PATH . 'includes/admin-webp-diagnostics-20261010.php';
+ZP_Admin_WebP_Diagnostics_20261010::register();
+require_once ZP_SUITE_PATH . 'includes/admin-queue-health-20261010.php';
+ZP_Admin_Queue_Health_20261010::register();
+require_once ZP_SUITE_PATH . 'includes/admin-queue-resume-20261010.php';
+ZP_Admin_Queue_Resume_20261010::register();
+require_once ZP_SUITE_PATH . 'includes/admin-diagnostics-panel-20261011.php';
+ZP_Admin_Diagnostics_Panel_20261011::register();
+// Existing Senuto projects: authenticated reports, daily sync and measured history.
+require_once ZP_SUITE_PATH . 'includes/admin-senuto-positions-20261010.php';
+require_once ZP_SUITE_PATH . 'includes/admin-seo-plan-20261011.php';
+ZP_Admin_SEO_Plan_20261011::register();
+// Render the visible mobile hero immediately; keep its existing visual and motion rules.
+require_once ZP_SUITE_PATH . 'includes/mobile-hero-stability-2917.php';
+// Reserve early loading for the existing mobile hero italic font.
+require_once ZP_SUITE_PATH . 'includes/mobile-font-preload-20261010.php';
+// Contrast and accessible names, without changing layout or motion.
+require_once ZP_SUITE_PATH . 'includes/frontend-accessibility-20261010.php';
 
 // v2.9.4 — home page: a tile for every industry page, and a looser layout for the SEO section above the footer.
 require_once ZP_SUITE_PATH . 'includes/home-294.php';
@@ -1603,3 +1703,7 @@ require_once ZP_SUITE_PATH . 'includes/contact-form-280.php';
 require_once ZP_SUITE_PATH . 'includes/contact-quick.php';
 /* Duży formularz: zdjęcie zespołu zamiast podglądu „Nowa wiadomość”, na każdej stronie inne niż reszta zdjęć zespołu na niej. */
 require_once ZP_SUITE_PATH . 'includes/contact-team-photo.php';
+
+// Sole Luna admin view replaces the old page callback after all legacy menu registrations.
+require_once ZP_SUITE_PATH . 'includes/admin-luna-translator-ui-20261011.php';
+ZP_Luna_Translator_UI_20261011::register();

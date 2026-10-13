@@ -141,7 +141,172 @@ function zp_seo_service_transform(string $html, array $spec, string $variant): s
   if ($missed && defined('WP_DEBUG') && WP_DEBUG) {
     error_log('[zp-seo-plan] ' . $variant . ': not found in template: ' . implode(' | ', $missed));
   }
-  return $html;
+  return zp_seo_service_sync_shop_faq($html, $variant);
+}
+
+/** Kept for callers; complete-document synchronization runs after the translator. */
+function zp_seo_service_sync_shop_faq(string $html, string $variant): string { return $html; }
+
+/** Early path gate only: never initialize Router caches or query/auth state here. */
+function zp_seo_service_faq_candidate($uri): bool {
+  if (!is_string($uri) || $uri === '' || $uri[0] !== '/' || substr($uri, 0, 2) === '//') { return false; }
+  $path = zp_seo_plan_path($uri);
+  $paths = array_fill_keys(array_merge(array_keys(zp_seo_plan_data('pages')), [
+    '/tworzenie-stron-internetowych/', '/tworzenie-sklepow-internetowych/', '/projektowanie-logo/',
+    '/identyfikacja-wizualna/', '/strony-internetowe-katowice/', '/sklepy-internetowe-katowice/', '/logo-branding-katowice/',
+  ]), true);
+  if (isset($paths[$path])) { return true; }
+  if (strpos($path, '/en/') !== 0) { return false; }
+  $file = defined('ZPL_DIR') ? ZPL_DIR . 'data/routes.php' : '';
+  $data = $file !== '' && is_file($file) ? (array) include $file : [];
+  $routes = is_array($data['routes'] ?? null) ? $data['routes'] : [];
+  $custom = get_option('zpl_routes', []);
+  foreach ($paths as $pl => $_) {
+    $en = is_array($custom) && is_string($custom[$pl] ?? null) ? $custom[$pl] : ($routes[$pl] ?? '/en' . $pl);
+    if (is_string($en) && $en === $path) { return true; }
+  }
+  return false;
+}
+
+function zp_seo_service_faq_context(): bool {
+  if (!did_action('wp') || !zp_seo_plan_active() || is_admin() || !is_singular('page') || is_404()
+    || is_feed() || is_preview() || isset($_GET['elementor-preview'])
+    || (defined('REST_REQUEST') && REST_REQUEST) || (function_exists('wp_doing_ajax') && wp_doing_ajax())
+    || (function_exists('wp_doing_cron') && wp_doing_cron())) { return false; }
+  $id = (int) get_queried_object_id();
+  if (!$id || get_post_status($id) !== 'publish' || (string) get_post_field('post_password', $id) !== '') { return false; }
+  $path = zp_seo_plan_path((string) get_permalink($id));
+  return isset(zp_seo_service_registry()[$path]);
+}
+
+/** Read text only; the source DOM/markup is never saved back to the document. */
+function zp_seo_service_faq_plain(DOMNode $node): string {
+  $copy = $node->cloneNode(true);
+  $doc = new DOMDocument('1.0', 'UTF-8');
+  $copy = $doc->importNode($copy, true); $doc->appendChild($copy);
+  $xp = new DOMXPath($doc);
+  foreach ($xp->query('//script|//style|//svg|//i|//*[contains(concat(" ",normalize-space(@class)," ")," faq-no ")]') as $remove) {
+    if ($remove->parentNode) { $remove->parentNode->removeChild($remove); }
+  }
+  $value = (string) $doc->saveHTML($copy);
+  $value = preg_replace('~</(?:p|div|li|ul|ol|h[1-6]|tr)\s*>|<br\b[^>]*>~i', ' ', $value);
+  $value = html_entity_decode(wp_strip_all_tags((string) $value), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+  return trim((string) preg_replace('~[\s\x{00a0}]+~u', ' ', $value));
+}
+
+/** Only the actual template FAQ section, never unrelated sidebar/footer details. */
+function zp_seo_service_faq_items(string $html): ?array {
+  if (!class_exists('DOMDocument')) { return null; }
+  if (!preg_match_all('~<section\b[^>]*\bid\s*=\s*(["\'])(faq|zpFaqShopKatNavy)\1[^>]*>~i', $html, $sections)) { return []; }
+  if (count($sections[0]) !== 1) { return null; }
+  $range = zp_seo_html_section_range($html, $sections[0][0]);
+  if (!$range) { return null; }
+  $fragment = substr($html, $range[0], $range[1] - $range[0]);
+  if (strlen($fragment) > 120000) { return null; }
+  $doc = new DOMDocument('1.0', 'UTF-8'); $previous = libxml_use_internal_errors(true);
+  try { $loaded = $doc->loadHTML('<?xml encoding="UTF-8"?>' . $fragment, LIBXML_NONET | LIBXML_NOERROR | LIBXML_NOWARNING); }
+  finally { libxml_clear_errors(); libxml_use_internal_errors($previous); }
+  if (!$loaded) { return null; }
+  $xp = new DOMXPath($doc); $items = []; $seen = [];
+  $blocks = $xp->query('//section[@id="faq"]//details[contains(concat(" ",normalize-space(@class)," ")," faq-item ")]'
+    . '|//section[@id="zpFaqShopKatNavy"]//article[contains(concat(" ",normalize-space(@class)," ")," zpFaqShopKatNavy__item ")]');
+  if (!$blocks || $blocks->length > 50) { return null; }
+  foreach ($blocks as $block) {
+    // Closed/collapsed answers are legitimate; hidden whole items/sidebars are not.
+    if ($xp->query('ancestor-or-self::*[@hidden or @inert or translate(@aria-hidden,"TRUE","true")="true"]|ancestor::aside|ancestor::nav|ancestor::header|ancestor::footer', $block)->length) { continue; }
+    $hidden = false;
+    for ($parent = $block; $parent instanceof DOMElement; $parent = $parent->parentNode) {
+      if (preg_match('~(?:display\s*:\s*none|visibility\s*:\s*hidden)~i', $parent->getAttribute('style'))) { $hidden = true; break; }
+    }
+    if ($hidden) { continue; }
+    $shop = strtolower($block->nodeName) === 'article';
+    $q = $xp->query($shop ? './button//strong' : './summary', $block)->item(0);
+    $a = $xp->query('.//div[contains(concat(" ",normalize-space(@class)," ")," ' . ($shop ? 'zpFaqShopKatNavy__answer' : 'faq-answer') . ' ")]', $block)->item(0);
+    if (!$q || !$a) { return null; }
+    $question = zp_seo_service_faq_plain($q); $answer = zp_seo_service_faq_plain($a);
+    if ($question === '' || $answer === '' || strlen($question) > 600 || strlen($answer) > 12000 || isset($seen[$question])) { return null; }
+    $seen[$question] = true;
+    $items[] = ['@type' => 'Question', 'name' => $question, 'acceptedAnswer' => ['@type' => 'Answer', 'text' => $answer]];
+  }
+  return $items;
+}
+
+/** Preserve non-FAQ JSON-LD nodes, including object/array shape and multi-type nodes. */
+function zp_seo_service_faq_prune($value, bool &$changed) {
+  if ($value instanceof stdClass) {
+    $type = $value->{'@type'} ?? null;
+    $types = is_array($type) ? $type : [$type];
+    $remaining = array_values(array_filter($types, static function ($t) { return !in_array($t, ['FAQPage', 'https://schema.org/FAQPage', 'http://schema.org/FAQPage'], true); }));
+    if (count($remaining) !== count($types)) {
+      $changed = true;
+      if (!$remaining) { return null; }
+      $value->{'@type'} = is_array($type) ? $remaining : $remaining[0];
+    }
+    foreach (get_object_vars($value) as $key => $part) {
+      $new = zp_seo_service_faq_prune($part, $changed);
+      if ($new === null && $part !== null) { unset($value->{$key}); } else { $value->{$key} = $new; }
+    }
+  } elseif (is_array($value)) {
+    $out = [];
+    foreach ($value as $part) {
+      $new = zp_seo_service_faq_prune($part, $changed);
+      if ($new !== null || $part === null) { $out[] = $new; }
+    }
+    $value = $out;
+  }
+  return $value;
+}
+
+/** Final HTML, after ZPL translation and all head/body emitters; no DOM reserialization. */
+function zp_seo_service_faq_sync_document(string $html): string {
+  if (strlen($html) > 8000000 || stripos($html, '<html') === false || stripos($html, '</head>') === false
+    || stripos($html, '</body>') === false || !preg_match('//u', $html)) { return $html; }
+  $items = zp_seo_service_faq_items($html);
+  if ($items === null) { return $html; }
+  $failed = false;
+  $flags = JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_PRESERVE_ZERO_FRACTION;
+  $result = preg_replace_callback('~(<script\b(?:"[^"]*"|\'[^\']*\'|[^\'">])*>)(.*?)(</script\s*>)~is', static function ($m) use ($flags, &$failed) {
+    if (!preg_match('~\stype\s*=\s*(["\'])application/ld\+json\1(?=\s|/?>)~i', $m[1]) ) { return $m[0]; }
+    if (strlen($m[2]) > 1000000) { $failed = true; return $m[0]; }
+    $data = json_decode($m[2], false, 64);
+    if (json_last_error() !== JSON_ERROR_NONE) { if (stripos($m[2], 'FAQPage') !== false) { $failed = true; } return $m[0]; }
+    $changed = false; $new = zp_seo_service_faq_prune($data, $changed);
+    if (!$changed) { return $m[0]; }
+    if ($new === null) { return ''; }
+    $json = wp_json_encode($new, $flags);
+    if (!is_string($json)) { $failed = true; return $m[0]; }
+    return $m[1] . $json . $m[3];
+  }, $html);
+  if (!is_string($result) || $failed) { return $html; }
+  if (!$items) { return $result; }
+  $schema = wp_json_encode(['@context' => 'https://schema.org', '@type' => 'FAQPage', 'mainEntity' => $items], $flags);
+  if (!is_string($schema)) { return $html; }
+  $at = strripos($result, '</body>');
+  return substr($result, 0, $at) . '<script type="application/ld+json" id="zp-service-faq-schema">' . $schema . '</script>' . substr($result, $at);
+}
+
+function zp_seo_service_faq_document_buffer(string $chunk, int $phase): string {
+  static $pending = ''; static $bypass = false;
+  if ($phase & PHP_OUTPUT_HANDLER_CLEAN) { $pending = ''; $bypass = false; return ''; }
+  if ($bypass) { if ($phase & PHP_OUTPUT_HANDLER_FINAL) { $bypass = false; } return $chunk; }
+  $pending .= $chunk;
+  if (strlen($pending) > 8000000) { $out = $pending; $pending = ''; $bypass = !($phase & PHP_OUTPUT_HANDLER_FINAL); return $out; }
+  if (!($phase & PHP_OUTPUT_HANDLER_FINAL)) { return ''; }
+  $html = $pending; $pending = '';
+  if (!zp_seo_service_faq_context()) { return $html; }
+  foreach (headers_list() as $header) {
+    if ((stripos($header, 'Content-Type:') === 0 && stripos($header, 'text/html') === false)
+      || stripos($header, 'Content-Encoding:') === 0) { return $html; }
+  }
+  try { return zp_seo_service_faq_sync_document($html); } catch (Throwable $error) { return $html; }
+}
+
+// Included before plugins_loaded: outer to Runtime::boot (PHP_INT_MIN), so EN is already translated.
+// The early gate is pure; actual public page/status checks occur only after WordPress queried the page.
+if (($_SERVER['REQUEST_METHOD'] ?? '') === 'GET' && !(defined('WP_CLI') && WP_CLI)
+  && zp_seo_service_faq_candidate($_SERVER['REQUEST_URI'] ?? '') && empty($GLOBALS['zp_seo_service_faq_buffer'])) {
+  $GLOBALS['zp_seo_service_faq_buffer'] = true;
+  ob_start('zp_seo_service_faq_document_buffer');
 }
 
 /** Replace the first occurrence of $old, treating any run of whitespace as flexible. */
@@ -293,6 +458,9 @@ function zp_seo_shop_guide_html(): string {
 /* ------------------------------------------------------------------- specs */
 
 function zp_seo_service_spec(string $variant): ?array {
+  // Local originals bypass the spec in English; the national shop has its own EN
+  // dictionary, so the new Polish demand copy must not change its translation input.
+  $demand_pl = !zp_seo_plan_is_en();
   $L = static function (string $path, string $text): string {
     return '<a class="zpSeoLink" href="' . esc_url(home_url($path)) . '">' . $text . '</a>';
   };
@@ -354,10 +522,12 @@ function zp_seo_service_spec(string $variant): ?array {
           ['new', 'Czy możemy spotkać się w Katowicach?', 'Tak. Nasze biuro mieści się w Katowicach przy <strong>ul. Modelarskiej 18/2</strong>. Na spotkaniu omawiamy brief, cele strony i zakres prac. Kolejne etapy — makiety, projekt i odbiory — prowadzimy w biurze albo online, jak wygodniej.'],
           ['new', 'Czy tworzycie strony internetowe dla firm z całego Śląska?', 'Tak. Pracujemy z firmami z Katowic i całego województwa śląskiego, a także z innych regionów Polski. Firmom działającym lokalnie układamy strukturę treści pod <strong>wyszukiwania lokalne</strong> i łączymy stronę z Profilem Firmy w Google.' . $AS('/agencja-reklamowa-katowice/', ' Jeśli oprócz strony potrzebujesz logo i reklam, zobacz, co robi nasza ', 'agencja reklamowa w Katowicach', '.')],
           ['keep', 2],
-          ['new', 'Ile kosztuje strona internetowa w Katowicach?', 'Cena zależy od zakresu, a nie od miasta: liczby podstron, poziomu projektu, treści i funkcji. Od czego zależy cena, wyjaśniamy w poradniku ' . $L($cost_www, 'ile kosztuje strona internetowa') . ', a dokładną wycenę przygotujemy po uzupełnieniu ' . $L('/studio-wyceny/', 'Studia Wyceny') . '.'],
+          ['new', 'Ile kosztuje strona internetowa w Katowicach?', 'Strony firmowe realizujemy od <strong>3 999 zł</strong>. Cena zależy od liczby podstron, projektu, treści i funkcji; osobno ustalamy zakres rezerwacji, katalogu czy integracji. Pakiety porównasz wyżej, a czynniki wyceny opisujemy w poradniku ' . $L($cost_www, 'ile kosztuje strona internetowa') . '. Dokładną propozycję przygotujemy po uzupełnieniu ' . $L('/studio-wyceny/', 'Studia Wyceny') . '.'],
           ['keep', 3],
           ['new', 'Gdzie znajdę więcej o tworzeniu stron internetowych?', 'Pakiety i realizacje pokazujemy wyżej na tej stronie. Więcej o procesie i o tym, czym różni się strona wizytówka, strona firmowa i rozbudowany serwis, piszemy na stronie ' . $L('/tworzenie-stron-internetowych/', 'tworzenie stron internetowych') . '.'],
           ['keep', 8],
+          ['new', 'Co przygotować przed spotkaniem o stronie internetowej w Katowicach?', 'Przygotuj listę usług, grupy klientów, obszar działania, przykładowe realizacje i sposób przyjmowania zapytań. Warto zaznaczyć, czy potrzebujesz formularza, rezerwacji wizyt czy katalogu. Dzięki temu brief w naszym biurze przy Modelarskiej 18/2 dotyczy konkretnego zakresu. Zobacz, jak ułożyć ' . $L('/seo-i-konwersja/struktura-podstrony-uslugowej-premium/', 'podstronę konkretnej usługi') . ' oraz jakie elementy powinna zawierać ' . $L('/sklepy-internetowe/strona-internetowa-dla-firmy-z-katowic-co-powinna-zawierac-zeby-zdobywac-lokalnych-klientow/', 'strona internetowa firmy z Katowic') . '.'],
+          ['new', 'Jak dopasować stronę do firmy, która obsługuje klientów lokalnie?', 'Dane kontaktowe, opis rzeczywistego obszaru obsługi i podstrony usług powinny odpowiadać temu, czego klient szuka przed telefonem lub wizytą. W portfolio Apartament Piękna pokazuje stronę z rezerwacjami, a Siemianowski — strukturę usług kancelarii. To różne zakresy, dlatego dopasowujemy stronę do sposobu pracy firmy. Więcej o widoczności lokalnej: ' . $L('/sklepy-internetowe/seo-lokalne-w-katowicach-jak-pozyskiwac-klientow-z-miasta-i-okolic/', 'SEO lokalne w Katowicach') . '.'],
         ],
         'replace' => [
           ['Tworzymy strony dla firm z Katowic, Śląska i całej Polski: od', 'Studio z Katowic, ul. Modelarska 18/2. Tworzymy strony internetowe dla firm ze Śląska: od'],
@@ -365,6 +535,8 @@ function zp_seo_service_spec(string $variant): ?array {
           ['<p class="section-kicker">Katowice • Śląsk • cała Polska</p>', '<p class="section-kicker">Katowice • ul. Modelarska 18/2 • Śląsk</p>'],
           ['<h2 class="section-title"> Jedno studio. <strong>Współpraca bez granic lokalizacji.</strong> </h2>', '<h2 class="section-title">Spotkajmy się <strong>w Katowicach.</strong></h2>'],
           ['Z Katowic projektujemy marki dla firm z całej Polski. Brief, prezentacje kierunków, konsultacje i przekazanie plików możemy przeprowadzić online — etap po etapie.', 'Zapraszamy do naszego biura przy ul. Modelarskiej 18/2 w Katowicach — tam omówimy brief, cele i zakres strony. Jeśli wygodniej, cały proces przeprowadzimy online. Pełny zakres usług opisujemy na stronie ' . $L('/tworzenie-stron-internetowych/', 'tworzenie stron internetowych') . '.'],
+          ['Duże projekty. <strong>Jeszcze większy kontekst.</strong>', 'Projektowanie stron w Katowicach. <strong>Zobacz zakres naszych realizacji.</strong>'],
+          ['Jedenaście wybranych realizacji — z pełniejszym opisem, zakresem, efektem i bezpośrednim podglądem strony. Każdy projekt ma <strong>własny cel, język, kolor i ścieżkę do kontaktu.</strong>', 'Studio w Katowicach, projekty dla różnych branż: <strong>Apartament Piękna</strong> łączy stronę z rezerwacjami, <strong>Siemianowski</strong> prezentuje specjalizacje kancelarii, a <strong>Gravia</strong> pokazuje realizacje infrastrukturalne i moduł kariery. Wybierz przykład zbliżony do zakresu Twojej firmy i sprawdź opis prac oraz stronę live.'],
         ],
       ];
 
@@ -376,16 +548,16 @@ function zp_seo_service_spec(string $variant): ?array {
         'faq' => [
           ['new', 'Czy tworzycie sklepy internetowe dla firm z całej Polski?', 'Tak. Projektujemy i wdrażamy <strong>sklepy internetowe dla firm z całej Polski</strong>. Najczęściej pracujemy na WordPressie i WooCommerce, ponieważ daje to dużą elastyczność przy sprzedaży produktów, usług, zapytań B2B, konfiguratorów, płatności, dostaw, SEO oraz późniejszym rozwoju sklepu. Firmy ze Śląska zapraszamy też do biura — zobacz ' . $local('sklepy-katowice', 'sklepy internetowe w Katowicach') . '.'],
           ['keep', 2], ['keep', 3], ['keep', 4], ['keep', 5],
-          ['new', 'Ile kosztuje stworzenie sklepu internetowego?', 'Cena zależy od zakresu: liczby produktów i kategorii, projektu graficznego, treści, integracji płatności i dostaw, wariantów, filtrów, automatyzacji i SEO. Orientacyjne kwoty opisujemy w poradniku ' . $L('/seo-i-konwersja/ile-kosztuje-sklep-internetowy-woocommerce-w-2026-roku/', 'ile kosztuje sklep internetowy') . ', a dokładną ' . $L('/studio-wyceny/', 'wycenę sklepu internetowego') . ' przygotujemy po kilku pytaniach w Studio Wyceny.'],
+          ['new', 'Ile kosztuje stworzenie sklepu internetowego?', $demand_pl ? 'Sklepy WooCommerce realizujemy od <strong>6 499 zł</strong>. Wycena zależy od liczby produktów i kategorii, projektu, wariantów, płatności, dostaw oraz integracji. Sklep detaliczny i system z zamówieniami hurtowymi wymagają innego zakresu. Porównaj pakiety wyżej i przeczytaj, ' . $L('/seo-i-konwersja/ile-kosztuje-sklep-internetowy-woocommerce-w-2026-roku/', 'ile kosztuje sklep internetowy') . '. Dokładną ' . $L('/studio-wyceny/', 'wycenę sklepu internetowego') . ' przygotujemy na podstawie Twojej oferty i wymaganych funkcji.' : 'Cena zależy od zakresu: liczby produktów i kategorii, projektu graficznego, treści, integracji płatności i dostaw, wariantów, filtrów, automatyzacji i SEO. Orientacyjne kwoty opisujemy w poradniku ' . $L('/seo-i-konwersja/ile-kosztuje-sklep-internetowy-woocommerce-w-2026-roku/', 'ile kosztuje sklep internetowy') . ', a dokładną ' . $L('/studio-wyceny/', 'wycenę sklepu internetowego') . ' przygotujemy po kilku pytaniach w Studio Wyceny.'],
           // 2.8.0: payments and B2B answers point to the articles from content batch 4.
           ['keep', 7, $AS('/sklepy-internetowe/bramka-platnicza/', 'Jak wybrać operatora i podłączyć go do WooCommerce, wyjaśniamy w poradniku o tym, jak działa ', 'bramka płatnicza', '.')],
-          ['keep', 8, $AS('/sklepy-internetowe/sklep-b2b/', 'Funkcje i platformy opisujemy w poradniku o tym, jak zbudować ', 'sklep B2B', '.')],
+          $demand_pl ? ['new', 'Czy tworzycie sklepy B2B, hurtowe lub katalogi zapytań?', 'Tak. W portfolio <strong>ProScarves</strong> łączy sklep detaliczny z osobną ścieżką zapytań hurtowych dla klubów, firm i organizacji, a <strong>Bransoletka24</strong> obsługuje detal i hurt w jednym sklepie WooCommerce. Przed wyceną ustalamy, czy klient ma kupować od razu, czy przesyłać zapytanie, oraz jak mają działać ceny i warianty. Zobacz ' . $L('/tworzenie-sklepow-internetowych/#portfolio-sklepy', 'realizacje sklepów') . ' i poradnik ' . $L('/sklepy-internetowe/sklep-b2b/', 'sklep B2B') . '.'] : ['keep', 8, $AS('/sklepy-internetowe/sklep-b2b/', 'Funkcje i platformy opisujemy w poradniku o tym, jak zbudować ', 'sklep B2B', '.')],
           ['keep', 9], ['keep', 10], ['keep', 11], ['keep', 12],
-          ['new', 'Czy projektujecie sklepy WooCommerce pod konkretne branże?', 'Tak. Sklep dla producenta, marki premium, firmy B2B, salonu, dystrybutora albo marki lokalnej powinien mieć inną strukturę kategorii, kart produktów, filtrów i ścieżki zakupu. Dlatego dopasowujemy WooCommerce do produktu, marży, sposobu sprzedaży i dalszego SEO e-commerce.' . $AS('/sklepy-internetowe/seo-sklepu-internetowego/', ' Jak przygotować sklep pod Google już przy budowie, opisujemy w poradniku ', 'SEO sklepu internetowego', '.')],
+          ['new', 'Czy projektujecie sklepy WooCommerce pod konkretne branże?', $demand_pl ? 'Tak. <strong>Świat Grilli</strong> porządkuje ofertę wielu marek, <strong>Papeterio</strong> łączy papeterię z wariantami i personalizacją, a <strong>ProScarves</strong> rozdziela sprzedaż gotowych produktów i zapytania hurtowe. Te realizacje pokazują, dlaczego kategorie, ' . $L('/sklepy-internetowe/karta-produktu-w-sklepie-internetowym/', 'karta produktu') . ' i sposób zamówienia wynikają z oferty, a nie z jednego szablonu. Zakres dopasowujemy do Twojego modelu sprzedaży.' : 'Tak. Sklep dla producenta, marki premium, firmy B2B, salonu, dystrybutora albo marki lokalnej powinien mieć inną strukturę kategorii, kart produktów, filtrów i ścieżki zakupu. Dlatego dopasowujemy WooCommerce do produktu, marży, sposobu sprzedaży i dalszego SEO e-commerce.' . $AS('/sklepy-internetowe/seo-sklepu-internetowego/', ' Jak przygotować sklep pod Google już przy budowie, opisujemy w poradniku ', 'SEO sklepu internetowego', '.')],
           ['new', 'Czy przenosicie istniejące sklepy na WooCommerce?', 'Tak. Przenosimy produkty, kategorie, klientów i zamówienia, a przede wszystkim adresy URL i przekierowania, żeby sklep nie stracił widoczności w Google. Jak wygląda taki proces, opisujemy w poradniku ' . $L('/strony-internetowe/migracja-sklepu-na-woocommerce/', 'migracja sklepu na WooCommerce') . '.'],
           ['keep', 14], ['keep', 15],
         ],
-        'replace' => [
+        'replace' => array_merge([
           ['aria-label="Hero Sklepy internetowe Katowice"', 'aria-label="Hero Tworzenie sklepów internetowych"'],
           ['<span class="dot"></span>Sklepy internetowe • Katowice</p>', '<span class="dot"></span>Sklepy internetowe • cała Polska</p>'],
           ['Projektujemy sklepy dla firm z Katowic, Śląska i całej Polski: od', 'Tworzymy sklepy internetowe WooCommerce dla firm z całej Polski: od'],
@@ -402,7 +574,10 @@ function zp_seo_service_spec(string $variant): ?array {
           ['<span class="zpFaqShopKatNavy__kicker">FAQ / Sklepy internetowe Katowice</span>', '<span class="zpFaqShopKatNavy__kicker">FAQ / Tworzenie sklepów internetowych</span>'],
           ['FAQ — sklepy internetowe Katowice i WooCommerce.', 'FAQ — tworzenie sklepów internetowych i WooCommerce.'],
           ['albo sklep lokalnej firmy z Katowic.', 'albo sklep lokalnej firmy.'],
-        ],
+        ], $demand_pl ? [
+          ['Poniżej znajdziesz krótką selekcję projektów e-commerce: od sklepów B2B i hurtowych, przez marki z personalizacją produktów, po rozbudowany multi-brandowy sklep dla branży grillowej.', '<strong>Świat Grilli</strong> — wiele marek i uporządkowane kategorie. <strong>ProScarves</strong> — detal oraz osobna ścieżka zapytań hurtowych. <strong>Papeterio</strong> — warianty i personalizacja papeterii. Porównaj zakres tych realizacji z własną ofertą; niżej znajdziesz opisy prac i linki do działających sklepów.'],
+          ['Nie zaczynamy od przypadkowego szablonu. Najpierw układamy ofertę, kategorie, produkty i ścieżkę zakupu, a dopiero potem projektujemy wygląd, wdrażamy WooCommerce i przygotowujemy sklep do realnej sprzedaży online.', 'Projektowanie sklepu zaczynamy od produktów i sposobu zamawiania. Ustalamy strukturę kategorii, warianty, płatności i dostawy, następnie projektujemy widoki i wdrażamy WooCommerce. Przed publikacją sprawdzamy zakup i wiadomości transakcyjne. Zobacz ' . $L('/tworzenie-sklepow-internetowych/#portfolio-sklepy', 'przykłady sklepów o różnych modelach sprzedaży') . ' i opisz swój zakres w ' . $L('/studio-wyceny/', 'Studio Wyceny') . '.'],
+        ] : []),
         // The guide goes last, right above the FAQ (Mat, 2.5.0).
         'before' => [['id="zpFaqShopKatNavy"', 'zp_seo_shop_guide_html', 'id="sklepy-woocommerce-katowice"']],
       ];
@@ -498,14 +673,18 @@ function zp_seo_service_spec(string $variant): ?array {
           ['new', 'Czy możemy zrobić warsztat marki w Katowicach?', 'Tak. Warsztat marki prowadzimy w naszym biurze przy <strong>ul. Modelarskiej 18/2 w Katowicach</strong>. Omawiamy charakter firmy, odbiorców, konkurencję i miejsca użycia znaku. Kolejne etapy — prezentacje i odbiory — mogą odbywać się w biurze albo online.'],
           ['keep', 8], ['keep', 9],
           ['new', 'Gdzie znajdę więcej o logo i identyfikacji wizualnej?', 'Pakiety, proces i pliki, które otrzymujesz, pokazujemy wyżej na tej stronie. Więcej o samym znaku i o całym systemie marki piszemy na stronach ' . $L('/projektowanie-logo/', 'projektowanie logo') . ' oraz ' . $L('/identyfikacja-wizualna/', 'identyfikacja wizualna') . '.' . $AS('/agencja-reklamowa-katowice/', ' Stronę i reklamy w nowej estetyce przygotuje ta sama ', 'agencja reklamowa z siedzibą w Katowicach', '.')],
+          ['new', 'Co przygotować na warsztat logo i brandingu w Katowicach?', 'Opisz odbiorców, ofertę i miejsca, w których znak ma działać: stronę, profil społecznościowy, szyld, opakowanie czy dokumenty. Przynieś dotychczasowe materiały, jeśli marka już istnieje. Na spotkaniu przy Modelarskiej 18/2 łatwiej wtedy ustalić, czy wystarczy projekt logo, czy potrzebny jest szerszy system identyfikacji.'],
+          ['new', 'Czy otrzymam logo do internetu i do druku?', 'Tak, zgodnie z wybranym pakietem przekazujemy uporządkowane warianty i formaty. W sekcji „Co otrzymujesz” pokazujemy SVG, PDF, PNG i JPG oraz zastosowania na jasnym i ciemnym tle. <strong>Medical Friend</strong> to przykład systemu obejmującego oznakowanie i materiały informacyjne, a <strong>Vista Architekci</strong> — monogramu z papeterią i zasadami użycia. Różnice wyjaśniamy w poradniku ' . $L('/logo-branding/logo-wektorowe-pliki-logo/', 'pliki logo i format wektorowy') . '.'],
         ],
         'replace' => [
-          ['Tworzymy <strong>logo, identyfikacje wizualne i brandbooki</strong>, które dobrze wyglądają nie tylko na prezentacji. Projektujemy system gotowy na stronę internetową, social media, druk, opakowania i materiały sprzedażowe.', 'Studio z Katowic, ul. Modelarska 18/2. Projektujemy <strong>logo i identyfikację wizualną</strong> dla firm z Katowic i Śląska — z warsztatem marki w naszym biurze albo w pełni online.'],
+          ['Tworzymy <strong>logo, identyfikacje wizualne i brandbooki</strong>, które dobrze wyglądają nie tylko na prezentacji. Projektujemy system gotowy na stronę internetową, social media, druk, opakowania i materiały sprzedażowe.', 'Projektowanie logo Katowice — studio przy ul. Modelarskiej 18/2. Projektujemy <strong>logo i identyfikację wizualną</strong> dla firm z Katowic i Śląska — z warsztatem marki w naszym biurze albo w pełni online.'],
           ['<p class="section-kicker">Katowice • Śląsk • cała Polska</p>', '<p class="section-kicker">Katowice • ul. Modelarska 18/2 • Śląsk</p>'],
           ['<h2 class="section-title"> Jedno studio. <strong>Współpraca bez granic lokalizacji.</strong> </h2>', '<h2 class="section-title">Warsztat marki <strong>w Katowicach.</strong></h2>'],
           ['Z Katowic projektujemy marki dla firm z całej Polski. Brief, prezentacje kierunków, konsultacje i przekazanie plików możemy przeprowadzić online — etap po etapie.', 'Na warsztat marki zapraszamy do naszego biura przy ul. Modelarskiej 18/2 w Katowicach. Pełną ofertę opisujemy na stronach ' . $L('/projektowanie-logo/', 'projektowanie logo') . ' i ' . $L('/identyfikacja-wizualna/', 'identyfikacja wizualna') . '.'],
           ['Możemy spotkać się lokalnie albo przeprowadzić cały proces online — od briefu po odbiór uporządkowanych plików.', 'Spotykamy się w naszym biurze przy ul. Modelarskiej 18/2 albo prowadzimy cały proces online — od briefu po odbiór uporządkowanych plików.'],
           ['Dodatkowe materiały, opakowania lub rozbudowane wdrożenie wyceniamy indywidualnie.', 'Dodatkowe materiały, opakowania lub rozbudowane wdrożenie wyceniamy indywidualnie. Więcej w poradniku ' . $L($cost_logo, 'ile kosztuje logo') . '.'],
+          ['Różne branże. <strong>Żadnego jednego stylu na wszystko.</strong>', 'Projektowanie logo w Katowicach. <strong>Różne branże i zastosowania.</strong>'],
+          ['Każdy projekt zaczyna się od innego problemu i kończy systemem dopasowanym do odbiorców, zastosowań i poziomu marki.', '<strong>Siemianowski</strong> — logo i materiały kancelarii. <strong>Vista Architekci</strong> — monogram, brandbook i papeteria. <strong>Medical Friend</strong> — identyfikacja oraz oznakowanie. Wybierz realizację i zobacz, jak znak pracuje w różnych materiałach; zakres dla Twojej firmy ustalimy na warsztacie w Katowicach lub online.'],
         ],
       ];
   }

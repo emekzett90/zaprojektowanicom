@@ -7,6 +7,11 @@ if (!defined('ABSPATH')) { exit; }
  * 2.9.13: 'exact' += 22 (14 moved, 8 gone) and old listing pages past the last one → the listing, the 404s from that report still open after 2.9.12. */
 return [
   'exact' => [
+    // 2.9.14: the former campaign archive has the current same-topic category as its successor.
+    '/category/kampanie-meta-ads/' => '/category/reklamy/',
+    '/wiedza/facebook-ads-dla-firm-lokalnych-co-dziala-najlepiej/' => '/meta-ads/facebook-ads-dla-firm-lokalnych/',
+    '/wiedza/sklep-internetowy-na-zamowienie-kiedy-lepszy-niz-szablon/' => '/sklepy-internetowe/sklep-internetowy-na-zamowienie/',
+    '/wiedza/kampanie-reklamowe-na-facebooku/' => '/kampanie-reklamowe-meta-ads/kampanie-facebook-ads-kiedy-warto-uruchomic-jak-przygotowac-strone/',
     // 2.9.13: the rest of the Search Console 404 report (data to 4.10) that still answered 404. Old German and
     // English addresses go to the page on the same topic; thank-you pages and removed client previews are gone (410).
     '/angebotsstudio/' => '/studio-wyceny/',

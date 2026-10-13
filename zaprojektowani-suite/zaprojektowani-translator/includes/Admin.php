@@ -231,6 +231,7 @@ final class Admin {
             echo '<section class="zpxCard zpte-gap"><p class="zpte-bad"><strong>Brak modułu językowego (zaprojektowani-languages).</strong> Tłumacz zapisuje wersje angielskie w tym module, więc bez niego nic nie robi.</p></section></div>';
             return;
         }
+        if ($current === 'status') { do_action('zpte_rewrite_card'); }
         if ($tab === 'edit') { self::tab_edit((int) ($_GET['id'] ?? 0)); }
         else { $fn = 'tab_' . $current; self::$fn(); }
         echo '</div>';

@@ -195,7 +195,7 @@ return [
     'kind' => 'page',
     'focus' => 'projektowanie logo katowice, projekt logo katowice, studio graficzne katowice, logo katowice, grafik katowice',
     'title' => 'Projektowanie logo Katowice i branding | Zaprojektowani',
-    'description' => 'Projektowanie logo i identyfikacji wizualnej dla firm z Katowic i Śląska. Warsztat marki w naszym biurze i lokalne realizacje. Zobacz projekty.',
+    'description' => 'Projektowanie logo Katowice: identyfikacja wizualna dla firm z Katowic i Śląska. Warsztat marki w naszym biurze i lokalne realizacje. Zobacz projekty.',
     'h1' => 'Projektowanie logo i branding w Katowicach',
     'editorial_title' => '',
     'editorial_description' => '',

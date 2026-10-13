@@ -157,7 +157,7 @@ add_action('admin_post_zp_cc_settings', function () {
   $s['safe_mode'] = empty($_POST['safe_mode']) ? '0' : '1';
   $d['settings'] = $s;
   update_option('zp_suite_command_center', $d, false);
-  wp_safe_redirect(add_query_arg(['page' => 'zp-suite', 'zp_msg' => 'saved'], admin_url('admin.php')) . '#zpx-popup');
+  wp_safe_redirect(add_query_arg(['page' => 'zp-suite-settings', 'zp_msg' => 'saved'], admin_url('admin.php')));
   exit;
 });
 

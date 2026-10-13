@@ -90,15 +90,22 @@ function zp_seo_plan_service_node(): ?array {
 function zp_seo_plan_filter_graph(array $graph): array {
   $site = home_url('/');
   $business = zp_seo_plan_business_node();
+  $service = zp_seo_plan_service_node();
+  $replaceSavedService = $service !== null && is_singular('page');
+  $removePageArticle = is_singular('page') && ($service !== null || is_front_page());
   $out = [];
   $placed = false;
   foreach ($graph as $key => $node) {
     if (!is_array($node)) { $out[$key] = $node; continue; }
     $types = array_map('strval', (array) ($node['@type'] ?? []));
     $id = (string) ($node['@id'] ?? '');
-    // 2.9.8: a Service schema saved in Rank Math for the home page ("Strony internetowe Katowice, …",
-    // offers with no name or price) stood next to the business node's makesOffer with the real prices.
-    if (in_array('Service', $types, true) && (strpos((string) $key, 'schema-') === 0 || preg_match('~#schema-\d+$~', $id)) && is_front_page()) { continue; }
+    // Pages describing the studio or a registered service are WebPage/Service, not articles.
+    // A saved per-page Article can survive Rank Math's global page default being set to None.
+    if ($removePageArticle && array_intersect($types, ['Article', 'BlogPosting', 'NewsArticle'])) { continue; }
+    // Saved Rank Math Service nodes duplicate the generated #service on registry service pages.
+    // Keep other schemas and saved Services on posts or pages without a generated replacement.
+    // The homepage keeps its existing rule: its offers already live in the business node.
+    if (in_array('Service', $types, true) && (strpos((string) $key, 'schema-') === 0 || preg_match('~#schema-\d+$~', $id)) && (is_front_page() || $replaceSavedService)) { continue; }
     $isBusiness = array_intersect($types, ['Organization', 'LocalBusiness', 'ProfessionalService', 'Corporation']) || preg_match('~#(organization|localbusiness|business)$~', $id);
     if ($isBusiness && (strpos($id, rtrim($site, '/')) === 0 || $id === '')) {
       if ($placed) { continue; }
@@ -115,8 +122,19 @@ function zp_seo_plan_filter_graph(array $graph): array {
     $out[$key] = $node;
   }
   if (!$placed) { $out['zpBusiness'] = $business; }
-  $service = zp_seo_plan_service_node();
   if ($service) { $out['zpService'] = $service; }
+  // The six audited inline duplicates are safe to remove only after a current Rank Math Article exists.
+  // Content rendered before wp_head has no marker and keeps its original schema.
+  if (function_exists('zp_seo_posts_duplicate_article_source') && is_singular('post')) {
+    $post_id = (int) get_queried_object_id();
+    $canonical = $post_id ? zp_seo_posts_schema_path((string) get_permalink($post_id)) : '';
+    $source = zp_seo_posts_duplicate_article_source($canonical);
+    if ($source !== '' && get_post_status($post_id) === 'publish') {
+      foreach ($out as $node) {
+        if (is_array($node) && zp_seo_posts_current_rankmath_article($node, $canonical)) { $GLOBALS['zp_seo_posts_rankmath_article'][$source] = true; break; }
+      }
+    }
+  }
   return $out;
 }
 

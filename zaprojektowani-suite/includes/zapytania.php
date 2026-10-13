@@ -68,6 +68,29 @@ function zp_inbox_lower(string $s): string {
   return function_exists('mb_strtolower') ? mb_strtolower($s, 'UTF-8') : strtolower($s);
 }
 
+/** Optional contact date in Warsaw's business calendar; never infer a date for an existing inquiry. */
+function zp_inbox_next_contact_date($value): ?string {
+  if (!is_string($value)) { return null; }
+  $value = trim($value);
+  if ($value === '') { return ''; }
+  if (!preg_match('/^\d{4}-\d{2}-\d{2}$/D', $value) || !checkdate((int) substr($value, 5, 2), (int) substr($value, 8, 2), (int) substr($value, 0, 4))) { return null; }
+  return $value;
+}
+
+function zp_inbox_business_date(?int $timestamp = null): string {
+  return (new DateTimeImmutable('@' . ($timestamp ?? time())))->setTimezone(new DateTimeZone('Europe/Warsaw'))->format('Y-m-d');
+}
+
+/** Completed/spam inquiries remain in their archive; dates never reopen or change their status. */
+function zp_inbox_followup_state(array $item, ?string $today = null): string {
+  if (in_array($item['status'] ?? '', ['closed', 'spam'], true)) { return ''; }
+  $date = zp_inbox_next_contact_date($item['next_contact_date'] ?? '');
+  if ($date === null || $date === '') { return ''; }
+  $today = zp_inbox_next_contact_date($today ?? zp_inbox_business_date());
+  if ($today === null || $today === '') { return ''; }
+  return $date === $today ? 'today' : ($date < $today ? 'overdue' : 'scheduled');
+}
+
 /** Every inquiry from both stores, newest first, in one shape. */
 function zp_inbox_items(): array {
   $items = [];
@@ -88,7 +111,7 @@ function zp_inbox_item(string $type, string $id, string $native, string $created
     'native' => $native,
     'status' => zp_inbox_status_read($type, $native),
     'name' => '', 'email' => '', 'phone' => '', 'company' => '', 'service' => '', 'kind' => '',
-    'source' => '', 'message' => '', 'website' => '', 'note' => '', 'files' => [], 'log' => [], 'details' => [],
+    'source' => '', 'message' => '', 'website' => '', 'note' => '', 'files' => [], 'log' => [], 'details' => [], 'next_contact_date' => '',
   ];
 }
 
@@ -113,11 +136,12 @@ function zp_inbox_from_lead(array $r): array {
   $it['source'] = $source;
   $it['website'] = zp_inbox_val($r['website'] ?? '');
   $it['note'] = (string) ($r['note'] ?? '');
+  $it['next_contact_date'] = zp_inbox_next_contact_date($r['next_contact_date'] ?? '') ?? '';
   $it['files'] = isset($r['files']) && is_array($r['files']) ? $r['files'] : [];
   $it['log'] = isset($r['status_log']) && is_array($r['status_log']) ? $r['status_log'] : [];
 
   $labels = ['budget' => 'Budżet', 'deadline' => 'Termin', 'website' => 'Strona www', 'callback_time' => 'Kiedy zadzwonić', 'callback_topic' => 'Temat rozmowy', 'priority' => 'Priorytet', 'tags' => 'Tagi', 'reminder' => 'Przypomnienie'];
-  $skip = ['id', 'created_at', 'updated_at', 'status', 'status_log', 'note', 'ip', 'user_agent', 'name', 'company', 'phone', 'email', 'message', 'services', 'files', 'source', 'contact_mode'];
+  $skip = ['id', 'created_at', 'updated_at', 'status', 'status_log', 'note', 'ip', 'user_agent', 'name', 'company', 'phone', 'email', 'message', 'services', 'files', 'source', 'contact_mode', 'next_contact_date'];
   foreach ($r as $k => $v) {
     if (in_array($k, $skip, true)) { continue; }
     $v = is_array($v) ? implode(', ', array_filter(array_map('zp_inbox_val', $v), 'strlen')) : zp_inbox_val($v);
@@ -143,6 +167,7 @@ function zp_inbox_from_order(array $r): array {
   $it['service'] = implode(' · ', array_filter([$pick(['Usługa', 'Service']), $pick(['Pakiet', 'Package'])], 'strlen'));
   $it['message'] = $pick(['Brief']);
   $it['note'] = (string) ($r['admin_note'] ?? '');
+  $it['next_contact_date'] = zp_inbox_next_contact_date($r['next_contact_date'] ?? '') ?? '';
   $it['files'] = isset($r['files']) && is_array($r['files']) ? $r['files'] : [];
   $it['log'] = isset($r['status_log']) && is_array($r['status_log']) ? $r['status_log'] : [];
 
@@ -159,6 +184,7 @@ function zp_inbox_from_order(array $r): array {
 /** Display name and the text searched by the search box. */
 function zp_inbox_finish(array $it): array {
   if ($it['name'] === '') { $it['name'] = $it['company'] !== '' ? $it['company'] : ($it['phone'] !== '' ? $it['phone'] : ($it['email'] !== '' ? $it['email'] : 'Bez imienia')); }
+  if (($it['next_contact_date'] ?? '') !== '') { $it['details'][] = ['Następny kontakt', $it['next_contact_date']]; }
   $parts = [$it['id'], $it['name'], $it['email'], $it['phone'], preg_replace('/\D+/', '', $it['phone']), $it['company'], $it['service'], $it['kind'], $it['source'], $it['message'], $it['note']];
   foreach ($it['details'] as $d) { $parts[] = $d[1]; }
   $it['search'] = zp_inbox_lower(implode("\n", $parts));
@@ -209,11 +235,13 @@ function zp_inbox_excerpt(string $text, int $len): string {
 function zp_inbox_filters(array $src): array {
   $typ = sanitize_key(wp_unslash($src['typ'] ?? ''));
   $status = sanitize_key(wp_unslash($src['status'] ?? ''));
+  $followup = sanitize_key(wp_unslash($src['followup'] ?? ''));
   return [
     'typ' => in_array($typ, ['form', 'studio'], true) ? $typ : '',
     'status' => isset(zp_inbox_statuses()[$status]) ? $status : '',
     'q' => trim(sanitize_text_field(wp_unslash($src['q'] ?? ''))),
     'zp_id' => sanitize_text_field(wp_unslash($src['zp_id'] ?? '')),
+    'followup' => in_array($followup, ['today', 'overdue'], true) ? $followup : '',
   ];
 }
 
@@ -221,10 +249,12 @@ function zp_inbox_filter(array $items, array $f): array {
   $q = $f['q'] !== '' ? zp_inbox_lower($f['q']) : '';
   $digits = preg_replace('/\D+/', '', $f['q']);
   $digits = strlen($digits) >= 5 && preg_match('/^[\d\s+()-]+$/', $f['q']) ? $digits : '';
-  return array_values(array_filter($items, function ($it) use ($f, $q, $digits) {
+  $today = zp_inbox_business_date();
+  return array_values(array_filter($items, function ($it) use ($f, $q, $digits, $today) {
     if ($f['zp_id'] !== '' && $it['key'] !== $f['zp_id']) { return false; }
     if ($f['typ'] !== '' && $it['type'] !== $f['typ']) { return false; }
     if ($f['status'] !== '' && $it['status'] !== $f['status']) { return false; }
+    if (($f['followup'] ?? '') !== '' && zp_inbox_followup_state($it, $today) !== $f['followup']) { return false; }
     if ($q !== '' && strpos($it['search'], $q) === false && ($digits === '' || strpos($it['search'], $digits) === false)) { return false; }
     return true;
   }));
@@ -235,7 +265,7 @@ function zp_inbox_filter(array $items, array $f): array {
  * ---------------------------------------------------------------------------------------------- */
 
 function zp_inbox_guard(string $action): void {
-  if (!current_user_can('manage_options')) { wp_die('Brak uprawnień.', 403); }
+  if (!current_user_can('manage_options') || ($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') { wp_die('Brak uprawnień.', '', ['response' => 403]); }
   check_admin_referer($action);
 }
 
@@ -243,7 +273,7 @@ function zp_inbox_guard(string $action): void {
 function zp_inbox_back(string $msg, int $n = 0, string $anchor = ''): void {
   $args = ['page' => 'zp-suite-zapytania'];
   wp_parse_str((string) wp_unslash($_POST['back'] ?? ''), $back);
-  foreach (['typ', 'status', 'q', 'paged', 'zp_id'] as $k) {
+  foreach (['typ', 'status', 'q', 'paged', 'zp_id', 'followup'] as $k) {
     if (isset($back[$k]) && is_scalar($back[$k]) && $back[$k] !== '') { $args[$k] = sanitize_text_field((string) $back[$k]); }
   }
   $args['zp_msg'] = $msg;
@@ -257,7 +287,11 @@ function zp_inbox_post_type(): string {
 }
 
 /** Apply a status and/or a note to one record; returns [record, changed]. Each change is logged with date and user. */
-function zp_inbox_apply(string $type, array $r, ?string $status, ?string $note): array {
+function zp_inbox_apply(string $type, array $r, ?string $status, ?string $note, ?string $next_contact = null): array {
+  if ($next_contact !== null) {
+    $next_contact = zp_inbox_next_contact_date($next_contact);
+    if ($next_contact === null) { throw new InvalidArgumentException('invalid_next_contact_date'); }
+  }
   $now = current_time('mysql');
   $user = wp_get_current_user();
   $who = $user && $user->exists() ? $user->user_login : '';
@@ -274,6 +308,12 @@ function zp_inbox_apply(string $type, array $r, ?string $status, ?string $note):
     $log[] = ['note' => '1', 'date' => $now, 'user' => $who];
     $changed = true;
   }
+  if ($next_contact !== null && $next_contact !== (string) ($r['next_contact_date'] ?? '')) {
+    if ($next_contact === '') { unset($r['next_contact_date']); }
+    else { $r['next_contact_date'] = $next_contact; }
+    $log[] = ['next_contact_date' => $next_contact, 'date' => $now, 'user' => $who];
+    $changed = true;
+  }
   if ($changed) {
     $r['status_log'] = array_slice($log, -40);
     if ($type === 'form') { $r['updated_at'] = $now; }
@@ -287,11 +327,16 @@ add_action('admin_post_zp_inbox_save', function () {
   $id = sanitize_text_field(wp_unslash($_POST['id'] ?? ''));
   $status = sanitize_key(wp_unslash($_POST['status'] ?? ''));
   $note = sanitize_textarea_field(wp_unslash($_POST['note'] ?? ''));
+  $next_contact = array_key_exists('next_contact_date', $_POST) ? zp_inbox_next_contact_date(wp_unslash($_POST['next_contact_date'])) : null;
+  if (array_key_exists('next_contact_date', $_POST) && $next_contact === null) { zp_inbox_back('invalid-next-contact'); }
   $rows = zp_inbox_raw($type);
   foreach ($rows as $i => $r) {
     if (!is_array($r) || (string) ($r['id'] ?? '') !== $id) { continue; }
-    [$rows[$i], $changed] = zp_inbox_apply($type, $r, $status, $note);
-    if ($changed) { zp_inbox_write($type, $rows); }
+    [$rows[$i], $changed] = zp_inbox_apply($type, $r, $status, $note, $next_contact);
+    if ($changed) {
+      zp_inbox_write($type, $rows);
+      if (zp_inbox_raw($type) !== $rows) { zp_inbox_back('save-failed'); }
+    }
     zp_inbox_back('saved', 0, 'zp-' . $type . '-' . sanitize_html_class($id));
   }
   zp_inbox_back('missing');
@@ -441,7 +486,10 @@ add_action('admin_menu', function () {
 function zp_inbox_log_line(string $type, array $entry): string {
   $when = !empty($entry['date']) ? zp_inbox_date((int) strtotime((string) $entry['date'])) : '';
   $who = !empty($entry['user']) ? (string) $entry['user'] : '';
-  if (!empty($entry['note'])) {
+  if (array_key_exists('next_contact_date', $entry)) {
+    $date = zp_inbox_next_contact_date($entry['next_contact_date']);
+    $what = $date !== null && $date !== '' ? 'następny kontakt: ' . $date : 'usunięty termin następnego kontaktu';
+  } elseif (!empty($entry['note'])) {
     $what = 'zmieniona notatka';
   } else {
     $status = zp_inbox_status_read($type, (string) ($entry['status'] ?? ''));
@@ -459,13 +507,19 @@ function zp_inbox_render_page(): void {
   $by_type = ['' => 0, 'form' => 0, 'studio' => 0];
   $by_status = array_fill_keys(array_keys($statuses), 0);
   $tab_status = array_fill_keys(array_keys($statuses), 0);
+  $tab_followup = ['today' => 0, 'overdue' => 0];
+  $today = zp_inbox_business_date();
   $old_new = 0;
   $limit = current_time('timestamp') - 30 * DAY_IN_SECONDS;
   foreach ($all as $it) {
     $by_type['']++;
     $by_type[$it['type']]++;
     $by_status[$it['status']]++;
-    if ($f['typ'] === '' || $it['type'] === $f['typ']) { $tab_status[$it['status']]++; }
+    if ($f['typ'] === '' || $it['type'] === $f['typ']) {
+      $tab_status[$it['status']]++;
+      $followup_state = zp_inbox_followup_state($it, $today);
+      if (isset($tab_followup[$followup_state])) { $tab_followup[$followup_state]++; }
+    }
     if ($it['status'] === 'new' && $it['ts'] && $it['ts'] < $limit) { $old_new++; }
   }
 
@@ -477,16 +531,20 @@ function zp_inbox_render_page(): void {
   $one = $f['zp_id'] !== '';
 
   $page_url = admin_url('admin.php?page=zp-suite-zapytania');
-  $keep = array_filter(['typ' => $f['typ'], 'status' => $f['status'], 'q' => $f['q']], 'strlen');
+  $keep = array_filter(['typ' => $f['typ'], 'status' => $f['status'], 'q' => $f['q'], 'followup' => $f['followup']], 'strlen');
   $back = http_build_query($keep + ($paged > 1 ? ['paged' => $paged] : []) + ($one ? ['zp_id' => $f['zp_id']] : []));
   $filtered = $keep || $one;
   $csv_url = wp_nonce_url(add_query_arg(array_map('rawurlencode', ['action' => 'zp_inbox_csv'] + $keep), admin_url('admin-post.php')), 'zp_inbox_csv');
+  $shared = function_exists('zp_admin20_open') && function_exists('zp_admin20_close');
+  if ($shared) { zp_admin20_open('Zapytania', 'inquiries', 'Formularze i Studio wyceny w jednej skrzynce. Status, notatka i termin następnego kontaktu.'); }
   ?>
-  <div class="wrap zpx zpxInbox">
+  <div class="<?php echo $shared ? 'zpx zpxInbox' : 'wrap zpx zpxInbox'; ?>">
     <header class="zpxHead">
+      <?php if (!$shared) : ?>
       <span class="zpxKicker">ZP Suite</span>
       <h1>Zapytania</h1>
       <p>Wszystko, co klienci wysłali przez formularze na stronie i przez Studio wyceny. Zadzwoń albo odpisz jednym kliknięciem, potem ustaw status i dopisz notatkę.</p>
+      <?php endif; ?>
       <div class="zpxStats">
         <a class="zpxStat<?php echo $by_status['new'] ? ' is-hot' : ''; ?>" href="<?php echo esc_url(add_query_arg('status', 'new', $page_url)); ?>"><strong><?php echo (int) $by_status['new']; ?></strong><span>nowe</span></a>
         <a class="zpxStat" href="<?php echo esc_url(add_query_arg('status', 'contact', $page_url)); ?>"><strong><?php echo (int) $by_status['contact']; ?></strong><span>w kontakcie</span></a>
@@ -496,10 +554,15 @@ function zp_inbox_render_page(): void {
     </header>
     <hr class="wp-header-end">
     <?php zp_panel_notice(); ?>
+    <?php if (($_GET['zp_msg'] ?? '') === 'invalid-next-contact') : ?>
+      <div class="notice notice-error"><p>Nie zapisano zmian. Podaj poprawną datę następnego kontaktu albo pozostaw to pole puste.</p></div>
+    <?php elseif (($_GET['zp_msg'] ?? '') === 'save-failed') : ?>
+      <div class="notice notice-error"><p>Nie udało się potwierdzić zapisu zapytania. Odśwież szczegóły i sprawdź dane przed ponowną próbą.</p></div>
+    <?php endif; ?>
 
     <nav class="zpxTabs" aria-label="Rodzaj zapytań">
       <?php foreach (['' => 'Wszystkie', 'form' => 'Formularze', 'studio' => 'Studio wyceny'] as $t => $label) : ?>
-        <a class="<?php echo $f['typ'] === $t && !$one ? 'is-active' : ''; ?>" href="<?php echo esc_url(add_query_arg(array_map('rawurlencode', array_filter(['typ' => $t, 'status' => $f['status'], 'q' => $f['q']], 'strlen')), $page_url)); ?>"><?php echo esc_html($label); ?> <em><?php echo (int) $by_type[$t]; ?></em></a>
+        <a class="<?php echo $f['typ'] === $t && !$one ? 'is-active' : ''; ?>" href="<?php echo esc_url(add_query_arg(array_map('rawurlencode', array_filter(['typ' => $t, 'status' => $f['status'], 'q' => $f['q'], 'followup' => $f['followup']], 'strlen')), $page_url)); ?>"><?php echo esc_html($label); ?> <em><?php echo (int) $by_type[$t]; ?></em></a>
       <?php endforeach; ?>
     </nav>
 
@@ -510,6 +573,13 @@ function zp_inbox_render_page(): void {
         <select name="status">
           <option value="">Wszystkie</option>
           <?php foreach ($statuses as $k => $label) : ?><option value="<?php echo esc_attr($k); ?>" <?php selected($f['status'], $k); ?>><?php echo esc_html($label . ' (' . $tab_status[$k] . ')'); ?></option><?php endforeach; ?>
+        </select>
+      </label>
+      <label>Następny kontakt
+        <select name="followup">
+          <option value="">Wszystkie terminy</option>
+          <option value="today" <?php selected($f['followup'], 'today'); ?>>Dzisiaj (<?php echo (int) $tab_followup['today']; ?>)</option>
+          <option value="overdue" <?php selected($f['followup'], 'overdue'); ?>>Zaległe (<?php echo (int) $tab_followup['overdue']; ?>)</option>
         </select>
       </label>
       <label class="zpxGrow">Szukaj
@@ -613,6 +683,9 @@ function zp_inbox_render_page(): void {
                     <label>Notatka (widzi ją tylko zespół)
                       <textarea name="note" rows="4" placeholder="Np. dzwoniłem 8.10, oddzwonić w piątek po wycenę."><?php echo esc_textarea($it['note']); ?></textarea>
                     </label>
+                    <label>Następny kontakt (Europe/Warsaw)
+                      <input type="date" name="next_contact_date" value="<?php echo esc_attr($it['next_contact_date']); ?>">
+                    </label>
                     <button class="button button-primary">Zapisz</button>
                   </form>
                   <?php if ($log) : ?>
@@ -666,4 +739,5 @@ function zp_inbox_render_page(): void {
   })();
   </script>
   <?php
+  if ($shared) { zp_admin20_close(); }
 }

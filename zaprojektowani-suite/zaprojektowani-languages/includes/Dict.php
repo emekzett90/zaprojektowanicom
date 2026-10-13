@@ -64,7 +64,7 @@ final class Dict {
         return $rev;
     }
 
-    public static function flush(): void { self::$overrides = null; self::$shards = []; self::$page = []; self::$external = []; }
+    public static function flush(): void { self::$overrides = null; self::$shards = []; self::$page = []; self::$external = []; if (class_exists('ZP_Translator_Approved_Overlay_20261011')) { \ZP_Translator_Approved_Overlay_20261011::flush(); } }
 
     /** Shipped page dictionary, or a page translated by another module (filter zpl_has_page, e.g. Tłumacz EN). */
     public static function has_page(string $source): bool {
@@ -89,6 +89,10 @@ final class Dict {
     public static function exact(string $key, string $lang, string $source): ?string {
         $o = self::overrides($lang);
         if (isset($o[$key])) { return (string) $o[$key]; }
+        if (function_exists('zp_en_approved_lookup')) {
+            $approved = zp_en_approved_lookup($key, $lang, $source);
+            if (is_string($approved)) { return $approved; }
+        }
         $pid = self::$page[$lang . $source] ?? (self::$page[$lang . $source] = 'p/' . self::page_id($source));
         $s = self::shard($lang, $pid);
         if (isset($s[$key])) { return $s[$key]; }
@@ -112,9 +116,21 @@ final class Dict {
 
     /** Lookup with number templates ("{1} czytań" => "{1} reads"). */
     public static function get(string $key, string $lang, string $source): ?string {
+        // Resolve numeric templates inside each priority layer before any shipped raw key.
+        $t = self::template($key);
+        $o = self::overrides($lang);
+        if (isset($o[$key])) { return (string) $o[$key]; }
+        if ($t !== null && isset($o[$t[0]])) { return self::fill((string) $o[$t[0]], $t[1], $lang); }
+        if (function_exists('zp_en_approved_lookup')) {
+            $approved = zp_en_approved_lookup($key, $lang, $source);
+            if (is_string($approved)) { return $approved; }
+            if ($t !== null) {
+                $approved = zp_en_approved_lookup($t[0], $lang, $source);
+                if (is_string($approved)) { return self::fill($approved, $t[1], $lang); }
+            }
+        }
         $v = self::exact($key, $lang, $source);
         if ($v !== null) { return $v; }
-        $t = self::template($key);
         if ($t !== null) {
             $v = self::exact($t[0], $lang, $source);
             if ($v !== null) { return self::fill($v, $t[1], $lang); }

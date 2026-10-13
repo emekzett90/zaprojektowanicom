@@ -11,6 +11,7 @@
   var doc = document, html = doc.documentElement;
   var state = { lang: cfg.lang === 'en' ? 'en' : 'pl', busy: false };
   var dicts = { en: null, pl: null };
+  var priorityDicts = { en: [], pl: [] };
   var pending = { en: null, pl: null };
   var routes = cfg.routes || null, reverse = null;
   var mem = new WeakMap(), attrMem = new WeakMap(), hrefMem = new WeakMap(), langMem = new WeakMap();
@@ -47,25 +48,53 @@
   function getJSON(url) {
     return fetch(url, { credentials: 'omit' }).then(function (r) { return r.ok ? r.json() : {}; }).catch(function () { return {}; });
   }
-  function loadDict(lang) {
-    if (dicts[lang]) return Promise.resolve(dicts[lang]);
-    if (pending[lang]) return pending[lang];
-    var jobs = [];
-    jobs.push(cfg.page ? getJSON(cfg.data + lang + '/' + cfg.page + '.json?v=' + encodeURIComponent(cfg.v)) : Promise.resolve({}));
-    jobs.push(cfg.ov ? getJSON(cfg.rest + 'overrides?lang=' + lang + '&v=' + encodeURIComponent(cfg.ov)) : Promise.resolve({}));
-    jobs.push(routes ? Promise.resolve(null) : getJSON(cfg.data + 'routes.json?v=' + encodeURIComponent(cfg.v)));
-    jobs.push(getJSON(cfg.data + lang + '/dyn.json?v=' + encodeURIComponent(cfg.v)));
-    pending[lang] = Promise.all(jobs).then(function (res) {
-      var m = new Map(), page = res[0] || {}, ov = (res[1] && res[1].map) || {}, dyn = res[3] || {};
-      Object.keys(dyn).forEach(function (k) { m.set(k, dyn[k]); });
-      Object.keys(page).forEach(function (k) { m.set(k, page[k]); });
-      Object.keys(ov).forEach(function (k) { m.set(k, ov[k]); });
-      if (!routes && res[2] && res[2].routes) routes = res[2].routes;
-      m.forEach(function (v) { known[lang].add(C.norm(stripMarkers(v))); });
-      dicts[lang] = m;
-      pending[lang] = null;
-      return m;
+  // Approved rewrites are read-only. A failed lookup keeps the last known dictionary.
+  var approvedRevision = { en: null, pl: null };
+  function readApproved(lang) {
+    var url = cfg.rest + 'approved-page?lang=' + encodeURIComponent(lang) + '&src=' + encodeURIComponent(cfg.src);
+    var opt = { credentials: 'same-origin', cache: 'no-store' };
+    try {
+      var el = doc.getElementById('zp-en-approved-preview'), p = el ? JSON.parse(el.textContent) : null;
+      if (p && p.source === cfg.src && typeof p.version === 'string' && /^[A-Za-z0-9][A-Za-z0-9_-]{0,95}$/.test(p.version) && typeof p.nonce === 'string') {
+        url += '&preview=' + encodeURIComponent(p.version); opt.headers = { 'X-WP-Nonce': p.nonce };
+      }
+    } catch (e) {}
+    return fetch(url, opt).then(function (r) { return r.ok ? r.json() : null; }).catch(function () { return null; }).then(function (p) {
+      return p && p.ok === true && p.source === cfg.src && p.lang === lang && typeof p.revision === 'string'
+        && (p.revision === '' || /^[a-f0-9]{64}$/.test(p.revision)) && p.map && typeof p.map === 'object' && !Array.isArray(p.map) ? p : null;
     });
+  }
+  function loadDict(lang, refresh) {
+    if (pending[lang]) return pending[lang];
+    if (dicts[lang] && !refresh) return Promise.resolve(dicts[lang]);
+    pending[lang] = readApproved(lang).then(function (approved) {
+      var revision = approved ? approved.revision : null;
+      if (dicts[lang] && (approved === null || approvedRevision[lang] === revision)) return dicts[lang];
+      var jobs = [];
+      jobs.push(cfg.page ? getJSON(cfg.data + lang + '/' + cfg.page + '.json?v=' + encodeURIComponent(cfg.v)) : Promise.resolve({}));
+      jobs.push(cfg.ov ? getJSON(cfg.rest + 'overrides?lang=' + lang + '&v=' + encodeURIComponent(cfg.ov) + (revision ? '&approved=' + revision : '')) : Promise.resolve({}));
+      jobs.push(routes ? Promise.resolve(null) : getJSON(cfg.data + 'routes.json?v=' + encodeURIComponent(cfg.v)));
+      jobs.push(getJSON(cfg.data + lang + '/dyn.json?v=' + encodeURIComponent(cfg.v)));
+      return Promise.all(jobs).then(function (res) {
+        var m = new Map(), page = res[0] || {}, ov = (res[1] && res[1].map) || {}, dyn = res[3] || {};
+        Object.keys(dyn).forEach(function (k) { m.set(k, dyn[k]); });
+        Object.keys(page).forEach(function (k) { m.set(k, page[k]); });
+        if (approved) Object.keys(approved.map).forEach(function (k) { m.set(k, approved.map[k]); });
+        Object.keys(ov).forEach(function (k) { m.set(k, ov[k]); });
+        if (!routes && res[2] && res[2].routes) routes = res[2].routes;
+        known[lang] = new Set(); negative[lang] = new Set();
+        m.forEach(function (v) { known[lang].add(C.norm(stripMarkers(v))); });
+        // Keep priority layers separate: a shipped raw number must not mask an approved template.
+        priorityDicts[lang] = [new Map(Object.keys(ov).map(function (k) { return [k, ov[k]]; })),
+          new Map(approved ? Object.keys(approved.map).map(function (k) { return [k, approved.map[k]]; }) : [])];
+        // Rebuild only cached English data from its retained Polish source after an approved revision changes.
+        if (lang === 'en' && dicts[lang] && approvedRevision[lang] !== revision) {
+          Object.keys(blobs).forEach(function (name) { if (blobs[name].pl) delete blobs[name].en; });
+        }
+        dicts[lang] = m; approvedRevision[lang] = revision;
+        return m;
+      });
+    }).then(function (map) { pending[lang] = null; return map; });
     return pending[lang];
   }
   // The server answers at most 400 keys per request; long pages (e.g. service pages without a page
@@ -127,7 +156,19 @@
   }
   function stripMarkers(s) { return String(s).replace(/<\/?\d+\/?>/g, ' '); }
 
+  function priorityTranslation(key, lang) {
+    var layers = priorityDicts[lang] || [], tpl;
+    for (var i = 0; i < layers.length; i++) {
+      var layer = layers[i];
+      if (layer.has(key)) return layer.get(key);
+      if (tpl === undefined) tpl = C.template(key);
+      if (tpl && layer.has(tpl[0])) return C.fill(layer.get(tpl[0]), tpl[1], lang);
+    }
+    return undefined;
+  }
   function translation(key, lang) {
+    var preferred = priorityTranslation(key, lang);
+    if (preferred !== undefined) return preferred;
     var d = dicts[lang];
     if (!d) return undefined;
     var t = d.get(key);
@@ -217,16 +258,24 @@
     return r;
   }
   /** Two-state memory {a, b}: returns the state to restore when the node still shows the other one. */
-  function pick(m, key, to) {
+  function pick(m, key, to, content) {
     if (!m) return null;
     var cur = m.a.lang === state.lang ? m.a : (m.b.lang === state.lang ? m.b : null);
     var tgt = m.a.lang === to ? m.a : (m.b.lang === to ? m.b : null);
-    return cur && tgt && cur !== tgt && cur.k === key ? tgt : null;
+    if (cur && tgt && cur !== tgt && cur.k === key) {
+      if (content && to === 'en') {
+        var preferred = priorityTranslation(key, to);
+        if (preferred !== undefined && (preferred === key || C.norm(preferred) !== tgt.k)) return null;
+      }
+      return tgt;
+    }
+    return null;
   }
   /** Returns true when the segment was changed. */
   function applySegment(seg, to) {
     var node = seg.type === 'multi' ? seg.root : seg.node;
-    var back = pick(mem.get(node), seg.k, to);
+    if (seg.k === '<szybka_strona />' && translation(seg.k, to) === seg.k) return false;
+    var back = pick(mem.get(node), seg.k, to, true);
     if (back) {
       if (seg.type === 'multi') rebuild(node, C.tokens(back.k), back.els);
       else node.nodeValue = back.raw;
@@ -250,7 +299,7 @@
   }
   function applyAttr(el, name, value, to) {
     var bag = attrMem.get(el) || {};
-    var back = pick(bag[name], value, to);
+    var back = pick(bag[name], value, to, true);
     if (back) { el.setAttribute(name, back.raw); return true; }
     var t = translation(value, to);
     if (t === undefined || t === value) return false;
@@ -368,11 +417,11 @@
     var miss = [];
     col.segs.forEach(function (s) {
       var node = s.type === 'multi' ? s.root : s.node;
-      if (pick(mem.get(node), s.k, to)) return;
+      if (pick(mem.get(node), s.k, to, true)) return;
       if (translation(s.k, to) === undefined && !known[to].has(C.norm(stripMarkers(s.k)))) miss.push(s.k);
     });
     col.attrs.forEach(function (a) {
-      if (pick((attrMem.get(a[0]) || {})[a[1]], a[2], to)) return;
+      if (pick((attrMem.get(a[0]) || {})[a[1]], a[2], to, true)) return;
       if (translation(a[2], to) === undefined && !known[to].has(a[2])) miss.push(a[2]);
     });
     return miss.filter(function (k, i, arr) { return arr.indexOf(k) === i; });
@@ -410,7 +459,7 @@
 
   function setTitle(to) {
     var cur = C.norm(doc.title);
-    var back = pick(titleMem, cur, to);
+    var back = pick(titleMem, cur, to, true);
     if (back) { doc.title = back.raw; return; }
     var t = translation(cur, to);
     if (t !== undefined) { titleMem = { a: { lang: state.lang, k: cur, raw: doc.title }, b: { lang: to, k: C.norm(t), raw: t } }; doc.title = t; }
@@ -427,7 +476,7 @@
     // Suite 2.9.12: a page the server sent in English opens its Polish address instead of being translated back
     // in place. Reading English back into Polish missed texts that only have a PL => EN entry (the home H1 among
     // them); the Polish page from the server is always complete. Going from Polish to English stays in place.
-    if (to === 'pl' && servedEn) {
+    if (to === 'pl' && (servedEn || (window.ZP_EN_Currency && window.ZP_EN_Currency.enabled))) {
       if (!opts.auto) { store.set('zpl_lang', to); setLangPreference(to); }
       // Back from the Polish page (page restored from the back/forward cache): the switch works again.
       window.addEventListener('pageshow', function (e) { if (e.persisted) { state.busy = false; setBusy(false); } }, { once: true });
@@ -435,7 +484,7 @@
       return Promise.resolve(true);
     }
     var col, miss = [], early = false;
-    return loadDict(to).then(function () {
+    return loadDict(to, true).then(function () {
       col = collect(doc.body);
       col.attrs = col.attrs.concat(headItems());
       miss = unresolved(col, to);

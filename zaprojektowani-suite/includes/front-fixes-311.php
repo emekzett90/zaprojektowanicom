@@ -236,6 +236,8 @@ html body #zhHero .zh__gflip.is-paused:not(#zpx){animation-play-state:paused}
 html body #zhHero .zh__gflip>.zh__title:not(#zpx){margin:0!important;opacity:1!important;transform:none!important;translate:none!important;scale:none!important;filter:none!important;animation:none!important;transition:none!important;visibility:hidden!important;text-shadow:none!important}
 html body #zhHero .zh__gflip .zh__title .zh__grad:not(#zpx){visibility:visible!important;background-position:100% 50%!important;animation:none!important;transition:none!important}
 @media (max-width:1100px){html body #zhHero .zh__gflip .zh__title .zh__grad:not(#zpx){background-position:0% 50%!important}}
+/* Kopia gradientu mieści się w już zmierzonej szerokości H1; nie dodaje ponownie mobilnych 22 px. */
+@media (max-width:600px){html body #zhHero .zh__gflip>.zh__title:not(#zpx){width:100%!important;max-width:100%!important}}
 @keyframes zpGFlip{0%,14%{opacity:0}86%,100%{opacity:1}}
 @media (prefers-reduced-motion:reduce){
   html body #zhHero .zh__gflip:not(#zpx){display:none!important}

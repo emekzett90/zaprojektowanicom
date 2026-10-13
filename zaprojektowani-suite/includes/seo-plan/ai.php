@@ -4,8 +4,8 @@ if (!defined('ABSPATH')) { exit; }
 /**
  * ZP Suite — Widoczność AI (ChatGPT, Claude, Gemini, Perplexity, Copilot), thread "Widoczność w AI", 7.10.2026.
  *
- * AI assistants answer from search indexes (ChatGPT and Copilot: Bing; Gemini: Google; Claude: its own web
- * search index) and from what their crawlers read without running JavaScript. Nothing here changes what people
+ * AI assistants use search services and their own fetchers. Bing is one useful search index, not the
+ * only source of ChatGPT answers. Nothing here changes what people
  * see on the pages:
  *  - robots.txt names the AI crawlers and lets them in on the same rules as search engines,
  *  - /llms.txt: a short, current description of the studio for language models (services, prices, deadlines,
@@ -130,7 +130,7 @@ function zp_ai_bots(): array {
     'ClaudeBot' => ['Anthropic (trening modeli)', 'train'],
     'PerplexityBot' => ['Perplexity (wyszukiwanie)', 'search'],
     'Perplexity-User' => ['Perplexity (otwiera stronę dla użytkownika)', 'user'],
-    'Google-Extended' => ['Gemini (zgoda na użycie treści)', 'token'],
+    'Google-Extended' => ['Gemini (trening i grounding; token robots.txt)', 'token'],
     'Applebot-Extended' => ['Apple Intelligence (zgoda na użycie treści)', 'token'],
     'DuckAssistBot' => ['DuckDuckGo (odpowiedzi AI)', 'search'],
     'MistralAI-User' => ['Mistral Le Chat', 'user'],
@@ -138,7 +138,7 @@ function zp_ai_bots(): array {
     'meta-externalfetcher' => ['Meta AI (otwiera stronę dla użytkownika)', 'user'],
     'Amazonbot' => ['Amazon (Alexa, Rufus)', 'search'],
     'CCBot' => ['Common Crawl (dane do trenowania wielu modeli)', 'train'],
-    'bingbot' => ['Bing: indeks ChatGPT i Copilota', 'search'],
+    'bingbot' => ['Bing (indeks wyszukiwarki)', 'search'],
     'Googlebot' => ['Google: indeks Gemini i AI Overviews', 'search'],
   ];
 }
@@ -258,9 +258,26 @@ function zp_ai_plain_description(string $text): string {
   return trim(implode(' ', $parts));
 }
 
-/** Markdown link line for a site path, when the page is live. */
+/** Published page/post ID, cached for this llms.txt build only. */
+function zp_ai_llms_post_id(string $path): int {
+  static $ids = [];
+  if (!array_key_exists($path, $ids)) { $ids[$path] = function_exists('zp_seo_plan_find_post') ? zp_seo_plan_find_post($path) : (int) url_to_postid(home_url($path)); }
+  return (int) $ids[$path];
+}
+
+/** Apply the same privacy/indexation checks to every group of llms.txt links. */
+function zp_ai_llms_public_path(string $path): bool {
+  if (isset(zp_seo_plan_data('redirects')['exact'][$path])) { return false; }
+  if (function_exists('zp_seo_plan_is_hidden_path') && zp_seo_plan_is_hidden_path($path)) { return false; }
+  if (function_exists('zp_seo_plan_path_is_live') && !zp_seo_plan_path_is_live($path)) { return false; }
+  $id = zp_ai_llms_post_id($path);
+  if ($id && (get_post_status($id) !== 'publish' || get_post_field('post_password', $id) !== '' || in_array('noindex', (array) get_post_meta($id, 'rank_math_robots', true), true))) { return false; }
+  return true;
+}
+
+/** Markdown link line for a live, public, indexable page. */
 function zp_ai_llms_link(string $path, string $label, string $text = ''): string {
-  if (function_exists('zp_seo_plan_path_is_live') && !zp_seo_plan_path_is_live($path)) { return ''; }
+  if (!zp_ai_llms_public_path($path)) { return ''; }
   $label = str_replace(['[', ']'], ['(', ')'], $label);
   return '- [' . $label . '](' . home_url($path) . ')' . ($text !== '' ? ': ' . $text : '') . "\n";
 }
@@ -286,17 +303,31 @@ function zp_ai_post_shows_other_article(string $path): bool {
     || strpos((string) get_post_meta($id, '_elementor_data', true), $needle) !== false;
 }
 
-/** Title of a plan entry without the " | Zaprojektowani" suffix. */
+/** Resolve saved metadata first; unresolved Rank Math variables fall back to plain plan/post text. */
+function zp_ai_saved_text(int $id, string $key): string {
+  $text = $id ? trim((string) get_post_meta($id, $key, true)) : '';
+  if (preg_match('~%[a-z][a-z0-9_]*(?:\([^%]*\))?%~i', $text)) { return ''; }
+  return trim(html_entity_decode(wp_strip_all_tags($text), ENT_QUOTES | ENT_HTML5, 'UTF-8'));
+}
+
+/** Current saved title, then the plan, then the post title; no brand suffix in llms.txt. */
 function zp_ai_plan_title(string $path, string $fallback = ''): string {
   $entry = zp_seo_plan_entry($path) ?? [];
-  $title = trim((string) ($entry['title'] ?? ''));
+  $id = zp_ai_llms_post_id($path);
+  $title = zp_ai_saved_text($id, 'rank_math_title');
+  if ($title === '') { $title = trim((string) (($entry['title'] ?? '') ?: ($entry['editorial_title'] ?? ''))); }
+  if ($title === '' && $id) { $title = trim(html_entity_decode(wp_strip_all_tags((string) get_the_title($id)), ENT_QUOTES | ENT_HTML5, 'UTF-8')); }
   $title = trim((string) preg_replace('~\s*[|–-]\s*Zaprojektowani(\.com)?\s*$~u', '', $title));
   return $title !== '' ? $title : $fallback;
 }
 
 function zp_ai_plan_description(string $path): string {
   $entry = zp_seo_plan_entry($path) ?? [];
-  return zp_ai_plain_description((string) ($entry['description'] ?? ''));
+  $id = zp_ai_llms_post_id($path);
+  $text = zp_ai_saved_text($id, 'rank_math_description');
+  if ($text === '') { $text = (string) (($entry['description'] ?? '') ?: ($entry['editorial_description'] ?? '')); }
+  if ($text === '' && $id) { $text = (string) get_post_field('post_excerpt', $id); }
+  return zp_ai_plain_description($text);
 }
 
 /** English path of a Polish page, or ''. */
@@ -421,9 +452,11 @@ function zp_ai_llms_build(): string {
   foreach ($paths as $path) {
     if ($count >= $max) { break; }
     $entry = zp_seo_plan_entry($path) ?? [];
-    if (($entry['kind'] ?? '') !== 'post' || trim((string) ($entry['title'] ?? '')) === '') { continue; }
+    if (($entry['kind'] ?? '') !== 'post') { continue; }
     if (isset($redirected[$path]) || zp_ai_post_shows_other_article($path)) { continue; }
-    $line = zp_ai_llms_link($path, zp_ai_plan_title($path), zp_ai_plan_description($path));
+    $title = zp_ai_plan_title($path);
+    if ($title === '') { continue; }
+    $line = zp_ai_llms_link($path, $title, zp_ai_plan_description($path));
     if ($line === '') { continue; }
     $guides .= $line;
     $count++;
@@ -438,11 +471,9 @@ function zp_ai_llms_build(): string {
     $seen[$path] = true;
     if (function_exists('zp_seo_plan_is_hidden_path') && zp_seo_plan_is_hidden_path($path)) { continue; }
     if (in_array('noindex', (array) get_post_meta($id, 'rank_math_robots', true), true)) { continue; }
-    $title = trim(html_entity_decode(wp_strip_all_tags((string) get_the_title($id)), ENT_QUOTES | ENT_HTML5, 'UTF-8'));
+    $title = zp_ai_plan_title($path);
     if ($title === '') { continue; }
-    $desc = (string) get_post_meta($id, 'rank_math_description', true);
-    if ($desc === '' || strpos($desc, '%') !== false) { $desc = (string) get_post_field('post_excerpt', $id); }
-    $line = zp_ai_llms_link($path, $title, zp_ai_plain_description($desc));
+    $line = zp_ai_llms_link($path, $title, zp_ai_plan_description($path));
     if ($line === '') { continue; }
     $guides .= $line;
     $count++;
@@ -461,6 +492,7 @@ function zp_ai_llms_build(): string {
     '/kontakt/' => ['Contact', ''],
   ];
   foreach ($en_pages as $pl => [$label, $what]) {
+    if (!zp_ai_llms_public_path($pl)) { continue; }
     $path = zp_ai_en_path($pl);
     if ($path === '') { continue; }
     $desc = $what;
@@ -486,6 +518,15 @@ foreach (['save_post', 'deleted_post', 'trashed_post'] as $zp_ai_hook) {
     zp_ai_llms_forget();
     if (!wp_next_scheduled('zp_ai_refresh')) { wp_schedule_single_event(time() + 300, 'zp_ai_refresh'); }
   });
+}
+unset($zp_ai_hook);
+// Rank Math's quick edits can update metadata without saving the WordPress post itself.
+foreach (['added_post_meta', 'updated_post_meta', 'deleted_post_meta'] as $zp_ai_hook) {
+  add_action($zp_ai_hook, function ($meta_id, $post_id, $key) {
+    if (!in_array($key, ['rank_math_title', 'rank_math_description', 'rank_math_robots'], true)) { return; }
+    zp_ai_llms_forget();
+    if (!wp_next_scheduled('zp_ai_refresh')) { wp_schedule_single_event(time() + 300, 'zp_ai_refresh'); }
+  }, 10, 3);
 }
 unset($zp_ai_hook);
 add_action('add_option_zp_ai_profiles', 'zp_ai_llms_forget');
@@ -695,7 +736,10 @@ add_action('init', function () {
   add_action('shutdown', static function () { zp_ai_count_bot(); }, 0);
 }, 1);
 
-/** AI assistant behind a referrer or a landing URL (ChatGPT adds utm_source=chatgpt.com to its links), or ''. */
+/**
+ * AI source from an exact case-insensitive name/domain UTM token or a parsed referrer host.
+ * Known hosts and their DNS subdomains are accepted; UTM URL strings and lookalike names are ignored.
+ */
 function zp_ai_source_of(string $ref, string $landing): string {
   $map = [
     'chatgpt.com' => 'ChatGPT', 'chat.openai.com' => 'ChatGPT', 'openai.com' => 'ChatGPT',
@@ -704,22 +748,29 @@ function zp_ai_source_of(string $ref, string $landing): string {
     'copilot.microsoft.com' => 'Copilot', 'copilot.cloud.microsoft' => 'Copilot', 'm365.cloud.microsoft' => 'Copilot',
     'chat.mistral.ai' => 'Mistral', 'chat.deepseek.com' => 'DeepSeek', 'grok.com' => 'Grok', 'meta.ai' => 'Meta AI', 'you.com' => 'You.com',
   ];
-  $query = (string) wp_parse_url($landing, PHP_URL_QUERY);
-  if ($query !== '') {
+  $match_host = static function (string $candidate) use ($map): string {
+    $host = strtolower($candidate);
+    if (substr($host, -1) === '.') { $host = substr($host, 0, -1); }
+    if ($host === '' || strlen($host) > 253 || !preg_match('/^[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?(?:\.[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?)*$/D', $host)) { return ''; }
+    foreach ($map as $domain => $name) {
+      if ($host === $domain || substr($host, -strlen('.' . $domain)) === '.' . $domain) { return $name; }
+    }
+    return '';
+  };
+  $query = wp_parse_url($landing, PHP_URL_QUERY);
+  if (is_string($query) && $query !== '') {
     parse_str($query, $q);
-    $utm = strtolower(trim((string) ($q['utm_source'] ?? '')));
+    $utm = isset($q['utm_source']) && is_string($q['utm_source']) ? strtolower(trim($q['utm_source'])) : '';
     if ($utm !== '') {
-      foreach ($map as $host => $name) {
-        if ($utm === $host || $utm === strtolower($name) || strpos($utm, $host) !== false) { return $name; }
+      foreach ($map as $name) {
+        if ($utm === strtolower($name)) { return $name; }
       }
+      $source = $match_host($utm);
+      if ($source !== '') { return $source; }
     }
   }
-  $host = strtolower((string) wp_parse_url($ref, PHP_URL_HOST));
-  if ($host === '') { return ''; }
-  foreach ($map as $domain => $name) {
-    if ($host === $domain || substr($host, -strlen('.' . $domain)) === '.' . $domain) { return $name; }
-  }
-  return '';
+  $host = wp_parse_url($ref, PHP_URL_HOST);
+  return is_string($host) ? $match_host($host) : '';
 }
 
 // Runs before the suite's own handler (analytics.php), which saves the page view and ends the request.
@@ -784,21 +835,54 @@ function zp_ai_indexnow_send(array $urls, string $why): array {
   $msg = is_wp_error($res) ? 'błąd połączenia: ' . $res->get_error_message() : zp_ai_indexnow_status_text($code);
   zp_ai_log(sprintf('IndexNow (%s): %d adresów, %s.', $why, count($list), $code ? $code . ' ' . $msg : $msg));
   update_option('zp_ai_indexnow_last', ['at' => time(), 'count' => count($list), 'code' => $code, 'msg' => $msg, 'why' => $why], false);
-  return [$code, $msg];
+  $retry = is_wp_error($res) ? '' : (string) wp_remote_retrieve_header($res, 'retry-after');
+  $retry_after = ctype_digit(trim($retry)) ? (int) trim($retry) : ($retry !== '' ? max(0, (int) strtotime($retry) - time()) : 0);
+  return [$code, $msg, min(86400, $retry_after)];
 }
 
 function zp_ai_indexnow_queue(array $urls): void {
   $queue = (array) get_option('zp_ai_indexnow_queue', []);
   $queue = array_values(array_unique(array_merge($queue, array_filter($urls))));
   update_option('zp_ai_indexnow_queue', array_slice($queue, -10000), false);
-  if (!wp_next_scheduled('zp_ai_indexnow_flush')) { wp_schedule_single_event(time() + 120, 'zp_ai_indexnow_flush'); }
+  $retry = (array) get_option('zp_ai_indexnow_retry', []);
+  if (empty($retry['blocked']) && !wp_next_scheduled('zp_ai_indexnow_flush')) { wp_schedule_single_event(max(time() + 120, (int) ($retry['next'] ?? 0)), 'zp_ai_indexnow_flush'); }
 }
 
-add_action('zp_ai_indexnow_flush', function () {
+/** Keep failed batches; at most five attempts, with 15m/1h/4h/12h backoff and Retry-After support. */
+function zp_ai_indexnow_flush(string $why = 'nowe i zmienione strony'): void {
   $queue = (array) get_option('zp_ai_indexnow_queue', []);
-  delete_option('zp_ai_indexnow_queue');
-  if ($queue && zp_ai_on()) { zp_ai_indexnow_send($queue, 'nowe i zmienione strony'); }
-});
+  $retry = (array) get_option('zp_ai_indexnow_retry', []);
+  if (!$queue || !zp_ai_on() || !empty($retry['blocked'])) { return; }
+  if ((int) ($retry['next'] ?? 0) > time()) {
+    if (!wp_next_scheduled('zp_ai_indexnow_flush')) { wp_schedule_single_event((int) $retry['next'], 'zp_ai_indexnow_flush'); }
+    return;
+  }
+  $lock = (int) get_option('zp_ai_indexnow_flush_lock', 0);
+  if ($lock && $lock < time() - 300) { delete_option('zp_ai_indexnow_flush_lock'); }
+  if (!add_option('zp_ai_indexnow_flush_lock', time(), '', false)) { return; }
+  try {
+    [$code, $msg, $retry_after] = array_pad(zp_ai_indexnow_send($queue, $why), 3, 0);
+    if (in_array($code, [200, 202], true)) {
+      // A post published during the HTTP request can append new URLs: do not lose them.
+      $remaining = array_values(array_diff((array) get_option('zp_ai_indexnow_queue', []), $queue));
+      update_option('zp_ai_indexnow_queue', $remaining, false);
+      delete_option('zp_ai_indexnow_retry');
+      if ($remaining && !wp_next_scheduled('zp_ai_indexnow_flush')) { wp_schedule_single_event(time() + 120, 'zp_ai_indexnow_flush'); }
+      return;
+    }
+    $attempts = (int) ($retry['attempts'] ?? 0) + 1;
+    $transient = $code === 0 || $code === 429 || $code >= 500;
+    $blocked = !$transient || $attempts >= 5;
+    $delays = [900, 3600, 14400, 43200];
+    $next = $blocked ? 0 : time() + max($delays[min($attempts - 1, 3)], (int) $retry_after);
+    update_option('zp_ai_indexnow_retry', ['attempts' => $attempts, 'next' => $next, 'blocked' => $blocked, 'code' => $code], false);
+    if (!$blocked && !wp_next_scheduled('zp_ai_indexnow_flush')) { wp_schedule_single_event($next, 'zp_ai_indexnow_flush'); }
+    if ($blocked) { zp_ai_log('IndexNow: kolejka zachowana; automatyczne próby wstrzymane. Sprawdź błąd i ponów kolejkę w panelu.'); }
+  } finally {
+    delete_option('zp_ai_indexnow_flush_lock');
+  }
+}
+add_action('zp_ai_indexnow_flush', 'zp_ai_indexnow_flush');
 
 /** Public addresses of a post: Polish and, when it has one, English. Empty for noindex and hidden pages. */
 function zp_ai_post_urls(WP_Post $post): array {
@@ -969,7 +1053,7 @@ function zp_ai_all_urls(): array {
 }
 
 add_action('zp_ai_indexnow_bulk', function () {
-  if (zp_ai_on()) { zp_ai_indexnow_send(zp_ai_all_urls(), 'pełna lista adresów'); }
+  if (zp_ai_on()) { zp_ai_indexnow_queue(zp_ai_all_urls()); zp_ai_indexnow_flush('pełna lista adresów'); }
 });
 
 /* ---------------------------------------------------------------------------------------------------------
@@ -1042,8 +1126,16 @@ add_action('admin_post_zp_ai', function () {
     if (($last['why'] ?? '') === 'pełna lista adresów (ręcznie)' && (int) ($last['at'] ?? 0) > time() - HOUR_IN_SECONDS && in_array((int) ($last['code'] ?? 0), [200, 202], true)) {
       $done = 'wait';
     } else {
-      zp_ai_indexnow_send(zp_ai_all_urls(), 'pełna lista adresów (ręcznie)');
+      zp_ai_indexnow_queue(zp_ai_all_urls());
+      zp_ai_indexnow_flush('pełna lista adresów (ręcznie)');
     }
+  } elseif ($do === 'retry') {
+    $retry = (array) get_option('zp_ai_indexnow_retry', []);
+    if (!empty($retry['blocked'])) {
+      delete_option('zp_ai_indexnow_retry');
+      wp_clear_scheduled_hook('zp_ai_indexnow_flush');
+      zp_ai_indexnow_queue([]);
+    } else { $done = 'wait'; }
   } elseif ($do === 'llms') {
     zp_ai_llms_forget();
     zp_ai_llms_file_sync('ręcznie');
@@ -1054,128 +1146,244 @@ add_action('admin_post_zp_ai', function () {
   exit;
 });
 
-/** Requests the home page and llms.txt with the crawlers' user agents (from the server, through its own address). */
+/** Effective robots.txt permission: most specific matching agent group, then longest path rule. */
+function zp_ai_robots_allows(string $text, string $agent, string $path): bool {
+  $groups = []; $group = ['agents' => [], 'rules' => []]; $has_directive = false;
+  foreach (preg_split('~\r?\n~', $text) as $line) {
+    $line = trim((string) preg_replace('~#.*$~', '', $line));
+    if (preg_match('~^user-agent\s*:\s*(\S+)~i', $line, $m)) {
+      if ($has_directive) { $groups[] = $group; $group = ['agents' => [], 'rules' => []]; $has_directive = false; }
+      $group['agents'][] = $m[1];
+    } elseif ($group['agents'] && preg_match('~^(allow|disallow)\s*:\s*(.*)$~i', $line, $m)) {
+      $has_directive = true;
+      $group['rules'][] = [strtolower($m[1]) === 'allow', trim($m[2])];
+    } elseif ($group['agents'] && strpos($line, ':') !== false) { $has_directive = true; }
+  }
+  if ($group['agents']) { $groups[] = $group; }
+  $specificity = -1; $rules = [];
+  foreach ($groups as $g) {
+    $match = -1;
+    foreach ($g['agents'] as $token) {
+      if ($token === '*') { $match = max($match, 0); }
+      elseif (stripos($agent, $token) !== false) { $match = max($match, strlen($token)); }
+    }
+    if ($match < 0 || $match < $specificity) { continue; }
+    if ($match > $specificity) { $rules = []; $specificity = $match; }
+    $rules = array_merge($rules, $g['rules']);
+  }
+  $allowed = true; $length = -1;
+  foreach ($rules as [$allow, $pattern]) {
+    if ($pattern === '') { continue; }
+    $end = substr($pattern, -1) === '$';
+    $plain = $end ? substr($pattern, 0, -1) : $pattern;
+    $rx = '~^' . str_replace('\\*', '.*', preg_quote($plain, '~')) . ($end ? '$' : '') . '~';
+    $size = strlen(str_replace('*', '', $plain));
+    if (preg_match($rx, $path) && ($size > $length || ($size === $length && $allow))) { $allowed = $allow; $length = $size; }
+  }
+  return $allowed;
+}
+
+/** Attribute reader for diagnostics, accepting either quote style and arbitrary attribute order. */
+function zp_ai_test_attribute(string $tag, string $name): string {
+  if (!preg_match('~(?:^|\s)' . preg_quote($name, '~') . '\s*=\s*(?:"([^"]*)"|\x27([^\x27]*)\x27|([^\s>]+))~i', $tag, $m)) { return ''; }
+  return html_entity_decode((string) ($m[1] !== '' ? $m[1] : (($m[2] ?? '') !== '' ? $m[2] : ($m[3] ?? ''))), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+}
+
+/** HTTP 200 alone can be a challenge page: inspect the actual payload and search directives. */
+function zp_ai_access_result($res, string $path, string $agent, ?string $robots): array {
+  $code = is_wp_error($res) ? 0 : (int) wp_remote_retrieve_response_code($res);
+  $row = ['bot' => $agent, 'path' => $path, 'code' => $code, 'ok' => false, 'note' => ''];
+  if (is_wp_error($res)) { $row['note'] = $res->get_error_message(); return $row; }
+  if ($code !== 200) { $row['note'] = 'HTTP ' . $code . ' ' . (string) wp_remote_retrieve_header($res, 'location'); return $row; }
+  $notes = []; $ok = true;
+  if ($robots === null) { $notes[] = 'Nie odczytano robots.txt'; $ok = false; }
+  elseif (!zp_ai_robots_allows($robots, $agent, $path)) { $notes[] = 'robots.txt blokuje adres'; $ok = false; }
+  else { $notes[] = 'robots.txt pozwala'; }
+  $type = strtolower((string) wp_remote_retrieve_header($res, 'content-type'));
+  $body = (string) wp_remote_retrieve_body($res);
+  if ($path === '/llms.txt') {
+    if (!preg_match('~^text/(?:plain|markdown)\b~', $type) || strpos($body, '# Zaprojektowani') === false || strpos($body, ZP_AI_LLMS_MARK) === false) { $notes[] = 'Brak oczekiwanego llms.txt lub błędny typ treści'; $ok = false; }
+    else { $notes[] = 'Aktualny plik llms.txt'; }
+  } else {
+    preg_match('~<title\b[^>]*>(.*?)</title>~is', $body, $title);
+    if (!preg_match('~^(?:text/html|application/xhtml\+xml)\b~', $type) || stripos((string) ($title[1] ?? ''), 'Zaprojektowani') === false) { $notes[] = 'Brak oczekiwanej strony HTML'; $ok = false; }
+    if (preg_match('~cf-chl-|challenge-platform|/_Incapsula_Resource~i', $body) || preg_match('~captcha|access denied|verify.*human|checking your browser~i', (string) ($title[1] ?? ''))) { $notes[] = 'Możliwa strona weryfikacji zamiast treści'; $ok = false; }
+    $canonical = ''; $directives = (string) wp_remote_retrieve_header($res, 'x-robots-tag');
+    preg_match_all('~<(?:meta|link)\b[^>]*>~i', $body, $tags);
+    foreach ($tags[0] as $tag) {
+      if (strcasecmp(zp_ai_test_attribute($tag, 'rel'), 'canonical') === 0) { $canonical = zp_ai_test_attribute($tag, 'href'); }
+      if (in_array(strtolower(zp_ai_test_attribute($tag, 'name')), ['robots', strtolower($agent)], true)) { $directives .= ',' . zp_ai_test_attribute($tag, 'content'); }
+    }
+    if ($canonical === '' || strcasecmp((string) wp_parse_url($canonical, PHP_URL_HOST), (string) wp_parse_url(home_url('/'), PHP_URL_HOST)) !== 0 || zp_seo_plan_path($canonical) !== $path) { $notes[] = 'Brak lub inny canonical'; $ok = false; }
+    if (preg_match('~(?:^|[\s,:])(?:noindex|nosnippet)(?:$|[\s,])|max-snippet\s*:\s*0\b~i', $directives)) { $notes[] = 'Ograniczenie indeksacji lub snippetu'; $ok = false; }
+    if ($ok) { $notes[] = 'HTML i canonical zgodne'; }
+  }
+  $row['ok'] = $ok; $row['note'] = implode(' · ', $notes);
+  return $row;
+}
+
+/** Server-side User-Agent probe, not verification of real crawler IPs or CDN cache traffic. */
 function zp_ai_access_test(): array {
   $agents = [
-    'GPTBot' => 'Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko; compatible; GPTBot/1.2; +https://openai.com/gptbot)',
     'OAI-SearchBot' => 'Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko); compatible; OAI-SearchBot/1.0; +https://openai.com/searchbot',
+    'Claude-SearchBot' => 'Mozilla/5.0 (compatible; Claude-SearchBot/1.0; +Claude-SearchBot@anthropic.com)',
+    'Googlebot' => 'Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)',
     'ChatGPT-User' => 'Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko); compatible; ChatGPT-User/1.0; +https://openai.com/bot',
-    'ClaudeBot' => 'Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko; compatible; ClaudeBot/1.0; +claudebot@anthropic.com)',
     'Claude-User' => 'Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko; compatible; Claude-User/1.0; +Claude-User@anthropic.com)',
     'PerplexityBot' => 'Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko; compatible; PerplexityBot/1.0; +https://perplexity.ai/perplexitybot)',
     'bingbot' => 'Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko; compatible; bingbot/2.0; +http://www.bing.com/bingbot.htm) Chrome/116.0.1938.76 Safari/537.36',
+    'GPTBot' => 'Mozilla/5.0 (compatible; GPTBot/1.4; +https://openai.com/gptbot)',
+    'ClaudeBot' => 'Mozilla/5.0 (compatible; ClaudeBot/1.0; +claudebot@anthropic.com)',
   ];
   $out = ['at' => time(), 'rows' => []];
+  $deadline = microtime(true) + 40;
+  $robot_response = wp_remote_get(home_url('/robots.txt'), ['timeout' => 8, 'redirection' => 0, 'sslverify' => true, 'limit_response_size' => 262144]);
+  $robot_code = is_wp_error($robot_response) ? 0 : (int) wp_remote_retrieve_response_code($robot_response);
+  $robots = $robot_code === 200 ? (string) wp_remote_retrieve_body($robot_response) : ($robot_code === 404 ? '' : null);
+  if (is_string($robots) && preg_match('~<(?:!doctype|html)\b~i', $robots)) { $robots = null; }
+  $out['robots_code'] = $robot_code;
   foreach ($agents as $name => $ua) {
     foreach (['/', '/llms.txt'] as $path) {
-      $res = wp_remote_get(add_query_arg('zp_ai_test', (string) time(), home_url($path)), ['timeout' => 15, 'redirection' => 0, 'user-agent' => $ua, 'sslverify' => false]);
-      $code = is_wp_error($res) ? 0 : (int) wp_remote_retrieve_response_code($res);
-      $where = is_wp_error($res) ? $res->get_error_message() : (string) wp_remote_retrieve_header($res, 'location');
-      $out['rows'][] = ['bot' => $name, 'path' => $path, 'code' => $code, 'note' => $where];
+      $left = $deadline - microtime(true);
+      if ($left < 1) { $out['rows'][] = ['bot' => $name, 'path' => $path, 'code' => 0, 'ok' => false, 'note' => 'Pominięto: osiągnięto limit czasu testu.']; continue; }
+      $res = wp_remote_get(add_query_arg('zp_ai_test', (string) time(), home_url($path)), ['timeout' => min(8, $left), 'redirection' => 0, 'user-agent' => $ua, 'sslverify' => true, 'limit_response_size' => 2097152]);
+      $out['rows'][] = zp_ai_access_result($res, $path, $name, $robots);
     }
   }
   return $out;
 }
 
+/** Private presentation helpers. Read cached data only; do not refresh Google or run crawler tests. */
+function zp_ai_admin_ga4(array $ga, string $period): array {
+  $report = is_array($ga['sourceReports'][$period] ?? null) ? $ga['sourceReports'][$period] : [];
+  $health = is_array($ga['sourceHealth'][$period] ?? null) ? $ga['sourceHealth'][$period] : [];
+  $rows = is_array($ga['aiByPeriod'][$period] ?? null) ? $ga['aiByPeriod'][$period] : null;
+  $out = ['count' => null, 'rows' => $rows ?? [], 'report' => $report, 'status' => 'unavailable'];
+  if (!in_array($report['status'] ?? '', ['ready', 'limited'], true) || $rows === null) { return $out; }
+  $out['status'] = !empty($report['limited']) ? 'limited' : (!empty($report['stale']) ? 'stale' : 'unavailable');
+  if (($report['status'] ?? '') !== 'ready' || ($health['totals_usable'] ?? false) !== true || !empty($report['limited']) || !empty($report['stale'])) { return $out; }
+  $sum = 0;
+  foreach ($rows as $row) {
+    $n = is_array($row) ? ($row['sessions'] ?? null) : null;
+    if (!is_numeric($n) || !is_finite((float) $n) || (float) $n < 0 || floor((float) $n) !== (float) $n) { return $out; }
+    $sum += (int) $n;
+  }
+  $out['count'] = $sum; $out['status'] = 'ready'; return $out;
+}
+
+function zp_ai_admin_sum(array $days, int $n, string $today): array {
+  $date = DateTimeImmutable::createFromFormat('!Y-m-d', $today, new DateTimeZone('UTC'));
+  if (!$date || $date->format('Y-m-d') !== $today || $n < 1 || $n > 60) { return []; }
+  $from = $date->modify('-' . ($n - 1) . ' days')->format('Y-m-d'); $out = [];
+  foreach ($days as $day => $counts) {
+    if (!is_string($day) || !preg_match('/^\d{4}-\d{2}-\d{2}$/D', $day) || !checkdate((int) substr($day, 5, 2), (int) substr($day, 8, 2), (int) substr($day, 0, 4)) || $day < $from || $day > $today || !is_array($counts)) { continue; }
+    foreach ($counts as $key => $value) { if (is_numeric($value) && (float) $value >= 0 && is_finite((float) $value)) { $out[$key] = ($out[$key] ?? 0) + (int) $value; } }
+  }
+  return $out;
+}
+
+function zp_ai_admin_number($value): string { return $value === null ? '—' : number_format_i18n((int) $value); }
+function zp_ai_admin_when($at): string { return is_numeric($at) && (int) $at > 0 ? wp_date('j.m.Y H:i', (int) $at) : 'brak zapisanego pomiaru'; }
+
 function zp_ai_admin_page(): void {
   if (!current_user_can('manage_options')) { return; }
-  $s = zp_ai_stats();
-  $bots = zp_ai_bots();
-  $today = wp_date('Y-m-d');
-  $sum = static function (array $days, int $n) use ($today): array {
-    $from = gmdate('Y-m-d', strtotime($today . ' -' . ($n - 1) . ' days'));
-    $out = [];
-    foreach ($days as $day => $counts) {
-      if ($day < $from) { continue; }
-      foreach ((array) $counts as $k => $v) { $out[$k] = ($out[$k] ?? 0) + (int) $v; }
-    }
-    return $out;
-  };
-  $b7 = $sum($s['bots'], 7);
-  $b30 = $sum($s['bots'], 30);
-  $r7 = $sum($s['refs'], 7);
-  $r30 = $sum($s['refs'], 30);
-  $notice = sanitize_key($_GET['done'] ?? '');
+  $s = zp_ai_stats(); $bots = zp_ai_bots(); $today = wp_date('Y-m-d');
+  $b7 = zp_ai_admin_sum((array) $s['bots'], 7, $today); $b30 = zp_ai_admin_sum((array) $s['bots'], 30, $today);
+  $r7 = zp_ai_admin_sum((array) $s['refs'], 7, $today); $r30 = zp_ai_admin_sum((array) $s['refs'], 30, $today);
+  $google = [];
+  if (function_exists('zp_admin_stats_data')) { try { $cached = zp_admin_stats_data(); $google = is_array($cached['ga4'] ?? null) ? $cached['ga4'] : []; } catch (Throwable $error) { $google = []; } }
+  $traffic = []; foreach (['today', '7d', '28d'] as $period) { $traffic[$period] = zp_ai_admin_ga4($google, $period); }
+  $stats_url = function_exists('zp_admin20_url') ? zp_admin20_url('zp-suite-stats') : admin_url('admin.php?page=zp-suite-stats');
+  $llms_state = get_option('zp_ai_llms_file_state', ''); $llms_state = is_string($llms_state) ? $llms_state : '';
+  $last = (array) get_option('zp_ai_indexnow_last', []); $retry = (array) get_option('zp_ai_indexnow_retry', []); $queue = (array) get_option('zp_ai_indexnow_queue', []);
+  $test = get_option('zp_ai_access_test', []); $test = is_array($test) ? $test : []; $test_rows = is_array($test['rows'] ?? null) ? $test['rows'] : [];
+  $search_fail = 0; $training_fail = 0; $incomplete = false;
+  foreach ($test_rows as $row) {
+    if (!is_array($row)) { continue; }
+    if (!array_key_exists('ok', $row)) { $incomplete = true; continue; }
+    if (!$row['ok']) { $purpose = $bots[(string) ($row['bot'] ?? '')][1] ?? ''; if ($purpose === 'train') { $training_fail++; } else { $search_fail++; } }
+  }
+  $manual_robots = file_exists(ABSPATH . 'robots.txt'); $enabled = zp_ai_on();
   $button = static function (string $do, string $label, string $class = 'button') {
-    echo '<form method="post" action="' . esc_url(admin_url('admin-post.php')) . '" style="display:inline-block;margin:0 8px 8px 0">';
-    wp_nonce_field('zp_ai');
-    echo '<input type="hidden" name="action" value="zp_ai"><input type="hidden" name="do" value="' . esc_attr($do) . '">';
-    echo '<button class="' . esc_attr($class) . '">' . esc_html($label) . '</button></form>';
+    echo '<form method="post" action="' . esc_url(admin_url('admin-post.php')) . '">'; wp_nonce_field('zp_ai');
+    echo '<input type="hidden" name="action" value="zp_ai"><input type="hidden" name="do" value="' . esc_attr($do) . '"><button class="' . esc_attr($class) . '">' . esc_html($label) . '</button></form>';
   };
-
-  echo '<div class="wrap"><h1>Widoczność AI: ChatGPT, Claude, Gemini, Perplexity, Copilot</h1>';
-  if ($notice === 'wait') { echo '<div class="notice notice-warning"><p>Pełną listę adresów można wysłać ręcznie raz na godzinę.</p></div>'; }
-  elseif ($notice !== '') { echo '<div class="notice notice-success"><p>Gotowe.</p></div>'; }
-  echo '<p style="max-width:860px">Asystenci AI odpowiadają na podstawie wyszukiwarek (ChatGPT i Copilot: Bing, Gemini: Google, Claude: własny indeks) i tego, co ich roboty przeczytają na stronie. Ten moduł wpuszcza roboty AI, podaje im aktualny opis firmy w <a href="' . esc_url(home_url('/llms.txt')) . '" target="_blank" rel="noopener">/llms.txt</a>, dopisuje ceny do danych strukturalnych i zgłasza nowe strony do Binga przez IndexNow. Wygląd strony się nie zmienia.</p>';
-  // A robots.txt file in the site root is served by the web server, so WordPress filters never see it.
-  if (file_exists(ABSPATH . 'robots.txt')) {
-    echo '<div class="notice notice-warning inline"><p>W katalogu strony jest plik robots.txt, więc ani WordPress, ani ta wtyczka go nie zmieniają. Grupa robotów AI pojawi się w <a href="' . esc_url(home_url('/robots.txt')) . '" target="_blank" rel="noopener">/robots.txt</a> dopiero po usunięciu tego pliku (zasady można wtedy edytować w Rank Math).</p></div>';
+  $shared = function_exists('zp_admin20_open') && function_exists('zp_admin20_close');
+  if ($shared) { zp_admin20_open('Widoczność AI', 'ai', 'Ruch z asystentów, żądania robotów i ustawienia udostępniania treści.'); }
+  else { echo '<div class="wrap zpAdmin20"><h1>Widoczność AI</h1>'; }
+  $notice = isset($_GET['done']) && is_string($_GET['done']) ? sanitize_key($_GET['done']) : '';
+  if ($notice === 'wait') { echo '<div class="notice notice-warning"><p>Nie rozpoczęto kolejnego zgłoszenia. Sprawdź zapisany stan kolejki; pełna lista ma odstęp co najmniej godziny po przyjęciu.</p></div>'; }
+  elseif (in_array($notice, ['profiles', 'bulk', 'retry', 'llms', 'test'], true)) { echo '<div class="notice notice-info"><p>Zakończono działanie. Wynik i zapisany stan znajdziesz w odpowiedniej sekcji poniżej.</p></div>'; }
+  echo '<p class="zpAdmin20__muted">Dostęp do strony, indeksacja, odesłanie użytkownika i cytowanie firmy to różne rzeczy. Ten panel pokazuje dane i narzędzia, które możesz sprawdzić; nie mierzy liczby cytowań w odpowiedziach AI.</p>';
+  echo '<div class="zpAIAdminCards" style="display:grid;gap:20px">';
+  $attention = [];
+  if (!$enabled) { $attention[] = ['Moduł jest wstrzymany razem z Planem SEO.', admin_url('tools.php?page=zp-seo-plan'), 'Otwórz Plan SEO']; }
+  if ($traffic['today']['count'] === null) { $attention[] = ['Dzisiejszy raport ruchu GA4 jest niedostępny, niepełny albo wymaga aktualizacji.', $stats_url, 'Sprawdź Statystyki']; }
+  if ($llms_state === 'blocked') { $attention[] = ['Nie udało się zaktualizować pliku llms.txt.', '#zp-ai-settings', 'Sprawdź plik']; }
+  if (!empty($retry['blocked'])) { $attention[] = ['Zgłoszenia IndexNow są wstrzymane po błędzie. Adresy zostały w kolejce.', '#zp-ai-indexnow', 'Sprawdź kolejkę']; }
+  if ($search_fail) { $attention[] = ['Zapisany test ma nieudane sprawdzenia wyszukiwania lub pobierania stron: ' . $search_fail . '.', '#zp-ai-access', 'Zobacz test']; }
+  if ($training_fail) { $attention[] = ['Zapisany test ma nieudane sprawdzenia robotów treningowych: ' . $training_fail . '. To osobny zakres od wyszukiwania AI.', '#zp-ai-access', 'Zobacz szczegóły']; }
+  if (!$test_rows || $incomplete) { $attention[] = ['Brak pełnego zapisanego testu dostępu. Otwórz diagnostykę, gdy chcesz sprawdzić obecny stan.', '#zp-ai-access', 'Diagnostyka dostępu']; }
+  echo '<section class="zpAdmin20__card"><h2>Co warto sprawdzić?</h2>';
+  if (!$attention) { echo '<p>W zapisanych danych nie ma sygnałów wymagających działania. To nie jest potwierdzenie indeksacji ani cytowania.</p>'; }
+  else { echo '<div class="zpAdmin20__rows">'; foreach ($attention as $item) { echo '<a href="' . esc_url($item[1]) . '"><span>' . esc_html($item[0]) . '</span><b>' . esc_html($item[2]) . ' →</b></a>'; } echo '</div>'; }
+  echo '</section><section class="zpAdmin20__card" id="zp-ai-traffic"><div class="zpAdmin20__sectionTitle"><div><h2>Ruch z asystentów AI</h2><p class="zpAdmin20__muted">Sesje GA4 z rozpoznanych odesłań, m.in. ChatGPT, Claude, Gemini, Perplexity i Copilot. Sesja nie oznacza unikalnej osoby ani cytowania.</p></div><a href="' . esc_url($stats_url) . '">Pełne Statystyki →</a></div><div class="zpAdmin20__metrics" style="grid-template-columns:repeat(auto-fit,minmax(160px,1fr))">';
+  foreach (['today' => 'Dzisiaj', '7d' => '7 dni', '28d' => '28 dni'] as $period => $label) {
+    $metric = $traffic[$period]; $report = $metric['report'];
+    echo '<div class="zpAdmin20__metric"><strong>' . esc_html(zp_ai_admin_number($metric['count'])) . '</strong><span>' . esc_html($label . ' · sesje z AI') . '</span><p class="zpAdmin20__muted">' . esc_html(!empty($report['start']) && !empty($report['end']) ? $report['start'] . ' — ' . $report['end'] : 'Brak pełnego raportu') . '<br>' . esc_html('Pobrano: ' . zp_ai_admin_when($report['fetched_at'] ?? null)) . '</p></div>';
   }
-
-  echo '<h2>Roboty AI na stronie</h2><table class="widefat striped" style="max-width:1100px"><thead><tr><th>Robot</th><th>Do czego</th><th>7 dni</th><th>30 dni</th><th>Ostatnia wizyta</th></tr></thead><tbody>';
-  foreach ($bots as $token => $bot) {
-    if ($bot[1] === 'token') { continue; }
-    $last = $s['bot_last'][$token] ?? null;
-    $when = $last ? wp_date('Y-m-d H:i', (int) $last['at']) . ' · ' . esc_html((string) $last['path']) . ' · ' . (int) $last['code'] : '—';
-    echo '<tr><td><code>' . esc_html($token) . '</code></td><td>' . esc_html($bot[0]) . '</td><td>' . (int) ($b7[$token] ?? 0) . '</td><td>' . (int) ($b30[$token] ?? 0) . '</td><td>' . $when . '</td></tr>';
+  echo '</div><p class="zpAdmin20__muted">„—” oznacza brak kompletnego, aktualnego raportu dla tego okresu. Nie jest zerowym ruchem. Część aplikacji nie przekazuje źródła i wtedy GA4 może zaliczyć wizytę do ruchu bezpośredniego. Dzisiaj jest okresem częściowym.</p>';
+  $ga_rows = $traffic['28d']['rows'];
+  if ($ga_rows && in_array($traffic['28d']['report']['status'] ?? '', ['ready', 'limited'], true)) {
+    echo '<details class="zpAdmin20__details"><summary>Źródła AI w raporcie GA4 z 28 dni</summary><p class="zpAdmin20__muted">' . esc_html(($traffic['28d']['report']['start'] ?? '') . ' — ' . ($traffic['28d']['report']['end'] ?? '')) . ($traffic['28d']['status'] !== 'ready' ? ' · Zapisany raport jest niepełny lub starszy; wiersze nie stanowią aktualnej sumy.' : '') . '</p><div class="zpAdmin20__tableWrap"><table class="zpAdmin20__table"><thead><tr><th>Źródło</th><th>Medium</th><th>Sesje</th></tr></thead><tbody>';
+    foreach (array_slice($ga_rows, 0, 50) as $row) { if (!is_array($row)) { continue; } echo '<tr><td>' . esc_html((string) ($row['source'] ?? '')) . '</td><td>' . esc_html((string) ($row['medium'] ?? '')) . '</td><td>' . esc_html(is_numeric($row['sessions'] ?? null) ? zp_ai_admin_number($row['sessions']) : '—') . '</td></tr>'; }
+    echo '</tbody></table></div></details>';
   }
-  echo '</tbody></table><p class="description">Liczone od instalacji modułu. Zero przy robocie, który powinien przychodzić (np. OAI-SearchBot), przy wizytach bingbota i Googlebota, może znaczyć blokadę na serwerze: użyj testu dostępu poniżej.</p>';
-
-  echo '<h2>Wejścia z asystentów AI</h2><table class="widefat striped" style="max-width:700px"><thead><tr><th>Źródło</th><th>7 dni</th><th>30 dni</th></tr></thead><tbody>';
-  if (!$r30) { echo '<tr><td colspan="3">Jeszcze nikt nie przyszedł z odpowiedzi AI (albo przeglądarka nie przekazała źródła).</td></tr>'; }
-  arsort($r30);
-  foreach ($r30 as $source => $n) { echo '<tr><td>' . esc_html($source) . '</td><td>' . (int) ($r7[$source] ?? 0) . '</td><td>' . (int) $n . '</td></tr>'; }
-  echo '</tbody></table>';
-  if (!empty($s['ref_last'])) {
-    echo '<p><strong>Ostatnie wejścia:</strong></p><ul style="margin-left:18px;list-style:disc">';
-    foreach (array_slice($s['ref_last'], 0, 15) as $r) { echo '<li>' . esc_html(wp_date('Y-m-d H:i', (int) $r['at']) . ' · ' . $r['source'] . ' → ' . $r['path']) . '</li>'; }
-    echo '</ul>';
-  }
-
-  $state = (string) get_option('zp_ai_llms_file_state', 'dynamic');
-  $states = [
-    'dynamic' => 'Podaje go wtyczka, zawsze aktualny.',
-    'static' => 'Plik w katalogu strony, aktualizowany przez wtyczkę po zmianach treści.',
-    'blocked' => 'Uwaga: stary plik llms.txt w katalogu strony zasłania nowy, a wtyczka nie może go zmienić. Usuń plik llms.txt w menedżerze plików hostingu (katalog główny strony) i odśwież tę stronę.',
-  ];
-  echo '<h2>llms.txt</h2><p>' . esc_html($states[$state] ?? $states['dynamic']) . ' <a href="' . esc_url(home_url('/llms.txt')) . '" target="_blank" rel="noopener">Otwórz /llms.txt</a></p>';
-  $button('llms', 'Odśwież llms.txt teraz');
-  $prev = get_option('zp_ai_llms_previous');
-  if (is_array($prev) && !empty($prev['text'])) {
-    echo '<details style="max-width:1100px"><summary>Poprzedni plik llms.txt (zapisany ' . esc_html(wp_date('Y-m-d H:i', (int) $prev['at'])) . ')</summary><pre style="white-space:pre-wrap;background:#fff;border:1px solid #dcdcde;padding:12px">' . esc_html((string) $prev['text']) . '</pre></details>';
-  }
-
-  $last = (array) get_option('zp_ai_indexnow_last', []);
-  $key = zp_ai_indexnow_key();
-  echo '<h2>IndexNow (Bing, ChatGPT, Copilot, Yandex, Seznam, Naver)</h2><table class="widefat striped" style="max-width:1100px"><tbody>';
-  echo '<tr><th style="width:240px">Zgłaszanie nowych stron</th><td>' . (zp_ai_indexnow_by_rank_math() ? 'Robi to moduł Instant Indexing w Rank Math; wtyczka wysyła tylko pełną listę.' : 'Automatycznie, kilka minut po publikacji lub zmianie strony.') . '</td></tr>';
-  echo '<tr><th>Plik klucza</th><td><a href="' . esc_url(home_url('/' . $key . '.txt')) . '" target="_blank" rel="noopener">/' . esc_html($key) . '.txt</a></td></tr>';
-  echo '<tr><th>Ostatnie zgłoszenie</th><td>' . ($last ? esc_html(wp_date('Y-m-d H:i', (int) $last['at']) . ': ' . (int) $last['count'] . ' adresów, ' . ($last['code'] ? $last['code'] . ' ' : '') . $last['msg'] . ' (' . $last['why'] . ')') : 'jeszcze nie') . '</td></tr>';
-  echo '<tr><th>W kolejce</th><td>' . count((array) get_option('zp_ai_indexnow_queue', [])) . '</td></tr>';
-  echo '</tbody></table><p style="margin-top:10px">';
-  $button('bulk', 'Wyślij teraz pełną listę adresów');
-  echo '</p>';
-  do_action('zp_ai_screen_after_indexnow'); // indexing.php: Google, new posts (2.9.11)
-
-  echo '<h2>Profile firmy w innych serwisach</h2><p style="max-width:860px">Linki trafiają do danych strukturalnych (sameAs) i do llms.txt, żeby wyszukiwarki i asystenci AI łączyli te profile ze stroną. Wklej po jednym linku w wierszu: LinkedIn, Behance, Dribbble, Oferteo, Sortlist, Aleo, Panorama Firm, PKT, Bing Places, Mapy Apple. Instagram, Facebook i Clutch są dodawane zawsze.</p>';
-  echo '<form method="post" action="' . esc_url(admin_url('admin-post.php')) . '">';
-  wp_nonce_field('zp_ai');
-  echo '<input type="hidden" name="action" value="zp_ai"><input type="hidden" name="do" value="profiles">';
-  echo '<textarea name="profiles" rows="7" style="width:100%;max-width:860px" placeholder="https://www.linkedin.com/company/…">' . esc_textarea(implode("\n", (array) get_option('zp_ai_profiles', []))) . '</textarea>';
-  echo '<p><button class="button button-primary">Zapisz profile</button></p></form>';
-
-  $test = get_option('zp_ai_access_test');
-  echo '<h2>Test dostępu robotów</h2><p style="max-width:860px">Serwer pobiera stronę główną i /llms.txt tak, jak przedstawiają się roboty AI. Kod 200 znaczy, że robot dostaje treść. 403 albo 503 znaczy blokadę (zapora hostingu); wtedy napisz do hostingu, żeby wpuścił te roboty.</p>';
-  $button('test', 'Uruchom test');
-  if (is_array($test) && !empty($test['rows'])) {
-    echo '<table class="widefat striped" style="max-width:860px"><thead><tr><th>Robot</th><th>Adres</th><th>Kod</th><th>Uwagi</th></tr></thead><tbody>';
-    foreach ($test['rows'] as $row) {
-      $ok = (int) $row['code'] === 200;
-      echo '<tr><td>' . esc_html($row['bot']) . '</td><td>' . esc_html($row['path']) . '</td><td style="color:' . ($ok ? '#008a20' : '#b32d2e') . ';font-weight:600">' . ((int) $row['code'] ?: '—') . '</td><td>' . esc_html((string) $row['note']) . '</td></tr>';
+  echo '<details class="zpAdmin20__details"><summary>Dodatkowy licznik Suite: referrer i UTM</summary><p class="zpAdmin20__muted">Odrębne zdarzenia własnego beacona. Nie dodajemy ich do sesji GA4. Brak wpisów może wynikać także z braku przekazanego źródła lub niewykonania beacona.</p><div class="zpAdmin20__tableWrap"><table class="zpAdmin20__table"><thead><tr><th>Źródło</th><th>7 dni</th><th>30 dni</th></tr></thead><tbody>';
+  arsort($r30); foreach ($r30 as $source => $n) { echo '<tr><td>' . esc_html((string) $source) . '</td><td>' . esc_html(zp_ai_admin_number($r7[$source] ?? 0)) . '</td><td>' . esc_html(zp_ai_admin_number($n)) . '</td></tr>'; }
+  if (!$r30) { echo '<tr><td colspan="3">Nie zapisano rozpoznanych zdarzeń z AI w tym okresie.</td></tr>'; }
+  echo '</tbody></table></div>';
+  if (!empty($s['ref_last'])) { echo '<h3>Ostatnie zapisane odesłania</h3><ul>'; foreach (array_slice((array) $s['ref_last'], 0, 15) as $r) { if (is_array($r)) { echo '<li>' . esc_html(zp_ai_admin_when($r['at'] ?? null) . ' · ' . ($r['source'] ?? '') . ' → ' . ($r['path'] ?? '')) . '</li>'; } } echo '</ul>'; }
+  echo '</details></section><section class="zpAdmin20__card" id="zp-ai-bots"><h2>Żądania robotów</h2><p class="zpAdmin20__muted">Poniżej wyszukiwarki i roboty pobierające treści. To żądania deklarujące dany User-Agent, bez weryfikacji IP. Cache/CDN może omijać WordPressa; zero nie potwierdza blokady.</p>';
+  $primary_bots = ['OAI-SearchBot', 'Claude-SearchBot', 'PerplexityBot', 'Googlebot', 'bingbot'];
+  $bot_table = static function (bool $other) use ($bots, $s, $b7, $b30, $primary_bots): void {
+    $labels = ['search' => 'wyszukiwanie', 'user' => 'pobranie dla użytkownika', 'train' => 'trening modeli'];
+    echo '<div class="zpAdmin20__tableWrap"><table class="zpAdmin20__table"><thead><tr><th>Robot</th><th>Rola</th><th>7 dni</th><th>30 dni</th><th>Ostatnie żądanie</th></tr></thead><tbody>';
+    foreach ($bots as $token => $bot) {
+      if ($bot[1] === 'token' || ($other === in_array($token, $primary_bots, true))) { continue; } $last_bot = $s['bot_last'][$token] ?? null;
+      $when = is_array($last_bot) ? zp_ai_admin_when($last_bot['at'] ?? null) . ' · ' . ($last_bot['path'] ?? '') . ' · HTTP ' . (int) ($last_bot['code'] ?? 0) : '—';
+      echo '<tr><td><code>' . esc_html($token) . '</code><br>' . esc_html($bot[0]) . '</td><td>' . esc_html($labels[$bot[1]]) . '</td><td>' . esc_html(zp_ai_admin_number($b7[$token] ?? 0)) . '</td><td>' . esc_html(zp_ai_admin_number($b30[$token] ?? 0)) . '</td><td>' . esc_html($when) . '</td></tr>';
     }
-    echo '</tbody></table><p class="description">Test z ' . esc_html(wp_date('Y-m-d H:i', (int) $test['at'])) . '.</p>';
-  }
+    echo '</tbody></table></div>';
+  };
+  $bot_table(false); echo '<details class="zpAdmin20__details"><summary>Pozostałe roboty, pobrania dla użytkownika i trening</summary><p class="zpAdmin20__muted">Pobranie dla użytkownika nie dowodzi cytowania. Dostęp do treningu i dostęp do wyszukiwania AI są osobnymi ustawieniami.</p>'; $bot_table(true); echo '</details></section>';
 
+  echo '<div class="zpAdmin20__grid" id="zp-ai-settings"><section class="zpAdmin20__card"><h2>Opis firmy: llms.txt</h2>';
+  $states = ['dynamic' => ['Generowany przez wtyczkę', 'Opis jest generowany i odświeżany po zmianach treści oraz pól Rank Math.'], 'static' => ['Plik aktualizowany przez Suite', 'Plik w katalogu strony jest odświeżany przez wtyczkę.'], 'blocked' => ['Aktualizacja zablokowana', 'Zapisany stan wskazuje, że plik w katalogu strony zasłania aktualny opis i wtyczka nie może go zmienić. Sprawdź uprawnienia lub plik w hostingu, a następnie odśwież opis.']];
+  $state = $states[$llms_state] ?? ['Brak zapisanego stanu', 'Otwórz plik, aby sprawdzić jego zawartość. Odświeżenie jest osobnym działaniem.'];
+  echo '<p><span class="zpAdmin20__status' . ($llms_state === 'blocked' ? ' is-warn' : '') . '">' . esc_html($state[0]) . '</span></p><p>' . esc_html($state[1]) . '</p><p class="zpAdmin20__muted">Stan zapisany przez Suite. Udostępnienie pliku nie gwarantuje, że asystent go wykorzysta.</p><div class="zpAdmin20__actions"><a class="button" href="' . esc_url(home_url('/llms.txt')) . '" target="_blank" rel="noopener">Otwórz llms.txt</a>'; $button('llms', 'Odśwież opis firmy'); echo '</div>';
+  $prev = get_option('zp_ai_llms_previous');
+  if (is_array($prev) && !empty($prev['text'])) { echo '<details class="zpAdmin20__details"><summary>Poprzednia kopia pliku</summary><p class="zpAdmin20__muted">Zapisano: ' . esc_html(zp_ai_admin_when($prev['at'] ?? null)) . '</p><pre style="white-space:pre-wrap;max-height:280px;overflow:auto">' . esc_html((string) $prev['text']) . '</pre></details>'; }
+  echo '</section><section class="zpAdmin20__card"><h2>Robots i dane firmy</h2><p><span class="zpAdmin20__status">' . esc_html($enabled ? 'Plan SEO aktywny' : 'Plan SEO wstrzymany') . '</span></p><p>Suite udostępnia reguły robotów oraz wzbogaca wspólne dane firmy i usług o ofertę i profile.</p><p class="zpAdmin20__muted">' . ($manual_robots ? 'W katalogu strony jest własny robots.txt. Reguły z tego pliku obsługuje serwer; filtry WordPressa go nie zmieniają. Sprawdź faktyczne zasady w pliku.' : 'Reguły robots.txt obsługują WordPress i istniejące moduły. Zapisane reguły konkretnych robotów mają pierwszeństwo.') . ' Ten ekran nie sprawdza danych strukturalnych każdej podstrony.</p><div class="zpAdmin20__actions"><a class="button" href="' . esc_url(home_url('/robots.txt')) . '" target="_blank" rel="noopener">Otwórz robots.txt</a><a class="button" href="#zp-ai-access">Diagnostyka dostępu</a></div><details class="zpAdmin20__details"><summary>Profile firmy w danych strukturalnych</summary><p class="zpAdmin20__muted">Adresy własnych profili firmy trafiają do sameAs i llms.txt. Instagram, Facebook i Clutch są dodawane przez istniejący moduł. Dodaj rzeczywiste profile, po jednym adresie w wierszu.</p><form method="post" action="' . esc_url(admin_url('admin-post.php')) . '">';
+  wp_nonce_field('zp_ai'); echo '<input type="hidden" name="action" value="zp_ai"><input type="hidden" name="do" value="profiles"><label for="zp-ai-profiles">Dodatkowe profile firmy</label><textarea id="zp-ai-profiles" name="profiles" rows="5" style="width:100%" placeholder="https://www.linkedin.com/company/…">' . esc_textarea(implode("\n", (array) get_option('zp_ai_profiles', []))) . '</textarea><p><button class="button button-primary">Zapisz profile</button></p></form></details></section></div>';
+
+  echo '<section class="zpAdmin20__card" id="zp-ai-indexnow"><h2>Zgłaszanie zmian wyszukiwarkom</h2><p class="zpAdmin20__muted">IndexNow informuje obsługujące go wyszukiwarki, m.in. Bing, o nowych i zmienionych adresach. HTTP 200/202 oznacza przyjęcie zgłoszenia; indeksację sprawdza się oddzielnie.</p><p>' . esc_html(zp_ai_indexnow_by_rank_math() ? 'Nowe strony zgłasza Instant Indexing w Rank Math. Suite zachowuje swoje zgłaszanie pełnej listy i zmian z kanału.' : 'Suite kolejkuje nowe lub zmienione strony po publikacji.') . '</p><div class="zpAdmin20__tableWrap"><table class="zpAdmin20__table"><tbody><tr><th>W kolejce</th><td>' . esc_html(zp_ai_admin_number(count($queue))) . '</td></tr><tr><th>Ostatnie zgłoszenie</th><td>' . ($last ? esc_html(zp_ai_admin_when($last['at'] ?? null) . ' · ' . (int) ($last['count'] ?? 0) . ' adresów · ' . ((int) ($last['code'] ?? 0) ? 'HTTP ' . (int) $last['code'] . ' · ' : '') . ($last['msg'] ?? '') . ' (' . ($last['why'] ?? '') . ')') : 'Brak zapisanego zgłoszenia') . '</td></tr>';
+  if ($retry) { echo '<tr><th>Ponowienia</th><td>' . esc_html(!empty($retry['blocked']) ? 'Wstrzymane po błędzie lub pięciu próbach. Kolejka pozostaje zachowana.' : 'Próba ' . (int) ($retry['attempts'] ?? 0) . ' · następna: ' . zp_ai_admin_when($retry['next'] ?? null)) . '</td></tr>'; }
+  echo '</tbody></table></div><div class="zpAdmin20__actions">'; $button('bulk', 'Zgłoś pełną listę adresów'); if (!empty($retry['blocked']) && $queue) { $button('retry', 'Ponów zachowaną kolejkę'); } echo '</div><details class="zpAdmin20__details"><summary>Plik klucza i sygnały dla Google</summary>';
+  $key = get_option('zp_ai_indexnow_key', '');
+  if (is_string($key) && preg_match('~^[a-f0-9]{32}$~', $key)) { echo '<p>Publiczny plik klucza: <a href="' . esc_url(home_url('/' . $key . '.txt')) . '" target="_blank" rel="noopener">/' . esc_html($key) . '.txt</a></p>'; }
+  else { echo '<p>Brak zapisanego klucza. Tworzy go istniejący mechanizm zgłaszania, nie samo otwarcie tego ekranu.</p>'; }
+  do_action('zp_ai_screen_after_indexnow'); echo '</details></section>';
+
+  echo '<section class="zpAdmin20__card" id="zp-ai-access"><h2>Diagnostyka dostępu</h2><p class="zpAdmin20__muted">Własny serwer wykonuje żądania z nazwami robotów i sprawdza HTTP, treść, canonical i robots.txt. To nie test z prawdziwych IP robotów ani potwierdzenie indeksacji. Google-Extended jest tokenem robots.txt, a nie osobnym robotem HTTP.</p><div class="zpAdmin20__actions">'; $button('test', 'Sprawdź dostęp teraz', 'button button-primary'); echo '</div><p class="zpAdmin20__muted">Ostatni zapisany test: ' . esc_html(zp_ai_admin_when($test['at'] ?? null)) . '. Otwarcie panelu nie wykonuje nowych żądań.</p>';
+  if ($test_rows) {
+    echo '<details class="zpAdmin20__details"><summary>Wyniki poszczególnych robotów' . ($search_fail || $training_fail ? ' — są sprawdzenia do przejrzenia' : '') . '</summary><div class="zpAdmin20__tableWrap"><table class="zpAdmin20__table"><thead><tr><th>Robot</th><th>Zakres</th><th>Adres</th><th>HTTP / wynik</th><th>Uwagi</th></tr></thead><tbody>';
+    foreach ($test_rows as $row) { if (!is_array($row)) { continue; } $checked = array_key_exists('ok', $row); $ok = $checked && (bool) $row['ok']; $purpose = $bots[(string) ($row['bot'] ?? '')][1] ?? ''; $scope = $purpose === 'train' ? 'trening' : ($purpose === 'user' ? 'pobranie dla użytkownika' : 'wyszukiwanie'); echo '<tr><td>' . esc_html((string) ($row['bot'] ?? '')) . '</td><td>' . esc_html($scope) . '</td><td>' . esc_html((string) ($row['path'] ?? '')) . '</td><td><span class="zpAdmin20__status' . ($checked ? ($ok ? ' is-ok' : ' is-warn') : '') . '">' . esc_html(((int) ($row['code'] ?? 0) ?: '—') . ' · ' . (!$checked ? 'starszy wynik HTTP' : ($ok ? 'test poprawny' : 'sprawdź'))) . '</span></td><td>' . esc_html((string) ($row['note'] ?? '')) . '</td></tr>'; }
+    echo '</tbody></table></div></details>';
+  } else { echo '<p>Nie zapisano jeszcze testu. Wynik pojawi się po użyciu przycisku.</p>'; }
+  echo '<p class="zpAdmin20__muted">Gdy pojawi się błąd, sprawdź odpowiedź i zakres robota. WAF/CDN oraz rzeczywiste żądania sprawdza się w logach hostingu; blokada treningu nie oznacza blokady wyszukiwania AI.</p></section>';
   $log = array_reverse((array) get_option(ZP_AI_LOG, []));
-  echo '<h2>Dziennik</h2><pre style="background:#fff;border:1px solid #dcdcde;padding:12px;max-width:1100px;max-height:360px;overflow:auto;white-space:pre-wrap">' . esc_html($log ? implode("\n", $log) : 'Brak wpisów.') . '</pre></div>';
+  echo '<section class="zpAdmin20__card"><details class="zpAdmin20__details"><summary>Dziennik działań Suite</summary><p class="zpAdmin20__muted">Zapisane działania i odpowiedzi mechanizmów. To log diagnostyczny, nie lista cytowań.</p><pre style="max-height:320px;overflow:auto;white-space:pre-wrap">' . esc_html($log ? implode("\n", $log) : 'Brak zapisanych działań.') . '</pre></details></section>';
+  echo '</div>'; // Card stack.
+  if ($shared) { zp_admin20_close(); } else { echo '</div>'; }
 }

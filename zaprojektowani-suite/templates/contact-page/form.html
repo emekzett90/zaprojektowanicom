@@ -452,7 +452,7 @@ body.zpbs-studio-page #zpContactFormLight .zpContactFormLight__map{
       }
 
       function updateHeights(){
-        modeBlocks.forEach(function(block){
+        var heights=modeBlocks.map(function(block){
           var modes=(block.getAttribute('data-mode-section') || '').split(' ');
           var current=getModeKey();
           var shouldShow=modes.indexOf(current) !== -1 || modes.indexOf('all') !== -1;
@@ -460,12 +460,17 @@ body.zpbs-studio-page #zpContactFormLight .zpContactFormLight__map{
           if(shouldShow){
             block.classList.remove('is-hidden');
             block.classList.add('is-visible');
-            block.style.maxHeight=block.scrollHeight + 42 + 'px';
           }else{
             block.classList.remove('is-visible');
             block.classList.add('is-hidden');
-            block.style.maxHeight='0px';
           }
+          return {block:block,show:shouldShow};
+        });
+        heights.forEach(function(item){
+          item.height=item.show ? item.block.scrollHeight + 42 + 'px' : '0px';
+        });
+        heights.forEach(function(item){
+          item.block.style.maxHeight=item.height;
         });
       }
 

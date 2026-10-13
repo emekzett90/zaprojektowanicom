@@ -24,7 +24,8 @@ function zp_websub_feeds(): array {
 
 /** Only the main feeds name the hub: they are the ones the plugin announces. */
 function zp_websub_main_feed(): bool {
-  return zp_ai_on() && !is_archive() && !is_search() && !is_singular();
+  // WordPress export also runs rss2_head, but its WXR document has no Atom namespace.
+  return zp_ai_on() && is_feed() && !is_archive() && !is_search() && !is_singular();
 }
 add_action('rss2_head', function () {
   if (zp_websub_main_feed()) { echo "\t<atom:link rel=\"hub\" href=\"" . esc_url(ZP_WEBSUB_HUB) . "\" />\n"; }

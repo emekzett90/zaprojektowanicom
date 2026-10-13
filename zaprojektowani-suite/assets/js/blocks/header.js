@@ -11,6 +11,21 @@
   function initZpNewNav(){
     var nav=qs('#zpNewNav');
     if(!nav || nav.dataset.zpReady==='1') return;
+    /* PL desktop home: read the initial scroll before our class/style writes.
+       The existing hero-overlay spacer has zero height; regular scroll reads
+       and every other header context keep their original behavior. */
+    var initialScrollY=null;
+    try{
+      var initialBody=d.body;
+      if(homeIconManaged && initialBody && initialBody.classList
+        && (initialBody.classList.contains('home') || initialBody.classList.contains('front-page'))
+        && !initialBody.classList.contains('admin-bar')
+        && nav.classList.contains('zpNewNav--heroOverlay')
+        && d.getElementById('zhHero') && /^pl(?:-|$)/i.test(d.documentElement.lang||'')
+        && w.matchMedia && w.matchMedia('(min-width:1101px)').matches){
+        initialScrollY=w.scrollY || d.documentElement.scrollTop || 0;
+      }
+    }catch(e){}
     nav.dataset.zpReady='1';
 
     /* v2.2.523: service pages must render the final transparent hero header immediately,
@@ -306,8 +321,8 @@
       }
     }
 
-    function setScrolledState(){
-      var y=w.scrollY || d.documentElement.scrollTop || 0;
+    function setScrolledState(initialY){
+      var y=typeof initialY==='number' ? initialY : (w.scrollY || d.documentElement.scrollTop || 0);
       syncHeroOverlay();
       nav.classList.toggle('is-scrolled', y>18);
       d.body.classList.toggle('zp-nav-scrolled', y>18);
@@ -594,7 +609,7 @@
     syncHeroOverlay();
     syncAdminOffset();
     ensureSpacer();
-    setScrolledState();
+    setScrolledState(initialScrollY);
     updateSpacer();
     updateMegaTop();
     renderIcons();

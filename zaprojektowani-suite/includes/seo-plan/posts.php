@@ -291,20 +291,241 @@ function zp_seo_posts_placeholder_fixes(): array {
   ];
 }
 
+/** A local schema identity URL as a normalized path, without its query or fragment. */
+function zp_seo_posts_schema_path($url): string {
+  if (!is_string($url) || $url === '') { return ''; }
+  $host = (string) wp_parse_url($url, PHP_URL_HOST);
+  $site_host = (string) wp_parse_url(home_url('/'), PHP_URL_HOST);
+  if ($host !== '' && strcasecmp(preg_replace('~^www\.~i', '', $host), preg_replace('~^www\.~i', '', $site_host)) !== 0) { return ''; }
+  $path = (string) wp_parse_url($url, PHP_URL_PATH);
+  return $path !== '' && $path[0] === '/' ? zp_seo_plan_path($path) : '';
+}
+
+/** Six audited templates with an extra inline Article/BlogPosting; English is the same source post. */
+function zp_seo_posts_duplicate_article_source(string $canonical): string {
+  $paths = [
+    '/logo-branding/brief-do-logo-i-identyfikacji-wizualnej/' => '/en/logo-branding/logo-and-visual-identity-brief/',
+    '/logo-branding/logo-branding-i-strona-jaka-kolejnosc-wdrozenia-ma-sens/' => '/en/logo-branding/logo-branding-website-what-comes-first/',
+    '/sklepy-internetowe/kategorie-produktow-w-sklepie-internetowym/' => '/en/online-stores/ecommerce-product-categories/',
+    '/sklepy-internetowe/koszyk-w-sklepie-internetowym-jak-ograniczyc-porzucone-zakupy/' => '/en/online-stores/reduce-shopping-cart-abandonment/',
+    '/poradniki/jak-pisac-teksty-na-strone-zeby-nie-brzmialy-jak-katalog-uslug/' => '/en/guides/how-to-write-website-copy-that-isnt-just-a-service-list/',
+    '/strony-internetowe/projektowanie-stron-internetowych-co-decyduje-o-zapytaniach/' => '/en/websites/website-design-that-attracts-customers/',
+  ];
+  foreach ($paths as $source => $english) {
+    if ($canonical === $source || $canonical === $english) { return $source; }
+  }
+  return '';
+}
+
+/** A positive current Rank Math article must have only current canonical identity URLs. */
+function zp_seo_posts_current_rankmath_article(array $node, string $canonical): bool {
+  if (!array_intersect((array) ($node['@type'] ?? []), ['Article', 'BlogPosting', 'NewsArticle'])) { return false; }
+  $found = false;
+  foreach (['@id', 'url', 'mainEntityOfPage'] as $key) {
+    $value = $node[$key] ?? null;
+    $urls = is_array($value) ? [$value['@id'] ?? null, $value['url'] ?? null] : [$value];
+    foreach ($urls as $url) {
+      if ($url === null || $url === '') { continue; }
+      $found = true;
+      if (zp_seo_posts_schema_path($url) !== $canonical) { return false; }
+    }
+  }
+  return $found;
+}
+
+/** Two copied identities confirmed in the audit; never match a new or mixed unexpected identity. */
+function zp_seo_posts_known_wrong_inline_identity(\stdClass $node, string $source, array $paths): bool {
+  $paths = array_values(array_unique($paths));
+  if (count($paths) !== 1) { return false; }
+  $headline = $node->headline ?? '';
+  if ($source === '/poradniki/jak-pisac-teksty-na-strone-zeby-nie-brzmialy-jak-katalog-uslug/') {
+    return ($node->{'@type'} ?? '') === 'Article'
+      && in_array($paths[0], ['/', '/en/'], true)
+      && in_array($headline, ['Kiedy warto założyć sklep WooCommerce?', 'When is it worth starting a WooCommerce store?'], true);
+  }
+  if ($source === '/strony-internetowe/projektowanie-stron-internetowych-co-decyduje-o-zapytaniach/') {
+    return ($node->{'@type'} ?? '') === 'BlogPosting'
+      && in_array($paths[0], ['/strony-internetowe/projektowanie-stron-internetowych-co-decyduje-o-tym-czy-strona-zdobywa-klientow/', '/en/strony-internetowe/projektowanie-stron-internetowych-co-decyduje-o-tym-czy-strona-zdobywa-klientow/'], true)
+      && in_array($headline, ['Projektowanie stron internetowych — co decyduje o tym, czy strona zdobywa klientów?', 'Website design — what determines whether a website wins clients?'], true);
+  }
+  return false;
+}
+
+/** Remove a primary inline duplicate only after Rank Math supplied the published post's current schema. */
+function zp_seo_posts_redundant_current_article(\stdClass $node, string $canonical): bool {
+  $source = zp_seo_posts_duplicate_article_source($canonical);
+  if ($source === '' || empty($GLOBALS['zp_seo_posts_rankmath_article'][$source])) { return false; }
+  $article = false;
+  foreach ((array) ($node->{'@type'} ?? []) as $type) {
+    if (is_string($type) && preg_match('~(?:^|[/#])(Article|BlogPosting|NewsArticle)$~', $type)) { $article = true; break; }
+  }
+  if (!$article) { return false; }
+  $paths = [];
+  $current = true;
+  foreach (['@id', 'url', 'mainEntityOfPage'] as $key) {
+    $value = $node->{$key} ?? null;
+    $urls = $value instanceof \stdClass ? [$value->{'@id'} ?? null, $value->url ?? null] : [$value];
+    foreach ($urls as $url) {
+      if (is_string($url) && $url !== '') {
+        $path = zp_seo_posts_schema_path($url);
+        if ($path === '') { return false; }
+        $paths[] = $path;
+        if (zp_seo_posts_duplicate_article_source($path) !== $source) { $current = false; }
+      }
+    }
+  }
+  return $current || zp_seo_posts_known_wrong_inline_identity($node, $source, $paths);
+}
+
+/** Only old Article identity URLs count; a citation or a link in its text does not. */
+function zp_seo_posts_legacy_article(\stdClass $node, string $canonical): bool {
+  $types = (array) ($node->{'@type'} ?? []);
+  $article = false;
+  foreach ($types as $type) {
+    if (is_string($type) && preg_match('~(?:^|[/#])(Article|BlogPosting|NewsArticle)$~', $type)) { $article = true; break; }
+  }
+  if (!$article) { return false; }
+  $paths = [];
+  foreach (['@id', 'url', 'mainEntityOfPage'] as $key) {
+    $value = $node->{$key} ?? null;
+    $urls = $value instanceof \stdClass ? [$value->{'@id'} ?? null, $value->url ?? null] : [$value];
+    foreach ($urls as $url) {
+      $path = zp_seo_posts_schema_path($url);
+      if ($path !== '') { $paths[] = $path; }
+    }
+  }
+  // An Article already identifying this post stays, even if another property contains an old URL.
+  if ($canonical !== '' && in_array($canonical, $paths, true)) { return false; }
+  foreach ($paths as $path) {
+    if (preg_match('~^/(?:en/)?(?:wiedza|wiedza-strony-internetowe-seo-i-konwersja|wiedza-logo-branding|poradniki)/~', $path)) { return true; }
+  }
+  return false;
+}
+
+/** Prune stale Article nodes at any depth, retaining other schema nodes and JSON object/list types. */
+function zp_seo_posts_prune_legacy_articles($data, string $canonical, bool &$changed, bool $primary_node = true, bool $remove_legacy = true) {
+  if ($data instanceof \stdClass) {
+    if (($remove_legacy && zp_seo_posts_legacy_article($data, $canonical)) || ($primary_node && zp_seo_posts_redundant_current_article($data, $canonical))) { $changed = true; return null; }
+    $had_graph = isset($data->{'@graph'}) && $data->{'@graph'} !== [];
+    foreach ($data as $key => $value) {
+      $filtered = zp_seo_posts_prune_legacy_articles($value, $canonical, $changed, $key === '@graph', $remove_legacy);
+      if ($value instanceof \stdClass && $filtered === null) { unset($data->{$key}); }
+      else { $data->{$key} = $filtered; }
+    }
+    // A graph holding only removed Articles has no schema left to publish.
+    if ($had_graph && (!isset($data->{'@graph'}) || $data->{'@graph'} === []) && !array_diff(array_keys(get_object_vars($data)), ['@context', '@graph', '@id'])) { return null; }
+    return $data;
+  }
+  if (is_array($data)) {
+    $out = [];
+    foreach ($data as $value) {
+      $filtered = zp_seo_posts_prune_legacy_articles($value, $canonical, $changed, $primary_node, $remove_legacy);
+      if (!($value instanceof \stdClass && $filtered === null)) { $out[] = $filtered; }
+    }
+    return $out;
+  }
+  return $data;
+}
+
+/** Keep the script byte-for-byte unless a confirmed stale or positively backed duplicate Article was removed. */
+function zp_seo_posts_clean_legacy_schema(string $html, string $canonical, bool $remove_legacy = true): string {
+  return (string) preg_replace_callback('~(<script\b[^>]*application/ld\+json[^>]*>)(.*?)(</script>)~is', static function (array $m) use ($canonical, $remove_legacy): string {
+    $data = json_decode(trim($m[2]));
+    if (json_last_error() !== JSON_ERROR_NONE) { return $m[0]; }
+    $changed = false;
+    $data = zp_seo_posts_prune_legacy_articles($data, $canonical, $changed, true, $remove_legacy);
+    if (!$changed) { return $m[0]; }
+    if ($data === null || $data === []) { return ''; }
+    $json = wp_json_encode($data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP);
+    return is_string($json) ? $m[1] . $json . $m[3] : $m[0];
+  }, $html);
+}
+
+/** Attribute lookup for bounded head tags; no serialization of the surrounding HTML. */
+function zp_seo_posts_schema_attribute(string $tag, string $name): ?string {
+  if (!class_exists('WP_HTML_Tag_Processor')) { return null; }
+  // The processor needs a complete raw-text element to expose SCRIPT's opening attributes.
+  $fragment = preg_match('~^<script\b~i', $tag) ? $tag . '</script>' : $tag;
+  $processor = new \WP_HTML_Tag_Processor($fragment);
+  if (!$processor->next_tag()) { return null; }
+  $value = $processor->get_attribute($name);
+  return is_string($value) ? $value : null;
+}
+
+/** Inspect the actual emitted Rank Math head, including canonical, instead of relying on render order. */
+function zp_seo_posts_head_article_canonical(string $head, string $source): string {
+  preg_match_all('~<link\b[^>]*>~is', $head, $links);
+  $canonicals = [];
+  foreach ($links[0] as $tag) {
+    $rel = strtolower((string) zp_seo_posts_schema_attribute($tag, 'rel'));
+    if (in_array('canonical', preg_split('~\s+~', trim($rel)) ?: [], true)) { $canonicals[] = zp_seo_posts_schema_path(zp_seo_posts_schema_attribute($tag, 'href')); }
+  }
+  if (count($canonicals) !== 1 || zp_seo_posts_duplicate_article_source($canonicals[0]) !== $source) { return ''; }
+  $canonical = $canonicals[0];
+  preg_match_all('~(<script\b[^>]*>)(.*?)</script\s*>~is', $head, $scripts, PREG_SET_ORDER);
+  $articles = 0;
+  foreach ($scripts as $script) {
+    if (strtolower(trim((string) zp_seo_posts_schema_attribute($script[1], 'type'))) !== 'application/ld+json') { continue; }
+    $classes = preg_split('~\s+~', trim((string) zp_seo_posts_schema_attribute($script[1], 'class'))) ?: [];
+    if (!in_array('rank-math-schema', $classes, true)) { continue; }
+    $data = json_decode(trim($script[2]), true);
+    if (!is_array($data) || json_last_error() !== JSON_ERROR_NONE) { return ''; }
+    $nodes = isset($data['@graph']) && is_array($data['@graph']) ? $data['@graph'] : [$data];
+    foreach ($nodes as $node) {
+      if (!is_array($node) || !array_intersect((array) ($node['@type'] ?? []), ['Article', 'BlogPosting', 'NewsArticle'])) { continue; }
+      if (!zp_seo_posts_current_rankmath_article($node, $canonical)) { return ''; }
+      $articles++;
+    }
+  }
+  return $articles === 1 ? $canonical : '';
+}
+
+/** Final body-only pass for Elementor templates that rendered their content before wp_head. */
+function zp_seo_posts_clean_complete_document(string $html): string {
+  if (!zp_seo_plan_active() || is_admin() || !is_singular('post')) { return $html; }
+  $id = (int) get_queried_object_id();
+  $source = $id ? zp_seo_posts_duplicate_article_source(zp_seo_posts_schema_path((string) get_permalink($id))) : '';
+  if ($source === '' || get_post_status($id) !== 'publish') { return $html; }
+  if (!preg_match('~<head\b[^>]*>(.*?)</head\s*>~is', $html, $head, PREG_OFFSET_CAPTURE)) { return $html; }
+  $canonical = zp_seo_posts_head_article_canonical($head[1][0], $source);
+  if ($canonical === '') { return $html; }
+  $after_head = $head[0][1] + strlen($head[0][0]);
+  if (!preg_match('~<body\b[^>]*>(.*)</body\s*>~is', $html, $body, PREG_OFFSET_CAPTURE, $after_head)) { return $html; }
+  $existed = isset($GLOBALS['zp_seo_posts_rankmath_article'][$source]);
+  $previous = $GLOBALS['zp_seo_posts_rankmath_article'][$source] ?? null;
+  $GLOBALS['zp_seo_posts_rankmath_article'][$source] = true;
+  try { $clean = zp_seo_posts_clean_legacy_schema($body[1][0], $canonical, false); }
+  finally {
+    if ($existed) { $GLOBALS['zp_seo_posts_rankmath_article'][$source] = $previous; }
+    else { unset($GLOBALS['zp_seo_posts_rankmath_article'][$source]); }
+  }
+  if ($clean === $body[1][0]) { return $html; }
+  return substr($html, 0, $body[1][1]) . $clean . substr($html, $body[1][1] + strlen($body[1][0]));
+}
+
+function zp_seo_posts_complete_document_buffer(string $html, int $phase): string {
+  // An early flush can split the document; leave such chunks byte-for-byte unchanged.
+  return ($phase & PHP_OUTPUT_HANDLER_FINAL) ? zp_seo_posts_clean_complete_document($html) : $html;
+}
+
+add_action('template_redirect', static function () {
+  if (!zp_seo_plan_active() || is_admin() || !is_singular('post') || !empty($GLOBALS['zp_seo_posts_document_buffer'])) { return; }
+  $id = (int) get_queried_object_id();
+  $source = $id ? zp_seo_posts_duplicate_article_source(zp_seo_posts_schema_path((string) get_permalink($id))) : '';
+  if ($source === '' || get_post_status($id) !== 'publish') { return; }
+  $GLOBALS['zp_seo_posts_document_buffer'] = true;
+  ob_start('zp_seo_posts_complete_document_buffer');
+}, 99);
+
 function zp_seo_posts_placeholders(string $html): string {
   if ($html === '' || !zp_seo_plan_active() || is_admin() || !is_singular('post')) { return $html; }
   $id = (int) get_queried_object_id();
   if (!$id || (in_the_loop() && get_the_ID() !== $id)) { return $html; }
 
-  // Old Article JSON-LD written into the content of Mat's posts, with the /wiedza/ address
-  // in mainEntityOfPage and its own organization ("Problemy na stronie" 7); Rank Math gives
-  // the post its Article schema.
+  // Old Article JSON-LD also lives inside @graph and uses earlier category prefixes. Rank Math
+  // supplies the current Article; keep inline FAQPage/HowTo siblings and canonical Articles.
   if (stripos($html, 'application/ld+json') !== false) {
-    $html = (string) preg_replace_callback('~<script\b[^>]*application/ld\+json[^>]*>(.*?)</script>\s*~is', static function (array $m): string {
-      $d = json_decode(trim($m[1]), true);
-      $types = is_array($d) ? (array) ($d['@type'] ?? []) : [];
-      return array_intersect($types, ['Article', 'BlogPosting', 'NewsArticle']) && strpos($m[1], '/wiedza/') !== false ? '' : $m[0];
-    }, $html);
+    $html = zp_seo_posts_clean_legacy_schema($html, zp_seo_posts_schema_path((string) get_permalink($id)));
   }
 
   $fix = zp_seo_posts_placeholder_fixes()[(string) get_post_field('post_name', $id)] ?? null;

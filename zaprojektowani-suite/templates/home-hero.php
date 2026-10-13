@@ -838,7 +838,7 @@ pointer-events:auto!important;
 <span class="zh__rlogo"><img src="https://zaprojektowani.com/wp-content/uploads/2026/05/facebook_duze_logo.webp" alt="Facebook"></span>
 </a>
 </div>
-<div class="zh__mobileStrip" aria-label="Narzędzia i technologie">
+<div class="zh__mobileStrip" role="group" aria-label="Narzędzia i technologie">
 <div class="zh__marqTrack">
 <span class="zh__marqGroup">
 <img src="https://zaprojektowani.com/wp-content/uploads/2026/05/google-ads-logo.png" alt="">

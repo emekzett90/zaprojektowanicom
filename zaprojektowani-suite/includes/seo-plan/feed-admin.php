@@ -98,7 +98,7 @@ function zp_feed_admin_page(): void {
   if ($settings['paused']) {
     $button('resume', 'Wznów publikację według planu');
   } else {
-    $button('hold', 'Przenieś zaplanowane do szkiców', 'button', 'Przenieść zaplanowane artykuły do szkiców? Nowe z kanału też trafią do szkiców, dopóki nie wznowisz publikacji.');
+    $button('hold', 'Przenieś zaplanowane wpisy z kanału do szkiców', 'button', 'Przenieść zaplanowane artykuły z kanału do szkiców? Pozostałe wpisy nie zostaną zmienione. Nowe z kanału też trafią do szkiców, dopóki nie wznowisz publikacji.');
   }
   $button('undo', 'Cofnij wszystko', 'button button-link-delete', 'Przenieść WSZYSTKIE artykuły z kanału do szkiców, także opublikowane, i wstrzymać moduł?');
   echo '</p><p class="description">Ostatnie sprawdzenie: ' . esc_html($status['last_try'] ? wp_date('Y-m-d H:i', (int) $status['last_try']) : 'jeszcze nie')

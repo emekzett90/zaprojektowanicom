@@ -28,6 +28,7 @@ final class Worker {
 
     /** Tables, first-run settings and the daily event (self-healing after updates or a cron reset). */
     public static function maintain(): void {
+        if (function_exists('zp_en_legacy_paid_blocked') && \zp_en_legacy_paid_blocked()) { return; }
         if (!Bridge::ready()) { return; }
         Store::install();
         Settings::migrate();
@@ -77,6 +78,7 @@ final class Worker {
     }
 
     public static function daily(): void {
+        if (function_exists('zp_en_legacy_paid_blocked') && \zp_en_legacy_paid_blocked()) { return; }
         if (!Settings::get('enabled')) { return; }
         wp_clear_scheduled_hook(self::DAILY);
         wp_schedule_single_event(self::next_daily(), self::DAILY);
@@ -87,6 +89,7 @@ final class Worker {
 
     /** Queue what needs translating and start the worker. Returns a short summary. */
     public static function plan(string $who = 'cron'): string {
+        if (function_exists('zp_en_legacy_paid_blocked') && \zp_en_legacy_paid_blocked()) { return 'Poprzednia kolejka jest zachowana jako archiwum. Aktualne tłumaczenia Luna są obsługiwane w karcie powyżej.'; }
         if ($who === 'cron' && !Settings::get('enabled')) { return 'Codzienny harmonogram jest wyłączony.'; }
         if (!Bridge::hooks_ready()) {
             $m = 'Moduł językowy nie ma haków dla Tłumacza EN (potrzebny zaprojektowani-languages 1.0.13+) — nic nie tłumaczę.';
@@ -232,6 +235,7 @@ final class Worker {
 
     /** Run the worker now (0) or in $delay seconds. */
     public static function kick(int $delay): void {
+        if (function_exists('zp_en_legacy_paid_blocked') && \zp_en_legacy_paid_blocked()) { return; }
         $next = wp_next_scheduled(self::WORK);
         if ($next && $next <= time() + max(0, $delay)) {
             if ($delay === 0) { spawn_cron(); }
@@ -315,16 +319,19 @@ final class Worker {
         } elseif ($alert = Log::current_alert()) {
             $s['state'] = 'blocked'; $s['message'] = (string) $alert['m'];
         }
+        if (function_exists('zp_en_legacy_paid_blocked') && \zp_en_legacy_paid_blocked()) { $s['can_step']=false;$s['running']=false;$s['state']='archived';$s['message']='Archiwum poprzedniego mechanizmu. Bieżący stan i nocne aktualizacje Luna pokazano w karcie powyżej.'; }
         return $s;
     }
 
     /** Explicit settings change or administrator retry releases an API/limit pause. */
     public static function resume(): void {
+        if (function_exists('zp_en_legacy_paid_blocked') && \zp_en_legacy_paid_blocked()) { return; }
         self::update_state(['retry_at' => 0, 'state' => 'queued']);
         if (Store::queued_count()) { self::kick(5); }
     }
 
     public static function work(): void {
+        if (function_exists('zp_en_legacy_paid_blocked') && \zp_en_legacy_paid_blocked()) { return; }
         if (!Bridge::hooks_ready() || Settings::api_key() === '' || Log::current_alert()) { return; }
         $state = self::state();
         if ((int) $state['retry_at'] > time()) { self::kick((int) $state['retry_at'] - time()); return; }
