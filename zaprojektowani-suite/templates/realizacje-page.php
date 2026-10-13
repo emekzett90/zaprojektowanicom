@@ -74,7 +74,8 @@ window.zpRealizacjeProjects = <?php echo wp_json_encode($zp_real_projects, JSON_
 </script>
 <section id="zpRealizacjePage" aria-labelledby="zpRealizacjeTitle">
 
-<header class="hero zpRealizacjePage__hero">
+<?php /* A div, not a header: the live heading check in ultimate-seo/ultimate.php skips headers outside main and would promote the featured h2 to a second H1. */ ?>
+<div class="hero zpRealizacjePage__hero">
   <div class="wrap">
     <nav class="heroCrumbs" aria-label="Okruszki">
       <a href="<?php echo esc_url(home_url('/')); ?>">Strona główna</a>
@@ -124,7 +125,7 @@ window.zpRealizacjeProjects = <?php echo wp_json_encode($zp_real_projects, JSON_
       </figure>
     </div>
   </div>
-</header>
+</div>
 
 <section class="spot" id="portfolio-realizacji" aria-label="Wyróżnione realizacje">
   <div class="sectionEyebrow"><span>Wybrane case studies</span><p>Projekty, w których szczególnie dobrze widać połączenie strategii, designu i wdrożenia.</p></div>
