@@ -20,6 +20,18 @@ define('ZP_SUITE_VERSION', '2.9.66');
 define('ZP_SUITE_PATH', plugin_dir_path(__FILE__));
 define('ZP_SUITE_URL', plugin_dir_url(__FILE__));
 
+/** True outside plain page views: wp-admin (with admin-ajax and admin-post), WP-Cron, the REST API and WP-CLI. */
+function zp_suite_backend_request(): bool {
+  static $backend = null;
+  if ($backend === null) {
+    $uri = isset($_SERVER['REQUEST_URI']) ? (string) $_SERVER['REQUEST_URI'] : '';
+    $backend = is_admin() || wp_doing_cron() || (defined('WP_CLI') && WP_CLI) || isset($_GET['rest_route'])
+      || strpos($uri, '/wp-json/') !== false || strpos($uri, '/xmlrpc.php') !== false;
+  }
+  return $backend;
+}
+
+require_once ZP_SUITE_PATH . 'includes/suite3/upgrade.php';
 require_once ZP_SUITE_PATH . 'includes/frontend-quality.php';
 
 // v2.9.3 — speed: style blocks printed in <body> are gathered (same order) and body:has() rules become a <body> attribute check (no visual change). Loads first.
@@ -258,6 +270,7 @@ add_action('plugins_loaded', function(){
   if ($previous === ZP_SUITE_VERSION) { return; }
 
   zp_suite_upgrade_140();
+  zp_suite3_upgrade($previous);
 
   /* Seed defaults only for a fresh install; version bumps must preserve CMS edits. */
   if ($previous === '') {
@@ -1586,23 +1599,25 @@ require_once ZP_SUITE_PATH . 'includes/ultimate-seo/bootstrap.php';
 
 // v2.3.0 — keyword plan: Rank Math values, nationwide service pages, redirects, schema and indexation.
 require_once ZP_SUITE_PATH . 'includes/seo-plan/bootstrap.php';
-require_once ZP_SUITE_PATH . 'includes/rankmath-repair-2914.php';
+// 3.0.0: the panel, reports and the article factory load only for wp-admin, cron, REST and WP-CLI requests.
+// A page view skips about 1.5 MB of PHP; the one front-end piece (article schema) loads per post below.
+require_once ZP_SUITE_PATH . 'includes/content-schema-front.php';
+if (zp_suite_backend_request()) {
 // Reviewed Senuto content package; posts are created only by the native admin review form.
 require_once ZP_SUITE_PATH . 'includes/content-batch-20261009.php';
-require_once ZP_SUITE_PATH . 'includes/cache-20261009.php';
-require_once ZP_SUITE_PATH . 'includes/gsc-quality-20261009.php';
 // Admin reports and calendar reuse native WordPress/Rank Math data.
-require_once ZP_SUITE_PATH . 'includes/gsc-quality-translation-20261009.php';
 require_once ZP_SUITE_PATH . 'includes/admin-stats-20261009.php';
 require_once ZP_SUITE_PATH . 'includes/admin-stats-presentation-20261010.php';
-require_once ZP_SUITE_PATH . 'includes/admin-translations-20261009.php';
 require_once ZP_SUITE_PATH . 'includes/admin-calendar-20261009.php';
 require_once ZP_SUITE_PATH . 'includes/article-google-20261010.php';
 ZP_Article_Google_20261010::register();
 require_once ZP_SUITE_PATH . 'includes/admin-lighthouse-20261010.php';
 require_once ZP_SUITE_PATH . 'includes/admin-experience-20261009.php';
-require_once ZP_SUITE_PATH . 'includes/admin-workspace-20261010.php';
 require_once ZP_SUITE_PATH . 'includes/admin-workspace-chrome-20261010.php';
+}
+// Codex's own HTML cache stays loaded so it can purge if it was ever switched on (3.0.0 switches it off).
+require_once ZP_SUITE_PATH . 'includes/cache-20261009.php';
+require_once ZP_SUITE_PATH . 'includes/admin-translations-20261009.php';
 require_once ZP_SUITE_PATH . 'includes/admin-single-translator-20261010.php';
 ZP_Single_Translator_20261010::register();
 // Versioned EN rewrites reuse the existing Translator UI and server-side API key.
@@ -1629,15 +1644,9 @@ require_once ZP_SUITE_PATH . 'includes/en-public-currency-20261011.php';
 ZP_EN_Public_Currency_20261011::register();
 require_once ZP_SUITE_PATH . 'includes/en-studio-budget-20261011.php';
 ZP_EN_Studio_Budget_20261011::register();
+if (zp_suite_backend_request()) {
 // Senuto-backed topics, OpenAI drafts and reviewed native publication dates.
 require_once ZP_SUITE_PATH . 'includes/admin-content-preparation-20261010.php';
-require_once ZP_SUITE_PATH . 'includes/preparation-image-http-diagnostics-20261011.php';
-ZP_Preparation_Image_HTTP_Diagnostics_20261011::register();
-// Read-only current preparation and published-media diagnostics.
-require_once ZP_SUITE_PATH . 'includes/preparation-review-diagnostics-20261011.php';
-ZP_Preparation_Review_Diagnostics_20261011::register();
-require_once ZP_SUITE_PATH . 'includes/published-prepared-image-compression-20261011.php';
-ZP_Published_Prepared_Image_Compression_20261011::register();
 // Explicit, reversible photo replacement in already prepared native drafts.
 require_once ZP_SUITE_PATH . 'includes/content-preparation-photo-refresh-20261010.php';
 // Automatically select researched business topics, links, categories and primary sources.
@@ -1652,33 +1661,15 @@ require_once ZP_SUITE_PATH . 'includes/managed-webp-20261010.php';
 require_once ZP_SUITE_PATH . 'includes/content-preparation-images-speed-20261010.php';
 require_once ZP_SUITE_PATH . 'includes/article-photo-refresh-20261010.php';
 ZP_Article_Photo_Refresh_20261010::register();
-require_once ZP_SUITE_PATH . 'includes/article-photo-metadata-diagnostics-20261011.php';
-ZP_Article_Photo_Metadata_Diagnostics_20261011::register();
-// Read-only provenance of existing generated article images.
-require_once ZP_SUITE_PATH . 'includes/prepared-image-compression-20261010.php';
-ZP_Prepared_Image_Compression_20261010::register();
-require_once ZP_SUITE_PATH . 'includes/article-photo-core-flags-reconciliation-20261011.php';
-ZP_Article_Photo_Core_Flags_Reconciliation_20261011::register();
-require_once ZP_SUITE_PATH . 'includes/published-prepared-image-compression-adapter-20261011.php';
-ZP_Published_Prepared_Compression_Adapter_20261011::register();
-// Keep one description when Rank Math has actually emitted its native tag.
-require_once ZP_SUITE_PATH . 'includes/content-preparation-seo-description-20261010.php';
-ZP_Preparation_SEO_Description_20261010::register();
-// Reviewed image replacement for the already published owned article.
-require_once ZP_SUITE_PATH . 'includes/published-prepared-photo-refresh-20261010.php';
-ZP_Published_Prepared_Photo_Refresh_20261010::register();
-require_once ZP_SUITE_PATH . 'includes/admin-webp-diagnostics-20261010.php';
-ZP_Admin_WebP_Diagnostics_20261010::register();
 require_once ZP_SUITE_PATH . 'includes/admin-queue-health-20261010.php';
 ZP_Admin_Queue_Health_20261010::register();
-require_once ZP_SUITE_PATH . 'includes/admin-queue-resume-20261010.php';
-ZP_Admin_Queue_Resume_20261010::register();
-require_once ZP_SUITE_PATH . 'includes/admin-diagnostics-panel-20261011.php';
-ZP_Admin_Diagnostics_Panel_20261011::register();
 // Existing Senuto projects: authenticated reports, daily sync and measured history.
 require_once ZP_SUITE_PATH . 'includes/admin-senuto-positions-20261010.php';
 require_once ZP_SUITE_PATH . 'includes/admin-seo-plan-20261011.php';
 ZP_Admin_SEO_Plan_20261011::register();
+}
+// One meta description: Hello Elementor's own tag is off while Rank Math prints one.
+add_filter('hello_elementor_description_meta_tag', static function ($show) { return defined('RANK_MATH_VERSION') ? false : $show; });
 // Render the visible mobile hero immediately; keep its existing visual and motion rules.
 require_once ZP_SUITE_PATH . 'includes/mobile-hero-stability-2917.php';
 // Reserve early loading for the existing mobile hero italic font.

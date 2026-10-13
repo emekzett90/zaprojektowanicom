@@ -344,8 +344,6 @@ add_action('admin_menu', static function (): void {
         'zp-suite-content-20261009' => ['Pakiet artykułów', [ZP_Content_Batch_20261009::class, 'page']],
         'zp-suite-photos-20261009' => ['Zdjęcia artykułów', [ZP_Content_Batch_20261009::class, 'photo_page']],
         'zp-suite-html-cache' => ['Cache HTML', [ZP_HTML_Cache_20261009::class, 'page']],
-        'zp-suite-gsc-quality' => ['Korekty jakości', [ZP_GSC_Quality_20261009::class, 'page']],
-        'zp-suite-gsc-quality-translation' => ['Korekta tłumaczenia', [ZP_GSC_Quality_Translation_20261009::class, 'page']],
     ];
     $requested = isset($_GET['page']) ? sanitize_key(wp_unslash($_GET['page'])) : '';
     foreach ($hidden as $page => $screen) {
