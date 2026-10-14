@@ -48,6 +48,8 @@ final class Runtime {
         if ($public && $lang === 'pl') {
             add_action('template_redirect', static function () use ($rel, $query) {
                 if (!is_404()) { return; }
+                // 3.2.0: a 301 the owner saved for this address in ZP Suite → Błędy 404 wins (served at priority 5).
+                if (function_exists('zp_suite3_redirects') && function_exists('zp_suite3_404_path') && isset(zp_suite3_redirects()[zp_suite3_404_path()]['to'])) { return; }
                 $en = Router::bare_en($rel);
                 if ($en !== null) { self::redirect(Router::base() . $en . ($query !== '' ? '?' . $query : ''), 301); }
             }, 1);
