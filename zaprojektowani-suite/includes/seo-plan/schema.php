@@ -49,15 +49,8 @@ function zp_seo_plan_business_node(): array {
   ]);
 }
 
-/** Service node for the current service page, or null. */
-function zp_seo_plan_service_node(): ?array {
-  if (!function_exists('zp_seo_service_variant')) { return null; }
-  $variant = zp_seo_service_variant();
-  if ($variant === '') { return null; }
-  $path = '';
-  foreach (zp_seo_service_registry() as $p => $r) { if ($r['variant'] === $variant) { $path = $p; break; } }
-  if ($path === '') { return null; }
-  $entry = zp_seo_plan_entry($path) ?? [];
+/** Service variant => [name, serviceType] of its Service node (content pages: their own 'schema'). */
+function zp_seo_plan_service_names(string $variant): ?array {
   $names = [
     'strony-national' => ['Tworzenie stron internetowych', 'Projektowanie i tworzenie stron internetowych'],
     'sklepy-national' => ['Tworzenie sklepów internetowych', 'Tworzenie sklepów internetowych WooCommerce'],
@@ -69,14 +62,28 @@ function zp_seo_plan_service_node(): ?array {
   ];
   $content = zp_seo_content_page_by_variant($variant);
   if ($content) { $names[$variant] = [$content['schema']['name'], $content['schema']['serviceType']]; }
+  return $names[$variant] ?? null;
+}
+
+/** Service node for the current service page, or null. */
+function zp_seo_plan_service_node(): ?array {
+  if (!function_exists('zp_seo_service_variant')) { return null; }
+  $variant = zp_seo_service_variant();
+  if ($variant === '') { return null; }
+  $path = '';
+  foreach (zp_seo_service_registry() as $p => $r) { if ($r['variant'] === $variant) { $path = $p; break; } }
+  if ($path === '') { return null; }
+  $names = zp_seo_plan_service_names($variant);
+  if (!$names) { return null; }
+  $entry = zp_seo_plan_entry($path) ?? [];
   $local = substr($variant, -6) === '-local';
   $url = home_url($path);
   $site = home_url('/');
   return (array) apply_filters('zp_seo_plan_service_node', [
     '@type' => 'Service',
     '@id' => $url . '#service',
-    'name' => $names[$variant][0],
-    'serviceType' => $names[$variant][1],
+    'name' => $names[0],
+    'serviceType' => $names[1],
     'description' => (string) ($entry['description'] ?? ''),
     'url' => $url,
     'provider' => ['@id' => $site . '#organization'],
@@ -84,6 +91,65 @@ function zp_seo_plan_service_node(): ?array {
       ? [['@type' => 'City', 'name' => 'Katowice'], ['@type' => 'AdministrativeArea', 'name' => 'województwo śląskie']]
       : ['@type' => 'Country', 'name' => 'Polska'],
   ], $variant);
+}
+
+/**
+ * The post's category for its breadcrumbs: the one in its address, under the name and at the address of its topic in
+ * the knowledge base (blog-knowledge.php), because an alias category redirects (301) to the topic's first category.
+ */
+function zp_seo_plan_breadcrumb_category(int $id, string $url): ?array {
+  $segments = explode('/', trim(zp_seo_plan_path($url), '/'));
+  $term = count($segments) > 1 ? get_term_by('slug', $segments[count($segments) - 2], 'category') : null;
+  if (!$term instanceof WP_Term) {
+    $cats = get_the_category($id);
+    $term = $cats ? $cats[0] : null;
+  }
+  if (!$term instanceof WP_Term) { return null; }
+  $name = (string) $term->name;
+  $link = get_category_link($term);
+  foreach (function_exists('zp_suite_wiedza_topic_groups') ? zp_suite_wiedza_topic_groups() : [] as $group) {
+    if (!in_array($term->slug, (array) $group['slugs'], true)) { continue; }
+    foreach ((array) $group['slugs'] as $slug) {
+      $primary = get_term_by('slug', $slug, 'category');
+      if ($primary instanceof WP_Term) { $name = (string) $group['label']; $link = get_category_link($primary); break; }
+    }
+    break;
+  }
+  return is_string($link) && $link !== '' ? ['name' => $name, 'url' => $link] : null;
+}
+
+/** Breadcrumb name of a service page (the name of its Service node), or ''. */
+function zp_seo_plan_breadcrumb_service(string $path): string {
+  if ($path === '/kampanie-reklamowe/') { return 'Kampanie reklamowe'; }
+  $variant = function_exists('zp_seo_service_registry') ? (string) (zp_seo_service_registry()[$path]['variant'] ?? '') : '';
+  return $variant !== '' ? (string) (zp_seo_plan_service_names($variant)[0] ?? '') : '';
+}
+
+/**
+ * SearchFit 14.10, point 4: BreadcrumbList like the visible breadcrumbs. Posts: Strona główna › Wiedza › category,
+ * service pages: Strona główna › service. In Polish, like the rest of the JSON-LD: on English pages the languages
+ * module translates the names and addresses (the service names are the ones of the page's Service node). Null elsewhere.
+ */
+function zp_seo_plan_breadcrumb_node(): ?array {
+  if (!is_singular(['post', 'page']) || is_front_page()) { return null; }
+  $id = (int) get_queried_object_id();
+  $url = $id ? (string) get_permalink($id) : '';
+  if ($url === '') { return null; }
+  $items = [['Strona główna', home_url('/')]];
+  if (is_singular('post')) {
+    $items[] = ['Wiedza', home_url('/wiedza/')];
+    $category = zp_seo_plan_breadcrumb_category($id, $url);
+    if ($category) { $items[] = [$category['name'], $category['url']]; }
+  } else {
+    $name = zp_seo_plan_breadcrumb_service(zp_seo_plan_path($url));
+    if ($name === '') { return null; }
+    $items[] = [$name, $url];
+  }
+  $list = [];
+  foreach ($items as $i => $item) {
+    $list[] = ['@type' => 'ListItem', 'position' => $i + 1, 'name' => $item[0], 'item' => $item[1]];
+  }
+  return ['@type' => 'BreadcrumbList', '@id' => $url . '#breadcrumb', 'itemListElement' => $list];
 }
 
 /** Keeps one business entity in a graph and adds the Service node. */
@@ -144,6 +210,28 @@ add_filter('rank_math/json_ld', function ($data, $jsonld = null) {
   return zp_seo_plan_filter_graph($data);
 }, 98, 2);
 
+/** Last pass, after the content modules (120, 125) added their nodes: one BreadcrumbList (point 4). */
+function zp_seo_plan_finish_graph(array $graph): array {
+  $crumbs = zp_seo_plan_breadcrumb_node();
+  if ($crumbs) {
+    // Ours replaces any other, e.g. Rank Math's own when its breadcrumbs get switched on.
+    foreach ($graph as $key => $node) {
+      if (is_array($node) && in_array('BreadcrumbList', array_map('strval', (array) ($node['@type'] ?? [])), true)) { unset($graph[$key]); }
+    }
+    $webpage = substr($crumbs['@id'], 0, -strlen('#breadcrumb')) . '#webpage';
+    foreach ($graph as $key => $node) {
+      if (is_array($node) && ($node['@id'] ?? '') === $webpage) { $graph[$key]['breadcrumb'] = ['@id' => $crumbs['@id']]; }
+    }
+    $graph['BreadcrumbList'] = $crumbs;
+  }
+  return $graph;
+}
+
+add_filter('rank_math/json_ld', function ($data, $jsonld = null) {
+  if (!zp_seo_plan_active() || !is_array($data) || is_admin()) { return $data; }
+  return zp_seo_plan_finish_graph($data);
+}, 210, 2);
+
 // Without Rank Math schema output, print the same nodes once.
 add_action('wp_footer', function () {
   if (!zp_seo_plan_active() || !empty($GLOBALS['zp_seo_plan_schema_done']) || is_admin() || is_404()) { return; }
@@ -152,6 +240,8 @@ add_action('wp_footer', function () {
   if (is_front_page() || !defined('RANK_MATH_VERSION')) { $graph[] = zp_seo_plan_business_node(); }
   $service = zp_seo_plan_service_node();
   if ($service) { $graph[] = $service; }
+  $crumbs = zp_seo_plan_breadcrumb_node();
+  if ($graph && $crumbs) { $graph[] = $crumbs; }
   if (!$graph) { return; }
   echo '<script type="application/ld+json" id="zp-seo-plan-schema">' . wp_json_encode(['@context' => 'https://schema.org', '@graph' => $graph], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) . '</script>' . "\n";
 }, 5);
