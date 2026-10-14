@@ -129,7 +129,8 @@ final class Import {
         if ($post_id <= 0) { $post_id = Sync::post_id_for($source); }
         $kind = strpos($source, '/category/') === 0 ? 'term' : ($source === '/' ? 'home' : 'post');
         $term_id = $kind === 'term' ? Sync::term_id_for($source) : 0;
-        $id = Store::page_add($source, ['post_id' => $post_id, 'term_id' => $term_id, 'kind' => $kind, 'origin' => substr((string) ($info['origin'] ?? 'import'), 0, 12)]);
+        $origin = substr((string) ($info['origin'] ?? 'import'), 0, 12);
+        $id = Store::page_add($source, ['post_id' => $post_id, 'term_id' => $term_id, 'kind' => $kind, 'origin' => $origin]);
         if (!$id) { return; }
 
         // English address: the fixed one, or the earlier translator's one. An address made of Polish words keeps
@@ -137,6 +138,9 @@ final class Import {
         $en = (string) ($info['en'] ?? '');
         $polish = $en !== '' && Routes::polish($en);
         $data = [];
+        // A page edited between the update and the copy (e.g. a title changed by another module) was queued as new.
+        $row = Store::page($id);
+        if ($row && (string) $row->origin === 'new') { $data['origin'] = $origin; }
         if (!Routes::external($source) && $en !== '' && Routes::valid_en($en)) { $data['en_path'] = $en; }
 
         // Translations: the rewrite and v2 maps (what is served today), plus Tłumacz EN 1's own page strings.
@@ -148,7 +152,6 @@ final class Import {
         $map = array_diff_key($map, Serve::SITE_TERMS);
         foreach ($map as $pl => $tr) { $map[$pl] = Sync::fix_terms((string) $tr, (string) $pl); }
         if ($map) {
-            $origin = substr((string) ($info['origin'] ?? 'import'), 0, 12);
             Store::strings_insert($id, $map, $origin);
             // The same text on another page (a lead shown in a list, a heading used twice) reuses this translation
             // instead of going to OpenAI again. Translations already in the memory stay as they are.
