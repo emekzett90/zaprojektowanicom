@@ -224,15 +224,9 @@ function zp_suite3_todo(): array {
     try {
       $queues = ZP_Admin_Queue_Health_20261010::data();
       foreach (($queues['queues'] ?? []) as $key => $queue) {
-        if (!is_array($queue) || empty($queue['issues'])) { continue; }
-        // Only what needs the owner: a job waiting for review, or a queue that really stopped (with its reason).
-        $issues = array_values(array_diff((array) $queue['issues'], ['jobs_limited']));
-        if (!$issues) { continue; }
-        $stall = array_values(array_diff($issues, ['needs_review']));
-        $text = $stall
-          ? trim('Kolejka zatrzymała się. ' . ZP_Admin_Queue_Health_20261010::issue_text((string) $stall[0]))
-          : 'Zadanie czeka na Twoje sprawdzenie w module.';
-        $row((string) ($queue['label'] ?? 'Kolejka treści'), $text, zp_suite3_url($key === 'photos' ? 'zp-suite-article-photos' : 'zp-suite-prepare'), 'update', 'warn');
+        // The real reason: a job waiting for the owner's decision is not a stalled queue (3.1.1).
+        $why = is_array($queue) ? ZP_Admin_Queue_Health_20261010::explain($queue) : null;
+        if ($why) { $row((string) ($queue['label'] ?? 'Kolejka treści'), $why['text'], zp_suite3_url($key === 'photos' ? 'zp-suite-article-photos' : 'zp-suite-prepare'), $why['kind'] === 'review' ? 'clipboard' : 'update', $why['kind'] === 'fault' ? 'bad' : 'warn'); }
       }
     } catch (Throwable $e) {}
   }
