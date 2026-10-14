@@ -29,12 +29,18 @@ final class Runtime {
         if (preg_match('~\.[a-z0-9]{2,5}$~i', $rel) && !preg_match('~\.html?$~i', $rel)) { return; }
 
         $query = (string) wp_parse_url($uri, PHP_URL_QUERY);
-        [$lang, $source, $mapped, $redirect] = Router::resolve($rel, $query, in_array((string) ($_SERVER['REQUEST_METHOD'] ?? 'GET'), ['GET', 'HEAD'], true));
+        $public = in_array((string) ($_SERVER['REQUEST_METHOD'] ?? 'GET'), ['GET', 'HEAD'], true);
+        [$lang, $source, $mapped, $redirect] = Router::resolve($rel, $query, $public);
         if ($redirect !== null) { self::redirect(Router::base() . $redirect . ($query !== '' ? '?' . $query : ''), 301); }
         if (Router::is_excluded($source)) {
             if ($lang === 'en') { self::redirect(Router::base() . $source . ($query !== '' ? '?' . $query : ''), 302); }
             Router::$excluded = true;
             return;
+        }
+        // 3.1.1: an English address without the closing slash ("/en", "/en/contact") gets a 301 to the one with it, as
+        // WordPress gives Polish ones ("/kontakt" → "/kontakt/"). /en answered 200 as a second copy of /en/ (SearchFit, 14.10).
+        if ($public && $lang === 'en' && substr($rel, -1) !== '/' && !preg_match('~\.html?$~i', $rel)) {
+            self::redirect(Router::base() . $rel . '/' . ($query !== '' ? '?' . $query : ''), 301);
         }
 
         // GEO: Poland stays on PL. A detected non-PL visitor entering a Polish URL

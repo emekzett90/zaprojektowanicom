@@ -283,11 +283,12 @@ final class Store {
     }
 
     /** Translations shown on every English page (titles, excerpts, menu, footer). Polish key => English. */
-    public static function shared_strings(): array {
+    /** Shared texts: [pl => en], or with $manual [pl => [en, manual]]. */
+    public static function shared_strings(bool $manual = false): array {
         global $wpdb;
         $out = [];
-        $rows = $wpdb->get_results('SELECT pl, en FROM ' . self::table('strings') . " WHERE scope = 0 AND shared = 1 AND en <> ''", ARRAY_N);
-        foreach ((array) $rows as $r) { $out[(string) $r[0]] = (string) $r[1]; }
+        $rows = $wpdb->get_results('SELECT pl, en, manual FROM ' . self::table('strings') . " WHERE scope = 0 AND shared = 1 AND en <> ''", ARRAY_N);
+        foreach ((array) $rows as $r) { $out[(string) $r[0]] = $manual ? [(string) $r[1], (int) $r[2]] : (string) $r[1]; }
         return $out;
     }
 
@@ -460,6 +461,13 @@ final class Store {
         } else {
             $wpdb->insert($t, ['page_id' => $page_id, 'path_hash' => $path_hash, 'rev' => 0, 'map' => '{}', 'keys_list' => $json, 'updated_at' => self::now()]);
         }
+    }
+
+    /** 3.1.1: add keys (hash => kind) to a page's list, e.g. the short version of its title once its translation is known. */
+    public static function keys_add(int $page_id, array $keys): void {
+        $row = self::page($page_id);
+        if (!$row || !$keys) { return; }
+        self::keys_save($page_id, self::hash((string) $row->path), self::keys_of($page_id) + $keys);
     }
 
     /** Pages whose current Polish version uses one of these keys. @return int[] page ids */

@@ -219,7 +219,7 @@ function zp_suite3_todo(): array {
     }
   }
   $t = zp_suite3_translator_summary();
-  if ($t && (int) ($t['problems'] ?? 0) > 0) { $row('Tłumaczenia EN do sprawdzenia', (int) $t['problems'] . ' treści z błędem lub bez wyniku.', zp_suite3_url(zp_suite3_translator_page()), 'translation', 'warn'); }
+  if ($t && (int) ($t['problems'] ?? 0) > 0) { $row('Tłumaczenia EN do sprawdzenia', zp_suite3_plural((int) $t['problems'], 'treść', 'treści', 'treści') . ' z błędem lub bez wyniku.', zp_suite3_url(zp_suite3_translator_page()), 'translation', 'warn'); }
   if (class_exists('ZP_Admin_Queue_Health_20261010')) {
     try {
       $queues = ZP_Admin_Queue_Health_20261010::data();

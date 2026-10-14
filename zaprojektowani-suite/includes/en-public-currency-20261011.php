@@ -202,8 +202,23 @@ final class ZP_EN_Public_Currency_20261011 {
         if (is_array($attempt)&&in_array($attempt['error']??'',self::ERRORS,true)) echo '<p>Ostatnia próba: '.esc_html($attempt['error']).'.</p>';
         echo '<form method="post" action="'.esc_url(admin_url('admin-post.php')).'"><input type="hidden" name="action" value="zp_en_currency_refresh">';wp_nonce_field('zp_en_currency_refresh');echo '<button type="submit" class="button">Zaplanuj pobranie aktualnego kursu NBP</button></form><p>Polskie ceny i wartości wysyłane z formularzy pozostają w PLN. Cztery ceny w osadzonym ekranie Studio Wyceny używają kursu strony nadrzędnej.</p></section>';
     }
-    private static function purge_cache(): void { if (class_exists('ZP_HTML_Cache_20261009')) ZP_HTML_Cache_20261009::queue_purge(); }
+    /**
+     * 3.1.1: dollar prices are on English pages only, so a new NBP rate (every working day) changes the version of the English
+     * pages alone (cache_version() below) and ZP Suite's HTML cache stops serving just their copies. It used to empty the
+     * whole cache, Polish pages included, once a day.
+     */
+    private static function purge_cache(): void { do_action('zp_html_cache_refresh'); }
+    /**
+     * 3.1.1: the rate is part of the version of every English page in ZP Suite's HTML cache (filter zpl_cache_versions,
+     * \ZPL\Router::cache_paths), so after purge_cache() above the cache stops serving the copies with the old prices.
+     * @param mixed $v
+     */
+    public static function cache_version($v): array {
+        $v=is_array($v)?$v:[];$r=self::rate();
+        $v['*']=(string)($v['*']??'').'|usd:'.self::POLICY.':'.self::SCRIPT.':'.($r?$r['mid_scaled'].':'.$r['effective_date']:'-');
+        return $v;
+    }
     public static function register(): void {
-        add_filter('zp_en_public_price_html',[self::class,'filter'],10,3);add_action('init',[self::class,'schedule']);add_action(self::DAILY,[self::class,'refresh']);add_action(self::REFRESH,[self::class,'refresh']);add_action('admin_post_zp_en_currency_refresh',[self::class,'handle']);add_action('zpte2_settings_cards',[self::class,'render'],30);
+        add_filter('zpl_cache_versions',[self::class,'cache_version']);add_filter('zp_en_public_price_html',[self::class,'filter'],10,3);add_action('init',[self::class,'schedule']);add_action(self::DAILY,[self::class,'refresh']);add_action(self::REFRESH,[self::class,'refresh']);add_action('admin_post_zp_en_currency_refresh',[self::class,'handle']);add_action('zpte2_settings_cards',[self::class,'render'],30);
     }
 }

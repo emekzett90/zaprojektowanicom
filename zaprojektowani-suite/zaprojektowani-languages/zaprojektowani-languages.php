@@ -24,7 +24,8 @@ if (defined('ZPL_EMBEDDED')) {
 }
 if (defined('ZPL_VERSION')) { return; }
 
-define('ZPL_VERSION', '1.1.0');
+define('ZPL_VERSION', '1.1.1');
+// 1.1.1 (Suite 3.1.1): /en/knowledge/ (was /en/insights/, 301), /en without the slash redirects, English pages are kept in ZP Suite's HTML cache.
 // 1.1.0 (Tłumacz EN 2): one translator serves above the shipped dictionaries (zpl_priority_dictionary), old English addresses redirect (zpl_legacy_routes).
 // 1.0.19: versioned approved EN overlays and bounded client dictionary refresh.
 // 1.0.18 (Suite 2.9.12): visitors whose browser reads Polish open Polish pages even after choosing English once; switching an English page to Polish opens the Polish address.
@@ -53,6 +54,8 @@ register_activation_hook(ZPL_HOST, static function () {
 add_action('plugins_loaded', ['ZPL\\Runtime', 'boot'], PHP_INT_MIN);
 add_action('plugins_loaded', ['ZPL\\Sitemap', 'boot']);
 add_action('rest_api_init', ['ZPL\\Rest', 'register']);
+// 3.1.1: ZP Suite's HTML cache keeps copies of the finished English pages too, each under the version of its English text.
+add_filter('zp_html_cache_policy_paths', ['ZPL\\Router', 'cache_paths'], 10, 2);
 if (is_admin()) { \ZPL\Admin::boot(); }
 
 /** Public helpers. Declared conditionally: an unconditional top-level function is bound when the file is compiled,

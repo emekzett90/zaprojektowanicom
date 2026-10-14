@@ -94,6 +94,7 @@ final class Worker {
         if ($admin) {
             Store::install();
             self::schedule_daily(false);
+            Migrate::run();
             self::after_update();
         }
         $s = self::state();
@@ -116,8 +117,13 @@ final class Worker {
         if ($was === $build) { return; }
         update_option(self::BUILD, $build, false);
         // The first start copies the earlier translations and checks everything afterwards anyway.
-        if ($was === '' || !Import::done() || !Settings::get('enabled') || !Settings::get('recheck')) { return; }
-        self::plan('update');
+        if ($was === '' || !Import::done() || !Settings::get('enabled')) { return; }
+        // 3.1.1: pages with untranslated fragments or an error go first (a new version usually fixes their cause; in
+        // 3.1.1 the 30 pages "do poprawy" of 3.1.0), also when the daily reading of every page is off.
+        $fix = 0;
+        foreach (Store::pages(['attention' => true, 'status' => ['new', 'done', 'partial', 'error']]) as $row) { Store::queue((int) $row->id, 30); $fix++; }
+        if ($fix) { Log::add('Nowa wersja wtyczki: w pierwszej kolejności tłumaczę ponownie ' . Admin::n($fix, 'stronę', 'strony', 'stron') . ' z brakującymi fragmentami lub błędem.'); }
+        if ($fix || Settings::get('recheck')) { self::plan('update'); }
     }
 
     /** Next 03:00 in the site's time zone (Europe/Warsaw on the live site). */
@@ -351,7 +357,7 @@ final class Worker {
             'message' => 'Wszystko sprawdzone. Następne sprawdzenie: ' . wp_date('j.m H:i', (int) (wp_next_scheduled(self::DAILY) ?: self::next_daily())) . '.']);
         if ($wasRunning) {
             $errors = (int) $run['errors'];
-            Log::add('Koniec przebiegu: sprawdzono ' . (int) $run['done'] . ' stron' . ($errors ? ', ' . $errors . ' z problemem (zakładka Strony)' : '') . '. Wersji EN: ' . Index::count() . '.', $errors ? 'warning' : 'info');
+            Log::add('Koniec przebiegu: sprawdzono ' . Admin::n((int) $run['done'], 'stronę', 'strony', 'stron') . ($errors ? ', ' . $errors . ' z problemem (zakładka Strony)' : '') . '. Wersji EN: ' . Index::count() . '.', $errors ? 'warning' : 'info');
         }
         Store::prune_jobs();
     }
@@ -443,7 +449,7 @@ final class Worker {
         if ($job->kind === 'units') {
             $payload = json_decode((string) $job->items, true);
             $n = is_array($payload['items'] ?? null) ? count($payload['items']) : 0;
-            Store::page_update((int) $row->id, ['keys_failed' => (int) $row->keys_failed + $n, 'message' => 'Nie przetłumaczono ' . $n . ' fragmentów: ' . OpenAI::short($why)]);
+            Store::page_update((int) $row->id, ['keys_failed' => (int) $row->keys_failed + $n, 'message' => Admin::n($n, 'fragment', 'fragmenty', 'fragmentów') . ' bez tłumaczenia: ' . OpenAI::short($why)]);
         }
         Log::add($row->path . ': ' . $why, 'warning');
     }

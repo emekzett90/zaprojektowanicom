@@ -31,7 +31,7 @@ final class Routes {
         'poradniki' => 'guides',
         'seo-content-marketing' => 'seo-content-marketing',
         'reklamy' => 'advertising',
-        'wiedza' => 'insights',
+        'wiedza' => 'knowledge', // 3.1.1: was insights (Mat, 14.10); /en/insights/ redirects
         'bez-kategorii' => 'uncategorized',
         'category' => 'category',
     ];
