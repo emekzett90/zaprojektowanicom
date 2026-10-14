@@ -149,6 +149,8 @@ a{color:inherit;text-decoration:none}
   .zp-demo-hand{position:fixed!important;z-index:99999!important;width:62px!important;height:62px!important;pointer-events:none!important;overflow:visible!important;opacity:0;visibility:visible!important;display:block!important;transform:rotate(-10deg)!important}
   .zp-demo-hand img{width:62px!important;height:auto!important;display:block!important;opacity:1!important;visibility:visible!important;filter:drop-shadow(0 10px 16px rgba(31,110,234,.28))!important}
 }
+/* 3.0 (14.10.2026): na telefonie karta kończy się na tagach, bez pustego pola pod opisem. */
+@media (max-width:720px){.zp-card{min-height:0}.zp-card__content{min-height:0}}
 @media (prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
 </style>
 
@@ -394,7 +396,11 @@ html,body,.zp-chooser,.zp-chooser *,.zp-chooser button,.zp-chooser input,.zp-cho
     post('service-select',{service:MAP[raw]||'web'});
   });
   function sendHeight(){
-    var h=Math.max(
+    /* 3.0: wysokość treści, nie dokumentu — scrollHeight ramki nigdy nie spada poniżej jej obecnej wysokości,
+       więc na telefonie (domyślnie 4300 px) pod kartami zostawało ~600 px pustego miejsca. */
+    var chooser=document.querySelector('.zp-chooser');
+    var h=chooser?chooser.getBoundingClientRect().bottom+(window.pageYOffset||0):0;
+    if(!(h>0))h=Math.max(
       document.documentElement ? document.documentElement.scrollHeight : 0,
       document.body ? document.body.scrollHeight : 0
     );
