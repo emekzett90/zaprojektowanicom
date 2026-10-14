@@ -58,15 +58,26 @@ add_action('wp_footer', function(){
         el.style.setProperty('backdrop-filter','none','important');
       });
     }
-    /* 3.1.1: the checks after the page start run in the next frame, before it is painted: reading
-       scrollY right after other scripts changed the page made the browser work out its styles again. */
+    /* 3.1.1: the checks run in the next frame, before it is painted, also on scroll (once per frame):
+       reading scrollY right after other scripts changed the page made the browser work out its styles
+       again on every scroll step. */
     var raf=0;
     function soon(){
       if(raf) return;
       if(typeof window.requestAnimationFrame!=='function'){applyHeader();return;}
       raf=window.requestAnimationFrame(function(){raf=0;applyHeader();});
     }
-    ['scroll','resize','load'].forEach(function(evt){window.addEventListener(evt,applyHeader,{passive:true});});
+    /* 3.1.1: on scroll, once the header script has marked the header as scrolled, it sets the sticky
+       background itself in the same frame (on phones its glass, on computers it clears these inline values
+       and the rule above paints the same colours), so writing them here first only made the two scripts
+       change the header twice on every scroll frame, with the same picture in the end. */
+    function onScroll(){
+      var nav=document.getElementById('zpNewNav');
+      if(nav && nav.classList.contains('is-scrolled')) return;
+      soon();
+    }
+    window.addEventListener('scroll',onScroll,{passive:true});
+    ['resize','load'].forEach(function(evt){window.addEventListener(evt,soon,{passive:true});});
     document.addEventListener('DOMContentLoaded',function(){soon(); setTimeout(soon,120); setTimeout(soon,700); setTimeout(soon,1600);});
   })();
   </script>
