@@ -330,6 +330,7 @@ Self-contained shortcode template: [zp_o_nas]
   /* =========================================================
      3.0 (13.10.2026) — O nas: spacing fixes and flat surfaces
      Mat 13.10: no gradients and no drop shadows. The bottom fades on the cut-out photos stay.
+     Mat 14.10: the hero keeps its original gradients and shadows.
      ========================================================= */
   /* front-fixes-290.css lifts the team portraits by 116px; the heads then ran into the heading
      (desktop and tablet) and into the card above (tablet). The process photo is taller than its box
@@ -357,13 +358,12 @@ Self-contained shortcode template: [zp_o_nas]
   /* The "4 kategorie / 2026" pill took the note's white text colour and showed up empty. */
   #zpAboutX .zpAboutX__awardsNote .zpAboutX__awardsNoteBadge{display:inline-flex;margin-top:0;color:#071426;line-height:1}
 
-  /* Flat colours instead of gradients. */
-  #zpAboutX .zpAboutX__hero{background:#fff}
-  #zpAboutX .zpAboutX__hero h1 strong{background:none;-webkit-background-clip:border-box;background-clip:border-box;color:var(--navy2);-webkit-text-fill-color:currentColor}
-  #zpAboutX .zpAboutX__eyebrow:before{background:var(--navy2)}
+  /* Flat colours instead of gradients. Mat 14.10: the hero at the top keeps its gradients and shadows,
+     so nothing below touches .zpAboutX__hero. */
+  #zpAboutX .zpAboutX__eyebrow:not(.zpAboutX__hero *):before{background:var(--navy2)}
   #zpAboutX .zpAboutX__history .zpAboutX__eyebrow:before,#zpAboutX .zpAboutX__studioAwards .zpAboutX__eyebrow:before,#zpAboutX .zpAboutX__reviews .zpAboutX__eyebrow:before,#zpAboutX .zpAboutX__cta .zpAboutX__eyebrow:before{background:#8ec8f7}
-  #zpAboutX .zpAboutX__btn:before{background:var(--navy)}
-  #zpAboutX .zpAboutX__btn--dark:before{background:var(--navy2)}
+  #zpAboutX .zpAboutX__btn:not(.zpAboutX__hero *):before{background:var(--navy)}
+  #zpAboutX .zpAboutX__btn--dark:not(.zpAboutX__hero *):before{background:var(--navy2)}
   #zpAboutX .zpAboutX__award--dark,#zpAboutX .zpAboutX__member--dark,#zpAboutX .zpAboutX__trustindex,#zpAboutX .zpAboutX__studioAwards,#zpAboutX .zpAboutX__cta{background:var(--navy)}
   #zpAboutX .zpAboutX__trustindexLogo{background:rgba(255,255,255,.04)}
   #zpAboutX .zpAboutX__awardFeature{background:rgba(255,255,255,.045)}
@@ -371,10 +371,9 @@ Self-contained shortcode template: [zp_o_nas]
   #zpAboutX .zpAboutX__timeline:after{background:#8ec8f7}
 
   /* No shadows: hover keeps the lift and the border colour. */
-  #zpAboutX .zpAboutX__heroVisual:before,#zpAboutX .zpAboutX__sticky .zpAboutX__processPhoto:before{display:none!important}
-  #zpAboutX .zpAboutX__heroVisual .zpAboutX__heroPerson,#zpAboutX .zpAboutX__sticky .zpAboutX__processPhoto img{filter:none!important}
-  #zpAboutX .zpAboutX__heroCard{background:#fff;box-shadow:none;-webkit-backdrop-filter:none;backdrop-filter:none}
-  #zpAboutX .zpAboutX__heroProof span:before,#zpAboutX .zpAboutX__trustindexLogo,#zpAboutX .zpAboutX__awardTrophy{box-shadow:none}
+  #zpAboutX .zpAboutX__sticky .zpAboutX__processPhoto:before{display:none!important}
+  #zpAboutX .zpAboutX__sticky .zpAboutX__processPhoto img{filter:none!important}
+  #zpAboutX .zpAboutX__trustindexLogo,#zpAboutX .zpAboutX__awardTrophy{box-shadow:none}
   #zpAboutX .zpAboutX__award:hover,#zpAboutX .zpAboutX__member:hover,#zpAboutX .zpAboutX__trustindex:hover,#zpAboutX .zpAboutX__caps .zpAboutX__cap--link:hover{box-shadow:none}
   #zpAboutX .zpAboutX__timeline:after,#zpAboutX .zpAboutX__timeline .zpAboutX__year:before,#zpAboutX .zpAboutX__timeline .zpAboutX__year.is-visible:before{box-shadow:none}
 
