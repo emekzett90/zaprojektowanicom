@@ -17,6 +17,11 @@ const catLabel=c=>c.includes('shop')?'Sklep internetowy':(c.includes('branding')
 const catIcon=c=>c.includes('shop')?'shopping-bag':(c.includes('branding')&&!c.includes('web'))?'pen-tool':c.includes('branding')?'layers':'monitor';
 const icons=()=>{try{window.lucide&&window.lucide.createIcons({attrs:{'stroke-width':2}})}catch(e){}};
 const esc=s=>String(s||'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
+/* SearchFit 14.10.2026: liveGone marks a client site that no longer opens (zp_suite_portfolio_live_gone()). Its live
+   buttons and texts stay as they were, only without the link; tabindex keeps Hello Elementor's reset for links
+   without href off their colour. */
+const hasLive=p=>!!(p.live||p.liveGone);
+const liveAttrs=p=>p.live?`href="${esc(p.live)}" target="_blank" rel="noopener"`:'tabindex="-1"';
 const slugify=s=>String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'').slice(0,90);
 
 /* On mobile the search/categories belong below the portfolio heading.
@@ -63,7 +68,7 @@ function spotlightMarkup(p,projectIndex,slideIndex){
       <ul class="spotList">${points.map(s=>`<li><i data-lucide="check"></i>${esc(s)}</li>`).join('')}</ul>
       <div class="spotActions">
         <button class="btn btn--ghostD" data-open="${projectIndex}" type="button"><span>Zobacz case study</span><i data-lucide="arrow-up-right"></i></button>
-        ${p.live?`<a class="btn btn--ghostD" href="${esc(p.live)}" target="_blank" rel="noopener"><span>Zobacz live</span><i data-lucide="external-link"></i></a>`:''}
+        ${hasLive(p)?`<a class="btn btn--ghostD" ${liveAttrs(p)}><span>Zobacz live</span><i data-lucide="external-link"></i></a>`:''}
       </div>
     </div>
   </article>`;
@@ -153,7 +158,7 @@ function renderGrid(){
       <div class="chips">${p.services.slice(0,3).map(s=>`<span>${esc(s)}</span>`).join('')}</div>
       <div class="cardActions">
         <a class="more" href="#case-${slug}" data-open="${i}"><span>Zobacz case study</span><i data-lucide="arrow-up-right"></i></a>
-        ${p.live?`<a class="livePill" href="${esc(p.live)}" target="_blank" rel="noopener" aria-label="Zobacz stronę live"><span>live</span> <i data-lucide="external-link"></i></a>`:''}
+        ${hasLive(p)?`<a class="livePill" ${liveAttrs(p)}${p.live?' aria-label="Zobacz stronę live"':''}><span>live</span> <i data-lucide="external-link"></i></a>`:''}
       </div>
     </div>
   </article>`;
@@ -258,7 +263,7 @@ function openModal(i){
       <p class="desc">${esc(p.desc)}</p>
       <div class="introActions">
         <a class="btn btn--ink" href="/studio-wyceny/"><span>Wyceń podobny projekt</span><i data-lucide="arrow-up-right"></i></a>
-        ${p.live?`<a class="btn btn--ghost" href="${esc(p.live)}" target="_blank" rel="noopener"><span>Zobacz live</span><i data-lucide="external-link"></i></a>`:''}
+        ${hasLive(p)?`<a class="btn btn--ghost" ${liveAttrs(p)}><span>Zobacz live</span><i data-lucide="external-link"></i></a>`:''}
       </div>
     </div>
   </div>
@@ -267,7 +272,7 @@ function openModal(i){
       <div class="fact"><span class="factIco"><i data-lucide="building-2"></i></span><div><span>Klient</span><b>${esc(p.client)}</b></div></div>
       <div class="fact"><span class="factIco"><i data-lucide="tags"></i></span><div><span>Branża</span><b>${esc(p.tag)}</b></div></div>
       <div class="fact"><span class="factIco"><i data-lucide="calendar"></i></span><div><span>Rok</span><b>${esc(p.year)}</b></div></div>
-      <div class="fact"><span class="factIco"><i data-lucide="badge-check"></i></span><div><span>Status</span><b>${p.live?'Online — projekt działa live':'Projekt portfolio — realizacja zakończona'}</b></div></div>
+      <div class="fact"><span class="factIco"><i data-lucide="badge-check"></i></span><div><span>Status</span><b>${hasLive(p)?'Online — projekt działa live':'Projekt portfolio — realizacja zakończona'}</b></div></div>
     </div>
     <div class="caseStory">
       <article class="storyCard"><span class="storyIcon"><i data-lucide="target"></i></span><div><small>Cel projektu</small><p>${esc(p.challenge)}</p></div></article>
@@ -297,7 +302,7 @@ function openModal(i){
     <button class="mobileModalBar__nav" type="button" data-mobile-prev aria-label="Poprzedni projekt"><i data-lucide="arrow-left"></i></button>
     <button class="mobileModalBar__close" type="button" data-mobile-close><i data-lucide="x"></i><span>Zamknij</span></button>
     <button class="mobileModalBar__nav" type="button" data-mobile-next aria-label="Następny projekt"><i data-lucide="arrow-right"></i></button>
-    ${p.live?`<a class="mobileModalBar__cta" href="${esc(p.live)}" target="_blank" rel="noopener"><span>Zobacz live</span><i data-lucide="external-link"></i></a>`:`<a class="mobileModalBar__cta" href="/studio-wyceny/"><span>Wyceń</span><i data-lucide="arrow-up-right"></i></a>`}
+    ${hasLive(p)?`<a class="mobileModalBar__cta" ${liveAttrs(p)}><span>Zobacz live</span><i data-lucide="external-link"></i></a>`:`<a class="mobileModalBar__cta" href="/studio-wyceny/"><span>Wyceń</span><i data-lucide="arrow-up-right"></i></a>`}
   </nav>`;
   icons();
   sheet.querySelector('[data-prev]').addEventListener('click',()=>openModal(cur-1));
