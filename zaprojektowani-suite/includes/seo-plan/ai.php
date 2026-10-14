@@ -621,7 +621,8 @@ function zp_ai_offer_node(array $o): array {
     'url' => home_url($o['path']),
     'priceCurrency' => 'PLN',
     'priceSpecification' => $spec,
-    'itemOffered' => ['@type' => 'Service', 'name' => $o['name']],
+    // SearchFit 14.10, point 8: a Service names its provider, the business node of schema.php.
+    'itemOffered' => ['@type' => 'Service', 'name' => $o['name'], 'provider' => ['@id' => home_url('/') . '#organization']],
     'areaServed' => ['@type' => 'Country', 'name' => 'Polska'],
   ];
   if ($o['note'] !== '') { $node['description'] = $o['note']; }

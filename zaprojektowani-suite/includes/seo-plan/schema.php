@@ -210,8 +210,56 @@ add_filter('rank_math/json_ld', function ($data, $jsonld = null) {
   return zp_seo_plan_filter_graph($data);
 }, 98, 2);
 
-/** Last pass, after the content modules (120, 125) added their nodes: one BreadcrumbList (point 4). */
+/** An Offer without any price: only availability, currency or address (point 8). One with its own content stays. */
+function zp_seo_plan_empty_offer(array $node): bool {
+  if (!array_intersect(array_map('strval', (array) ($node['@type'] ?? [])), ['Offer', 'AggregateOffer'])) { return false; }
+  foreach ($node as $key => $value) {
+    if (in_array($key, ['price', 'lowPrice', 'highPrice', 'priceSpecification'], true) && $value !== '' && $value !== null && $value !== []) { return false; }
+    if (!in_array($key, ['@type', '@id', 'price', 'lowPrice', 'highPrice', 'priceSpecification', 'priceCurrency', 'availability', 'url', 'priceValidUntil', 'itemCondition', 'validFrom'], true)) { return false; }
+  }
+  return true;
+}
+
+/**
+ * SearchFit 14.10, point 8, at any depth of a node: an Offer without a price goes (saved Rank Math schemas of
+ * /studio-wyceny/ and the English Katowice pages, which keep their saved Service), and every Service names its
+ * provider: the business node, by reference (an inline copy of it under the same @id becomes the reference).
+ */
+function zp_seo_plan_tidy_node(array $node, string $org): array {
+  foreach ($node as $key => $value) {
+    if (!is_array($value)) { continue; }
+    if ($value === [] || array_keys($value) === range(0, count($value) - 1)) {
+      $kept = [];
+      foreach ($value as $item) {
+        if (is_array($item) && zp_seo_plan_empty_offer($item)) { continue; }
+        $kept[] = is_array($item) ? zp_seo_plan_tidy_node($item, $org) : $item;
+      }
+      if ($kept || $value === []) { $node[$key] = $kept; } else { unset($node[$key]); }
+    } elseif (zp_seo_plan_empty_offer($value)) {
+      unset($node[$key]);
+    } else {
+      $node[$key] = zp_seo_plan_tidy_node($value, $org);
+    }
+  }
+  if (in_array('Service', array_map('strval', (array) ($node['@type'] ?? [])), true)) {
+    $provider = $node['provider'] ?? null;
+    if ($provider === null || $provider === '' || $provider === []) {
+      $node['provider'] = ['@id' => $org];
+    } elseif (is_array($provider) && count($provider) > 1 && is_string($provider['@id'] ?? null) && strpos($provider['@id'], home_url('/')) === 0 && preg_match('~#(organization|localbusiness|business)$~', $provider['@id'])) {
+      $node['provider'] = ['@id' => $org];
+    }
+  }
+  return $node;
+}
+
+/** Last pass, after the content modules (120, 125) added their nodes: one BreadcrumbList (point 4), offers and providers (point 8). */
 function zp_seo_plan_finish_graph(array $graph): array {
+  $org = home_url('/') . '#organization';
+  foreach ($graph as $key => $node) {
+    if (!is_array($node)) { continue; }
+    if (zp_seo_plan_empty_offer($node)) { unset($graph[$key]); continue; }
+    $graph[$key] = zp_seo_plan_tidy_node($node, $org);
+  }
   $crumbs = zp_seo_plan_breadcrumb_node();
   if ($crumbs) {
     // Ours replaces any other, e.g. Rank Math's own when its breadcrumbs get switched on.
