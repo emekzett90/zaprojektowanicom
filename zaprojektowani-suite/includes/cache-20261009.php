@@ -161,15 +161,61 @@ final class ZP_HTML_Cache_20261009 {
         update_option(self::STATE, ['enabled' => false, 'disabled' => true, 'at_utc' => gmdate('c')], false);
         // Keep original files' private backup; no config or drop-in is touched by emergency OFF.
     }
+    /**
+     * ZP Suite 3.0.1: put the device-aware drop-in in place of the one this module wrote and keep the private backup's
+     * hash in step, so "Przywróć" and "Odśwież" keep working. With $resume, pages are served from the cache again.
+     * Only a drop-in whose hash proves it is this module's own is replaced; wp-config.php is never touched.
+     */
+    public static function upgrade_dropin(bool $resume): string {
+        $backup = get_option(self::BACKUP, null);
+        if (!is_array($backup) || ($backup['schema'] ?? null) !== 1) { return 'not-installed'; }
+        if (!defined('WP_CACHE') || !WP_CACHE) { return 'wp-cache-off'; }
+        $file = self::dropin();
+        if (is_link($file) || !is_file($file)) { return 'dropin-missing'; }
+        $current = (string) hash_file('sha256', $file);
+        $template = self::read(self::template());
+        $new = hash('sha256', $template);
+        if ($current !== $new) {
+            if ($current !== ($backup['dropin_installed_sha'] ?? '')) { return 'dropin-foreign'; }
+            self::atomic($file, $template, 0644, $current);
+        }
+        if (($backup['dropin_installed_sha'] ?? '') !== $new) { $backup['dropin_installed_sha'] = $new; update_option(self::BACKUP, $backup, false); }
+        $state = get_option(self::STATE, []);
+        if (!$resume && empty($state['enabled'])) { return 'dropin-updated'; }
+        self::filesystem();
+        $policy = self::policy();
+        self::write_policy($policy);
+        update_option(self::STATE, ['enabled' => true, 'paths' => count($policy['paths']), 'ttl' => $policy['ttl'], 'at_utc' => gmdate('c')], false);
+        delete_option('zp_html_cache_20261009_error');
+        // Copies made before 3.0.1 belong to the old generation and are never read again.
+        $count = 0;
+        foreach (glob(self::dir() . '/zpc-*.php') ?: [] as $old) { if (++$count > 2000) { break; } if (!is_link($old) && preg_match('/\/zpc-[a-f0-9]{64}\.php$/D', $old)) { @unlink($old); } }
+        return 'on';
+    }
+    /** Short state for "Stan strony": on, off, not installed, or the reason it cannot serve. */
+    public static function status(): array {
+        $state = get_option(self::STATE, []);
+        $installed = is_array(get_option(self::BACKUP, null));
+        $dropin = self::dropin();
+        $sha = is_file($dropin) && !is_link($dropin) ? (string) hash_file('sha256', $dropin) : '';
+        $template = is_file(self::template()) ? (string) hash_file('sha256', self::template()) : '';
+        return ['installed' => $installed, 'enabled' => !empty($state['enabled']), 'paths' => (int) ($state['paths'] ?? 0), 'ttl' => (int) ($state['ttl'] ?? 0), 'wp_cache' => defined('WP_CACHE') && WP_CACHE, 'dropin_current' => $sha !== '' && $sha === $template, 'dropin_present' => $sha !== '', 'error' => (string) get_option('zp_html_cache_20261009_error', '')];
+    }
     private static function disabled_policy(): array { return ['schema' => 1, 'enabled' => false, 'ttl' => 1800, 'host' => '', 'paths' => [], 'geo_polish_safe' => false, 'next_publication' => 0, 'generation' => bin2hex(random_bytes(16))]; }
     public static function purge(): void {
         $state = get_option(self::STATE, []); if (empty($state['enabled'])) { return; }
         $backup = get_option(self::BACKUP, []);
         if (is_link(self::dropin()) || !is_file(self::dropin()) || hash_file('sha256', self::dropin()) !== ($backup['dropin_installed_sha'] ?? '')) { return; }
         try {
-            self::write_policy(self::policy());
+            // 3.0.1: an older drop-in of this module is replaced by the device-aware one (that step also refreshes).
+            if (hash_file('sha256', self::dropin()) !== hash_file('sha256', self::template())) { self::upgrade_dropin(false); return; }
+            $policy = self::policy();
+            // Two requests can refresh at the same moment; the loser's hash check fails although the policy is fresh.
+            try { self::write_policy($policy); } catch (RuntimeException $race) { usleep(50000); clearstatcache(); self::write_policy($policy); }
             $files = glob(self::dir() . '/zpc-*.php') ?: []; $count = 0;
             foreach ($files as $file) { if (++$count > 1000) { break; } if (!is_link($file) && preg_match('/\/zpc-[a-f0-9]{64}\.php$/D', $file)) { @unlink($file); } }
+            // 3.0.1: a later successful refresh clears an old failure note (it used to stay on the page for good).
+            if (get_option('zp_html_cache_20261009_error', '') !== '') { delete_option('zp_html_cache_20261009_error'); }
         } catch (Throwable $error) {
             // Existing TTL/deadline guard still limits stale content; failure visible to admins.
             update_option('zp_html_cache_20261009_error', 'Nie odświeżono polityki cache; sprawdź uprawnienia katalogu.', false);
@@ -182,9 +228,18 @@ final class ZP_HTML_Cache_20261009 {
     public static function option_changed(string $option): void {
         // Counters, admin progress/logs and lookup memoization do not change rendered content.
         if (in_array($option, ['zp_ai_stats', 'zpte_log', 'zpte_usage', 'zpte_progress', 'zpte_last_plan', 'zp_speed_img_sizes', 'zp_speed_live_paths'], true)) { return; }
+        // 3.0.1: panel data (404 log, redirect counters, cron heartbeat), visit counters and lookup memos. Ordinary visits or
+        // cron write these every few minutes, and each write used to empty the whole cache.
+        if (strpos($option, 'zp_suite3_') === 0 || in_array($option, ['zpl_geo_stats', 'zpl_missing', 'zpte_alert', 'zp_speed_att_ids', 'zp_suite_version_done', 'zp_suite_leads', 'zp_ai_feed_seen', 'zp_ai_changed', 'zp_ai_access_test', 'zp_ai_indexnow_last', 'zp_ai_indexnow_retry', 'zp_ai_indexnow_queue', 'zp_websub_last', 'zp_feed_guard_at', 'zp_feed_status', 'zp_feed_log', 'zp_ai_log'], true)) { return; }
+        if (apply_filters('zp_html_cache_ignore_option', false, $option)) { return; }
         if (preg_match('/^(?:zp_(?!html_cache_)|zpl_|zpte_|rank-math-|theme_mods_|widget_|sidebars_widgets|page_on_front|show_on_front|blogname|blogdescription|permalink_structure)/', $option)) { self::queue_purge(); }
     }
-    public static function meta_changed($meta_id, $post_id, $key): void { if (!in_array($key, ['_elementor_css', '_elementor_element_cache', '_elementor_page_assets', '_edit_lock', '_edit_last', '_zp_post_reads', '_zp_post_views'], true)) { self::queue_purge(); } }
+    public static function meta_changed($meta_id, $post_id, $key): void {
+        if (in_array($key, ['_elementor_css', '_elementor_element_cache', '_elementor_page_assets', '_edit_lock', '_edit_last', '_zp_post_reads', '_zp_post_views'], true)) { return; }
+        // 3.0.1: other modules (the EN translator, for one) can name their own keys that never change Polish pages.
+        if (apply_filters('zp_html_cache_ignore_meta', false, (string) $key, (int) $post_id)) { return; }
+        self::queue_purge();
+    }
     public static function handle(): void {
         if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST' || !self::allowed() || !wp_verify_nonce(is_string($_POST['_wpnonce'] ?? null) ? wp_unslash($_POST['_wpnonce']) : '', 'zp_html_cache_20261009')) { wp_die('Brak uprawnień lub błędny nonce.', '', ['response' => 403]); }
         try {
@@ -193,20 +248,25 @@ final class ZP_HTML_Cache_20261009 {
             elseif ($command === 'restore') { self::restore(); }
             elseif ($command === 'purge') { self::purge(); }
             elseif ($command === 'disable') { self::disable(); }
+            elseif ($command === 'resume') { $result = self::upgrade_dropin(true); if ($result !== 'on') { throw new RuntimeException('Nie włączono ponownie: ' . $result . '.'); } }
             else { throw new RuntimeException('Niedozwolone działanie.'); }
         } catch (Throwable $error) { set_transient('zp_html_cache_notice_' . get_current_user_id(), $error->getMessage(), 600); }
         wp_safe_redirect(admin_url('admin.php?page=' . self::PAGE)); exit;
     }
     public static function page(): void {
         if (!self::allowed()) { wp_die('Brak uprawnień administratora.'); }
-        echo '<div class="wrap"><h1>ZP Suite — Cache HTML</h1><p>Cache własnego kodu HTML: 1800 sekund, publiczne kanoniczne ścieżki PL, anonimowy GET bez parametrów i cookies, polski Accept-Language. Panel, REST/AJAX, formularze POST, podglądy, EN, Studio Wyceny i strony prywatne są pomijane. Wygląd i animacje są zachowane. Przy terminie publikacji omijamy HIT, aby WordPress uruchomił cron.</p>';
+        echo '<div class="wrap"><h1>ZP Suite — Cache HTML</h1><p>Cache własnego kodu HTML: 1800 sekund, publiczne kanoniczne ścieżki PL, anonimowy GET bez parametrów i cookies, polski Accept-Language, osobna kopia dla telefonu i komputera. Panel, REST/AJAX, formularze POST, podglądy, EN, Studio Wyceny i strony prywatne są pomijane. Wygląd i animacje są zachowane. Przy terminie publikacji omijamy HIT, aby WordPress uruchomił cron.</p>';
         $notice = get_transient('zp_html_cache_notice_' . get_current_user_id()); if ($notice) { echo '<div class="notice notice-error"><p>' . esc_html($notice) . '</p></div>'; delete_transient('zp_html_cache_notice_' . get_current_user_id()); }
         $state = get_option(self::STATE, []); $error = get_option('zp_html_cache_20261009_error', ''); if ($error) { echo '<div class="notice notice-error"><p>' . esc_html($error) . '</p></div>'; }
         $flags = ['WP_CACHE' => defined('WP_CACHE') && WP_CACHE, 'OPcache enable' => filter_var(ini_get('opcache.enable'), FILTER_VALIDATE_BOOLEAN), 'OPcache timestamps' => filter_var(ini_get('opcache.validate_timestamps'), FILTER_VALIDATE_BOOLEAN), 'OPcache restrict_api set' => (string) ini_get('opcache.restrict_api') !== '', 'OPcache status readable' => function_exists('opcache_get_status') && @opcache_get_status(false) !== false];
         echo '<table class="widefat"><tr><th>Bezpieczny raport</th><th>Wartość</th></tr>'; foreach ($flags as $key => $value) { echo '<tr><td>' . esc_html($key) . '</td><td>' . ($value ? 'tak' : 'nie') . '</td></tr>'; } echo '</table>';
         try {
             $dropin = self::read(self::dropin(), true); echo '<p>advanced-cache.php: ' . strlen($dropin) . ' B; SHA-256 <code>' . esc_html(hash('sha256', $dropin)) . '</code></p><details><summary>Treść drop-in z ukrytymi liniami poświadczeń</summary><pre style="white-space:pre-wrap;max-height:500px;overflow:auto">' . esc_html(self::redact($dropin)) . '</pre></details>';
-            if (empty($state['enabled'])) {
+            $backup = get_option(self::BACKUP, null);
+            if (empty($state['enabled']) && is_array($backup) && hash('sha256', $dropin) === ($backup['dropin_installed_sha'] ?? '') && defined('WP_CACHE') && WP_CACHE) {
+                // 3.0.1: switched off with the button below (or by 3.0.0), files still ours: switch back on without reinstalling.
+                echo '<p><strong>Cache wyłączony.</strong> Plik advanced-cache.php i wp-config.php są nadal nasze, więc wystarczy włączyć go ponownie.</p>'; self::form('resume', 'Włącz ponownie cache HTML');
+            } elseif (empty($state['enabled'])) {
                 $review = self::preflight(); echo '<p>Gotowe: ' . count($review['policy']['paths']) . ' ścieżek. Zmiana wp-config.php obejmuje wyłącznie WP_CACHE=false → true albo dodanie jednej deklaracji. Treści wp-config.php nie wyświetlamy. Oba oryginalne pliki trafiają przed zapisem do prywatnej opcji bazy (autoload=false). Konfiguracja SHA <code>' . esc_html($review['config_sha']) . '</code>.</p>';
                 self::form('enable', 'Włącz własny cache HTML z prywatną kopią i kontrolą hashów', $review['review_hash']);
             } else { echo '<p><strong>Cache włączony.</strong> Ścieżki: ' . (int) ($state['paths'] ?? 0) . '; TTL 1800 s. Dowód odpowiedzi: X-ZP-Cache HIT/MISS/BYPASS.</p>'; self::form('purge', 'Odśwież własny cache'); }
