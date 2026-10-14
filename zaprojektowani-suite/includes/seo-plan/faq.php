@@ -102,15 +102,15 @@ add_filter('option_zp_suite_faq_cms', 'zp_seo_faq_refresh', 20);
 function zp_seo_faq_rank_math_owns(string $meta_key): bool {
   if (!zp_seo_plan_active()) { return false; }
   if (zp_seo_plan_is_en()) {
-    if (!in_array($meta_key, ['rank_math_title', 'rank_math_description'], true) || !class_exists('ZPL\\Router') || \ZPL\Router::$lang !== 'en' || \ZPL\Router::$source !== '/najczesciej-zadawane-pytania/' || !class_exists('ZP_EN_Rewrite_20261011') || !class_exists('ZPL\\Html')) { return false; }
+    if (!in_array($meta_key, ['rank_math_title', 'rank_math_description'], true) || !class_exists('ZPL\\Router') || \ZPL\Router::$lang !== 'en' || \ZPL\Router::$source !== '/najczesciej-zadawane-pytania/' || !class_exists('ZPL\\Dict') || !class_exists('ZPL\\Html')) { return false; }
     $id = (int) get_queried_object_id();
-    if ($id <= 0 || (int) (ZP_EN_Rewrite_20261011::manifest()['/najczesciej-zadawane-pytania/']['post_id'] ?? 0) !== $id) { return false; }
+    if ($id <= 0) { return false; }
     $value = get_post_meta($id, $meta_key, true);
     if (!is_string($value) || trim($value) === '' || preg_match('/%[a-z_][a-z0-9_-]*%/i', $value)) { return false; }
     $key = \ZPL\Html::norm(\ZPL\Html::decode($value));
-    // Only this fresh approved PL key may pass through to the existing manual/approved Dict translation.
-    $approved = ZP_EN_Rewrite_20261011::approved_page('/najczesciej-zadawane-pytania/');
-    return is_array($approved['map'] ?? null) && isset($approved['map'][$key]) && is_string($approved['map'][$key]) && trim($approved['map'][$key]) !== '';
+    // The Polish value passes through only when the translator has its English version (any translator, 14.10.2026).
+    $en = \ZPL\Dict::get($key, 'en', '/najczesciej-zadawane-pytania/');
+    return is_string($en) && trim($en) !== '';
   }
   $id = (int) get_queried_object_id();
   return $id > 0 && trim((string) get_post_meta($id, $meta_key, true)) !== '';

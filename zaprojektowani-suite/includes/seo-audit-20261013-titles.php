@@ -40,7 +40,7 @@ function zp_seo_audit_titles(): array {
     '/logo-branding/branding-firmy-od-podstaw/' => ['type' => 'post', 'was' => ['branding co to'], 'focus' => 'branding firmy', 'seo_title' => 'Branding firmy – co to jest i jak zbudować markę', 'post_title' => 'Branding firmy od podstaw – co to jest i kiedy jest potrzebny'],
     '/logo-branding/brief-do-logo-i-identyfikacji-wizualnej/' => ['type' => 'post', 'was' => ['brief logo'], 'focus' => 'brief do logo', 'post_title' => 'Brief do logo i identyfikacji wizualnej – jak go przygotować'],
     '/logo-branding/czym-rozni-sie-logo-od-brandingu/' => ['type' => 'post', 'was' => ['czym różni się logo od brandingu'], 'focus' => 'logo a branding'],
-    '/logo-branding/identyfikacja-wizualna-firmy/' => ['type' => 'post', 'was' => ['identyfikacja wizualna firmy'], 'post_title' => 'Identyfikacja wizualna firmy – elementy, przykłady i wdrożenie'],
+    '/logo-branding/identyfikacja-wizualna-firmy/' => ['type' => 'post', 'was' => ['identyfikacja wizualna firmy'], 'post_title' => 'Identyfikacja wizualna firmy – co to jest i co zawiera'],
     '/logo-branding/ile-kosztuje-logo-dla-firmy-i-co-obejmuje-cena/' => ['type' => 'post', 'was' => ['projekt logo ceny'], 'focus' => 'ile kosztuje logo'],
     '/logo-branding/jak-wymyslic-nazwe-firmy/' => ['type' => 'post', 'was' => ['nazwa dla firmy'], 'focus' => 'jak wymyślić nazwę firmy', 'seo_title' => 'Jak wymyślić nazwę firmy? Metody i przykłady'],
     '/logo-branding/jakie-cechy-powinno-miec-dobre-logo-firmowe/' => ['type' => 'post', 'was' => ['cechy dobrego logo'], 'focus' => 'dobre logo firmowe', 'seo_title' => 'Jakie cechy powinno mieć dobre logo firmowe?'],
@@ -48,8 +48,8 @@ function zp_seo_audit_titles(): array {
     '/logo-branding/ksiega-znaku-mini-brandbook-pelna-identyfikacja-wizualna-co-wybrac/' => ['type' => 'post', 'was' => ['mini księga znaku'], 'post_title' => 'Mini księga znaku, brandbook czy pełna identyfikacja – co wybrać?'],
     '/logo-branding/logo-branding-i-strona-jaka-kolejnosc-wdrozenia-ma-sens/' => ['type' => 'post', 'was' => ['jak połączyć logo branding i stronę internetową'], 'focus' => 'branding i strona', 'seo_title' => 'Logo, branding i strona – jaka kolejność wdrożenia?', 'post_title' => 'Logo, branding i strona – jaka kolejność wdrożenia ma sens?'],
     '/logo-branding/logo-na-koszulce-kiedy-uproscic-do-haftu-lub-nadruku/' => ['type' => 'post', 'was' => ['koszulki z logo firmy'], 'focus' => 'logo na koszulce', 'seo_title' => 'Logo na koszulce: kiedy uprościć znak do haftu?', 'post_title' => 'Logo na koszulce: kiedy uprościć znak do haftu lub nadruku?'],
-    '/logo-branding/projekt-logo-firmy-od-czego-zaczac-i-czego-unikac/' => ['type' => 'post', 'was' => ['jak zrobić logo firmy'], 'post_title' => 'Jak zrobić logo firmy – od czego zacząć i czego unikać'],
-    '/logo-branding/projektowanie-logo-jak-powstaje-znak-ktory-dziala-w-internecie-druku-i-sprzedazy/' => ['type' => 'post', 'was' => ['jak zaprojektować logo'], 'post_title' => 'Jak zaprojektować logo, które działa w internecie, druku i sprzedaży?'],
+    '/logo-branding/projekt-logo-firmy-od-czego-zaczac-i-czego-unikac/' => ['type' => 'post', 'was' => ['jak zrobić logo firmy'], 'post_title' => 'Jak zrobić logo firmy? Od czego zacząć i czego unikać'],
+    '/logo-branding/projektowanie-logo-jak-powstaje-znak-ktory-dziala-w-internecie-druku-i-sprzedazy/' => ['type' => 'post', 'was' => ['jak zaprojektować logo'], 'post_title' => 'Jak zaprojektować logo? Proces projektowania krok po kroku'],
     '/logo-branding/strategia-marki/' => ['type' => 'post', 'was' => ['strategia marki'], 'seo_title' => 'Strategia marki – co to jest i jak ją zbudować?', 'post_title' => 'Strategia marki – jak ją zbudować? Elementy, przykład i plan'],
     '/meta-ads/facebook-ads-dla-firm-lokalnych/' => ['type' => 'post', 'was' => ['lokalne reklamy facebook'], 'focus' => 'reklama na Facebooku dla firm lokalnych', 'seo_title' => 'Reklama na Facebooku dla firm lokalnych – co działa', 'post_title' => 'Reklama na Facebooku dla firm lokalnych – co działa w Facebook Ads?'],
     '/meta-ads/kampanie-facebook-ads-jakie-cele-wybierac-na-poczatku/' => ['type' => 'post', 'was' => ['kampanie Facebook Ads – jakie cele wybierać na początku'], 'focus' => 'cele kampanii Facebook Ads', 'seo_title' => 'Cele kampanii Facebook Ads – co wybrać na początku', 'post_title' => 'Cele kampanii Facebook Ads – jakie wybierać na początku'],
@@ -63,21 +63,21 @@ function zp_seo_audit_titles(): array {
     '/sklepy-internetowe/koszyk-w-sklepie-internetowym-jak-ograniczyc-porzucone-zakupy/' => ['type' => 'post', 'was' => ['porzucone koszyki'], 'post_title' => 'Porzucone koszyki – jak je ograniczyć w sklepie internetowym?'],
     '/sklepy-internetowe/seo-lokalne-w-katowicach-jak-pozyskiwac-klientow-z-miasta-i-okolic/' => ['type' => 'post', 'was' => ['sklep internetowy na zamówienie', 'seo lokalne katowice'], 'focus' => 'SEO lokalne Katowice', 'drop_old' => 'all', 'seo_title' => 'SEO lokalne Katowice – jak zdobywać klientów z miasta', 'post_title' => 'SEO lokalne Katowice – jak pozyskiwać klientów z miasta i okolic'],
     '/sklepy-internetowe/sklep-internetowy-na-zamowienie/' => ['type' => 'post', 'was' => ['dedykowany sklep internetowy'], 'focus' => 'sklep internetowy na zamówienie', 'seo_title' => 'Sklep internetowy na zamówienie – kiedy lepszy niż szablon'],
-    '/sklepy-internetowe/strona-internetowa-dla-branzy-beauty-jakie-sekcje-zwiekszaja-zapytania/' => ['type' => 'post', 'was' => ['strona internetowa dla branży beauty co powinna zawierać'], 'focus' => 'strona internetowa dla branży beauty', 'seo_title' => 'Strona internetowa dla branży beauty – jakie sekcje?'],
+    '/sklepy-internetowe/strona-internetowa-dla-branzy-beauty-jakie-sekcje-zwiekszaja-zapytania/' => ['type' => 'post', 'was' => ['strona internetowa dla branży beauty co powinna zawierać', 'strona internetowa dla branży beauty'], 'focus' => 'sekcje strony salonu beauty', 'drop_old' => 'all', 'seo_title' => 'Sekcje strony salonu beauty – co zwiększa liczbę zapytań?', 'post_title' => 'Jakie sekcje strony salonu beauty zwiększają liczbę zapytań?'],
     '/sklepy-internetowe/strona-internetowa-dla-firmy-budowlanej-jak-pokazac-realizacje-i-zdobywac-wyceny/' => ['type' => 'post', 'was' => ['strona internetowa dla firmy budowlanej jak zdobywać zapytania'], 'focus' => 'strona internetowa dla firmy budowlanej', 'seo_title' => 'Strona internetowa dla firmy budowlanej – realizacje'],
-    '/sklepy-internetowe/strona-internetowa-dla-firmy-z-katowic-co-powinna-zawierac-zeby-zdobywac-lokalnych-klientow/' => ['type' => 'post', 'was' => ['sklep internetowy na zamówienie', 'strona internetowa firmy z katowic'], 'focus' => 'strona internetowa dla firmy z Katowic', 'drop_old' => 'all', 'seo_title' => 'Strona internetowa dla firmy z Katowic – co zawrzeć?', 'post_title' => 'Strona internetowa dla firmy z Katowic – co powinna zawierać?'],
+    '/sklepy-internetowe/strona-internetowa-dla-firmy-z-katowic-co-powinna-zawierac-zeby-zdobywac-lokalnych-klientow/' => ['type' => 'post', 'was' => ['sklep internetowy na zamówienie', 'strona internetowa firmy z katowic', 'strona internetowa dla firmy z katowic'], 'focus' => 'strona internetowa dla lokalnej firmy', 'drop_old' => 'all', 'seo_title' => 'Strona internetowa dla lokalnej firmy – co powinna zawierać?', 'post_title' => 'Strona internetowa dla lokalnej firmy – co powinna zawierać, żeby zdobywać klientów?'],
     '/strony-internetowe/agencja-czy-freelancer-do-stworzenia-strony/' => ['type' => 'post', 'was' => ['freelancer strony internetowe'], 'focus' => 'agencja czy freelancer'],
     '/strony-internetowe/makieta-strony-internetowej/' => ['type' => 'post', 'was' => ['makieta strony internetowej'], 'seo_title' => 'Makieta strony internetowej – co to jest i jak ją zrobić', 'post_title' => 'Makieta strony internetowej – wireframe, mockup i prototyp'],
     '/strony-internetowe/migracja-sklepu-na-woocommerce/' => ['type' => 'post', 'was' => ['migracja sklepu internetowego'], 'focus' => 'migracja sklepu na WooCommerce'],
-    '/strony-internetowe/projektowanie-stron-internetowych-co-decyduje-o-zapytaniach/' => ['type' => 'post', 'was' => ['zasady tworzenia stron internetowych'], 'post_title' => 'Zasady tworzenia stron internetowych – układ, UX i treści'],
+    '/strony-internetowe/projektowanie-stron-internetowych-co-decyduje-o-zapytaniach/' => ['type' => 'post', 'was' => ['zasady tworzenia stron internetowych'], 'post_title' => 'Zasady tworzenia stron internetowych, które dają zapytania'],
     '/strony-internetowe/przebudowa-strony-bez-utraty-widocznosci-w-google/' => ['type' => 'post', 'was' => ['migracja strony internetowej'], 'focus' => 'przebudowa strony bez utraty widoczności'],
     '/strony-internetowe/rodzaje-stron-internetowych/' => ['type' => 'post', 'was' => ['rodzaje stron internetowych'], 'seo_title' => 'Rodzaje stron internetowych – 12 typów i ich zastosowanie', 'post_title' => 'Rodzaje stron internetowych – który wybrać dla firmy?'],
     '/strony-internetowe/sklep-internetowy-swiat-grilli/' => ['type' => 'post', 'was' => ['sklep internetowy Świat Grilli'], 'post_title' => 'Sklep internetowy Świat Grilli – od brandingu do WooCommerce'],
-    '/strony-internetowe/strona-internetowa-dla-firmy-co-powinna-zawierac/' => ['type' => 'post', 'was' => ['co powinna zawierać strona internetowa'], 'post_title' => 'Co powinna zawierać strona internetowa firmy?'],
+    '/strony-internetowe/strona-internetowa-dla-firmy-co-powinna-zawierac/' => ['type' => 'post', 'was' => ['co powinna zawierać strona internetowa'], 'post_title' => 'Co powinna zawierać strona internetowa firmy? Lista elementów'],
     '/strony-internetowe/strona-internetowa-polerstone/' => ['type' => 'post', 'was' => ['strona internetowa Polerstone'], 'post_title' => 'Strona internetowa Polerstone i branding marki kamieniarskiej'],
     '/strony-internetowe/strona-na-abonament-czy-na-wlasnosc/' => ['type' => 'post', 'was' => ['strona internetowa w abonamencie'], 'focus' => 'strona na abonament'],
     '/strony-internetowe/szablon-czy-projekt-indywidualny-strony/' => ['type' => 'post', 'was' => ['strona internetowa szablon'], 'focus' => 'szablon czy projekt indywidualny'],
-    '/strony-internetowe/tworzenie-stron-internetowych-profesjonalny-proces-od-strategii-do-wdrozenia/' => ['type' => 'post', 'was' => ['etapy tworzenia strony internetowej'], 'post_title' => 'Etapy tworzenia strony internetowej – terminy i odbiór projektu'],
+    '/strony-internetowe/tworzenie-stron-internetowych-profesjonalny-proces-od-strategii-do-wdrozenia/' => ['type' => 'post', 'was' => ['etapy tworzenia strony internetowej'], 'post_title' => 'Etapy tworzenia strony internetowej krok po kroku'],
     '/strony-internetowe/woocommerce-czy-shopify/' => ['type' => 'post', 'was' => ['shopify czy woocommerce'], 'focus' => 'WooCommerce czy Shopify'],
     '/strony-internetowe/wordpress-czy-strona-dedykowana/' => ['type' => 'post', 'was' => ['dedykowana strona internetowa'], 'focus' => 'WordPress czy strona dedykowana'],
     '/strony-internetowe/wordpress-wix-czy-webflow/' => ['type' => 'post', 'was' => ['webflow czy wordpress'], 'focus' => 'Wix czy Webflow'],
@@ -191,9 +191,10 @@ function zp_seo_audit_titles_run(): void {
   } catch (\Throwable $e) {
     $report['errors'][] = $e->getMessage();
   } finally {
-    $ids = [];
-    foreach ((array) ($backup['titles'] ?? []) as $id => $t) { if (get_post_type((int) $id) === 'post') { $ids[] = (int) $id; } }
-    update_option(ZP_SEO_AUDIT_TITLES_H1, $ids, true);
+    // Post id => its title before this run (the H1 filter below also renames a heading that repeated it).
+    $old = [];
+    foreach ((array) ($backup['titles'] ?? []) as $id => $t) { if (get_post_type((int) $id) === 'post') { $old[(int) $id] = (string) ($t['old'] ?? ''); } }
+    update_option(ZP_SEO_AUDIT_TITLES_H1, $old, true);
     $report['finished_utc'] = gmdate('c');
     update_option(ZP_SEO_AUDIT_TITLES_RESULT, $report, false);
     $GLOBALS['zp_seo_audit_titles_notice'] = $report;
@@ -249,20 +250,105 @@ add_action('admin_notices', static function () {
     . ($report['errors'] ? '<p>' . esc_html('Błędy (ponowna próba przy następnym wejściu): ' . implode(', ', array_slice($report['errors'], 0, 8))) . '</p>' : '') . '</div>';
 });
 
+/** Heading text for comparing: no tags or entities, one kind of space and dash, lower case. */
+function zp_seo_audit_titles_norm(string $html): string {
+  $text = html_entity_decode(wp_strip_all_tags($html), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+  $text = (string) preg_replace(['~[\x{00A0}\s]+~u', '~\s*[\x{2013}\x{2014}-]\s*~u'], [' ', ' - '], $text);
+  return zp_seo_audit_titles_lower($text);
+}
+
 /**
  * The H1 of a post whose title this file changed shows the post title, when the article prints its own H1 and
- * the plan's code (seo-plan/posts.php, the same rule) did not already do it. Polish page only.
+ * the plan's code (seo-plan/posts.php, the same rule) did not already do it. A heading in the article that
+ * repeated the old title (the "Najważniejsze zagadnienia" box under the H1) shows the new one, so no heading
+ * keeps the service phrase the old title had. Polish page only.
  */
 function zp_seo_audit_titles_h1(string $html): string {
   if ($html === '' || is_admin() || !is_singular('post')) { return $html; }
   if (function_exists('zp_seo_plan_is_en') && zp_seo_plan_is_en()) { return $html; }
   $id = (int) get_queried_object_id();
-  if (!$id || (in_the_loop() && get_the_ID() !== $id) || !in_array($id, (array) get_option(ZP_SEO_AUDIT_TITLES_H1, []), true)) { return $html; }
+  $changed = (array) get_option(ZP_SEO_AUDIT_TITLES_H1, []);
+  if (!$id || (in_the_loop() && get_the_ID() !== $id) || !isset($changed[$id]) || !is_string($changed[$id])) { return $html; }
   $title = trim((string) get_post_field('post_title', $id));
   $at = strpos($html, 'class="zpArticleNew');
-  if ($title === '' || !preg_match('~(<h1\b[^>]*>)(.*?)(</h1>)~is', $html, $m, PREG_OFFSET_CAPTURE, $at === false ? 0 : $at)) { return $html; }
-  if (trim(html_entity_decode(wp_strip_all_tags($m[2][0]), ENT_QUOTES, 'UTF-8')) === $title) { return $html; }
-  return substr($html, 0, $m[2][1]) . esc_html($title) . substr($html, $m[2][1] + strlen($m[2][0]));
+  $at = $at === false ? 0 : $at;
+  if ($title === '' || !preg_match('~(<h1\b[^>]*>)(.*?)(</h1>)~is', $html, $m, PREG_OFFSET_CAPTURE, $at)) { return $html; }
+  if (trim(html_entity_decode(wp_strip_all_tags($m[2][0]), ENT_QUOTES, 'UTF-8')) !== $title) {
+    $html = substr($html, 0, $m[2][1]) . esc_html($title) . substr($html, $m[2][1] + strlen($m[2][0]));
+  }
+  $old = zp_seo_audit_titles_norm($changed[$id]);
+  if ($old === '' || $old === zp_seo_audit_titles_norm($title)) { return $html; }
+  $head = substr($html, 0, $at);
+  $body = (string) preg_replace_callback('~(<h([2-4])\b[^>]*>)(.*?)(</h\2>)~is', static function (array $h) use ($old, $title): string {
+    return zp_seo_audit_titles_norm($h[3]) === $old ? $h[1] . esc_html($title) . $h[4] : $h[0];
+  }, substr($html, $at));
+  return $head . $body;
 }
 add_filter('the_content', 'zp_seo_audit_titles_h1', 21);
 add_filter('elementor/frontend/the_content', 'zp_seo_audit_titles_h1', 21);
+
+/**
+ * Posts that Google showed instead of a service page (Search Console and Senuto audit of 13.10.2026, list A): the
+ * article's opening paragraph ends with a link to the service, in the words of the service's phrase.
+ * path => [lead-in, link text, service path].
+ */
+function zp_seo_audit_service_links(): array {
+  return [
+    '/logo-branding/projektowanie-logo-jak-powstaje-znak-ktory-dziala-w-internecie-druku-i-sprzedazy/' => ['Jeśli wolisz zlecić projekt, zobacz naszą ofertę:', 'projektowanie logo', '/projektowanie-logo/'],
+    '/logo-branding/projekt-logo-firmy-od-czego-zaczac-i-czego-unikac/' => ['Jeśli wolisz zlecić projekt, zobacz naszą ofertę:', 'projekt logo firmy', '/projektowanie-logo/'],
+    '/logo-branding/identyfikacja-wizualna-firmy/' => ['Jeśli chcesz zlecić cały system marki, zobacz naszą ofertę:', 'identyfikacja wizualna dla firm', '/identyfikacja-wizualna/'],
+    '/strony-internetowe/strona-internetowa-dla-firmy-co-powinna-zawierac/' => ['Jeśli chcesz zlecić projekt, zobacz naszą ofertę:', 'strona internetowa dla firmy', '/tworzenie-stron-internetowych/'],
+    '/strony-internetowe/tworzenie-stron-internetowych-profesjonalny-proces-od-strategii-do-wdrozenia/' => ['Jeśli szukasz wykonawcy, zobacz naszą ofertę:', 'tworzenie stron internetowych', '/tworzenie-stron-internetowych/'],
+    '/strony-internetowe/projektowanie-stron-internetowych-co-decyduje-o-zapytaniach/' => ['Jeśli szukasz wykonawcy, zobacz naszą ofertę:', 'projektowanie stron internetowych', '/tworzenie-stron-internetowych/'],
+    '/sklepy-internetowe/strona-internetowa-dla-branzy-beauty-jakie-sekcje-zwiekszaja-zapytania/' => ['Gotowe rozwiązania dla salonów opisujemy w ofercie:', 'strony internetowe dla salonów beauty', '/strony-internetowe-dla-salonow-beauty/'],
+    '/sklepy-internetowe/seo-lokalne-w-katowicach-jak-pozyskiwac-klientow-z-miasta-i-okolic/' => ['Jeśli potrzebujesz strony dla firmy z regionu, zobacz naszą ofertę:', 'strony internetowe w Katowicach', '/strony-internetowe-katowice/'],
+    '/sklepy-internetowe/strona-internetowa-dla-firmy-z-katowic-co-powinna-zawierac-zeby-zdobywac-lokalnych-klientow/' => ['Jeśli szukasz wykonawcy na miejscu, zobacz naszą ofertę:', 'strony internetowe w Katowicach', '/strony-internetowe-katowice/'],
+  ];
+}
+
+/** Wording that kept the service phrase in a post's opening paragraph and headings: path => [[old text, new text]]. */
+function zp_seo_audit_post_wording(): array {
+  return [
+    '/logo-branding/projektowanie-logo-jak-powstaje-znak-ktory-dziala-w-internecie-druku-i-sprzedazy/' => [
+      ['W tym poradniku pokazujemy, jak wygląda profesjonalne projektowanie logo krok po kroku:', 'W tym poradniku pokazujemy krok po kroku, jak powstaje profesjonalne logo:'],
+      ['Od czego zaczyna się projektowanie logo?', 'Od czego zaczyna się praca nad logo?'],
+      ['Najczęstsze pytania o projektowanie logo', 'Najczęstsze pytania o to, jak powstaje logo'],
+    ],
+  ];
+}
+
+/**
+ * Applies the two lists above to the displayed article (Polish page only). The text in the database stays as it
+ * is: an old text that is no longer in the article is skipped, and a paragraph that already links to the service
+ * gets no second link.
+ */
+function zp_seo_audit_posts_service(string $html): string {
+  if ($html === '' || is_admin() || !is_singular('post') || !function_exists('zp_seo_plan_path')) { return $html; }
+  if (function_exists('zp_seo_plan_is_en') && zp_seo_plan_is_en()) { return $html; }
+  $id = (int) get_queried_object_id();
+  if (!$id || (in_the_loop() && get_the_ID() !== $id)) { return $html; }
+  $path = zp_seo_plan_path((string) get_permalink($id));
+  $link = zp_seo_audit_service_links()[$path] ?? null;
+  $wording = zp_seo_audit_post_wording()[$path] ?? [];
+  $at = strpos($html, 'class="zpArticleNew');
+  if ((!$link && !$wording) || $at === false) { return $html; }
+  $head = substr($html, 0, $at);
+  $body = substr($html, $at);
+  foreach ($wording as [$old, $new]) {
+    // A space in the stored text matches any run of spaces or non-breaking spaces in the article.
+    $words = array_map(static function (string $w): string { return preg_quote($w, '~'); }, explode(' ', $old));
+    $body = (string) preg_replace_callback('~' . implode('(?:\s|&nbsp;|&#160;|\x{00A0})+', $words) . '~u', static function () use ($new): string { return esc_html($new); }, $body, 1);
+  }
+  if ($link && (!function_exists('zp_seo_plan_link_is_live') || zp_seo_plan_link_is_live($link[2]))) {
+    [$lead, $text, $to] = $link;
+    $found = preg_match('~<p\b[^>]*\bclass="[^"]*\bzpArticleNew__intro\b[^"]*"[^>]*>(.*?)</p>~is', $body, $p, PREG_OFFSET_CAPTURE)
+      || preg_match('~<p\b[^>]*\bclass="[^"]*\bzpArticleNew__lead\b[^"]*"[^>]*>(.*?)</p>~is', $body, $p, PREG_OFFSET_CAPTURE);
+    if ($found && !preg_match('~href=["\'](?:https?://[^/"\']+)?' . preg_quote($to, '~') . '["\'#?]~i', $p[1][0])) {
+      $end = $p[1][1] + strlen($p[1][0]);
+      $body = substr($body, 0, $end) . ' ' . esc_html($lead) . ' <a href="' . esc_url(home_url($to)) . '">' . esc_html($text) . '</a>.' . substr($body, $end);
+    }
+  }
+  return $head . $body;
+}
+add_filter('the_content', 'zp_seo_audit_posts_service', 22);
+add_filter('elementor/frontend/the_content', 'zp_seo_audit_posts_service', 22);

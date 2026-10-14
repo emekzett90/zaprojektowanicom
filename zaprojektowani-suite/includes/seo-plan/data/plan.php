@@ -389,7 +389,7 @@ return [
     'focus' => 'etapy tworzenia strony internetowej, etapy projektowania strony internetowej, jak tworzyć strony internetowe, tworzenie strony internetowej krok po kroku, proces tworzenia strony internetowej',
     'title' => 'Etapy tworzenia strony internetowej krok po kroku',
     'description' => 'Poznaj proces tworzenia stron internetowych: brief, strukturę, projekt, wdrożenie i testy. Sprawdź zadania klienta oraz kryteria odbioru gotowej strony.',
-    'h1' => 'Etapy tworzenia strony internetowej – terminy i odbiór projektu',
+    'h1' => 'Etapy tworzenia strony internetowej krok po kroku',
     'editorial_title' => 'Tworzenie stron internetowych — etapy od briefu do startu',
     'editorial_description' => 'Poznaj proces tworzenia stron internetowych: brief, strukturę, projekt, wdrożenie i testy. Sprawdź zadania klienta oraz kryteria odbioru gotowej strony.',
     'links' => [
@@ -405,7 +405,7 @@ return [
     'focus' => 'zasady tworzenia stron internetowych, jak zaprojektować stronę internetową, projekt graficzny strony internetowej',
     'title' => 'Zasady tworzenia stron internetowych, które dają zapytania',
     'description' => 'Zobacz, jak projektowanie stron internetowych łączy układ, treści i UX. Poznaj sekcje, które pomagają zrozumieć ofertę i przejść do wysłania zapytania.',
-    'h1' => 'Zasady tworzenia stron internetowych – układ, UX i treści',
+    'h1' => 'Zasady tworzenia stron internetowych, które dają zapytania',
     'editorial_title' => 'Projektowanie stron internetowych — UX, treści i przykłady',
     'editorial_description' => 'Zobacz, jak projektowanie stron internetowych łączy układ, treści i UX. Poznaj sekcje, które pomagają zrozumieć ofertę i przejść do wysłania zapytania.',
     'links' => [
@@ -420,7 +420,7 @@ return [
     'focus' => 'jak zaprojektować logo, proces projektowania logo, jak zaprojektować logo firmy, zasady projektowania logo, techniki projektowania logo',
     'title' => 'Jak zaprojektować logo? Proces projektowania krok po kroku',
     'description' => '',
-    'h1' => 'Jak zaprojektować logo, które działa w internecie, druku i sprzedaży?',
+    'h1' => 'Jak zaprojektować logo? Proces projektowania krok po kroku',
     'editorial_title' => '',
     'editorial_description' => '',
     'links' => [
@@ -435,7 +435,7 @@ return [
     'focus' => 'identyfikacja wizualna firmy, identyfikacja wizualna co to, elementy identyfikacji wizualnej, identyfikacja wizualna marki przykłady, czym jest identyfikacja wizualna',
     'title' => 'Identyfikacja wizualna firmy – co to jest i co zawiera',
     'description' => 'Poznaj elementy identyfikacji wizualnej: logo, kolory, typografię i materiały firmowe. Zobacz przykłady oraz plan wdrożenia spójnego systemu marki.',
-    'h1' => 'Identyfikacja wizualna firmy – elementy, przykłady i wdrożenie',
+    'h1' => 'Identyfikacja wizualna firmy – co to jest i co zawiera',
     'editorial_title' => 'Identyfikacja wizualna — elementy i przykłady dla firmy',
     'editorial_description' => 'Poznaj elementy identyfikacji wizualnej: logo, kolory, typografię i materiały firmowe. Zobacz przykłady oraz plan wdrożenia spójnego systemu marki.',
     'links' => [
@@ -579,7 +579,7 @@ return [
     'focus' => 'jak zrobić logo firmy, jak stworzyć logo firmy, jak zrobić logo, jak stworzyć logo',
     'title' => 'Jak zrobić logo firmy? Od czego zacząć i czego unikać',
     'description' => '',
-    'h1' => 'Jak zrobić logo firmy – od czego zacząć i czego unikać',
+    'h1' => 'Jak zrobić logo firmy? Od czego zacząć i czego unikać',
     'editorial_title' => '',
     'editorial_description' => '',
     'links' => [
@@ -841,7 +841,7 @@ return [
     'focus' => 'co powinna zawierać strona internetowa, co powinna zawierać strona internetowa firmy, elementy strony internetowej, elementy strony firmowej',
     'title' => 'Co powinna zawierać strona internetowa firmy?',
     'description' => '',
-    'h1' => 'Co powinna zawierać strona internetowa firmy?',
+    'h1' => 'Co powinna zawierać strona internetowa firmy? Lista elementów',
     'editorial_title' => '',
     'editorial_description' => '',
     'links' => [
@@ -1097,7 +1097,7 @@ return [
   '/sklepy-internetowe/strona-internetowa-dla-branzy-beauty-jakie-sekcje-zwiekszaja-zapytania/' => [
     'kind' => 'post',
     'focus' => '',
-    'title' => 'Strona internetowa dla branży beauty – jakie sekcje?',
+    'title' => 'Sekcje strony salonu beauty – co zwiększa liczbę zapytań?',
     'description' => '',
     'h1' => '',
     'editorial_title' => '',
