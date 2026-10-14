@@ -58,8 +58,16 @@ add_action('wp_footer', function(){
         el.style.setProperty('backdrop-filter','none','important');
       });
     }
+    /* 3.1.1: the checks after the page start run in the next frame, before it is painted: reading
+       scrollY right after other scripts changed the page made the browser work out its styles again. */
+    var raf=0;
+    function soon(){
+      if(raf) return;
+      if(typeof window.requestAnimationFrame!=='function'){applyHeader();return;}
+      raf=window.requestAnimationFrame(function(){raf=0;applyHeader();});
+    }
     ['scroll','resize','load'].forEach(function(evt){window.addEventListener(evt,applyHeader,{passive:true});});
-    document.addEventListener('DOMContentLoaded',function(){applyHeader(); setTimeout(applyHeader,120); setTimeout(applyHeader,700); setTimeout(applyHeader,1600);});
+    document.addEventListener('DOMContentLoaded',function(){soon(); setTimeout(soon,120); setTimeout(soon,700); setTimeout(soon,1600);});
   })();
   </script>
   <?php
