@@ -1,12 +1,12 @@
 {
  "format": 1,
- "zaktualizowano": "2026-10-09T11:34:27+02:00",
+ "zaktualizowano": "2026-10-14T23:28:59+02:00",
  "wpisy": [
   {
    "slug": "papier-firmowy",
    "sciezka": "/logo-branding/papier-firmowy/",
    "plik": "wpisy/papier-firmowy.json",
-   "sha256": "89c0bb596972981a1072421fbad648546d848b219a459a3b7c3f19d7f39d846d",
+   "sha256": "e2859f6f236ec3f5703daaf0a074b972ebad136872f2f6e916869dbb6e8303e5",
    "publikacja": "2026-10-15T08:00:00+02:00",
    "paczka": 5
   },
@@ -54,7 +54,7 @@
    "slug": "inpost-woocommerce-integracje-sklepu",
    "sciezka": "/sklepy-internetowe/inpost-woocommerce-integracje-sklepu/",
    "plik": "wpisy/inpost-woocommerce-integracje-sklepu.json",
-   "sha256": "e924abbb0a83f74aff8e56443ea30288cf93241f92749570ef3f064724d81589",
+   "sha256": "9e84c1d43d23c443e9b82c14b3618ca67fec03788167125bad4d63a2aeb3ca5d",
    "publikacja": "2026-11-03T08:00:00+01:00",
    "paczka": 6
   },
@@ -62,7 +62,7 @@
    "slug": "nowoczesne-strony-internetowe",
    "sciezka": "/strony-internetowe/nowoczesne-strony-internetowe/",
    "plik": "wpisy/nowoczesne-strony-internetowe.json",
-   "sha256": "99f4b396233e36b435528ac00b58e316a0c8f09465f7cd0aa8eb4bbea0579600",
+   "sha256": "d75a6c591fe5279110c0067babfda8f53d20838cb3acaf1b3ede452033096130",
    "publikacja": "2026-11-06T08:00:00+01:00",
    "paczka": 6
   },
@@ -70,7 +70,7 @@
    "slug": "logo-restauracji-i-kawiarni",
    "sciezka": "/logo-branding/logo-restauracji-i-kawiarni/",
    "plik": "wpisy/logo-restauracji-i-kawiarni.json",
-   "sha256": "ac024306b852db961989fa760837b4d4614bcd98297bc09fa432b729048f4e4f",
+   "sha256": "f4b783fa03e55f3352b39d81272e0297f0a73b51f05b5a7177561cdef740a4b6",
    "publikacja": "2026-11-10T08:00:00+01:00",
    "paczka": 6
   },
@@ -78,7 +78,7 @@
    "slug": "core-web-vitals",
    "sciezka": "/seo-i-konwersja/core-web-vitals/",
    "plik": "wpisy/core-web-vitals.json",
-   "sha256": "f46dd460164d21ae79aee304d67476e93cbe302be1158252a19129f11ef64e62",
+   "sha256": "59924f807c8c83643c482c176819780ed042a9644c0d919fe0cf50dda23e64fd",
    "publikacja": "2026-11-13T08:00:00+01:00",
    "paczka": 6
   }
