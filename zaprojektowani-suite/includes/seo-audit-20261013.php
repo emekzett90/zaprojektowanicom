@@ -23,6 +23,8 @@ if (!defined('ABSPATH')) { exit; }
 
 // Focus phrase in the title (Rank Math): one backed-up change of phrases and titles.
 require_once __DIR__ . '/seo-audit-20261013-titles.php';
+// SearchFit audit of 14.10 (points 2 and 5): shorter titles and descriptions, one backed-up change.
+require_once __DIR__ . '/seo-searchfit-20261014.php';
 
 /** File key: base name without folder, query, extension, WordPress size suffix or "-scaled". */
 function zp_suite_audit_alt_key(string $src): string {
