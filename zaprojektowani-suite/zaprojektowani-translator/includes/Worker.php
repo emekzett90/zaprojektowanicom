@@ -18,6 +18,7 @@ final class Worker {
     const LOCK = 'zpte2_lock';
     const STATE = 'zpte2_state';
     const TICK = 'zpte2_tick_key';
+    const BUILD = 'zpte2_build';
     const STEP = 22;
     const LOCK_TTL = 90;
     const IN_FLIGHT = 6;
@@ -92,6 +93,7 @@ final class Worker {
         if ($admin) {
             Store::install();
             self::schedule_daily(false);
+            self::after_update();
         }
         $s = self::state();
         if (!empty($s['work']) && !self::running() && !wp_next_scheduled(self::WORK)) {
@@ -101,6 +103,20 @@ final class Worker {
             self::update(['work' => 1]);
             wp_schedule_single_event(time() + 2, self::WORK);
         }
+    }
+
+    /**
+     * A new version of ZP Suite can change texts in templates (headings, buttons, footer): every English page is
+     * read again right away instead of at the next 03:00, and only its new texts go to OpenAI.
+     */
+    private static function after_update(): void {
+        $build = (defined('ZP_SUITE_VERSION') ? ZP_SUITE_VERSION : '') . '|' . ZPTE_VERSION . '|' . (defined('ZPL_VERSION') ? ZPL_VERSION : '');
+        $was = (string) get_option(self::BUILD, '');
+        if ($was === $build) { return; }
+        update_option(self::BUILD, $build, false);
+        // The first start copies the earlier translations and checks everything afterwards anyway.
+        if ($was === '' || !Import::done() || !Settings::get('enabled') || !Settings::get('recheck')) { return; }
+        self::plan('update');
     }
 
     /** Next 03:00 in the site's time zone (Europe/Warsaw on the live site). */
@@ -155,7 +171,7 @@ final class Worker {
             'run' => $fresh ? ['started' => time(), 'total' => $q, 'done' => 0, 'errors' => 0, 'who' => $who, 'finished' => 0] : ['total' => max((int) $s['run']['total'], (int) $s['run']['done'] + $q)],
             'message' => 'Sprawdzam strony i tłumaczę nowe teksty.',
         ]);
-        $label = ['cron' => 'codzienne', 'tick' => 'codzienne', 'import' => 'pierwsze po przeniesieniu', 'manual' => 'ręczne'][$who] ?? $who;
+        $label = ['cron' => 'codzienne', 'tick' => 'codzienne', 'import' => 'pierwsze po przeniesieniu', 'manual' => 'ręczne', 'update' => 'po aktualizacji wtyczki'][$who] ?? $who;
         Log::add(sprintf('Sprawdzenie (%s): nowe %d, zmienione %d, pozostałe %d — w kolejce %d.', $label, $c['new'] ?? 0, $c['changed'] ?? 0, $c['recheck'] ?? 0, $q));
         self::chain(1);
         return $c;
