@@ -373,7 +373,11 @@ HTML;
    - krok 4: błędy pod polami zamiast okna „Brakuje…"; brak nazwy marki wraca do kroku 3 z błędem przy polu;
    - dodatek wliczony w pakiet ma to napisane na karcie (zamiast okna po kliknięciu);
    - „?" na dotyk otwiera podpowiedź w karcie; tekst podpowiedzi jest w treści strony, więc EN go tłumaczy;
-   - po zmianie kroku fokus trafia na tytuł kroku. */
+   - po zmianie kroku fokus trafia na tytuł kroku;
+   - komputer (Mat 14.10, nagłówki kroków i „0X / 05" bez zmian): pasek na dole płaski, bez cienia, z linią postępu,
+     „Dalej" bez gradientu; klik w „?" nie zaznacza karty (dymek jest po najechaniu); podgląd briefu z boku
+     przewija się, gdy ekran jest niski, więc opis projektu i przyciski kontaktu nie chowają się pod paskiem;
+   - funkcje w podglądzie i podsumowaniu: nazwy łamią się między słowami, nie w środku słowa, i stoją od lewej. */
 function zp_studio_ux_310(){
   return <<<'HTML'
 <style id="zpbs-ux-310">
@@ -407,10 +411,6 @@ html body.zpbs-studio-page #zpbsUltimate[data-mode="brief"] .zpbsSticky{left:0!i
 html body.zpbs-studio-page #zpbsUltimate.zpbsKbOpen[data-mode="brief"] .zpbsSticky{transform:translateY(110%)!important;opacity:0!important;pointer-events:none!important}
 html body.zpbs-studio-page #zpbsUltimate[data-mode="brief"] .zpbsSticky::before{content:""!important;display:block!important;position:absolute!important;left:0!important;right:0!important;top:-1px!important;height:3px!important;background:#e3e8ef!important;pointer-events:none!important}
 html body.zpbs-studio-page #zpbsUltimate[data-mode="brief"] .zpbsSticky::after{content:""!important;display:block!important;position:absolute!important;left:0!important;top:-1px!important;height:3px!important;width:20%!important;background:#05070b!important;pointer-events:none!important;transition:width .3s ease!important}
-html body.zpbs-studio-page #zpbsUltimate[data-mode="brief"][data-step="2"] .zpbsSticky::after{width:40%!important}
-html body.zpbs-studio-page #zpbsUltimate[data-mode="brief"][data-step="3"] .zpbsSticky::after{width:60%!important}
-html body.zpbs-studio-page #zpbsUltimate[data-mode="brief"][data-step="4"] .zpbsSticky::after{width:80%!important}
-html body.zpbs-studio-page #zpbsUltimate[data-mode="brief"][data-step="5"] .zpbsSticky::after{width:100%!important}
 html body.zpbs-studio-page #zpbsUltimate[data-mode="brief"] .zpbsSticky .zpbsStickyIn{display:grid!important;grid-template-columns:48px minmax(0,1fr) auto!important;grid-template-areas:"prev text next"!important;align-items:center!important;gap:10px!important;width:100%!important;max-width:none!important;min-height:0!important;margin:0!important;padding:10px 12px!important}
 html body.zpbs-studio-page #zpbsUltimate[data-mode="brief"] .zpbsSticky .zpbsStickyStep,html body.zpbs-studio-page #zpbsUltimate[data-mode="brief"] .zpbsSticky .zpbsStickySummaryBtn,html body.zpbs-studio-page #zpbsUltimate[data-mode="brief"] .zpbsSticky [data-sticky-title]{display:none!important}
 html body.zpbs-studio-page #zpbsUltimate[data-mode="brief"] .zpbsSticky .zpbsStickyActions{display:contents!important}
@@ -427,6 +427,24 @@ html body.zpbs-studio-page #zpbsUltimate[data-mode="brief"] .zpbsSticky [data-st
 html body.zpbs-studio-page #zpbsUltimate[data-mode="brief"] .zpbsSticky [data-sticky-next] svg{width:18px!important;height:18px!important;min-width:18px!important;stroke:#fff!important}
 html body.zpbs-studio-page #zpbsUltimate[data-mode="brief"] .zpbsSticky [data-sticky-next]:hover,html body.zpbs-studio-page #zpbsUltimate[data-mode="brief"] .zpbsSticky [data-sticky-next]:active{background:#1d2939!important}
 }
+@media (min-width:781px){
+html body.zpbs-studio-page #zpbsUltimate[data-mode="brief"] .zpbsSticky{background:#071426!important;background-image:none!important;box-shadow:none!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important}
+html body.zpbs-studio-page #zpbsUltimate[data-mode="brief"] .zpbsSticky .zpbsStickyStep{background:#163761!important;background-image:none!important;box-shadow:none!important}
+html body.zpbs-studio-page #zpbsUltimate[data-mode="brief"] .zpbsSticky [data-sticky-next],html body.zpbs-studio-page #zpbsUltimate[data-mode="brief"] .zpbsSticky [data-sticky-next]:hover{box-shadow:none!important}
+html body.zpbs-studio-page #zpbsUltimate .zpbsNav .zpbsBtnPrimary{background:#05070b!important;background-image:none!important;box-shadow:none!important}
+html body.zpbs-studio-page #zpbsUltimate[data-mode="brief"] .zpbsSticky::before{content:""!important;display:block!important;position:absolute!important;left:0!important;right:0!important;top:-1px!important;width:auto!important;height:3px!important;background:rgba(255,255,255,.12)!important;background-image:none!important;opacity:1!important;pointer-events:none!important}
+html body.zpbs-studio-page #zpbsUltimate[data-mode="brief"] .zpbsSticky::after{content:""!important;display:block!important;position:absolute!important;left:0!important;top:-1px!important;height:3px!important;width:20%!important;background:#8ec8f7!important;pointer-events:none!important;transition:width .3s ease!important}
+}
+@media (min-width:1181px){
+html body.zpbs-studio-page #zpbsUltimate[data-mode="brief"] .zpbsSide{max-height:calc(100vh - 172px)!important;overflow-x:hidden!important;overflow-y:auto!important;scrollbar-width:thin;scrollbar-color:#cfd6e0 transparent}
+}
+html body.zpbs-studio-page #zpbsUltimate[data-mode="brief"][data-step="2"] .zpbsSticky::after{width:40%!important}
+html body.zpbs-studio-page #zpbsUltimate[data-mode="brief"][data-step="3"] .zpbsSticky::after{width:60%!important}
+html body.zpbs-studio-page #zpbsUltimate[data-mode="brief"][data-step="4"] .zpbsSticky::after{width:80%!important}
+html body.zpbs-studio-page #zpbsUltimate[data-mode="brief"][data-step="5"] .zpbsSticky::after{width:100%!important}
+html body #zpbsUltimate .zpSummaryRemoveList{justify-content:flex-start!important}
+html body #zpbsUltimate .zpSummaryRemoveItem{text-align:left!important}
+html body #zpbsUltimate .zpSummaryRemoveItem b{overflow-wrap:break-word!important;word-break:normal!important;-webkit-hyphens:none!important;hyphens:none!important}
 </style>
 <script id="zpbs-ux-310-js">
 (function(){
@@ -557,8 +575,9 @@ html body.zpbs-studio-page #zpbsUltimate[data-mode="brief"] .zpbsSticky [data-st
     setTimeout(function(){card.classList.remove('is-zp-nudge');},900);
   },true);
 
-  /* „?": na dotyk podpowiedź otwiera się w karcie i nie zaznacza karty. Tekst siedzi w treści strony,
-     więc EN go tłumaczy; na EN dymek na hover dostaje przetłumaczony tekst. */
+  /* „?": na dotyk podpowiedź otwiera się w karcie i nie zaznacza karty. Z myszką dymek pokazuje się po najechaniu,
+     a klik w „?" też już nie zaznacza karty. Tekst siedzi w treści strony, więc EN go tłumaczy; na EN dymek na hover
+     dostaje przetłumaczony tekst. */
   function tipFor(card){
     var body=card.querySelector('.zpbsMiniCard__body'),s=body&&body.querySelector('.zpbsTipText');
     if(body&&!s){
@@ -570,7 +589,8 @@ html body.zpbs-studio-page #zpbsUltimate[data-mode="brief"] .zpbsSticky [data-st
   function closeTips(except){qsa('.zpbsMiniCard.is-zp-tip-open').forEach(function(c){if(c!==except)c.classList.remove('is-zp-tip-open');});}
   document.addEventListener('click',function(e){
     var mark=near(e,'.zpbsTipMark'),card=mark&&mark.closest('.zpbsMiniCard');
-    if(!card||!mqTouch.matches)return;
+    if(!card)return;
+    if(!mqTouch.matches){if(card.hasAttribute('data-tip'))stop(e);return;}
     stop(e);tipFor(card);
     var open=!card.classList.contains('is-zp-tip-open');
     closeTips(card);card.classList.toggle('is-zp-tip-open',open);
