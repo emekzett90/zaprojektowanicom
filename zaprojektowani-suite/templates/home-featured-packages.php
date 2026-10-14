@@ -30,7 +30,7 @@ if (!defined('ABSPATH')) { exit; }
           <p class="zpFeaturedCard__sub">Logo + karta stylu + pliki firmowe</p>
           <div class="zpFeaturedCard__price"><strong>1499 zł</strong><span class="zpFeaturedCard__priceMeta">jednorazowo</span></div>
           <p class="zpFeaturedCard__desc">Dla firmy, która chce nie tylko nowe logo, ale od razu uporządkowany styl gotowy do użycia na stronie, w social media i sprzedaży.</p>
-          <div class="zpFeaturedCard__best"><span>Najlepszy, gdy…</span><strong>Chcesz od pierwszego dnia wyglądać jak spójna, profesjonalna marka.</strong></div>
+          <div class="zpFeaturedCard__best"><span>Najlepszy, gdy…</span><div class="zpFeaturedCard__bestText">Chcesz od pierwszego dnia wyglądać jak spójna, profesjonalna marka.</div></div>
           <ul class="zpFeaturedCard__list">
             <li>6 autorskich koncepcji logo</li><li>10 rund poprawek wybranego kierunku</li><li>AI + SVG + karta stylu marki</li><li>wizytówka, stopka, teczka + prawa</li>
           </ul>
@@ -59,7 +59,7 @@ if (!defined('ABSPATH')) { exit; }
           <h3 id="zpWebShopTitle">Strona Premium</h3>
           <p class="zpFeaturedCard__sub" id="zpWebShopSub">Rozbudowana struktura • SEO • konwersja</p>
           <p class="zpFeaturedCard__desc" id="zpWebShopDesc">Dla firm, które chcą mocniej wejść w Google, lepiej pokazać ofertę i regularnie pozyskiwać zapytania ze strony.</p>
-          <div class="zpFeaturedCard__best"><span>Najlepszy, gdy…</span><strong id="zpWebShopBest">Strona ma pozycjonować markę, sprzedawać ofertę i pracować długofalowo.</strong></div>
+          <div class="zpFeaturedCard__best"><span>Najlepszy, gdy…</span><div class="zpFeaturedCard__bestText" id="zpWebShopBest">Strona ma pozycjonować markę, sprzedawać ofertę i pracować długofalowo.</div></div>
           <ul class="zpFeaturedCard__list" id="zpWebShopList">
             <li>rozbudowana struktura pod SEO</li><li>copywriting i premium UX/UI</li><li>WordPress + szybka wersja mobile</li><li>analityka i układ pod zapytania</li>
           </ul>
@@ -87,7 +87,7 @@ if (!defined('ABSPATH')) { exit; }
           <h3>Standard Performance</h3>
           <p class="zpFeaturedCard__sub">Stała obsługa • testy • remarketing • UTM</p>
           <p class="zpFeaturedCard__desc">Dla firm, które chcą regularnie pozyskiwać zapytania lub sprzedaż i potrzebują ciągłej pracy nad jakością ruchu oraz wynikiem.</p>
-          <div class="zpFeaturedCard__best"><span>Najlepszy, gdy…</span><strong>Masz sprawdzoną ofertę i chcesz zbudować przewidywalny rytm pozyskiwania klientów.</strong></div>
+          <div class="zpFeaturedCard__best"><span>Najlepszy, gdy…</span><div class="zpFeaturedCard__bestText">Masz sprawdzoną ofertę i chcesz zbudować przewidywalny rytm pozyskiwania klientów.</div></div>
           <ul class="zpFeaturedCard__list">
             <li>Meta Ads i/lub Google Ads</li><li>regularne testy kreacji i odbiorców</li><li>remarketing i kontrola jakości ruchu</li><li>konwersje, UTM i rekomendacje</li>
           </ul>

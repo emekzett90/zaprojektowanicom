@@ -166,7 +166,7 @@ function zp_seo_industry_tile_details(string $key): string {
   }
   return '<div class="zpHomeSeo__details" aria-hidden="true"><div class="zpHomeSeo__detailsIn">'
     . ($pills !== '' ? '<span class="zpHomeSeo__points">' . $pills . '</span>' : '')
-    . '<span class="zpHomeSeo__deal"><span class="zpHomeSeo__price"><b>Od 3&nbsp;999&nbsp;zł</b> domena i&nbsp;hosting w&nbsp;cenie</span>'
+    . '<span class="zpHomeSeo__deal"><span class="zpHomeSeo__price"><span class="zpHomeSeo__priceVal">Od 3&nbsp;999&nbsp;zł</span> domena i&nbsp;hosting w&nbsp;cenie</span>'
     . '<span class="zpHomeSeo__offer">Zobacz ofertę<svg viewBox="0 0 24 24"><path d="M7 17 17 7M8 7h9v9"/></svg></span></span>'
     . '</div></div>';
 }
@@ -356,6 +356,7 @@ add_action('wp_head', static function () {
     . $tile . '::before{background:linear-gradient(180deg,rgba(5,7,11,.3) 0%,rgba(5,7,11,.06) 20%,rgba(5,7,11,.14) 42%,rgba(5,7,11,.74) 74%,rgba(5,7,11,.96) 100%)!important}'
     . $tile . ':hover::before,' . $tile . ':focus-visible::before{background:linear-gradient(180deg,rgba(5,7,11,.24) 0%,rgba(5,7,11,.02) 20%,rgba(5,7,11,.08) 38%,rgba(5,7,11,.64) 72%,rgba(5,7,11,.94) 100%)!important}'
     . $tile . ' .zpHomeSeo__num{opacity:.9!important;color:rgba(255,255,255,.62)!important}'
+    . $tile . ' .zpHomeSeo__priceVal{font-weight:bolder}' // the price was a <b> (SEO audit 13.10.2026: fewer bold tags), same weight below 981 px
     . '@media (min-width:981px) and (max-width:1180px){' . $tile . '{min-height:340px!important}}'
     . '@media (max-width:980px){' . $tile . ' > .zpHomeSeo__go,' . $tile . ' .zpHomeSeo__details{display:none!important}}'
     . '@media (min-width:981px){'
@@ -379,7 +380,7 @@ add_action('wp_head', static function () {
     . $tile . ' .zpHomeSeo__point::before{content:"";flex:none;width:16px;height:16px;border:1px solid rgba(142,200,247,.46);border-radius:50%;background:rgba(142,200,247,.14) url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 24 24%27 fill=%27none%27 stroke=%27%238ec8f7%27 stroke-width=%273.4%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27%3E%3Cpath d=%27m6 12.5 4 4 8-9%27/%3E%3C/svg%3E") 50% 50%/10px no-repeat}'
     . $tile . ' .zpHomeSeo__deal{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:16px;padding-top:16px;border-top:1px solid rgba(255,255,255,.14)}'
     . $tile . ' .zpHomeSeo__price{display:flex;flex-direction:column;gap:2px;min-width:0;color:rgba(255,255,255,.66);font-size:11px;line-height:1.35}'
-    . $tile . ' .zpHomeSeo__price b{color:#fff;font-size:16px;line-height:1.2;font-weight:760;letter-spacing:-.025em}'
+    . $tile . ' .zpHomeSeo__price b,' . $tile . ' .zpHomeSeo__priceVal{color:#fff;font-size:16px;line-height:1.2;font-weight:760;letter-spacing:-.025em}'
     . $tile . ' .zpHomeSeo__offer{display:inline-flex;align-items:center;gap:6px;flex:none;padding:9px 12px;border-radius:999px;background:#fff;color:#07111f;font-size:12px;line-height:1;font-weight:780;letter-spacing:-.01em;white-space:nowrap}'
     . $tile . ' .zpHomeSeo__offer svg{width:13px;height:13px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}'
     . '}'

@@ -28,17 +28,17 @@ function zp_suite_meta_verified_markup(string $theme = 'dark', string $context =
         <span class="zpMetaVerified__check" aria-hidden="true">
           <svg viewBox="0 0 24 24"><path d="m9.3 12.7 1.8 1.8 3.8-4.3"/></svg>
         </span>
-        <span><strong>Zweryfikowane profile</strong><small>Zaprojektowani.com w Meta</small></span>
+        <span><span class="zpMetaVerified__name">Zweryfikowane profile</span><small>Zaprojektowani.com w Meta</small></span>
       </div>
       <div class="zpMetaVerified__links">
         <a href="<?php echo esc_url($facebook); ?>" target="_blank" rel="noopener" aria-label="Otwórz Facebook Zaprojektowani">
           <span class="zpMetaVerified__social zpMetaVerified__social--fb" aria-hidden="true">f</span>
-          <span><strong>Facebook</strong><small>@zaprojektowanicom</small></span>
+          <span><span class="zpMetaVerified__name">Facebook</span><small>@zaprojektowanicom</small></span>
           <svg class="zpMetaVerified__arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg>
         </a>
         <a href="<?php echo esc_url($instagram); ?>" target="_blank" rel="noopener" aria-label="Otwórz Instagram Zaprojektowani">
           <span class="zpMetaVerified__social zpMetaVerified__social--ig" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="5"/><circle cx="12" cy="12" r="3.5"/><circle cx="17.4" cy="6.7" r=".8" class="fill"/></svg></span>
-          <span><strong>Instagram</strong><small>@zaprojektowanicom</small></span>
+          <span><span class="zpMetaVerified__name">Instagram</span><small>@zaprojektowanicom</small></span>
           <svg class="zpMetaVerified__arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg>
         </a>
       </div>

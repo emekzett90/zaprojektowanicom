@@ -139,7 +139,7 @@ v1.9:
 
       <div class="zpServicesPath__footerText">
         <span>Nie wiesz, od czego zacząć?</span>
-        <strong>Opisz nam projekt — dobierzemy kolejność działań: strategię, stronę, sklep, branding, SEO albo kampanie, bez dokładania przypadkowych funkcji.</strong>
+        <div class="zpServicesPath__footerLead">Opisz nam projekt — dobierzemy kolejność działań: strategię, stronę, sklep, branding, SEO albo kampanie, bez dokładania przypadkowych funkcji.</div>
       </div>
 
       <a class="zpServicesPath__btn" href="/studio-wyceny/">
