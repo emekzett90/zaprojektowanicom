@@ -24,7 +24,8 @@ if (!defined('ABSPATH')) { exit; }
  *   (session cookie) every page opens in English, also in such a browser (Suite 3.0).
  * - Only the switch counts as a choice of Polish: a visitor coming from the English version of the same page.
  *   A link from another English page to a Polish one keeps a visitor from abroad in English.
- * - Pages the browser fetches ahead (prefetch of the switch's other language) are never redirected.
+ * - The switch's own prefetch of the other language (referer: this page's English version) is never redirected;
+ *   other prefetches and prerenders (address bar, search results) are routed like page views.
  * - Only plain page views are redirected: no form posts, background fetches or addresses with their own
  *   parameters (search, feeds…); campaign tags such as utm_* and gclid go along to the English page.
  */
@@ -80,7 +81,7 @@ final class Geo {
         return in_array($v, ['pl', 'en'], true) ? $v : null;
     }
 
-    /** A prefetch or prerender started by the browser (the switch is fetched ahead): never redirected, no cookies. */
+    /** A prefetch or prerender started by the browser. It never sets a cookie; only the switch's own one skips the redirect. */
     public static function is_speculative(): bool {
         $p = strtolower((string) ($_SERVER['HTTP_SEC_PURPOSE'] ?? ($_SERVER['HTTP_PURPOSE'] ?? ($_SERVER['HTTP_X_MOZ'] ?? ''))));
         return $p !== '' && (strpos($p, 'prefetch') !== false || strpos($p, 'prerender') !== false);
@@ -154,8 +155,10 @@ final class Geo {
             if (!preg_match(self::QUERY_OK, (string) $k)) { return $out('query'); }
         }
 
-        // A page fetched ahead by the browser (the other language of the switch) is answered as it is.
-        if ($live && self::is_speculative()) { return $out('prefetch'); }
+        // The switch fetching this page ahead from its English version is answered as it is (no redirect, no cookie).
+        // Any other prefetch or prerender (address bar, Google results) is routed like a page view: the browser
+        // follows the redirect, so a visitor from abroad still lands on English.
+        if ($live && self::is_speculative() && self::from_english_equivalent($source)) { return $out('prefetch'); }
 
         // A conscious switch to Polish is stronger than automatic country routing; this visit's choice comes first.
         $pref = $live ? self::preference() : (in_array($ctx['pref'] ?? '', ['pl', 'en'], true) ? $ctx['pref'] : null);

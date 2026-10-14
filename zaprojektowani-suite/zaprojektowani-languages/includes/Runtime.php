@@ -46,7 +46,7 @@ final class Runtime {
                 $geoTarget = Geo::redirect_target('pl', $source, $mapped);
                 if ($geoTarget === null) { return; }
                 // Counted only for browsers that say it is a page view (scripts posing as browsers rarely do).
-                if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'GET' && strtolower((string) ($_SERVER['HTTP_SEC_FETCH_MODE'] ?? '')) === 'navigate') { Geo::count_redirect(); }
+                if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'GET' && strtolower((string) ($_SERVER['HTTP_SEC_FETCH_MODE'] ?? '')) === 'navigate' && !Geo::is_speculative()) { Geo::count_redirect(); }
                 if (!headers_sent()) { nocache_headers(); }
                 self::redirect(Router::base() . $geoTarget . ($query !== '' ? '?' . $query : ''), 302);
             }, 21);
