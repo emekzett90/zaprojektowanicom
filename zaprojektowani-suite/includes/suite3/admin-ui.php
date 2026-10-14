@@ -284,7 +284,7 @@ function zp_suite3_dashboard(): void {
   }
   echo '</div></section>';
 
-  echo '<section class="navy-card"><div class="eyebrow">Nowe w wersji ' . esc_html(ZP_SUITE_VERSION) . '</div><h2>Lżejsza wtyczka i prostszy panel.</h2><p>Strona wczytuje mniej kodu, panel ma jedno menu u góry, a nowa zakładka „Stan strony” pokazuje problemy i błędy 404 z gotowymi przekierowaniami.</p><a class="button" href="' . esc_url(zp_suite3_url('zp-suite-health')) . '">Stan strony</a></section>';
+  echo '<section class="navy-card"><div class="eyebrow">Nowe w wersji ' . esc_html(ZP_SUITE_VERSION) . '</div><h2>Płynniejsza strona i pulpit bez fałszywych alarmów.</h2><p>Strona główna przewija się płynniej, robot nie wchodzi od nowa, strony EN są w cache, a błędy 404 liczą się tylko z linków, które naprawdę są na stronie. Szczegóły i zadania po aktualizacji są w „Stanie strony”.</p><a class="button" href="' . esc_url(zp_suite3_url('zp-suite-health')) . '">Stan strony</a></section>';
   echo '</aside></div>';
 
   echo '<div class="quick-grid">';
