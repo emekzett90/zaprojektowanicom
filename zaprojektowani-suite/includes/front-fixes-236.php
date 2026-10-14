@@ -18,18 +18,30 @@ add_action('wp_footer', function(){
   <script id="zp-suite-front-fixes-236-js">
   (function(){
     'use strict';
+    /* 3.1.1: an element shown once is not measured again, and the check stops when all are shown. It
+       measured every card on every scroll frame for the whole visit before. */
+    var revealDone=false;
     function revealEarly(){
+      if(revealDone) return;
       var selectors=['#zpShowcaseServices .zpSSCard','#zpLaptopShowcase','.zpLaptopShowcase','.zpTrustCert'];
+      var vh=window.innerHeight||800, waiting=0, show=[];
       selectors.forEach(function(sel){
         document.querySelectorAll(sel).forEach(function(el){
+          if(el.zpRevealed) return;
           var r=el.getBoundingClientRect();
-          var vh=window.innerHeight||800;
-          if(r.top<vh*1.18 && r.bottom>-80){
-            el.classList.add('isVisible','is-inview','is-in');
-            if(el.id==='zpLaptopShowcase' || el.classList.contains('zpLaptopShowcase')) el.setAttribute('data-ready','1');
-          }
+          if(r.top<vh*1.18 && r.bottom>-80) show.push(el); else waiting++;
         });
       });
+      show.forEach(function(el){
+        el.zpRevealed=1;
+        el.classList.add('isVisible','is-inview','is-in');
+        if(el.id==='zpLaptopShowcase' || el.classList.contains('zpLaptopShowcase')) el.setAttribute('data-ready','1');
+      });
+      if(!waiting && document.readyState==='complete'){
+        revealDone=true;
+        window.removeEventListener('scroll',scheduleReveal);
+        window.removeEventListener('resize',scheduleReveal);
+      }
     }
     var revealRaf=0;
     function scheduleReveal(){
@@ -39,7 +51,31 @@ add_action('wp_footer', function(){
         revealEarly();
       });
     }
-    if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',revealEarly,{once:true}); else revealEarly();
+    /* 3.1.1: where the browser can tell by itself when an element comes near the view (the same area: from
+       80 px above the screen to 18% of its height below it), nothing is measured on scroll at all. */
+    function watchReveal(){
+      var io=new IntersectionObserver(function(entries){
+        entries.forEach(function(entry){
+          if(!entry.isIntersecting) return;
+          var el=entry.target;
+          io.unobserve(el);
+          if(el.zpRevealed) return;
+          el.zpRevealed=1;
+          el.classList.add('isVisible','is-inview','is-in');
+          if(el.id==='zpLaptopShowcase' || el.classList.contains('zpLaptopShowcase')) el.setAttribute('data-ready','1');
+        });
+      },{rootMargin:'80px 0px 18% 0px'});
+      ['#zpShowcaseServices .zpSSCard','#zpLaptopShowcase','.zpLaptopShowcase','.zpTrustCert'].forEach(function(sel){
+        document.querySelectorAll(sel).forEach(function(el){ if(!el.zpRevealed) io.observe(el); });
+      });
+    }
+    if('IntersectionObserver' in window){
+      if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',watchReveal,{once:true}); else watchReveal();
+      return;
+    }
+    /* 3.1.1: also the first pass runs in the next frame, before it is painted, so its measuring does not
+       make the browser work out the styles of the page once more during the page start. */
+    if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',scheduleReveal,{once:true}); else scheduleReveal();
     window.addEventListener('scroll',scheduleReveal,{passive:true});
     window.addEventListener('resize',scheduleReveal,{passive:true});
   })();

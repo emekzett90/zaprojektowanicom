@@ -993,29 +993,63 @@ pointer-events:auto!important;
      is 1100 px or narrower or the hero is off screen, and plays again from the same frame once
      its canvas has a real size again (Spline resizes it a moment after the box shows).
      The stop waits for "load-complete": Spline starts its drawing loop itself right after that. */
+  /* 3.1.1 — off screen only the drawing stops (the renderer's frame loop). Spline's own stop()/play()
+     also switched the scene's events off and on, and switching them on runs the scene's start
+     animation again: each time a visitor scrolled back to the top the robot came in once more, with
+     a stutter while its events were set up again. Its events now stay on, so the robot carries on
+     from the same frame. Spline also measured its canvas on every scroll of the page (a full layout
+     of the page each time, wherever the visitor was); it now does that once per frame and only while
+     the hero can be seen. */
   var mqNarrow=mq?mq('(max-width:1100px)'):null;
-  var heroInView=true,sceneReady=false,playTries=0;
+  var heroInView=true,sceneReady=false,playTries=0,drawing=true,hookedApp=null,rectRaf=0;
   function splineApp(){try{return sp._spline||null;}catch(e){return null;}}
   function splineCanvas(){try{return sp.shadowRoot?sp.shadowRoot.querySelector('canvas'):null;}catch(e){return null;}}
+  function splineLoop(app){try{var r=app._renderer;return r&&typeof r.setAnimationLoop==='function'&&typeof app.render==='function'?r:null;}catch(e){return null;}}
+  function pauseDrawing(app){
+    var r=splineLoop(app);
+    if(r){r.setAnimationLoop(null);drawing=false;return;}
+    if(typeof app.stop==='function'){if(!app.isStopped) app.stop();drawing=false;}
+  }
+  function resumeDrawing(app){
+    if('_lastTime' in app) app._lastTime=0; /* the first frame after a pause moves one frame, not the whole pause */
+    var r=splineLoop(app);
+    if(r){r.setAnimationLoop(app.render);drawing=true;return;}
+    if(typeof app.play==='function'){app.play();drawing=true;}
+  }
   function syncSplineRun(){
     var app=splineApp();
-    if(!sceneReady||!app||typeof app.stop!=='function'||typeof app.play!=='function') return;
+    if(!sceneReady||!app) return;
     try{
-      if(!heroInView||(mqNarrow&&mqNarrow.matches)){ playTries=0; if(!app.isStopped) app.stop(); return; }
-      if(!app.isStopped) return;
+      if(!heroInView||(mqNarrow&&mqNarrow.matches)){ playTries=0; if(drawing) pauseDrawing(app); return; }
+      if(drawing) return;
       var c=splineCanvas();
       if(c&&c.width>0&&c.height>0){
         playTries=0;
-        if('_lastTime' in app) app._lastTime=0; /* the first frame after a pause moves one frame, not the whole pause */
-        app.play();
+        resumeDrawing(app);
       }else if(playTries++<120){
         w.requestAnimationFrame(syncSplineRun);
       }
     }catch(e){}
   }
-  sp.addEventListener('load-start',function(){sceneReady=false;});
+  function measureCanvas(){
+    rectRaf=0;
+    var app=splineApp();
+    if(app&&app===hookedApp&&typeof app._onScroll==='function'){try{app._onScroll();}catch(e){}}
+  }
+  function onPageScroll(){ if(!rectRaf&&heroInView&&hookedApp) rectRaf=w.requestAnimationFrame(measureCanvas); }
+  function hookCanvasMeasure(){
+    var app=splineApp();
+    if(!app||typeof app._onScroll!=='function') return;
+    try{d.removeEventListener('scroll',app._onScroll);}catch(e){return;}
+    if(!hookedApp) d.addEventListener('scroll',onPageScroll,{passive:true});
+    hookedApp=app;
+  }
+  sp.addEventListener('load-start',function(){sceneReady=false;drawing=true;});
   sp.addEventListener('load-complete',function(){
     sceneReady=true;
+    drawing=true;
+    hookCanvasMeasure();
+    setTimeout(hookCanvasMeasure,400);
     setTimeout(syncSplineRun,60);
   });
   if(mqNarrow){
@@ -1026,6 +1060,7 @@ pointer-events:auto!important;
     try{
       new IntersectionObserver(function(entries){
         heroInView=entries[entries.length-1].isIntersecting;
+        if(heroInView) onPageScroll();
         syncSplineRun();
       },{rootMargin:'200px 0px'}).observe(hero);
     }catch(e){}
@@ -1046,7 +1081,7 @@ pointer-events:auto!important;
   if(d.readyState==='loading') d.addEventListener('DOMContentLoaded',startAfterFirstPaint,{once:true});
   else startAfterFirstPaint();
 })();</script>
-<script>(function(){var hero=document.getElementById('zhHero');var sp=document.getElementById('zhSpline');var stage=document.getElementById('zhStage');var reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion:reduce)').matches;var fine=!window.matchMedia||window.matchMedia('(pointer:fine)').matches;var SA=false;try{SA=window.zpSyntheticAudit===true||false /* v711: identical production behavior in browser audits */||false;}catch(e){}if(SA){try{document.documentElement.classList.add('zp-synthetic-audit');}catch(e){}}if(!hero)return;var wm=hero.querySelector('.zh__wm');if(wm){wm.setAttribute('aria-label',(wm.textContent||'zaprojektowani').trim());}if(sp&&!SA&&(sp.getAttribute('url')||sp.getAttribute('data-url'))){try{sp.setAttribute('events-target','global');sp.setAttribute('loading-anim-type','none');}catch(e){}var done=false,canvasPoll=null;var reveal=function(){if(done)return;done=true;if(canvasPoll)clearInterval(canvasPoll);requestAnimationFrame(function(){requestAnimationFrame(function(){hero.classList.add('is-spline-loaded');hideBrand();});});};sp.addEventListener('load',reveal,{once:true});sp.addEventListener('load-complete',reveal,{once:true});canvasPoll=setInterval(function(){try{if(sp.shadowRoot && sp.shadowRoot.querySelector('canvas'))reveal();}catch(e){}},120);setTimeout(function(){if(canvasPoll)clearInterval(canvasPoll);},9000);}function hideBrand(){var n=0,t2=setInterval(function(){try{var sr=sp&&sp.shadowRoot;if(sr){['#logo','a#logo','#hints','[id="logo"]','[id="hints"]'].forEach(function(sel){sr.querySelectorAll(sel).forEach(function(l){l.style.setProperty('display','none','important');l.style.setProperty('visibility','hidden','important');l.style.setProperty('opacity','0','important');l.style.setProperty('pointer-events','none','important');});});}}catch(e){}if(++n>36)clearInterval(t2);},250);}function countUp(el){var target=parseFloat(el.getAttribute('data-count'))||0;var dec=parseInt(el.getAttribute('data-dec')||'0',10);var suf=el.getAttribute('data-suffix')||'';el.textContent=(dec?target.toFixed(dec):target)+suf;}[].forEach.call(hero.querySelectorAll('[data-count]'),countUp);var prog=document.getElementById('zhProg');function onScroll(){if(!prog)return;var d=document.documentElement;var max=(d.scrollHeight-d.clientHeight)||1;prog.style.height=Math.max(0,Math.min(100,(d.scrollTop/max)*100))+'%';}if(!SA){window.addEventListener('scroll',onScroll,{passive:true});onScroll();}if(reduce||SA)return;var mag=document.getElementById('zhMagnet');if(mag&&fine){mag.addEventListener('mousemove',function(e){var r=mag.getBoundingClientRect();var mx=(e.clientX-r.left-r.width/2)/(r.width/2),my=(e.clientY-r.top-r.height/2)/(r.height/2);mag.style.transform='translate('+(mx*7).toFixed(1)+'px,'+((my*5)-2).toFixed(1)+'px)';});mag.addEventListener('mouseleave',function(){mag.style.transform='';});}if(sp&&!SA){try{sp.setAttribute('events-target','global');sp.setAttribute('mouse-events','global');}catch(e){}}var layers=[].slice.call(hero.querySelectorAll('[data-px]'));var tx=0,ty=0,cx=0,cy=0,raf=null;function isMob(){return window.matchMedia&&window.matchMedia('(max-width:1100px)').matches;}function clamp(v,min,max){return Math.max(min,Math.min(max,v));}function syncSplinePointerMode(){if(!sp||SA)return;try{sp.setAttribute('events-target','global');sp.setAttribute('mouse-events','global');if(sp.getAttribute('url'))sp.style.pointerEvents='auto';}catch(e){}}syncSplinePointerMode();window.addEventListener('resize',syncSplinePointerMode,{passive:true});function applyRobotTransform(){layers.forEach(function(el){var d=parseFloat(el.getAttribute('data-px'))||1;var prefix=(el.className.indexOf('__kin')>-1)?'translateY(-52%)':'';el.style.transform=prefix+'translate3d('+(cx*d).toFixed(2)+'px,'+(cy*d).toFixed(2)+'px,0)';});if(stage){var mob=isMob();if(mob){stage.style.setProperty('transform','none','important');return;}var base='';var depth=1;var rotY=(-cx)*.38*depth;var moveX=(cx)*.75*depth;stage.style.setProperty('transform',base+'perspective(1400px)rotateY('+rotY.toFixed(2)+'deg)rotateX('+(cy*.28*depth).toFixed(2)+'deg)translate3d('+moveX.toFixed(1)+'px,'+(cy*.45*depth).toFixed(1)+'px,0)','important');}}function loop(){cx+=(tx-cx)*.12;cy+=(ty-cy)*.12;applyRobotTransform();if(Math.abs(tx-cx)>.025||Math.abs(ty-cy)>.025){raf=requestAnimationFrame(loop);}else{raf=null;}}function trackHeroPointer(e){var x,y;if(e&&e.touches&&e.touches[0]){x=e.touches[0].clientX;y=e.touches[0].clientY;}else if(e&&e.changedTouches&&e.changedTouches[0]){x=e.changedTouches[0].clientX;y=e.changedTouches[0].clientY;}else if(e&&typeof e.clientX==='number'){x=e.clientX;y=e.clientY;}else{return;}var r=hero.getBoundingClientRect();if(x<r.left||x>r.right||y<r.top||y>r.bottom)return;var px=clamp((x-r.left)/Math.max(r.width,1),0,1);var py=clamp((y-r.top)/Math.max(r.height,1),0,1);tx=(px-.5)*16;ty=(py-.5)*-10;if(!raf)raf=requestAnimationFrame(loop);}function resetPointer(){tx=0;ty=0;if(!raf)raf=requestAnimationFrame(loop);}/* v2.2.526: parallax pointer-tracking is desktop-only. On mobile the touchmove handler
+<script>(function(){var hero=document.getElementById('zhHero');var sp=document.getElementById('zhSpline');var stage=document.getElementById('zhStage');var reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion:reduce)').matches;var fine=!window.matchMedia||window.matchMedia('(pointer:fine)').matches;var SA=false;try{SA=window.zpSyntheticAudit===true||false /* v711: identical production behavior in browser audits */||false;}catch(e){}if(SA){try{document.documentElement.classList.add('zp-synthetic-audit');}catch(e){}}if(!hero)return;var wm=hero.querySelector('.zh__wm');if(wm){wm.setAttribute('aria-label',(wm.textContent||'zaprojektowani').trim());}if(sp&&!SA&&(sp.getAttribute('url')||sp.getAttribute('data-url'))){try{sp.setAttribute('events-target','global');sp.setAttribute('loading-anim-type','none');}catch(e){}var done=false,canvasPoll=null;var reveal=function(){if(done)return;done=true;if(canvasPoll)clearInterval(canvasPoll);requestAnimationFrame(function(){requestAnimationFrame(function(){hero.classList.add('is-spline-loaded');hideBrand();});});};sp.addEventListener('load',reveal,{once:true});sp.addEventListener('load-complete',reveal,{once:true});canvasPoll=setInterval(function(){try{if(sp.shadowRoot && sp.shadowRoot.querySelector('canvas'))reveal();}catch(e){}},120);setTimeout(function(){if(canvasPoll)clearInterval(canvasPoll);},9000);}function hideBrand(){var n=0,t2=setInterval(function(){try{var sr=sp&&sp.shadowRoot;if(sr){['#logo','a#logo','#hints','[id="logo"]','[id="hints"]'].forEach(function(sel){sr.querySelectorAll(sel).forEach(function(l){l.style.setProperty('display','none','important');l.style.setProperty('visibility','hidden','important');l.style.setProperty('opacity','0','important');l.style.setProperty('pointer-events','none','important');});});}}catch(e){}if(++n>36)clearInterval(t2);},250);}function countUp(el){var target=parseFloat(el.getAttribute('data-count'))||0;var dec=parseInt(el.getAttribute('data-dec')||'0',10);var suf=el.getAttribute('data-suffix')||'';el.textContent=(dec?target.toFixed(dec):target)+suf;}[].forEach.call(hero.querySelectorAll('[data-count]'),countUp);var prog=document.getElementById('zhProg');/* 3.1.1: the bar sits in the hero, so it is worked out once per frame and only while the hero can be seen; it measured the whole page on every scroll before. */var progRaf=0,progSeen=true;function progUpdate(){progRaf=0;if(!prog||!progSeen)return;var d=document.documentElement;var max=(d.scrollHeight-d.clientHeight)||1;prog.style.height=Math.max(0,Math.min(100,(d.scrollTop/max)*100))+'%';}function onScroll(){if(!prog||progRaf||!progSeen)return;progRaf=requestAnimationFrame(progUpdate);}if(!SA){window.addEventListener('scroll',onScroll,{passive:true});progUpdate();if(prog&&'IntersectionObserver' in window){try{new IntersectionObserver(function(es){progSeen=es[es.length-1].isIntersecting;if(progSeen)onScroll();}).observe(hero);}catch(e){}}}if(reduce||SA)return;var mag=document.getElementById('zhMagnet');if(mag&&fine){mag.addEventListener('mousemove',function(e){var r=mag.getBoundingClientRect();var mx=(e.clientX-r.left-r.width/2)/(r.width/2),my=(e.clientY-r.top-r.height/2)/(r.height/2);mag.style.transform='translate('+(mx*7).toFixed(1)+'px,'+((my*5)-2).toFixed(1)+'px)';});mag.addEventListener('mouseleave',function(){mag.style.transform='';});}if(sp&&!SA){try{sp.setAttribute('events-target','global');sp.setAttribute('mouse-events','global');}catch(e){}}var layers=[].slice.call(hero.querySelectorAll('[data-px]'));var tx=0,ty=0,cx=0,cy=0,raf=null;function isMob(){return window.matchMedia&&window.matchMedia('(max-width:1100px)').matches;}function clamp(v,min,max){return Math.max(min,Math.min(max,v));}function syncSplinePointerMode(){if(!sp||SA)return;try{sp.setAttribute('events-target','global');sp.setAttribute('mouse-events','global');if(sp.getAttribute('url'))sp.style.pointerEvents='auto';}catch(e){}}syncSplinePointerMode();window.addEventListener('resize',syncSplinePointerMode,{passive:true});function applyRobotTransform(){layers.forEach(function(el){var d=parseFloat(el.getAttribute('data-px'))||1;var prefix=(el.className.indexOf('__kin')>-1)?'translateY(-52%)':'';el.style.transform=prefix+'translate3d('+(cx*d).toFixed(2)+'px,'+(cy*d).toFixed(2)+'px,0)';});if(stage){var mob=isMob();if(mob){stage.style.setProperty('transform','none','important');return;}var base='';var depth=1;var rotY=(-cx)*.38*depth;var moveX=(cx)*.75*depth;stage.style.setProperty('transform',base+'perspective(1400px)rotateY('+rotY.toFixed(2)+'deg)rotateX('+(cy*.28*depth).toFixed(2)+'deg)translate3d('+moveX.toFixed(1)+'px,'+(cy*.45*depth).toFixed(1)+'px,0)','important');}}function loop(){cx+=(tx-cx)*.12;cy+=(ty-cy)*.12;applyRobotTransform();if(Math.abs(tx-cx)>.025||Math.abs(ty-cy)>.025){raf=requestAnimationFrame(loop);}else{raf=null;}}function trackHeroPointer(e){var x,y;if(e&&e.touches&&e.touches[0]){x=e.touches[0].clientX;y=e.touches[0].clientY;}else if(e&&e.changedTouches&&e.changedTouches[0]){x=e.changedTouches[0].clientX;y=e.changedTouches[0].clientY;}else if(e&&typeof e.clientX==='number'){x=e.clientX;y=e.clientY;}else{return;}var r=hero.getBoundingClientRect();if(x<r.left||x>r.right||y<r.top||y>r.bottom)return;var px=clamp((x-r.left)/Math.max(r.width,1),0,1);var py=clamp((y-r.top)/Math.max(r.height,1),0,1);tx=(px-.5)*16;ty=(py-.5)*-10;if(!raf)raf=requestAnimationFrame(loop);}function resetPointer(){tx=0;ty=0;if(!raf)raf=requestAnimationFrame(loop);}/* v2.2.526: parallax pointer-tracking is desktop-only. On mobile the touchmove handler
    ran on every scroll/touch (getBoundingClientRect + rAF + style writes) yet the robot tilt
    is invisible on mobile — pure main-thread waste that made scrolling janky. */
 if(fine&&window.matchMedia&&window.matchMedia('(min-width:1101px)').matches){hero.addEventListener('mousemove',trackHeroPointer,{passive:true});hero.addEventListener('pointermove',trackHeroPointer,{passive:true});hero.addEventListener('mouseleave',resetPointer,{passive:true});window.addEventListener('blur',resetPointer,true);}applyRobotTransform();})();</script>

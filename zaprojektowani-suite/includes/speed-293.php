@@ -362,6 +362,7 @@ function zp_speed_process(string $html): ?string {
     $ops[] = [$move[0], $move[1], $put];
   }
   foreach (zp_speed_unused_font_preloads($html, $scan) as $op) { $ops[] = $op; }
+  foreach (zp_speed_header_font_preload($html, $scan) as $op) { $ops[] = $op; }
   if (function_exists('zp_speed_lazy_ratio_ops')) { // includes/speed-images.php
     foreach (zp_speed_lazy_ratio_ops($html, $scan) as $op) { $ops[] = $op; }
   }
@@ -544,6 +545,36 @@ function zp_speed_unused_font_preloads(string $html, array $scan): array {
   return $ops;
 }
 
+/*
+ * 3.1.1: the 800 face of Plus Jakarta Sans comes with the other preloaded faces. Every page with the site
+ * header shows text in it on its first screen (the buttons and labels of the header, the call button of the
+ * phone header bar, eyebrows), and without a preload the browser asks for the file only once it lays out that
+ * text. On a slow phone line it then sometimes came after the first paint: the text was drawn in the fallback
+ * font first and moved when the file arrived (Lighthouse layout shift 0.16 to 0.37 in 3 of 12 runs of the home
+ * page). The preload is a copy of the 700 one with the other file name, right after it, and only where the page
+ * declares the face itself and nothing preloads it yet.
+ */
+function zp_speed_header_font_preload(string $html, array $scan): array {
+  $face = 'plus-jakarta-sans-v12-latin_latin-ext-800.woff2';
+  if (strpos($html, 'id="zpNewNav"') === false || strpos($html, $face) === false) { return []; }
+  if (!preg_match('~@font-face\s*\{[^}]*' . preg_quote($face, '~') . '~i', $html)) { return []; }
+  if (!preg_match_all('~<link\b[^>]*>~i', $html, $m, PREG_OFFSET_CAPTURE)) { return []; }
+  $anchor = null;
+  foreach ($m[0] as $tag) {
+    if (!preg_match('~\srel\s*=\s*(["\']?)preload\1[\s/>]~i', $tag[0])) { continue; }
+    if (strpos($tag[0], $face) !== false) { return []; } // already preloaded
+    if ($anchor === null && strpos($tag[0], 'plus-jakarta-sans-v12-latin_latin-ext-700.woff2') !== false
+      && $tag[1] < $scan['head_end'] && !zp_speed_in_skip($scan['skip'], $tag[1])) {
+      $anchor = $tag;
+    }
+  }
+  if ($anchor === null || preg_match('~\smedia\s*=~i', $anchor[0])) { return []; }
+  $copy = str_replace('plus-jakarta-sans-v12-latin_latin-ext-700.woff2', $face, $anchor[0]);
+  $copy = preg_replace('~\sid\s*=\s*(["\'])[^"\']*\1~i', '', $copy);
+  $end = $anchor[1] + strlen($anchor[0]);
+  return [[$end, $end, "\n" . $copy]];
+}
+
 /** Whether a stylesheet the page names mentions $needle (true also when one cannot be checked). */
 function zp_speed_css_names(string $html, string $needle): bool {
   static $seen = [];
@@ -639,6 +670,69 @@ function zp_speed_attachment_cache_clear() {
 add_action('add_attachment', 'zp_speed_attachment_cache_clear');
 add_action('edit_attachment', 'zp_speed_attachment_cache_clear');
 add_action('delete_attachment', 'zp_speed_attachment_cache_clear');
+
+/*
+ * 3.1.1 — endless decorative animations rest while their section is off screen.
+ * About fifty of them (glows, gradients in headings, floating mock-ups, marquees, the hero's rings and team photos) kept
+ * running on the home page wherever the visitor was, so the browser restyled and repainted those parts of the page on
+ * every frame of the whole visit, scrolling included. A section more than half a screen away from the view gets
+ * "zp-anim-off", which holds its endless animations where they are; they go on from there before it is back in view.
+ * Only endless animations are marked (data-zp-loop on the element, -b/-a for ::before/::after), so entrance animations
+ * play as before, and nothing that stays on screen whatever the scroll is touched (fixed bars, the header, dialogs).
+ * The rule sits in a cascade layer, so it wins over every "!important" animation rule outside layers whatever its
+ * strength. Browsers without layers or IntersectionObserver keep everything running, as before. It starts once the
+ * page has loaded and the browser is idle.
+ */
+add_action('wp_footer', function () {
+  if (is_admin() || !zp_speed_enabled()) { return; }
+  if (isset($_GET['zp_speed']) && (string) $_GET['zp_speed'] === '0') { return; }
+  ?>
+<style id="zp-speed-anim-rest">@layer zp-anim-rest{.zp-anim-off[data-zp-loop],.zp-anim-off [data-zp-loop],.zp-anim-off[data-zp-loop-b]::before,.zp-anim-off [data-zp-loop-b]::before,.zp-anim-off[data-zp-loop-a]::after,.zp-anim-off [data-zp-loop-a]::after{animation-play-state:paused!important}}</style>
+<script id="zp-speed-anim-rest-js">
+(function(w,d){
+  'use strict';
+  if(!('IntersectionObserver' in w) || !w.CSSLayerBlockRule || !w.CSSAnimation || typeof w.Element.prototype.getAnimations!=='function') return;
+  function staysOnScreen(el, box){
+    if(el.closest('#zpNewNav,dialog,[role="dialog"],[aria-modal="true"]')) return true;
+    for(var e=el; e && e!==box.parentElement; e=e.parentElement){
+      if(w.getComputedStyle(e).position==='fixed') return true;
+    }
+    return false;
+  }
+  function markLoops(box){
+    var list;
+    try{ list=box.getAnimations({subtree:true}); }catch(e){ return; }
+    for(var i=0;i<list.length;i++){
+      var a=list[i], eff=a.effect;
+      if(!(a instanceof w.CSSAnimation) || !eff || !eff.target || !eff.getTiming) continue;
+      var pseudo=eff.pseudoElement||'';
+      var attr=pseudo==='' ? 'data-zp-loop' : pseudo==='::before' ? 'data-zp-loop-b' : pseudo==='::after' ? 'data-zp-loop-a' : '';
+      var el=eff.target;
+      if(!attr || el.hasAttribute(attr) || eff.getTiming().iterations!==Infinity) continue;
+      if(staysOnScreen(el, box)) continue;
+      el.setAttribute(attr,'');
+    }
+  }
+  function start(){
+    var io=new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        var box=entry.target, off=!entry.isIntersecting;
+        if(off) markLoops(box);
+        if(box.classList.contains('zp-anim-off')!==off) box.classList.toggle('zp-anim-off', off);
+      });
+    }, {rootMargin:'50% 0px'});
+    d.querySelectorAll('section,footer').forEach(function(box){
+      if(!box.closest('#zpNewNav')) io.observe(box);
+    });
+  }
+  function idle(){
+    if('requestIdleCallback' in w) w.requestIdleCallback(start, {timeout:3000}); else w.setTimeout(start, 600);
+  }
+  if(d.readyState==='complete') idle(); else w.addEventListener('load', idle, {once:true});
+})(window,document);
+</script>
+  <?php
+}, 99);
 
 /* ZP Suite → Przyspieszenie: the off switch. After the menu clean-up (admin-menu-consolidation-186.php, 9999), which removes
  * other items; not called "Szybkość", because front-fixes-183.php removes every item with that word or "Statystyki". */

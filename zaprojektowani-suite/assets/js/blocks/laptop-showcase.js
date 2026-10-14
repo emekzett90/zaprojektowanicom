@@ -35,6 +35,7 @@
       }
 
       function clearOutro(){
+        if (!/(^|\s)is-outro/.test(root.className)) return;
         root.classList.remove(
           'is-outro',
           'is-outro-1',
@@ -76,7 +77,11 @@
         return Math.min(Math.max(n, min), max);
       }
 
+      /* 3.1.1: the class changes only when its state does. Adding a class it already had still told the
+         page's other scripts that the section changed, on every scroll frame. */
       function setClass(name, state){
+        state = !!state;
+        if (root.classList.contains(name) === state) return;
         if (state) {
           root.classList.add(name);
         } else {

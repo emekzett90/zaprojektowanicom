@@ -17,18 +17,27 @@ function zp_suite_241_clean_header_stabilizer(){
   function stabilize(){
     var nav=d.getElementById('zpNewNav');
     if(!nav) return;
+    /* 3.1.1: the scroll position is read before the class changes, not after them. */
+    var y=w.scrollY || d.documentElement.scrollTop || 0;
     nav.classList.add('zp-icons-ready');
     if(d.body && d.body.classList && (d.body.classList.contains('zp-logo-branding-page') || d.body.classList.contains('zp-logo-branding-shortcode'))){
       nav.classList.add('zpNewNav--heroOverlay');
     }
-    var y=w.scrollY || d.documentElement.scrollTop || 0;
     nav.classList.toggle('is-scrolled', y>18);
     if(d.body) d.body.classList.toggle('zp-nav-scrolled', y>18);
   }
+  /* 3.1.1: after the page start, the load and pageshow the check runs once in the next frame, before
+     it is painted, instead of in the middle of other scripts' changes. */
+  var raf=0;
+  function soon(){
+    if(raf) return;
+    if(typeof w.requestAnimationFrame!=='function'){stabilize();return;}
+    raf=w.requestAnimationFrame(function(){raf=0;stabilize();});
+  }
   stabilize();
-  ready(stabilize);
-  w.addEventListener('pageshow',stabilize,{passive:true});
-  w.addEventListener('load',stabilize,{once:true,passive:true});
+  ready(soon);
+  w.addEventListener('pageshow',soon,{passive:true});
+  w.addEventListener('load',soon,{once:true,passive:true});
 })(window,document);
 </script>
 <?php }
