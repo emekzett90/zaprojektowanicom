@@ -229,10 +229,15 @@ final class ZP_HTML_Cache_20261009 {
         // Counters, admin progress/logs and lookup memoization do not change rendered content.
         if (in_array($option, ['zp_ai_stats', 'zpte_log', 'zpte_usage', 'zpte_progress', 'zpte_last_plan', 'zp_speed_img_sizes', 'zp_speed_live_paths'], true)) { return; }
         // 3.0.1: panel data (404 log, redirect counters, cron heartbeat), visit counters and lookup memos. Ordinary visits or
-        // cron write these every few minutes, and each write used to empty the whole cache.
-        if (strpos($option, 'zp_suite3_') === 0 || in_array($option, ['zpl_geo_stats', 'zpl_missing', 'zpte_alert', 'zp_speed_att_ids', 'zp_suite_version_done', 'zp_suite_leads', 'zp_ai_feed_seen', 'zp_ai_changed', 'zp_ai_access_test', 'zp_ai_indexnow_last', 'zp_ai_indexnow_retry', 'zp_ai_indexnow_queue', 'zp_websub_last', 'zp_feed_guard_at', 'zp_feed_status', 'zp_feed_log', 'zp_ai_log'], true)) { return; }
+        // cron write these every few minutes, and each write used to empty the whole cache. 3.1.0: quote requests from Studio
+        // wyceny and the llms.txt build time are on no page; the weekly style-file test counts only when it flips (below).
+        if (strpos($option, 'zp_suite3_') === 0 || in_array($option, ['zpl_geo_stats', 'zpl_missing', 'zpte_alert', 'zp_speed_att_ids', 'zp_suite_version_done', 'zp_suite_leads', 'zp_ai_feed_seen', 'zp_ai_changed', 'zp_ai_access_test', 'zp_ai_indexnow_last', 'zp_ai_indexnow_retry', 'zp_ai_indexnow_queue', 'zp_websub_last', 'zp_feed_guard_at', 'zp_feed_status', 'zp_feed_log', 'zp_ai_log', 'zp_studio_wyceny_orders', 'zp_ai_llms_built', 'zp_speed_files_ok'], true)) { return; }
         if (apply_filters('zp_html_cache_ignore_option', false, $option)) { return; }
         if (preg_match('/^(?:zp_(?!html_cache_)|zpl_|zpte_|rank-math-|theme_mods_|widget_|sidebars_widgets|page_on_front|show_on_front|blogname|blogdescription|permalink_structure)/', $option)) { self::queue_purge(); }
+    }
+    /** Copies made while the style files were served link to them, and copies made before carry the styles inline. */
+    public static function speed_files_changed($old, $new): void {
+        if (empty($old['ok']) !== empty($new['ok'])) { self::queue_purge(); }
     }
     public static function meta_changed($meta_id, $post_id, $key): void {
         if (in_array($key, ['_elementor_css', '_elementor_element_cache', '_elementor_page_assets', '_edit_lock', '_edit_last', '_zp_post_reads', '_zp_post_views'], true)) { return; }
@@ -284,4 +289,5 @@ add_action('admin_post_zp_html_cache_20261009', [ZP_HTML_Cache_20261009::class, 
 foreach (['save_post', 'deleted_post', 'trashed_post', 'untrashed_post', 'transition_post_status', 'wp_update_nav_menu', 'switch_theme', 'upgrader_process_complete', 'created_term', 'edited_term', 'delete_term'] as $hook) { add_action($hook, [ZP_HTML_Cache_20261009::class, 'queue_purge'], PHP_INT_MAX, 0); }
 foreach (['updated_post_meta', 'added_post_meta', 'deleted_post_meta'] as $hook) { add_action($hook, [ZP_HTML_Cache_20261009::class, 'meta_changed'], PHP_INT_MAX, 3); }
 add_action('updated_option', [ZP_HTML_Cache_20261009::class, 'option_changed'], PHP_INT_MAX, 1);
+add_action('update_option_zp_speed_files_ok', [ZP_HTML_Cache_20261009::class, 'speed_files_changed'], PHP_INT_MAX, 2);
 if (function_exists('register_deactivation_hook')) { register_deactivation_hook(dirname(__DIR__) . '/zaprojektowani-suite.php', [ZP_HTML_Cache_20261009::class, 'deactivate']); }
