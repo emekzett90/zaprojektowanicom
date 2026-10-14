@@ -1,5 +1,7 @@
 <?php
 // ZP Suite managed HTML cache 20261009 v1. Direct requests execute no cached content.
+// ZP Suite 3.0.1: one copy per device class (phone or computer), decided exactly like wp_is_mobile(),
+// because the theme strips hero videos and lazy-loads some images for phones on the server.
 if (!defined('ABSPATH') || !defined('WP_CONTENT_DIR')) { exit; }
 
 final class ZP_Cache_Early_20261009 {
@@ -38,8 +40,17 @@ final class ZP_Cache_Early_20261009 {
         return '';
     }
 
+    /** 'm' or 'd': the same test as WordPress's wp_is_mobile() (Client Hint first, then the user agent). */
+    public static function device(array $server): string {
+        if (isset($server['HTTP_SEC_CH_UA_MOBILE'])) { return $server['HTTP_SEC_CH_UA_MOBILE'] === '?1' ? 'm' : 'd'; }
+        $ua = (string) ($server['HTTP_USER_AGENT'] ?? '');
+        if ($ua === '') { return 'd'; }
+        foreach (['Mobile', 'Android', 'Silk/', 'Kindle', 'BlackBerry', 'Opera Mini', 'Opera Mobi'] as $needle) { if (strpos($ua, $needle) !== false) { return 'm'; } }
+        return 'd';
+    }
+
     public static function key(array $p, array $server): string {
-        return hash('sha256', $p['generation'] . "\nhttps\n" . $server['HTTP_HOST'] . "\n" . $server['REQUEST_URI']);
+        return hash('sha256', $p['generation'] . "\nhttps\n" . $server['HTTP_HOST'] . "\n" . $server['REQUEST_URI'] . "\n" . self::device($server));
     }
 
     public static function hit(string $dir, array $p, array $server, ?int $now = null): ?array {
@@ -87,10 +98,10 @@ final class ZP_Cache_Early_20261009 {
         if ($reason !== '') { if (!headers_sent()) { header('X-ZP-Cache: BYPASS; ' . $reason); } return; }
         $hit = self::hit($dir, $p, $_SERVER);
         if ($hit) {
-            header('Content-Type: text/html; charset=UTF-8'); header('Cache-Control: private, no-cache, max-age=0'); header('Vary: Accept-Encoding, Cookie, Accept-Language'); header('X-ZP-Cache: HIT'); header('X-ZP-Cache-Age: ' . $hit['age']);
+            header('Content-Type: text/html; charset=UTF-8'); header('Cache-Control: private, no-cache, max-age=0'); header('Vary: Accept-Encoding, Cookie, Accept-Language, User-Agent, Sec-CH-UA-Mobile'); header('X-ZP-Cache: HIT'); header('X-ZP-Cache-Device: ' . self::device($_SERVER)); header('X-ZP-Cache-Age: ' . $hit['age']);
             echo $hit['html']; exit;
         }
-        header('X-ZP-Cache: MISS'); $server = $_SERVER; $flushed = false;
+        header('X-ZP-Cache: MISS'); header('X-ZP-Cache-Device: ' . self::device($_SERVER)); $server = $_SERVER; $flushed = false;
         // Start before plugins: this outermost buffer sees Suite's final transformed HTML.
         ob_start(static function ($html, $phase) use ($dir, $p, $server, &$flushed) {
             if (($phase & PHP_OUTPUT_HANDLER_FINAL) === 0) { $flushed = true; return $html; }

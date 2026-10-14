@@ -101,10 +101,23 @@ function zp_suite3_health_checks(bool $deep = false): array {
     $checks[] = zp_suite3_check('autoload', 'Dużo danych wczytywanych przy każdej odsłonie', 'warn', sprintf('Opcje z autoload mają %s. Powyżej 1 MB spowalniają każdą stronę. Lista największych jest niżej.', size_format($autoload, 1)), $health . '#autoload');
   }
 
-  // Codex's own HTML cache
-  $cache_state = get_option('zp_html_cache_20261009_state', []);
-  if (is_array($cache_state) && !empty($cache_state['enabled'])) {
-    $checks[] = zp_suite3_check('codex_cache', 'Włączony cache HTML z wersji Codexa', 'warn', 'Ten cache nie odróżnia telefonu od komputera, więc telefon może dostać wersję komputerową. Wyłącz go w Strona → Wydajność → Cache HTML.', zp_suite3_url('zp-suite-html-cache'));
+  // Page cache (ZP Suite's own HTML cache for Polish visitors without cookies)
+  if (class_exists('ZP_HTML_Cache_20261009')) {
+    $c = ZP_HTML_Cache_20261009::status();
+    $url = zp_suite3_url('zp-suite-html-cache');
+    $upgrade = get_option('zp_suite3_cache_301', []);
+    $upgrade_error = is_array($upgrade) && strpos((string) ($upgrade['result'] ?? ''), 'error') === 0 ? (string) $upgrade['result'] : '';
+    if (!$c['installed']) {
+      $checks[] = zp_suite3_check('page_cache', 'Cache stron nie jest zainstalowany', 'info', 'Każda odsłona składa stronę w PHP. Cache włączysz na stronie Cache HTML.', $url);
+    } elseif ($c['enabled'] && $c['wp_cache'] && $c['dropin_current'] && $c['error'] === '') {
+      $checks[] = zp_suite3_check('page_cache', 'Cache stron działa', 'ok', sprintf('%s po polsku, odświeżane co %d min, osobno dla telefonu i komputera. Odwiedzający bez cookies dostają gotową stronę.', zp_suite3_plural($c['paths'], 'adres', 'adresy', 'adresów'), max(1, (int) round($c['ttl'] / 60))), $url);
+    } elseif ($c['enabled'] && !$c['dropin_current']) {
+      $checks[] = zp_suite3_check('page_cache', 'Cache stron ma starą wersję pliku advanced-cache.php', 'bad', 'Stara wersja nie odróżnia telefonu od komputera. ' . ($upgrade_error !== '' ? 'Aktualizacja zgłosiła: ' . $upgrade_error . '. ' : '') . 'Otwórz Cache HTML i użyj „Odśwież własny cache”.', $url);
+    } elseif ($c['enabled']) {
+      $checks[] = zp_suite3_check('page_cache', 'Cache stron wymaga uwagi', 'warn', $c['error'] !== '' ? $c['error'] : 'WP_CACHE jest wyłączone w wp-config.php, więc cache nie podaje stron.', $url);
+    } else {
+      $checks[] = zp_suite3_check('page_cache', 'Cache stron wyłączony', 'warn', 'Strony są składane w PHP przy każdej odsłonie (około 1 s zamiast 0,1 s). ' . ($upgrade_error !== '' ? 'Aktualizacja zgłosiła: ' . $upgrade_error . '. ' : '') . 'Włącz go przyciskiem „Włącz ponownie cache HTML” na stronie Cache HTML.', $url);
+    }
   }
 
   // Google data
