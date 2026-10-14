@@ -16,8 +16,9 @@
  *   stylesheet link, outside script or style-adding script between them, becomes one CSS file
  *   loaded by a <link> at the place of the run's first style. The order of all CSS stays the same,
  *   so the same rules win and the page looks the same. Styles before the first stylesheet link
- *   (the header's critical CSS) and styles in <body> above the page's first heading (the hero)
- *   stay in the page, so the top of the page is drawn as before. Also kept in the page: runs under
+ *   (the header's critical CSS), styles in <body> above the page's first heading (the hero) and
+ *   the home hero's own styles in <body> (#zhHero, .zh__, printed after its H1) stay in the page,
+ *   so the top of the page is drawn as before. Also kept in the page: runs under
  *   8 kB, styles with other attributes than id and type, with @import, @charset, relative or #
  *   addresses, unbalanced braces or an open comment, and styles whose id a script of the page names.
  * - the home page's portfolio controller, which the page keeps as text until it is needed
@@ -243,6 +244,10 @@ function zp_speed_weight_style_ops(string $html, array $scan): array {
     $hero = $style[0] >= $scan['body_open'] && ($h1 < 0 || $style[0] < $h1);
     if ($style[0] < $first_link || $hero) { $run = -1; continue; }
     $css = zp_speed_weight_style_css($html, $style, $named);
+    // The home hero's own styles come after its H1 (templates/home-hero.php). From a file in <body> they can arrive
+    // after the first paint and move the heading on phones (3.1.0 review), so there they stay in the page. In <head>
+    // a stylesheet holds back the first paint, so nothing moves.
+    if ($css !== null && $style[0] >= $scan['body_open'] && preg_match('~#zhHero\b|\.zh__~', $css)) { $css = null; }
     if ($css === null) { $run = -1; continue; } // a style that stays in the page also ends the run
     if ($broken || $run < 0) { $runs[] = []; $run = count($runs) - 1; }
     $runs[$run][] = [$style[0], $style[1], $css];
