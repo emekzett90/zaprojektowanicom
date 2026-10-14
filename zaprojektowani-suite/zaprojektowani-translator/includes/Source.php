@@ -12,10 +12,10 @@ final class Source {
      * Fetch the rendered Polish page from this server (loopback request).
      * @return array{ok:bool,html:string,code:int,error:string,gone:bool,redirect:string,via:string}
      */
-    public static function fetch(string $path, int $post_id = 0): array {
+    public static function fetch(string $path, int $post_id = 0, int $timeout = 10): array {
         $out = ['ok' => false, 'html' => '', 'code' => 0, 'error' => '', 'gone' => false, 'redirect' => '', 'via' => 'http'];
         $res = wp_remote_get(home_url($path), [
-            'timeout' => min(8, max(1, OpenAI::remaining() - 3)),
+            'timeout' => max(2, min(15, $timeout)),
             'redirection' => 0,
             'user-agent' => 'Zaprojektowani-Tlumacz-EN/' . ZPTE_VERSION . '; ' . home_url('/'),
             // zpl_lang_pref=pl: a manual language choice, so the GEO redirect never sends this request to /en/.
