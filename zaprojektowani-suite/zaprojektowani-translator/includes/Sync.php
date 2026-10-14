@@ -598,14 +598,14 @@ final class Sync {
         $map = [];
         foreach ($keys as $h => $kind) {
             if (isset($own[$h]) && (string) $own[$h]->en !== '') {
-                $map[(string) $own[$h]->pl] = self::fix_terms((string) $own[$h]->en);
+                $map[(string) $own[$h]->pl] = self::fix_terms((string) $own[$h]->en, (string) $own[$h]->pl);
                 continue;
             }
             $r = $mem[$h] ?? null;
             if (!$r || (string) $r->en === '' || (int) $r->shared) { continue; } // shared texts come from the shared map
             // The shipped dictionary keeps its wording unless the memory has a manual correction.
             if (!(int) $r->manual && \ZPL\Dict::base((string) $r->pl, 'en', $path) !== null) { continue; }
-            $map[(string) $r->pl] = self::fix_terms((string) $r->en);
+            $map[(string) $r->pl] = self::fix_terms((string) $r->en, (string) $r->pl);
         }
         $rev = Store::map_save($page_id, Store::hash($path), $map, null);
         Serve::bump($page_id, $rev);
@@ -615,7 +615,7 @@ final class Sync {
     /** The shared map (titles, leads, menu and footer texts) from the translation memory. */
     public static function compile_shared(): void {
         $map = [];
-        foreach (Store::shared_strings() as $pl => $en) { $map[(string) $pl] = self::fix_terms((string) $en); }
+        foreach (Store::shared_strings() as $pl => $en) { $map[(string) $pl] = self::fix_terms((string) $en, (string) $pl); }
         $rev = Store::map_save(Store::SHARED, '', $map, null);
         Serve::bump(Store::SHARED, $rev);
     }
@@ -628,7 +628,11 @@ final class Sync {
         return $n;
     }
 
-    public static function fix_terms(string $en): string {
-        return strtr($en, self::TERM_FIXES);
+    /** Fixed names, and phone numbers written as in Polish ("501 054 253", never "501,054,253" as old translations had it). */
+    public static function fix_terms(string $en, string $pl = ''): string {
+        $en = strtr($en, self::TERM_FIXES);
+        if ($pl === '' || strpos($en, ',') === false || !preg_match_all('~(?<![\d,.])\d{2,3}(?:[ \x{00A0}\x{202F}]\d{3}){2,}(?!\d)~u', $pl, $m)) { return $en; }
+        foreach ($m[0] as $tel) { $en = str_replace((string) preg_replace('~[ \x{00A0}\x{202F}]~u', ',', $tel), $tel, $en); }
+        return $en;
     }
 }

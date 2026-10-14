@@ -188,6 +188,8 @@ final class Dict {
 
     /** "1 500" <-> "1,500" and "4,9" <-> "4.9"; dates, times and plain numbers are untouched. */
     public static function num(string $v, string $lang): string {
+        // Phone numbers ("501 054 253", "+48 501 054 253") keep their spaces: no price on the site has 9 digits.
+        if (strlen((string) preg_replace('/\D/', '', $v)) >= 9) { return $v; }
         if ($lang === 'en') {
             if (preg_match('/^\d{1,3}(?:[ \x{00A0}\x{202F}]\d{3})+$/u', $v)) { return preg_replace('/[ \x{00A0}\x{202F}]/u', ',', $v) ?? $v; }
             if (preg_match('/^\d+,\d{1,2}$/', $v)) { return str_replace(',', '.', $v); }

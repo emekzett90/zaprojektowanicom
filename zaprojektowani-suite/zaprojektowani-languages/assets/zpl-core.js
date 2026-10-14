@@ -189,6 +189,8 @@
     return vals.length ? [parts.join(''), vals] : null;
   }
   function num(v, lang) {
+    // Phone numbers ("501 054 253") keep their spaces: no price on the site has 9 digits.
+    if (v.replace(/\D/g, '').length >= 9) return v;
     if (lang === 'en') {
       if (/^\d{1,3}(?:[ \u00A0\u202F]\d{3})+$/.test(v)) return v.replace(/[ \u00A0\u202F]/g, ',');
       if (/^\d+,\d{1,2}$/.test(v)) return v.replace(',', '.');
