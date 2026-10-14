@@ -744,14 +744,25 @@ final class ZP_Content_Preparation_20261010 {
         if(!$ready)echo '<p>Nie ma jeszcze gotowych szkiców.</p>';echo '<p><label><input type="radio" name="schedule_mode" value="assigned" checked> Użyj przypisanych terminów każdego szkicu</label></p><p><label><input type="radio" name="schedule_mode" value="manual"> Ustaw nowe terminy poniżej</label></p><label class="zpAdmin20__field">Własna pierwsza publikacja · Warszawa <input type="datetime-local" name="schedule_first" style="max-width:100%"></label><label class="zpAdmin20__field">Odstęp w dniach <input type="number" name="schedule_interval" value="7" min="1" max="60"></label><label class="zpAdmin20__check"><input type="checkbox" name="review_ack" value="1" required> Przejrzałem pełne szkice i obrazy; zatwierdzam wybrane publikacje.</label><button class="button button-primary"'.(!$ready||!self::allowed(true)?' disabled':'').'>Zaplanuj gotowe</button></form></section>';
         if(class_exists('ZP_Prepared_Photo_Refresh_20261010'))ZP_Prepared_Photo_Refresh_20261010::render();
     }
+    /**
+     * 3.2.0: the article as the page shows it. A save in Elementor (e.g. a new H1 typed in by hand) rewrites post_content
+     * as a copy without the zpArticlePrepared class, while the page is drawn from the HTML widget in _elementor_data; the
+     * BlogPosting and FAQPage blocks then stopped. The widget is read when post_content no longer carries the marker.
+     */
+    private static function article_html(WP_Post $p): string {
+        if(str_contains($p->post_content,'zpArticlePrepared'))return $p->post_content;
+        $raw=get_post_meta($p->ID,'_elementor_data',true);$tree=is_array($raw)?$raw:json_decode((string)$raw,true);if(!is_array($tree))return '';$found=[];
+        $walk=static function($nodes)use(&$walk,&$found){foreach($nodes as $n){if(!is_array($n))continue;if(($n['widgetType']??'')==='html'&&str_contains((string)($n['settings']['html']??''),'zpArticlePrepared'))$found[]=(string)$n['settings']['html'];if(is_array($n['elements']??null))$walk($n['elements']);}};$walk($tree);
+        return count($found)===1?$found[0]:'';
+    }
     public static function schema($data) {
         if(!is_array($data)||is_admin()||!is_singular('post'))return $data;$id=get_queried_object_id();$marker=get_post_meta($id,self::PREFIX.'job',true);if(!is_string($marker)||$marker==='')return $data;
-        $p=get_post($id);if(!$p||$p->post_type!=='post'||!str_contains($p->post_content,'zpArticlePrepared'))return $data;
+        $p=get_post($id);if(!$p||$p->post_type!=='post')return $data;$article=self::article_html($p);if($article==='')return $data;
         $url=get_permalink($id);$author=null;$publisher=null;$webpage=$url.'#webpage';
         foreach($data as $key=>$node){if(!is_array($node))continue;$types=(array)($node['@type']??[]);if(array_intersect($types,['Article','BlogPosting','NewsArticle'])){$author=$node['author']??$author;$publisher=$node['publisher']??$publisher;unset($data[$key]);}elseif(in_array('WebPage',$types,true)&&isset($node['@id']))$webpage=$node['@id'];}
         $blog=['@type'=>'BlogPosting','@id'=>$url.'#blogposting','url'=>$url,'headline'=>$p->post_title,'description'=>(string)get_post_meta($id,'rank_math_description',true),'mainEntityOfPage'=>['@id'=>$webpage],'datePublished'=>get_post_time(DATE_W3C,false,$p),'dateModified'=>get_post_modified_time(DATE_W3C,false,$p),'inLanguage'=>'pl-PL','author'=>$author?:['@type'=>'Person','name'=>get_the_author_meta('display_name',$p->post_author),'url'=>get_author_posts_url($p->post_author)]];
         if($publisher)$blog['publisher']=$publisher;$image=wp_get_attachment_image_src(get_post_thumbnail_id($id),'full');if($image)$blog['image']=['@type'=>'ImageObject','url'=>$image[0],'width'=>(int)$image[1],'height'=>(int)$image[2]];$data['zp_prepared_blogposting_20261010']=$blog;
-        $faq=get_post_meta($id,self::PREFIX.'faq',true);$text=self::normalized($p->post_content);if(!is_array($faq)||!$text)return $data;$questions=[];
+        $faq=get_post_meta($id,self::PREFIX.'faq',true);$text=self::normalized($article);if(!is_array($faq)||!$text)return $data;$questions=[];
         foreach($faq as $item){if(!is_array($item)||!is_string($item['question']??null)||!is_string($item['answer']??null)||strpos($text,self::normalized($item['question']))===false||strpos($text,self::normalized($item['answer']))===false)return $data;$questions[]=['@type'=>'Question','name'=>$item['question'],'acceptedAnswer'=>['@type'=>'Answer','text'=>$item['answer']]];}
         if($questions){foreach($data as $key=>$node){if(is_array($node)&&in_array('FAQPage',(array)($node['@type']??[]),true))unset($data[$key]);}$data['zp_prepared_faq_20261010']=['@type'=>'FAQPage','@id'=>$url.'#faq','url'=>$url,'mainEntity'=>$questions];}return $data;
     }
