@@ -22,6 +22,7 @@ final class Worker {
     const STEP = 22;
     const LOCK_TTL = 90;
     const IN_FLIGHT = 6;
+    const SCAN = 100;           // new requests submit() and next_due() look at in one step (oldest first)
     const SENT_MAX_AGE = 1800;  // no answer after 30 minutes: ask again
     const UNKNOWN_WAIT = 600;   // sending ended without an answer: maybe accepted, so wait before sending again
 
@@ -187,6 +188,11 @@ final class Worker {
     }
 
     private static function tick_async(): void {
+        // One request per page load: saving 50 posts at once (bulk edit, a title migration) starts one step, not 50.
+        // That step reads every queued page and chains on to the next one itself.
+        static $sent = false;
+        if ($sent) { return; }
+        $sent = true;
         wp_remote_post(rest_url('zpte/v1/tick'), [
             'timeout' => 0.01,
             'blocking' => false,
@@ -309,16 +315,22 @@ final class Worker {
         return ['busy' => false, 'left' => $left];
     }
 
-    /** Seconds until something in the queue can move: a page to read, a request to send, an answer to collect. */
+    /**
+     * Seconds until something in the queue can move: a page to read, a request to send, an answer to collect. It sees
+     * exactly what the step may do (the reading gate, the same requests submit() looks at), so a queue that only
+     * waits for retries never starts steps back to back.
+     */
     private static function next_due(): int {
-        if (Store::next_queued()) { return 1; }
+        if (Store::count_jobs(['new']) < self::IN_FLIGHT * 3 && Store::next_queued()) { return 1; }
         if (Store::count_jobs(['sent']) > 0) { return 2; }
         $at = Store::next_retry_at();
-        foreach (Store::jobs(['new', 'unknown'], 100) as $job) {
-            $t = (int) strtotime((string) $job->updated_at . ' UTC');
-            if ($job->state === 'unknown') { $t += self::UNKNOWN_WAIT; }
-            elseif ((string) $job->error !== '') { $t += 45 * max(1, (int) $job->tries); }
-            else { return 1; }
+        foreach (Store::jobs(['new'], self::SCAN) as $job) {
+            if ((string) $job->error === '') { return 1; }
+            $t = (int) strtotime((string) $job->updated_at . ' UTC') + 45 * max(1, (int) $job->tries);
+            $at = $at > 0 ? min($at, $t) : $t;
+        }
+        foreach (Store::jobs(['unknown'], 30) as $job) {
+            $t = (int) strtotime((string) $job->updated_at . ' UTC') + self::UNKNOWN_WAIT;
             $at = $at > 0 ? min($at, $t) : $t;
         }
         return $at > 0 ? max(1, $at - time()) : 60;
@@ -445,7 +457,8 @@ final class Worker {
         }
         $inflight = Store::count_jobs(['sent']);
         $n = 0;
-        foreach (Store::jobs(['new'], self::IN_FLIGHT * 2) as $job) {
+        // Requests waiting for a retry are skipped, so the scan goes past them (the in-flight cap still limits sending).
+        foreach (Store::jobs(['new'], self::SCAN) as $job) {
             if ($inflight >= self::IN_FLIGHT || time() >= $deadline - 4) { break; }
             if ((string) $job->error !== '' && (int) strtotime((string) $job->updated_at . ' UTC') > time() - 45 * max(1, (int) $job->tries)) { continue; }
             if ((int) $job->chars > 0 && ($l = Log::limit_reached((int) $job->chars)) !== '') { self::limit_pause($l); break; }
