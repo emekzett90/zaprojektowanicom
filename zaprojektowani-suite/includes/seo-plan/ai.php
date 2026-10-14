@@ -699,7 +699,37 @@ add_filter('zp_seo_plan_service_node', function ($node, $variant = '') {
 function zp_ai_stats(): array {
   $s = get_option('zp_ai_stats', []);
   $s = is_array($s) ? $s : [];
-  return array_merge(['bots' => [], 'bot_last' => [], 'refs' => [], 'ref_last' => []], $s);
+  $s = array_merge(['bots' => [], 'bot_last' => [], 'refs' => [], 'ref_last' => []], $s);
+  $merged = zp_ai_cached_bot_visits($s);
+  if ($merged !== $s) { zp_ai_stats_save($merged); }
+  return $merged;
+}
+
+/**
+ * 14.10.2026: robot visits answered by the HTML cache (cache-dropin-20261009.php), where WordPress does not run, wait in
+ * the cache folder's bots.log; they are counted here once (the file is taken by renaming it, so two requests never
+ * count it twice).
+ */
+function zp_ai_cached_bot_visits(array $s): array {
+  if (!zp_ai_on() || !class_exists('ZP_HTML_Cache_20261009')) { return $s; }
+  $file = ZP_HTML_Cache_20261009::dir() . '/bots.log';
+  if (is_link($file) || !is_file($file)) { return $s; }
+  $taken = $file . '.' . bin2hex(random_bytes(6)) . '.tmp';
+  if (!@rename($file, $taken)) { return $s; }
+  $lines = @file($taken, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+  @unlink($taken);
+  foreach (array_slice(is_array($lines) ? $lines : [], 0, 5000) as $line) {
+    $visit = json_decode((string) $line, true);
+    if (!is_array($visit) || !is_int($visit[0] ?? null) || !is_string($visit[1] ?? null) || !is_string($visit[2] ?? null)) { continue; }
+    $bot = zp_ai_bot_of($visit[2]);
+    if ($bot === '') { continue; }
+    $day = wp_date('Y-m-d', $visit[0]);
+    $s['bots'][$day][$bot] = (int) ($s['bots'][$day][$bot] ?? 0) + 1;
+    if ((int) ($s['bot_last'][$bot]['at'] ?? 0) <= $visit[0]) {
+      $s['bot_last'][$bot] = ['at' => $visit[0], 'path' => substr($visit[1], 0, 200), 'code' => 200];
+    }
+  }
+  return $s;
 }
 
 function zp_ai_stats_save(array $s): void {
