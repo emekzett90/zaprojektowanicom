@@ -3,44 +3,13 @@ $zp_kb_ajax = admin_url('admin-ajax.php');
 $zp_kb_nonce = wp_create_nonce('zp_wiedza_nonce');
 $zp_kb_cats = get_categories(['hide_empty'=>true,'orderby'=>'name']);
 $zp_kb_topics = isset($zp_kb_topics) && is_array($zp_kb_topics) ? $zp_kb_topics : (function_exists('zp_suite_wiedza_topic_groups_resolved') ? zp_suite_wiedza_topic_groups_resolved() : []);
-$zp_kb_stats_posts = get_posts([
-  'post_type'              => 'post',
-  'post_status'            => 'publish',
-  'posts_per_page'         => -1,
-  'orderby'                => 'ID',
-  'order'                  => 'ASC',
-  'ignore_sticky_posts'    => true,
-  'no_found_rows'          => true,
-  'suppress_filters'       => false,
-  'update_post_meta_cache' => false,
-  'update_post_term_cache' => false,
-]);
-$zp_kb_stats_ids = wp_list_pluck($zp_kb_stats_posts, 'ID');
-if ($zp_kb_stats_ids) { update_meta_cache('post', array_map('intval', $zp_kb_stats_ids)); }
-$zp_kb_total_articles = count($zp_kb_stats_posts);
+/* 3.1.1: the figures come with the kept index (zp_suite_wiedza_index_payload()); only read counts are read on each render. */
+$zp_kb_index = isset($zp_kb_index) && is_array($zp_kb_index) && isset($zp_kb_index['reads']) ? $zp_kb_index : zp_suite_wiedza_index_payload();
+$zp_kb_total_articles = (int) $zp_kb_index['count'];
 $zp_kb_topic_count = count($zp_kb_topics);
-$zp_kb_total_reads = 0;
-$zp_kb_total_minutes = 0;
-$zp_kb_latest_modified = 0;
-foreach ($zp_kb_stats_posts as $zp_kb_stats_post) {
-  $zp_kb_sid = (int) $zp_kb_stats_post->ID;
-  $zp_kb_reads = (int) get_post_meta($zp_kb_sid, '_zp_post_reads', true);
-  if ($zp_kb_reads < 1) { $zp_kb_reads = (int) get_post_meta($zp_kb_sid, '_zp_post_views', true); }
-  $zp_kb_total_reads += max(0, $zp_kb_reads);
-
-  $zp_kb_saved_read = get_post_meta($zp_kb_sid, '_zp_blog_read', true);
-  if ($zp_kb_saved_read && preg_match('/(\\d+)/', (string) $zp_kb_saved_read, $zp_kb_read_match)) {
-    $zp_kb_minutes = max(1, (int) $zp_kb_read_match[1]);
-  } else {
-    $zp_kb_plain = trim(wp_strip_all_tags(strip_shortcodes((string) $zp_kb_stats_post->post_content)));
-    $zp_kb_words = preg_split('/\\s+/u', $zp_kb_plain, -1, PREG_SPLIT_NO_EMPTY);
-    $zp_kb_minutes = max(1, (int) ceil((is_array($zp_kb_words) ? count($zp_kb_words) : 0) / 220));
-  }
-  $zp_kb_total_minutes += $zp_kb_minutes;
-
-  $zp_kb_mod = strtotime((string) $zp_kb_stats_post->post_modified_gmt . ' GMT');
-  if ($zp_kb_mod > $zp_kb_latest_modified) { $zp_kb_latest_modified = $zp_kb_mod; }
-}
+$zp_kb_total_reads = (int) $zp_kb_index['reads'];
+$zp_kb_total_minutes = (int) $zp_kb_index['minutes'];
+$zp_kb_latest_modified = (int) $zp_kb_index['modified'];
 $zp_kb_avg_read_minutes = $zp_kb_total_articles > 0 ? max(1, (int) round($zp_kb_total_minutes / $zp_kb_total_articles)) : 0;
 $zp_kb_latest_label = $zp_kb_latest_modified ? wp_date('d.m.Y', $zp_kb_latest_modified) : wp_date('d.m.Y');
 $zp_kb_total_reads_label = number_format_i18n($zp_kb_total_reads);
