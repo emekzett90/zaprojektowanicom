@@ -28,6 +28,8 @@ final class ZP_Admin_Queue_Health_20261010 {
         'needs_review'=>'Zadanie ma stan wymagający kontroli w swoim panelu.',
         'wp_cron_disabled'=>'DISABLE_WP_CRON jest włączone; wykonywanie wymaga zewnętrznego harmonogramu.',
     ];
+    /** Polish text of an issue code, for the dashboard. */
+    public static function issue_text(string $code): string {return self::ISSUES[$code]??'';}
     public static function allowed(): bool {return is_admin() && current_user_can('manage_options') && !((function_exists('wp_doing_ajax')&&wp_doing_ajax()) || (function_exists('wp_doing_cron')&&wp_doing_cron()) || (defined('REST_REQUEST')&&REST_REQUEST));}
     private static function stamp($value): ?int {return is_int($value)&&$value>0&&$value<=4102444800?$value:null;}
     private static function enum($value,array $allowed,string $fallback='unknown'): string {return is_string($value)&&in_array($value,$allowed,true)?$value:$fallback;}
@@ -64,7 +66,8 @@ final class ZP_Admin_Queue_Health_20261010 {
             if(in_array($state,['running','applying','publishing'],true)&&$started!==null&&$started<$now-600)$issues[]='running_overdue';
             if(in_array($lock['status'],['invalid','expired'],true))$issues[]='lock_'.$lock['status'];
         }
-        if($updated!==null&&$updated>$now+300)$issues[]='timestamp_future';if(in_array($state,['needs_retry','needs_attention','publish_attention','policy_hold','schedule_attention'],true))$issues[]='needs_review';
+        if($updated!==null&&$updated>$now+300)$issues[]='timestamp_future';// policy_hold is the module's own decision (topic below the minimum search volume, kept as a draft), not a stalled queue.
+        if(in_array($state,['needs_retry','needs_attention','publish_attention','schedule_attention'],true))$issues[]='needs_review';
         return ['label'=>$spec['label'],'state'=>$state,'stage'=>$stage,'counts'=>$complete?$counts:null,'queued'=>$complete?$queued:null,'active'=>$complete?$active:null,'updated_at'=>$updated,'age_seconds'=>$age,'started_at'=>$started,'next_poll_at'=>$poll,'known_response'=>$stateResponse||$receiptResponse,'response_presence'=>$stateResponse?($receiptResponse?'both':'state'):($receiptResponse?'receipt':'none'),'known_response_jobs'=>$known,'worker'=>$worker,'watchdog'=>$watchdog,'lock'=>$lock,'issues'=>array_values(array_unique($issues))];
     }
     /** Only allowlisted, typed operational fields; no task IDs, prompts, response IDs or credentials. */
