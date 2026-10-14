@@ -105,13 +105,16 @@ final class Routes {
 
     /**
      * The address comes from the language module itself (its shipped data or its routes option, which the owner
-     * can edit in Języki PL/EN → Adresy URL): this module never changes it.
+     * can edit in Języki PL/EN → Adresy URL): this module never changes it. Except an address made of Polish words
+     * (an earlier translator saved some there): this module gives the page an English one and the old one redirects;
+     * the routes option itself stays as it is.
      */
     public static function external(string $pl): bool {
         $data = \ZPL\Router::data();
-        if (isset($data['routes'][$pl])) { return true; }
+        $en = isset($data['routes'][$pl]) && is_string($data['routes'][$pl]) ? $data['routes'][$pl] : '';
         $custom = get_option('zpl_routes', []);
-        return is_array($custom) && isset($custom[$pl]) && is_string($custom[$pl]) && $custom[$pl] !== '';
+        if (is_array($custom) && isset($custom[$pl]) && is_string($custom[$pl]) && $custom[$pl] !== '') { $en = $custom[$pl]; }
+        return $en !== '' && !self::polish($en);
     }
 
     public static function valid_en(string $en): bool {

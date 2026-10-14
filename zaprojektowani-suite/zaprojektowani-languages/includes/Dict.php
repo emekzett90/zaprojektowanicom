@@ -170,6 +170,19 @@ final class Dict {
         return null;
     }
 
+    /**
+     * Shipped dictionaries and other modules' curated texts (filter zpl_dictionary), with number templates; without
+     * manual overrides or Tłumacz EN. Tłumacz EN asks this to know which texts the plugin already translates, so
+     * those are never sent to OpenAI and keep their wording.
+     */
+    public static function lower(string $key, string $lang, string $source): ?string {
+        $v = self::shipped($key, $lang, $source);
+        if ($v !== null) { return $v; }
+        $t = self::template($key);
+        if ($t !== null && ($v = self::shipped($t[0], $lang, $source)) !== null) { return self::fill($v, $t[1], $lang); }
+        return null;
+    }
+
     public static function template(string $key): ?array {
         $vals = [];
         $parts = preg_split('~(</?\d+/?>)~', $key, -1, PREG_SPLIT_DELIM_CAPTURE) ?: [$key];
@@ -188,6 +201,8 @@ final class Dict {
 
     /** "1 500" <-> "1,500" and "4,9" <-> "4.9"; dates, times and plain numbers are untouched. */
     public static function num(string $v, string $lang): string {
+        // Phone numbers ("501 054 253", "+48 501 054 253") keep their spaces: no price on the site has 9 digits.
+        if (strlen((string) preg_replace('/\D/', '', $v)) >= 9) { return $v; }
         if ($lang === 'en') {
             if (preg_match('/^\d{1,3}(?:[ \x{00A0}\x{202F}]\d{3})+$/u', $v)) { return preg_replace('/[ \x{00A0}\x{202F}]/u', ',', $v) ?? $v; }
             if (preg_match('/^\d+,\d{1,2}$/', $v)) { return str_replace(',', '.', $v); }

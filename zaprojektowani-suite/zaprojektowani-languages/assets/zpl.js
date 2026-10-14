@@ -26,6 +26,9 @@
   var NEVER = /^\/(?:wp-admin|wp-login\.php|wp-json|wp-content|wp-includes|wp-cron\.php|xmlrpc\.php|feed|comments\/feed|sitemap)(?:\/|$)/i;
   var INLINE = { a: 1, abbr: 1, b: 1, bdi: 1, bdo: 1, br: 1, cite: 1, code: 1, data: 1, del: 1, dfn: 1, em: 1, font: 1, i: 1, img: 1, ins: 1, kbd: 1, mark: 1, q: 1, s: 1, samp: 1, small: 1, span: 1, strong: 1, sub: 1, sup: 1, time: 1, u: 1, 'var': 1, wbr: 1, svg: 1, picture: 1, input: 1 };
   var POLISH = /[ąćęłńóśźżĄĆĘŁŃÓŚŹŻ]|\b(?:i|w|z|na|do|się|jest|nie|dla|oraz|lub|że|jak|czy|od|po|przez|są|nas)\b/;
+  // Dollar amounts ("$4,100 USD") are written by the currency script on English pages after this script's pass:
+  // such text is never looked up or reported (no dictionary entry can match a changing amount).
+  var USD = /\$\d[\d,.]*\s+USD\b/;
 
   function setLangPreference(lang) {
     lang = lang === 'en' ? 'en' : 'pl';
@@ -141,7 +144,7 @@
     try { window.localStorage.setItem(reportStorageKey, String(reportNext)); } catch (e) {}
   }
   function report(keys) {
-    var list = keys.filter(function (k) { return !reported.has(k) && POLISH.test(k); }).slice(0, 60);
+    var list = keys.filter(function (k) { return !reported.has(k) && POLISH.test(k) && !USD.test(k); }).slice(0, 60);
     if (!list.length || state.lang !== 'en' || Date.now() < nextReportAt()) return;
     // Fewer than 30 batches/hour per browser, including reports from dynamic DOM.
     postponeReport(125);
@@ -421,11 +424,11 @@
     var miss = [];
     col.segs.forEach(function (s) {
       var node = s.type === 'multi' ? s.root : s.node;
-      if (pick(mem.get(node), s.k, to, true)) return;
+      if (pick(mem.get(node), s.k, to, true) || USD.test(s.k)) return;
       if (translation(s.k, to) === undefined && !known[to].has(C.norm(stripMarkers(s.k)))) miss.push(s.k);
     });
     col.attrs.forEach(function (a) {
-      if (pick((attrMem.get(a[0]) || {})[a[1]], a[2], to, true)) return;
+      if (pick((attrMem.get(a[0]) || {})[a[1]], a[2], to, true) || USD.test(a[2])) return;
       if (translation(a[2], to) === undefined && !known[to].has(a[2])) miss.push(a[2]);
     });
     return miss.filter(function (k, i, arr) { return arr.indexOf(k) === i; });
@@ -577,12 +580,15 @@
       var miss = [];
       cols.forEach(function (x) { miss = miss.concat(unresolved(x.col, L)); });
       miss = miss.filter(function (k, i, a) { return a.indexOf(k) === i && !negative[L].has(k); });
-      var run = function (final) {
+      var run = function (final, answered) {
         if (state.lang !== L) return;
         var left = [];
         withoutObserver(function () {
           cols.forEach(function (x) {
-            left = left.concat(applyCollected(x.col, L));
+            // When the server answers, text a page script has changed in the meantime is left to its own pass:
+            // a translation of the earlier text would overwrite the newer one (e.g. an older budget).
+            var col = answered ? { segs: x.col.segs.filter(unchanged), attrs: x.col.attrs.filter(function (a) { return a[0].isConnected && C.norm(a[0].getAttribute(a[1]) || '') === a[2]; }) } : x.col;
+            left = left.concat(applyCollected(col, L));
             applyLinks(x.b, L);
             applyFrames(x.b, L);
             applyLangAttrs(x.b, L);
@@ -594,8 +600,12 @@
       // Back to Polish only uses the local reverse dictionary (no server round-trips for Polish text).
       if (L !== 'en') miss = [];
       run(!miss.length);
-      if (miss.length) lookup(L, miss).then(function () { run(true); });
+      if (miss.length) lookup(L, miss).then(function () { run(true, true); });
     });
+  }
+  function unchanged(s) {
+    if (s.type === 'multi') { var now = s.root.isConnected ? segAfter(s.root) : null; return !!now && now.k === s.k; }
+    return !!s.node && s.node.isConnected && C.norm(s.node.nodeValue || '') === s.k;
   }
   function collectBlock(b) {
     // Walk the block the same way the page walk reaches it.

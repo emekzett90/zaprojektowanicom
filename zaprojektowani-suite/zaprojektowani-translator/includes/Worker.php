@@ -22,6 +22,7 @@ final class Worker {
     const STEP = 22;
     const LOCK_TTL = 90;
     const IN_FLIGHT = 6;
+    const SCAN = 100;           // new requests submit() and next_due() look at in one step (oldest first)
     const SENT_MAX_AGE = 1800;  // no answer after 30 minutes: ask again
     const UNKNOWN_WAIT = 600;   // sending ended without an answer: maybe accepted, so wait before sending again
 
@@ -45,7 +46,7 @@ final class Worker {
         $s = get_option(self::STATE, []);
         $s = is_array($s) ? $s : [];
         $run = array_merge(['started' => 0, 'total' => 0, 'done' => 0, 'errors' => 0, 'who' => '', 'finished' => 0], is_array($s['run'] ?? null) ? $s['run'] : []);
-        $s = array_merge(['work' => 0, 'phase' => 'idle', 'message' => '', 'step_at' => 0, 'daily_at' => 0, 'retry_at' => 0, 'current' => ''], $s);
+        $s = array_merge(['work' => 0, 'phase' => 'idle', 'message' => '', 'step_at' => 0, 'daily_at' => 0, 'retry_at' => 0, 'wait_until' => 0, 'current' => ''], $s);
         $s['run'] = $run;
         // Names the older status screen reads.
         $s['state'] = $s['phase'];
@@ -167,7 +168,7 @@ final class Worker {
         $s = self::state();
         $fresh = !(int) $s['run']['started'] || (int) $s['run']['finished'] || !$s['work'];
         self::update([
-            'work' => 1, 'phase' => 'translating', 'daily_at' => in_array($who, ['cron', 'tick', 'import'], true) ? time() : (int) $s['daily_at'],
+            'work' => 1, 'phase' => 'translating', 'wait_until' => 0, 'daily_at' => in_array($who, ['cron', 'tick', 'import'], true) ? time() : (int) $s['daily_at'],
             'run' => $fresh ? ['started' => time(), 'total' => $q, 'done' => 0, 'errors' => 0, 'who' => $who, 'finished' => 0] : ['total' => max((int) $s['run']['total'], (int) $s['run']['done'] + $q)],
             'message' => 'Sprawdzam strony i tłumaczę nowe teksty.',
         ]);
@@ -187,6 +188,11 @@ final class Worker {
     }
 
     private static function tick_async(): void {
+        // One request per page load: saving 50 posts at once (bulk edit, a title migration) starts one step, not 50.
+        // That step reads every queued page and chains on to the next one itself.
+        static $sent = false;
+        if ($sent) { return; }
+        $sent = true;
         wp_remote_post(rest_url('zpte/v1/tick'), [
             'timeout' => 0.01,
             'blocking' => false,
@@ -249,6 +255,7 @@ final class Worker {
         if (!Bridge::ready()) { return ['busy' => false, 'left' => 0]; }
         if (!self::lock()) { return ['busy' => true, 'left' => -1]; }
         $left = 0;
+        $next = null; // the next step is asked for after the lock is free, so that it is not turned away as busy
         try {
             if (function_exists('set_time_limit')) { @set_time_limit(self::STEP + 20); }
             Store::install();
@@ -258,7 +265,7 @@ final class Worker {
             // 1. The earlier translations first: no API, a few seconds.
             if (!Import::done()) {
                 self::update(['work' => 1, 'phase' => 'import', 'message' => 'Przenoszę obecne tłumaczenia EN i adresy.']);
-                if (Import::step($deadline - 3)) { self::chain(1); return ['busy' => false, 'left' => 1]; }
+                if (Import::step($deadline - 3)) { $next = 1; return ['busy' => false, 'left' => 1]; }
                 self::plan('import');
             }
 
@@ -285,35 +292,61 @@ final class Worker {
                 $s = self::state();
                 $retry = (int) $s['retry_at'] > time() ? (int) $s['retry_at'] - time() : 15 * MINUTE_IN_SECONDS;
                 self::update(['phase' => 'paused', 'message' => $pause]);
-                self::chain($retry);
+                $next = $retry;
             } else {
-                self::update(['message' => 'Tłumaczę: ' . $left . ' w toku.']);
-                self::chain(Store::count_jobs(['new']) || Store::next_queued() ? 1 : 2);
+                // Only pages or requests that wait for their next try: no step until then (no requests in a loop).
+                $wait = self::next_due();
+                self::update(['wait_until' => $wait > 3 ? time() + $wait : 0, 'message' => $wait > 3
+                    ? 'Czekam na ponowną próbę (' . $left . ' w toku) — następna o ' . wp_date('H:i', time() + $wait) . '.'
+                    : 'Tłumaczę: ' . $left . ' w toku.']);
+                $next = $wait;
             }
         } catch (\Throwable $e) {
             $m = 'Błąd modułu: ' . $e->getMessage() . ' (' . basename($e->getFile()) . ':' . $e->getLine() . '). Ponowię za 5 minut.';
             Log::add($m, 'error');
             self::update(['phase' => 'error', 'message' => OpenAI::short($m), 'retry_at' => time() + 300]);
-            self::chain(300);
+            $next = 300;
             $left = 1;
         } finally {
             self::update(['step_at' => time()]);
             self::unlock();
+            if ($next !== null) { self::chain($next); }
         }
         return ['busy' => false, 'left' => $left];
+    }
+
+    /**
+     * Seconds until something in the queue can move: a page to read, a request to send, an answer to collect. It sees
+     * exactly what the step may do (the reading gate, the same requests submit() looks at), so a queue that only
+     * waits for retries never starts steps back to back.
+     */
+    private static function next_due(): int {
+        if (Store::count_jobs(['new']) < self::IN_FLIGHT * 3 && Store::next_queued()) { return 1; }
+        if (Store::count_jobs(['sent']) > 0) { return 2; }
+        $at = Store::next_retry_at();
+        foreach (Store::jobs(['new'], self::SCAN) as $job) {
+            if ((string) $job->error === '') { return 1; }
+            $t = (int) strtotime((string) $job->updated_at . ' UTC') + 45 * max(1, (int) $job->tries);
+            $at = $at > 0 ? min($at, $t) : $t;
+        }
+        foreach (Store::jobs(['unknown'], 30) as $job) {
+            $t = (int) strtotime((string) $job->updated_at . ' UTC') + self::UNKNOWN_WAIT;
+            $at = $at > 0 ? min($at, $t) : $t;
+        }
+        return $at > 0 ? max(1, $at - time()) : 60;
     }
 
     /** Pages in the queue or waiting for answers, plus jobs not finished. */
     public static function left(): int {
         if (!Store::ready()) { return 0; }
-        return Store::queued_count() + Store::count_jobs(['new', 'sent', 'unknown']) + (Import::done() ? 0 : 1);
+        return Store::queued_count() + Store::count_jobs(['new', 'sent', 'unknown', 'wait']) + (Import::done() ? 0 : 1);
     }
 
     private static function complete(): void {
         $s = self::state();
         $run = $s['run'];
         $wasRunning = !empty($s['work']) && !(int) $run['finished'];
-        self::update(['work' => 0, 'phase' => 'idle', 'current' => '', 'retry_at' => 0,
+        self::update(['work' => 0, 'phase' => 'idle', 'current' => '', 'retry_at' => 0, 'wait_until' => 0,
             'run' => ['finished' => time(), 'total' => max((int) $run['total'], (int) $run['done'])],
             'message' => 'Wszystko sprawdzone. Następne sprawdzenie: ' . wp_date('j.m H:i', (int) (wp_next_scheduled(self::DAILY) ?: self::next_daily())) . '.']);
         if ($wasRunning) {
@@ -424,7 +457,8 @@ final class Worker {
         }
         $inflight = Store::count_jobs(['sent']);
         $n = 0;
-        foreach (Store::jobs(['new'], self::IN_FLIGHT * 2) as $job) {
+        // Requests waiting for a retry are skipped, so the scan goes past them (the in-flight cap still limits sending).
+        foreach (Store::jobs(['new'], self::SCAN) as $job) {
             if ($inflight >= self::IN_FLIGHT || time() >= $deadline - 4) { break; }
             if ((string) $job->error !== '' && (int) strtotime((string) $job->updated_at . ' UTC') > time() - 45 * max(1, (int) $job->tries)) { continue; }
             if ((int) $job->chars > 0 && ($l = Log::limit_reached((int) $job->chars)) !== '') { self::limit_pause($l); break; }
@@ -490,10 +524,9 @@ final class Worker {
     }
 
     private static function advance_pages(): int {
-        $n = 0;
+        $n = Sync::resolve_waits();
         foreach (['translating', 'route'] as $stage) {
-            foreach (Store::in_stage($stage, 20) as $row) {
-                if (Store::count_jobs(['new', 'sent', 'unknown'], (int) $row->id) > 0) { continue; }
+            foreach (Store::ready_in_stage($stage, 20) as $row) {
                 Sync::advance($row);
                 $n++;
             }
@@ -517,7 +550,7 @@ final class Worker {
     /** Re-check after a settings change or a "try again" in the panel. */
     public static function resume(): void {
         Log::clear_alert();
-        self::update(['retry_at' => 0, 'work' => 1, 'phase' => 'translating', 'message' => 'Wznowiono.']);
+        self::update(['retry_at' => 0, 'wait_until' => 0, 'work' => 1, 'phase' => 'translating', 'message' => 'Wznowiono.']);
         self::chain(1);
     }
 
@@ -525,7 +558,7 @@ final class Worker {
     public static function kick(int $pages = 1): void {
         $s = self::state();
         $open = !empty($s['work']) && !(int) $s['run']['finished'] && (int) $s['run']['started'];
-        self::update(['work' => 1, 'run' => $open ? ['total' => (int) $s['run']['total'] + $pages]
+        self::update(['work' => 1, 'wait_until' => 0, 'run' => $open ? ['total' => (int) $s['run']['total'] + $pages]
             : ['started' => time(), 'total' => max($pages, Store::queued_count()), 'done' => 0, 'errors' => 0, 'who' => 'manual', 'finished' => 0]]);
         self::chain(1);
     }
@@ -553,7 +586,7 @@ final class Worker {
             'current' => (string) $s['current'], 'running' => $running,
             'paused' => self::paused(), 'retry_at' => (int) $s['retry_at'],
             // Background steps stopped (no loopback, no WP-Cron): the open panel runs them.
-            'stalled' => $work && !$running && (int) $s['step_at'] < time() - 45 && (int) $s['retry_at'] <= time(),
+            'stalled' => $work && !$running && (int) $s['step_at'] < time() - 45 && (int) $s['retry_at'] <= time() && (int) $s['wait_until'] <= time(),
             'step_at' => (int) $s['step_at'],
             'import' => Import::done() ? null : ['pages' => (int) $import['pages'], 'of' => count((array) $import['list'])],
         ];
@@ -619,6 +652,6 @@ final class Worker {
         $path = Sync::path_of_term((int) $term_id);
         if ($path === '' || Sync::ineligible($path) !== '' || Sync::alias_of($path) !== '') { return; }
         $id = Sync::ensure($path, 'term', 0, (int) $term_id);
-        if ($id) { Store::queue($id, 30); self::update(['work' => 1]); self::chain(5); }
+        if ($id) { Store::queue($id, 30); self::update(['work' => 1, 'wait_until' => 0]); self::chain(5); }
     }
 }

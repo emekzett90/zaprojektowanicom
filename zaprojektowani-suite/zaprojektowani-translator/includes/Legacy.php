@@ -78,17 +78,32 @@ final class Legacy {
 
     // ---------------------------------------------------------------------- v2
 
-    /** Pages v2 published: Polish path => English path. */
+    /** Pages v2 served in English (its own published version, or an older rewrite version it kept a reference to): Polish path => English path. */
     public static function v2_routes(): array {
         $out = [];
         $inv = self::opt(self::V2_PREFIX . 'inventory');
         foreach (is_array($inv) ? $inv : [] as $source => $row) {
             if (!is_string($source) || !is_array($row)) { continue; }
-            $p = self::v2_published($source);
-            $en = is_array($p['snapshot'] ?? null) ? (string) ($p['snapshot']['en'] ?? '') : '';
+            $en = (string) (self::v2_snapshot($source)['en'] ?? '');
             if ($en !== '' && strpos($en, '/en/') === 0) { $out[$source] = $en; }
         }
         return $out;
+    }
+
+    /** What v2 kept about a page it served (source, en, post_id…): from its published version, else from its reference. */
+    public static function v2_snapshot(string $source): array {
+        $p = self::v2_published($source);
+        if ($p) { return is_array($p['snapshot'] ?? null) ? $p['snapshot'] : []; }
+        $ref = self::v2_legacy_ref($source);
+        return $ref && self::codex_page_map($source, $ref['revision']) ? $ref['snapshot'] : [];
+    }
+
+    /** v2's reference to an older rewrite version it served for a page without a version of its own: revision and snapshot, or []. */
+    public static function v2_legacy_ref(string $source): array {
+        $ref = self::opt(self::V2_PREFIX . 'legacy_' . hash('sha256', $source));
+        $rev = is_array($ref) ? (string) ($ref['revision'] ?? '') : '';
+        if (!preg_match('~^[a-f0-9]{32}$~', $rev)) { return []; }
+        return ['revision' => $rev, 'snapshot' => is_array($ref['snapshot'] ?? null) ? $ref['snapshot'] : []];
     }
 
     /** The published v2 version of a page (map, snapshot), or []. */
@@ -105,9 +120,8 @@ final class Legacy {
         $map = $p ? self::strings_only($p['map']) : [];
         if ($map) { return $map; }
         // v2 also served an older rewrite version it kept a reference to.
-        $ref = self::opt(self::V2_PREFIX . 'legacy_' . hash('sha256', $source));
-        $rev = is_array($ref) ? (string) ($ref['revision'] ?? '') : '';
-        return preg_match('~^[a-f0-9]{32}$~', $rev) ? self::codex_page_map($source, $rev) : [];
+        $ref = self::v2_legacy_ref($source);
+        return $ref ? self::codex_page_map($source, $ref['revision']) : [];
     }
 
     // -------------------------------------------------------- Tłumacz EN 1 (tables)

@@ -19,6 +19,7 @@ final class Store {
     const DB_VERSION = '2.0.0';
     const DB_OPTION = 'zpte2_db';
     const SHARED = 0;
+    const RETRY_AFTER = 600; // a page that failed to load is read again after 10 minutes
 
     public static function table(string $name): string {
         global $wpdb;
@@ -193,8 +194,15 @@ final class Store {
     /** Next page to read (queued, not waiting for OpenAI; a page that just failed to load waits 10 minutes). @return object|null */
     public static function next_queued() {
         global $wpdb;
-        $row = $wpdb->get_row($wpdb->prepare('SELECT * FROM ' . self::table('pages') . " WHERE queued = 1 AND stage = '' AND status <> 'off' AND (tries = 0 OR checked_at IS NULL OR checked_at < %s) ORDER BY priority ASC, id ASC LIMIT 1", gmdate('Y-m-d H:i:s', time() - 10 * MINUTE_IN_SECONDS)));
+        $row = $wpdb->get_row($wpdb->prepare('SELECT * FROM ' . self::table('pages') . " WHERE queued = 1 AND stage = '' AND status <> 'off' AND (tries = 0 OR checked_at IS NULL OR checked_at < %s) ORDER BY priority ASC, id ASC LIMIT 1", gmdate('Y-m-d H:i:s', time() - self::RETRY_AFTER)));
         return $row ?: null;
+    }
+
+    /** When the first page that failed to load may be read again (0 = no page waits for that). */
+    public static function next_retry_at(): int {
+        global $wpdb;
+        $t = $wpdb->get_var('SELECT MIN(checked_at) FROM ' . self::table('pages') . " WHERE queued = 1 AND stage = '' AND status <> 'off' AND tries > 0 AND checked_at IS NOT NULL");
+        return $t ? (int) strtotime((string) $t . ' UTC') + self::RETRY_AFTER : 0;
     }
 
     public static function queued_count(): int {
@@ -206,6 +214,13 @@ final class Store {
     public static function in_stage(string $stage, int $limit = 20): array {
         global $wpdb;
         $rows = $wpdb->get_results($wpdb->prepare('SELECT * FROM ' . self::table('pages') . ' WHERE stage = %s ORDER BY priority ASC, id ASC LIMIT %d', $stage, $limit));
+        return is_array($rows) ? $rows : [];
+    }
+
+    /** Pages of a stage with no request left (not answered, or waiting for another page's answer). @return object[] */
+    public static function ready_in_stage(string $stage, int $limit = 20): array {
+        global $wpdb;
+        $rows = $wpdb->get_results($wpdb->prepare('SELECT p.* FROM ' . self::table('pages') . ' p WHERE p.stage = %s AND NOT EXISTS (SELECT 1 FROM ' . self::table('jobs') . " j WHERE j.page_id = p.id AND j.state IN ('new','sent','unknown','wait')) ORDER BY p.priority ASC, p.id ASC LIMIT %d", $stage, $limit));
         return is_array($rows) ? $rows : [];
     }
 
@@ -463,11 +478,24 @@ final class Store {
 
     // ------------------------------------------------------------------- jobs
 
-    public static function job_add(int $page_id, string $kind, array $items, int $chars): int {
+    /** A request to OpenAI (state new), or a list of texts a page waits for (kind and state "wait"). */
+    public static function job_add(int $page_id, string $kind, array $items, int $chars, string $state = 'new'): int {
         global $wpdb;
         $now = self::now();
-        $wpdb->insert(self::table('jobs'), ['page_id' => $page_id, 'kind' => $kind, 'state' => 'new', 'items' => (string) wp_json_encode($items, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES), 'chars' => $chars, 'created_at' => $now, 'updated_at' => $now]);
+        $wpdb->insert(self::table('jobs'), ['page_id' => $page_id, 'kind' => $kind, 'state' => $state, 'items' => (string) wp_json_encode($items, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES), 'chars' => $chars, 'created_at' => $now, 'updated_at' => $now]);
         return (int) $wpdb->insert_id;
+    }
+
+    /** Polish texts in requests not answered yet, of any page: hash => page id. */
+    public static function pending_texts(): array {
+        global $wpdb;
+        $out = [];
+        $rows = $wpdb->get_results('SELECT page_id, items FROM ' . self::table('jobs') . " WHERE kind = 'units' AND state IN ('new','sent','unknown')", ARRAY_A);
+        foreach ((array) $rows as $r) {
+            $p = json_decode((string) $r['items'], true);
+            foreach (array_keys(is_array($p['items'] ?? null) ? $p['items'] : []) as $k) { $out[self::hash((string) $k)] = (int) $r['page_id']; }
+        }
+        return $out;
     }
 
     public static function job_update(int $id, array $data): void {

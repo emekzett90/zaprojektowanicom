@@ -1,11 +1,11 @@
 <?php
 /**
- * Upgrade steps for 3.0.x. Each runs once, when the stored version is older than its release, and deletes no data:
+ * Upgrade steps for 3.x. Each runs once, when the stored version is older than its release, and deletes no data:
  * Codex's options, post meta and EN translations stay, so reinstalling the 2.9.66 ZIP brings everything back.
  */
 if (!defined('ABSPATH')) { exit; }
 
-/** Results of the 3.0.1 cache step that are settled; any other result is retried from wp-admin or cron. */
+/** Results of the cache step (3.0.1, again in 3.1.0) that are settled; any other result is retried from wp-admin or cron. */
 const ZP_SUITE3_CACHE_301_SETTLED = ['on', 'not-installed', 'dropin-updated', 'dropin-foreign', 'dropin-missing'];
 
 function zp_suite3_upgrade(string $previous): void {
@@ -15,10 +15,12 @@ function zp_suite3_upgrade(string $previous): void {
       wp_clear_scheduled_hook($hook);
     }
   }
-  if ($previous !== '' && version_compare($previous, '3.0.1', '<')) {
+  if ($previous !== '' && version_compare($previous, '3.1.0', '<')) {
     // Codex's HTML cache keyed pages by address only, while phones get different HTML (no hero video, lazy images).
     // 3.0.1 installs a drop-in that keeps one copy per device class; 3.0.0 had switched the cache off for that reason,
-    // so it comes back on. Runs once WordPress has finished loading (permalinks are needed for the list of pages).
+    // so it comes back on. 3.1.0's drop-in also answers robots and visitors with only consent or statistics cookies;
+    // the live file is replaced here because nothing purges after an update. Runs once WordPress has finished loading
+    // (permalinks are needed for the list of pages).
     delete_option('zp_suite3_cache_301');
     add_action('wp_loaded', 'zp_suite3_cache_301', 99);
   }

@@ -5,7 +5,7 @@
   if (!configElement) return;
   try { cfg = JSON.parse(configElement.textContent); } catch (e) { return; }
   if (cfg.policy !== 'usd_nbp_human_v2' || !Number.isInteger(cfg.mid_scaled) || cfg.mid_scaled < 10000 || cfg.mid_scaled > 1000000000 || !/^\d{4}-\d{2}-\d{2}$/.test(cfg.effective_date)) return;
-  var mid = cfg.mid_scaled;
+  var mid = cfg.mid_scaled, deferZl = false;
   var numberPattern = '(?:[0-9]{1,3}(?:,[0-9]{3})+|[0-9]{1,3}(?:[ \\u00a0\\u202f][0-9]{3})+|[0-9]+)(?:[.,][0-9]{1,2})?';
   var chain = numberPattern + '(?:\\s*(?:–|—|-|to|and)\\s*' + numberPattern + '|,\\s+' + numberPattern + '){0,4}';
   var moneyPattern = new RegExp('(?<![\\p{L}\\p{N}.,-])(?:(PLN)\\s+(' + chain + ')|(' + chain + ')\\s+(PLN|zł))(?![\\p{L}\\p{N}]|[.,][0-9])', 'giu');
@@ -27,6 +27,9 @@
   function edits(text) {
     var out = [], m; moneyPattern.lastIndex = 0;
     while ((m = moneyPattern.exec(text))) {
+      // A Polish amount ("15 000 zł") that a page script has just written waits for the translation first:
+      // its patterns ("Budżet: {1} zł" => "Budget: PLN {1}") need the Polish form. late() converts what stays Polish.
+      if (deferZl && m[4] && m[4].toLowerCase() === 'zł') continue;
       var raw = m[2] || m[3], groupOffset = m.index + (m[1] ? m[0].indexOf(raw) : 0);
       var unitOffset = m[1] ? m.index : m.index + m[0].lastIndexOf(m[4]);
       var nums = new RegExp(numberPattern, 'gu'), n, part = [], valid = true;
@@ -98,7 +101,7 @@
     if (node.nodeType === 3) { var newText = money(node.nodeValue); if (newText !== node.nodeValue) node.nodeValue = newText; return; }
     if (node.nodeType !== 1) return;
     if (node.id === 'wpadminbar' || node.hasAttribute('data-zp-currency-skip')) return;
-    if (!displayOnly && calculationSource(node)) { calculationDisplay(node);return; }
+    if (!displayOnly && calculationSource(node)) { var deferred = deferZl;deferZl = false;calculationDisplay(node);deferZl = deferred;return; }
     if (node.tagName === 'SCRIPT') {
       if ((node.getAttribute('type') || '').toLowerCase() === 'application/ld+json') try { var raw = node.textContent, parsed = JSON.parse(raw), converted = schema(parsed, ''); if (JSON.stringify(parsed) !== JSON.stringify(converted)) node.textContent = JSON.stringify(converted); } catch (e) {}
       return;
@@ -114,7 +117,7 @@
       Array.prototype.forEach.call(node.childNodes, inlineAttributes);
     } else Array.prototype.slice.call(node.childNodes).forEach(function (child) { walk(child, displayOnly); });
   }
-  var observer = null, queued = [], frameDocs = new WeakSet(), raf = 0;
+  var observer = null, queued = [], frameDocs = new WeakSet(), raf = 0, later = new Map(), lateTimer = 0;
   function english() { return /^en(?:-|$)/i.test(document.documentElement.lang || ''); }
   function priceRoot(node) {
     var el = node.nodeType === 1 ? node : node.parentElement;if (!el) return null;
@@ -126,7 +129,24 @@
     records.forEach(function (r) { var root = priceRoot(r.target); if (root && queued.indexOf(root) < 0 && queued.length < 128) queued.push(root); });
     if (!raf && queued.length) raf = requestAnimationFrame(flush);
   }
-  function flush() { raf = 0; var work = queued; queued = []; if (!english()) return; if (observer) observer.disconnect(); work.forEach(function (root) { if (root.isConnected) { freezeOptions(root); walk(root); } }); observe(); }
+  function flush() {
+    raf = 0; var work = queued; queued = []; if (!english()) return; if (observer) observer.disconnect();
+    deferZl = true;
+    try { work.forEach(function (root) { if (root.isConnected) { freezeOptions(root); walk(root); } }); } finally { deferZl = false; }
+    observe();
+    var now = Date.now();
+    work.forEach(function (root) { if (later.has(root) || later.size < 512) later.set(root, now); });
+    if (later.size && !lateTimer) lateTimer = setTimeout(late, 400);
+  }
+  // A root is converted in full 400 ms after its last change, when the translation's own pass (at most ~360 ms
+  // after a change) is done.
+  function late() {
+    lateTimer = 0; if (!english()) { later.clear(); return; }
+    var now = Date.now(), due = [], next = 400;
+    later.forEach(function (at, root) { if (now - at >= 400) { due.push(root); later.delete(root); } else next = Math.min(next, 410 - (now - at)); });
+    if (due.length) { if (observer) observer.disconnect(); due.forEach(function (root) { if (root.isConnected) walk(root); }); observe(); }
+    if (later.size) lateTimer = setTimeout(late, next);
+  }
   function observe() { if (observer) observer.observe(document.documentElement, { subtree: true, childList: true, characterData: true, attributes: true, attributeFilter: ['content', 'title', 'aria-label', 'aria-valuetext', 'label'] }); }
   function ownedFrame(frame) {
     if (cfg.source !== '/studio-wyceny/') return false;
