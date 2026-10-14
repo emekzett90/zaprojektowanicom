@@ -51,7 +51,8 @@ add_action('template_redirect', static function (): void {
   }
   // A redirect added later must work at once, so the server cache keeps no copy of 404 pages.
   if (!headers_sent()) { header('X-LiteSpeed-Cache-Control: no-cache'); }
-  if (zp_suite3_404_is_noise($path)) { return; }
+  // 3.1.0: an address the SEO plan marks as gone for good (410, e.g. /rutpoz_web/) is not a broken link.
+  if (http_response_code() === 410 || zp_suite3_404_is_noise($path)) { return; }
   zp_suite3_404_record($path);
 }, 5);
 

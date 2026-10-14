@@ -22,6 +22,15 @@ function zp_suite3_upgrade(string $previous): void {
     delete_option('zp_suite3_cache_301');
     add_action('wp_loaded', 'zp_suite3_cache_301', 99);
   }
+  if ($previous !== '' && version_compare($previous, '3.1.0', '<') && function_exists('zp_seo_plan_data')) {
+    // 3.0.x logged addresses that the SEO plan answers with 410 (gone on purpose); they are not 404s to fix.
+    $log = get_option('zp_suite3_404_log', []);
+    $gone = (array) ((zp_seo_plan_data('redirects')['exact'] ?? []));
+    if (is_array($log) && $log) {
+      $kept = array_filter($log, static fn($path) => ($gone[$path] ?? '') !== '@410', ARRAY_FILTER_USE_KEY);
+      if (count($kept) !== count($log)) { update_option('zp_suite3_404_log', $kept, false); }
+    }
+  }
 }
 
 function zp_suite3_cache_301(): void {
