@@ -133,15 +133,23 @@ final class ZP_HTML_Cache_20261009 {
     /**
      * 3.1.1: policy writes take a lock, so a purge's new generation and a refresh that keeps the old one never cross.
      * With $expected (the hash of the file the policy was composed from), the write happens only if nobody wrote since.
+     * 3.2.0: with $keep_off, a policy file that says the cache is off stays as it is (checked under the same lock that
+     * deactivate() writes under), so a purge that started before the owner switched the cache off cannot switch it back on.
      */
-    private static function write_policy(array $policy, ?string $expected = null): void {
+    private static function write_policy(array $policy, ?string $expected = null, bool $keep_off = false): bool {
         $file = self::dir() . '/policy.php'; $lock_file = self::dir() . '/.policy.lock';
         $lock = !is_link($lock_file) && is_dir(self::dir()) ? @fopen($lock_file, 'c') : false;
         if ($lock) { @chmod($lock_file, 0600); flock($lock, LOCK_EX); }
         try {
             clearstatcache(true, $file); $current = is_file($file) ? (string) hash_file('sha256', $file) : hash('sha256', '');
             if ($expected !== null && !hash_equals($expected, $current)) { throw new RuntimeException('Polityka cache zmieniła się w trakcie odświeżania.'); }
+            if ($keep_off && is_file($file) && !is_link($file)) {
+                $raw = (string) @file_get_contents($file);
+                $on_disk = strpos($raw, self::PREFIX) === 0 ? json_decode(substr($raw, strlen(self::PREFIX)), true) : null;
+                if (is_array($on_disk) && ($on_disk['enabled'] ?? null) === false) { return false; }
+            }
             self::atomic($file, self::PREFIX . wp_json_encode($policy), 0600, $current);
+            return true;
         } finally { if ($lock) { flock($lock, LOCK_UN); fclose($lock); } }
     }
     public static function enable(string $review_hash): void {
@@ -211,7 +219,8 @@ final class ZP_HTML_Cache_20261009 {
         if (!$resume && empty($state['enabled'])) { return 'dropin-updated'; }
         self::filesystem();
         $policy = self::policy();
-        self::write_policy($policy);
+        // Without $resume the cache was on when this started; if the owner switched it off meanwhile, it stays off.
+        if (!self::write_policy($policy, null, !$resume)) { return 'dropin-updated'; }
         update_option(self::STATE, ['enabled' => true, 'paths' => count($policy['paths']), 'ttl' => $policy['ttl'], 'at_utc' => gmdate('c')], false);
         delete_option('zp_html_cache_20261009_error');
         // Copies of the old generation are never read again; the sweep deletes them (3.1.1).
@@ -241,7 +250,8 @@ final class ZP_HTML_Cache_20261009 {
             $policy = self::policy();
             // A new generation makes every copy unreachable at once. 3.1.1: copies are no longer deleted here (that cost every
             // save up to 1000 file deletions); the sweep deletes them. A write by older code mid-update can fail the hash check once.
-            try { self::write_policy($policy); } catch (RuntimeException $race) { usleep(50000); clearstatcache(); self::write_policy($policy); }
+            try { $written = self::write_policy($policy, null, true); } catch (RuntimeException $race) { usleep(50000); clearstatcache(); $written = self::write_policy($policy, null, true); }
+            if (!$written) { return; }
             self::schedule_sweep();
             // 3.0.1: a later successful refresh clears an old failure note (it used to stay on the page for good).
             if (get_option('zp_html_cache_20261009_error', '') !== '') { delete_option('zp_html_cache_20261009_error'); }

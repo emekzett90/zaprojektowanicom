@@ -83,7 +83,7 @@ function zp_suite3_404_record(string $path): void {
     if ($host !== '' && strcasecmp(preg_replace('~^www\.~', '', $host), preg_replace('~^www\.~', '', $own)) === 0) {
       // 3.2.0: a Referer from our own site is only a lead. Scanners send it with addresses no page links to
       // (/ads.txt, /sellers.json…), so the link check opens that page and looks for the link before it counts.
-      $iref = zp_suite3_404_path((string) wp_parse_url($ref, PHP_URL_PATH));
+      $iref = zp_suite3_404_path((string) wp_parse_url($ref, PHP_URL_PATH) ?: '/');   // "https://host" alone is the home page
       if ($iref !== '' && (empty($entry['internal']) || ($entry['iref'] ?? '') !== $iref)) { $entry['iref'] = $iref; $entry['linked'] = null; $entry['tries'] = 0; }
       $entry['internal'] = true;
     }
@@ -177,7 +177,9 @@ function zp_suite3_404_verify(): void {
     elseif (in_array($code, [404, 410], true)) { $results[$page] = []; }   // the page itself is gone: it links to nothing
     else { $results[$page] = null; }                                       // try again later (at most 3 times)
   }
-  // Read again: visits may have been logged meanwhile; only the verdict fields are written.
+  // Read again: visits, "Pomiń" or "Wyczyść listę" may have changed the log meanwhile; only the verdict fields are written.
+  // The option is not autoloaded, so WordPress keeps the first read in memory: drop that copy to read the database.
+  wp_cache_delete(ZP_SUITE3_404_LOG, 'options');
   $log = get_option(ZP_SUITE3_404_LOG, []);
   if (!is_array($log)) { return; }
   $now = time(); $changed = false;
