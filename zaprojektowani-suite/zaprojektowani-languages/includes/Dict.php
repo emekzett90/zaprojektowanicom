@@ -170,6 +170,19 @@ final class Dict {
         return null;
     }
 
+    /**
+     * Shipped dictionaries and other modules' curated texts (filter zpl_dictionary), with number templates; without
+     * manual overrides or Tłumacz EN. Tłumacz EN asks this to know which texts the plugin already translates, so
+     * those are never sent to OpenAI and keep their wording.
+     */
+    public static function lower(string $key, string $lang, string $source): ?string {
+        $v = self::shipped($key, $lang, $source);
+        if ($v !== null) { return $v; }
+        $t = self::template($key);
+        if ($t !== null && ($v = self::shipped($t[0], $lang, $source)) !== null) { return self::fill($v, $t[1], $lang); }
+        return null;
+    }
+
     public static function template(string $key): ?array {
         $vals = [];
         $parts = preg_split('~(</?\d+/?>)~', $key, -1, PREG_SPLIT_DELIM_CAPTURE) ?: [$key];

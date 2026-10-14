@@ -288,14 +288,20 @@ final class Sync {
                 // A manual correction stays as the owner wrote it, also when the page is translated again on request.
                 if ((int) $r->manual || (!$force && Translator::broken($k, (string) $r->en) === '')) {
                     $known++;
-                    if (isset($shared[$k]) && !isset($mem[$h])) { $markShared[$k] = (string) $r->en; }
-                    elseif (isset($shared[$k]) && !(int) $mem[$h]->shared) { $markShared[$k] = (string) $mem[$h]->en; }
+                    // Shared texts outrank the plugin's own dictionaries on every page: a text those already
+                    // translate (shipped, or curated by another module) keeps that wording unless corrected by hand.
+                    if (isset($shared[$k]) && ((int) $r->manual || \ZPL\Dict::lower($k, 'en', $path) === null)) {
+                        if (!isset($mem[$h])) { $markShared[$k] = (string) $r->en; }
+                        elseif (!(int) $mem[$h]->shared) { $markShared[$k] = (string) $mem[$h]->en; }
+                    }
                     continue;
                 }
                 $todo[$k] = (string) $kind; // translated again; the old text is served until the new one arrives
                 continue;
             }
-            if (isset($overrides[$k]) || isset($sharedMap[$k]) || \ZPL\Dict::base($k, 'en', $path) !== null) { $known++; continue; }
+            // Texts the plugin already translates (manual overrides, shared texts, shipped dictionaries and other
+            // modules' curated texts such as the contact forms) never go to OpenAI.
+            if (isset($overrides[$k]) || isset($sharedMap[$k]) || \ZPL\Dict::lower($k, 'en', $path) !== null) { $known++; continue; }
             if (strlen($k) > Translator::MAX_KEY) { continue; }
             $todo[$k] = (string) $kind;
         }
@@ -679,8 +685,9 @@ final class Sync {
                 continue;
             }
             if ((int) $r->shared) { continue; } // shared texts come from the shared map
-            // The shipped dictionary keeps its wording unless the memory has a manual correction.
-            if (!(int) $r->manual && \ZPL\Dict::base((string) $r->pl, 'en', $path) !== null) { continue; }
+            // The plugin's own dictionaries (shipped, and other modules' curated texts) keep their wording unless the
+            // memory has a manual correction.
+            if (!(int) $r->manual && \ZPL\Dict::lower((string) $r->pl, 'en', $path) !== null) { continue; }
             $map[(string) $r->pl] = self::fix_terms((string) $r->en, (string) $r->pl);
         }
         $rev = Store::map_save($page_id, Store::hash($path), $map, null);
