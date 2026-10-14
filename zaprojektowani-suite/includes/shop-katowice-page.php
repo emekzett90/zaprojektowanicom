@@ -290,8 +290,22 @@ function zp_suite_shop_katowice_get_section($key){
   return zp_suite_shop_katowice_default_section($key);
 }
 
+/**
+ * SearchFit 14.10.2026, point 7: the LinkedIn company page does not exist. The hero saved in the CMS option still links
+ * to it, so the icon loses its link when printed, exactly as in templates/shop-katowice/sections/hero.html: role="img"
+ * keeps the name, tabindex="-1" keeps Hello Elementor's a:not([href]):not([tabindex]) reset off its colour.
+ */
+function zp_suite_shop_katowice_unlink_linkedin($html){
+  if (stripos((string)$html, 'linkedin.com/company/zaprojektowani') === false) { return (string)$html; }
+  return (string) preg_replace_callback('~<a\b[^>]*\shref=(["\'])https://(?:www\.)?linkedin\.com/company/zaprojektowani/?\1[^>]*>~i', function($m){
+    $attrs = (string) preg_replace('~\s(?:href|target|rel|role|tabindex)\s*=\s*(["\'])[^"\']*\1~i', '', substr($m[0], 2, -1));
+    return '<a role="img"' . $attrs . ' tabindex="-1">';
+  }, (string)$html);
+}
+
 function zp_suite_shop_katowice_clean_html($html){
   $html = str_replace('http://zaprojektowani.com/', 'https://zaprojektowani.com/', (string)$html);
+  $html = zp_suite_shop_katowice_unlink_linkedin($html);
   if (function_exists('zp_suite_meta_verified_tokens')) { $html = zp_suite_meta_verified_tokens($html); }
   $html = preg_replace('#<script\s+src=["\'][^"\']*lucide\.min\.js[^"\']*["\']\s*></script>#i', '', $html);
   if (strpos($html, 'zh--shops') === false && strpos($html, 'zpShopHeroUnified') === false) {

@@ -96,11 +96,19 @@ function zp_footer_v3_groups(): array {
 
 /** Local pages strip (always linked; data-zp-local keeps them off the nationwide remap). */
 function zp_footer_v3_local_links(): array {
-  return [
+  $links = [
     ['text' => 'Strony internetowe Katowice', 'path' => '/strony-internetowe-katowice/'],
     ['text' => 'Sklepy internetowe Katowice', 'path' => '/sklepy-internetowe-katowice/'],
     ['text' => 'Projektowanie logo Katowice', 'path' => '/logo-branding-katowice/'],
   ];
+  // SearchFit 14.10.2026: the agency page had no footer link. /en/ turns it into /en/advertising-agency-katowice/
+  // through the English route of that page; without the route the translator would send it to the websites page,
+  // so on /en/ it is listed only while that route exists.
+  $en = class_exists('\ZPL\Router') && \ZPL\Router::$lang === 'en';
+  if (!$en || isset(\ZPL\Router::routes()['/agencja-reklamowa-katowice/'])) {
+    $links[] = ['text' => 'Agencja reklamowa Katowice', 'path' => '/agencja-reklamowa-katowice/'];
+  }
+  return $links;
 }
 
 /** "od 3 999 zł" with non-breaking spaces so a price never wraps. */
@@ -251,6 +259,7 @@ function zp_footer_v3_en_strings(): array {
     'Strony internetowe Katowice' => 'Websites Katowice',
     'Sklepy internetowe Katowice' => 'Online stores Katowice',
     'Projektowanie logo Katowice' => 'Logo design Katowice',
+    'Agencja reklamowa Katowice' => 'Advertising agency Katowice',
     'Studio w Katowicach.' => 'Studio in Katowice.',
     'Projektujemy dla firm z całej Polski.' => 'We design for companies across Poland.',
     'Mapa serwisu' => 'Site map',

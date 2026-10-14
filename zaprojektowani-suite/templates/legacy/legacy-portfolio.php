@@ -74,6 +74,8 @@ if (!function_exists('zp_showcase_portfolio_shortcode')) {
       $scope = is_array($item['scope'] ?? null) ? $item['scope'] : [];
       $desc = $item['desc'] ?? '';
       $live = $item['live'] ?? '';
+      // SearchFit 14.10.2026: a client site that no longer opens keeps its button, without the link (zp_suite_portfolio_live_gone()).
+      $live_gone = !$live && !empty($item['liveGone']);
       $num = str_pad((string)($index + 1), 2, '0', STR_PAD_LEFT);
       /* v2.2.709 mobile stability: do not decode every portfolio image at once.
          The real image is hydrated only for the current card and its neighbours. */
@@ -112,7 +114,7 @@ if (!function_exists('zp_showcase_portfolio_shortcode')) {
           <?php endif; ?>
           <div class="zpShowcaseMobile__actions">
             <button class="zpShowcaseMobile__detailsBtn" type="button" data-zp-mobile-details><span>Szczegóły</span><i data-lucide="chevron-down" aria-hidden="true"></i></button>
-            <?php if ($live) : ?><a class="zpShowcaseMobile__liveBtn" href="<?php echo esc_url($live); ?>" target="_blank" rel="noopener"><span>Zobacz live</span><i data-lucide="external-link" aria-hidden="true"></i></a><?php endif; ?>
+            <?php if ($live || $live_gone) : ?><a class="zpShowcaseMobile__liveBtn" <?php echo $live ? 'href="' . esc_url($live) . '" target="_blank" rel="noopener"' : 'tabindex="-1"'; ?>><span>Zobacz live</span><i data-lucide="external-link" aria-hidden="true"></i></a><?php endif; ?>
           </div>
           <div class="zpShowcaseMobile__details" hidden>
             <?php if ($desc) : ?><p><?php echo esc_html($desc); ?></p><?php endif; ?>
@@ -469,6 +471,10 @@ if (!function_exists('zp_showcase_portfolio_shortcode')) {
     });
   }
 
+  /* liveGone: the client site no longer opens, its buttons stay without the link (zp_suite_portfolio_live_gone()). */
+  const hasLive = item => !!(item.live || item.liveGone);
+  const liveAttrs = item => item.live ? `href="${esc(item.live)}" target="_blank" rel="noopener"` : 'tabindex="-1"';
+
   function currentItems(){ return activeMode === 'logo' ? logoItems : webItems; }
   function setText(nodeList, value){ nodeList.forEach(el => el.textContent = value); }
   function setBar(nodeList, value){ nodeList.forEach(el => el.style.width = value); }
@@ -665,7 +671,7 @@ if (!function_exists('zp_showcase_portfolio_shortcode')) {
       }
 
       const meta = (item.meta || []).map(m => `<span>${esc(m)}</span>`).join('');
-      const live = item.live ? `<a class="zpShowcaseWhite__btn zpShowcaseWhite__btn--live" href="${esc(item.live)}" target="_blank" rel="noopener">Live ${arrowIcon()}</a>` : '';
+      const live = hasLive(item) ? `<a class="zpShowcaseWhite__btn zpShowcaseWhite__btn--live" ${liveAttrs(item)}>Live ${arrowIcon()}</a>` : '';
 
       return `
         <article class="zpShowcaseWhite__card" data-zp-card data-index="${index}" tabindex="0" aria-label="Otwórz szczegóły projektu ${esc(item.brand)}">
@@ -743,7 +749,7 @@ if (!function_exists('zp_showcase_portfolio_shortcode')) {
 
   function renderPopup(item){
     const isLogo = activeMode === 'logo';
-    const live = item.live ? `<a href="${esc(item.live)}" target="_blank" rel="noopener">Zobacz live ${arrowIcon()}</a>` : '';
+    const live = hasLive(item) ? `<a ${liveAttrs(item)}>Zobacz live ${arrowIcon()}</a>` : '';
     const scope = (item.scope || []).map(s => `<li><i data-lucide="check"></i><span>${esc(s)}</span></li>`).join('');
     const tools = (item.tools || []).map(t => `<span class="zpShowcasePop__tool"><i data-lucide="check-circle-2"></i>${esc(t)}</span>`).join('');
     const storyRows = [
@@ -763,7 +769,7 @@ if (!function_exists('zp_showcase_portfolio_shortcode')) {
       <div class="zpShowcasePop__layout ${isLogo ? 'zpShowcasePop__layout--logo' : 'zpShowcasePop__layout--web'}">
         <div class="zpShowcasePop__visual" style="--pop-img:url('${esc(fullUploadUrl(item.img))}')"><div class="zpShowcasePop__visualInner"><img class="zpShowcasePop__img" src="${esc(fullUploadUrl(item.img))}" alt="${esc(item.brand)} — ${esc(item.sub)}" loading="eager" decoding="async"></div></div>
         <div class="zpShowcasePop__info">
-          <div class="zpShowcasePop__top"><span class="zpShowcasePop__pill"><i data-lucide="tag"></i>${esc(item.tag)}</span><span class="zpShowcasePop__pill"><i data-lucide="calendar-days"></i>${esc(item.year || '2026')}</span>${item.live ? '<span class="zpShowcasePop__pill"><i data-lucide="radio"></i>live</span>' : ''}</div>
+          <div class="zpShowcasePop__top"><span class="zpShowcasePop__pill"><i data-lucide="tag"></i>${esc(item.tag)}</span><span class="zpShowcasePop__pill"><i data-lucide="calendar-days"></i>${esc(item.year || '2026')}</span>${hasLive(item) ? '<span class="zpShowcasePop__pill"><i data-lucide="radio"></i>live</span>' : ''}</div>
           <h3 class="zpShowcasePop__title" id="zpShowcasePopTitle">${esc(item.brand)}</h3>
           <p class="zpShowcasePop__subtitle">${esc(item.sub)}</p>
           <p class="zpShowcasePop__text">${esc(item.desc)}</p>

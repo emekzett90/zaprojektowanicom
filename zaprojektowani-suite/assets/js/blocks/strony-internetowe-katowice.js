@@ -420,7 +420,7 @@ var ZP_SI_ASSETS = (function () {
           dialogServices.replaceChildren(...project.services.map(item => { const span = document.createElement('span'); span.textContent = item; return span; }));
           dialogResults.replaceChildren(...project.results.map(([title, copy]) => { const article = document.createElement('article'); article.className = 'project-result'; const strong = document.createElement('strong'); const span = document.createElement('span'); strong.textContent = title; span.textContent = copy; article.append(strong, span); return article; }));
           dialogLive.href = project.live;
-          dialogLive.setAttribute('aria-label', `Zobacz stronę ${project.title} na żywo`);
+          // The link's name is its own text and the window title (aria-labelledby in body.html), in both languages.
           projectDialog.querySelector('.project-dialog__shell').scrollTop = 0;
         };
 
@@ -694,6 +694,8 @@ const portfolio=document.getElementById('portfolio'),side=document.querySelector
         card.classList.toggle('scope-pinned', !!open && entry.pinned);
         trigger.setAttribute('aria-expanded', open ? 'true' : 'false');
         panel.setAttribute('aria-hidden', open ? 'false' : 'true');
+        // A closed panel is also inert, so its links and buttons cannot take focus (SearchFit 14.10.2026).
+        panel.inert = !open;
       };
 
       const closeSelf = ({ focus = false, dismiss = false } = {}) => {
