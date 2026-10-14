@@ -1,0 +1,81 @@
+Zaprojektowani Suite 3.1.0 — 14.10.2026
+
+Podstawa: 3.0.1 (14.10.2026). Dane Codexa, ZP Translator v2 i starego Tłumacza EN zostają w bazie (kopiowane, nigdy nie kasowane), więc cofnięcie do 2.9.66 lub 3.0.1 działa jak dotąd.
+
+Tłumacz EN 2.0.0 (nowy, jeden zamiast trzech)
+- Jeden tłumacz EN w ZP Suite zamiast trzech; dotychczasowe tłumaczenia przeniesione bez tłumaczenia od nowa, wtyczka ZP Translator v2 wyłączona (dane zostają).
+- Codziennie o 3:00 sprawdza strony, wpisy i kategorie; nowy lub zmieniony wpis tłumaczy od razu po publikacji (Luna, sens zamiast słowo w słowo).
+- Angielskie adresy i kategorie dla nowych wpisów, trzy wpisy z polskim adresem pod /en/ dostały angielskie (z przekierowaniem 301); stopka, menu i listy wpisów po angielsku.
+- Mapy witryny PL i EN oraz hreflang na każdej stronie z wersją angielską.
+- Panel Tłumacza EN: pasek postępu na żywo, lista stron, poprawianie tekstów, koszty dzienne i miesięczne.
+- Zmiana języka płynna, bez białego przeładowania, w tym samym miejscu strony; gość z zagranicy dostaje wersję angielską i zostaje na niej, przeglądarka po polsku dostaje polską.
+- Polskie strony nie ładują skryptów tłumacza; pliki języków zminifikowane.
+- Ceny na stronach angielskich w formacie amerykańskim: „$1,250 USD” (kurs NBP).
+- Studio wyceny po angielsku: pasek „Step 1 of 5 · Budget: $4,100 USD” zgadza się po każdej zmianie budżetu i kroku.
+- Numery telefonów na stronach EN jak po polsku („501 054 253”).
+- Adresy EN złożone z polskich słów (zapisane kiedyś przez stary tłumacz) dostały angielskie, stare przekierowują 301.
+- Klucz OpenAI zostaje tam, gdzie był; nic nie trzeba wpisywać.
+
+Audyt SEO z 13.10 (wygląd strony bez zmian)
+- Obrazki bez opisu (alt) dostały opis: 0 obrazków bez altu na 67 sprawdzonych adresach PL i EN.
+- 62 tytuły stron i wpisów zawierają frazę z Rank Math. Zmiana jest zapisana z kopią i ma przycisk „Cofnij te zmiany”.
+- Lżejszy HTML: style i dane idą do osobnych plików, więc strona główna waży około 516 kB zamiast 1493 kB (style w HTML: 104 kB zamiast 911 kB).
+- Pogrubienia zrobione innym znacznikiem z tym samym wyglądem; opinie, „5.0” i nagłówki zostają takie same dla odwiedzających.
+- Jeden H1 na stronie FAQ i Realizacji (PL i EN).
+- Sześć wpisów, które zabierały frazy stronom usług, ma nowe H1 i tytuły (lista A z audytu); wpis o salonach beauty i wpis dla firmy z Katowic mają nowe frazy; 9 wpisów ma zdanie z linkiem do usługi.
+- Przekierowania w jednym kroku zamiast łańcuchów, linki wewnętrzne od razu na adres końcowy (lista C); 418 linków z parametrami zamienionych na adresy bez parametrów.
+- Logo w danych strukturalnych wskazuje istniejący plik (wcześniej Google dostawał 404); stary adres przekierowuje.
+- Pliki po usuniętych podglądach klientów (/bransoletka24/, /rutpoz_web/ i inne) odpowiadają 410 (usunięte celowo); dziennik 404 ich nie liczy jako błędów.
+- Linki do WhatsApp, Messengera, Map i opinii Google oraz linki z wyborem w Studiu wyceny mają nofollow.
+- Logo w nagłówku nie zabiera już pasma obrazkowi robota na stronie głównej (szybszy LCP).
+- Wtyczka nie czyści już całego cache strony (LiteSpeed, CDN). Wcześniej moduł napraw SEO robił to mniej więcej raz w tygodniu, a plan SEO przy każdej nowej wersji planu. Zmienione strony odświeżają się same przy zapisie.
+
+Cache stron
+- Google, Bing i inne roboty oraz testy szybkości dostają gotową stronę z cache (lokalnie 0,015 s zamiast około 0,9 s). To ta sama polska strona, którą dostaje odwiedzający.
+- Odwiedzający, którzy zaakceptowali cookies (Cookiebot, Google, Meta), też dostają stronę z cache. Każde inne cookie (zalogowany, komentarz, wybór języka) dalej omija cache.
+- Kopie stron powstają tylko z wizyt bez cookies.
+- Gość z zagranicy dalej trafia na wersję angielską: cache nigdy nie odpowiada przeglądarce bez języka polskiego ani komuś, kto wybrał język przełącznikiem.
+- Wizyty robotów obsłużone z cache są doliczane w panelu Widoczność AI.
+- Aktualizacja sama podmienia plik wp-content/advanced-cache.php (tylko nasz, sprawdzony hashem), bez czyszczenia LiteSpeed.
+
+Strony
+- Realizacje wyglądają jak przed zmianami (Twoja prośba z 14.10). Zostaje tylko poprawka niewidoczna dla odwiedzających: na stronie jest jeden H1.
+- O nas: górny nagłówek znowu ma gradient, tak jak wcześniej. Zostały poprawki niżej na stronie: zdjęcia zespołu i procesu nie wchodzą na tekst, wyróżnienie nagród jest widoczne, a na telefonie pod przyciskami jest mniejsza dziura.
+- Kontakt: krótki formularz oddzwonienia ze strony głównej stoi nad dużym formularzem. Ten sam formularz i te same zdarzenia GTM i Meta, a „Pełny formularz” przewija do dużego formularza.
+- Studio wyceny na telefonie:
+  - pasek kroków przyklejony do dołu ekranu, z ceną i przyciskami Wstecz i Dalej;
+  - większe pola i przyciski wyboru (iPhone nie powiększa strony przy wpisywaniu);
+  - błędy pokazują się pod polami zamiast w oknie;
+  - podpowiedzi „?” działają po dotknięciu.
+  Dane wysyłane z formularza i zdarzenia analityczne są bez zmian. Te same komunikaty są też po angielsku.
+- Studio wyceny na komputerze (nagłówki kroków bez zmian):
+  - pasek na dole jest płaski, granatowy, bez gradientu i cienia, z cienką linią postępu;
+  - kliknięcie „?” nie zaznacza już karty;
+  - panel briefu z boku kończy się nad paskiem i przewija się, więc „Opis projektu”, Zadzwoń i WhatsApp są zawsze dostępne;
+  - funkcje w panelu i podsumowaniu łamią się między słowami.
+  Dane wysyłane z formularza są bez zmian.
+
+Drobne
+- Menu na telefonie i wyszukiwarka: „Logo i branding” jak dotąd (bez tej poprawki wracał napis „Logo & branding”).
+- Zapasowa ikona strony (favicon) wskazuje istniejący plik logo.
+- Stan strony ma stały przycisk „Cofnij tytuły” dla tytułów z audytu SEO (wcześniej link był tylko w jednorazowym komunikacie).
+- Wysłana wycena ze Studia, odświeżenie llms.txt i cotygodniowy test plików stylów nie czyszczą już cache stron.
+
+Jak sprawdzić po instalacji
+- curl -sI -H "Accept-Language: pl-PL" https://zaprojektowani.com/ dwa razy: MISS, potem HIT, z X-ZP-Cache-Device: d. To samo z User-Agent iPhone'a: HIT z X-ZP-Cache-Device: m.
+- curl -sI -A "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)" https://zaprojektowani.com/ : X-ZP-Cache: HIT.
+- curl -sI -A "Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/141" -H "Accept-Language: en-US,en" -H "Cookie: zpl_geo_country=US" https://zaprojektowani.com/ : X-ZP-Cache: BYPASS; language i przekierowanie 302 na /en/.
+- ZP Suite → Stan strony: „Cache stron działa”, Tłumacz EN z wersją 2.0.0.
+- /en/ i /en/insights/ odpowiadają 200 po angielsku; przyciski „Choose…” przy pakietach na /en/ prowadzą na /en/quote-studio/#zpbs_service=…
+- Tłumacz EN → dziennik: „Obecne tłumaczenia EN przeniesione: N stron…”, potem przebieg z paskiem postępu.
+- Studio wyceny po angielsku: ceny w formacie „$1,250 USD”.
+
+Cofnięcie
+Gdyby tłumacz EN nie pasował:
+1. Szybki powrót do stanu sprzed 3.1.0: WordPress → Wtyczki → Dodaj wtyczkę → Wyślij wtyczkę na serwer → zaprojektowani-suite-3.0.1.zip → zastąp obecną wersję. Potem w Wtyczkach włącz „ZP Translator v2”.
+2. Pełny powrót do wersji Codexa z 13.10: tak samo wgraj zaprojektowani-suite-20261013.zip (ZP Suite 2.9.66) i zp-translator-v2-20261013.zip (ZP Translator v2 2.0.1), potem włącz ZP Translator v2.
+Dane starych tłumaczy (Codex, v2, Tłumacz EN 1) nie zostały zmienione ani usunięte, a klucz API zostaje. Nowe tabele tłumacza (zpen_*) zostają w bazie i niczemu nie przeszkadzają.
+
+Gdyby nie pasowały nowe tytuły z audytu SEO: ZP Suite → Stan strony → „Tytuły z frazą z audytu SEO 13.10” → „Cofnij tytuły”. Przywraca poprzednie tytuły i frazy Rank Math; tytuły zmienione później ręcznie zostają. Zrób to przed ewentualnym powrotem do starszej wersji wtyczki, bo starsza wersja nie ma tego przycisku, a nowe tytuły zostają w bazie.
+
+Cache: nowy plik advanced-cache.php działa też ze starszymi wersjami. Wyłączysz go w ZP Suite → Strona → Cache HTML.
