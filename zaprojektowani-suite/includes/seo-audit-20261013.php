@@ -78,6 +78,11 @@ function zp_suite_audit_alt_map(): array {
     'portfolio-siemianowski' => ['Identyfikacja wizualna Kancelarii Adwokackiej Siemianowski', 'Siemianowski law firm brand identity'],
     'zp-sygnet-ciemny' => ['Sygnet Zaprojektowani', 'Zaprojektowani logo mark'],
     'zp-sygnet-jasny' => ['Sygnet Zaprojektowani', 'Zaprojektowani logo mark'],
+    // Service heroes, also on the service cards under articles (seo-plan/service-heroes.php, seo-plan/links.php): the words of the hero.
+    'polerstone-na-skalnej-podstawie' => ['Polerstone — projekt strony internetowej na laptopie i skalnej podstawie', 'Polerstone website design on a laptop on a stone base'],
+    'swiat-grili-na-smartfonie-i-laptopie' => ['Świat Grilli — sklep internetowy na smartfonie i laptopie', 'Świat Grilli online store on a smartphone and a laptop'],
+    'hero-laptop' => ['Projekt strony internetowej — laptop z witryną kancelarii', 'A website design — a laptop with a law firm website'],
+    'zaprojektowani_logo_branding_zaufali_widget_alt_premium' => ['Mockup projektów logo i brandingu — Zaprojektowani', 'Logo and branding design mock-up — Zaprojektowani'],
     // Client logos.
     'vista' => $logo('Vista Architekci'),
     'logo-vista' => $logo('Vista Architekci'),
@@ -121,6 +126,9 @@ function zp_suite_audit_alt_map(): array {
     'pagespeed-insights-logo' => $logo('PageSpeed Insights'),
     'tech-figma' => $logo('Figma'),
     'tech-wordpress' => $logo('WordPress'),
+    'wordpress_blue_logo.svg-1' => $logo('WordPress'),
+    'tech-woocommerce' => $logo('WooCommerce'),
+    'tech-php' => $logo('PHP'),
     'adobe-illustrator' => $logo('Adobe Illustrator'),
     'adobe-indesign' => $logo('Adobe InDesign'),
     'trustindex' => ['Znak weryfikacji Trustindex', 'Trustindex verification badge'],
@@ -252,7 +260,8 @@ function zp_suite_audit_links_html(string $html): string {
   $host = strtolower((string) wp_parse_url(home_url('/'), PHP_URL_HOST));
   foreach ($parts as $i => $part) {
     if ($i % 2 === 1 || stripos($part, '<a') === false) { continue; }
-    $done = preg_replace_callback('~(<a\s[^>]*>)(.*?</a>)?~is', static function (array $m) use ($host): string {
+    // A link's content ends at its own closing tag, also when written "</a\n>", and never runs into the next link.
+    $done = preg_replace_callback('~(<a\s[^>]*>)([^<]*+(?:<(?!a\s|/a\s*>)[^<]*+)*+</a\s*>)?~is', static function (array $m) use ($host): string {
       return zp_suite_audit_link_tag($m[1], $host, (string) ($m[2] ?? '')) . ($m[2] ?? '');
     }, $part);
     if (is_string($done)) { $parts[$i] = $done; }
