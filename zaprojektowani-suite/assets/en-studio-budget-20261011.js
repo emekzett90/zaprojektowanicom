@@ -4,7 +4,7 @@
   var config=document.getElementById('zp-en-currency-config'),cfg;
   if (!config) return;
   try { cfg=JSON.parse(config.textContent); } catch(e) { return; }
-  if (cfg.source!=='/studio-wyceny/'||cfg.policy!=='usd_nbp_human_v1') return;
+  if (cfg.source!=='/studio-wyceny/'||cfg.policy!=='usd_nbp_human_v2') return;
   var states=new WeakMap(),pending=0,observer=null;
   var CAPS={web:[0,30000,500],shop:[0,60000,1000],brand:[1000,15000,500],ads:[0,20000,250]};
   function english() { return /^en(?:-|$)/i.test(document.documentElement.lang||''); }
@@ -20,7 +20,7 @@
   function currentRow(s) { return s.rows.find(function(row){return row.pln===Number(s.source.value);})||null; }
   function sync(s) {
     var row=currentRow(s);if (!row) return;
-    s.proxy.value=String(row.usd);s.proxy.setAttribute('aria-valuetext','USD '+String(row.usd).replace(/\B(?=(\d{3})+(?!\d))/g,','));
+    s.proxy.value=String(row.usd);s.proxy.setAttribute('aria-valuetext','$'+String(row.usd).replace(/\B(?=(\d{3})+(?!\d))/g,',')+' USD');
     s.proxy.disabled=s.source.disabled;
   }
   function apply(s,row) {
@@ -37,7 +37,7 @@
     var proxy=source.cloneNode(false);proxy.removeAttribute('id');proxy.removeAttribute('name');proxy.removeAttribute('data-budget-range');proxy.removeAttribute('data-bound');proxy.setAttribute('data-zp-usd-budget','');
     proxy.min=String(rows[0].usd);proxy.max=String(rows[rows.length-1].usd);proxy.step='any';proxy.value=String(actual.usd);
     proxy.setAttribute('aria-label','Approximate budget in US dollars');proxy.setAttribute('data-zpl-skip','');
-    proxy.setAttribute('title','Budget range: USD '+rows[0].usd+'–USD '+String(rows[rows.length-1].usd).replace(/\B(?=(\d{3})+(?!\d))/g,','));
+    proxy.setAttribute('title','Budget range: $'+String(rows[0].usd).replace(/\B(?=(\d{3})+(?!\d))/g,',')+'–$'+String(rows[rows.length-1].usd).replace(/\B(?=(\d{3})+(?!\d))/g,',')+' USD');
     var s={source:source,proxy:proxy,rows:rows};states.set(source,s);
     source.insertAdjacentElement('afterend',proxy);source.style.setProperty('display','none','important');source.setAttribute('aria-hidden','true');
     proxy.addEventListener('input',function(){apply(s,nearest(rows,Number(proxy.value),Number(source.value)));});

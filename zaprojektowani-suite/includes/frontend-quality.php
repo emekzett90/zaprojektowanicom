@@ -80,6 +80,10 @@ function zp_suite_quality_html(string $html): string {
     if (stripos($header, 'content-encoding:') === 0) { return $html; }
   }
   $html = zp_suite_strip_image_slots($html);
+  // SEO audit 13.10.2026: every plugin image gets a description (includes/seo-audit-20261013.php).
+  if (function_exists('zp_suite_audit_alt_html')) { $html = zp_suite_audit_alt_html($html); }
+  // Links with tracking parameters and chat or map shortcuts get rel="nofollow" (same file).
+  if (function_exists('zp_suite_audit_links_html')) { $html = zp_suite_audit_links_html($html); }
   $tags = new WP_HTML_Tag_Processor($html);
   $marked = 0;
   while ($tags->next_tag('IMG')) {

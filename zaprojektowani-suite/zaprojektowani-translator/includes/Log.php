@@ -3,17 +3,20 @@ namespace ZPTE;
 
 if (!defined('ABSPATH')) { exit; }
 
-/** Activity log, daily OpenAI usage and the alert shown in wp-admin (all small options, not autoloaded). */
+/**
+ * Activity log, OpenAI usage (characters, tokens and cost per day) and the one alert shown in wp-admin.
+ * Small options, never autoloaded. The earlier translator's options (zpte_log, zpte_usage) stay as they were.
+ */
 final class Log {
-    const OPTION = 'zpte_log';
-    const USAGE = 'zpte_usage';
-    const ALERT = 'zpte_alert';
-    const MAX = 200;
+    const OPTION = 'zpte2_log';
+    const USAGE = 'zpte2_usage';
+    const ALERT = 'zpte2_alert';
+    const MAX = 300;
 
     public static function add(string $message, string $level = 'info'): void {
         $log = get_option(self::OPTION, []);
         if (!is_array($log)) { $log = []; }
-        array_unshift($log, ['t' => time(), 'l' => $level, 'm' => $message]);
+        array_unshift($log, ['t' => time(), 'l' => $level, 'm' => OpenAI::short($message)]);
         update_option(self::OPTION, array_slice($log, 0, self::MAX), false);
     }
 
@@ -30,51 +33,55 @@ final class Log {
         $u = get_option(self::USAGE, []);
         $d = $day ?? self::day();
         $row = is_array($u) && isset($u[$d]) && is_array($u[$d]) ? $u[$d] : [];
-        return array_merge(['chars' => 0, 'requests' => 0, 'in' => 0, 'out' => 0], $row);
+        return array_merge(['chars' => 0, 'requests' => 0, 'in' => 0, 'out' => 0, 'usd' => 0.0], $row);
     }
 
-    public static function count(int $chars, int $in, int $out): void {
+    /** One finished OpenAI request: Polish characters sent and tokens billed. */
+    public static function count(int $chars, int $in, int $out, string $model): void {
         $u = get_option(self::USAGE, []);
         if (!is_array($u)) { $u = []; }
         $d = self::day();
         $row = self::usage($d);
+        $price = Settings::price($model);
         $row['chars'] += $chars;
         $row['requests'] += 1;
         $row['in'] += $in;
         $row['out'] += $out;
+        $row['usd'] = round((float) $row['usd'] + ($in * $price['in'] + $out * $price['out']) / 1000000, 6);
         $u[$d] = $row;
         krsort($u);
-        update_option(self::USAGE, array_slice($u, 0, 62, true), false);
+        update_option(self::USAGE, array_slice($u, 0, 70, true), false);
     }
 
-    /** Usage summed over the current month. */
+    /** Usage summed over the current calendar month. */
     public static function month(): array {
         $u = get_option(self::USAGE, []);
-        $sum = ['chars' => 0, 'requests' => 0, 'in' => 0, 'out' => 0];
+        $sum = ['chars' => 0, 'requests' => 0, 'in' => 0, 'out' => 0, 'usd' => 0.0];
         $prefix = wp_date('Y-m-');
         foreach (is_array($u) ? $u : [] as $d => $row) {
             if (strpos((string) $d, $prefix) !== 0 || !is_array($row)) { continue; }
-            foreach ($sum as $k => $v) { $sum[$k] = $v + (int) ($row[$k] ?? 0); }
+            foreach ($sum as $k => $v) { $sum[$k] = $v + ($k === 'usd' ? (float) ($row[$k] ?? 0) : (int) ($row[$k] ?? 0)); }
         }
         return $sum;
     }
 
-    public static function can_send(int $chars): bool {
-        $limit = (int) Settings::get('daily_chars');
-        return $limit <= 0 || self::usage()['chars'] + $chars <= $limit;
-    }
-
-    public static function over_limit(): bool {
-        $limit = (int) Settings::get('daily_chars');
-        return $limit > 0 && self::usage()['chars'] >= $limit;
+    /** '' when a request of $chars may go out now, otherwise why not ('day' or 'month'). */
+    public static function limit_reached(int $chars = 0): string {
+        $daily = (int) Settings::get('daily_chars');
+        if ($daily > 0 && self::usage()['chars'] + $chars > $daily) { return 'day'; }
+        $monthly = (float) Settings::get('monthly_usd');
+        if ($monthly > 0 && self::month()['usd'] >= $monthly) { return 'month'; }
+        return '';
     }
 
     // ------------------------------------------------------------------ alert
 
-    /** A problem only the administrator can fix (bad key, no credit): shown on every wp-admin screen until fixed. */
+    /** A problem only the administrator can fix (key, credit, model): shown in wp-admin until it is fixed. */
     public static function alert(string $message): void {
+        $message = OpenAI::short($message);
+        $a = self::current_alert();
+        if (!$a || $a['m'] !== $message) { self::add($message, 'error'); }
         update_option(self::ALERT, ['t' => time(), 'm' => $message], false);
-        self::add($message, 'error');
     }
 
     public static function clear_alert(): void { delete_option(self::ALERT); }

@@ -53,7 +53,8 @@ window.zpRealizacjeProjects = <?php echo wp_json_encode($zp_real_projects, JSON_
 </script>
 <section id="zpRealizacjePage" aria-labelledby="zpRealizacjeTitle">
 
-<header class="hero zpRealizacjePage__hero">
+<?php /* A div, not a header, so the heading check in ultimate-seo/ultimate.php always counts this H1 (before 3.1.0 it skipped headers outside main and made the featured h2 a second H1). Looks the same. */ ?>
+<div class="hero zpRealizacjePage__hero">
   <div class="wrap">
     <nav class="heroCrumbs" aria-label="Okruszki">
       <a href="<?php echo esc_url(home_url('/')); ?>">Strona główna</a>
@@ -103,7 +104,7 @@ window.zpRealizacjeProjects = <?php echo wp_json_encode($zp_real_projects, JSON_
       </figure>
     </div>
   </div>
-</header>
+</div>
 
 <section class="portfolioPaths" aria-label="Obszary realizacji">
   <div class="portfolioPaths__in">

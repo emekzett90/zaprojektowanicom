@@ -3,91 +3,78 @@ namespace ZPTE;
 
 if (!defined('ABSPATH')) { exit; }
 
-/** ZP Suite → Tłumacz EN */
+/** ZP Suite → Tłumacz EN: status and progress, pages, translations, settings and log. */
 final class Admin {
     const SLUG = 'zp-tlumacz-en';
     const PER_PAGE = 50;
-    /** Daily limit choices: characters of Polish text sent to OpenAI a day (0 = no limit). */
-    const LIMITS = [100000 => '100 000 znaków', 200000 => '200 000 znaków', 400000 => '400 000 znaków (zalecane)', 1000000 => '1 000 000 znaków', 0 => 'bez limitu'];
-    /** Models offered in the settings; any other model name can still be typed in. */
-    const MODELS = ['gpt-5.4-mini' => 'Zalecany: gpt-5.4-mini (szybki i tani)', 'gpt-5.4' => 'Dokładniejszy: gpt-5.4 (droższy)'];
+    const TABS = ['overview' => 'Przegląd', 'pages' => 'Strony', 'texts' => 'Teksty', 'settings' => 'Ustawienia', 'log' => 'Dziennik'];
+    /** Models offered in the settings (any other name can be typed in). */
+    const MODELS = ['gpt-6-luna' => 'gpt-6-luna (zalecany: szybki i tani)'];
+    const MODELS_OPTION = 'zpte2_models';
 
     public static function boot(): void {
         // After the Suite trims its submenu (priority 9999), so this entry stays visible.
         add_action('admin_menu', [self::class, 'menu'], 10000);
-        add_action('admin_post_zpte', [self::class, 'handle']);
+        add_action('admin_post_zpte2', [self::class, 'handle']);
         add_action('admin_notices', [self::class, 'notices']);
-        add_action('wp_ajax_zpte_status', [self::class, 'ajax_status']);
-        add_action('wp_ajax_zpte_step', [self::class, 'ajax_step']);
+        add_action('wp_ajax_zpte2_status', [self::class, 'ajax_status']);
+        add_action('wp_ajax_zpte2_step', [self::class, 'ajax_step']);
         add_action('admin_enqueue_scripts', [self::class, 'assets']);
-    }
-
-    public static function assets(): void {
-        if (($_GET['page'] ?? '') !== self::SLUG || !current_user_can('manage_options')) { return; }
-        wp_enqueue_style('zpte-admin', plugins_url('assets/admin.css', ZPTE_DIR . 'translator.php'), [], ZPTE_VERSION);
-        if (($_GET['tab'] ?? 'status') !== 'status') { return; }
-        wp_enqueue_script('zpte-admin', plugins_url('assets/admin.js', ZPTE_DIR . 'translator.php'), [], ZPTE_VERSION, true);
-        wp_localize_script('zpte-admin', 'zpteAdmin', ['url' => admin_url('admin-ajax.php'), 'nonce' => wp_create_nonce('zpte_progress')]);
-    }
-
-    private static function ajax_authorize(): void {
-        if (!current_user_can('manage_options')) { wp_send_json_error(['message' => 'Brak uprawnień.'], 403); }
-        check_ajax_referer('zpte_progress', 'nonce');
-        if (!Bridge::hooks_ready()) { wp_send_json_error(['message' => 'Moduł językowy wymaga aktualizacji.'], 409); }
-        Store::install();
-    }
-
-    public static function ajax_status(): void {
-        self::ajax_authorize();
-        wp_send_json_success(['progress' => Worker::progress(), 'nonce' => wp_create_nonce('zpte_progress')]);
-    }
-
-    /** Browser fallback: works even when hosting blocks wp-cron loopback requests. */
-    public static function ajax_step(): void {
-        self::ajax_authorize();
-        Worker::work();
-        wp_send_json_success(['progress' => Worker::progress(), 'nonce' => wp_create_nonce('zpte_progress')]);
-    }
-
-    /** Live progress of the current run (assets/admin.js fills the data-zpte fields and drives the queue). */
-    private static function progress_panel(array $s): void {
-        echo '<section class="zpxCard zpte-progress" id="zpte-progress" data-state="' . esc_attr($s['state']) . '" aria-labelledby="zpte-progress-title">'
-            . '<div class="zpte-progress-head"><h2 id="zpte-progress-title">Postęp tłumaczenia</h2><strong data-zpte="percent">' . (int) $s['percent'] . '%</strong></div>'
-            . '<div class="zpte-progress-track" role="progressbar" aria-label="Postęp tłumaczenia stron" aria-valuemin="0" aria-valuemax="100" aria-valuenow="' . (int) $s['percent'] . '"><span style="width:' . (int) $s['percent'] . '%"></span></div>'
-            . '<p class="zpte-progress-message" data-zpte="message" role="status" aria-live="polite">' . esc_html($s['message']) . '</p>'
-            . '<div class="zpte-progress-counts"><span><strong data-zpte="done">' . (int) $s['done'] . '</strong> z <strong data-zpte="total">' . (int) $s['total'] . '</strong> stron gotowych</span>'
-            . '<span><strong data-zpte="queued">' . (int) $s['queued'] . '</strong> w kolejce</span><span><strong data-zpte="errors">' . (int) $s['errors'] . '</strong> wymaga uwagi</span></div>'
-            . '<p class="zpte-progress-current" data-zpte="current"></p><p class="description" data-zpte="retry"></p>'
-            . '<p class="description" id="zpte-poll-status">Postęp odświeża się sam. Dopóki ten ekran jest otwarty, tłumaczenie idzie dalej także wtedy, gdy serwer nie uruchamia zadań w tle.</p>'
-            . '<noscript><p>Włącz JavaScript, aby widzieć postęp na żywo. Codzienne tłumaczenie działa niezależnie od tego ekranu.</p></noscript></section>';
     }
 
     public static function menu(): void {
         global $admin_page_hooks;
         $parent = isset($admin_page_hooks['zp-suite']) ? 'zp-suite' : 'options-general.php';
-        add_submenu_page($parent, 'Tłumacz EN (OpenAI)', 'Tłumacz EN', 'manage_options', self::SLUG, [self::class, 'page']);
+        add_submenu_page($parent, 'Tłumacz EN', 'Tłumacz EN', 'manage_options', self::SLUG, [self::class, 'page']);
     }
 
     public static function url(array $args = []): string {
         return add_query_arg(array_merge(['page' => self::SLUG], $args), admin_url('admin.php'));
     }
 
-    public static function notices(): void {
-        if (!current_user_can('manage_options')) { return; }
-        $a = Log::current_alert();
-        if (!$a) { return; }
-        echo '<div class="notice notice-error"><p><strong>Tłumacz EN wstrzymany:</strong> ' . esc_html((string) $a['m'])
-            . ' <a href="' . esc_url(self::url()) . '">Otwórz Tłumacza EN</a></p></div>';
+    private static function tab(): string {
+        $t = isset($_GET['tab']) && is_string($_GET['tab']) ? sanitize_key(wp_unslash($_GET['tab'])) : 'overview';
+        if ($t === 'status') { $t = 'overview'; } // older links
+        return isset(self::TABS[$t]) ? $t : 'overview';
     }
 
-    private static function when(?string $gmt): string {
-        if ($gmt === null || $gmt === '' || strpos($gmt, '0000') === 0) { return '—'; }
-        $ts = strtotime($gmt . ' UTC');
-        return $ts ? self::day_time($ts) : '—';
+    public static function assets(): void {
+        if (($_GET['page'] ?? '') !== self::SLUG || !current_user_can('manage_options')) { return; }
+        wp_enqueue_style('zpte2-admin', plugins_url('assets/admin.css', ZPTE_DIR . 'translator.php'), [], ZPTE_VERSION);
+        if (self::tab() !== 'overview') { return; }
+        wp_enqueue_script('zpte2-admin', plugins_url('assets/admin.js', ZPTE_DIR . 'translator.php'), [], ZPTE_VERSION, true);
+        wp_localize_script('zpte2-admin', 'zpte2Admin', ['url' => admin_url('admin-ajax.php'), 'nonce' => wp_create_nonce('zpte2_progress')]);
     }
+
+    // ------------------------------------------------------------------ AJAX
+
+    private static function ajax_ok(): bool {
+        if (!current_user_can('manage_options') || !check_ajax_referer('zpte2_progress', 'nonce', false)) {
+            // 200 with an error flag: the panel stops asking, without noise in the browser console.
+            wp_send_json(['success' => false, 'data' => ['reload' => true]]);
+        }
+        return true;
+    }
+
+    public static function ajax_status(): void {
+        self::ajax_ok();
+        wp_send_json_success(['progress' => Worker::progress(), 'nonce' => wp_create_nonce('zpte2_progress')]);
+    }
+
+    /** The open panel moves the work on when the background steps do not run (hosting without loopback or cron). */
+    public static function ajax_step(): void {
+        self::ajax_ok();
+        if (function_exists('session_write_close')) { @session_write_close(); }
+        $p = Worker::progress();
+        if ($p['stalled']) { Worker::work('panel'); }
+        wp_send_json_success(['progress' => Worker::progress(), 'nonce' => wp_create_nonce('zpte2_progress')]);
+    }
+
+    // --------------------------------------------------------------- helpers
 
     /** "dziś 03:00", "jutro 03:00", "wczoraj 14:10" or "5.10.2026 03:00" (site time). */
     public static function day_time(int $ts): string {
+        if ($ts <= 0) { return '—'; }
         $d = wp_date('Y-m-d', $ts);
         $t = wp_date('H:i', $ts);
         if ($d === wp_date('Y-m-d')) { return 'dziś ' . $t; }
@@ -96,642 +83,504 @@ final class Admin {
         return wp_date('j.m.Y', $ts) . ' ' . $t;
     }
 
+    private static function when(?string $gmt): string {
+        if ($gmt === null || $gmt === '' || strpos($gmt, '0000') === 0) { return '—'; }
+        $ts = strtotime($gmt . ' UTC');
+        return $ts ? self::day_time($ts) : '—';
+    }
+
     /** 1 strona, 2 strony, 5 stron. */
-    private static function pages_word(int $n): string {
+    public static function pages_word(int $n): string {
         if ($n === 1) { return 'strona'; }
         $d = $n % 10;
         $h = $n % 100;
         return $d >= 2 && $d <= 4 && ($h < 12 || $h > 14) ? 'strony' : 'stron';
     }
 
-    private static function form_open(string $do, array $hidden = [], string $confirm = ''): string {
-        $h = '<form method="post" action="' . esc_url(admin_url('admin-post.php')) . '" class="zpte-inline"' . ($confirm !== '' ? ' onsubmit="return confirm(' . esc_attr((string) wp_json_encode($confirm)) . ')"' : '') . '>'
-            . '<input type="hidden" name="action" value="zpte"><input type="hidden" name="do" value="' . esc_attr($do) . '">'
-            . wp_nonce_field('zpte', '_wpnonce', true, false);
-        foreach ($hidden as $k => $v) { $h .= '<input type="hidden" name="' . esc_attr($k) . '" value="' . esc_attr((string) $v) . '">'; }
+    private static function usd(float $v): string {
+        return '$' . number_format($v, $v < 1 ? 4 : 2, '.', ',');
+    }
+
+    private static function form(string $do, array $hidden = [], string $confirm = '', string $class = 'zpte2-inline'): string {
+        $h = '<form method="post" action="' . esc_url(admin_url('admin-post.php')) . '" class="' . esc_attr($class) . '"'
+            . ($confirm !== '' ? ' onsubmit="return confirm(' . esc_attr((string) wp_json_encode($confirm)) . ')"' : '') . '>'
+            . '<input type="hidden" name="action" value="zpte2"><input type="hidden" name="do" value="' . esc_attr($do) . '">'
+            . wp_nonce_field('zpte2', '_wpnonce', true, false);
+        foreach ($hidden as $k => $v) { $h .= '<input type="hidden" name="' . esc_attr((string) $k) . '" value="' . esc_attr((string) $v) . '">'; }
         return $h;
     }
 
     private static function button(string $do, string $label, array $hidden = [], string $class = 'button', string $confirm = ''): string {
-        return self::form_open($do, $hidden, $confirm) . '<button type="submit" class="' . esc_attr($class) . '">' . esc_html($label) . '</button></form>';
+        return self::form($do, $hidden, $confirm) . '<button type="submit" class="' . esc_attr($class) . '">' . esc_html($label) . '</button></form>';
     }
 
     // ---------------------------------------------------------------- summary
 
     /**
-     * Published Polish posts and pages (of the types chosen in Ustawienia) that have no English version, so a
-     * visitor from abroad reads them in Polish. Newest first. Pages the translator skipped on purpose (hidden or
-     * noindex) and pages switched off by hand are left out.
-     * @return array<int,array{post_id:int,path:string,title:string,type:string,date:string,row:?object}>
+     * Published Polish posts and pages (types chosen in Ustawienia) with no English version yet: visitors from
+     * abroad read them in Polish. Newest first; noindex and client-only pages are left out.
+     * @return array<int,array{post_id:int,path:string,title:string,type:string,date:string}>
      */
     public static function missing_pages(): array {
         static $cache = null;
         if ($cache !== null) { return $cache; }
+        $key = Index::count() . ':' . Routes::version() . ':' . implode(',', Settings::types());
+        $cached = get_transient('zpte2_missing');
+        if (is_array($cached) && ($cached['k'] ?? '') === $key && is_array($cached['v'] ?? null)) { return $cache = $cached['v']; }
         $cache = [];
         $types = Bridge::ready() ? Settings::types() : [];
-        if (!$types) { return $cache; }
-        $rows = [];
-        if (get_option('zpte_db') === Store::DB_VERSION) {
-            foreach (Store::paths(['kind' => ['new', 'older']]) as $r) { $rows[(string) $r->path] = $r; }
+        if ($types) {
+            $ids = get_posts(['post_type' => $types, 'post_status' => 'publish', 'has_password' => false, 'posts_per_page' => -1,
+                'orderby' => 'date', 'order' => 'DESC', 'fields' => 'ids', 'no_found_rows' => true, 'suppress_filters' => true, 'ignore_sticky_posts' => true]);
+            if ($ids) { _prime_post_caches(array_map('intval', $ids), false, true); }
+            foreach ((array) $ids as $pid) {
+                $pid = (int) $pid;
+                $path = Sync::path_of_post($pid);
+                if ($path === '' || Sync::ineligible($path) !== '') { continue; }
+                if (\ZPL\Router::has_route($path) && \ZPL\Dict::has_page($path)) { continue; }
+                $robots = get_post_meta($pid, 'rank_math_robots', true);
+                if (is_array($robots) && in_array('noindex', $robots, true)) { continue; }
+                $cache[] = ['post_id' => $pid, 'path' => $path, 'title' => html_entity_decode(get_the_title($pid), ENT_QUOTES, 'UTF-8'),
+                    'type' => (string) get_post_type($pid), 'date' => (string) get_the_date('j.m.Y', $pid)];
+            }
         }
-        $ids = get_posts(['post_type' => $types, 'post_status' => 'publish', 'has_password' => false, 'posts_per_page' => -1,
-            'orderby' => 'date', 'order' => 'DESC', 'fields' => 'ids', 'no_found_rows' => true, 'suppress_filters' => true, 'ignore_sticky_posts' => true]);
-        if ($ids) { _prime_post_caches(array_map('intval', $ids), true, true); } // permalinks and robots meta without a query per post
-        $routes = \ZPL\Router::routes();
-        foreach ((array) $ids as $pid) {
-            $pid = (int) $pid;
-            $path = Bridge::path_of_post($pid);
-            if ($path === '' || Bridge::ineligible($path) !== '') { continue; }
-            if (isset($routes[$path]) && \ZPL\Dict::has_page($path)) { continue; }
-            $row = $rows[$path] ?? null;
-            if ($row && in_array($row->status, ['skipped', 'off'], true)) { continue; }
-            $robots = get_post_meta($pid, 'rank_math_robots', true);
-            if (is_array($robots) && in_array('noindex', $robots, true)) { continue; }
-            $cache[] = ['post_id' => $pid, 'path' => $path, 'title' => html_entity_decode(get_the_title($pid), ENT_QUOTES, 'UTF-8'),
-                'type' => (string) get_post_type($pid), 'date' => (string) get_the_date('j.m.Y', $pid), 'row' => $row];
-        }
+        set_transient('zpte2_missing', ['k' => $key, 'v' => $cache], 10 * MINUTE_IN_SECONDS);
         return $cache;
     }
 
     /**
-     * One sentence for the top of the Status tab: is it working, and if not, what to do about it.
-     * @return array{0:string,1:string,2:string} level (ok|warn|bad), text, action buttons (HTML)
+     * One sentence: is it working, and if not, what to do (ZP Suite command center reads [0] and [1]).
+     * @return array{0:string,1:string,2:string} level (ok|warn|bad), text, buttons (HTML)
      */
     public static function headline(): array {
         $settings = self::url(['tab' => 'settings']);
         if (!Bridge::hooks_ready()) {
-            return ['bad', 'Moduł językowy w tej wersji wtyczki nie współpracuje z tłumaczem, więc nic nie tłumaczę. Wgraj aktualną wersję ZP Suite.', ''];
+            return ['bad', 'Moduł Języki PL/EN w tej wersji nie współpracuje z tłumaczem. Wgraj aktualną wersję ZP Suite.', ''];
         }
         if (Settings::api_key() === '') {
             $text = Settings::key_unreadable()
                 ? 'Zapisanego klucza OpenAI nie da się odczytać (zmieniły się klucze bezpieczeństwa WordPressa). Wklej klucz ponownie.'
-                : 'Brak klucza OpenAI, więc nowe wpisy nie dostają wersji angielskiej.';
-            return ['bad', $text, '<a class="button button-primary" href="' . esc_url($settings . '#zpte-key') . '">Wklej klucz</a>'];
+                : 'Brak klucza OpenAI: obecne strony EN działają, ale nowe i zmienione teksty czekają na tłumaczenie.';
+            return ['bad', $text, '<a class="button button-primary" href="' . esc_url($settings . '#zpte2-key') . '">Wklej klucz</a>'];
         }
-        $alert = Log::current_alert();
-        if ($alert) {
-            return ['bad', 'Wstrzymane: ' . (string) $alert['m'], self::button('retry', 'Spróbuj ponownie', [], 'button button-primary') . '<a class="button" href="' . esc_url($settings) . '">Ustawienia</a>'];
-        }
-        if (!Settings::get('enabled')) {
-            return ['warn', 'Codzienne tłumaczenie jest wyłączone, więc nowe wpisy nie dostaną wersji angielskiej same.', '<a class="button button-primary" href="' . esc_url($settings . '#zpte-enabled') . '">Włącz w ustawieniach</a>'];
+        if ($a = Log::current_alert()) {
+            return ['bad', 'Wstrzymany: ' . (string) $a['m'], self::button('resume', 'Spróbuj ponownie', [], 'button button-primary') . ' <a class="button" href="' . esc_url($settings) . '">Ustawienia</a>'];
         }
         $p = Worker::progress();
-        if ($p['state'] === 'limit') {
-            return ['warn', 'Wstrzymane do jutra: wykorzystano dzienny limit znaków. Dokończę sam po północy.', '<a class="button" href="' . esc_url($settings . '#zpte-limit') . '">Zmień limit</a>'];
+        if ($p['paused'] !== '' && $p['retry_at'] > time()) {
+            return ['warn', $p['paused'], self::button('resume', 'Wznów teraz')];
         }
-        if ($p['state'] === 'retry') {
-            $at = (int) ($p['retry_at'] ?? 0);
-            return ['warn', 'Chwilowy błąd połączenia z OpenAI. Ponowię sam' . ($at > time() ? ' o ' . wp_date('H:i', $at) : '') . '.', ''];
+        if (!Settings::get('enabled')) {
+            return ['warn', 'Codzienne sprawdzenie jest wyłączone: nowe wpisy dostaną wersję EN tylko po publikacji lub ręcznym sprawdzeniu.', '<a class="button" href="' . esc_url($settings) . '">Włącz w ustawieniach</a>'];
         }
-        if ((int) $p['queued'] > 0) {
-            $n = (int) $p['queued'];
-            return ['ok', 'Tłumaczę: w kolejce ' . $n . ' ' . self::pages_word($n) . '. Postęp widać poniżej.', ''];
+        if (!Import::done()) {
+            return ['ok', 'Przenoszę obecne tłumaczenia i adresy EN do nowego tłumacza (bez kosztów OpenAI). Strony EN działają w tym czasie jak dotąd.', ''];
         }
-        $last = (int) get_option('zpte_last_plan');
-        $next = wp_next_scheduled(Worker::DAILY);
-        $text = 'Działa. ' . ($last ? 'Ostatnie sprawdzenie: ' . self::day_time($last) . '.' : 'Pierwsze sprawdzenie jeszcze przed nami.')
-            . ($next ? ' Następne: ' . self::day_time((int) $next) . '.' : '');
-        return ['ok', $text, self::button('run', 'Sprawdź teraz')];
+        if ($p['work']) {
+            return ['ok', 'Tłumaczę: ' . $p['message'], ''];
+        }
+        $s = Worker::state();
+        $next = (int) (wp_next_scheduled(Worker::DAILY) ?: Worker::next_daily());
+        $text = 'Działa. Wersji EN: ' . Index::count() . '. ' . ((int) $s['daily_at'] ? 'Ostatnie sprawdzenie: ' . self::day_time((int) $s['daily_at']) . '. ' : '') . 'Następne: ' . self::day_time($next) . '.';
+        return ['ok', $text, self::button('run', 'Sprawdź wszystko teraz')];
+    }
+
+    public static function notices(): void {
+        if (!current_user_can('manage_options') || (($_GET['page'] ?? '') === self::SLUG)) { return; }
+        $a = Log::current_alert();
+        if (!$a) { return; }
+        echo '<div class="notice notice-error"><p><strong>Tłumacz EN wstrzymany:</strong> ' . esc_html((string) $a['m'])
+            . ' <a href="' . esc_url(self::url()) . '">Otwórz Tłumacza EN</a></p></div>';
     }
 
     // ------------------------------------------------------------------- page
 
     public static function page(): void {
         if (!current_user_can('manage_options')) { return; }
-        $tabs = ['status' => 'Status', 'pages' => 'Strony', 'settings' => 'Ustawienia', 'log' => 'Dziennik'];
-        $tab = sanitize_key($_GET['tab'] ?? 'status');
-        if ($tab === 'edit') { $current = 'pages'; } else { $current = isset($tabs[$tab]) ? $tab : 'status'; }
-        $ready = Bridge::ready();
-        if ($ready) { Store::install(); }
-        echo '<div class="wrap zpx zpte"><header class="zpxHead"><span class="zpxKicker">ZP Suite · Tłumacz EN ' . esc_html(ZPTE_VERSION) . '</span><h1>Tłumacz EN</h1>'
-            . '<p>Każdej nocy o 3:00 tłumaczy nowe polskie wpisy na angielski (OpenAI) i uzupełnia braki na stronach angielskich. Słownik z wtyczki i ręczne poprawki z Języki PL/EN mają pierwszeństwo.</p>';
-        if ($ready && $current === 'status') {
-            $missing = count(self::missing_pages());
-            $attention = Store::count_paths(['attention' => true]);
-            $stats = [
-                [$missing, 'bez wersji EN', self::url(['tab' => 'pages', 'f' => 'missing']), $missing > 0],
-                [Store::queued_count(), 'w kolejce', '', false],
-                [$attention, 'wymaga uwagi', self::url(['tab' => 'pages', 'f' => 'error']), $attention > 0],
-                [Store::count_paths(['kind' => ['new', 'older'], 'status' => 'published']), 'przetłumaczone przez AI', self::url(['tab' => 'pages', 'f' => 'new']), false],
-            ];
-            echo '<div class="zpxStats">';
-            foreach ($stats as [$n, $label, $href, $hot]) {
-                $inner = '<strong>' . esc_html(number_format_i18n((int) $n)) . '</strong><span>' . esc_html($label) . '</span>';
-                echo $href !== '' ? '<a class="zpxStat' . ($hot ? ' is-hot' : '') . '" href="' . esc_url($href) . '">' . $inner . '</a>' : '<div class="zpxStat">' . $inner . '</div>';
-            }
-            echo '</div>';
+        if (Bridge::ready()) { Store::install(); }
+        $tab = self::tab();
+        echo '<div class="wrap zpte2"><h1>Tłumacz EN</h1>';
+        echo '<p class="zpte2-lead">Jeden tłumacz całej strony: nowe i zmienione teksty po angielsku, angielskie adresy z przekierowaniami, mapy witryny EN i hreflang. Sprawdza wszystko codziennie o 03:00 i od razu po publikacji wpisu.</p>';
+        self::flash();
+        echo '<nav class="zpte2-tabs" aria-label="Tłumacz EN">';
+        foreach (self::TABS as $k => $label) {
+            echo '<a href="' . esc_url(self::url(['tab' => $k])) . '"' . ($k === $tab ? ' class="is-active" aria-current="page"' : '') . '>' . esc_html($label) . '</a>';
         }
-        echo '</header><hr class="wp-header-end">';
-        if (!empty($_GET['msg'])) { echo '<div class="notice notice-success is-dismissible"><p>' . esc_html(wp_unslash((string) $_GET['msg'])) . '</p></div>'; }
-        if (!empty($_GET['err'])) { echo '<div class="notice notice-error is-dismissible"><p>' . esc_html(wp_unslash((string) $_GET['err'])) . '</p></div>'; }
-        echo '<nav class="zpxTabs" aria-label="Zakładki Tłumacza EN">';
-        foreach ($tabs as $k => $label) { echo '<a class="' . ($k === $current ? 'is-active' : '') . '" href="' . esc_url(self::url(['tab' => $k])) . '"' . ($k === $current ? ' aria-current="page"' : '') . '>' . esc_html($label) . '</a>'; }
         echo '</nav>';
-        if (!$ready) {
-            echo '<section class="zpxCard zpte-gap"><p class="zpte-bad"><strong>Brak modułu językowego (zaprojektowani-languages).</strong> Tłumacz zapisuje wersje angielskie w tym module, więc bez niego nic nie robi.</p></section></div>';
+        if (!Bridge::ready()) {
+            echo '<div class="zpte2-box is-bad"><p>Brak modułu Języki PL/EN, więc tłumacz nie działa.</p></div></div>';
             return;
         }
-        if ($current === 'status') { do_action('zpte_rewrite_card'); }
-        if ($tab === 'edit') { self::tab_edit((int) ($_GET['id'] ?? 0)); }
-        else { $fn = 'tab_' . $current; self::$fn(); }
+        switch ($tab) {
+            case 'pages': self::tab_pages(); break;
+            case 'texts': self::tab_texts(); break;
+            case 'settings': self::tab_settings(); break;
+            case 'log': self::tab_log(); break;
+            default: self::tab_overview();
+        }
         echo '</div>';
     }
 
-    private static function tab_status(): void {
+    private static function flash(): void {
+        $msg = isset($_GET['zpte2_msg']) && is_string($_GET['zpte2_msg']) ? sanitize_text_field(wp_unslash($_GET['zpte2_msg'])) : '';
+        if ($msg === '') { return; }
+        $bad = !empty($_GET['zpte2_err']);
+        echo '<div class="zpte2-flash' . ($bad ? ' is-bad' : '') . '" role="status"><p>' . esc_html($msg) . '</p></div>';
+    }
+
+    private static function tab_overview(): void {
         [$level, $text, $actions] = self::headline();
-        echo '<section class="zpteState is-' . esc_attr($level) . '" role="status"><p><span class="zpteDot" aria-hidden="true"></span>' . esc_html($text) . '</p>'
-            . ($actions !== '' ? '<div class="zpteActions">' . $actions . '</div>' : '') . '</section>';
+        echo '<div class="zpte2-box is-' . esc_attr($level) . '"><p>' . esc_html($text) . '</p>' . ($actions !== '' ? '<div class="zpte2-actions">' . $actions . '</div>' : '') . '</div>';
 
         $p = Worker::progress();
-        $active = Settings::api_key() !== '' && Bridge::hooks_ready()
-            && ((int) $p['queued'] > 0 || !empty($p['running']) || ((int) $p['finished_at'] > time() - 6 * HOUR_IN_SECONDS));
-        if ($active) { self::progress_panel($p); }
+        echo '<section class="zpte2-card" id="zpte2-progress" data-work="' . ($p['work'] ? '1' : '0') . '" aria-labelledby="zpte2-progress-title">'
+            . '<div class="zpte2-head"><h2 id="zpte2-progress-title">Bieżący przebieg</h2><strong data-zpte2="percent">' . (int) $p['percent'] . '%</strong></div>'
+            . '<div class="zpte2-bar" role="progressbar" aria-label="Postęp przebiegu" aria-valuemin="0" aria-valuemax="100" aria-valuenow="' . (int) $p['percent'] . '"><span style="width:' . (int) $p['percent'] . '%"></span></div>'
+            . '<p class="zpte2-message" data-zpte2="message" role="status" aria-live="polite">' . esc_html($p['message'] !== '' ? $p['message'] : 'Czekam na następne sprawdzenie.') . '</p>'
+            . '<ul class="zpte2-counts">'
+            . '<li><strong data-zpte2="done">' . (int) $p['done'] . '</strong> z <strong data-zpte2="total">' . (int) $p['total'] . '</strong> stron sprawdzonych</li>'
+            . '<li><strong data-zpte2="queued">' . (int) $p['queued'] . '</strong> w kolejce</li>'
+            . '<li><strong data-zpte2="en">' . (int) $p['en'] . '</strong> wersji EN</li>'
+            . '<li><strong data-zpte2="attention">' . (int) $p['attention'] . '</strong> do poprawy</li></ul>'
+            . '<p class="zpte2-current" data-zpte2="current">' . ($p['current'] !== '' && $p['work'] ? esc_html('Teraz: ' . $p['current']) : '') . '</p>'
+            . '<p class="description">Postęp odświeża się sam. Tłumaczenie działa w tle także przy zamkniętym panelu; gdy serwer wstrzyma zadania w tle, otwarty panel prowadzi je dalej.</p>'
+            . '<div class="zpte2-actions">' . self::button('run', 'Sprawdź wszystko teraz', [], 'button button-primary')
+            . ($p['paused'] !== '' || Log::current_alert() ? ' ' . self::button('resume', 'Wznów') : '') . '</div></section>';
+
+        $today = Log::usage();
+        $month = Log::month();
+        $cap = (float) Settings::get('monthly_usd');
+        $daily = (int) Settings::get('daily_chars');
+        $s = Worker::state();
+        $next = (int) (wp_next_scheduled(Worker::DAILY) ?: 0);
+        echo '<div class="zpte2-grid">';
+        echo '<section class="zpte2-card"><h2>Koszt OpenAI</h2><dl class="zpte2-dl">'
+            . '<dt>Dziś</dt><dd>' . esc_html(self::usd((float) $today['usd']) . ' · ' . number_format_i18n((int) $today['chars']) . ' znaków' . ($daily > 0 ? ' z ' . number_format_i18n($daily) : '') . ' · ' . (int) $today['requests'] . ' zapytań') . '</dd>'
+            . '<dt>Ten miesiąc</dt><dd>' . esc_html(self::usd((float) $month['usd']) . ($cap > 0 ? ' z limitu ' . self::usd($cap) : '')) . '</dd>'
+            . '<dt>Model</dt><dd>' . esc_html(Settings::model() . ' · rozumowanie ' . (Settings::EFFORTS[Settings::effort()] ?? Settings::effort())) . '</dd></dl></section>';
+        echo '<section class="zpte2-card"><h2>Harmonogram</h2><dl class="zpte2-dl">'
+            . '<dt>Codziennie</dt><dd>' . esc_html(Settings::get('enabled') ? '03:00 (czas strony) — nowe, zmienione i wszystkie pozostałe strony' : 'wyłączone') . '</dd>'
+            . '<dt>Ostatnie</dt><dd>' . esc_html(self::day_time((int) $s['daily_at'])) . '</dd>'
+            . '<dt>Następne</dt><dd>' . esc_html($next ? self::day_time($next) : '—') . '</dd>'
+            . '<dt>Po publikacji</dt><dd>' . esc_html(Settings::get('auto') ? 'od razu (tylko nowe i zmienione teksty)' : 'wyłączone') . '</dd></dl></section>';
+        echo '</div>';
 
         $missing = self::missing_pages();
-        echo '<div class="zpxGrid">';
-        echo '<section class="zpxCard"><h2>Strony bez wersji angielskiej</h2>';
-        if ($missing) {
-            echo '<p>Goście z zagranicy widzą te strony po polsku: przekierowanie na wersję angielską działa tylko dla stron, które ją mają.</p>';
+        echo '<section class="zpte2-card"><h2>Wpisy i strony bez wersji EN</h2>';
+        if (!$missing) {
+            echo '<p>Każdy opublikowany wpis i strona ma wersję angielską.</p></section>';
+            return;
         }
-        self::missing_list(array_slice($missing, 0, 6), 'status');
-        if (count($missing) > 6) { echo '<a class="zpxMore" href="' . esc_url(self::url(['tab' => 'pages', 'f' => 'missing'])) . '">Wszystkie (' . count($missing) . ') →</a>'; }
-        echo '</section>';
+        echo '<p>' . esc_html(count($missing) . ' ' . self::pages_word(count($missing)) . ' — goście z zagranicy widzą je po polsku. Tłumacz zajmie się nimi sam przy najbliższym przebiegu; możesz też uruchomić to od razu.') . '</p><ul class="zpte2-list">';
+        foreach (array_slice($missing, 0, 15) as $m) {
+            echo '<li><span><a href="' . esc_url(home_url($m['path'])) . '" target="_blank" rel="noopener">' . esc_html($m['title'] !== '' ? $m['title'] : $m['path']) . '</a><small>' . esc_html($m['path'] . ' · ' . $m['date']) . '</small></span>'
+                . self::button('translate_post', 'Przetłumacz teraz', ['post_id' => $m['post_id']]) . '</li>';
+        }
+        echo '</ul></section>';
+    }
 
-        $usage = Log::usage();
-        $month = Log::month();
-        $limit = (int) Settings::get('daily_chars');
-        $next = wp_next_scheduled(Worker::DAILY);
-        $last = (int) get_option('zpte_last_plan');
-        $cron = defined('DISABLE_WP_CRON') && DISABLE_WP_CRON;
-        $key = Settings::api_key() !== '';
-        $rows = [
-            'Klucz OpenAI' => $key ? 'zapisany (' . Settings::key_hint() . ')' . (Settings::key_source() === 'constant' ? ', z wp-config.php' : '') : 'brak',
-            'Model' => Settings::model(),
-            'Następne sprawdzenie' => $next ? self::day_time((int) $next) : '—',
-            'Ostatnie sprawdzenie' => $last ? self::day_time($last) : 'jeszcze nie było',
-            'Dziś wysłano do OpenAI' => number_format_i18n((int) $usage['chars']) . ' znaków' . ($limit > 0 ? ' z ' . number_format_i18n($limit) . ' (limit dzienny)' : ' (bez limitu)'),
-            'W tym miesiącu' => number_format_i18n((int) $month['chars']) . ' znaków, zapytań: ' . number_format_i18n((int) $month['requests']),
-            'Uruchamianie w tle' => $cron ? 'wyłączone na serwerze (DISABLE_WP_CRON): tłumaczenie idzie przy otwartym panelu albo z zadaniem cron na hostingu' : 'włączone: start przy pierwszym wejściu na stronę po 3:00',
+    // ---------------------------------------------------------------- pages
+
+    private static function filters(): array {
+        return [
+            'all' => ['Wszystkie', ['status' => ['new', 'done', 'partial', 'error']]],
+            'en' => ['Z wersją EN', ['status' => ['done', 'partial']]],
+            'queue' => ['W kolejce', ['queued' => 1, 'status' => ['new', 'done', 'partial', 'error']]],
+            'attention' => ['Do poprawy', ['attention' => true, 'status' => ['new', 'done', 'partial', 'error']]],
+            'off' => ['Wyłączone', ['status' => ['off']]],
         ];
-        echo '<section class="zpxCard"><h2>Szczegóły</h2><dl class="zpteDl">';
-        foreach ($rows as $k => $v) { echo '<div><dt>' . esc_html($k) . '</dt><dd' . ($k === 'Klucz OpenAI' && !$key ? ' class="zpte-bad"' : '') . '>' . esc_html($v) . '</dd></div>'; }
-        echo '</dl>';
-        if ($key) { echo '<div class="zpteActions">' . self::button('run', 'Sprawdź teraz', [], 'button button-primary') . self::button('test', 'Sprawdź połączenie z OpenAI') . '</div>'; }
-        echo '<p class="description">Nowy polski wpis dostaje angielski adres (np. /en/websites/…), przetłumaczony tytuł, opis, treść i dane dla Google, a wersje PL i EN wskazują się nawzajem (hreflang).</p></section>';
-        echo '</div>';
-    }
-
-    /** Rows of Polish pages without English, each with one action. $from = tab the actions return to. */
-    private static function missing_list(array $items, string $from): void {
-        if (!$items) { echo '<div class="zpxEmpty">Każda opublikowana strona ma wersję angielską.</div>'; return; }
-        $key = Settings::api_key() !== '';
-        if (!$key) {
-            echo '<p class="zpteNote">Najpierw <a href="' . esc_url(self::url(['tab' => 'settings'])) . '#zpte-key">wklej klucz OpenAI</a>, potem przetłumaczysz te strony jednym przyciskiem.</p>';
-        }
-        $back = ['back_tab' => $from, 'f' => 'missing'];
-        echo '<div class="zpteList">';
-        foreach ($items as $it) {
-            $row = $it['row'];
-            $type = get_post_type_object($it['type']);
-            $meta = rawurldecode($it['path']) . ' · ' . ($type ? (string) $type->labels->singular_name : $it['type']) . ' · ' . $it['date'];
-            $chip = '';
-            $action = '';
-            if ($row && ((int) $row->queued || $row->status === 'working')) {
-                $chip = '<span class="zpxPill">w kolejce</span>';
-            } elseif ($row && $row->status === 'draft') {
-                $chip = '<span class="zpxPill is-quote">szkic do akceptacji</span>';
-                $en = (string) $row->en_path !== '' ? (string) $row->en_path : \ZPL\Router::en_path((string) $row->path);
-                $action = '<a class="button" href="' . esc_url(home_url($en) . '?zpte_preview=1') . '" target="_blank" rel="noopener">Podgląd</a>'
-                    . self::button('publish', 'Opublikuj', array_merge($back, ['id' => (int) $row->id]), 'button button-primary');
-            } else {
-                if ($row && $row->status === 'error') { $chip = '<span class="zpxPill is-warn" title="' . esc_attr((string) $row->message) . '">nie udało się</span>'; }
-                $action = $key
-                    ? self::button('add', 'Przetłumacz', array_merge($back, ['path' => $it['path']]), 'button button-primary')
-                    : '<button type="button" class="button" disabled>Przetłumacz</button>';
-            }
-            echo '<div class="zpteItem"><div class="zpteItemMain"><a href="' . esc_url(home_url($it['path'])) . '" target="_blank" rel="noopener"><b>' . esc_html($it['title'] !== '' ? $it['title'] : rawurldecode($it['path'])) . '</b></a><small>' . esc_html($meta) . '</small>'
-                . ($row && $row->status === 'error' && (string) $row->message !== '' ? '<small class="zpte-warn">' . esc_html((string) $row->message) . '</small>' : '') . '</div>'
-                . '<div class="zpteItemEnd">' . $chip . $action . '</div></div>';
-        }
-        echo '</div>';
-    }
-
-    private static function status_label(string $status): string {
-        $map = ['queued' => 'czeka w kolejce', 'working' => 'w trakcie', 'draft' => 'szkic do akceptacji', 'published' => 'gotowa', 'error' => 'problem', 'skipped' => 'pominięta', 'off' => 'wyłączona'];
-        return $map[$status] ?? $status;
-    }
-
-    private static function status_class(string $status): string {
-        $map = ['published' => 'is-ok', 'draft' => 'is-quote', 'error' => 'is-warn', 'skipped' => 'is-off', 'off' => 'is-off'];
-        return $map[$status] ?? '';
     }
 
     private static function tab_pages(): void {
-        $filters = [
-            'missing' => ['Bez wersji EN', null],
-            'new' => ['Tłumaczone przez AI', ['kind' => ['new', 'older']]],
-            'draft' => ['Szkice do akceptacji', ['status' => 'draft']],
-            'error' => ['Wymaga uwagi', ['attention' => true]],
-            'existing' => ['Gotowe strony EN', ['kind' => 'existing']],
-            'all' => ['Wszystkie', []],
-        ];
-        $f = sanitize_key($_GET['f'] ?? 'missing');
-        if (!isset($filters[$f])) { $f = 'missing'; }
-
-        echo '<nav class="zpxTabs zpte-filters" aria-label="Filtr stron">';
-        foreach ($filters as $k => [$label, $w]) {
-            $n = $w === null ? count(self::missing_pages()) : Store::count_paths($w);
-            echo '<a class="' . ($k === $f ? 'is-active' : '') . '" href="' . esc_url(self::url(['tab' => 'pages', 'f' => $k])) . '">' . esc_html($label) . ' <em>' . esc_html(number_format_i18n($n)) . '</em></a>';
-        }
-        echo '</nav>';
-
-        if ($f === 'missing') {
-            $missing = self::missing_pages();
-            echo '<section class="zpxCard zpte-gap"><h2>Polskie strony bez wersji angielskiej</h2><p>Goście z zagranicy widzą je po polsku. Tłumaczenie trwa kilka minut na stronę i od razu publikuje wersję angielską'
-                . (Settings::get('mode') === 'draft' ? ' jako szkic do akceptacji' : '') . '.</p>';
-            $todo = array_filter($missing, static function ($it) { return !$it['row'] || (!(int) $it['row']->queued && in_array($it['row']->status, ['queued', 'error'], true)); });
-            if (count($todo) > 1 && Settings::api_key() !== '') {
-                $limit = (int) Settings::get('daily_chars');
-                $confirm = 'Przetłumaczyć ' . count($todo) . ' ' . self::pages_word(count($todo)) . '? Koszt w OpenAI zależy od długości stron.' . ($limit > 0 ? ' Dzienny limit to ' . number_format_i18n($limit) . ' znaków: większa partia dokończy się następnego dnia.' : '');
-                echo '<div class="zpteActions">' . self::button('add_all', 'Przetłumacz wszystkie (' . count($todo) . ')', ['back_tab' => 'pages', 'f' => 'missing'], 'button button-primary', $confirm) . '</div>';
-            }
-            self::missing_list($missing, 'pages');
-            echo '</section>';
-        } else {
-            self::pages_table($filters[$f][1], $f);
-        }
-
-        echo '<details class="zpxCard zpte-gap"><summary>Przetłumacz inny adres</summary>';
-        echo '<form method="post" action="' . esc_url(admin_url('admin-post.php')) . '" class="zpte-add"><input type="hidden" name="action" value="zpte"><input type="hidden" name="do" value="add"><input type="hidden" name="back_tab" value="pages"><input type="hidden" name="f" value="' . esc_attr($f) . '">';
-        wp_nonce_field('zpte');
-        echo '<label for="zpte-add">Polski adres strony, np. <code>/strony-www/nazwa-wpisu/</code></label><span><input id="zpte-add" name="path" class="regular-text code" placeholder="/polski-adres/"> <button class="button">Dodaj do kolejki</button></span></form></details>';
-    }
-
-    private static function pages_table(array $where, string $f): void {
+        $filters = self::filters();
+        $f = isset($_GET['f']) && is_string($_GET['f']) ? sanitize_key(wp_unslash($_GET['f'])) : 'all';
+        if ($f === 'error') { $f = 'attention'; }
+        if (!isset($filters[$f])) { $f = 'all'; }
+        $q = isset($_GET['q']) && is_string($_GET['q']) ? trim(sanitize_text_field(wp_unslash($_GET['q']))) : '';
         $paged = max(1, (int) ($_GET['paged'] ?? 1));
-        $total = Store::count_paths($where);
-        $rows = Store::paths($where, self::PER_PAGE, ($paged - 1) * self::PER_PAGE, 'queued DESC, id DESC');
-        if (!$rows) { echo '<div class="zpxEmpty zpte-gap">Brak stron w tym widoku.</div>'; return; }
-        echo '<div class="zpte-gap"><table class="widefat striped zpte-table"><thead><tr><th>Strona PL</th><th>Wersja angielska</th><th>Stan</th><th>Teksty</th><th>Sprawdzono</th><th>Akcje</th></tr></thead><tbody>';
+        $where = $filters[$f][1];
+        if ($q !== '') { $where['search'] = $q; }
+
+        echo '<div class="zpte2-toolbar"><ul class="zpte2-filters">';
+        foreach ($filters as $k => [$label, $w]) {
+            echo '<li><a href="' . esc_url(self::url(['tab' => 'pages', 'f' => $k])) . '"' . ($k === $f ? ' class="is-active"' : '') . '>' . esc_html($label) . ' <span>' . (int) Store::count_pages($w) . '</span></a></li>';
+        }
+        echo '</ul><form method="get" class="zpte2-search"><input type="hidden" name="page" value="' . esc_attr(self::SLUG) . '"><input type="hidden" name="tab" value="pages"><input type="hidden" name="f" value="' . esc_attr($f) . '">'
+            . '<label class="screen-reader-text" for="zpte2-q">Szukaj adresu</label><input type="search" id="zpte2-q" name="q" value="' . esc_attr($q) . '" placeholder="Szukaj adresu PL lub EN"><button class="button">Szukaj</button></form></div>';
+
+        $total = Store::count_pages($where);
+        $rows = Store::pages($where, self::PER_PAGE, ($paged - 1) * self::PER_PAGE, 'queued DESC, priority ASC, id DESC');
+        if (!$rows) { echo '<div class="zpte2-card"><p>Brak stron w tym widoku.</p></div>'; return; }
+        $routes = \ZPL\Router::routes();
+        $status = ['new' => 'Nowa', 'done' => 'Gotowa', 'partial' => 'Częściowo', 'error' => 'Błąd', 'off' => 'Wyłączona'];
+        $stage = ['translating' => 'tłumaczy', 'route' => 'nadaje adres EN'];
+        echo '<div class="zpte2-card zpte2-table-wrap"><table class="zpte2-table"><thead><tr><th scope="col">Strona</th><th scope="col">Adres EN</th><th scope="col">Stan</th><th scope="col">Teksty</th><th scope="col">Sprawdzono</th><th scope="col"><span class="screen-reader-text">Akcje</span></th></tr></thead><tbody>';
         foreach ($rows as $r) {
-            $en = (string) $r->en_path !== '' ? (string) $r->en_path : \ZPL\Router::en_path((string) $r->path);
-            $kind = ['new' => 'nowy wpis', 'older' => 'starszy wpis', 'existing' => 'gotowa strona EN, uzupełniam braki'][$r->kind] ?? $r->kind;
-            echo '<tr><td data-label="Strona PL"><a href="' . esc_url(home_url((string) $r->path)) . '" target="_blank" rel="noopener">' . esc_html(rawurldecode((string) $r->path)) . '</a><br><small>' . esc_html($kind) . ((int) $r->post_id ? ' · <a href="' . esc_url((string) get_edit_post_link((int) $r->post_id)) . '">edytuj wpis</a>' : '') . '</small></td>';
-            echo '<td data-label="Wersja angielska"><a href="' . esc_url(home_url($en) . ($r->status === 'draft' ? '?zpte_preview=1' : '')) . '" target="_blank" rel="noopener">' . esc_html($en) . '</a>' . ($r->status === 'draft' ? '<br><small>podgląd dla administratora</small>' : '') . '</td>';
-            echo '<td data-label="Stan"><span class="zpxPill ' . esc_attr(self::status_class((string) $r->status)) . '">' . esc_html(self::status_label((string) $r->status)) . '</span>' . ((int) $r->queued ? '<br><small>w kolejce</small>' : '') . ($r->message ? '<br><small>' . esc_html((string) $r->message) . '</small>' : '') . '</td>';
-            echo '<td data-label="Teksty">' . number_format_i18n((int) $r->keys_ai) . ' z ' . number_format_i18n((int) $r->keys_total) . ' przetłumaczone automatycznie' . ((int) $r->keys_failed ? '<br><small class="zpte-bad">' . number_format_i18n((int) $r->keys_failed) . ' do ponowienia</small>' : '') . '</td>';
-            echo '<td data-label="Sprawdzono">' . esc_html(self::when($r->checked_at)) . '</td><td data-label="Akcje" class="zpte-actions">';
-            $hid = ['id' => (int) $r->id, 'back_tab' => 'pages', 'f' => $f];
-            if ($r->status === 'draft') { echo self::button('publish', 'Opublikuj', $hid, 'button button-primary'); }
-            if ($r->status !== 'off') { echo self::button('queue', 'Przetłumacz ponownie', $hid); }
-            if ((int) $r->keys_ai > 0) { echo '<a class="button" href="' . esc_url(self::url(['tab' => 'edit', 'id' => (int) $r->id])) . '">Popraw tłumaczenie</a> '; }
-            echo $r->status === 'off'
-                ? self::button('on', 'Włącz', $hid)
-                : self::button('off', 'Wyłącz', $hid, 'button', 'Wyłączyć tłumaczenie maszynowe tej strony? Angielski adres dodany przez tłumacza zostanie usunięty.');
+            $path = (string) $r->path;
+            $en = (string) ($routes[$path] ?? '');
+            $live = $en !== '' && strpos($en, '/en/') === 0 && Index::has($path);
+            $state = $status[$r->status] ?? $r->status;
+            if ($r->stage !== '' && isset($stage[$r->stage])) { $state .= ', ' . $stage[$r->stage]; }
+            elseif ((int) $r->queued) { $state .= ', w kolejce'; }
+            $cls = $r->status === 'error' || (int) $r->keys_failed > 0 ? 'bad' : ($r->status === 'done' ? 'ok' : ($r->status === 'off' ? 'off' : 'warn'));
+            echo '<tr><td><a href="' . esc_url(home_url($path)) . '" target="_blank" rel="noopener">' . esc_html($path) . '</a></td>';
+            echo '<td>' . ($en !== '' ? '<a href="' . esc_url(home_url($en)) . '" target="_blank" rel="noopener">' . esc_html($en) . '</a>' . ($live ? '' : ' <small>(jeszcze niewidoczna)</small>') . (Routes::polish($en) ? ' <small class="zpte2-warn">polskie słowa</small>' : '') : '—') . '</td>';
+            echo '<td><span class="zpte2-pill is-' . esc_attr($cls) . '">' . esc_html($state) . '</span>' . ((string) $r->message !== '' ? '<small>' . esc_html((string) $r->message) . '</small>' : '') . '</td>';
+            echo '<td>' . (int) $r->keys_done . ' / ' . (int) $r->keys_total . ((int) $r->keys_failed ? '<small class="zpte2-warn">' . (int) $r->keys_failed . ' bez tłumaczenia</small>' : '') . '</td>';
+            echo '<td>' . esc_html(self::when($r->checked_at)) . '</td><td class="zpte2-row-actions">';
+            if ($r->status !== 'off') {
+                echo self::button('page_check', 'Sprawdź teraz', ['id' => (int) $r->id]);
+                echo self::button('page_force', 'Przetłumacz od nowa', ['id' => (int) $r->id], 'button-link', 'Przetłumaczyć całą stronę od nowa? Ręczne poprawki zostaną.');
+                if ($r->kind !== 'home' && !Routes::external($path)) {
+                    echo '<details><summary>Zmień adres EN</summary>' . self::form('page_route', ['id' => (int) $r->id], '', 'zpte2-route')
+                        . '<label class="screen-reader-text" for="zpte2-en-' . (int) $r->id . '">Nowy adres EN</label><input type="text" id="zpte2-en-' . (int) $r->id . '" name="en" value="' . esc_attr($en) . '" pattern="/en/.*" required>'
+                        . '<button class="button">Zapisz</button><small>Stary adres przekieruje na nowy (301).</small></form></details>';
+                }
+            }
             echo '</td></tr>';
         }
         echo '</tbody></table></div>';
         $pages = (int) ceil($total / self::PER_PAGE);
         if ($pages > 1) {
-            echo '<p class="zpxPager">';
-            for ($i = 1; $i <= $pages; $i++) { echo $i === $paged ? '<strong>' . $i . '</strong> ' : '<a href="' . esc_url(self::url(['tab' => 'pages', 'f' => $f, 'paged' => $i])) . '">' . $i . '</a> '; }
+            echo '<p class="zpte2-pager">';
+            for ($i = 1; $i <= $pages; $i++) {
+                $args = ['tab' => 'pages', 'f' => $f, 'paged' => $i];
+                if ($q !== '') { $args['q'] = $q; }
+                echo $i === $paged ? '<strong>' . $i . '</strong> ' : '<a href="' . esc_url(self::url($args)) . '">' . $i . '</a> ';
+            }
             echo '</p>';
         }
     }
 
-    private static function tab_edit(int $id): void {
-        $row = Store::path($id);
-        echo '<p class="zpxBackLink"><a href="' . esc_url(self::url(['tab' => 'pages', 'f' => 'new'])) . '">← Lista stron</a></p>';
-        if (!$row) { echo '<div class="zpxEmpty zpte-gap">Nie ma takiej strony.</div>'; return; }
-        $paged = max(1, (int) ($_GET['paged'] ?? 1));
-        $per = 100;
-        $total = Store::count_strings_of($id);
-        $strings = Store::strings_of($id, $per, ($paged - 1) * $per);
-        $kinds = ['text' => 'tekst na stronie', 'title' => 'tytuł', 'meta' => 'opis w Google i podgląd linku', 'attr' => 'opis obrazka lub przycisku', 'schema' => 'dane dla Google'];
-        echo '<section class="zpxCard zpte-gap"><h2>' . esc_html(rawurldecode((string) $row->path)) . '</h2>';
-        echo '<p>Poprawione teksty są zapamiętywane jako ręczne i ponowne tłumaczenie ich nie nadpisze. Znaczniki <code>&lt;1&gt;…&lt;/1&gt;</code> i <code>&lt;2/&gt;</code> oznaczają linki i pogrubienia: muszą zostać.</p>';
-        if (!$strings) { echo '<div class="zpxEmpty">Ta strona nie ma tłumaczeń maszynowych.</div></section>'; return; }
-        echo '<form method="post" action="' . esc_url(admin_url('admin-post.php')) . '"><input type="hidden" name="action" value="zpte"><input type="hidden" name="do" value="edit"><input type="hidden" name="id" value="' . (int) $id . '"><input type="hidden" name="paged" value="' . (int) $paged . '">';
-        wp_nonce_field('zpte');
-        echo '<table class="widefat striped zpte-table zpte-edit"><thead><tr><th style="width:45%">Polski</th><th>Angielski</th></tr></thead><tbody>';
-        foreach ($strings as $s) {
-            echo '<tr><td data-label="Polski"><code style="white-space:pre-wrap">' . esc_html((string) $s->pl) . '</code><br><small>' . esc_html($kinds[(string) $s->kind] ?? (string) $s->kind) . ((int) $s->manual ? ' · poprawione ręcznie' : '') . '</small></td>'
-                . '<td data-label="Angielski"><textarea name="t[' . (int) $s->id . ']" rows="' . max(2, min(10, (int) ceil(strlen((string) $s->en) / 90))) . '">' . esc_textarea((string) $s->en) . '</textarea>'
-                . '<input type="hidden" name="o[' . (int) $s->id . ']" value="' . esc_attr(md5((string) $s->en)) . '"></td></tr>';
+    // ---------------------------------------------------------------- texts
+
+    private static function tab_texts(): void {
+        $q = isset($_GET['q']) && is_string($_GET['q']) ? trim(sanitize_text_field(wp_unslash($_GET['q']))) : '';
+        echo '<div class="zpte2-card"><p>Pamięć tłumaczeń: każdy polski tekst ma jedno angielskie tłumaczenie, używane na wszystkich stronach, na których występuje. Poprawka zapisana tutaj zostaje na stałe (tłumacz jej nie nadpisze) i od razu trafia na strony EN.</p>'
+            . '<form method="get" class="zpte2-search"><input type="hidden" name="page" value="' . esc_attr(self::SLUG) . '"><input type="hidden" name="tab" value="texts">'
+            . '<label class="screen-reader-text" for="zpte2-tq">Szukaj tekstu</label><input type="search" id="zpte2-tq" name="q" value="' . esc_attr($q) . '" placeholder="Szukaj po polsku lub angielsku"><button class="button">Szukaj</button></form></div>';
+        $rows = Store::find_strings($q, 50);
+        echo '<h2 class="zpte2-h">' . esc_html($q === '' ? 'Ostatnio przetłumaczone' : 'Wyniki: ' . count($rows) . (count($rows) === 50 ? '+' : '')) . '</h2>';
+        if (!$rows) { echo '<div class="zpte2-card"><p>Nic nie znaleziono.</p></div>'; return; }
+        $origins = ['ai' => 'AI', 'manual' => 'poprawka', 'zpte' => 'import', 'codex' => 'import', 'v2' => 'import', 'shared' => 'wspólny', 'import' => 'import'];
+        echo '<div class="zpte2-texts">';
+        foreach ($rows as $r) {
+            $label = $origins[(string) $r->origin] ?? (string) $r->origin;
+            if ((int) $r->manual) { $label = 'poprawka'; }
+            $scope = (int) $r->scope === 0 ? ((int) $r->shared ? 'cała strona (menu, stopka, tytuły)' : 'wszystkie strony z tym tekstem') : 'tylko strona ' . (string) (Store::page((int) $r->scope)->path ?? '#' . (int) $r->scope);
+            echo '<div class="zpte2-text">' . self::form('string_save', ['id' => (int) $r->id, 'q' => $q], '', 'zpte2-text-form')
+                . '<p class="zpte2-pl" lang="pl">' . esc_html((string) $r->pl) . '</p>'
+                . '<label class="screen-reader-text" for="zpte2-s' . (int) $r->id . '">Tłumaczenie</label><textarea id="zpte2-s' . (int) $r->id . '" name="en" rows="' . (strlen((string) $r->en) > 180 ? 4 : 2) . '" lang="en">' . esc_textarea((string) $r->en) . '</textarea>'
+                . '<p class="zpte2-meta"><span class="zpte2-pill">' . esc_html($label) . '</span> ' . esc_html($scope . ' · ' . self::when((string) $r->updated_at)) . ' <button class="button button-small">Zapisz poprawkę</button></p></form></div>';
         }
-        echo '</tbody></table>';
-        submit_button('Zapisz poprawki');
-        echo '</form>';
-        $pages = (int) ceil($total / $per);
-        if ($pages > 1) {
-            echo '<p class="zpxPager">';
-            for ($i = 1; $i <= $pages; $i++) { echo $i === $paged ? '<strong>' . $i . '</strong> ' : '<a href="' . esc_url(self::url(['tab' => 'edit', 'id' => $id, 'paged' => $i])) . '">' . $i . '</a> '; }
-            echo '</p>';
-        }
-        echo '</section>';
+        echo '</div>';
     }
+
+    // ------------------------------------------------------------- settings
 
     private static function tab_settings(): void {
-        $s = Settings::all();
-        $types = Settings::public_types();
-        echo '<form method="post" action="' . esc_url(admin_url('admin-post.php')) . '" autocomplete="off"><input type="hidden" name="action" value="zpte"><input type="hidden" name="do" value="save">';
-        wp_nonce_field('zpte');
-        echo '<section class="zpxCard zpte-gap" id="zpte-key"><h2>Klucz OpenAI</h2>';
-        if (Settings::key_source() === 'constant') {
-            echo '<p>Klucz jest ustawiony w wp-config.php (stała <code>ZPTE_OPENAI_API_KEY</code>): ' . esc_html(Settings::key_hint()) . '.</p>';
+        $all = Settings::all();
+        $src = Settings::key_source();
+        echo self::form('save_settings', [], '', 'zpte2-settings');
+        echo '<section class="zpte2-card" id="zpte2-key"><h2>Klucz API OpenAI</h2>';
+        if ($src === 'constant') {
+            echo '<p>Klucz pochodzi z pliku wp-config.php (stała ZPTE_OPENAI_API_KEY): ' . esc_html(Settings::key_hint()) . '.</p>';
         } else {
-            $hint = Settings::key_hint();
-            echo '<p><label for="zpte-key-input" class="screen-reader-text">Klucz OpenAI</label><input id="zpte-key-input" type="password" name="api_key" class="regular-text code zpte-wide" autocomplete="new-password" spellcheck="false" placeholder="' . esc_attr($hint !== '' ? 'zapisany: ' . $hint . ' (wklej nowy, aby zmienić)' : 'sk-…') . '"></p>';
-            echo '<p class="description">Klucz utworzysz na platform.openai.com → API keys. Zapisuję go zaszyfrowany i nigdy nie pokazuję w całości. Puste pole zostawia obecny klucz.</p>';
-            if ($hint !== '') { echo '<p><label><input type="checkbox" name="delete_key" value="1"> Usuń zapisany klucz</label></p>'; }
+            if ($src === 'option') { echo '<p>Zapisany klucz: <code>' . esc_html(Settings::key_hint()) . '</code>. Zostaw pole puste, żeby go nie zmieniać.</p>'; }
+            elseif (Settings::key_unreadable()) { echo '<p class="zpte2-warn">Zapisanego klucza nie da się odczytać (zmieniły się klucze bezpieczeństwa WordPressa). Wklej go ponownie.</p>'; }
+            else { echo '<p>Brak klucza: nowe teksty nie będą tłumaczone.</p>'; }
+            echo '<p><label for="zpte2-api-key">Nowy klucz</label><br><input type="password" id="zpte2-api-key" name="api_key" value="" autocomplete="new-password" spellcheck="false" class="regular-text" placeholder="sk-…"></p>';
+            if ($src === 'option') { echo '<p><label><input type="checkbox" name="delete_key" value="1"> Usuń zapisany klucz</label></p>'; }
+            echo '<p class="description">Klucz jest zapisany w bazie w postaci zaszyfrowanej i nigdy nie jest wyświetlany w całości.</p>';
         }
         echo '</section>';
 
-        $model = Settings::model();
-        $custom = !isset(self::MODELS[$model]);
-        $limit = (int) $s['daily_chars'];
-        $limits = self::LIMITS;
-        if (!isset($limits[$limit])) { $limits = [$limit => number_format_i18n($limit) . ' znaków (obecny)'] + $limits; }
-        echo '<section class="zpxCard zpte-gap"><h2>Tłumaczenie</h2><table class="form-table zpte-form" role="presentation"><tbody>';
-        echo '<tr id="zpte-enabled"><th>Codzienne tłumaczenie</th><td><label><input type="checkbox" name="enabled" value="1"' . checked(!empty($s['enabled']), true, false) . '> Codziennie o 3:00 tłumacz nowe wpisy i uzupełniaj braki na stronach angielskich</label></td></tr>';
-        echo '<tr><th><label for="zpte-model">Model OpenAI</label></th><td><select id="zpte-model" name="model_choice">';
-        if ($custom) { echo '<option value="' . esc_attr($model) . '" selected>' . esc_html($model . ' (obecny)') . '</option>'; }
-        foreach (self::MODELS as $m => $label) { echo '<option value="' . esc_attr($m) . '"' . selected($model, $m, false) . '>' . esc_html($label) . '</option>'; }
-        echo '</select><p class="description"><label for="zpte-model-custom">Inny model (zostaw puste, jeśli nie wiesz):</label><br><input id="zpte-model-custom" name="model_custom" class="regular-text code" placeholder="np. gpt-5-mini"></p>'
-            . '<p class="description">Koszt zależy od długości tekstów i cennika OpenAI. „Sprawdź połączenie” na zakładce Status pokaże, czy model jest dostępny dla Twojego klucza.</p></td></tr>';
-        echo '<tr><th>Nowe wpisy</th><td><label><input type="radio" name="mode" value="publish"' . checked($s['mode'] !== 'draft', true, false) . '> publikuj wersję angielską od razu</label><br><label><input type="radio" name="mode" value="draft"' . checked($s['mode'] === 'draft', true, false) . '> zapisz jako szkic, opublikuję ręcznie (Strony → Szkice do akceptacji)</label></td></tr>';
-        echo '<tr><th>Co tłumaczyć</th><td>';
-        foreach ($types as $name => $label) { echo '<label class="zpte-check"><input type="checkbox" name="types[]" value="' . esc_attr($name) . '"' . checked(in_array($name, (array) $s['types'], true), true, false) . '> ' . esc_html($label) . '</label>'; }
-        echo '</td></tr>';
-        echo '<tr><th><label for="zpte-since">Nowe wpisy = opublikowane od</label></th><td><input id="zpte-since" type="date" name="since" value="' . esc_attr((string) $s['since']) . '"></td></tr>';
-        echo '<tr><th>Starsze wpisy</th><td><label><input type="checkbox" name="older" value="1"' . checked(!empty($s['older']), true, false) . '> Co noc tłumacz też starsze wpisy i strony bez wersji angielskiej</label><p class="description">Można to zrobić też ręcznie: Strony → Bez wersji EN → Przetłumacz. Do czasu tłumaczenia taka strona ma pod /en/… polską treść i nie trafia do Google.</p></td></tr>';
-        echo '<tr><th>Braki na stronach EN</th><td><label><input type="checkbox" name="gaps" value="1"' . checked(!empty($s['gaps']), true, false) . '> Uzupełniaj nieprzetłumaczone teksty na gotowych stronach angielskich (nowe sekcje, stopka, menu)</label><p class="description">Gotowe teksty biorę ze słownika i z pamięci tłumaczeń; do OpenAI wysyłam tylko brakujące.</p></td></tr>';
-        echo '<tr id="zpte-limit"><th><label for="zpte-limit-select">Dzienny limit</label></th><td><select id="zpte-limit-select" name="daily_chars">';
-        foreach ($limits as $n => $label) { echo '<option value="' . (int) $n . '"' . selected($limit, (int) $n, false) . '>' . esc_html($label) . '</option>'; }
-        echo '</select><p class="description">Ile polskiego tekstu dziennie wysyłam do OpenAI. Gdy limit się skończy, dokończę następnego dnia.</p></td></tr>';
-        echo '<tr><th><label for="zpte-instr">Dodatkowe instrukcje</label></th><td><textarea id="zpte-instr" name="instructions" rows="4" placeholder="np. Zwracaj się do klienta per you. „Wycena” tłumacz jako „quote”.">' . esc_textarea((string) $s['instructions']) . '</textarea></td></tr>';
-        echo '</tbody></table>';
-        submit_button('Zapisz ustawienia');
-        echo '</section></form>';
+        $models = self::MODELS;
+        foreach ((array) get_option(self::MODELS_OPTION, []) as $m) {
+            if (is_string($m) && !isset($models[$m]) && preg_match('~^(gpt|o\d)~', $m)) { $models[$m] = $m; }
+        }
+        $current = Settings::model();
+        if (!isset($models[$current])) { $models[$current] = $current; }
+        echo '<section class="zpte2-card"><h2>Model i jakość</h2><p><label for="zpte2-model">Model</label><br><select id="zpte2-model" name="model">';
+        foreach ($models as $m => $label) { echo '<option value="' . esc_attr($m) . '"' . selected($current, $m, false) . '>' . esc_html($label) . '</option>'; }
+        echo '</select> <label class="screen-reader-text" for="zpte2-model-other">Inny model</label><input type="text" id="zpte2-model-other" name="model_other" value="" placeholder="inny model (opcjonalnie)" spellcheck="false"></p>';
+        echo '<p><label for="zpte2-effort">Rozumowanie</label><br><select id="zpte2-effort" name="effort">';
+        foreach (Settings::EFFORTS as $e => $label) { echo '<option value="' . esc_attr($e) . '"' . selected(Settings::effort(), $e, false) . '>' . esc_html($label) . '</option>'; }
+        echo '</select></p><p><label for="zpte2-instr">Dodatkowe wskazówki dla tłumacza</label><br><textarea id="zpte2-instr" name="instructions" rows="3" class="large-text" maxlength="2000">' . esc_textarea((string) $all['instructions']) . '</textarea></p>'
+            . '<p class="description">Np. nazwy, których nie tłumaczyć. Tłumacz zawsze pisze naturalnym amerykańskim angielskim, oddaje sens, a nie słowa, i zostawia ceny w złotych.</p></section>';
 
-        echo '<details class="zpxCard zpte-gap zpte-danger"><summary>Usuń dane tłumacza</summary><p>Usuwa wszystkie tłumaczenia maszynowe, listę stron i angielskie adresy dodane przez tłumacza. Ustawienia i klucz zostają.</p>'
-            . self::button('purge', 'Usuń tłumaczenia maszynowe', [], 'button button-link-delete', 'Usunąć wszystkie tłumaczenia maszynowe? Strony EN tłumaczone przez OpenAI wrócą do stanu sprzed tłumaczenia.') . '</details>';
+        echo '<section class="zpte2-card"><h2>Kiedy tłumaczyć</h2>'
+            . '<p><label><input type="checkbox" name="enabled" value="1"' . checked(!empty($all['enabled']), true, false) . '> Codziennie o 03:00 sprawdzaj wszystkie strony i tłumacz nowe oraz zmienione teksty</label></p>'
+            . '<p><label><input type="checkbox" name="auto" value="1"' . checked(!empty($all['auto']), true, false) . '> Tłumacz wpis od razu po publikacji lub aktualizacji</label></p>'
+            . '<p><label><input type="checkbox" name="terms" value="1"' . checked(!empty($all['terms']), true, false) . '> Strony kategorii też mają wersje EN</label></p>'
+            . '<p><label><input type="checkbox" name="recheck" value="1"' . checked(!empty($all['recheck']), true, false) . '> Codziennie czytaj ponownie wszystkie strony EN (menu, stopka, listy wpisów)</label></p><fieldset><legend>Rodzaje treści</legend>';
+        foreach (Settings::public_types() as $type => $label) {
+            echo '<label class="zpte2-check"><input type="checkbox" name="types[]" value="' . esc_attr($type) . '"' . checked(in_array($type, Settings::types(), true), true, false) . '> ' . esc_html($label) . '</label>';
+        }
+        echo '</fieldset></section>';
+
+        echo '<section class="zpte2-card"><h2>Limity</h2>'
+            . '<p><label for="zpte2-daily">Polskich znaków dziennie (0 = bez limitu)</label><br><input type="number" id="zpte2-daily" name="daily_chars" min="0" step="10000" value="' . (int) $all['daily_chars'] . '"></p>'
+            . '<p><label for="zpte2-monthly">Koszt miesięcznie, USD (0 = bez limitu)</label><br><input type="number" id="zpte2-monthly" name="monthly_usd" min="0" step="1" value="' . esc_attr((string) (float) $all['monthly_usd']) . '"></p>'
+            . '<p class="description">Po przekroczeniu limitu tłumacz czeka (do północy albo do nowego miesiąca) i sam wznawia pracę. Obecne strony EN działają dalej.</p></section>';
+        echo '<p><button type="submit" class="button button-primary">Zapisz ustawienia</button></p></form>';
+
+        echo '<section class="zpte2-card"><h2>Połączenie z OpenAI</h2><p>Sprawdza klucz i pobiera listę dostępnych modeli.</p>' . self::button('test', 'Sprawdź połączenie') . '</section>';
+        echo '<section class="zpte2-card"><h2>Zadania w tle bez ruchu na stronie</h2><p>Tłumacz uruchamia kolejne kroki sam. Jeśli hosting ma cron, dodaj wywołanie tego adresu co 5 minut — wtedy codzienne sprawdzenie ruszy o czasie nawet bez odwiedzin:</p>'
+            . '<p><label class="screen-reader-text" for="zpte2-tick">Adres zadania</label><input type="text" id="zpte2-tick" readonly class="large-text code" value="' . esc_attr(Worker::tick_url()) . '" onfocus="this.select()"></p>'
+            . '<p class="description">Adres zawiera tajny klucz tej strony; nie publikuj go.</p></section>';
+        echo '<section class="zpte2-card"><h2>Języki PL/EN</h2><p>Ręczne korekty (mają pierwszeństwo przed tłumaczem), adresy i język odwiedzających są w module Języki PL/EN:</p><p class="zpte2-actions">';
+        foreach (['overrides' => 'Ręczne korekty', 'routes' => 'Adresy PL / EN', 'geo' => 'Język odwiedzających'] as $t => $label) {
+            echo '<a class="button" href="' . esc_url(add_query_arg(['page' => 'zpl-languages', 'tab' => $t], admin_url('admin.php'))) . '">' . esc_html($label) . '</a> ';
+        }
+        echo '</p></section>';
+        do_action('zpte2_settings_cards');
     }
+
+    // --------------------------------------------------------------------- log
 
     private static function tab_log(): void {
         $log = Log::all();
-        if (!$log) { echo '<div class="zpxEmpty zpte-gap">Dziennik jest pusty.</div>'; return; }
-        echo '<div class="zpte-gap"><table class="widefat striped zpte-table zpte-log"><thead><tr><th style="width:150px">Kiedy</th><th>Zdarzenie</th></tr></thead><tbody>';
+        if (!$log) { echo '<div class="zpte2-card"><p>Dziennik jest pusty.</p></div>'; return; }
+        $labels = ['info' => 'info', 'warning' => 'uwaga', 'error' => 'błąd'];
+        echo '<div class="zpte2-card zpte2-table-wrap"><table class="zpte2-table"><thead><tr><th scope="col">Kiedy</th><th scope="col">Rodzaj</th><th scope="col">Co się stało</th></tr></thead><tbody>';
         foreach ($log as $e) {
-            $cls = ($e['l'] ?? '') === 'error' ? 'zpte-bad' : (($e['l'] ?? '') === 'warning' ? 'zpte-warn' : '');
-            echo '<tr><td data-label="Kiedy">' . esc_html(self::day_time((int) ($e['t'] ?? 0))) . '</td><td data-label="Zdarzenie" class="' . $cls . '">' . esc_html((string) ($e['m'] ?? '')) . '</td></tr>';
+            $l = (string) ($e['l'] ?? 'info');
+            echo '<tr class="is-' . esc_attr($l) . '"><td>' . esc_html(self::day_time((int) ($e['t'] ?? 0))) . '</td><td>' . esc_html($labels[$l] ?? $l) . '</td><td>' . esc_html((string) ($e['m'] ?? '')) . '</td></tr>';
         }
         echo '</tbody></table></div>';
     }
 
-    // ---------------------------------------------------------------- actions
+    // ----------------------------------------------------------------- actions
 
-    /** Queue one Polish address. Returns [path that was queued, error]. */
-    private static function enqueue(string $raw): array {
-        $raw = trim($raw);
-        $p = (string) wp_parse_url($raw, PHP_URL_PATH);
-        $path = \ZPL\Router::norm_path(\ZPL\Router::rel($p !== '' ? $p : $raw));
-        $why = Bridge::ineligible($path);
-        if ($raw === '' || $why !== '') { return ['', 'Tego adresu nie tłumaczę' . ($why !== '' ? ': ' . $why : '') . '.']; }
-        $pid = url_to_postid(home_url($path));
-        $row = Store::path_by_path($path);
-        if (!$row) {
-            $kind = Bridge::shipped($path) ? 'existing' : 'older';
-            $nid = Store::path_add($path, ['post_id' => max(0, (int) $pid), 'kind' => $kind, 'status' => $kind === 'existing' ? 'published' : 'queued']);
-            $row = Store::path($nid);
-        }
-        if (!$row) { return ['', 'Nie udało się dodać ' . $path . ' do kolejki.']; }
-        if ($row->status === 'off' || $row->status === 'skipped') { Store::path_update((int) $row->id, ['status' => $row->kind === 'existing' ? 'published' : 'queued', 'tries' => 0]); }
-        Store::queue((int) $row->id, 5);
-        return [$path, ''];
-    }
-
-    public static function handle(): void {
-        if (!current_user_can('manage_options')) { wp_die('Brak uprawnień.'); }
-        check_admin_referer('zpte');
-        $do = sanitize_key($_POST['do'] ?? '');
-        $id = (int) ($_POST['id'] ?? 0);
-        $back = ['tab' => 'pages'];
-        $backTab = sanitize_key($_POST['back_tab'] ?? '');
-        $backF = sanitize_key($_POST['f'] ?? '');
-        if ($backTab === 'status') { $back = ['tab' => 'status']; }
-        elseif ($backF !== '') { $back = ['tab' => 'pages', 'f' => $backF]; }
-        $msg = '';
-        $err = '';
-        $nokey = 'Najpierw wklej klucz OpenAI w zakładce Ustawienia. Bez niego nic nie tłumaczę.';
-        Store::install();
-        switch ($do) {
-            case 'save':
-                $back = ['tab' => 'settings'];
-                $before = Settings::all();
-                $types = array_values(array_intersect(array_map('sanitize_key', (array) ($_POST['types'] ?? [])), array_keys(Settings::public_types())));
-                $since = sanitize_text_field(wp_unslash((string) ($_POST['since'] ?? '')));
-                $model = trim(sanitize_text_field(wp_unslash((string) ($_POST['model_custom'] ?? ''))));
-                if ($model === '') { $model = trim(sanitize_text_field(wp_unslash((string) ($_POST['model_choice'] ?? ($_POST['model'] ?? ''))))); }
-                $new = [
-                    'enabled' => empty($_POST['enabled']) ? 0 : 1,
-                    'model' => preg_match('~^[A-Za-z0-9._:-]{2,80}$~', $model) ? $model : Settings::DEFAULT_MODEL,
-                    'mode' => ($_POST['mode'] ?? '') === 'draft' ? 'draft' : 'publish',
-                    'types' => $types,
-                    'since' => preg_match('~^\d{4}-\d{2}-\d{2}$~', $since) ? $since : (string) Settings::get('since'),
-                    'older' => empty($_POST['older']) ? 0 : 1,
-                    'gaps' => empty($_POST['gaps']) ? 0 : 1,
-                    'daily_chars' => max(0, (int) ($_POST['daily_chars'] ?? 0)),
-                    'instructions' => sanitize_textarea_field(wp_unslash((string) ($_POST['instructions'] ?? ''))),
-                ];
-                Settings::update($new);
-                $msg = 'Zapisano ustawienia.';
-                // A paused run (no credit, unavailable model, daily limit) only resumes when something that can fix it changed.
-                $fixes = $new['model'] !== (string) $before['model'] || $new['daily_chars'] !== (int) $before['daily_chars'] || $new['enabled'] !== (int) $before['enabled'];
-                if (!empty($_POST['delete_key'])) {
-                    Settings::delete_key();
-                    $msg .= ' Klucz usunięty.';
-                    $fixes = true;
-                }
-                $key = trim((string) wp_unslash($_POST['api_key'] ?? ''));
-                $saved = false;
-                if ($key !== '') {
-                    if (!Settings::looks_like_key($key)) {
-                        $err = 'To nie wygląda na klucz OpenAI (oczekiwany ciąg zaczynający się zwykle od „sk-”, bez spacji). Klucza nie zapisano.';
-                    } else {
-                        Settings::save_key($key);
-                        $msg .= ' Klucz zapisany (' . Settings::key_hint() . ').';
-                        Log::add('Zapisano nowy klucz API (' . Settings::key_hint() . ').');
-                        $saved = true;
-                        $fixes = true;
-                    }
-                }
-                unset($key);
-                if ($fixes) {
-                    Log::clear_alert();
-                    Worker::resume();
-                }
-                Worker::maintain();
-                if ($saved) {
-                    // Check the key at once, and start the very first check so new content is translated today.
-                    $r = OpenAI::models();
-                    if (!$r['ok']) {
-                        $err = 'Klucz zapisany, ale OpenAI go nie przyjmuje: ' . $r['error'];
-                    } elseif (Settings::get('enabled') && !get_option('zpte_last_plan')) {
-                        $msg .= ' ' . Worker::plan('admin');
-                    }
-                }
-                break;
-            case 'test':
-                $back = ['tab' => 'status'];
-                if (Settings::api_key() === '') { $err = $nokey; break; }
-                $r = OpenAI::models();
-                if (!$r['ok']) { $err = 'Połączenie z OpenAI nie działa: ' . $r['error']; break; }
-                $model = Settings::model();
-                $gpt = array_values(array_filter($r['ids'], static function ($m) { return (bool) preg_match('~^(?:gpt-|o\d|chatgpt)~', $m); }));
-                if (in_array($model, $r['ids'], true)) {
-                    Log::clear_alert();
-                    $msg = 'Połączenie działa, klucz jest poprawny, model ' . $model . ' jest dostępny.';
-                } else {
-                    $err = 'Klucz działa, ale model ' . $model . ' nie jest dostępny. Dostępne modele GPT: ' . implode(', ', array_slice($gpt, 0, 25)) . '.';
-                }
-                break;
-            case 'run':
-                $back = ['tab' => 'status'];
-                if (!Bridge::hooks_ready()) { $err = 'Moduł językowy w tej wersji wtyczki nie współpracuje z tłumaczem. Wgraj aktualną wersję ZP Suite.'; break; }
-                if (Settings::api_key() === '') { $err = $nokey; break; }
-                $summary = Worker::plan('admin');
-                $msg = $summary . (Store::queued_count() > 0 ? ' Postęp widać poniżej.' : '');
-                break;
-            case 'retry':
-            case 'clear_alert':
-                $back = ['tab' => 'status'];
-                Log::clear_alert();
-                if ($do === 'retry') {
-                    Worker::resume();
-                    $msg = 'Wznowiono. Jeśli problem wróci, komunikat pojawi się znowu.';
-                }
-                break;
-            case 'add':
-                if (Settings::api_key() === '') { $err = $nokey; break; }
-                [$path, $err] = self::enqueue((string) wp_unslash($_POST['path'] ?? ''));
-                if ($path !== '') {
-                    Worker::kick(0);
-                    $msg = 'Dodano do kolejki: ' . rawurldecode($path) . '. Postęp zobaczysz na zakładce Status.';
-                }
-                break;
-            case 'add_all':
-                if (Settings::api_key() === '') { $err = $nokey; break; }
-                $n = 0;
-                foreach (self::missing_pages() as $it) {
-                    $row = $it['row'];
-                    if ($row && ((int) $row->queued || !in_array($row->status, ['queued', 'error'], true))) { continue; }
-                    [$path] = self::enqueue($it['path']);
-                    if ($path !== '') { $n++; }
-                }
-                if ($n) { Worker::kick(0); }
-                $msg = $n ? 'Dodano do kolejki: ' . $n . ' ' . self::pages_word($n) . '. Postęp zobaczysz na zakładce Status.' : 'Nie ma stron do dodania.';
-                break;
-            case 'queue':
-                $row = Store::path($id);
-                if ($row) {
-                    if (in_array($row->status, ['skipped', 'error'], true)) { Store::path_update($id, ['status' => $row->kind === 'existing' ? 'published' : 'queued', 'tries' => 0]); }
-                    Store::path_update($id, ['source_modified' => null]);
-                    Store::queue($id, 5);
-                    Worker::kick(0);
-                    $msg = 'Dodano do kolejki. Postęp zobaczysz na zakładce Status.';
-                }
-                break;
-            case 'publish':
-                $row = Store::path($id);
-                if ($row && $row->status === 'draft') {
-                    // The worker gives it an English address and publishes it (mode is ignored for an approved draft).
-                    Store::path_update($id, ['status' => 'error', 'tries' => 0, 'message' => 'Zaakceptowano — publikuję.']);
-                    self::approve($id);
-                    $msg = 'Opublikowano wersję angielską.';
-                }
-                break;
-            case 'off':
-                $row = Store::path($id);
-                if ($row) {
-                    Sync::retire($row, 'Wyłączono ręcznie.', 'off');
-                    $msg = 'Wyłączono tłumaczenie maszynowe tej strony.';
-                }
-                break;
-            case 'on':
-                $row = Store::path($id);
-                if ($row) {
-                    Store::path_update($id, ['status' => $row->kind === 'existing' ? 'published' : 'queued', 'tries' => 0, 'source_modified' => null, 'message' => '']);
-                    Store::queue($id, 5);
-                    Worker::kick(0);
-                    $msg = 'Włączono: tłumaczę w tle.';
-                }
-                break;
-            case 'edit':
-                $back = ['tab' => 'edit', 'id' => $id, 'paged' => max(1, (int) ($_POST['paged'] ?? 1))];
-                $row = Store::path($id);
-                if (!$row) { break; }
-                $n = 0;
-                $bad = 0;
-                $current = [];
-                foreach (Store::strings_of($id, 100000) as $s) { $current[(int) $s->id] = $s; }
-                foreach ((array) ($_POST['t'] ?? []) as $sid => $text) {
-                    $sid = (int) $sid;
-                    if (!isset($current[$sid])) { continue; }
-                    $en = \ZPL\Html::norm((string) wp_unslash($text));
-                    $orig = (string) ($_POST['o'][$sid] ?? '');
-                    if ($en === '' || md5((string) $current[$sid]->en) !== $orig || $en === (string) $current[$sid]->en) { continue; }
-                    $pl = (string) $current[$sid]->pl;
-                    if ((preg_match('~</?\d+/?>~', $pl) || preg_match('~</?\d+/?>~', $en)) && !\ZPL\Html::markers_match($pl, $en)) { $bad++; continue; }
-                    Store::string_edit($sid, $en);
-                    $n++;
-                }
-                if ($n) {
-                    Bridge::rebuild_index();
-                    Bridge::purge([(string) $row->path, (string) $row->en_path !== '' ? (string) $row->en_path : \ZPL\Router::en_path((string) $row->path)], (int) $row->post_id);
-                }
-                $msg = 'Zapisano poprawki: ' . $n . '.';
-                if ($bad) { $err = 'Nie zapisano poprawek: ' . $bad . ' (znaczniki <1>…</1> muszą się zgadzać z tekstem polskim).'; }
-                break;
-            case 'purge':
-                $back = ['tab' => 'settings'];
-                foreach (Store::paths(['kind' => ['new', 'older']]) as $row) {
-                    if ((int) $row->route_added && (string) $row->en_path !== '') { Bridge::remove_route((string) $row->path, (string) $row->en_path); }
-                }
-                Worker::unschedule();
-                delete_option(Worker::STATE);
-                Store::drop_all();
-                Store::install();
-                delete_option(Bridge::INDEX);
-                delete_option('zpte_suite_seen');
-                Log::add('Usunięto wszystkie tłumaczenia maszynowe.');
-                do_action('litespeed_purge_all');
-                $msg = 'Usunięto tłumaczenia maszynowe.';
-                break;
-        }
-        $args = $back;
-        if ($msg !== '') { $args['msg'] = rawurlencode($msg); }
-        if ($err !== '') { $args['err'] = rawurlencode($err); }
+    private static function back(string $tab, string $msg, bool $error = false, array $extra = []): void {
+        $args = array_merge(['tab' => $tab, 'zpte2_msg' => $msg], $extra);
+        if ($error) { $args['zpte2_err'] = 1; }
         wp_safe_redirect(self::url($args));
         exit;
     }
 
-    /** Publish an approved draft: English address + status, without another translation pass. */
-    private static function approve(int $id): void {
-        $row = Store::path($id);
-        if (!$row) { return; }
-        $post = (int) $row->post_id > 0 ? get_post((int) $row->post_id) : null;
-        $html = '';
-        if (!$post && Bridge::route((string) $row->path) === '') {
-            $src = Source::fetch((string) $row->path);
-            $html = $src['ok'] ? $src['html'] : '';
+    public static function handle(): void {
+        if (!current_user_can('manage_options')) { wp_die('Brak uprawnień.', '', ['response' => 403]); }
+        check_admin_referer('zpte2');
+        $do = isset($_POST['do']) && is_string($_POST['do']) ? sanitize_key(wp_unslash($_POST['do'])) : '';
+        if (!Bridge::ready()) { self::back('overview', 'Brak modułu Języki PL/EN.', true); }
+        Store::install();
+        $id = (int) ($_POST['id'] ?? 0);
+        switch ($do) {
+            case 'run':
+                $c = Worker::plan('manual');
+                self::back('overview', isset($c['import']) ? 'Najpierw przenoszę obecne tłumaczenia, potem sprawdzę wszystkie strony.' : 'Sprawdzam wszystkie strony: nowe ' . (int) ($c['new'] ?? 0) . ', zmienione ' . (int) ($c['changed'] ?? 0) . '.');
+                break;
+            case 'resume':
+                Worker::resume();
+                self::back('overview', 'Wznowiono.');
+                break;
+            case 'translate_post':
+                $pid = (int) ($_POST['post_id'] ?? 0);
+                if ($pid > 0 && Sync::plan_post($pid)) {
+                    Worker::kick(1);
+                    delete_transient('zpte2_missing');
+                    self::back('overview', 'Tłumaczę: ' . Sync::path_of_post($pid));
+                }
+                self::back('overview', 'Tej strony nie da się przetłumaczyć (adres techniczny, wyłączony lub niepubliczny).', true);
+                break;
+            case 'page_check':
+            case 'page_force':
+                $row = $id ? Store::page($id) : null;
+                if (!$row || $row->status === 'off') { self::back('pages', 'Nie znaleziono strony.', true); }
+                if ($do === 'page_force') { Sync::force($id); } else { Store::queue($id, 3); }
+                Worker::kick(1);
+                self::back('pages', ($do === 'page_force' ? 'Tłumaczę od nowa: ' : 'Sprawdzam: ') . $row->path, false, ['f' => 'queue']);
+                break;
+            case 'page_route':
+                self::change_route($id);
+                break;
+            case 'string_save':
+                self::save_string();
+                break;
+            case 'save_settings':
+                self::save_settings();
+                break;
+            case 'test':
+                $r = OpenAI::models();
+                if (empty($r['ok'])) { self::back('settings', 'Połączenie nie działa: ' . OpenAI::short((string) ($r['error'] ?? 'nieznany błąd')), true); }
+                $list = array_values(array_filter(array_map('strval', (array) ($r['ids'] ?? [])), static function ($m) { return (bool) preg_match('~^[A-Za-z0-9._:-]{2,80}$~', $m); }));
+                update_option(self::MODELS_OPTION, array_slice($list, 0, 200), false);
+                Log::clear_alert();
+                $has = in_array(Settings::model(), $list, true);
+                self::back('settings', 'Połączenie działa. Dostępnych modeli: ' . count($list) . '.' . ($list && !$has ? ' Uwaga: wybranego modelu ' . Settings::model() . ' nie ma na liście tego klucza.' : ''), $list && !$has);
+                break;
         }
-        $data = Sync::ensure_route($row, (string) $row->path, $html, $post);
-        Store::path_update($id, array_merge($data, ['status' => 'published', 'queued' => 0, 'tries' => 0, 'message' => 'Opublikowano po akceptacji.']));
-        Store::recompute_globals();
-        Bridge::rebuild_index();
-        $fresh = Store::path($id);
-        Bridge::purge([(string) $row->path, $fresh ? (string) $fresh->en_path : ''], (int) $row->post_id);
-        Log::add('Zaakceptowano szkic: ' . $row->path . ' → ' . ($fresh ? $fresh->en_path : '') . '.');
+        self::back('overview', 'Nieznana akcja.', true);
+    }
+
+    private static function change_route(int $id): void {
+        $row = $id ? Store::page($id) : null;
+        if (!$row) { self::back('pages', 'Nie znaleziono strony.', true); }
+        $en = strtolower(trim(sanitize_text_field(wp_unslash((string) ($_POST['en'] ?? '')))));
+        $en = '/' . trim((string) preg_replace('~^https?://[^/]+~', '', $en), '/') . '/';
+        if (strpos($en, '/en/') !== 0) { $en = '/en' . $en; }
+        if (!Routes::valid_en($en) || $en === '/en/') { self::back('pages', 'Adres EN może mieć tylko małe litery bez polskich znaków, cyfry i myślniki, np. /en/websites/my-page/.', true, ['q' => $row->path]); }
+        if (Routes::external((string) $row->path)) { self::back('pages', 'Adres tej strony ustawia moduł Języki PL/EN (Adresy URL) — zmień go tam.', true, ['q' => $row->path]); }
+        $owner = \ZPL\Router::reverse()[$en] ?? '';
+        if ($owner !== '' && $owner !== (string) $row->path) { self::back('pages', 'Ten adres ma już strona ' . $owner . '.', true, ['q' => $row->path]); }
+        $old = (string) (\ZPL\Router::routes()[(string) $row->path] ?? '');
+        if (!Routes::assign($id, $en)) { self::back('pages', 'Nie udało się zapisać adresu.', true, ['q' => $row->path]); }
+        Index::rebuild();
+        Log::add('Ręczna zmiana adresu EN: ' . $row->path . ' → ' . $en . ($old !== '' && $old !== $en ? ' (stary ' . $old . ' przekierowuje 301)' : '') . '.');
+        self::back('pages', 'Zapisano adres EN ' . $en . '.', false, ['q' => $row->path]);
+    }
+
+    private static function save_string(): void {
+        $id = (int) ($_POST['id'] ?? 0);
+        $q = isset($_POST['q']) && is_string($_POST['q']) ? sanitize_text_field(wp_unslash($_POST['q'])) : '';
+        $row = $id ? Store::string_row($id) : null;
+        if (!$row) { self::back('texts', 'Nie znaleziono tekstu.', true, ['q' => $q]); }
+        $en = trim((string) preg_replace('~\s+~u', ' ', wp_unslash((string) ($_POST['en'] ?? ''))));
+        if ($en === '') { self::back('texts', 'Tłumaczenie nie może być puste.', true, ['q' => $q]); }
+        // Only the numbered markers of the Polish text (<1>…</1>, <2/>) may be there, never real HTML.
+        if (preg_match('~<\s*/?\s*[a-z!?]~i', $en)) { self::back('texts', 'Nie zapisano: tłumaczenie nie może zawierać znaczników HTML.', true, ['q' => $q]); }
+        $why = Translator::broken((string) $row->pl, $en);
+        if ($why !== '' && strpos($why, 'polsku') === false) { self::back('texts', 'Nie zapisano: ' . $why . '. Zachowaj znaczniki takie jak <1>…</1> i pola {1} z polskiego tekstu.', true, ['q' => $q]); }
+        Store::string_edit($id, $en);
+        $n = (int) $row->scope > 0 ? (Sync::compile((int) $row->scope) ? 1 : 0) : Sync::recompile_using([(string) $row->hash]);
+        if ((int) $row->scope === 0 && (int) $row->shared) { Sync::compile_shared(); }
+        Log::add('Ręczna poprawka tłumaczenia: „' . mb_substr((string) $row->pl, 0, 80) . '” (stron: ' . $n . ').');
+        self::back('texts', 'Zapisano poprawkę' . ($n ? ' (stron: ' . $n . ')' : '') . '.', false, ['q' => $q]);
+    }
+
+    private static function save_settings(): void {
+        $p = wp_unslash($_POST);
+        $vals = [];
+        foreach (['enabled', 'auto', 'terms', 'recheck'] as $k) { $vals[$k] = !empty($p[$k]) ? 1 : 0; }
+        $model = trim((string) ($p['model_other'] ?? '')) !== '' ? trim((string) $p['model_other']) : (string) ($p['model'] ?? '');
+        if (preg_match('~^[A-Za-z0-9._:-]{2,80}$~', $model)) { $vals['model'] = $model; }
+        $effort = (string) ($p['effort'] ?? '');
+        if (isset(Settings::EFFORTS[$effort])) { $vals['effort'] = $effort; }
+        $types = array_values(array_intersect(array_map('strval', (array) ($p['types'] ?? [])), array_keys(Settings::public_types())));
+        $vals['types'] = $types;
+        $vals['daily_chars'] = max(0, min(50000000, (int) ($p['daily_chars'] ?? 0)));
+        $vals['monthly_usd'] = max(0, min(10000, round((float) ($p['monthly_usd'] ?? 0), 2)));
+        $vals['instructions'] = mb_substr(sanitize_textarea_field((string) ($p['instructions'] ?? '')), 0, 2000);
+        $before = Settings::all();
+        Settings::update($vals);
+        $msg = 'Zapisano ustawienia.';
+        if (Settings::key_source() !== 'constant') {
+            if (!empty($p['delete_key'])) { Settings::delete_key(); $msg .= ' Klucz usunięty.'; }
+            $key = trim((string) ($p['api_key'] ?? ''));
+            if ($key !== '') {
+                if (!Settings::looks_like_key($key)) { self::back('settings', 'To nie wygląda na klucz API OpenAI (sk-…). Nic nie zmieniono w kluczu.', true); }
+                Settings::save_key($key);
+                $msg .= ' Klucz zapisany.';
+                Log::clear_alert();
+            }
+        }
+        // The daily event follows the switch; a model or key change lets paused work continue.
+        if ((int) $before['enabled'] !== (int) $vals['enabled']) { wp_clear_scheduled_hook(Worker::DAILY); }
+        if ($vals['enabled']) { Worker::maintain(); }
+        if (Settings::api_key() !== '' && ($before['model'] !== Settings::model() || strpos($msg, 'Klucz zapisany') !== false || Log::current_alert())) { Worker::resume(); }
+        Log::add('Zmieniono ustawienia tłumacza.');
+        self::back('settings', $msg);
     }
 }

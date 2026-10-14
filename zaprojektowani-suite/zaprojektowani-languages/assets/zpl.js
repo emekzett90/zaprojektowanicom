@@ -1,4 +1,4 @@
-/*! Zaprojektowani Languages — PL/EN switch without reload. */
+/*! Zaprojektowani Languages — English pages: translates text that page scripts add after load. */
 (function () {
   'use strict';
   var C = window.ZPLCore;
@@ -26,16 +26,16 @@
   var NEVER = /^\/(?:wp-admin|wp-login\.php|wp-json|wp-content|wp-includes|wp-cron\.php|xmlrpc\.php|feed|comments\/feed|sitemap)(?:\/|$)/i;
   var INLINE = { a: 1, abbr: 1, b: 1, bdi: 1, bdo: 1, br: 1, cite: 1, code: 1, data: 1, del: 1, dfn: 1, em: 1, font: 1, i: 1, img: 1, ins: 1, kbd: 1, mark: 1, q: 1, s: 1, samp: 1, small: 1, span: 1, strong: 1, sub: 1, sup: 1, time: 1, u: 1, 'var': 1, wbr: 1, svg: 1, picture: 1, input: 1 };
   var POLISH = /[ąćęłńóśźżĄĆĘŁŃÓŚŹŻ]|\b(?:i|w|z|na|do|się|jest|nie|dla|oraz|lub|że|jak|czy|od|po|przez|są|nas)\b/;
-
-  var store = {
-    get: function (k) { try { return window.sessionStorage.getItem(k); } catch (e) { return null; } },
-    set: function (k, v) { try { window.sessionStorage.setItem(k, v); } catch (e) {} }
-  };
+  // Dollar amounts ("$4,100 USD") are written by the currency script on English pages after this script's pass:
+  // such text is never looked up or reported (no dictionary entry can match a changing amount).
+  var USD = /\$\d[\d,.]*\s+USD\b/;
 
   function setLangPreference(lang) {
     lang = lang === 'en' ? 'en' : 'pl';
+    var secure = location.protocol === 'https:' ? ';Secure' : '';
     try {
-      document.cookie = 'zpl_lang_pref=' + lang + ';path=/;max-age=31536000;SameSite=Lax' + (location.protocol === 'https:' ? ';Secure' : '');
+      document.cookie = 'zpl_lang_pref=' + lang + ';path=/;max-age=31536000;SameSite=Lax' + secure;
+      document.cookie = 'zpl_lang_session=' + lang + ';path=/;SameSite=Lax' + secure;
     } catch (e) {}
     // The server sets the same cookie again: Safari keeps cookies written by scripts for 7 days only.
     try {
@@ -52,11 +52,13 @@
   var approvedRevision = { en: null, pl: null };
   function readApproved(lang) {
     var url = cfg.rest + 'approved-page?lang=' + encodeURIComponent(lang) + '&src=' + encodeURIComponent(cfg.src);
-    var opt = { credentials: 'same-origin', cache: 'no-store' };
+    // The page names the revision it was rendered with: that answer never changes, so the browser keeps it.
+    var opt = { credentials: 'same-origin' };
+    if (typeof cfg.rev === 'string' && /^[a-f0-9]{64}$/.test(cfg.rev)) url += '&rev=' + cfg.rev; else opt.cache = 'no-store';
     try {
       var el = doc.getElementById('zp-en-approved-preview'), p = el ? JSON.parse(el.textContent) : null;
       if (p && p.source === cfg.src && typeof p.version === 'string' && /^[A-Za-z0-9][A-Za-z0-9_-]{0,95}$/.test(p.version) && typeof p.nonce === 'string') {
-        url += '&preview=' + encodeURIComponent(p.version); opt.headers = { 'X-WP-Nonce': p.nonce };
+        url += '&preview=' + encodeURIComponent(p.version); opt.headers = { 'X-WP-Nonce': p.nonce }; opt.cache = 'no-store';
       }
     } catch (e) {}
     return fetch(url, opt).then(function (r) { return r.ok ? r.json() : null; }).catch(function () { return null; }).then(function (p) {
@@ -142,7 +144,7 @@
     try { window.localStorage.setItem(reportStorageKey, String(reportNext)); } catch (e) {}
   }
   function report(keys) {
-    var list = keys.filter(function (k) { return !reported.has(k) && POLISH.test(k); }).slice(0, 60);
+    var list = keys.filter(function (k) { return !reported.has(k) && POLISH.test(k) && !USD.test(k); }).slice(0, 60);
     if (!list.length || state.lang !== 'en' || Date.now() < nextReportAt()) return;
     // Fewer than 30 batches/hour per browser, including reports from dynamic DOM.
     postponeReport(125);
@@ -217,7 +219,12 @@
     if (NEVER.test(p) || (/\.[a-z0-9]{2,5}$/i.test(p) && !/\.html?$/i.test(p))) return href;
     p = normPath(p);
     var isEn = p === '/en/' || p.indexOf('/en/') === 0, np;
-    if (lang === 'en') { if (isEn || excluded(p)) return href; np = enPath(p); }
+    if (lang === 'en') {
+      if (isEn || excluded(p)) return href;
+      // Pages served in English carry the full route list: a page with no English version keeps its Polish address.
+      if (cfg.routes && !routes[p] && !(/^(.*\/)page\/(\d+)\/$/.exec(p) && routes[/^(.*\/)page\/(\d+)\/$/.exec(p)[1]])) return href;
+      np = enPath(p);
+    }
     else { if (!isEn) return href; np = plPath(p); }
     var out = base + np + u.search + u.hash;
     if (/^[a-z][a-z0-9+.-]*:\/\//i.test(s) || s.indexOf('//') === 0) out = u.protocol + '//' + u.host + out;
@@ -417,11 +424,11 @@
     var miss = [];
     col.segs.forEach(function (s) {
       var node = s.type === 'multi' ? s.root : s.node;
-      if (pick(mem.get(node), s.k, to, true)) return;
+      if (pick(mem.get(node), s.k, to, true) || USD.test(s.k)) return;
       if (translation(s.k, to) === undefined && !known[to].has(C.norm(stripMarkers(s.k)))) miss.push(s.k);
     });
     col.attrs.forEach(function (a) {
-      if (pick((attrMem.get(a[0]) || {})[a[1]], a[2], to, true)) return;
+      if (pick((attrMem.get(a[0]) || {})[a[1]], a[2], to, true) || USD.test(a[2])) return;
       if (translation(a[2], to) === undefined && !known[to].has(a[2])) miss.push(a[2]);
     });
     return miss.filter(function (k, i, arr) { return arr.indexOf(k) === i; });
@@ -477,7 +484,7 @@
     // in place. Reading English back into Polish missed texts that only have a PL => EN entry (the home H1 among
     // them); the Polish page from the server is always complete. Going from Polish to English stays in place.
     if (to === 'pl' && (servedEn || (window.ZP_EN_Currency && window.ZP_EN_Currency.enabled))) {
-      if (!opts.auto) { store.set('zpl_lang', to); setLangPreference(to); }
+      if (!opts.auto) setLangPreference(to);
       // Back from the Polish page (page restored from the back/forward cache): the switch works again.
       window.addEventListener('pageshow', function (e) { if (e.persisted) { state.busy = false; setBusy(false); } }, { once: true });
       location.assign(targetUrl(to));
@@ -513,7 +520,7 @@
       state.lang = to;
       cfg.lang = to;
       try { history.replaceState(history.state, '', targetUrl(to)); } catch (e) {}
-      if (!opts.auto) { store.set('zpl_lang', to); setLangPreference(to); }
+      if (!opts.auto) setLangPreference(to);
       updateSwitches();
       if (to === 'en') { startObserver(); if (!miss.length || early) report(missing.map(function (s) { return s.k; })); } else if (servedEn) startObserver(); else stopObserver();
       try { doc.dispatchEvent(new CustomEvent('zpl:change', { detail: { lang: to, from: from } })); } catch (e) {}
@@ -573,12 +580,15 @@
       var miss = [];
       cols.forEach(function (x) { miss = miss.concat(unresolved(x.col, L)); });
       miss = miss.filter(function (k, i, a) { return a.indexOf(k) === i && !negative[L].has(k); });
-      var run = function (final) {
+      var run = function (final, answered) {
         if (state.lang !== L) return;
         var left = [];
         withoutObserver(function () {
           cols.forEach(function (x) {
-            left = left.concat(applyCollected(x.col, L));
+            // When the server answers, text a page script has changed in the meantime is left to its own pass:
+            // a translation of the earlier text would overwrite the newer one (e.g. an older budget).
+            var col = answered ? { segs: x.col.segs.filter(unchanged), attrs: x.col.attrs.filter(function (a) { return a[0].isConnected && C.norm(a[0].getAttribute(a[1]) || '') === a[2]; }) } : x.col;
+            left = left.concat(applyCollected(col, L));
             applyLinks(x.b, L);
             applyFrames(x.b, L);
             applyLangAttrs(x.b, L);
@@ -590,8 +600,12 @@
       // Back to Polish only uses the local reverse dictionary (no server round-trips for Polish text).
       if (L !== 'en') miss = [];
       run(!miss.length);
-      if (miss.length) lookup(L, miss).then(function () { run(true); });
+      if (miss.length) lookup(L, miss).then(function () { run(true, true); });
     });
+  }
+  function unchanged(s) {
+    if (s.type === 'multi') { var now = s.root.isConnected ? segAfter(s.root) : null; return !!now && now.k === s.k; }
+    return !!s.node && s.node.isConnected && C.norm(s.node.nodeValue || '') === s.k;
   }
   function collectBlock(b) {
     // Walk the block the same way the page walk reaches it.
@@ -716,13 +730,10 @@
 
   // ------------------------------------------------------------------- boot
 
-  function sameSiteReferrer() {
-    try { return !!doc.referrer && new URL(doc.referrer).host === location.host; } catch (e) { return false; }
-  }
   function boot() {
-    bindSwitches();
+    // zpl-switch.js (on every page) runs the switch: the other language opens at its own address.
+    if (!window.ZPLSwitch) { bindSwitches(); try { watchTheme(); } catch (e) {} }
     updateSwitches();
-    try { watchTheme(); } catch (e) {}
     if (state.lang === 'en') {
       startObserver();
       suiteNav();
@@ -752,9 +763,6 @@
         });
       }
     };
-    var pref = store.get('zpl_lang');
-    // A scan frame (Skaner EN) always shows the language of its address.
-    if (pref && pref !== state.lang && sameSiteReferrer() && !cfg.scan) switchTo(pref, { auto: true });
     if (cfg.debug && state.lang === 'en') loadDict('en').then(function () { applyCollected(collect(doc.body), 'en'); });
   }
   if (doc.readyState === 'loading') doc.addEventListener('DOMContentLoaded', boot); else boot();

@@ -84,7 +84,7 @@ final class ZPSSEO_Editorial {
     public static function normalize($html, $rule = null) {
         $pattern='~<!--[\s\S]*?-->|<(script|style|textarea|title|noscript)\b(?:"[^"]*"|\x27[^\x27]*\x27|[^\x27">])*?>[\s\S]*?</\1\s*>|<(h[1-6])\b(?:"[^"]*"|\x27[^\x27]*\x27|[^\x27">])*?>[\s\S]*?</\2\s*>|<(?:"[^"]*"|\x27[^\x27]*\x27|[^\x27">])+>~i';
         if (!preg_match_all($pattern,$html,$found,PREG_OFFSET_CAPTURE)) { return $html; }
-        $tokens=$found[0];$stack=[];$head=false;$headings=[];$main=-1;$edits=[];$seenTitle=false;$seenDescription=false;$leadStart=null;$leadEdits=[];
+        $tokens=$found[0];$stack=[];$head=false;$headings=[];$main=-1;$edits=[];$seenTitle=false;$seenDescription=false;$leadStart=null;$leadEdits=[];$pageH1=false;
         foreach($tokens as $i=>$item){
             $tag=$item[0];if(strpos($tag,'<!--')===0){continue;}
             if(preg_match('~^</([a-z0-9-]+)~i',$tag,$close)){
@@ -100,12 +100,15 @@ final class ZPSSEO_Editorial {
             $p=new WP_HTML_Tag_Processor($tag);if(!$p->next_tag()){continue;}$name=$p->get_tag();
             if($name==='HEAD'){$head=true;}
             if($name==='P' && $rule && strpos((string)$p->get_attribute('class'),'zpSinglePostHero__lead')!==false){$leadStart=$i;}
-            $hidden=false;$excluded=false;
-            foreach($stack as $entry){$hidden=$hidden||$entry['hidden'];$excluded=$excluded||$entry['excluded'];}
+            $hidden=false;$excluded=false;$hard=false;
+            foreach($stack as $entry){$hidden=$hidden||$entry['hidden'];$excluded=$excluded||$entry['excluded'];$hard=$hard||($entry['excluded']&&!$entry['header']);}
             $style=(string)$p->get_attribute('style');
             $ownHidden=$p->get_attribute('hidden')!==null || strtolower((string)$p->get_attribute('aria-hidden'))==='true' || preg_match('/display\s*:\s*none|visibility\s*:\s*hidden/i',$style);
             $inContent=false;foreach($stack as $ancestor){if(in_array($ancestor['name'],['ARTICLE','MAIN'],true)){$inContent=true;}}
             $ownExcluded=(($name==='HEADER' && !$inContent)||in_array($name,['FOOTER','NAV','ASIDE','FORM','DIALOG','TEMPLATE','NOSCRIPT'],true)) || $p->get_attribute('role')==='dialog';
+            // A page hero or section <header> is excluded like the site header, but an H1 in it is still the page's H1.
+            $ownHeader=$name==='HEADER' && !$inContent && $p->get_attribute('role')!=='dialog' && $p->get_attribute('role')!=='banner' && $p->get_attribute('id')!=='zpNewNav' && !preg_match('/\b(zpNewNav|site-header|elementor-location-header)\b/',(string)$p->get_attribute('class')) && $p->get_attribute('data-elementor-type')!=='header';
+            if($name==='H1' && !$head && $excluded && !$hard && !$hidden && !$ownHidden){$pageH1=true;}
             if(!$excluded&&!$hidden&&!$ownHidden && ($name==='MAIN' || $name==='ARTICLE' || in_array($p->get_attribute('data-elementor-type'),['wp-page','wp-post'],true)) && $main<0){$main=$i;}
             if($name==='TITLE' && $head && $rule){
                 $edits[$i]=$seenTitle ? '' : '<title>'.esc_html($rule['title']).'</title>';$seenTitle=true;continue;
@@ -134,11 +137,12 @@ final class ZPSSEO_Editorial {
             // Raw-text elements and headings above are complete tokens; do not put them on the stack.
             if(in_array($name,['SCRIPT','STYLE','TEXTAREA','TITLE','NOSCRIPT'],true)||preg_match('/^H[1-6]$/',$name)){continue;}
             if(!in_array($name,['AREA','BASE','BR','COL','EMBED','HR','IMG','INPUT','LINK','META','PARAM','SOURCE','TRACK','WBR'],true)&&!preg_match('~/\s*>$~',$tag)){
-                $stack[]=['name'=>$name,'hidden'=>(bool)$ownHidden,'excluded'=>(bool)$ownExcluded];
+                $stack[]=['name'=>$name,'hidden'=>(bool)$ownHidden,'excluded'=>(bool)$ownExcluded,'header'=>(bool)$ownHeader];
             }
         }
-        $primary=null;foreach($headings as $h){if($h['level']===1){$primary=$h['index'];break;}}
-        if($primary===null && $headings && $main>=0){$primary=$headings[0]['index'];}
+        // SEO audit 13.10.2026: with an H1 in such a header (FAQ, Realizacje) no other heading is made an H1, so the page keeps one.
+        $primary=null;if(!$pageH1){foreach($headings as $h){if($h['level']===1){$primary=$h['index'];break;}}}
+        if($primary===null && !$pageH1 && $headings && $main>=0){$primary=$headings[0]['index'];}
         $previous=1;
         foreach($headings as $h){
             $i=$h['index'];$original=$tokens[$i][0];$level=$i===$primary ? 1 : max(2,min($h['level'],$previous+1));$previous=$level;
@@ -150,7 +154,7 @@ final class ZPSSEO_Editorial {
             }
             if($new!==$original){$edits[$i]=$new;}
         }
-        if($primary===null && $rule && $main>=0){$edits[$main]=($edits[$main]??$tokens[$main][0]).'<h1 class="zpu-generated-heading">'.esc_html($rule['h1']).'</h1>';}
+        if($primary===null && !$pageH1 && $rule && $main>=0){$edits[$main]=($edits[$main]??$tokens[$main][0]).'<h1 class="zpu-generated-heading">'.esc_html($rule['h1']).'</h1>';}
         // Add a missing description only inside a real head, never to fragments or JSON.
         if($rule && !$seenDescription){foreach($tokens as $i=>$item){if(preg_match('~^</head\s*>$~i',$item[0])){$edits[$i]='<meta name="description" content="'.esc_attr($rule['description']).'">'.$item[0];break;}}}
         $changes=$leadEdits;

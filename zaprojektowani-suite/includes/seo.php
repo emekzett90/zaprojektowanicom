@@ -107,7 +107,7 @@ add_action('wp_head', function () {
   }
 
   $site = home_url('/');
-  $logo = 'https://zaprojektowani.com/wp-content/uploads/2026/05/zaproktowani_znak_wodny_czarny.png';
+  $logo = 'https://zaprojektowani.com/wp-content/uploads/2026/08/znak_wodny_czarny.png'; // 14.10.2026: the 2026/05 file never existed (Google got 404)
 
   $schema = [
     '@context' => 'https://schema.org',

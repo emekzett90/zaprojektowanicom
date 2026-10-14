@@ -74,6 +74,8 @@ function zp_speed_buffer($chunk, $phase = 0) {
   try {
     if (function_exists('zp_suite_quality_html')) { $html = zp_suite_quality_html($html); }
     $out = zp_speed_should_process($html) ? zp_speed_process($html) : null;
+    // SEO audit 13.10.2026: inline CSS and the mobile portfolio cards to static files (speed-html-weight.php).
+    if (is_string($out) && function_exists('zp_speed_weight_html')) { $out = zp_speed_weight_html($out); }
   } catch (\Throwable $e) {
     $out = null;
   }

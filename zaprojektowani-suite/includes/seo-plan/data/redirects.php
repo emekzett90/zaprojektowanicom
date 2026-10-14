@@ -7,6 +7,11 @@ if (!defined('ABSPATH')) { exit; }
  * 2.9.13: 'exact' += 22 (14 moved, 8 gone) and old listing pages past the last one → the listing, the 404s from that report still open after 2.9.12. */
 return [
   'exact' => [
+    // 14.10.2026 (Search Console and Senuto audit of 13.10, list C): the old /logo-branding/ address leads to visual
+    // identity, not the Katowice page (29 posts link to it as "branding"); the company logo of the structured data
+    // moved from a file that never existed to the real one (404 log of 3.0.1).
+    '/logo-branding/' => '/identyfikacja-wizualna/',
+    '/wp-content/uploads/2026/05/zaproktowani_znak_wodny_czarny.png' => '/wp-content/uploads/2026/08/znak_wodny_czarny.png',
     // 2.9.14: the former campaign archive has the current same-topic category as its successor.
     '/category/kampanie-meta-ads/' => '/category/reklamy/',
     '/wiedza/facebook-ads-dla-firm-lokalnych-co-dziala-najlepiej/' => '/meta-ads/facebook-ads-dla-firm-lokalnych/',

@@ -107,8 +107,10 @@ html body #zpMegaFooter .zpFootCta__proof li{display:flex;flex-direction:column;
 html body #zpMegaFooter .zpFootCta__proof li:first-child{padding-left:0;border-left:0}
 html body #zpMegaFooter .zpFootCta__proof li>a{display:flex;flex-direction:column;align-items:inherit;color:inherit!important;text-decoration:none!important;transition:opacity .2s ease}
 html body #zpMegaFooter .zpFootCta__proof li>a:hover{opacity:.82}
-html body #zpMegaFooter .zpFootCta__proof b{display:flex;align-items:baseline;font-size:clamp(20px,1.45vw,24px);font-weight:650;letter-spacing:-.025em;line-height:1;color:#fff;font-variant-numeric:tabular-nums}
-html body #zpMegaFooter .zpFootCta__proof b i{margin-left:4px;font-style:normal;font-size:.8em;line-height:1;color:#f5c451}
+html body #zpMegaFooter .zpFootCta__proof b,
+html body #zpMegaFooter .zpFootCta__proof .zpFootCta__val{display:flex;align-items:baseline;font-size:clamp(20px,1.45vw,24px);font-weight:650;letter-spacing:-.025em;line-height:1;color:#fff;font-variant-numeric:tabular-nums}
+html body #zpMegaFooter .zpFootCta__proof b i,
+html body #zpMegaFooter .zpFootCta__proof .zpFootCta__val i{margin-left:4px;font-style:normal;font-size:.8em;line-height:1;color:#f5c451}
 html body #zpMegaFooter .zpFootCta__proof span{margin-top:7px;font-size:13px;font-weight:500;line-height:1.2;color:rgba(255,255,255,.58);white-space:nowrap}
 html body #zpMegaFooter .zpMegaFooter__teamPhoto{transform:none!important;max-width:none!important;padding:0!important;overflow:visible!important}
 html body #zpMegaFooter .zpMegaFooter__teamPhoto img{position:absolute!important;inset:0!important;display:block!important;width:100%!important;height:100%!important;max-width:none!important;object-fit:contain!important;object-position:center bottom!important;transform:none!important;-webkit-mask-image:linear-gradient(180deg,#000 0%,#000 84%,rgba(0,0,0,.55) 93%,transparent 100%)!important;mask-image:linear-gradient(180deg,#000 0%,#000 84%,rgba(0,0,0,.55) 93%,transparent 100%)!important}

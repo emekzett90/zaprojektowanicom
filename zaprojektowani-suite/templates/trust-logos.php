@@ -40,19 +40,19 @@ v5.0:
         <div class="zpTrustPinned__stats" role="group" aria-label="Dowody zaufania">
           <div class="zpTrustPinned__stat">
             <i class="zpTrustPinned__statIcon" data-lucide="briefcase-business" aria-hidden="true"></i>
-            <strong><?php echo esc_html($zp_projects_count); ?></strong>
+            <div class="zpTrustPinned__num"><?php echo esc_html($zp_projects_count); ?></div>
             <span>realizacji</span>
           </div>
 
           <div class="zpTrustPinned__stat">
             <i class="zpTrustPinned__statIcon" data-lucide="star" aria-hidden="true"></i>
-            <strong><?php echo esc_html($zp_google_rating); ?></strong>
+            <div class="zpTrustPinned__num"><?php echo esc_html($zp_google_rating); ?></div>
             <span>Google</span>
           </div>
 
           <div class="zpTrustPinned__stat">
             <i class="zpTrustPinned__statIcon" data-lucide="thumbs-up" aria-hidden="true"></i>
-            <strong><?php echo esc_html($zp_recommendations); ?></strong>
+            <div class="zpTrustPinned__num"><?php echo esc_html($zp_recommendations); ?></div>
             <span>poleceń</span>
           </div>
         </div>

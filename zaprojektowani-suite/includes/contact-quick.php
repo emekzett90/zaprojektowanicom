@@ -37,7 +37,7 @@ function zp_suite_quick_contact_topics(): array {
 }
 
 /**
- * Sekcja z krótkim formularzem. $context: home | strony | sklepy | logo | kampanie
+ * Sekcja z krótkim formularzem. $context: home | strony | sklepy | logo | kampanie | kontakt
  * (na podstronach usług od razu zaznacza pasujący temat).
  */
 function zp_suite_quick_contact_section(string $context = 'home'): string {
@@ -51,7 +51,7 @@ function zp_suite_quick_contact_section(string $context = 'home'): string {
   $min_ms = zp_suite_opt('security.min_seconds_enabled', '1') === '0' ? 0 : (int) round(max(0, (float) zp_suite_opt('security.min_seconds', '6')) * 1000);
   $img = ZP_SUITE_URL . 'assets/img/quick-contact/';
   $people = ['marta' => 'Marta', 'mateusz' => 'Mateusz', 'stanislaw' => 'Stanisław'];
-  $full_form = in_array($context, ['home', 'strony', 'sklepy', 'logo', 'kampanie'], true) ? '#formularz-kontaktowy' : home_url('/kontakt/');
+  $full_form = in_array($context, ['home', 'strony', 'sklepy', 'logo', 'kampanie', 'kontakt'], true) ? '#formularz-kontaktowy' : home_url('/kontakt/');
 
   ob_start();
   ?>

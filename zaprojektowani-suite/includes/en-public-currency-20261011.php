@@ -1,15 +1,20 @@
 <?php
 if (!defined('ABSPATH')) exit;
 
-/** Presentation only. Sealed EN translations and form amounts always remain PLN. */
+/**
+ * Presentation only: prices on English pages in US dollars, American style ("$1,250 USD"), converted at the NBP
+ * mid-rate and rounded. Translations and form amounts always remain PLN. Shown on every English page that has an
+ * English version (Tłumacz EN 2 / language module); Polish pages are never touched.
+ */
 final class ZP_EN_Public_Currency_20261011 {
     public const RATE='zps_en_public_currency_20261011_rate';
     public const ATTEMPT='zps_en_public_currency_20261011_attempt';
     public const DAILY='zp_en_public_currency_daily_20261011';
     public const REFRESH='zp_en_public_currency_refresh_20261011';
     public const URL='https://api.nbp.pl/api/exchangerates/rates/a/usd/?format=json';
-    public const POLICY='usd_nbp_human_v1';
-    private const PREFIX='zps_en_rewrite_20261011_';
+    public const POLICY='usd_nbp_human_v2';
+    /** Changes with assets/en-public-currency-20261011.js, so browsers fetch the new file. */
+    public const SCRIPT='20261014';
     private const ERRORS=['http_failed','http_status','rate_invalid','storage_failed'];
 
     public static function parse_rate(array $data,int $now): array {
@@ -54,7 +59,12 @@ final class ZP_EN_Public_Currency_20261011 {
             $u=($m['unit'][1]??-1)>=0?$m['unit']:$m['endunit'];$group=($m['prefix'][1]??-1)>=0?$m['prefix']:$m['suffix'];$tokens=[];$valid=true;
             preg_match_all('~'.$num.'~u',$group[0],$numbers,PREG_OFFSET_CAPTURE);
             foreach ($numbers[0] as [$raw,$offset]) { $cents=self::amount($raw);if ($cents===null) {$valid=false;break;} $tokens[]=[$group[1]+$offset,strlen($raw),self::formatted(self::usd($cents,$mid))]; }
-            if ($valid&&$tokens) { $out[]=[$u[1],strlen($u[0]),'USD'];array_push($out,...$tokens); }
+            if (!$valid||!$tokens) continue;
+            // American format: every amount with "$", the code once after the last one ("$250–$550 USD").
+            foreach ($tokens as $i=>$token) $tokens[$i][2]='$'.$token[2];
+            if (($m['unit'][1]??-1)>=0) { $out[]=[$u[1],$group[1]-$u[1],''];$tokens[count($tokens)-1][2].=' USD'; }
+            else $out[]=[$u[1],strlen($u[0]),'USD'];
+            array_push($out,...$tokens);
         }
         usort($out,static fn($a,$b)=>$b[0]<=>$a[0]);return $out;
     }
@@ -83,18 +93,11 @@ final class ZP_EN_Public_Currency_20261011 {
         }
         return $value;
     }
+    /** Ready on every public page that has an English version (address and translations), whichever translator made it. */
     public static function gate(string $source): string {
-        if (!class_exists('ZP_EN_Rewrite_20261011')||!class_exists('ZPL\\Html')||!function_exists('zp_en_rewrite_approved_page')) return 'dependency_missing';
-        if (class_exists('ZP_EN_Rewrite_Nightly_20261011')) { $incremental=ZP_EN_Rewrite_Nightly_20261011::currency_gate($source);if ($incremental!==null) return $incremental; }
-        if (preg_match('~^/(?:oferty|briefy)(?:/|$)~i',$source)||!isset(ZP_EN_Rewrite_20261011::manifest()[$source])) return 'private_or_unmapped';
-        $index=get_option(ZP_EN_Rewrite_20261011::INDEX,[]);$id=$index['current']??null;
-        if (!is_string($id)||preg_match('/^[a-f0-9]{32}$/D',$id)!==1) return 'awaiting_translation';
-        $r=get_option(self::PREFIX.'r_'.$id,[]);
-        if (!is_array($r)||($r['id']??null)!==$id||($r['model']??null)!=='gpt-6-luna'||($r['scope']??null)!=='luna_full'||($r['state']??null)!=='verified'||!is_array($r['pages']??null)||count($r['pages'])!==count(ZP_EN_Rewrite_20261011::manifest())||array_diff_key(ZP_EN_Rewrite_20261011::manifest(),$r['pages'])) return 'awaiting_translation';
-        foreach ($r['pages'] as $status) if (!is_array($status)||($status['state']??null)!=='verified') return 'awaiting_translation';
-        if (($r['pages'][$source]['state']??null)!=='verified'||($index['active'][$source]??null)!==$id) return 'awaiting_translation';
-        $approved=zp_en_rewrite_approved_page($source);
-        return is_array($approved)&&($approved['revision']??null)===$id&&!empty($approved['map'])?'ready':'source_changed';
+        if (!class_exists('ZPL\\Html')||!class_exists('ZPL\\Router')||!class_exists('ZPL\\Dict')) return 'dependency_missing';
+        if (preg_match('~^/(?:oferty|briefy)(?:/|$)~i',$source)) return 'private_or_unmapped';
+        return \ZPL\Router::has_route($source)&&\ZPL\Dict::has_page($source)?'ready':'awaiting_translation';
     }
     private static function request_ok(): bool {
         if (is_admin()||(defined('REST_REQUEST')&&REST_REQUEST)||wp_doing_ajax()||wp_doing_cron()||(defined('WP_CLI')&&WP_CLI)||is_feed()||is_404()||($_SERVER['REQUEST_METHOD']??'GET')!=='GET') return false;
@@ -158,12 +161,13 @@ final class ZP_EN_Public_Currency_20261011 {
     }
     public static function filter(string $html,string $lang,string $source): string {
         try {
-            if (!self::request_ok()||!in_array($lang,['pl','en'],true)||!self::indexable($html)||self::gate($source)!=='ready'||!($rate=self::rate())||strpos($html,'id="zp-en-currency-config"')!==false) return $html;
-            if ($lang==='en') $html=self::document($html,$rate['mid_scaled']);
+            // English pages only: the switch opens the Polish page at its own address, so Polish pages need nothing.
+            if ($lang!=='en'||!self::request_ok()||!self::indexable($html)||self::gate($source)!=='ready'||!($rate=self::rate())||strpos($html,'id="zp-en-currency-config"')!==false) return $html;
+            $html=self::document($html,$rate['mid_scaled']);
             $config=['policy'=>self::POLICY,'mid_scaled'=>$rate['mid_scaled'],'effective_date'=>$rate['effective_date'],'source'=>$source,'lang'=>$lang,'revision'=>hash('sha256',self::POLICY.'|'.$rate['mid_scaled'].'|'.$rate['effective_date'])];
             $tags='<script type="application/json" id="zp-en-currency-config">'.wp_json_encode($config,JSON_HEX_TAG|JSON_HEX_AMP|JSON_HEX_APOS|JSON_HEX_QUOT).'</script>';
-            $url=plugins_url('../assets/en-public-currency-20261011.js',__FILE__);$tags.='<script defer src="'.esc_url($url.'?ver='.self::POLICY).'"></script>';
-            $tags.='<p id="zp-en-currency-note"'.($lang==='en'?'':' hidden').' style="font:inherit;font-size:12px;line-height:1.5;text-align:center;padding:12px;margin:0">Prices shown in USD are converted and rounded using the NBP mid-rate dated '.esc_html($rate['effective_date']).'. The final proposal confirms currency and applicable taxes.</p>';
+            $url=plugins_url('../assets/en-public-currency-20261011.js',__FILE__);$tags.='<script defer src="'.esc_url($url.'?ver='.self::POLICY.'.'.self::SCRIPT).'"></script>';
+            $tags.='<p id="zp-en-currency-note" style="font:inherit;font-size:12px;line-height:1.5;text-align:center;padding:12px;margin:0">Prices in USD are approximate: converted from PLN at the NBP mid-rate of '.esc_html($rate['effective_date']).' and rounded. Your proposal confirms the currency and applicable taxes.</p>';
             return preg_replace('~</body>~i',$tags.'</body>',$html,1)??$html;
         } catch(Throwable $ignored) { return $html; }
     }
@@ -185,21 +189,21 @@ final class ZP_EN_Public_Currency_20261011 {
     public static function handle(): void {
         if (($_SERVER['REQUEST_METHOD']??'')!=='POST'||!current_user_can('manage_options')) wp_die('Brak uprawnień.');check_admin_referer('zp_en_currency_refresh');
         if (!wp_next_scheduled(self::REFRESH)) wp_schedule_single_event(time()+1,self::REFRESH);
-        $args=['page'=>'zp-tlumacz-en','tab'=>'status','zp_currency_notice'=>'queued'];if (($_POST['_zp_workspace']??null)==='1') $args['zp_workspace']='1';
+        $args=['page'=>'zp-tlumacz-en','tab'=>'settings','zp_currency_notice'=>'queued'];if (($_POST['_zp_workspace']??null)==='1') $args['zp_workspace']='1';
         wp_safe_redirect(add_query_arg($args,admin_url('admin.php')));exit;
     }
     public static function render(): void {
         if (!is_admin()||!current_user_can('manage_options')||($_SERVER['REQUEST_METHOD']??'GET')!=='GET'||wp_doing_ajax()) return;
         $rate=self::rate();$gate=self::gate('/');$attempt=get_option(self::ATTEMPT,[]);$next=wp_next_scheduled(self::DAILY);
-        echo '<section class="zpAdmin20__card"><h2>Ceny USD w angielskiej witrynie</h2><p>'.esc_html($gate==='ready'&&$rate?'Automatyczna prezentacja USD gotowa.':'Prezentacja USD czeka na ukończenie i potwierdzenie całej kampanii Luna oraz poprawny kurs NBP. Bieżące tłumaczenia zachowują ceny PLN.').'</p>';
+        echo '<section class="zpte2-card"><h2>Ceny w USD na stronach EN</h2><p>'.esc_html($rate?'Strony angielskie pokazują ceny w dolarach, jak na stronach amerykańskich: „$1,250 USD” (przeliczone kursem średnim NBP i zaokrąglone).':'Ceny w dolarach pojawią się po pobraniu kursu NBP; do tego czasu strony angielskie pokazują ceny w PLN.').'</p>';
+        if ($rate&&$gate!=='ready') echo '<p>Strona główna nie ma jeszcze wersji angielskiej, więc nie pokazuje cen w USD.</p>';
         if ($rate) echo '<p>Kurs NBP: 1 USD = '.esc_html(number_format($rate['mid_scaled']/1000000,4,'.','')).' PLN · data publikacji '.esc_html($rate['effective_date']).' · pobrano '.esc_html(wp_date('d.m.Y H:i',$rate['fetched_at'],wp_timezone())).'.</p>';
         echo '<p>Aktualizacja dzienna: '.esc_html($next?wp_date('d.m.Y H:i',(int)$next,wp_timezone()):'brak zdarzenia').' (WP-Cron uruchamia się przy ruchu). Kurs ostatnio poprawny zostaje zachowany przy błędzie. Zaokrąglenie: do 1 / 5 / 10 / 50 USD według poziomu ceny.</p>';
         if (is_array($attempt)&&in_array($attempt['error']??'',self::ERRORS,true)) echo '<p>Ostatnia próba: '.esc_html($attempt['error']).'.</p>';
         echo '<form method="post" action="'.esc_url(admin_url('admin-post.php')).'"><input type="hidden" name="action" value="zp_en_currency_refresh">';wp_nonce_field('zp_en_currency_refresh');echo '<button type="submit" class="button">Zaplanuj pobranie aktualnego kursu NBP</button></form><p>Polskie ceny i wartości wysyłane z formularzy pozostają w PLN. Cztery ceny w osadzonym ekranie Studio Wyceny używają kursu strony nadrzędnej.</p></section>';
     }
     private static function purge_cache(): void { if (class_exists('ZP_HTML_Cache_20261009')) ZP_HTML_Cache_20261009::queue_purge(); }
-    public static function translation_changed(string $option): void { if ($option==='zps_en_rewrite_20261011_index') self::purge_cache(); }
     public static function register(): void {
-        add_filter('zp_en_public_price_html',[self::class,'filter'],10,3);add_action('init',[self::class,'schedule']);add_action(self::DAILY,[self::class,'refresh']);add_action(self::REFRESH,[self::class,'refresh']);add_action('admin_post_zp_en_currency_refresh',[self::class,'handle']);add_action('zpte_rewrite_card',[self::class,'render'],30);add_action('updated_option',[self::class,'translation_changed'],100,1);
+        add_filter('zp_en_public_price_html',[self::class,'filter'],10,3);add_action('init',[self::class,'schedule']);add_action(self::DAILY,[self::class,'refresh']);add_action(self::REFRESH,[self::class,'refresh']);add_action('admin_post_zp_en_currency_refresh',[self::class,'handle']);add_action('zpte2_settings_cards',[self::class,'render'],30);
     }
 }

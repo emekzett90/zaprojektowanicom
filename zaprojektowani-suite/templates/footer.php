@@ -68,7 +68,7 @@ $zp_logo_light = 'https://zaprojektowani.com/wp-content/uploads/2026/05/ZP_CIEMN
 
         <ul class="zpFootCta__proof" aria-label="Zaprojektowani w liczbach">
           <?php foreach (zp_footer_cta_proof() as $zp_fp) : ?>
-            <li><?php if (!empty($zp_fp['href'])) : ?><a href="<?php echo esc_url($zp_fp['href']); ?>" target="_blank" rel="noopener"><?php endif; ?><b><?php echo esc_html($zp_fp['value']); ?><?php if (!empty($zp_fp['star'])) : ?><i aria-hidden="true">★</i><?php endif; ?></b><span><?php echo esc_html($zp_fp['label']); ?></span><?php if (!empty($zp_fp['href'])) : ?></a><?php endif; ?></li>
+            <li><?php if (!empty($zp_fp['href'])) : ?><a href="<?php echo esc_url($zp_fp['href']); ?>" target="_blank" rel="noopener"><?php endif; ?><div class="zpFootCta__val"><?php echo esc_html($zp_fp['value']); ?><?php if (!empty($zp_fp['star'])) : ?><i aria-hidden="true">★</i><?php endif; ?></div><span><?php echo esc_html($zp_fp['label']); ?></span><?php if (!empty($zp_fp['href'])) : ?></a><?php endif; ?></li>
           <?php endforeach; ?>
         </ul>
       </div>
@@ -108,7 +108,7 @@ $zp_logo_light = 'https://zaprojektowani.com/wp-content/uploads/2026/05/ZP_CIEMN
               <i data-lucide="phone-call"></i>
               <span>
                 <em>Telefon</em>
-                <strong>+48 501 054 253</strong>
+                <span class="zpMegaFooter__contactVal">+48 501 054 253</span>
               </span>
             </a>
 
@@ -116,7 +116,7 @@ $zp_logo_light = 'https://zaprojektowani.com/wp-content/uploads/2026/05/ZP_CIEMN
               <i data-lucide="mail"></i>
               <span>
                 <em>E-mail</em>
-                <strong>kontakt@zaprojektowani.com</strong>
+                <span class="zpMegaFooter__contactVal">kontakt@zaprojektowani.com</span>
               </span>
             </a>
 
@@ -124,7 +124,7 @@ $zp_logo_light = 'https://zaprojektowani.com/wp-content/uploads/2026/05/ZP_CIEMN
               <i data-lucide="map-pin"></i>
               <span>
                 <em>Biuro w Katowicach</em>
-                <strong>ul. Modelarska 18/2, 40-142 Katowice</strong>
+                <span class="zpMegaFooter__contactVal">ul. Modelarska 18/2, 40-142 Katowice</span>
                 <small>Pon.–pt. 9:00–17:00 · NIP 9930682613</small>
               </span>
             </a>

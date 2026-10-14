@@ -20,13 +20,20 @@ if (!defined('ABSPATH')) { exit; }
  *   setting "polish_stays".
  * - Logged-in WordPress users are never redirected (previews and editing keep working).
  * - A manual language choice wins: PL keeps Polish pages, EN sends Polish addresses to their English version,
- *   except in a browser that knows Polish (Suite 2.9.12).
+ *   except in a browser that knows Polish (Suite 2.9.12); for the rest of the visit in which English was chosen
+ *   (session cookie) every page opens in English, also in such a browser (Suite 3.0).
+ * - Only the switch counts as a choice of Polish: a visitor coming from the English version of the same page.
+ *   A link from another English page to a Polish one keeps a visitor from abroad in English.
+ * - The switch's own prefetch of the other language (referer: this page's English version) is never redirected;
+ *   other prefetches and prerenders (address bar, search results) are routed like page views.
  * - Only plain page views are redirected: no form posts, background fetches or addresses with their own
  *   parameters (search, feeds…); campaign tags such as utm_* and gclid go along to the English page.
  */
 final class Geo {
     const COUNTRY_COOKIE = 'zpl_geo_country'; // only the result of the REST fallback below
     const PREF_COOKIE = 'zpl_lang_pref';
+    /** The language chosen with the switch during this visit (browser session): the rest of the visit follows it. */
+    const SESSION_COOKIE = 'zpl_lang_session';
     const COOKIE_TTL = 604800; // 7 days
     const PREF_TTL = 31536000; // 365 days: set by the server, so Safari keeps it too
     /** Query keys that may go along to the English page; any other parameter keeps the Polish page. */
@@ -43,6 +50,8 @@ final class Geo {
         'pref' => 'Gość sam wybrał wersję polską przełącznikiem PL/EN.',
         'logged-in' => 'Zalogowany użytkownik WordPressa: bez przekierowania (podgląd i edycja działają normalnie).',
         'switch' => 'Gość przeszedł z wersji angielskiej na polską: zapamiętujemy wybór polskiego.',
+        'prefetch' => 'Wczytanie z wyprzedzeniem (prefetch) przełącznika: bez przekierowania i bez zmiany wyboru języka.',
+        'session-en' => 'Gość wybrał w tej wizycie wersję angielską: przekierowanie na wersję angielską.',
         'pref-en' => 'Gość sam wybrał wersję angielską przełącznikiem PL/EN: przekierowanie na wersję angielską.',
         'no-en' => 'Ta strona nie ma jeszcze wersji angielskiej.',
         'polish-browser' => 'Przeglądarka zna polski: zostaje po polsku.',
@@ -64,6 +73,18 @@ final class Geo {
     public static function preference(): ?string {
         $v = strtolower(trim((string) ($_COOKIE[self::PREF_COOKIE] ?? '')));
         return in_array($v, ['pl', 'en'], true) ? $v : null;
+    }
+
+    /** The PL/EN choice made during this visit (session cookie). */
+    public static function session_preference(): ?string {
+        $v = strtolower(trim((string) ($_COOKIE[self::SESSION_COOKIE] ?? '')));
+        return in_array($v, ['pl', 'en'], true) ? $v : null;
+    }
+
+    /** A prefetch or prerender started by the browser. It never sets a cookie; only the switch's own one skips the redirect. */
+    public static function is_speculative(): bool {
+        $p = strtolower((string) ($_SERVER['HTTP_SEC_PURPOSE'] ?? ($_SERVER['HTTP_PURPOSE'] ?? ($_SERVER['HTTP_X_MOZ'] ?? ''))));
+        return $p !== '' && (strpos($p, 'prefetch') !== false || strpos($p, 'prerender') !== false);
     }
 
     /**
@@ -134,20 +155,31 @@ final class Geo {
             if (!preg_match(self::QUERY_OK, (string) $k)) { return $out('query'); }
         }
 
-        // A conscious switch to Polish is stronger than automatic country routing.
+        // The switch fetching this page ahead from its English version is answered as it is (no redirect, no cookie).
+        // Any other prefetch or prerender (address bar, Google results) is routed like a page view: the browser
+        // follows the redirect, so a visitor from abroad still lands on English.
+        if ($live && self::is_speculative() && self::from_english_equivalent($source)) { return $out('prefetch'); }
+
+        // A conscious switch to Polish is stronger than automatic country routing; this visit's choice comes first.
         $pref = $live ? self::preference() : (in_array($ctx['pref'] ?? '', ['pl', 'en'], true) ? $ctx['pref'] : null);
-        if ($pref === 'pl') { return $out('pref'); }
+        $session = $live ? self::session_preference() : (in_array($ctx['session'] ?? '', ['pl', 'en'], true) ? $ctx['session'] : null);
+        if ($session === 'pl' || ($session === null && $pref === 'pl')) { return $out('pref'); }
 
         if ($mapped === null) { $mapped = isset(Router::routes()[Router::norm_path($source)]); }
         if (!$mapped || !Dict::has_page($source)) { return $out('no-en'); }
 
         if ($live && function_exists('is_user_logged_in') && is_user_logged_in()) { return $out('logged-in'); }
 
-        // Coming from our own English page to this Polish one = the switch without JavaScript.
-        if ($live && self::from_english_page()) {
+        // Coming from this page's own English version = the switch without JavaScript. Any other English page
+        // (a link that leads to Polish) is no choice of Polish: such visitors keep getting English.
+        if ($live && self::from_english_equivalent($source)) {
             self::set_preference_cookie('pl');
             return $out('switch');
         }
+
+        // English chosen with the switch during this visit: every page of the visit in English, also in a browser
+        // that knows Polish (the year-long choice below does not override such browsers, see 2.9.12).
+        if ($session === 'en') { return $out('session-en', Router::en_path($source)); }
 
         // A browser that reads Polish opens Polish pages, also after English was chosen once (Suite 2.9.12: a tap on
         // EN, even by mistake, sent every Polish address of a Polish visitor to English for a year). The switch still
@@ -197,8 +229,8 @@ final class Geo {
         return false;
     }
 
-    /** Same-site referrer on an English page (/en/...). */
-    private static function from_english_page(): bool {
+    /** Same-site referrer on the English version of this very page (where the switch links to it). */
+    private static function from_english_equivalent(string $source): bool {
         $ref = (string) ($_SERVER['HTTP_REFERER'] ?? '');
         if ($ref === '') { return false; }
         $p = wp_parse_url($ref);
@@ -208,7 +240,8 @@ final class Geo {
         $hh = strtolower((string) ($home['host'] ?? ''));
         if ($h !== $hh && $h !== 'www.' . $hh && 'www.' . $h !== $hh) { return false; }
         $rel = Router::norm_path(Router::rel((string) ($p['path'] ?? '/')));
-        return $rel === '/en/' || strpos($rel, '/en/') === 0;
+        if ($rel !== '/en/' && strpos($rel, '/en/') !== 0) { return false; }
+        return $rel === Router::norm_path(Router::en_path(Router::norm_path($source)));
     }
 
     /**
@@ -261,7 +294,7 @@ final class Geo {
      * It calls our own REST endpoint once; the endpoint may do the country-only remote lookup.
      */
     public static function inject_client(string $html, string $lang, string $source): string {
-        if ($lang !== 'pl' || self::preference() !== null || self::is_bot()) { return $html; }
+        if ($lang !== 'pl' || self::preference() !== null || self::session_preference() !== null || self::is_bot()) { return $html; }
         $set = self::settings();
         if (!$set['enabled'] || !Router::$mapped || !Dict::has_page($source)) { return $html; }
         if ($set['polish_stays'] && self::prefers_polish((string) ($_SERVER['HTTP_ACCEPT_LANGUAGE'] ?? ''))) { return $html; }
@@ -275,7 +308,7 @@ final class Geo {
         $polish = $set['polish_stays'] ? 'if([].concat(navigator.languages||[],navigator.language||"").some(function(l){return /^pl(?:-|$)/i.test(l)}))return;' : '';
         // An unknown country is remembered as "--" for a day, so a failed lookup is not repeated on every page.
         $tag = '<style id="zpl-geo-pending-css">html.zpl-geo-pending #CybotCookiebotDialog{visibility:hidden!important}</style>'
-            . '<script id="zpl-geo-boot">(function(){try{var d=document.documentElement,k=document.cookie;if(k.indexOf("' . self::COUNTRY_COOKIE . '=")!==-1||k.indexOf("' . self::PREF_COOKIE . '=")!==-1)return;if(/bot|crawl|spider|lighthouse|pagespeed|headless/i.test(navigator.userAgent||""))return;' . $polish . 'd.classList.add("zpl-geo-pending");var c=new AbortController(),t=setTimeout(function(){c.abort()},2200);fetch(' . $restJs . ',{credentials:"same-origin",cache:"no-store",signal:c.signal}).then(function(r){return r.ok?r.json():null}).then(function(x){clearTimeout(t);var cc=x&&typeof x.country==="string"?x.country.toUpperCase():"",v=/^[A-Z]{2}$/.test(cc)?cc:"--";document.cookie="' . self::COUNTRY_COOKIE . '="+v+";path=/;max-age="+(v==="--"?86400:' . self::COOKIE_TTL . ')+";SameSite=Lax"+(location.protocol==="https:"?";Secure":"");if(v!=="--"&&v!=="PL"){location.replace(' . $targetJs . '+location.search+location.hash);return}d.classList.remove("zpl-geo-pending")}).catch(function(){clearTimeout(t);d.classList.remove("zpl-geo-pending")})}catch(e){document.documentElement.classList.remove("zpl-geo-pending")}})();</script>';
+            . '<script id="zpl-geo-boot">(function(){try{var d=document.documentElement,k=document.cookie;if(k.indexOf("' . self::COUNTRY_COOKIE . '=")!==-1||k.indexOf("' . self::PREF_COOKIE . '=")!==-1||k.indexOf("' . self::SESSION_COOKIE . '=")!==-1)return;if(/bot|crawl|spider|lighthouse|pagespeed|headless/i.test(navigator.userAgent||""))return;' . $polish . 'd.classList.add("zpl-geo-pending");var c=new AbortController(),t=setTimeout(function(){c.abort()},2200);fetch(' . $restJs . ',{credentials:"same-origin",cache:"no-store",signal:c.signal}).then(function(r){return r.ok?r.json():null}).then(function(x){clearTimeout(t);var cc=x&&typeof x.country==="string"?x.country.toUpperCase():"",v=/^[A-Z]{2}$/.test(cc)?cc:"--";document.cookie="' . self::COUNTRY_COOKIE . '="+v+";path=/;max-age="+(v==="--"?86400:' . self::COOKIE_TTL . ')+";SameSite=Lax"+(location.protocol==="https:"?";Secure":"");if(v!=="--"&&v!=="PL"){location.replace(' . $targetJs . '+location.search+location.hash);return}d.classList.remove("zpl-geo-pending")}).catch(function(){clearTimeout(t);d.classList.remove("zpl-geo-pending")})}catch(e){document.documentElement.classList.remove("zpl-geo-pending")}})();</script>';
 
         return preg_replace('~<head\b[^>]*>~i', '$0' . $tag, $html, 1) ?? $html;
     }
@@ -446,13 +479,16 @@ final class Geo {
     public static function set_preference_cookie(string $lang): void {
         if (!in_array($lang, ['pl', 'en'], true) || headers_sent()) { return; }
         self::set_cookie(self::PREF_COOKIE, $lang, self::PREF_TTL);
+        self::set_cookie(self::SESSION_COOKIE, $lang, 0);
         $_COOKIE[self::PREF_COOKIE] = $lang;
+        $_COOKIE[self::SESSION_COOKIE] = $lang;
     }
 
+    /** $ttl 0 = until the browser is closed. */
     private static function set_cookie(string $name, string $value, int $ttl): void {
         $secure = is_ssl();
         setcookie($name, $value, [
-            'expires' => time() + $ttl,
+            'expires' => $ttl > 0 ? time() + $ttl : 0,
             'path' => '/',
             'secure' => $secure,
             'httponly' => false,

@@ -40,7 +40,7 @@ v8.6:
           <div class="zpSSCard__copy">
             <div class="zpSSCard__label"><i data-lucide="monitor-smartphone"></i> Strony internetowe</div>
             <h3 class="zpSSCard__h3">Strony internetowe</h3>
-            <p class="zpSSCard__desc"><strong>Strona może sprzedawać, edukować i budować zaufanie zanim klient zadzwoni.</strong>Projektujemy strony firmowe, landing page i serwisy premium dla kancelarii, deweloperów, salonów beauty, lekarzy i firm usługowych — z dobrą strukturą nagłówków, responsywnością, SEO oraz jasną ścieżką kontaktu.</p>
+            <p class="zpSSCard__desc"><span class="zpSSCard__lead">Strona może sprzedawać, edukować i budować zaufanie zanim klient zadzwoni.</span>Projektujemy strony firmowe, landing page i serwisy premium dla kancelarii, deweloperów, salonów beauty, lekarzy i firm usługowych — z dobrą strukturą nagłówków, responsywnością, SEO oraz jasną ścieżką kontaktu.</p>
             <div class="zpSSCard__actions">
               <a class="zpSSBtn" href="/strony-internetowe-katowice/"><span>Strony www</span><i data-lucide="arrow-right"></i></a>
               <a class="zpSSBtn zpSSBtn--ghost" href="/realizacje/"><span>Realizacje</span><i data-lucide="external-link"></i></a>
@@ -70,7 +70,7 @@ v8.6:
           <div class="zpSSCard__copy">
             <div class="zpSSCard__label"><i data-lucide="shopping-bag"></i> Sklepy internetowe</div>
             <h3 class="zpSSCard__h3">Sklepy internetowe WooCommerce</h3>
-            <p class="zpSSCard__desc"><strong>Dobry e-commerce to nie tylko ładna karta produktu.</strong>Budujemy sklepy WooCommerce z przejrzystą strukturą, płatnościami, automatyzacjami, analityką, konfiguracją dostaw i układem dopasowanym do sprzedaży.</p>
+            <p class="zpSSCard__desc"><span class="zpSSCard__lead">Dobry e-commerce to nie tylko ładna karta produktu.</span>Budujemy sklepy WooCommerce z przejrzystą strukturą, płatnościami, automatyzacjami, analityką, konfiguracją dostaw i układem dopasowanym do sprzedaży.</p>
             <div class="zpSSCard__actions">
               <a class="zpSSBtn" href="/sklepy-internetowe-katowice/"><span>Sklepy internetowe</span><i data-lucide="arrow-right"></i></a>
               <a class="zpSSBtn zpSSBtn--ghost" href="/studio-wyceny/"><span>Wyceń sklep</span><i data-lucide="send"></i></a>
@@ -97,7 +97,7 @@ v8.6:
           <div class="zpSSCard__copy">
             <div class="zpSSCard__label"><i data-lucide="sparkles"></i> Logo i branding</div>
             <h3 class="zpSSCard__h3">Logo i branding</h3>
-            <p class="zpSSCard__desc"><strong>Logo to dopiero początek — marka musi działać w każdym miejscu styku z klientem.</strong>Tworzymy znaki, systemy identyfikacji, kolory, typografię, materiały firmowe i brandbooki gotowe do użycia online oraz w druku.</p>
+            <p class="zpSSCard__desc"><span class="zpSSCard__lead">Logo to dopiero początek — marka musi działać w każdym miejscu styku z klientem.</span>Tworzymy znaki, systemy identyfikacji, kolory, typografię, materiały firmowe i brandbooki gotowe do użycia online oraz w druku.</p>
             <div class="zpSSCard__actions">
               <a class="zpSSBtn" href="/logo-branding-katowice/"><span>Logo i branding</span><i data-lucide="arrow-right"></i></a>
               <a class="zpSSBtn zpSSBtn--ghost" href="/realizacje/"><span>Zobacz projekty</span><i data-lucide="external-link"></i></a>
@@ -124,7 +124,7 @@ v8.6:
           <div class="zpSSCard__copy">
             <div class="zpSSCard__label"><i data-lucide="megaphone"></i> Facebook & Instagram Ads</div>
             <h3 class="zpSSCard__h3">Kampanie Meta Ads dla firm</h3>
-            <p class="zpSSCard__desc"><strong>Nie przepalamy budżetu na przypadkowe kliknięcia.</strong>Przygotowujemy strategię, kreacje, konfigurację Pixela/CAPI, testy A/B i optymalizację kampanii Meta Ads pod leady, sprzedaż lub rozpoznawalność marki.</p>
+            <p class="zpSSCard__desc"><span class="zpSSCard__lead">Nie przepalamy budżetu na przypadkowe kliknięcia.</span>Przygotowujemy strategię, kreacje, konfigurację Pixela/CAPI, testy A/B i optymalizację kampanii Meta Ads pod leady, sprzedaż lub rozpoznawalność marki.</p>
             <div class="zpSSCard__actions">
               <a class="zpSSBtn" href="/kampanie-reklamowe/"><span>Kampanie Meta</span><i data-lucide="arrow-right"></i></a>
               <a class="zpSSBtn zpSSBtn--ghost" href="/studio-wyceny/"><span>Omów kampanię</span><i data-lucide="message-circle"></i></a>
@@ -151,7 +151,7 @@ v8.6:
           <div class="zpSSCard__copy">
             <div class="zpSSCard__label"><i data-lucide="messages-square"></i> Porozmawiajmy o Twoim projekcie</div>
             <h3 class="zpSSCard__h3">Zobaczmy, co możemy zrobić razem</h3>
-            <p class="zpSSCard__desc"><strong>Masz pomysł, ale chcesz nadać mu lepszy kierunek wizualny, techniczny albo sprzedażowy?</strong>Napisz do nas — przeanalizujemy potrzeby, zaproponujemy najlepszy zakres i przygotujemy konkretną wycenę.</p>
+            <p class="zpSSCard__desc"><span class="zpSSCard__lead">Masz pomysł, ale chcesz nadać mu lepszy kierunek wizualny, techniczny albo sprzedażowy?</span>Napisz do nas — przeanalizujemy potrzeby, zaproponujemy najlepszy zakres i przygotujemy konkretną wycenę.</p>
             <div class="zpSSCard__actions">
               <a class="zpSSBtn" href="/studio-wyceny/"><span>Skontaktuj się</span><i data-lucide="arrow-right"></i></a>
               <a class="zpSSBtn zpSSBtn--ghost" href="https://wa.me/48501054253"><span>WhatsApp</span><i data-lucide="phone"></i></a>

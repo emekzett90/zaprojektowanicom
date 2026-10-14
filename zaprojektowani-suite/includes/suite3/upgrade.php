@@ -1,11 +1,11 @@
 <?php
 /**
- * Upgrade steps for 3.0.x. Each runs once, when the stored version is older than its release, and deletes no data:
+ * Upgrade steps for 3.x. Each runs once, when the stored version is older than its release, and deletes no data:
  * Codex's options, post meta and EN translations stay, so reinstalling the 2.9.66 ZIP brings everything back.
  */
 if (!defined('ABSPATH')) { exit; }
 
-/** Results of the 3.0.1 cache step that are settled; any other result is retried from wp-admin or cron. */
+/** Results of the cache step (3.0.1, again in 3.1.0) that are settled; any other result is retried from wp-admin or cron. */
 const ZP_SUITE3_CACHE_301_SETTLED = ['on', 'not-installed', 'dropin-updated', 'dropin-foreign', 'dropin-missing'];
 
 function zp_suite3_upgrade(string $previous): void {
@@ -15,12 +15,23 @@ function zp_suite3_upgrade(string $previous): void {
       wp_clear_scheduled_hook($hook);
     }
   }
-  if ($previous !== '' && version_compare($previous, '3.0.1', '<')) {
+  if ($previous !== '' && version_compare($previous, '3.1.0', '<')) {
     // Codex's HTML cache keyed pages by address only, while phones get different HTML (no hero video, lazy images).
     // 3.0.1 installs a drop-in that keeps one copy per device class; 3.0.0 had switched the cache off for that reason,
-    // so it comes back on. Runs once WordPress has finished loading (permalinks are needed for the list of pages).
+    // so it comes back on. 3.1.0's drop-in also answers robots and visitors with only consent or statistics cookies;
+    // the live file is replaced here because nothing purges after an update. Runs once WordPress has finished loading
+    // (permalinks are needed for the list of pages).
     delete_option('zp_suite3_cache_301');
     add_action('wp_loaded', 'zp_suite3_cache_301', 99);
+  }
+  if ($previous !== '' && version_compare($previous, '3.1.0', '<') && function_exists('zp_seo_plan_data')) {
+    // 3.0.x logged addresses that the SEO plan answers with 410 (gone on purpose); they are not 404s to fix.
+    $log = get_option('zp_suite3_404_log', []);
+    $gone = (array) ((zp_seo_plan_data('redirects')['exact'] ?? []));
+    if (is_array($log) && $log) {
+      $kept = array_filter($log, static fn($path) => ($gone[$path] ?? '') !== '@410', ARRAY_FILTER_USE_KEY);
+      if (count($kept) !== count($log)) { update_option('zp_suite3_404_log', $kept, false); }
+    }
   }
 }
 

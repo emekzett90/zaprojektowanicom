@@ -1418,11 +1418,41 @@ if (!function_exists('zp_showcase_portfolio_shortcode')) {
     },{passive:true});
     hydrateWindow(rail,0);
   }
+  /* SEO audit 13.10.2026: the cards can live in a JSON file instead of the page (includes/speed-html-weight.php
+     sets data-zp-src on the template). It is fetched once, ahead of time, and the rail fills from it as before. */
+  var tplWait={};
+  function tplFetch(mode){
+    var tpl=root.querySelector('template[data-zp-mobile-template="'+mode+'"]');
+    var src=tpl&&tpl.getAttribute('data-zp-src');
+    if(!src||tpl.dataset.zpLoaded==='1'||!window.fetch) return null;
+    if(!tplWait[mode]){
+      tplWait[mode]=fetch(src,{credentials:'same-origin'}).then(function(r){
+        if(!r.ok) throw new Error('HTTP '+r.status);
+        return r.json();
+      }).then(function(data){
+        if(tpl.dataset.zpLoaded!=='1'){
+          if(data&&typeof data.html==='string'&&!tpl.content.firstChild) tpl.innerHTML=data.html;
+          tpl.dataset.zpLoaded='1';
+        }
+      });
+      tplWait[mode].catch(function(){tplWait[mode]=null;});
+    }
+    return tplWait[mode];
+  }
   function ensureRail(mode){
     var rail=root.querySelector('[data-zp-mobile-rail="'+mode+'"]');
     if(!rail) return rail;
     if(rail.dataset.zpTemplateReady!=='1'){
       var tpl=root.querySelector('template[data-zp-mobile-template="'+mode+'"]');
+      var wait=tpl&&tpl.content&&!tpl.content.firstChild?tplFetch(mode):null;
+      if(wait){
+        wait.then(function(){
+          if(rail.dataset.zpTemplateReady==='1') return;
+          ensureRail(mode);
+          if(isMobile()&&root.getAttribute('data-mode')===mode) hydrateWindow(rail,nearest(rail));
+        },function(){});
+        return rail;
+      }
       if(tpl && tpl.content){
         rail.appendChild(tpl.content.cloneNode(true));
         rail.dataset.zpTemplateReady='1';
@@ -1467,6 +1497,13 @@ if (!function_exists('zp_showcase_portfolio_shortcode')) {
       if(panel){panel.hidden=!panel.hidden;var label=detail.querySelector('span');if(label)label.textContent=panel.hidden?'Szczegóły':'Ukryj szczegóły';detail.setAttribute('aria-expanded',panel.hidden?'false':'true');}
     }
   },{passive:false});
+  function prefetchRails(){
+    if(!isMobile()) return;
+    var first=root.getAttribute('data-mode')==='logo'?'logo':'web';
+    var wait=tplFetch(first);
+    var other=function(){tplFetch(first==='web'?'logo':'web');};
+    if(wait) wait.then(other,other); else other();
+  }
   if('IntersectionObserver' in window){
     var railObserver=new IntersectionObserver(function(entries){
       entries.forEach(function(entry){
@@ -1474,9 +1511,20 @@ if (!function_exists('zp_showcase_portfolio_shortcode')) {
       });
     },{rootMargin:'320px 0px',threshold:0.01});
     railObserver.observe(root);
+    /* About two screens ahead the cards are fetched, so they are there when the rail is filled. */
+    var prefetchObserver=new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if(entry.isIntersecting){prefetchObserver.disconnect();prefetchRails();}
+      });
+    },{rootMargin:'1600px 0px',threshold:0});
+    prefetchObserver.observe(root);
   }else if(isMobile()){
     prepareVisibleRail();
   }
+  if(document.readyState==='complete') prefetchRails();
+  else window.addEventListener('load',function(){
+    if('requestIdleCallback' in window) window.requestIdleCallback(prefetchRails,{timeout:2000}); else window.setTimeout(prefetchRails,600);
+  },{once:true,passive:true});
   window.addEventListener('resize',prepareVisibleRail,{passive:true});
   window.addEventListener('pagehide',function(){root.querySelectorAll('[data-zp-mobile-rail]').forEach(coolRail);},{passive:true});
 })();

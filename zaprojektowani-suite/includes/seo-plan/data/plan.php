@@ -287,7 +287,7 @@ return [
   '/najczesciej-zadawane-pytania/' => [
     'kind' => 'page',
     'focus' => 'najczęściej zadawane pytania',
-    'title' => 'FAQ: pytania o strony, sklepy, logo i ceny | Zaprojektowani',
+    'title' => 'Najczęściej zadawane pytania o strony | Zaprojektowani',
     'description' => 'Odpowiedzi na najczęstsze pytania o strony internetowe, sklepy WooCommerce, logo, SEO i kampanie: ceny, terminy, wycena i współpraca z Zaprojektowani.',
     'h1' => '',
     'editorial_title' => '',
@@ -324,7 +324,7 @@ return [
   ],
   '/logo-branding/ile-kosztuje-logo-dla-firmy-i-co-obejmuje-cena/' => [
     'kind' => 'post',
-    'focus' => 'projekt logo ceny, logo ceny, projektowanie logo cena, projekt logo cena, logo cena',
+    'focus' => 'ile kosztuje logo, projekt logo ceny, logo ceny, projektowanie logo cena, projekt logo cena',
     'title' => 'Ile kosztuje logo? Ceny projektu logo w 2026',
     'description' => 'Ile kosztuje projekt logo w 2026? Widełki cen logo, mini brandingu i pełnej identyfikacji wizualnej oraz to, co obejmuje cena. Zobacz przykłady.',
     'h1' => 'Ile kosztuje logo dla firmy? Ceny logo i identyfikacji wizualnej',
@@ -389,7 +389,7 @@ return [
     'focus' => 'etapy tworzenia strony internetowej, etapy projektowania strony internetowej, jak tworzyć strony internetowe, tworzenie strony internetowej krok po kroku, proces tworzenia strony internetowej',
     'title' => 'Etapy tworzenia strony internetowej krok po kroku',
     'description' => 'Poznaj proces tworzenia stron internetowych: brief, strukturę, projekt, wdrożenie i testy. Sprawdź zadania klienta oraz kryteria odbioru gotowej strony.',
-    'h1' => 'Tworzenie stron internetowych — etapy, terminy i odbiór projektu',
+    'h1' => 'Etapy tworzenia strony internetowej krok po kroku',
     'editorial_title' => 'Tworzenie stron internetowych — etapy od briefu do startu',
     'editorial_description' => 'Poznaj proces tworzenia stron internetowych: brief, strukturę, projekt, wdrożenie i testy. Sprawdź zadania klienta oraz kryteria odbioru gotowej strony.',
     'links' => [
@@ -405,7 +405,7 @@ return [
     'focus' => 'zasady tworzenia stron internetowych, jak zaprojektować stronę internetową, projekt graficzny strony internetowej',
     'title' => 'Zasady tworzenia stron internetowych, które dają zapytania',
     'description' => 'Zobacz, jak projektowanie stron internetowych łączy układ, treści i UX. Poznaj sekcje, które pomagają zrozumieć ofertę i przejść do wysłania zapytania.',
-    'h1' => 'Projektowanie stron internetowych — układ, UX i treści na przykładach',
+    'h1' => 'Zasady tworzenia stron internetowych, które dają zapytania',
     'editorial_title' => 'Projektowanie stron internetowych — UX, treści i przykłady',
     'editorial_description' => 'Zobacz, jak projektowanie stron internetowych łączy układ, treści i UX. Poznaj sekcje, które pomagają zrozumieć ofertę i przejść do wysłania zapytania.',
     'links' => [
@@ -420,7 +420,7 @@ return [
     'focus' => 'jak zaprojektować logo, proces projektowania logo, jak zaprojektować logo firmy, zasady projektowania logo, techniki projektowania logo',
     'title' => 'Jak zaprojektować logo? Proces projektowania krok po kroku',
     'description' => '',
-    'h1' => '',
+    'h1' => 'Jak zaprojektować logo? Proces projektowania krok po kroku',
     'editorial_title' => '',
     'editorial_description' => '',
     'links' => [
@@ -435,7 +435,7 @@ return [
     'focus' => 'identyfikacja wizualna firmy, identyfikacja wizualna co to, elementy identyfikacji wizualnej, identyfikacja wizualna marki przykłady, czym jest identyfikacja wizualna',
     'title' => 'Identyfikacja wizualna firmy – co to jest i co zawiera',
     'description' => 'Poznaj elementy identyfikacji wizualnej: logo, kolory, typografię i materiały firmowe. Zobacz przykłady oraz plan wdrożenia spójnego systemu marki.',
-    'h1' => 'Identyfikacja wizualna — elementy, przykłady i plan wdrożenia',
+    'h1' => 'Identyfikacja wizualna firmy – co to jest i co zawiera',
     'editorial_title' => 'Identyfikacja wizualna — elementy i przykłady dla firmy',
     'editorial_description' => 'Poznaj elementy identyfikacji wizualnej: logo, kolory, typografię i materiały firmowe. Zobacz przykłady oraz plan wdrożenia spójnego systemu marki.',
     'links' => [
@@ -466,10 +466,10 @@ return [
   ],
   '/seo-i-konwersja/landing-page-przyklady/' => [
     'kind' => 'post',
-    'focus' => 'landing page przykłady, landing page przykład, przykłady landing page',
-    'title' => 'Landing page: przykłady skutecznych stron i co z nich wziąć',
+    'focus' => 'przykłady landing page, landing page przykłady, landing page przykład',
+    'title' => 'Przykłady landing page – skuteczne strony i wnioski',
     'description' => 'Zobacz przykłady landing page i analizę ich sekcji: oferty, dowodów zaufania, CTA oraz formularza. Wykorzystaj wnioski przy planowaniu własnej strony.',
-    'h1' => '',
+    'h1' => 'Przykłady landing page – omówienie stron pod zapytania',
     'editorial_title' => 'Landing page — przykłady i omówienie sekcji krok po kroku',
     'editorial_description' => 'Zobacz przykłady landing page i analizę ich sekcji: oferty, dowodów zaufania, CTA oraz formularza. Wykorzystaj wnioski przy planowaniu własnej strony.',
     'links' => [
@@ -500,7 +500,7 @@ return [
     'focus' => 'mini księga znaku, mini brandbook',
     'title' => 'Mini księga znaku czy pełny brandbook – co wybrać?',
     'description' => '',
-    'h1' => '',
+    'h1' => 'Mini księga znaku, brandbook czy pełna identyfikacja – co wybrać?',
     'editorial_title' => '',
     'editorial_description' => '',
     'links' => [
@@ -543,10 +543,10 @@ return [
   ],
   '/logo-branding/branding-firmy-od-podstaw/' => [
     'kind' => 'post',
-    'focus' => 'branding co to, co to jest branding, budowanie marki, tworzenie marki, budowanie marki firmy',
-    'title' => 'Branding – co to jest i jak zbudować markę od podstaw',
+    'focus' => 'branding firmy, branding co to, co to jest branding, budowanie marki, tworzenie marki',
+    'title' => 'Branding firmy – co to jest i jak zbudować markę',
     'description' => '',
-    'h1' => '',
+    'h1' => 'Branding firmy od podstaw – co to jest i kiedy jest potrzebny',
     'editorial_title' => '',
     'editorial_description' => '',
     'links' => [
@@ -579,7 +579,7 @@ return [
     'focus' => 'jak zrobić logo firmy, jak stworzyć logo firmy, jak zrobić logo, jak stworzyć logo',
     'title' => 'Jak zrobić logo firmy? Od czego zacząć i czego unikać',
     'description' => '',
-    'h1' => '',
+    'h1' => 'Jak zrobić logo firmy? Od czego zacząć i czego unikać',
     'editorial_title' => '',
     'editorial_description' => '',
     'links' => [
@@ -671,7 +671,7 @@ return [
     'focus' => 'porzucone koszyki, porzucony koszyk, porzucone koszyki woocommerce',
     'title' => 'Porzucone koszyki – jak je ograniczyć w sklepie internetowym',
     'description' => '',
-    'h1' => '',
+    'h1' => 'Porzucone koszyki – jak je ograniczyć w sklepie internetowym?',
     'editorial_title' => '',
     'editorial_description' => '',
     'links' => [
@@ -686,7 +686,7 @@ return [
     'focus' => 'optymalizacja konwersji, konwersja na stronie internetowej, jak zwiększyć konwersję na stronie',
     'title' => 'Optymalizacja konwersji strony – od czego zacząć',
     'description' => '',
-    'h1' => '',
+    'h1' => 'Optymalizacja konwersji – co naprawdę ma znaczenie na stronie',
     'editorial_title' => '',
     'editorial_description' => '',
     'links' => [
@@ -698,8 +698,8 @@ return [
   ],
   '/logo-branding/kolory-i-typografia-marki/' => [
     'kind' => 'post',
-    'focus' => 'czcionka do logo, kolory logo, kolory w logo, psychologia kolorów logo, brandbook i typografia marki',
-    'title' => 'Czcionka i kolory logo – jak dobrać typografię marki',
+    'focus' => 'kolory i typografia marki, czcionka do logo, kolory logo, kolory w logo, psychologia kolorów logo',
+    'title' => 'Kolory i typografia marki – czcionka i kolory logo',
     'description' => '',
     'h1' => '',
     'editorial_title' => '',
@@ -714,10 +714,10 @@ return [
   ],
   '/logo-branding/brief-do-logo-i-identyfikacji-wizualnej/' => [
     'kind' => 'post',
-    'focus' => 'brief logo, brief projektowy, brief do logo, brief graficzny',
+    'focus' => 'brief do logo, brief logo, brief projektowy, brief graficzny',
     'title' => 'Brief do logo i identyfikacji wizualnej – co przygotować',
     'description' => '',
-    'h1' => '',
+    'h1' => 'Brief do logo i identyfikacji wizualnej – jak go przygotować',
     'editorial_title' => '',
     'editorial_description' => '',
     'links' => [
@@ -734,7 +734,7 @@ return [
     'focus' => 'brief strony internetowej, brief do strony internetowej',
     'title' => 'Brief strony internetowej – co przygotować przed projektem',
     'description' => '',
-    'h1' => '',
+    'h1' => 'Brief strony internetowej – jak go przygotować do projektu',
     'editorial_title' => '',
     'editorial_description' => '',
     'links' => [
@@ -747,7 +747,7 @@ return [
   ],
   '/strony-internetowe/wordpress-wix-czy-webflow/' => [
     'kind' => 'post',
-    'focus' => 'webflow czy wordpress, wix czy wordpress, wordpress czy wix',
+    'focus' => 'Wix czy Webflow, webflow czy wordpress, wix czy wordpress, wordpress czy wix',
     'title' => '',
     'description' => '',
     'h1' => '',
@@ -778,7 +778,7 @@ return [
   ],
   '/strony-internetowe/woocommerce-czy-shopify/' => [
     'kind' => 'post',
-    'focus' => 'shopify czy woocommerce, shopify vs woocommerce, woocommerce czy shopify',
+    'focus' => 'WooCommerce czy Shopify, shopify czy woocommerce, shopify vs woocommerce',
     'title' => '',
     'description' => '',
     'h1' => '',
@@ -793,7 +793,7 @@ return [
   ],
   '/strony-internetowe/przebudowa-strony-bez-utraty-widocznosci-w-google/' => [
     'kind' => 'post',
-    'focus' => 'migracja strony internetowej, przebudowa strony a seo',
+    'focus' => 'przebudowa strony bez utraty widoczności, migracja strony internetowej, przebudowa strony a seo',
     'title' => '',
     'description' => '',
     'h1' => '',
@@ -808,7 +808,7 @@ return [
   ],
   '/strony-internetowe/migracja-sklepu-na-woocommerce/' => [
     'kind' => 'post',
-    'focus' => 'migracja sklepu internetowego, migracja sklepu na woocommerce, przeniesienie sklepu na woocommerce',
+    'focus' => 'migracja sklepu na WooCommerce, migracja sklepu internetowego, przeniesienie sklepu na woocommerce',
     'title' => '',
     'description' => '',
     'h1' => '',
@@ -826,7 +826,7 @@ return [
     'focus' => 'przebudowa strony internetowej, modernizacja strony internetowej, redesign strony internetowej, odświeżenie strony internetowej, przebudowa strony www',
     'title' => 'Przebudowa strony internetowej – kiedy warto ją zrobić',
     'description' => '',
-    'h1' => '',
+    'h1' => 'Przebudowa strony internetowej firmy – kiedy warto?',
     'editorial_title' => '',
     'editorial_description' => '',
     'links' => [
@@ -841,7 +841,7 @@ return [
     'focus' => 'co powinna zawierać strona internetowa, co powinna zawierać strona internetowa firmy, elementy strony internetowej, elementy strony firmowej',
     'title' => 'Co powinna zawierać strona internetowa firmy?',
     'description' => '',
-    'h1' => '',
+    'h1' => 'Co powinna zawierać strona internetowa firmy? Lista elementów',
     'editorial_title' => '',
     'editorial_description' => '',
     'links' => [
@@ -854,7 +854,7 @@ return [
   ],
   '/strony-internetowe/szablon-czy-projekt-indywidualny-strony/' => [
     'kind' => 'post',
-    'focus' => 'strona internetowa szablon, gotowy szablon strony internetowej, szablon czy indywidualny projekt strony',
+    'focus' => 'szablon czy projekt indywidualny, strona internetowa szablon, gotowy szablon strony internetowej, szablon czy indywidualny projekt strony',
     'title' => '',
     'description' => '',
     'h1' => '',
@@ -869,7 +869,7 @@ return [
   ],
   '/strony-internetowe/strona-na-abonament-czy-na-wlasnosc/' => [
     'kind' => 'post',
-    'focus' => 'strona internetowa w abonamencie, strona na abonament, strona www w abonamencie, strona internetowa na abonament',
+    'focus' => 'strona na abonament, strona internetowa w abonamencie, strona www w abonamencie, strona internetowa na abonament',
     'title' => '',
     'description' => '',
     'h1' => '',
@@ -884,7 +884,7 @@ return [
   ],
   '/strony-internetowe/wordpress-czy-strona-dedykowana/' => [
     'kind' => 'post',
-    'focus' => 'dedykowana strona internetowa, strona dedykowana, strona internetowa dedykowana, wordpress czy strona dedykowana',
+    'focus' => 'WordPress czy strona dedykowana, dedykowana strona internetowa, strona dedykowana, strona internetowa dedykowana',
     'title' => '',
     'description' => '',
     'h1' => '',
@@ -914,8 +914,8 @@ return [
   ],
   '/logo-branding/jakie-cechy-powinno-miec-dobre-logo-firmowe/' => [
     'kind' => 'post',
-    'focus' => 'cechy dobrego logo, dobre logo, jak powinno wyglądać logo, jakie powinno być logo firmy, jakie cechy powinno mieć profesjonalne logo',
-    'title' => '',
+    'focus' => 'dobre logo firmowe, cechy dobrego logo, dobre logo, jak powinno wyglądać logo, jakie powinno być logo firmy',
+    'title' => 'Jakie cechy powinno mieć dobre logo firmowe?',
     'description' => '',
     'h1' => '',
     'editorial_title' => '',
@@ -930,8 +930,8 @@ return [
   ],
   '/strony-www/strona-internetowa-dla-malej-firmy/' => [
     'kind' => 'post',
-    'focus' => 'strona www dla małej firmy, strona internetowa dla małej firmy, strony internetowe dla małych firm, strony www dla małych firm, strona dla małej firmy',
-    'title' => '',
+    'focus' => 'strona internetowa dla małej firmy, strona www dla małej firmy, strony internetowe dla małych firm, strony www dla małych firm, strona dla małej firmy',
+    'title' => 'Strona internetowa dla małej firmy – niezbędne elementy',
     'description' => '',
     'h1' => '',
     'editorial_title' => '',
@@ -950,8 +950,8 @@ return [
   ],
   '/sklepy-internetowe/sklep-internetowy-na-zamowienie/' => [
     'kind' => 'post',
-    'focus' => 'dedykowany sklep internetowy, sklep internetowy na zamówienie, indywidualny sklep internetowy, sklep internetowy na zamówienie cena',
-    'title' => '',
+    'focus' => 'sklep internetowy na zamówienie, dedykowany sklep internetowy, indywidualny sklep internetowy, sklep internetowy na zamówienie cena',
+    'title' => 'Sklep internetowy na zamówienie – kiedy lepszy niż szablon',
     'description' => '',
     'h1' => '',
     'editorial_title' => '',
@@ -965,7 +965,7 @@ return [
   ],
   '/strony-internetowe/agencja-czy-freelancer-do-stworzenia-strony/' => [
     'kind' => 'post',
-    'focus' => 'freelancer strony internetowe, strona internetowa freelancer, agencja czy freelancer, freelancer czy agencja',
+    'focus' => 'agencja czy freelancer, freelancer strony internetowe, strona internetowa freelancer, freelancer czy agencja',
     'title' => '',
     'description' => '',
     'h1' => '',
@@ -980,8 +980,8 @@ return [
   ],
   '/strony-www/jak-sprawdzic-czy-strona-internetowa-dziala-skutecznie/' => [
     'kind' => 'post',
-    'focus' => 'skuteczna strona internetowa, skuteczna strona www, skuteczność strony internetowej',
-    'title' => '',
+    'focus' => 'czy strona internetowa działa skutecznie, skuteczna strona internetowa, skuteczna strona www, skuteczność strony internetowej',
+    'title' => 'Jak sprawdzić, czy strona internetowa działa skutecznie?',
     'description' => '',
     'h1' => '',
     'editorial_title' => '',
@@ -1097,7 +1097,7 @@ return [
   '/sklepy-internetowe/strona-internetowa-dla-branzy-beauty-jakie-sekcje-zwiekszaja-zapytania/' => [
     'kind' => 'post',
     'focus' => '',
-    'title' => '',
+    'title' => 'Sekcje strony salonu beauty – co zwiększa liczbę zapytań?',
     'description' => '',
     'h1' => '',
     'editorial_title' => '',
@@ -1121,10 +1121,10 @@ return [
   /* 2.5.0: content batch 2 (tresci/paczka-2/plan-wpisy.php). */
   '/meta-ads/facebook-ads-dla-firm-lokalnych/' => [
     'kind' => 'post',
-    'focus' => 'lokalne reklamy facebook, reklamy facebook lokalne, facebook reklamy lokalne, reklama lokalna na facebooku',
-    'title' => 'Lokalne reklamy na Facebooku dla firm – co działa najlepiej',
+    'focus' => 'reklama na Facebooku dla firm lokalnych, lokalne reklamy facebook, reklamy facebook lokalne, facebook reklamy lokalne, reklama lokalna na facebooku',
+    'title' => 'Reklama na Facebooku dla firm lokalnych – co działa',
     'description' => 'Lokalne reklamy na Facebooku dla małych firm: jaki cel kampanii wybrać, jak ustawić zasięg i budżet oraz jak liczyć telefony i wiadomości. Sprawdź, co działa.',
-    'h1' => 'Lokalne reklamy na Facebooku – co działa w Facebook Ads dla firm lokalnych?',
+    'h1' => 'Reklama na Facebooku dla firm lokalnych – co działa w Facebook Ads?',
     'editorial_title' => '',
     'editorial_description' => '',
     'links' => [
@@ -1267,8 +1267,8 @@ return [
   ],
   '/logo-branding/jak-wymyslic-nazwe-firmy/' => [
     'kind' => 'post',
-    'focus' => 'nazwa dla firmy, jak wymyślić nazwę firmy, wymyślanie nazwy firmy, naming firmy, nazwa firmy',
-    'title' => 'Nazwa dla firmy – jak ją wymyślić? Metody i przykłady',
+    'focus' => 'jak wymyślić nazwę firmy, nazwa dla firmy, wymyślanie nazwy firmy, naming firmy, nazwa firmy',
+    'title' => 'Jak wymyślić nazwę firmy? Metody i przykłady',
     'description' => 'Nazwa dla firmy ma być krótka, łatwa do zapamiętania i wolna w rejestrach. Poznaj 6 metod wymyślania nazw, przykłady marek i listę rzeczy do sprawdzenia.',
     'h1' => 'Jak wymyślić nazwę firmy? Metody, przykłady i co sprawdzić przed wyborem',
     'editorial_title' => '',
@@ -1283,9 +1283,9 @@ return [
   '/strony-internetowe/makieta-strony-internetowej/' => [
     'kind' => 'post',
     'focus' => 'makieta strony internetowej, makieta strony www, wireframe strony internetowej, makieta strony, prototyp strony internetowej',
-    'title' => 'Makieta strony internetowej – co to jest i jak ją zrobić?',
+    'title' => 'Makieta strony internetowej – co to jest i jak ją zrobić',
     'description' => 'Makieta strony internetowej to plan układu strony przed projektem graficznym. Zobacz, czym różnią się wireframe, mockup i prototyp, i jak zrobić makietę.',
-    'h1' => 'Makieta strony www – wireframe, mockup i prototyp krok po kroku',
+    'h1' => 'Makieta strony internetowej – wireframe, mockup i prototyp',
     'editorial_title' => '',
     'editorial_description' => '',
     'links' => [
@@ -1298,9 +1298,9 @@ return [
   '/strony-internetowe/rodzaje-stron-internetowych/' => [
     'kind' => 'post',
     'focus' => 'rodzaje stron internetowych, typy stron internetowych, rodzaje stron www, jaką stronę internetową wybrać',
-    'title' => 'Rodzaje stron internetowych – 12 typów i do czego służą',
+    'title' => 'Rodzaje stron internetowych – 12 typów i ich zastosowanie',
     'description' => 'Rodzaje stron internetowych od wizytówki i strony firmowej po sklep, portal i aplikację. Zobacz 12 typów stron, ich zastosowania i jak wybrać właściwy.',
-    'h1' => 'Typy stron internetowych – który rodzaj strony wybrać dla firmy?',
+    'h1' => 'Rodzaje stron internetowych – który wybrać dla firmy?',
     'editorial_title' => '',
     'editorial_description' => '',
     'links' => [
@@ -1313,9 +1313,9 @@ return [
   '/logo-branding/strategia-marki/' => [
     'kind' => 'post',
     'focus' => 'strategia marki, jak zbudować strategię marki, strategia brandingowa, elementy strategii marki, strategia marki przykład',
-    'title' => 'Strategia marki – co to jest i jak ją zbudować? Przykład',
+    'title' => 'Strategia marki – co to jest i jak ją zbudować?',
     'description' => 'Strategia marki mówi, dla kogo jest firma, czym się wyróżnia i jak komunikuje. Zobacz 9 elementów strategii, plan w 7 krokach i przykład dla małej firmy.',
-    'h1' => 'Jak zbudować strategię marki? Elementy, przykład i plan krok po kroku',
+    'h1' => 'Strategia marki – jak ją zbudować? Elementy, przykład i plan',
     'editorial_title' => '',
     'editorial_description' => '',
     'links' => [

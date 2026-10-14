@@ -88,9 +88,16 @@ final class Router {
         return self::$reverse;
     }
 
-    /** Old English URLs (previous translator) => current English URL. */
+    /** Old English URLs (previous translator, or an English address Tłumacz EN changed) => current English URL. */
     public static function legacy(): array {
-        if (self::$legacy === null) { self::$legacy = (array) (self::data()['legacy'] ?? []); }
+        if (self::$legacy === null) {
+            $l = (array) (self::data()['legacy'] ?? []);
+            $extra = function_exists('apply_filters') ? apply_filters('zpl_legacy_routes', []) : [];
+            foreach (is_array($extra) ? $extra : [] as $old => $new) {
+                if (is_string($old) && is_string($new) && $old !== $new && !isset($l[$old]) && strpos($old, '/en/') === 0 && strpos($new, '/en/') === 0) { $l[$old] = $new; }
+            }
+            self::$legacy = $l;
+        }
         return self::$legacy;
     }
 
@@ -173,6 +180,13 @@ final class Router {
         return null;
     }
 
+    /** The Polish path has an English address of its own (route, alias or paged route). */
+    public static function has_route(string $pl): bool {
+        $pl = self::norm_path($pl);
+        $r = self::routes();
+        return isset($r[$pl]) || (isset(self::ALIASES[$pl]) && isset($r[self::ALIASES[$pl]])) || self::paged_en($pl) !== null;
+    }
+
     /** English path for a Polish source path (fallback: /en + path). */
     public static function en_path(string $pl): string {
         $pl = self::norm_path($pl);
@@ -207,6 +221,8 @@ final class Router {
         if ($lang === 'en') {
             if ($rel === '/en/' || strpos($rel, '/en/') === 0) { return $url; }
             if (self::is_excluded($rel)) { return $url; }
+            // No English version yet: the link keeps the Polish address instead of an /en/ page in Polish.
+            if (!self::has_route($rel)) { return $url; }
             $new = self::en_path($rel);
         } else {
             if ($rel !== '/en/' && strpos($rel, '/en/') !== 0) { return $url; }

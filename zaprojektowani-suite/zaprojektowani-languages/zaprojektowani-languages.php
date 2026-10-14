@@ -24,7 +24,8 @@ if (defined('ZPL_EMBEDDED')) {
 }
 if (defined('ZPL_VERSION')) { return; }
 
-define('ZPL_VERSION', '1.0.22');
+define('ZPL_VERSION', '1.1.0');
+// 1.1.0 (Tłumacz EN 2): one translator serves above the shipped dictionaries (zpl_priority_dictionary), old English addresses redirect (zpl_legacy_routes).
 // 1.0.19: versioned approved EN overlays and bounded client dictionary refresh.
 // 1.0.18 (Suite 2.9.12): visitors whose browser reads Polish open Polish pages even after choosing English once; switching an English page to Polish opens the Polish address.
 // 1.0.17: missing-text reports share a browser cooldown and respect the server quota; static page dictionaries are requested only when present.
@@ -32,7 +33,7 @@ define('ZPL_VERSION', '1.0.22');
 // 1.0.15: English versions of the nationwide service and content pages (own routes and page dictionaries).
 // 1.0.14: no-reload switch asks the server for every missing text (batches of 400), English for SEO-plan texts (seo-271), English sitemaps split like the Polish ones.
 // 1.0.13: filters zpl_dictionary, zpl_has_page and zpl_sitemap_pages let other modules add translated pages.
-define('ZPL_API', 1);
+define('ZPL_API', 2);
 define('ZPL_FILE', __FILE__);
 define('ZPL_HOST', defined('ZPL_EMBEDDED') ? (string) ZPL_EMBEDDED : __FILE__); // the plugin file WordPress knows
 define('ZPL_DIR', plugin_dir_path(__FILE__));

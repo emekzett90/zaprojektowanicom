@@ -3,290 +3,733 @@ namespace ZPTE;
 
 if (!defined('ABSPATH')) { exit; }
 
-/** One page: fetch the Polish version, translate what the English version is missing, publish. */
+/**
+ * One Polish page on its way to English:
+ *   read()    fetch the Polish page as visitors get it, cut it into fragments with the language module itself,
+ *             find what has no English text yet and create OpenAI jobs for it;
+ *   advance() once the jobs are answered: compile the page's map, give the page an English address if it has
+ *             none (or only one made of Polish words), and publish it.
+ * Translations are kept per Polish text, not per page version: editing a page never throws its English away;
+ * only new or changed sentences are translated again.
+ */
 final class Sync {
-    const DONE = 'done';
-    const PARTIAL = 'partial';     // ran out of time or daily budget: continues on the next run
-    const RETRY = 'retry';         // OpenAI temporarily unavailable: stop this run
-    const LIMIT = 'limit';
-    const FATAL = 'fatal';         // key/credit/model problem: stop until the administrator fixes it
+    const MAX_TRIES = 3;
+    /** Pages to translate again from scratch at their next read ("Przetłumacz od nowa" in the panel). */
+    const FORCE = 'zpte2_force';
+    /** Names the site uses for its own sections, fixed in every English text (older translations used others). */
+    const TERM_FIXES = ['Pricing Studio' => 'Quote Studio', 'Valuation studio' => 'Quote Studio', 'Valuation Studio' => 'Quote Studio', 'Studio Wyceny' => 'Quote Studio'];
+    /** Parts of every page (menu, footer): their texts are shared by all English pages. */
+    const SHARED_IDS = ['zpNewNav'];
+    const SHARED_CLASSES = ['zpMegaFooter'];
 
-    /** @param object $row zpte_paths row */
-    public static function run($row, int $deadline): string {
+    // ------------------------------------------------------------------ paths
+
+    /** Site-relative path of a published post, normalized like the language module does it ('' if none). */
+    public static function path_of_post(int $post_id): string {
+        if ((int) get_option('page_on_front') === $post_id && get_option('show_on_front') === 'page') { return '/'; }
+        $url = get_permalink($post_id);
+        if (!is_string($url) || $url === '') { return ''; }
+        $p = (string) wp_parse_url($url, PHP_URL_PATH);
+        if ($p === '' || wp_parse_url($url, PHP_URL_QUERY)) { return ''; } // plain permalinks (?p=1) have no path
+        return \ZPL\Router::norm_path(\ZPL\Router::rel($p));
+    }
+
+    public static function path_of_term(int $term_id): string {
+        $url = get_term_link($term_id);
+        if (!is_string($url) || $url === '') { return ''; }
+        $p = (string) wp_parse_url($url, PHP_URL_PATH);
+        if ($p === '' || wp_parse_url($url, PHP_URL_QUERY)) { return ''; }
+        return \ZPL\Router::norm_path(\ZPL\Router::rel($p));
+    }
+
+    public static function post_id_for(string $path): int {
+        if ($path === '/') { return get_option('show_on_front') === 'page' ? (int) get_option('page_on_front') : 0; }
+        $id = (int) url_to_postid(home_url($path));
+        return $id > 0 && self::path_of_post($id) === $path ? $id : 0;
+    }
+
+    public static function term_id_for(string $path): int {
+        if (!preg_match('~^/category/(?:[^/]+/)*([^/]+)/$~', $path, $m)) { return 0; }
+        $t = get_term_by('slug', $m[1], 'category');
+        return $t instanceof \WP_Term ? (int) $t->term_id : 0;
+    }
+
+    /** Why a Polish path gets no English version of its own ('' = it can have one). */
+    public static function ineligible(string $path): string {
+        if ($path === '' || $path === '/en/' || strpos($path, '/en/') === 0) { return 'adres angielski'; }
+        if (\ZPL\Router::never($path)) { return 'adres techniczny'; }
+        if (\ZPL\Router::is_excluded($path)) { return 'ścieżka wyłączona w Języki PL/EN'; }
+        if (strpos($path, '/dziekujemy') === 0 || strpos($path, '/page/') !== false) { return 'strona pomocnicza'; }
+        // Pages made for one client (questionnaires, offers) stay out of Google, so no English version.
+        if (function_exists('zp_seo_plan_is_private_path') && zp_seo_plan_is_private_path($path)) { return 'strona dla klienta (noindex)'; }
+        return '';
+    }
+
+    // ------------------------------------------------------------------ queue
+
+    /** Row for a Polish path (created when missing). */
+    public static function ensure(string $path, string $kind, int $post_id = 0, int $term_id = 0): int {
+        $row = Store::page_by_path($path);
+        if ($row) {
+            $data = [];
+            if ($post_id > 0 && (int) $row->post_id !== $post_id) { $data['post_id'] = $post_id; }
+            if ($term_id > 0 && (int) $row->term_id !== $term_id) { $data['term_id'] = $term_id; }
+            if ($row->status === 'off') { $data['status'] = (int) $row->keys_done > 0 ? 'done' : 'new'; $data['message'] = ''; $data['tries'] = 0; }
+            if ($data) { Store::page_update((int) $row->id, $data); }
+            return (int) $row->id;
+        }
+        return Store::page_add($path, ['kind' => $kind, 'post_id' => $post_id, 'term_id' => $term_id, 'origin' => 'new']);
+    }
+
+    /**
+     * Daily check (and "Sprawdź wszystko"): every public post, page and category, the home page and every page
+     * the language module has an English address for. New pages first, then edited ones, then the rest.
+     * @return array{new:int,changed:int,recheck:int}
+     */
+    public static function plan_all(): array {
+        $out = ['new' => 0, 'changed' => 0, 'recheck' => 0];
+        $seen = [];
+        $types = Settings::types();
+        if ($types) {
+            $page = 1;
+            do {
+                $ids = (array) get_posts(['post_type' => $types, 'post_status' => 'publish', 'has_password' => false, 'posts_per_page' => 300,
+                    'paged' => $page++, 'orderby' => 'ID', 'order' => 'ASC', 'fields' => 'ids', 'no_found_rows' => true, 'suppress_filters' => true, 'ignore_sticky_posts' => true]);
+                foreach ($ids as $pid) {
+                    $pid = (int) $pid;
+                    $path = self::path_of_post($pid);
+                    if ($path === '' || isset($seen[$path]) || self::ineligible($path) !== '') { continue; }
+                    $seen[$path] = true;
+                    $id = self::ensure($path, $path === '/' ? 'home' : 'post', $pid);
+                    $out[self::plan_one($id, (string) get_post_field('post_modified_gmt', $pid))]++;
+                }
+            } while (count($ids) === 300);
+        }
+        if (Settings::get('terms')) {
+            $terms = get_terms(['taxonomy' => 'category', 'hide_empty' => true]);
+            foreach (is_array($terms) ? $terms : [] as $t) {
+                if (!$t instanceof \WP_Term) { continue; }
+                $path = self::path_of_term((int) $t->term_id);
+                if ($path === '' || isset($seen[$path]) || self::ineligible($path) !== '' || self::alias_of($path) !== '') { continue; }
+                $seen[$path] = true;
+                $out[self::plan_one(self::ensure($path, 'term', 0, (int) $t->term_id), '')]++;
+            }
+        }
+        // Pages the language module already serves in English (home, services, archives): their new texts too.
+        foreach (array_keys(\ZPL\Router::routes()) as $path) {
+            $path = (string) $path;
+            if (isset($seen[$path]) || self::ineligible($path) !== '') { continue; }
+            $seen[$path] = true;
+            $kind = $path === '/' ? 'home' : (strpos($path, '/category/') === 0 ? 'term' : 'post');
+            $id = self::ensure($path, $kind, $kind === 'post' || $kind === 'home' ? self::post_id_for($path) : 0, $kind === 'term' ? self::term_id_for($path) : 0);
+            $out[self::plan_one($id, '')]++;
+        }
+        // Rows of posts that are no longer public: their English version goes.
+        foreach (Store::pages(['kind' => ['post', 'term', 'home']]) as $row) {
+            if (isset($seen[(string) $row->path]) || $row->status === 'off') { continue; }
+            if ($row->kind === 'term' && self::alias_of((string) $row->path) !== '') { self::retire($row, 'Kategoria jest odpowiednikiem innej kategorii (wspólny adres EN).'); continue; }
+            Store::queue((int) $row->id, 40); // read() decides: gone, moved or still there
+        }
+        return $out;
+    }
+
+    /** Queue one row for the daily check with the right urgency; returns new|changed|recheck. */
+    private static function plan_one(int $id, string $modified_gmt): string {
+        $row = $id ? Store::page($id) : null;
+        if (!$row) { return 'recheck'; }
+        if ((int) $row->keys_done === 0 && $row->status !== 'done') { Store::queue($id, 10); return 'new'; }
+        if ($modified_gmt !== '' && ($row->checked_at === null || $modified_gmt > (string) $row->checked_at)) { Store::queue($id, 20); return 'changed'; }
+        if (Settings::get('recheck') || (int) $row->keys_failed > 0 || $row->status === 'error') { Store::queue($id, 60); }
+        return 'recheck';
+    }
+
+    /** A post was published or updated: translate it now, and refresh the pages that list it. */
+    public static function plan_post(int $post_id): bool {
+        $path = self::path_of_post($post_id);
+        if ($path === '' || self::ineligible($path) !== '') { return false; }
+        Store::install();
+        $id = self::ensure($path, $path === '/' ? 'home' : 'post', $post_id);
+        if (!$id) { return false; }
+        Store::queue($id, 5);
+        // Lists and the footer show the post's title and lead: the home page, the blog and its category.
+        foreach (['/', (string) self::path_of_post((int) get_option('page_for_posts'))] as $p) {
+            if ($p !== '' && $p !== $path && ($r = Store::page_by_path($p))) { Store::queue((int) $r->id, 7); }
+        }
+        foreach ((array) get_the_category($post_id) as $cat) {
+            if ($cat instanceof \WP_Term && ($r = Store::page_by_term((int) $cat->term_id))) { Store::queue((int) $r->id, 8); }
+        }
+        return true;
+    }
+
+    /** Translate this page again from scratch at its next read (all fragments, also those already translated). */
+    public static function force(int $page_id): void {
+        $f = get_option(self::FORCE, []);
+        $f = is_array($f) ? $f : [];
+        $f[$page_id] = time();
+        update_option(self::FORCE, $f, false);
+        Store::queue($page_id, 3);
+    }
+
+    /** Was a full translation asked for this page? (Asked once: the flag is cleared.) */
+    public static function take_force(int $page_id): bool {
+        $f = get_option(self::FORCE, []);
+        if (!is_array($f) || !isset($f[$page_id])) { return false; }
+        unset($f[$page_id]);
+        update_option(self::FORCE, $f, false);
+        return true;
+    }
+
+    /** Category paths that share another category's English page (see ZPL\Router::ALIASES). */
+    public static function alias_of(string $path): string {
+        $a = \ZPL\Router::ALIASES;
+        return strpos($path, '/category/') === 0 && isset($a[$path]) ? (string) $a[$path] : '';
+    }
+
+    // ------------------------------------------------------------------- read
+
+    /**
+     * Read one queued page. Returns 'jobs' (waiting for OpenAI), 'done', 'skip' or 'retry'.
+     * @param object $row zpen_pages row
+     */
+    public static function read($row, int $deadline, bool $force = false): string {
         $id = (int) $row->id;
         $path = (string) $row->path;
-        $kind = (string) $row->kind;
-        $post = null;
         $now = Store::now();
 
-        // 1. The post behind the page still exists and is public; its address may have changed.
-        if ((int) $row->post_id > 0) {
+        // 1. The post or category still exists and is public; a post's Polish address may have changed.
+        if ($row->kind !== 'term' && (int) $row->post_id > 0) {
             $post = get_post((int) $row->post_id);
             if (!$post || $post->post_status !== 'publish' || $post->post_password !== '') {
                 self::retire($row, 'Wpis nie jest już publiczny — wersję angielską wyłączono.');
-                return self::DONE;
+                return 'skip';
             }
-            $current = Bridge::path_of_post((int) $post->ID);
+            $current = self::path_of_post((int) $post->ID);
             if ($current !== '' && $current !== $path) {
-                $other = Store::path_by_path($current);
-                if ($other && (int) $other->id !== $id) { Store::path_delete((int) $other->id); }
-                if ((int) $row->route_added && (string) $row->en_path !== '') {
-                    Bridge::remove_route($path, (string) $row->en_path);
-                    Bridge::add_route($current, (string) $row->en_path);
-                }
-                Log::add('Zmienił się polski adres: ' . $path . ' → ' . $current . '.');
-                Store::path_update($id, ['path' => $current]);
+                $other = Store::page_by_path($current);
+                if ($other && (int) $other->id !== $id) { Store::page_delete((int) $other->id); }
+                Store::page_update($id, ['path' => $current]);
+                Log::add('Zmienił się polski adres: ' . $path . ' → ' . $current . '. Angielski adres zostaje.');
                 $path = $current;
+                Routes::rebuild();
+                Index::rebuild();
+            }
+        }
+        if ($row->kind === 'term' && (int) $row->term_id > 0) {
+            $t = get_term((int) $row->term_id, 'category');
+            if (!$t instanceof \WP_Term || (int) $t->count === 0) {
+                self::retire($row, 'Kategoria jest pusta lub usunięta — wersję angielską wyłączono.');
+                return 'skip';
             }
         }
 
         // 2. Pages that get no English version of their own.
-        $why = Bridge::ineligible($path);
+        $why = self::ineligible($path);
+        if ($why === '' && $row->kind === 'term' && self::alias_of($path) !== '') { $why = 'kategoria z tym samym adresem EN co inna'; }
         if ($why !== '') {
-            Store::path_update($id, ['status' => $kind === 'existing' ? 'off' : 'skipped', 'queued' => 0, 'checked_at' => $now, 'message' => 'Pominięto: ' . $why . '.']);
-            return self::DONE;
+            self::retire($row, 'Pominięto: ' . $why . '.');
+            return 'skip';
         }
 
-        // 3. The Polish page as visitors see it.
-        $src = Source::fetch($path, (int) $row->post_id);
+        // 3. The Polish page as visitors get it.
+        $src = Source::fetch($path, (int) $row->post_id, max(3, min(12, $deadline - time() - 3)));
         if (!$src['ok']) {
+            // A post or category confirmed public above that answers 404 is a hiccup of this one request (security rule,
+            // cache, maintenance), not a removed page: its English version stays and the read is repeated.
+            if ($src['gone'] && in_array((int) $src['code'], [404, 410], true) && ((int) $row->post_id > 0 || (int) $row->term_id > 0)) {
+                $src['gone'] = false;
+            }
             if ($src['gone']) {
-                if ($kind === 'existing') {
-                    Store::path_update($id, ['queued' => 0, 'checked_at' => $now, 'message' => $src['error'] . '.']);
-                } else {
-                    self::retire($row, $src['error'] . ' — pominięto.');
-                }
-                return self::DONE;
+                self::retire($row, $src['error'] . '.');
+                return 'skip';
             }
             $tries = (int) $row->tries + 1;
-            Store::path_update($id, ['queued' => 0, 'tries' => $tries, 'checked_at' => $now, 'status' => in_array($row->status, ['published', 'draft'], true) ? $row->status : 'error', 'message' => $src['error'] . '.']);
+            Store::page_update($id, ['tries' => $tries, 'queued' => $tries < self::MAX_TRIES ? 1 : 0, 'priority' => max((int) $row->priority, 70),
+                'checked_at' => $now, 'status' => $row->status === 'new' ? 'error' : $row->status, 'message' => OpenAI::short($src['error']) . '.']);
             Log::add($path . ': ' . $src['error'] . '.', 'warning');
-            return self::DONE;
+            return 'retry';
         }
         if ($src['via'] === 'post') { Log::add($path . ': ' . $src['error'], 'warning'); }
-        if ($kind !== 'existing' && Source::noindex($src['html'])) {
-            self::retire($row, 'Polska strona ma noindex — nie tłumaczę stron wyłączonych z Google.', 'skipped');
-            return self::DONE;
+        $html = (string) $src['html'];
+        if ($row->kind === 'post' && Source::noindex($html) && !\ZPL\Router::has_route($path)) {
+            self::retire($row, 'Polska strona ma noindex — nie tłumaczę stron wyłączonych z Google.');
+            return 'skip';
         }
 
-        // 4. Fragments the English page has no translation for (shipped dictionary and manual fixes count).
-        $units = Source::units($src['html']);
-        $need = [];
-        Bridge::$off = true;
-        \ZPL\Dict::flush();
-        try {
-            foreach ($units as $k => $unitKind) {
-                if (\ZPL\Dict::get($k, 'en', $path) === null) { $need[$k] = $unitKind; }
-            }
-        } finally {
-            Bridge::$off = false;
-            \ZPL\Dict::flush();
+        // 4. Fragments of the page, plus the texts other pages show about it (titles and leads in lists).
+        $units = Source::units($html);
+        $shared = self::region_units($html);
+        foreach (self::post_units($row) as $k => $kind) {
+            if (!isset($units[$k])) { $units[$k] = $kind; }
+            $shared[$k] = true;
+        }
+        $hash = md5(implode("\n", array_keys($units)));
+        if (!$force && $hash === (string) $row->source_hash && (int) $row->keys_failed === 0 && $row->status === 'done' && !self::needs_route($row)) {
+            Store::page_update($id, ['queued' => 0, 'tries' => 0, 'checked_at' => $now, 'message' => '']);
+            Worker::page_finished();
+            return 'done';
         }
 
-        // 5. Translation memory first, OpenAI for the rest.
-        $known = Store::strings_by_hash(array_map([Store::class, 'hash'], array_keys($need)));
-        $ids = [];
+        // 5. What already has English text: this page's own translations, the translation memory, the shipped
+        //    dictionary, manual corrections and the shared texts. Broken earlier translations are done again.
+        $hashes = [];
+        foreach ($units as $k => $kind) { $hashes[Store::hash((string) $k)] = (string) $kind; }
+        $own = Store::strings(array_keys($hashes), $id);
+        $mem = Store::strings(array_keys($hashes), Store::SHARED);
+        $sharedMap = Serve::shared_map();
+        $overrides = \ZPL\Dict::overrides('en');
         $todo = [];
-        foreach ($need as $k => $unitKind) {
-            $r = $known[Store::hash($k)] ?? null;
-            if ($r && (string) $r->en !== '') { $ids[$k] = (int) $r->id; } else { $todo[$k] = $unitKind; }
+        $known = 0;
+        $markShared = [];
+        foreach ($units as $k => $kind) {
+            $k = (string) $k;
+            $h = Store::hash($k);
+            $r = self::pick($own[$h] ?? null, $mem[$h] ?? null);
+            if ($r) {
+                // A manual correction stays as the owner wrote it, also when the page is translated again on request.
+                if ((int) $r->manual || (!$force && Translator::broken($k, (string) $r->en) === '')) {
+                    $known++;
+                    // Shared texts outrank the plugin's own dictionaries on every page: a text those already
+                    // translate (shipped, or curated by another module) keeps that wording unless corrected by hand.
+                    if (isset($shared[$k]) && ((int) $r->manual || \ZPL\Dict::lower($k, 'en', $path) === null)) {
+                        if (!isset($mem[$h])) { $markShared[$k] = (string) $r->en; }
+                        elseif (!(int) $mem[$h]->shared) { $markShared[$k] = (string) $mem[$h]->en; }
+                    }
+                    continue;
+                }
+                $todo[$k] = (string) $kind; // translated again; the old text is served until the new one arrives
+                continue;
+            }
+            // Texts the plugin already translates (manual overrides, shared texts, shipped dictionaries and other
+            // modules' curated texts such as the contact forms) never go to OpenAI.
+            if (isset($overrides[$k]) || isset($sharedMap[$k]) || \ZPL\Dict::lower($k, 'en', $path) !== null) { $known++; continue; }
+            if (strlen($k) > Translator::MAX_KEY) { continue; }
+            $todo[$k] = (string) $kind;
         }
-        $context = Source::title($src['html']) ?: Source::h1($src['html']) ?: $path;
-        $failed = [];
-        Store::path_update($id, ['keys_total' => count($units), 'keys_ai' => count($ids)]);
-        Worker::page_progress($path, count($units), count($units) - count($todo));
+        if ($markShared) {
+            // Menu and footer texts already translated for one page now serve every English page.
+            Store::strings_insert(Store::SHARED, $markShared, 'shared', true);
+            Store::mark_shared(array_map([Store::class, 'hash'], array_keys($markShared)));
+            self::compile_shared();
+        }
+        Store::keys_save($id, Store::hash($path), $hashes);
+
+        // 6. OpenAI jobs, in document order, a few fragments each. A text already on its way to OpenAI for another
+        //    page (a title or lead shown in several lists) is not sent again: this page waits for that answer.
+        $ctx = ['title' => Source::title($html) ?: Source::h1($html), 'path' => $path];
+        $await = [];
         if ($todo) {
-            Store::path_update($id, ['status' => in_array($row->status, ['published', 'draft'], true) ? $row->status : 'working']);
-            foreach (Translator::batches($todo) as $batch) {
-                if (time() >= $deadline - 5 || Log::over_limit()) {
-                    // Progress is kept: the next run finds these fragments in the translation memory.
-                    Store::links_add($id, array_values($ids));
-                    Store::path_update($id, ['message' => Log::over_limit() ? 'Dzienny limit znaków wyczerpany — dokończę jutro.' : 'W trakcie tłumaczenia — dokończę przy następnym uruchomieniu.']);
-                    return Log::over_limit() ? self::LIMIT : self::PARTIAL;
-                }
-                $res = Translator::translate($batch, $context);
-                foreach ($res['ok'] as $pl => $en) {
-                    $sid = Store::string_save((string) $pl, (string) $en, (string) ($batch[$pl] ?? 'text'), Settings::model());
-                    if ($sid) { $ids[(string) $pl] = $sid; }
-                }
-                foreach ($res['failed'] as $pl) { $failed[(string) $pl] = true; }
-                Store::links_add($id, array_values($ids));
-                Store::path_update($id, ['keys_ai' => count($ids), 'keys_failed' => count($failed), 'message' => 'Zapisano ' . count($ids) . ' tłumaczeń; kontynuuję stronę.']);
-                Worker::page_progress($path, count($units), count($units) - count($need) + count($ids));
-                if (!empty($res['deferred']) || !empty($res['limit'])) { return !empty($res['limit']) ? self::LIMIT : self::PARTIAL; }
-                if ($res['fatal']) {
-                    Store::links_add($id, array_values($ids));
-                    Store::path_update($id, ['message' => $res['error']]);
-                    Log::alert($res['error']);
-                    return self::FATAL;
-                }
-                if ($res['retry']) {
-                    Store::links_add($id, array_values($ids));
-                    Store::path_update($id, ['message' => $res['error']]);
-                    Log::add($res['error'], 'warning');
-                    return self::RETRY;
-                }
-                if ($res['error'] !== '') { Log::add($path . ': ' . $res['error'], 'warning'); }
+            $pending = self::pending();
+            foreach ($todo as $k => $kind) {
+                if (isset($pending[Store::hash((string) $k)])) { $await[$k] = $kind; unset($todo[$k]); }
             }
-            // Validation failures get a later bounded retry; do not hide fatal errors in a second pass.
-
         }
+        $jobs = 0;
+        foreach (Translator::batches($todo) as $batch) {
+            $chars = 0;
+            foreach (array_keys($batch) as $k) { $chars += Translator::len((string) $k); self::$pending[Store::hash((string) $k)] = $id; }
+            $sh = array_values(array_intersect(array_keys($batch), array_keys($shared)));
+            Store::job_add($id, 'units', ['items' => $batch, 'shared' => $sh, 'ctx' => $ctx], $chars);
+            $jobs++;
+        }
+        if ($await) {
+            Store::job_add($id, 'wait', ['items' => $await, 'shared' => array_values(array_intersect(array_keys($await), array_keys($shared))), 'ctx' => $ctx], 0, 'wait');
+        }
+        $message = $jobs ? 'Tłumaczę ' . count($todo) . ' fragmentów (' . $jobs . ' ' . ($jobs === 1 ? 'zapytanie' : 'zapytań') . ').' : '';
+        if ($await) { $message = trim($message . ' Czekam na ' . count($await) . ' wspólnych fragmentów tłumaczonych dla innej strony.'); }
+        Store::page_update($id, [
+            'source_hash' => $hash, 'source_modified' => $row->kind === 'post' && (int) $row->post_id > 0 ? (string) get_post_field('post_modified_gmt', (int) $row->post_id) : null,
+            'keys_total' => count($units), 'keys_done' => $known, 'keys_failed' => 0, 'queued' => 0, 'tries' => 0,
+            'stage' => $jobs || $await ? 'translating' : '', 'checked_at' => $now,
+            'status' => $row->status === 'error' ? ((int) $row->keys_done > 0 ? 'done' : 'new') : $row->status,
+            'message' => $message,
+        ]);
+        if (!$jobs && !$await) {
+            self::advance(Store::page($id));
+            return 'done';
+        }
+        return 'jobs';
+    }
 
-        // 6. The page uses exactly these fragments now (fragments that disappeared from the page are unlinked).
-        Store::links_replace($id, array_values($ids));
-        self::pin_titles($post, $units, $ids);
+    /**
+     * Texts inside the menu and the footer: the same on every page, so their translations are shared.
+     * @return array<string,bool>
+     */
+    private static function region_units(string $html): array {
+        $out = [];
+        $root = \ZPL\Html::parse($html);
+        $found = [];
+        $walk = static function ($n) use (&$walk, &$found, $html) {
+            if (($n['t'] ?? 0) !== 1) { return; }
+            $a = \ZPL\Html::attrs(substr($html, $n['s'], $n['te'] - $n['s']));
+            $classes = explode(' ', (string) ($a['class'] ?? ''));
+            if (in_array((string) ($a['id'] ?? ''), self::SHARED_IDS, true) || array_intersect(self::SHARED_CLASSES, $classes)) { $found[] = $n; return; }
+            foreach ($n['c'] ?? [] as $c) { $walk($c); }
+        };
+        $walk($root);
+        foreach ($found as $n) {
+            $frag = '<html><head></head><body>' . substr($html, $n['s'], $n['e'] - $n['s']) . '</body></html>';
+            foreach (\ZPL\Page::extract($frag) as $it) {
+                $k = (string) ($it['k'] ?? '');
+                if ($k !== '') { $out[$k] = true; }
+            }
+        }
+        return $out;
+    }
 
-        $stats = [
-            'queued' => 0,
-            'keys_total' => count($units),
-            'keys_ai' => count($ids),
-            'keys_failed' => count($failed),
-            'checked_at' => $now,
-            'source_modified' => $post ? (string) $post->post_modified_gmt : null,
-        ];
-        if ($todo) { $stats['translated_at'] = $now; }
-        $was = (string) $row->status;
-
-        // 7. Status and English address.
-        if ($kind === 'existing') {
-            $stats['status'] = 'published';
-            $stats['message'] = $failed ? 'Nie przetłumaczono ' . count($failed) . ' fragm. — ponowię przy kolejnym sprawdzeniu.' : ($todo ? 'Uzupełniono ' . count($todo) . ' fragm.' : 'Bez braków.');
-            $stats['tries'] = $failed ? (int) $row->tries + 1 : 0;
-        } elseif ($failed && $was !== 'published' && !self::good_enough(count($failed), count($need), (int) $row->tries + 1)) {
-            $stats['status'] = 'error';
-            $stats['tries'] = (int) $row->tries + 1;
-            $stats['message'] = 'Nie przetłumaczono ' . count($failed) . ' z ' . count($need) . ' fragm. — ponowię przy następnym uruchomieniu.';
-        } elseif ($was !== 'published' && Settings::get('mode') === 'draft') {
-            $stats['status'] = 'draft';
-            $stats['message'] = 'Szkic czeka na akceptację.';
-            $stats['tries'] = 0;
+    /**
+     * Title and leads of a post the way lists, cards and the footer print them (they are on other pages, so
+     * they are translated with the post and shared by every English page). @return array<string,string>
+     */
+    private static function post_units($row): array {
+        $pid = (int) $row->post_id;
+        if ($row->kind !== 'post' || $pid <= 0 || get_post_type($pid) !== 'post') { return []; }
+        $norm = static function (string $s): string { return \ZPL\Html::norm(\ZPL\Html::decode(wp_strip_all_tags($s))); };
+        $out = [];
+        $title = $norm((string) get_the_title($pid));
+        if ($title !== '') { $out[$title] = 'text'; }
+        $excerpt = (string) get_post_field('post_excerpt', $pid, 'raw');
+        $variants = [];
+        if ($excerpt !== '') {
+            $variants[] = $excerpt;
+            $variants[] = wp_trim_words(wp_strip_all_tags($excerpt), 22, '…');
         } else {
-            if (time() >= $deadline - 5 && Bridge::route($path) === '') {
-                Store::links_add($id, array_values($ids));
-                Store::path_update($id, ['message' => 'Treść zapisana — kończę publikację w następnym kroku.']);
-                return self::PARTIAL;
-            }
-            $route = self::ensure_route($row, $path, $src['html'], $post);
-            $stats = array_merge($stats, $route);
-            $stats['status'] = 'published';
-            // Leftover fragments are retried by the daily check (up to 4 times).
-            $stats['tries'] = $failed ? (int) $row->tries + 1 : 0;
-            $stats['message'] = $failed ? 'Opublikowano; ' . count($failed) . ' fragm. czeka na ponowne tłumaczenie.' : ($todo ? 'Przetłumaczono ' . count($todo) . ' fragm.' : 'Bez zmian.');
+            $variants[] = wp_trim_words(wp_strip_all_tags((string) get_post_field('post_content', $pid, 'raw')), 22, '…');
         }
-        if (!empty($stats['keys_failed']) && (int) ($stats['tries'] ?? 0) >= 4) {
-            $stats['message'] = 'Pozostało ' . (int) $stats['keys_failed'] . ' fragm. po 4 próbach. Sprawdź Dziennik i wybierz „Przetłumacz ponownie”, aby wznowić.';
+        if (function_exists('zp_suite_wiedza_fast_excerpt')) {
+            foreach ([20, 34, 42] as $w) { $variants[] = (string) zp_suite_wiedza_fast_excerpt($pid, $w); }
+            $variants[] = wp_trim_words((string) zp_suite_wiedza_fast_excerpt($pid, 42), 32, '…');
         }
-        Store::path_update($id, $stats);
-
-        // 8. Shared fragments, cache, lists that show the new page.
-        Store::recompute_globals();
-        Bridge::rebuild_index();
-        $fresh = Store::path($id);
-        $en = $fresh ? (string) $fresh->en_path : '';
-        Bridge::purge([$path, $en !== '' ? $en : \ZPL\Router::en_path($path)], $post ? (int) $post->ID : 0);
-        if ($stats['status'] === 'published' && $was !== 'published' && $kind !== 'existing') {
-            Log::add('Opublikowano wersję angielską: ' . $path . ' → ' . ($en !== '' ? $en : \ZPL\Router::en_path($path)) . ' (' . count($todo) . ' fragm.).');
-            self::queue_hubs($post);
-        } elseif ($todo || $failed) {
-            Log::add($path . ': ' . (string) $stats['message']);
+        foreach ($variants as $v) {
+            $v = $norm((string) $v);
+            if ($v !== '' && strlen($v) <= Translator::MAX_KEY) { $out[$v] = 'text'; }
         }
-        return self::DONE;
+        return $out;
     }
+
+    // ---------------------------------------------------------------- answers
 
     /**
-     * A new page goes live when only a few fragments failed (they are retried later), or, after the third
-     * attempt, when at least 80% is translated (the language module keeps a page below 90% out of Google).
+     * Save the translations of one answered batch. Returns the number saved; fragments that failed the checks
+     * get one more job, after that they are counted as failed on the page.
+     * @param object $job zpen_jobs row
      */
-    private static function good_enough(int $failed, int $need, int $attempt): bool {
-        if ($failed <= max(2, (int) ceil($need * 0.05))) { return true; }
-        return $attempt >= 3 && $failed <= (int) floor($need * 0.2);
-    }
-
-    /** Titles and excerpts appear in post lists and cards on other pages: share them site-wide. */
-    private static function pin_titles($post, array $units, array $ids): void {
-        if (!$post) { return; }
-        $want = [];
-        foreach ([get_the_title($post), (string) $post->post_excerpt] as $t) {
-            $k = \ZPL\Html::norm(wp_strip_all_tags(html_entity_decode((string) $t, ENT_QUOTES | ENT_HTML5, 'UTF-8')));
-            if ($k !== '' && isset($ids[$k])) { $want[] = $ids[$k]; }
+    public static function apply_units($job, array $data): int {
+        $payload = json_decode((string) $job->items, true);
+        $items = is_array($payload['items'] ?? null) ? $payload['items'] : [];
+        $shared = array_flip(is_array($payload['shared'] ?? null) ? $payload['shared'] : []);
+        $ids = self::ids($items);
+        $res = Translator::accept($data, $ids, $items);
+        $pageId = (int) $job->page_id;
+        $own = $pageId > 0 ? Store::strings(array_map([Store::class, 'hash'], array_keys($res['ok'])), $pageId) : [];
+        $sharedHit = false;
+        foreach ($res['ok'] as $pl => $en) {
+            $pl = (string) $pl;
+            $meta = ['kind' => (string) ($items[$pl] ?? 'text'), 'origin' => 'ai', 'model' => (string) $job->model, 'shared' => isset($shared[$pl]) ? 1 : 0];
+            Store::string_save(Store::SHARED, $pl, (string) $en, $meta, true);
+            // An earlier translation kept for this page only would hide the new one: replace it too.
+            if (isset($own[Store::hash($pl)])) { Store::string_save($pageId, $pl, (string) $en, $meta, true); }
+            if (isset($shared[$pl])) { $sharedHit = true; }
         }
-        if ($want) { Store::pin($want); }
-    }
-
-    /**
-     * English address for a newly translated page: an existing route if there is one, otherwise
-     * the English parent learned from similar pages + an English slug from the model.
-     */
-    public static function ensure_route($row, string $path, string $html, $post): array {
-        $existing = Bridge::route($path);
-        if ($existing !== '') { return ['en_path' => $existing]; }
-
-        $segs = array_values(array_filter(explode('/', trim($path, '/')), 'strlen'));
-        $last = (string) array_pop($segs);
-        $parent = $segs ? '/' . implode('/', $segs) . '/' : '/';
-        $prefix = $parent === '/' ? '/en/' : Bridge::learned_parent($parent);
-        $unknown = [];
-        if ($prefix === '') {
-            // Parent path never seen in English: translate its segments (deepest known prefix first).
-            $prefix = '/en/';
-            $acc = '/';
-            foreach ($segs as $s) {
-                $acc .= $s . '/';
-                $known = Bridge::learned_parent($acc) ?: Bridge::route($acc);
-                if ($known !== '') { $prefix = trailingslashit($known); continue; }
-                $unknown[] = $s;
+        if ($sharedHit) { self::compile_shared(); }
+        if ($res['failed']) {
+            $retry = [];
+            foreach ($res['failed'] as $pl => $why) { $retry[(string) $pl] = (string) ($items[$pl] ?? 'text'); }
+            if ((int) $job->tries + 1 < 2) {
+                $nid = Store::job_add($pageId, 'units', ['items' => $retry, 'shared' => array_values(array_intersect(array_keys($retry), array_keys($shared))), 'ctx' => $payload['ctx'] ?? []], 0);
+                Store::job_update($nid, ['tries' => (int) $job->tries + 1]);
+            } else {
+                $row = Store::page($pageId);
+                if ($row) { Store::page_update($pageId, ['keys_failed' => (int) $row->keys_failed + count($retry), 'message' => 'Nie przetłumaczono ' . count($retry) . ' fragmentów: ' . reset($res['failed']) . '.']); }
+                Log::add(($row ? $row->path : '#' . $pageId) . ': ' . count($retry) . ' fragmentów bez tłumaczenia (' . reset($res['failed']) . ').', 'warning');
             }
         }
-
-        $title_pl = $post ? \ZPL\Html::norm(wp_strip_all_tags(get_the_title($post))) : (Source::h1($html) ?: Source::title($html));
-        $title_en = '';
-        if ($title_pl !== '') {
-            $t = Store::strings_by_hash([Store::hash($title_pl)]);
-            $title_en = $t ? (string) reset($t)->en : '';
+        if ($res['ok'] && ($row = Store::page($pageId))) {
+            Store::page_update($pageId, ['keys_done' => min((int) $row->keys_total, (int) $row->keys_done + count($res['ok']))]);
         }
-        $ai = Translator::slug($title_pl, $title_en, rawurldecode($last), $unknown);
-        $slug = $ai['slug'] !== '' ? $ai['slug'] : Translator::slug_from_title($title_en !== '' ? $title_en : $title_pl);
-        if ($slug === '') { $slug = Translator::sanitize_slug(rawurldecode($last)); }
-        foreach ($unknown as $s) {
-            $prefix .= ($ai['segments'][$s] ?? Translator::sanitize_slug(rawurldecode($s))) . '/';
-        }
-        $en = Bridge::free_en_path($prefix . $slug . '/', $path);
-        Bridge::add_route($path, $en);
-        return ['en_path' => $en, 'route_added' => 1];
+        return count($res['ok']);
     }
 
-    /** Home, blog list and the post's categories list the new post: fill their gaps soon. */
-    private static function queue_hubs($post): void {
-        if (!Settings::get('gaps')) { return; }
-        $paths = ['/'];
-        $blog = (int) get_option('page_for_posts');
-        if ($blog > 0) { $paths[] = Bridge::path_of_post($blog); }
-        if ($post && $post->post_type === 'post') {
-            foreach ((array) get_the_category((int) $post->ID) as $cat) {
-                $link = get_category_link($cat);
-                if (is_string($link) && $link !== '') { $paths[] = \ZPL\Router::norm_path(\ZPL\Router::rel((string) wp_parse_url($link, PHP_URL_PATH))); }
-            }
-        }
-        $routes = \ZPL\Router::routes();
-        foreach (array_unique(array_filter($paths)) as $p) {
-            if (!isset($routes[$p]) || Bridge::ineligible($p) !== '') { continue; }
-            $pid = Store::path_add($p, ['kind' => 'existing', 'status' => 'published']);
-            if ($pid) { Store::queue($pid, 35); }
-        }
+    /** "a1" => Polish key, in the order the request listed them (Translator::units_request). */
+    public static function ids(array $items): array {
+        $ids = [];
+        $n = 0;
+        foreach (array_keys($items) as $k) { $ids['a' . (++$n)] = (string) $k; }
+        return $ids;
     }
 
-    /** Turn off the English version of a page that is gone (route removed only if this module made it). */
-    public static function retire($row, string $message, string $status = 'skipped'): void {
+    /** English address from an answered slug job. @param object $job */
+    public static function apply_slug($job, array $data): bool {
+        $payload = json_decode((string) $job->items, true);
+        $segments = is_array($payload['segments'] ?? null) ? $payload['segments'] : [];
+        $acc = Translator::accept_slug($data, $segments);
+        if ($acc['segments']) { Routes::learn_segments($acc['segments']); }
+        $row = Store::page((int) $job->page_id);
+        if (!$row) { return true; }
+        $slug = $acc['slug'];
+        if ($slug === '' && (int) $job->tries >= 1) { $slug = Translator::slug_from_title((string) ($payload['page']['title_en'] ?? '')); }
+        if ($slug === '') { return false; }
+        $en = Routes::build((string) $row->path, $slug);
+        if ($en === '') {
+            self::park($row, 'Brak angielskiej nazwy dla części adresu ' . Routes::parent_of((string) $row->path) . ' — dodaj ją w Adresach EN.');
+            Log::add($row->path . ': brak angielskiej nazwy części adresu, strona czeka.', 'warning');
+            return true;
+        }
+        Routes::assign((int) $row->id, $en);
+        self::finish(Store::page((int) $row->id));
+        return true;
+    }
+
+    // ---------------------------------------------------------------- advance
+
+    /** The page's English address is missing or made of Polish words (and this module may set it). */
+    public static function needs_route($row): bool {
+        $path = (string) $row->path;
+        if ($row->kind === 'home' || self::alias_of($path) !== '') { return false; }
+        if (Routes::external($path)) { return false; }
+        $route = (string) (\ZPL\Router::routes()[$path] ?? '');
+        return $route === '' || Routes::polish($route);
+    }
+
+    /** All jobs of a page are answered: compile, give it an English address, publish. @param object|null $row */
+    public static function advance($row): void {
+        if (!$row) { return; }
         $id = (int) $row->id;
-        if ((int) $row->route_added && (string) $row->en_path !== '') { Bridge::remove_route((string) $row->path, (string) $row->en_path); }
-        $was = (string) $row->status;
-        Store::path_update($id, ['status' => $status, 'queued' => 0, 'route_added' => 0, 'checked_at' => Store::now(), 'message' => $message]);
-        Store::links_replace($id, []);
-        if ($was === 'published') {
-            Store::recompute_globals();
-            Bridge::rebuild_index();
-            Bridge::purge([(string) $row->path, (string) $row->en_path], (int) $row->post_id);
-            Log::add((string) $row->path . ': ' . $message);
+        if (Store::count_jobs(['new', 'sent', 'unknown', 'wait'], $id) > 0) { return; }
+        self::compile($id);
+        $row = Store::page($id);
+        if (!$row) { return; }
+        $failed = (int) $row->keys_failed;
+        $total = max(1, (int) $row->keys_total);
+        if (self::needs_route($row)) {
+            if ($failed > max(2, (int) floor($total * 0.05))) {
+                // Too much is missing to open a new English page: next daily check tries again.
+                self::park($row, 'Za dużo nieprzetłumaczonych fragmentów (' . $failed . ') — strona EN poczeka na kolejne sprawdzenie.');
+                return;
+            }
+            $direct = self::direct_route($row);
+            if ($direct !== '') {
+                Routes::assign($id, $direct);
+                self::finish(Store::page($id));
+                return;
+            }
+            if ($row->stage === 'route') {
+                // The address request failed three times (Worker::finish_job): an address from the English
+                // title, otherwise the page keeps its current address until the next check.
+                $payload = self::slug_payload($row);
+                $slug = Translator::slug_from_title((string) ($payload['page']['title_en'] ?? ''));
+                $en = $slug !== '' ? Routes::build((string) $row->path, $slug) : '';
+                if ($en !== '') {
+                    Routes::assign($id, $en);
+                    self::finish(Store::page($id));
+                    return;
+                }
+                self::park($row, 'Nie udało się utworzyć angielskiego adresu — spróbuję przy następnym sprawdzeniu.');
+                return;
+            }
+            Store::job_add($id, 'slug', self::slug_payload($row), 0);
+            Store::page_update($id, ['stage' => 'route', 'message' => 'Tworzę angielski adres strony.']);
+            return;
         }
+        self::finish($row);
+    }
+
+    /** The page waits for the next check (its current English version, if any, stays). @param object $row */
+    private static function park($row, string $message): void {
+        Store::page_update((int) $row->id, ['stage' => '', 'queued' => 0, 'status' => (int) $row->keys_done > 0 ? 'partial' : 'error', 'message' => OpenAI::short($message)]);
+        Index::rebuild();
+        Worker::page_finished(true);
+    }
+
+    /** Categories with a known English name get their address without asking the model. @param object $row */
+    private static function direct_route($row): string {
+        $path = (string) $row->path;
+        if ($row->kind !== 'term') { return ''; }
+        $seg = Routes::last($path);
+        $en = Routes::SEGMENTS[$seg] ?? (string) (Routes::learned_segments()[$seg] ?? '');
+        if ($en === '') { return ''; }
+        $parent = Routes::parent(Routes::parent_of($path));
+        return $parent === '' ? '' : Routes::free($parent . $en . '/', $path);
+    }
+
+    /** What the model needs to name the page's English address. @param object $row */
+    private static function slug_payload($row): array {
+        $path = (string) $row->path;
+        $title = '';
+        if ($row->kind === 'term' && (int) $row->term_id > 0) {
+            $t = get_term((int) $row->term_id, 'category');
+            $title = $t instanceof \WP_Term ? (string) $t->name : '';
+        } elseif ((int) $row->post_id > 0) {
+            $title = (string) get_the_title((int) $row->post_id);
+        }
+        $title = \ZPL\Html::norm(\ZPL\Html::decode(wp_strip_all_tags($title)));
+        $titleEn = $title !== '' ? (string) (\ZPL\Dict::get($title, 'en', $path) ?? '') : '';
+        if ($titleEn === '' && $title !== '') {
+            $r = Store::strings([Store::hash($title)], Store::SHARED)[Store::hash($title)] ?? null;
+            $titleEn = $r ? (string) $r->en : '';
+        }
+        $parent = Routes::parent_of($path);
+        return [
+            'page' => ['kind' => (string) $row->kind, 'title_pl' => $title, 'title_en' => $titleEn, 'slug_pl' => Routes::last($path)],
+            'segments' => Routes::unknown_segments($parent),
+        ];
+    }
+
+    /** @param object|null $row */
+    public static function finish($row): void {
+        if (!$row) { return; }
+        $failed = (int) $row->keys_failed;
+        $route = (string) (\ZPL\Router::routes()[(string) $row->path] ?? '');
+        $was = (string) $row->status;
+        Store::page_update((int) $row->id, [
+            'stage' => '', 'queued' => 0, 'tries' => 0,
+            'status' => $failed > 0 ? 'partial' : 'done',
+            'translated_at' => Store::now(),
+            'message' => $failed > 0 ? (string) $row->message : '',
+        ]);
+        Index::rebuild();
+        if ($was !== 'done' && $route !== '') {
+            Log::add('Wersja EN gotowa: ' . $row->path . ' → ' . $route . ($failed ? ' (bez ' . $failed . ' fragmentów)' : '') . '.');
+        }
+        Worker::page_finished();
+    }
+
+    /** Remove a page's English version (post unpublished, deleted, noindex…). @param object $row */
+    public static function retire($row, string $why): void {
+        foreach (Store::jobs(['new', 'unknown', 'wait'], 200, (int) $row->id) as $j) { Store::job_update((int) $j->id, ['state' => 'dropped']); }
+        foreach (Store::jobs(['sent'], 200, (int) $row->id) as $j) { OpenAI::cancel((string) $j->response_id); Store::job_update((int) $j->id, ['state' => 'dropped']); }
+        $had = $row->status !== 'off' && (string) $row->en_path !== '';
+        Store::page_update((int) $row->id, ['status' => 'off', 'queued' => 0, 'stage' => '', 'checked_at' => Store::now(), 'message' => OpenAI::short($why)]);
+        if ($had) { Routes::rebuild(); }
+        Index::rebuild();
+        Worker::page_finished();
+    }
+
+    // ------------------------------------------------------------- shared waits
+
+    /** Texts in requests not answered yet (this request's own new jobs included): hash => page id. */
+    private static $pending = null;
+
+    private static function pending(): array {
+        if (self::$pending === null) { self::$pending = Store::pending_texts(); }
+        return self::$pending;
+    }
+
+    /**
+     * Pages waiting for texts another page sent: the wait ends when those answers are in. A text whose request
+     * ended without an answer (failed, dropped with its page) is sent by the waiting page itself.
+     */
+    public static function resolve_waits(): int {
+        $waits = Store::jobs(['wait'], 50);
+        if (!$waits) { return 0; }
+        $pending = Store::pending_texts();
+        self::$pending = $pending;
+        $n = 0;
+        foreach ($waits as $job) {
+            $payload = json_decode((string) $job->items, true);
+            $items = is_array($payload['items'] ?? null) ? $payload['items'] : [];
+            $sharedKeys = array_flip(is_array($payload['shared'] ?? null) ? $payload['shared'] : []);
+            $pageId = (int) $job->page_id;
+            $mem = $items ? Store::strings(array_map(static function ($k) { return Store::hash((string) $k); }, array_keys($items)), Store::SHARED) : [];
+            $done = [];
+            $orphans = [];
+            $still = [];
+            foreach ($items as $k => $kind) {
+                $h = Store::hash((string) $k);
+                if (isset($mem[$h]) && (string) $mem[$h]->en !== '') { $done[$h] = (string) $k; }
+                elseif (isset($pending[$h])) { $still[$k] = $kind; }
+                else { $orphans[$k] = $kind; }
+            }
+            if (!$done && !$orphans) { continue; }
+            $n++;
+            // A title or lead of this page translated for a list elsewhere is shown on every English page.
+            $mark = [];
+            foreach ($done as $h => $k) { if (isset($sharedKeys[$k]) && !(int) $mem[$h]->shared) { $mark[] = $h; } }
+            if ($mark) { Store::mark_shared($mark); self::compile_shared(); }
+            if ($done && ($row = Store::page($pageId))) {
+                Store::page_update($pageId, ['keys_done' => min((int) $row->keys_total, (int) $row->keys_done + count($done))]);
+            }
+            foreach (Translator::batches($orphans) as $batch) {
+                $chars = 0;
+                foreach (array_keys($batch) as $k) { $chars += Translator::len((string) $k); $pending[Store::hash((string) $k)] = $pageId; }
+                $sh = array_values(array_intersect(array_keys($batch), array_keys($sharedKeys)));
+                Store::job_add($pageId, 'units', ['items' => $batch, 'shared' => $sh, 'ctx' => $payload['ctx'] ?? []], $chars);
+            }
+            if ($still) {
+                $sh = array_values(array_intersect(array_keys($still), array_keys($sharedKeys)));
+                Store::job_update((int) $job->id, ['items' => (string) wp_json_encode(['items' => $still, 'shared' => $sh, 'ctx' => $payload['ctx'] ?? []], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)]);
+            } else {
+                Store::job_update((int) $job->id, ['state' => 'done']);
+            }
+        }
+        self::$pending = $pending;
+        return $n;
+    }
+
+    // ---------------------------------------------------------------- compile
+
+    /** Build the served map of one page from its key list. Returns the number of entries. */
+    public static function compile(int $page_id): int {
+        $row = Store::page($page_id);
+        if (!$row) { return 0; }
+        $path = (string) $row->path;
+        $keys = Store::keys_of($page_id);
+        if (!$keys) { return 0; }
+        $own = Store::strings(array_keys($keys), $page_id);
+        $mem = Store::strings(array_keys($keys), Store::SHARED);
+        $map = [];
+        foreach ($keys as $h => $kind) {
+            $r = self::pick($own[$h] ?? null, $mem[$h] ?? null);
+            if (!$r) { continue; }
+            if ($r === ($own[$h] ?? null)) {
+                $map[(string) $r->pl] = self::fix_terms((string) $r->en, (string) $r->pl);
+                continue;
+            }
+            if ((int) $r->shared) { continue; } // shared texts come from the shared map
+            // The plugin's own dictionaries (shipped, and other modules' curated texts) keep their wording unless the
+            // memory has a manual correction.
+            if (!(int) $r->manual && \ZPL\Dict::lower((string) $r->pl, 'en', $path) !== null) { continue; }
+            $map[(string) $r->pl] = self::fix_terms((string) $r->en, (string) $r->pl);
+        }
+        $rev = Store::map_save($page_id, Store::hash($path), $map, null);
+        Serve::bump($page_id, $rev);
+        return count($map);
+    }
+
+    /**
+     * The translation a page uses: its own copy (kept from the earlier translators), unless the memory holds a
+     * manual correction and the copy is not one, so a correction saved in the panel shows on every page.
+     * @param object|null $own zpen_strings row of the page
+     * @param object|null $mem zpen_strings row of the memory
+     * @return object|null
+     */
+    private static function pick($own, $mem) {
+        $o = $own && (string) $own->en !== '' ? $own : null;
+        $m = $mem && (string) $mem->en !== '' ? $mem : null;
+        if ($o && $m && (int) $m->manual && !(int) $o->manual) { return $m; }
+        return $o ?: $m;
+    }
+
+    /** The shared map (titles, leads, menu and footer texts) from the translation memory. */
+    public static function compile_shared(): void {
+        $map = [];
+        foreach (Store::shared_strings() as $pl => $en) { $map[(string) $pl] = self::fix_terms((string) $en, (string) $pl); }
+        $rev = Store::map_save(Store::SHARED, '', $map, null);
+        Serve::bump(Store::SHARED, $rev);
+    }
+
+    /** Recompile every page that uses one of these Polish texts (after a manual correction). */
+    public static function recompile_using(array $hashes): int {
+        $n = 0;
+        foreach (Store::pages_using($hashes) as $pid) { self::compile($pid); $n++; }
+        self::compile_shared();
+        return $n;
+    }
+
+    /** Fixed names, and phone numbers written as in Polish ("501 054 253", never "501,054,253" as old translations had it). */
+    public static function fix_terms(string $en, string $pl = ''): string {
+        $en = strtr($en, self::TERM_FIXES);
+        if ($pl === '' || strpos($en, ',') === false || !preg_match_all('~(?<![\d,.])\d{2,3}(?:[ \x{00A0}\x{202F}]\d{3}){2,}(?!\d)~u', $pl, $m)) { return $en; }
+        foreach ($m[0] as $tel) { $en = str_replace((string) preg_replace('~[ \x{00A0}\x{202F}]~u', ',', $tel), $tel, $en); }
+        return $en;
     }
 }
