@@ -130,10 +130,13 @@ function zp_seo_posts_transform(string $html): string {
     }
   }
 
-  // New sections and their table of contents links.
+  // New sections and their table of contents links: after the section named in 'after' (3.1.0), otherwise
+  // after the article's first section.
   foreach (array_merge((array) (zp_seo_plan_data('sections')[$path] ?? []), zp_feed_sections_for($path)) as $s) {
     $sid = (string) $s['id'];
-    if (strpos($html, 'id="' . $sid . '"') !== false || ($range = zp_seo_html_section_range($html, 'zpArticleNew__section')) === null) { continue; }
+    if (strpos($html, 'id="' . $sid . '"') !== false) { continue; }
+    $range = !empty($s['after']) ? zp_seo_html_section_range($html, 'id="' . $s['after'] . '"') : null;
+    if ($range === null && ($range = zp_seo_html_section_range($html, 'zpArticleNew__section')) === null) { continue; }
     $first = preg_match('~\bid="([^"]+)"~', substr($html, $range[0], 300), $fm) ? $fm[1] : '';
     $html = substr($html, 0, $range[1]) . "\n" . (string) $s['html'] . substr($html, $range[1]);
     if ($first !== '' && !empty($s['toc'])) {
@@ -179,6 +182,24 @@ function zp_seo_posts_transform(string $html): string {
 
 add_filter('the_content', 'zp_seo_posts_transform', 20);
 add_filter('elementor/frontend/the_content', 'zp_seo_posts_transform', 20);
+
+/**
+ * 3.1.0: a post with a new or changed section in data/sections.php ('dated' => day of the change) gets a fresh
+ * sitemap date and goes to IndexNow once, on the next administrator visit, as the feed additions do (ai.php).
+ * Its text grew without an edit in WordPress, so nothing else would tell search engines to read it again.
+ */
+add_action('admin_init', function () {
+  if (wp_doing_ajax() || !current_user_can('manage_options') || !zp_seo_plan_active() || !function_exists('zp_ai_on') || !zp_ai_on()) { return; }
+  $seen = (array) get_option('zp_seo_sections_dated', []);
+  $paths = [];
+  foreach (zp_seo_plan_data('sections') as $path => $sections) {
+    $day = max(array_merge([''], array_map(static fn($s) => (string) ($s['dated'] ?? ''), (array) $sections)));
+    if ($day !== '' && $day > (string) ($seen[$path] ?? '')) { $paths[] = (string) $path; $seen[$path] = $day; }
+  }
+  if (!$paths) { return; }
+  update_option('zp_seo_sections_dated', $seen, false);
+  zp_ai_changed_at_display($paths, 'nowe sekcje we wpisach');
+}, 110);
 
 /**
  * 2.9.2: two of Mat's older posts still showed the notes of their brief: "[DO UZUPEŁNIENIA]"
