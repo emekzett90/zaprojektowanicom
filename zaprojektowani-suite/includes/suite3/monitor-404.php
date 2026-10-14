@@ -62,12 +62,16 @@ function zp_suite3_404_record(string $path): void {
   $ua = (string) ($_SERVER['HTTP_USER_AGENT'] ?? '');
   $google = (bool) preg_match('~Googlebot|Google-InspectionTool|GoogleOther~i', $ua);
   $bot = $google || preg_match('~bot|crawl|spider|slurp|semrush|ahrefs|seobility|petal|bytespider|python|curl|wget|headless~i', $ua);
+  // A burst of hits on one address (a bot retrying) costs one write per 10 seconds; Google's visits always count.
+  if (!$google && isset($log[$path]['last']) && $now - (int) $log[$path]['last'] < 10) { return; }
   $entry = $log[$path] ?? ['n' => 0, 'google' => 0, 'bots' => 0, 'first' => $now, 'last' => 0, 'ref' => '', 'internal' => false];
   $entry['n']++; $entry['last'] = $now;
   if ($google) { $entry['google']++; }
   if ($bot) { $entry['bots']++; }
   $ref = (string) wp_get_raw_referer();
-  if ($ref !== '') {
+  // Opening the address from wp-admin (this panel) is not a broken link on the site.
+  $refPath = (string) wp_parse_url($ref, PHP_URL_PATH);
+  if ($ref !== '' && strpos($refPath, '/wp-admin') !== 0 && zp_suite3_404_path($ref) !== $path) {
     $host = (string) wp_parse_url($ref, PHP_URL_HOST); $own = (string) wp_parse_url(home_url('/'), PHP_URL_HOST);
     $entry['ref'] = substr($host . (string) wp_parse_url($ref, PHP_URL_PATH), 0, 200);
     if ($host !== '' && strcasecmp(preg_replace('~^www\.~', '', $host), preg_replace('~^www\.~', '', $own)) === 0) { $entry['internal'] = true; }
@@ -204,7 +208,7 @@ function zp_suite3_404_page(): void {
     if (!empty($e['google'])) { $meta[] = '<span class="tag is-warn">Google: ' . (int) $e['google'] . '</span>'; }
     if (!empty($e['ref']) && empty($e['internal'])) { $meta[] = '<small>z: ' . esc_html((string) $e['ref']) . '</small>'; }
     elseif (!empty($e['ref'])) { $meta[] = '<small>link na: ' . esc_html((string) $e['ref']) . '</small>'; }
-    echo '<tr><td><strong><a href="' . esc_url(home_url((string) $path)) . '" target="_blank" rel="noopener">' . esc_html((string) $path) . '</a></strong>' . ($meta ? '<div style="margin-top:6px;display:flex;gap:6px;flex-wrap:wrap;align-items:center">' . implode('', $meta) . '</div>' : '') . '</td><td class="num">' . (int) ($e['n'] ?? 0) . '</td><td>' . esc_html(human_time_diff((int) ($e['last'] ?? time()))) . ' temu</td><td>';
+    echo '<tr><td><strong><a href="' . esc_url(home_url((string) $path)) . '" target="_blank" rel="noopener noreferrer">' . esc_html((string) $path) . '</a></strong>' . ($meta ? '<div style="margin-top:6px;display:flex;gap:6px;flex-wrap:wrap;align-items:center">' . implode('', $meta) . '</div>' : '') . '</td><td class="num">' . (int) ($e['n'] ?? 0) . '</td><td>' . esc_html(human_time_diff((int) ($e['last'] ?? time()))) . ' temu</td><td>';
     echo zp_suite3_404_form('redirect', (string) $path, '<label class="screen-reader-text" for="zp404-' . md5((string) $path) . '">Cel przekierowania</label><input type="text" id="zp404-' . md5((string) $path) . '" name="to" value="' . esc_attr($suggest) . '" placeholder="/adres-docelowy/">', 'Przekieruj', 'button primary');
     echo '</td><td>' . zp_suite3_404_form(!empty($e['hidden']) ? 'unhide' : 'hide', (string) $path, '', !empty($e['hidden']) ? 'Przywróć' : 'Pomiń', 'button ghost') . '</td></tr>';
   }
@@ -219,7 +223,7 @@ function zp_suite3_404_page(): void {
     foreach ($redirects as $from => $r) {
       if (!is_array($r)) { continue; }
       $to = (string) ($r['to'] ?? '');
-      echo '<tr><td><strong>' . esc_html((string) $from) . '</strong></td><td><a href="' . esc_url(strpos($to, '/') === 0 ? home_url($to) : $to) . '" target="_blank" rel="noopener">' . esc_html($to) . '</a></td><td class="num">' . (int) ($r['hits'] ?? 0) . '</td><td>' . esc_html(zp_suite3_date($r['at'] ?? null)) . '</td><td>' . zp_suite3_404_form('delete', (string) $from, '', 'Usuń', 'button ghost') . '</td></tr>';
+      echo '<tr><td><strong>' . esc_html((string) $from) . '</strong></td><td><a href="' . esc_url(strpos($to, '/') === 0 ? home_url($to) : $to) . '" target="_blank" rel="noopener noreferrer">' . esc_html($to) . '</a></td><td class="num">' . (int) ($r['hits'] ?? 0) . '</td><td>' . esc_html(zp_suite3_date($r['at'] ?? null)) . '</td><td>' . zp_suite3_404_form('delete', (string) $from, '', 'Usuń', 'button ghost') . '</td></tr>';
     }
     echo '</tbody></table></div>';
   }
