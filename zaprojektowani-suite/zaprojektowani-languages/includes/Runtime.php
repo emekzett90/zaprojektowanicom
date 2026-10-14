@@ -134,15 +134,27 @@ final class Runtime {
         return $dest;
     }
 
+    /** Minified copy of an asset (assets/x.min.js next to assets/x.js), the readable one with SCRIPT_DEBUG. */
+    public static function asset(string $file): string {
+        $min = preg_replace('~\.(js|css)$~', '.min.$1', $file) ?? $file;
+        if ((defined('SCRIPT_DEBUG') && SCRIPT_DEBUG) || !is_file(ZPL_DIR . 'assets/' . $min)) { $min = $file; }
+        return ZPL_URL . 'assets/' . $min;
+    }
+
     public static function assets(): void {
-        wp_enqueue_style('zpl', ZPL_URL . 'assets/zpl.css', [], ZPL_VERSION);
+        wp_enqueue_style('zpl', self::asset('zpl.css'), [], ZPL_VERSION);
         // data/en.css is only used by the /en/ frontend. Loading it on Polish pages
         // made it a needless render-blocking stylesheet in Lighthouse.
         if (Router::$lang === 'en' && is_file(ZPL_DIR . 'data/en.css')) {
             wp_enqueue_style('zpl-en', ZPL_URL . 'data/en.css', [], Dict::meta()['version'] ?? ZPL_VERSION);
         }
-        wp_enqueue_script('zpl-core', ZPL_URL . 'assets/zpl-core.js', [], ZPL_VERSION, ['in_footer' => true, 'strategy' => 'defer']);
-        wp_enqueue_script('zpl', ZPL_URL . 'assets/zpl.js', ['zpl-core'], ZPL_VERSION, ['in_footer' => true, 'strategy' => 'defer']);
+        // The switch (both languages): the other language opens at its own address, fetched ahead, with a cross-fade.
+        wp_enqueue_script('zpl-switch', self::asset('zpl-switch.js'), [], ZPL_VERSION, ['in_footer' => true, 'strategy' => 'defer']);
+        // English pages only: texts that page scripts add later are translated in the browser. Polish pages need none of it.
+        if (Router::$lang === 'en') {
+            wp_enqueue_script('zpl-core', self::asset('zpl-core.js'), [], ZPL_VERSION, ['in_footer' => true, 'strategy' => 'defer']);
+            wp_enqueue_script('zpl', self::asset('zpl.js'), ['zpl-switch', 'zpl-core'], ZPL_VERSION, ['in_footer' => true, 'strategy' => 'defer']);
+        }
     }
 
     public static function buffer($chunk, $phase = 0) {
@@ -190,7 +202,8 @@ final class Runtime {
         $html = Geo::cookiebot_manual_blocking($html);
         $html = Switcher::inject($html, $lang, $source);
         $html = self::seo($html, $lang, $source, $stats);
-        $html = preg_replace('~<head\b[^>]*>~i', '$0' . Suite::early_script($source), $html, 1) ?? $html;
+        $early = Suite::early_script($source) . Switcher::early($lang);
+        $html = preg_replace_callback('~<head\b[^>]*>~i', static function ($m) use ($early) { return $m[0] . $early; }, $html, 1) ?? $html;
         // If the hosting/CDN did not provide a country header, start a one-time lightweight
         // geo lookup as the first head script. It caches a first-party country cookie.
         $html = Geo::inject_client($html, $lang, $source);
@@ -201,7 +214,7 @@ final class Runtime {
         $html = self::config($html, $lang, $source);
         // Page marker for page-scoped CSS pseudo-content translations (data/en.css).
         $html = preg_replace('~<html\b(?![^>]*\bdata-zpl-page=)~i', '<html data-zpl-page="p-' . Dict::page_id($source) . '"', $html, 1) ?? $html;
-        $html = self::ensure_assets($html);
+        $html = self::ensure_assets($html, $lang);
         if ($lang === 'en' && $stats['miss'] > 0 && current_user_can('manage_options')) {
             Missing::remember(array_slice(Page::$missing, 0, 400, true), $source);
         }
@@ -237,13 +250,16 @@ final class Runtime {
     }
 
     /** Pages rendered without wp_footer() (custom full-document templates) still get the switch runtime. */
-    private static function ensure_assets(string $html): string {
-        if (strpos($html, 'zaprojektowani-languages/assets/zpl.js') !== false) { return $html; }
+    private static function ensure_assets(string $html, string $lang): string {
+        if (strpos($html, 'zaprojektowani-languages/assets/zpl-switch') !== false) { return $html; }
         $v = rawurlencode(ZPL_VERSION);
-        $tags = '<script defer src="' . esc_url(ZPL_URL . 'assets/zpl-core.js?ver=' . $v) . '"></script><script defer src="' . esc_url(ZPL_URL . 'assets/zpl.js?ver=' . $v) . '"></script>';
-        $css = '<link rel="stylesheet" href="' . esc_url(ZPL_URL . 'assets/zpl.css?ver=' . $v) . '">';
-        if (is_file(ZPL_DIR . 'data/en.css')) { $css .= '<link rel="stylesheet" href="' . esc_url(ZPL_URL . 'data/en.css?ver=' . rawurlencode((string) (Dict::meta()['version'] ?? $v))) . '">'; }
-        if (strpos($html, 'zaprojektowani-languages/assets/zpl.css') === false) { $html = preg_replace('~</head>~i', $css . '</head>', $html, 1) ?? $html; }
+        $tags = '<script defer src="' . esc_url(self::asset('zpl-switch.js') . '?ver=' . $v) . '"></script>';
+        if ($lang === 'en') {
+            $tags .= '<script defer src="' . esc_url(self::asset('zpl-core.js') . '?ver=' . $v) . '"></script><script defer src="' . esc_url(self::asset('zpl.js') . '?ver=' . $v) . '"></script>';
+        }
+        $css = '<link rel="stylesheet" href="' . esc_url(self::asset('zpl.css') . '?ver=' . $v) . '">';
+        if ($lang === 'en' && is_file(ZPL_DIR . 'data/en.css')) { $css .= '<link rel="stylesheet" href="' . esc_url(ZPL_URL . 'data/en.css?ver=' . rawurlencode((string) (Dict::meta()['version'] ?? $v))) . '">'; }
+        if (!preg_match('~zaprojektowani-languages/assets/zpl(?:\.min)?\.css~', $html)) { $html = preg_replace('~</head>~i', $css . '</head>', $html, 1) ?? $html; }
         $pos = strripos($html, '</body>');
         return $pos === false ? $html . $tags : substr($html, 0, $pos) . $tags . substr($html, $pos);
     }
@@ -262,6 +278,8 @@ final class Runtime {
             'ov' => (string) get_option('zpl_overrides_version', ''),
             'ex' => Router::excludes(),
             'en' => Router::en_path($source),
+            // Revision of this page's translations: the browser keeps that exact answer (zpl.js readApproved).
+            'rev' => $lang === 'en' ? (string) apply_filters('zpl_approved_revision', '', $source) : '',
             'frame' => home_url('/'),
             'blobs' => preg_match_all('~<script\b[^>]*>\s*window\.(zp\w+)\s*=\s*[\[{]~', $html, $bm) ? array_values(array_unique($bm[1])) : [],
             'routes' => $lang === 'en' ? Router::routes() : null,

@@ -214,7 +214,7 @@ final class Serve {
         $map = self::shared_map() + self::page_map($source);
         if (!$map) { return ''; }
         $row = self::row($source);
-        return hash('sha256', $source . '|' . self::map_version(0) . '|' . ($row ? $row['rev'] : 0) . '|' . count($map) . '|' . (Import::done() ? 1 : 0) . '|' . md5((string) wp_json_encode(array_slice($map, 0, 50, true))));
+        return hash('sha256', ZPTE_VERSION . '|' . $source . '|' . self::map_version(0) . '|' . ($row ? $row['rev'] : 0) . '|' . count($map) . '|' . (Import::done() ? 1 : 0) . '|' . md5((string) wp_json_encode(array_slice($map, 0, 50, true))));
     }
 
     /** @param mixed $rev */
