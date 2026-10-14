@@ -13,6 +13,8 @@ final class ZP_EN_Public_Currency_20261011 {
     public const REFRESH='zp_en_public_currency_refresh_20261011';
     public const URL='https://api.nbp.pl/api/exchangerates/rates/a/usd/?format=json';
     public const POLICY='usd_nbp_human_v2';
+    /** Changes with assets/en-public-currency-20261011.js, so browsers fetch the new file. */
+    public const SCRIPT='20261014';
     private const ERRORS=['http_failed','http_status','rate_invalid','storage_failed'];
 
     public static function parse_rate(array $data,int $now): array {
@@ -164,7 +166,7 @@ final class ZP_EN_Public_Currency_20261011 {
             $html=self::document($html,$rate['mid_scaled']);
             $config=['policy'=>self::POLICY,'mid_scaled'=>$rate['mid_scaled'],'effective_date'=>$rate['effective_date'],'source'=>$source,'lang'=>$lang,'revision'=>hash('sha256',self::POLICY.'|'.$rate['mid_scaled'].'|'.$rate['effective_date'])];
             $tags='<script type="application/json" id="zp-en-currency-config">'.wp_json_encode($config,JSON_HEX_TAG|JSON_HEX_AMP|JSON_HEX_APOS|JSON_HEX_QUOT).'</script>';
-            $url=plugins_url('../assets/en-public-currency-20261011.js',__FILE__);$tags.='<script defer src="'.esc_url($url.'?ver='.self::POLICY).'"></script>';
+            $url=plugins_url('../assets/en-public-currency-20261011.js',__FILE__);$tags.='<script defer src="'.esc_url($url.'?ver='.self::POLICY.'.'.self::SCRIPT).'"></script>';
             $tags.='<p id="zp-en-currency-note" style="font:inherit;font-size:12px;line-height:1.5;text-align:center;padding:12px;margin:0">Prices in USD are approximate: converted from PLN at the NBP mid-rate of '.esc_html($rate['effective_date']).' and rounded. Your proposal confirms the currency and applicable taxes.</p>';
             return preg_replace('~</body>~i',$tags.'</body>',$html,1)??$html;
         } catch(Throwable $ignored) { return $html; }

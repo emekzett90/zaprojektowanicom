@@ -19,6 +19,7 @@ final class Store {
     const DB_VERSION = '2.0.0';
     const DB_OPTION = 'zpte2_db';
     const SHARED = 0;
+    const RETRY_AFTER = 600; // a page that failed to load is read again after 10 minutes
 
     public static function table(string $name): string {
         global $wpdb;
@@ -193,8 +194,15 @@ final class Store {
     /** Next page to read (queued, not waiting for OpenAI; a page that just failed to load waits 10 minutes). @return object|null */
     public static function next_queued() {
         global $wpdb;
-        $row = $wpdb->get_row($wpdb->prepare('SELECT * FROM ' . self::table('pages') . " WHERE queued = 1 AND stage = '' AND status <> 'off' AND (tries = 0 OR checked_at IS NULL OR checked_at < %s) ORDER BY priority ASC, id ASC LIMIT 1", gmdate('Y-m-d H:i:s', time() - 10 * MINUTE_IN_SECONDS)));
+        $row = $wpdb->get_row($wpdb->prepare('SELECT * FROM ' . self::table('pages') . " WHERE queued = 1 AND stage = '' AND status <> 'off' AND (tries = 0 OR checked_at IS NULL OR checked_at < %s) ORDER BY priority ASC, id ASC LIMIT 1", gmdate('Y-m-d H:i:s', time() - self::RETRY_AFTER)));
         return $row ?: null;
+    }
+
+    /** When the first page that failed to load may be read again (0 = no page waits for that). */
+    public static function next_retry_at(): int {
+        global $wpdb;
+        $t = $wpdb->get_var('SELECT MIN(checked_at) FROM ' . self::table('pages') . " WHERE queued = 1 AND stage = '' AND status <> 'off' AND tries > 0 AND checked_at IS NOT NULL");
+        return $t ? (int) strtotime((string) $t . ' UTC') + self::RETRY_AFTER : 0;
     }
 
     public static function queued_count(): int {

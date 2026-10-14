@@ -145,12 +145,13 @@ final class Import {
         }
         // Site terms are shared by every page now: a page keeps no copy of its own.
         $map = array_diff_key($map, Serve::SITE_TERMS);
+        foreach ($map as $pl => $tr) { $map[$pl] = Sync::fix_terms((string) $tr, (string) $pl); }
         if ($map) {
             Store::strings_insert($id, $map, substr((string) ($info['origin'] ?? 'import'), 0, 12));
             $keys = [];
             foreach ($map as $pl => $tr) { $keys[Store::hash((string) $pl)] = 'text'; }
             $served = [];
-            foreach ($map as $pl => $tr) { $served[(string) $pl] = Sync::fix_terms((string) $tr); }
+            foreach ($map as $pl => $tr) { $served[(string) $pl] = (string) $tr; }
             $rev = Store::map_save($id, Store::hash($source), $served, $keys);
             Serve::bump($id, $rev);
             $data['status'] = 'done';
