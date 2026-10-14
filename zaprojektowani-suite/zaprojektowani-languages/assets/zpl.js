@@ -1,4 +1,4 @@
-/*! Zaprojektowani Languages — PL/EN switch without reload. */
+/*! Zaprojektowani Languages — English pages: translates text that page scripts add after load. */
 (function () {
   'use strict';
   var C = window.ZPLCore;
@@ -27,15 +27,12 @@
   var INLINE = { a: 1, abbr: 1, b: 1, bdi: 1, bdo: 1, br: 1, cite: 1, code: 1, data: 1, del: 1, dfn: 1, em: 1, font: 1, i: 1, img: 1, ins: 1, kbd: 1, mark: 1, q: 1, s: 1, samp: 1, small: 1, span: 1, strong: 1, sub: 1, sup: 1, time: 1, u: 1, 'var': 1, wbr: 1, svg: 1, picture: 1, input: 1 };
   var POLISH = /[ąćęłńóśźżĄĆĘŁŃÓŚŹŻ]|\b(?:i|w|z|na|do|się|jest|nie|dla|oraz|lub|że|jak|czy|od|po|przez|są|nas)\b/;
 
-  var store = {
-    get: function (k) { try { return window.sessionStorage.getItem(k); } catch (e) { return null; } },
-    set: function (k, v) { try { window.sessionStorage.setItem(k, v); } catch (e) {} }
-  };
-
   function setLangPreference(lang) {
     lang = lang === 'en' ? 'en' : 'pl';
+    var secure = location.protocol === 'https:' ? ';Secure' : '';
     try {
-      document.cookie = 'zpl_lang_pref=' + lang + ';path=/;max-age=31536000;SameSite=Lax' + (location.protocol === 'https:' ? ';Secure' : '');
+      document.cookie = 'zpl_lang_pref=' + lang + ';path=/;max-age=31536000;SameSite=Lax' + secure;
+      document.cookie = 'zpl_lang_session=' + lang + ';path=/;SameSite=Lax' + secure;
     } catch (e) {}
     // The server sets the same cookie again: Safari keeps cookies written by scripts for 7 days only.
     try {
@@ -52,11 +49,13 @@
   var approvedRevision = { en: null, pl: null };
   function readApproved(lang) {
     var url = cfg.rest + 'approved-page?lang=' + encodeURIComponent(lang) + '&src=' + encodeURIComponent(cfg.src);
-    var opt = { credentials: 'same-origin', cache: 'no-store' };
+    // The page names the revision it was rendered with: that answer never changes, so the browser keeps it.
+    var opt = { credentials: 'same-origin' };
+    if (typeof cfg.rev === 'string' && /^[a-f0-9]{64}$/.test(cfg.rev)) url += '&rev=' + cfg.rev; else opt.cache = 'no-store';
     try {
       var el = doc.getElementById('zp-en-approved-preview'), p = el ? JSON.parse(el.textContent) : null;
       if (p && p.source === cfg.src && typeof p.version === 'string' && /^[A-Za-z0-9][A-Za-z0-9_-]{0,95}$/.test(p.version) && typeof p.nonce === 'string') {
-        url += '&preview=' + encodeURIComponent(p.version); opt.headers = { 'X-WP-Nonce': p.nonce };
+        url += '&preview=' + encodeURIComponent(p.version); opt.headers = { 'X-WP-Nonce': p.nonce }; opt.cache = 'no-store';
       }
     } catch (e) {}
     return fetch(url, opt).then(function (r) { return r.ok ? r.json() : null; }).catch(function () { return null; }).then(function (p) {
@@ -217,7 +216,12 @@
     if (NEVER.test(p) || (/\.[a-z0-9]{2,5}$/i.test(p) && !/\.html?$/i.test(p))) return href;
     p = normPath(p);
     var isEn = p === '/en/' || p.indexOf('/en/') === 0, np;
-    if (lang === 'en') { if (isEn || excluded(p)) return href; np = enPath(p); }
+    if (lang === 'en') {
+      if (isEn || excluded(p)) return href;
+      // Pages served in English carry the full route list: a page with no English version keeps its Polish address.
+      if (cfg.routes && !routes[p] && !(/^(.*\/)page\/(\d+)\/$/.exec(p) && routes[/^(.*\/)page\/(\d+)\/$/.exec(p)[1]])) return href;
+      np = enPath(p);
+    }
     else { if (!isEn) return href; np = plPath(p); }
     var out = base + np + u.search + u.hash;
     if (/^[a-z][a-z0-9+.-]*:\/\//i.test(s) || s.indexOf('//') === 0) out = u.protocol + '//' + u.host + out;
@@ -477,7 +481,7 @@
     // in place. Reading English back into Polish missed texts that only have a PL => EN entry (the home H1 among
     // them); the Polish page from the server is always complete. Going from Polish to English stays in place.
     if (to === 'pl' && (servedEn || (window.ZP_EN_Currency && window.ZP_EN_Currency.enabled))) {
-      if (!opts.auto) { store.set('zpl_lang', to); setLangPreference(to); }
+      if (!opts.auto) setLangPreference(to);
       // Back from the Polish page (page restored from the back/forward cache): the switch works again.
       window.addEventListener('pageshow', function (e) { if (e.persisted) { state.busy = false; setBusy(false); } }, { once: true });
       location.assign(targetUrl(to));
@@ -513,7 +517,7 @@
       state.lang = to;
       cfg.lang = to;
       try { history.replaceState(history.state, '', targetUrl(to)); } catch (e) {}
-      if (!opts.auto) { store.set('zpl_lang', to); setLangPreference(to); }
+      if (!opts.auto) setLangPreference(to);
       updateSwitches();
       if (to === 'en') { startObserver(); if (!miss.length || early) report(missing.map(function (s) { return s.k; })); } else if (servedEn) startObserver(); else stopObserver();
       try { doc.dispatchEvent(new CustomEvent('zpl:change', { detail: { lang: to, from: from } })); } catch (e) {}
@@ -716,13 +720,10 @@
 
   // ------------------------------------------------------------------- boot
 
-  function sameSiteReferrer() {
-    try { return !!doc.referrer && new URL(doc.referrer).host === location.host; } catch (e) { return false; }
-  }
   function boot() {
-    bindSwitches();
+    // zpl-switch.js (on every page) runs the switch: the other language opens at its own address.
+    if (!window.ZPLSwitch) { bindSwitches(); try { watchTheme(); } catch (e) {} }
     updateSwitches();
-    try { watchTheme(); } catch (e) {}
     if (state.lang === 'en') {
       startObserver();
       suiteNav();
@@ -752,9 +753,6 @@
         });
       }
     };
-    var pref = store.get('zpl_lang');
-    // A scan frame (Skaner EN) always shows the language of its address.
-    if (pref && pref !== state.lang && sameSiteReferrer() && !cfg.scan) switchTo(pref, { auto: true });
     if (cfg.debug && state.lang === 'en') loadDict('en').then(function () { applyCollected(collect(doc.body), 'en'); });
   }
   if (doc.readyState === 'loading') doc.addEventListener('DOMContentLoaded', boot); else boot();

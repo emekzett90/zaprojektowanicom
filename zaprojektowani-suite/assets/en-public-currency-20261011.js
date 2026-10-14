@@ -1,10 +1,10 @@
-/*! Public EN price presentation. Original form and calculator values stay PLN. */
+/*! Public EN price presentation in US dollars ("$1,250 USD"). Original form and calculator values stay PLN. */
 (function () {
   'use strict';
   var configElement = document.getElementById('zp-en-currency-config'), cfg;
   if (!configElement) return;
   try { cfg = JSON.parse(configElement.textContent); } catch (e) { return; }
-  if (cfg.policy !== 'usd_nbp_human_v1' || !Number.isInteger(cfg.mid_scaled) || cfg.mid_scaled < 10000 || cfg.mid_scaled > 1000000000 || !/^\d{4}-\d{2}-\d{2}$/.test(cfg.effective_date)) return;
+  if (cfg.policy !== 'usd_nbp_human_v2' || !Number.isInteger(cfg.mid_scaled) || cfg.mid_scaled < 10000 || cfg.mid_scaled > 1000000000 || !/^\d{4}-\d{2}-\d{2}$/.test(cfg.effective_date)) return;
   var mid = cfg.mid_scaled;
   var numberPattern = '(?:[0-9]{1,3}(?:,[0-9]{3})+|[0-9]{1,3}(?:[ \\u00a0\\u202f][0-9]{3})+|[0-9]+)(?:[.,][0-9]{1,2})?';
   var chain = numberPattern + '(?:\\s*(?:–|—|-|to|and)\\s*' + numberPattern + '|,\\s+' + numberPattern + '){0,4}';
@@ -30,8 +30,12 @@
       var raw = m[2] || m[3], groupOffset = m.index + (m[1] ? m[0].indexOf(raw) : 0);
       var unitOffset = m[1] ? m.index : m.index + m[0].lastIndexOf(m[4]);
       var nums = new RegExp(numberPattern, 'gu'), n, part = [], valid = true;
-      while ((n = nums.exec(raw))) { var cents = amount(n[0]); if (cents === null) { valid = false; break; } part.push([groupOffset + n.index, n[0].length, format(usd(cents))]); }
-      if (valid && part.length) { out.push([unitOffset, (m[1] || m[4]).length, 'USD']); out = out.concat(part); }
+      while ((n = nums.exec(raw))) { var cents = amount(n[0]); if (cents === null) { valid = false; break; } part.push([groupOffset + n.index, n[0].length, '$' + format(usd(cents))]); }
+      if (!valid || !part.length) continue;
+      // American format: every amount with "$", the code once after the last one ("$250–$550 USD").
+      if (m[1]) { out.push([unitOffset, groupOffset - unitOffset, '']); part[part.length - 1][2] += ' USD'; }
+      else out.push([unitOffset, m[4].length, 'USD']);
+      out = out.concat(part);
     }
     return out.sort(function (a, b) { return b[0] - a[0]; });
   }

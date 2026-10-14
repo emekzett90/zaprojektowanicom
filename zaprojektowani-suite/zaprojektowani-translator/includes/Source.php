@@ -12,10 +12,10 @@ final class Source {
      * Fetch the rendered Polish page from this server (loopback request).
      * @return array{ok:bool,html:string,code:int,error:string,gone:bool,redirect:string,via:string}
      */
-    public static function fetch(string $path, int $post_id = 0): array {
+    public static function fetch(string $path, int $post_id = 0, int $timeout = 10): array {
         $out = ['ok' => false, 'html' => '', 'code' => 0, 'error' => '', 'gone' => false, 'redirect' => '', 'via' => 'http'];
         $res = wp_remote_get(home_url($path), [
-            'timeout' => min(8, max(1, OpenAI::remaining() - 3)),
+            'timeout' => max(2, min(15, $timeout)),
             'redirection' => 0,
             'user-agent' => 'Zaprojektowani-Tlumacz-EN/' . ZPTE_VERSION . '; ' . home_url('/'),
             // zpl_lang_pref=pl: a manual language choice, so the GEO redirect never sends this request to /en/.
@@ -32,8 +32,10 @@ final class Source {
         $out['code'] = $code;
         if ($code >= 300 && $code < 400) {
             $out['redirect'] = (string) wp_remote_retrieve_header($res, 'location');
-            $out['gone'] = true;
             $out['error'] = 'Polski adres przekierowuje' . ($out['redirect'] !== '' ? ' na ' . $out['redirect'] : '');
+            // Only a move to another page of this site counts (e.g. a redirect set in Rank Math). A redirect to the same
+            // address, to logging in or to another site (security rules, maintenance) is a hiccup: the next check retries.
+            $out['gone'] = self::moved($path, $out['redirect']);
             return $out;
         }
         if ($code === 404 || $code === 410) {
@@ -50,6 +52,21 @@ final class Source {
         $out['ok'] = true;
         $out['html'] = $html;
         return $out;
+    }
+
+    /** The redirect leads to a different page of this site. */
+    private static function moved(string $path, string $location): bool {
+        if ($location === '') { return false; }
+        $to = wp_parse_url($location);
+        $home = wp_parse_url(home_url('/'));
+        if (!is_array($to) || !is_array($home)) { return false; }
+        $host = strtolower((string) ($to['host'] ?? ''));
+        $own = strtolower((string) ($home['host'] ?? ''));
+        if ($host !== '' && $host !== $own && $host !== 'www.' . $own && 'www.' . $host !== $own) { return false; }
+        $target = \ZPL\Router::norm_path(\ZPL\Router::rel((string) ($to['path'] ?? '/')));
+        // Logging in, or the English version (a language redirect, which this request is never meant to get).
+        if (preg_match('~^/(?:wp-login\.php|wp-admin|en)(?:/|$)~i', $target)) { return false; }
+        return $target !== \ZPL\Router::norm_path($path);
     }
 
     /**

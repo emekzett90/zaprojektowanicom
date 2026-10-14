@@ -15,6 +15,8 @@ final class Dict {
     private static $page = [];
     /** @var array<string,array<string,string>> extra dictionaries from the zpl_dictionary filter, per direction+page */
     private static $external = [];
+    /** @var array<string,array<int,array<string,string>>> manual overrides + priority layers, per direction+page */
+    private static $priority = [];
 
     public static function page_id(string $source): string { return substr(md5($source), 0, 12); }
 
@@ -64,7 +66,22 @@ final class Dict {
         return $rev;
     }
 
-    public static function flush(): void { self::$overrides = null; self::$shards = []; self::$page = []; self::$external = []; if (class_exists('ZP_Translator_Approved_Overlay_20261011')) { \ZP_Translator_Approved_Overlay_20261011::flush(); } }
+    public static function flush(): void { self::$overrides = null; self::$shards = []; self::$page = []; self::$external = []; self::$priority = []; }
+
+    /**
+     * Translations that outrank the shipped dictionaries (filter zpl_priority_dictionary, Tłumacz EN):
+     * [page map, shared map] for this page and direction. Loaded once per page and direction.
+     */
+    private static function priority(string $lang, string $source): array {
+        $k = $lang . $source;
+        if (!isset(self::$priority[$k])) {
+            $v = function_exists('apply_filters') ? apply_filters('zpl_priority_dictionary', [], $lang, $source) : [];
+            $layers = [self::overrides($lang)];
+            foreach (is_array($v) ? $v : [] as $layer) { if (is_array($layer) && $layer) { $layers[] = $layer; } }
+            self::$priority[$k] = $layers;
+        }
+        return self::$priority[$k];
+    }
 
     /** Shipped page dictionary, or a page translated by another module (filter zpl_has_page, e.g. Tłumacz EN). */
     public static function has_page(string $source): bool {
@@ -85,14 +102,16 @@ final class Dict {
         return self::$external[$k];
     }
 
-    /** Exact lookup (no templates). */
+    /** Exact lookup (no templates): manual overrides, Tłumacz EN, shipped dictionaries, other modules. */
     public static function exact(string $key, string $lang, string $source): ?string {
-        $o = self::overrides($lang);
-        if (isset($o[$key])) { return (string) $o[$key]; }
-        if (function_exists('zp_en_approved_lookup')) {
-            $approved = zp_en_approved_lookup($key, $lang, $source);
-            if (is_string($approved)) { return $approved; }
+        foreach (self::priority($lang, $source) as $layer) {
+            if (isset($layer[$key])) { return (string) $layer[$key]; }
         }
+        return self::shipped($key, $lang, $source);
+    }
+
+    /** Shipped dictionaries, then the zpl_dictionary filter (last resort). */
+    private static function shipped(string $key, string $lang, string $source): ?string {
         $pid = self::$page[$lang . $source] ?? (self::$page[$lang . $source] = 'p/' . self::page_id($source));
         $s = self::shard($lang, $pid);
         if (isset($s[$key])) { return $s[$key]; }
@@ -118,22 +137,35 @@ final class Dict {
     public static function get(string $key, string $lang, string $source): ?string {
         // Resolve numeric templates inside each priority layer before any shipped raw key.
         $t = self::template($key);
-        $o = self::overrides($lang);
-        if (isset($o[$key])) { return (string) $o[$key]; }
-        if ($t !== null && isset($o[$t[0]])) { return self::fill((string) $o[$t[0]], $t[1], $lang); }
-        if (function_exists('zp_en_approved_lookup')) {
-            $approved = zp_en_approved_lookup($key, $lang, $source);
-            if (is_string($approved)) { return $approved; }
-            if ($t !== null) {
-                $approved = zp_en_approved_lookup($t[0], $lang, $source);
-                if (is_string($approved)) { return self::fill($approved, $t[1], $lang); }
-            }
+        foreach (self::priority($lang, $source) as $layer) {
+            if (isset($layer[$key])) { return (string) $layer[$key]; }
+            if ($t !== null && isset($layer[$t[0]])) { return self::fill((string) $layer[$t[0]], $t[1], $lang); }
         }
-        $v = self::exact($key, $lang, $source);
+        $v = self::shipped($key, $lang, $source);
         if ($v !== null) { return $v; }
         if ($t !== null) {
-            $v = self::exact($t[0], $lang, $source);
+            $v = self::shipped($t[0], $lang, $source);
             if ($v !== null) { return self::fill($v, $t[1], $lang); }
+        }
+        return null;
+    }
+
+    /**
+     * Shipped dictionaries only (with number templates), without manual overrides, Tłumacz EN or other modules.
+     * Tłumacz EN asks this to know which texts the plugin already translates.
+     */
+    public static function base(string $key, string $lang, string $source): ?string {
+        $t = self::template($key);
+        foreach ([$key, $t[0] ?? null] as $i => $k) {
+            if ($k === null) { continue; }
+            $pid = 'p/' . self::page_id($source);
+            $v = self::shard($lang, $pid)[$k] ?? self::shard($lang, 'common')[$k] ?? self::shard($lang, 'seo-230')[$k] ?? self::shard($lang, 'seo-271')[$k] ?? null;
+            if ($v === null) {
+                $idx = self::shard($lang, 'index');
+                $h = substr(md5($k), 0, 10);
+                if (isset($idx[$h])) { $v = self::shard($lang, $idx[$h])[$k] ?? null; }
+            }
+            if ($v !== null) { return $i === 0 ? (string) $v : self::fill((string) $v, $t[1], $lang); }
         }
         return null;
     }

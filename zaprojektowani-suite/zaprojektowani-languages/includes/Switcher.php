@@ -7,7 +7,9 @@ if (!defined('ABSPATH')) { exit; }
 final class Switcher {
     public static function markup(string $lang, string $source, string $variant): string {
         $pl = esc_url(home_url($source));
-        $en = esc_url(home_url(Router::en_path($source)));
+        // A page without an English version yet: English opens the English home page, never a Polish /en/ copy.
+        $hasEn = $lang === 'en' || (Router::has_route($source) && Dict::has_page($source));
+        $en = esc_url(home_url($hasEn ? Router::en_path($source) : '/en/'));
         $isEn = $lang === 'en';
         $label = $isEn ? 'Language' : 'Język';
         $cls = 'zpl-switch zpl-switch--' . $variant . ($isEn ? ' is-en' : ' is-pl');
@@ -36,6 +38,23 @@ final class Switcher {
                 . '<path d="M30,0v30M0,15h60" stroke="#fff" stroke-width="10"/><path d="M30,0v30M0,15h60" stroke="#c8102e" stroke-width="6"/></svg>';
         }
         return '<span class="zpl-switch__flag zpl-switch__flag--' . $lang . '" aria-hidden="true">' . $svg . '</span>';
+    }
+
+    /**
+     * Head script of every page. After a switch (sessionStorage zpl_vt, written by assets/zpl-switch.js) it turns
+     * on the cross-fade between the two pages (View Transitions, where the browser has them) and puts the reader
+     * back at the same place of the page. Nothing happens on any other page view.
+     */
+    public static function early(string $lang): string {
+        $l = $lang === 'en' ? 'en' : 'pl';
+        return '<script id="zpl-vt">(function(){try{var s=sessionStorage.getItem("zpl_vt");if(!s)return;sessionStorage.removeItem("zpl_vt");var v=JSON.parse(s);'
+            . 'if(!v||Date.now()-v.t>20000||v.to!=="' . $l . '")return;var d=document,h=d.head||d.getElementsByTagName("head")[0];'
+            . 'if(!(window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches)&&window.CSS&&CSS.supports&&CSS.supports("view-transition-name: none")){'
+            . 'var st=d.createElement("style");st.id="zpl-vt-css";st.textContent="@view-transition{navigation:auto}::view-transition-group(root){animation-duration:.3s}";h.appendChild(st);'
+            . 'var l=d.createElement("link");l.rel="expect";l.href="#zpl-config";l.setAttribute("blocking","render");h.appendChild(l)}'
+            . 'if(location.hash||v.src!==window.ZPLSourcePath||!(v.y>0))return;var done=0,go=function(e){if(done||(e&&e.type==="pagereveal"&&!d.getElementById("zpl-config")))return;done=1;'
+            . 'var x=Math.max(0,d.documentElement.scrollHeight-innerHeight),y=v.r>0&&x>0?Math.round(v.r*x):v.y;if(y>0)window.scrollTo(0,y)};'
+            . 'window.addEventListener("pagereveal",go);d.addEventListener("DOMContentLoaded",go)}catch(e){}})();</script>';
     }
 
     public static function inject(string $html, string $lang, string $source): string {

@@ -4,20 +4,18 @@ namespace ZPTE;
 if (!defined('ABSPATH')) { exit; }
 
 /**
- * Minimal OpenAI Chat Completions client (wp_remote_post, no SDK).
- * Result: ['ok' => bool, 'data' => array|null, 'error' => string, 'fatal' => bool, 'retry' => bool,
- *          'truncated' => bool, 'in' => int, 'out' => int]
- *   fatal — only the administrator can fix it (key, credit, model): stop until the settings change;
- *   retry — temporary (network, rate limit, server error): try again on the next run.
+ * OpenAI Responses API client (wp_remote_*, no SDK). Requests run in background mode: sending one takes a
+ * moment, the answer is collected by later worker steps, so no page load or cron run ever waits for a model.
+ *
+ * Every call returns an array with at least:
+ *   ok     — the request did what was asked;
+ *   error  — a Polish message for the panel and the log (never contains the key);
+ *   fatal  — only the administrator can fix it (key, credit, model): the queue stops until settings change;
+ *   retry  — temporary (network, rate limit, server error): the same step is repeated later.
  */
 final class OpenAI {
-    private static $deadline = 0;
-
-    public static function deadline(int $deadline): void { self::$deadline = $deadline; }
-
-    public static function remaining(): int {
-        return self::$deadline ? max(0, self::$deadline - time()) : 30;
-    }
+    const POST_TIMEOUT = 25;
+    const GET_TIMEOUT = 15;
 
     public static function base(): string {
         // ZPTE_OPENAI_BASE (wp-config.php) points the module at a compatible endpoint or a test server.
@@ -26,119 +24,184 @@ final class OpenAI {
     }
 
     private static function result(array $r): array {
-        return array_merge(['ok' => false, 'data' => null, 'error' => '', 'fatal' => false, 'retry' => false, 'truncated' => false, 'deferred' => false, 'in' => 0, 'out' => 0], $r);
+        return array_merge(['ok' => false, 'error' => '', 'fatal' => false, 'retry' => false, 'http' => 0], $r);
     }
 
-    /** Reasoning models (o-series, gpt-5) reject a custom temperature. */
-    private static function takes_temperature(string $model): bool {
-        return !preg_match('~^(?:o\d|gpt-5)~i', $model);
+    private static function headers(string $key): array {
+        return ['Authorization' => 'Bearer ' . $key, 'Content-Type' => 'application/json', 'Accept' => 'application/json'];
     }
 
     /**
-     * One structured-output request. $schema is a JSON schema for the answer object.
+     * Start a background response. $body is a complete Responses API request without "background"/"store".
+     * Returns id and status; a server that answers at once (no background support) returns the parsed answer too.
      */
-    public static function json(array $messages, string $name, array $schema, int $max_tokens = 12000): array {
+    public static function submit(array $body): array {
         $key = Settings::api_key();
-        if ($key === '') { return self::result(['error' => 'Brak klucza API OpenAI — wklej go w ZP Suite → Tłumacz EN → Ustawienia.', 'fatal' => true]); }
-        $model = Settings::model();
-        $body = [
-            'model' => $model,
-            'messages' => $messages,
-            'response_format' => ['type' => 'json_schema', 'json_schema' => ['name' => $name, 'strict' => true, 'schema' => $schema]],
-            'max_completion_tokens' => $max_tokens,
-        ];
-        if (self::takes_temperature($model)) { $body['temperature'] = 0.2; }
-        if (preg_match('~^gpt-5\.4(?:-|$)~', $model)) { $body['reasoning_effort'] = 'none'; }
-
+        if ($key === '') { return self::result(['error' => 'Brak klucza API OpenAI. Wklej go w ZP Suite → Tłumacz EN → Ustawienia.', 'fatal' => true]); }
+        $body['background'] = true;
+        $body['store'] = true; // background responses must be stored until they are collected
         for ($attempt = 0; $attempt < 3; $attempt++) {
-            if (self::remaining() < 5) { return self::result(['error' => 'Koniec bieżącego kroku — kontynuuję w następnym.', 'deferred' => true]); }
-            $res = wp_remote_post(self::base() . '/chat/completions', [
-                'timeout' => min(25, max(1, self::remaining() - 2)),
-                'headers' => ['Authorization' => 'Bearer ' . $key, 'Content-Type' => 'application/json'],
-                'body' => wp_json_encode($body),
+            $res = wp_remote_post(self::base() . '/responses', [
+                'timeout' => self::POST_TIMEOUT,
+                'redirection' => 0,
+                'headers' => self::headers($key),
+                'body' => (string) wp_json_encode($body, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
                 'data_format' => 'body',
             ]);
             if (is_wp_error($res)) {
-                return self::result(['error' => 'Brak połączenia z OpenAI: ' . $res->get_error_message(), 'retry' => true]);
+                return self::result(['error' => 'Brak połączenia z OpenAI: ' . self::short($res->get_error_message()), 'retry' => true]);
             }
             $code = (int) wp_remote_retrieve_response_code($res);
             $json = json_decode((string) wp_remote_retrieve_body($res), true);
-            $err = is_array($json) && isset($json['error']) && is_array($json['error']) ? $json['error'] : [];
-            $msg = (string) ($err['message'] ?? '');
-            $errCode = (string) ($err['code'] ?? '');
-            $param = (string) ($err['param'] ?? '');
-
-            if ($code === 400 && isset($body['temperature']) && ($param === 'temperature' || stripos($msg, 'temperature') !== false)) {
-                unset($body['temperature']);
+            if ($code === 400 && self::param_rejected($json, 'reasoning') && isset($body['reasoning'])) {
+                // A model without reasoning settings: the same request without them.
+                unset($body['reasoning']);
                 continue;
             }
-            if ($code === 400 && ($body['response_format']['type'] ?? '') === 'json_schema' && ($param === 'response_format' || stripos($msg, 'response_format') !== false || stripos($msg, 'json_schema') !== false)) {
-                // Older models: plain JSON mode, the answer is still validated by Translator.
-                $body['response_format'] = ['type' => 'json_object'];
-                $body['messages'][0]['content'] .= "\n\nAnswer with one JSON object only, shaped like this JSON schema: " . wp_json_encode($schema);
+            if ($code === 400 && self::param_rejected($json, 'service_tier') && isset($body['service_tier'])) {
+                unset($body['service_tier']);
                 continue;
             }
-            if ($code === 401) {
-                return self::result(['error' => 'OpenAI odrzuciło klucz API (401). Sprawdź, czy klucz jest aktywny, i wklej go ponownie.', 'fatal' => true]);
+            if ($code !== 200) { return self::failure($code, $json, (string) ($body['model'] ?? '')); }
+            if (!is_array($json) || !is_string($json['id'] ?? null) || $json['id'] === '') {
+                return self::result(['error' => 'OpenAI przyjęło zapytanie bez numeru odpowiedzi. Ponowię je.', 'retry' => true, 'http' => $code]);
             }
-            if ($code === 403) {
-                return self::result(['error' => 'OpenAI odmówiło dostępu (403): ' . self::short($msg), 'fatal' => true]);
-            }
-            if ($code === 404) {
-                return self::result(['error' => 'Model „' . $model . '” jest niedostępny dla tego klucza (404). Wybierz inny model w ustawieniach.', 'fatal' => true]);
-            }
-            if ($code === 429) {
-                if ($errCode === 'insufficient_quota' || stripos($msg, 'quota') !== false || stripos($msg, 'billing') !== false) {
-                    return self::result(['error' => 'Na koncie OpenAI skończyły się środki lub limit (429 insufficient_quota). Doładuj konto na platform.openai.com.', 'fatal' => true]);
-                }
-                return self::result(['error' => 'OpenAI ogranicza liczbę zapytań (429) — ponowię przy następnym uruchomieniu.', 'retry' => true]);
-            }
-            if ($code >= 500 || $code === 408 || $code === 0) {
-                return self::result(['error' => 'Błąd po stronie OpenAI (' . $code . ') — ponowię przy następnym uruchomieniu.', 'retry' => true]);
-            }
-            if ($code !== 200 || !is_array($json)) {
-                return self::result(['error' => 'OpenAI: błąd ' . $code . ($msg !== '' ? ' — ' . self::short($msg) : ''), 'fatal' => $code >= 400 && $code < 500]);
-            }
-
-            $choice = $json['choices'][0] ?? [];
-            $in = (int) ($json['usage']['prompt_tokens'] ?? 0);
-            $out = (int) ($json['usage']['completion_tokens'] ?? 0);
-            $content = $choice['message']['content'] ?? null;
-            if (!empty($choice['message']['refusal'])) {
-                return self::result(['error' => 'Model odmówił odpowiedzi: ' . self::short((string) $choice['message']['refusal']), 'in' => $in, 'out' => $out]);
-            }
-            if (($choice['finish_reason'] ?? '') === 'length') {
-                return self::result(['error' => 'Odpowiedź za długa', 'truncated' => true, 'in' => $in, 'out' => $out]);
-            }
-            $data = is_string($content) ? json_decode($content, true) : null;
-            if (!is_array($data)) {
-                return self::result(['error' => 'OpenAI zwróciło odpowiedź, której nie da się odczytać.', 'in' => $in, 'out' => $out]);
-            }
-            return self::result(['ok' => true, 'data' => $data, 'in' => $in, 'out' => $out]);
+            $out = self::result(['ok' => true, 'id' => (string) $json['id'], 'status' => (string) ($json['status'] ?? ''), 'http' => $code]);
+            if (!in_array($out['status'], ['queued', 'in_progress'], true)) { $out['answer'] = self::parse($json); }
+            return $out;
         }
-        return self::result(['error' => 'OpenAI nie przyjęło zapytania.']);
+        return self::result(['error' => 'OpenAI nie przyjęło zapytania.', 'retry' => true]);
     }
 
-    /** Key check for the settings screen: models available to the key. */
+    /**
+     * State of a background response. 'done' => true once it finished (well or not); 'answer' holds the parsed
+     * result then (see parse()).
+     */
+    public static function fetch(string $id): array {
+        $key = Settings::api_key();
+        if ($key === '') { return self::result(['error' => 'Brak klucza API OpenAI.', 'fatal' => true]); }
+        if (!preg_match('~^[A-Za-z0-9_-]{1,200}$~', $id)) { return self::result(['error' => 'Nieprawidłowy numer odpowiedzi OpenAI.', 'lost' => true]); }
+        $res = wp_remote_get(self::base() . '/responses/' . rawurlencode($id), ['timeout' => self::GET_TIMEOUT, 'redirection' => 0, 'headers' => self::headers($key)]);
+        if (is_wp_error($res)) {
+            return self::result(['error' => 'Brak połączenia z OpenAI: ' . self::short($res->get_error_message()), 'retry' => true]);
+        }
+        $code = (int) wp_remote_retrieve_response_code($res);
+        $json = json_decode((string) wp_remote_retrieve_body($res), true);
+        if ($code === 404) {
+            // The answer is gone (expired or never stored): the batch is simply sent again.
+            return self::result(['error' => 'OpenAI nie ma już tej odpowiedzi; wyślę fragmenty ponownie.', 'lost' => true, 'http' => 404]);
+        }
+        if ($code !== 200) { return self::failure($code, $json, ''); }
+        if (!is_array($json)) { return self::result(['error' => 'Nieczytelna odpowiedź OpenAI.', 'retry' => true, 'http' => $code]); }
+        $status = (string) ($json['status'] ?? '');
+        if (in_array($status, ['queued', 'in_progress'], true)) {
+            return self::result(['ok' => true, 'done' => false, 'status' => $status, 'http' => $code]);
+        }
+        return self::result(['ok' => true, 'done' => true, 'status' => $status, 'answer' => self::parse($json), 'http' => $code]);
+    }
+
+    /** Stop a background response that is no longer needed (page changed, queue cleared). Best effort. */
+    public static function cancel(string $id): void {
+        $key = Settings::api_key();
+        if ($key === '' || !preg_match('~^[A-Za-z0-9_-]{1,200}$~', $id)) { return; }
+        wp_remote_post(self::base() . '/responses/' . rawurlencode($id) . '/cancel', ['timeout' => 5, 'redirection' => 0, 'blocking' => false, 'headers' => self::headers($key), 'body' => '{}']);
+    }
+
+    /**
+     * Finished response => ['status', 'data' (decoded JSON object or null), 'refusal', 'truncated', 'in', 'out', 'error'].
+     */
+    public static function parse(array $json): array {
+        $status = (string) ($json['status'] ?? '');
+        $out = ['status' => $status, 'data' => null, 'refusal' => '', 'truncated' => false, 'in' => 0, 'out' => 0, 'error' => ''];
+        $usage = is_array($json['usage'] ?? null) ? $json['usage'] : [];
+        $out['in'] = max(0, (int) ($usage['input_tokens'] ?? 0));
+        $out['out'] = max(0, (int) ($usage['output_tokens'] ?? 0));
+        if ($status === 'incomplete') {
+            $reason = (string) ($json['incomplete_details']['reason'] ?? '');
+            $out['truncated'] = $reason === 'max_output_tokens';
+            $out['error'] = $out['truncated'] ? 'Odpowiedź za długa.' : 'OpenAI przerwało odpowiedź (' . self::short($reason ?: 'incomplete') . ').';
+            return $out;
+        }
+        if ($status !== 'completed') {
+            $msg = is_array($json['error'] ?? null) ? (string) ($json['error']['message'] ?? '') : '';
+            $out['error'] = 'OpenAI: odpowiedź ' . ($status !== '' ? $status : 'bez stanu') . ($msg !== '' ? ' — ' . self::short($msg) : '') . '.';
+            return $out;
+        }
+        $text = '';
+        foreach ((array) ($json['output'] ?? []) as $item) {
+            if (!is_array($item) || ($item['type'] ?? '') !== 'message') { continue; }
+            foreach ((array) ($item['content'] ?? []) as $part) {
+                if (!is_array($part)) { continue; }
+                if (($part['type'] ?? '') === 'refusal') { $out['refusal'] = self::short((string) ($part['refusal'] ?? '')); }
+                if (($part['type'] ?? '') === 'output_text' && is_string($part['text'] ?? null)) { $text .= $part['text']; }
+            }
+        }
+        if ($text === '' && is_string($json['output_text'] ?? null)) { $text = (string) $json['output_text']; }
+        if ($out['refusal'] !== '' && $text === '') { $out['error'] = 'Model odmówił odpowiedzi: ' . $out['refusal']; return $out; }
+        $data = json_decode($text, true, 64);
+        if (!is_array($data)) { $out['error'] = 'OpenAI zwróciło odpowiedź, której nie da się odczytać.'; return $out; }
+        $out['data'] = $data;
+        return $out;
+    }
+
+    /** Models available to the key (settings screen). */
     public static function models(): array {
         $key = Settings::api_key();
         if ($key === '') { return ['ok' => false, 'error' => 'Brak klucza API.', 'ids' => []]; }
-        $res = wp_remote_get(self::base() . '/models', ['timeout' => 20, 'headers' => ['Authorization' => 'Bearer ' . $key]]);
-        if (is_wp_error($res)) { return ['ok' => false, 'error' => 'Brak połączenia z OpenAI: ' . $res->get_error_message(), 'ids' => []]; }
+        $res = wp_remote_get(self::base() . '/models', ['timeout' => 20, 'redirection' => 0, 'headers' => self::headers($key)]);
+        if (is_wp_error($res)) { return ['ok' => false, 'error' => 'Brak połączenia z OpenAI: ' . self::short($res->get_error_message()), 'ids' => []]; }
         $code = (int) wp_remote_retrieve_response_code($res);
         $json = json_decode((string) wp_remote_retrieve_body($res), true);
-        if ($code === 401) { return ['ok' => false, 'error' => 'OpenAI odrzuciło klucz API (401).', 'ids' => []]; }
         if ($code !== 200 || !is_array($json)) {
-            $msg = is_array($json) ? (string) ($json['error']['message'] ?? '') : '';
-            return ['ok' => false, 'error' => 'OpenAI: błąd ' . $code . ($msg !== '' ? ' — ' . self::short($msg) : ''), 'ids' => []];
+            $f = self::failure($code, $json, '');
+            return ['ok' => false, 'error' => $f['error'], 'ids' => []];
         }
         $ids = [];
-        foreach ((array) ($json['data'] ?? []) as $m) { if (!empty($m['id'])) { $ids[] = (string) $m['id']; } }
+        foreach ((array) ($json['data'] ?? []) as $m) {
+            $id = is_array($m) ? (string) ($m['id'] ?? '') : '';
+            // Text models only: no audio, image, embedding or moderation models in the list.
+            if ($id === '' || preg_match('~(?:embedding|whisper|tts|dall-e|image|audio|realtime|moderation|transcribe|search|computer-use|davinci|babbage)~i', $id)) { continue; }
+            $ids[] = $id;
+        }
         sort($ids);
         return ['ok' => true, 'error' => '', 'ids' => $ids];
     }
 
-    private static function short(string $s): string {
+    /** @param mixed $json */
+    private static function param_rejected($json, string $param): bool {
+        if (!is_array($json) || !is_array($json['error'] ?? null)) { return false; }
+        $p = (string) ($json['error']['param'] ?? '');
+        $m = (string) ($json['error']['message'] ?? '');
+        return strpos($p, $param) === 0 || stripos($m, $param) !== false;
+    }
+
+    /** @param mixed $json */
+    private static function failure(int $code, $json, string $model): array {
+        $err = is_array($json) && is_array($json['error'] ?? null) ? $json['error'] : [];
+        $msg = (string) ($err['message'] ?? '');
+        $type = (string) ($err['code'] ?? ($err['type'] ?? ''));
+        if ($code === 401) {
+            return self::result(['error' => 'OpenAI odrzuciło klucz API (401). Sprawdź, czy klucz jest aktywny, i wklej go ponownie.', 'fatal' => true, 'http' => $code]);
+        }
+        if ($code === 403) {
+            return self::result(['error' => 'OpenAI odmówiło dostępu (403)' . ($msg !== '' ? ': ' . self::short($msg) : '.'), 'fatal' => true, 'http' => $code]);
+        }
+        if ($code === 404) {
+            return self::result(['error' => $model !== '' ? 'Model „' . $model . '” jest niedostępny dla tego klucza (404). Wybierz inny model w ustawieniach.' : 'OpenAI: nie znaleziono (404).', 'fatal' => $model !== '', 'http' => $code]);
+        }
+        if ($code === 429) {
+            if ($type === 'insufficient_quota' || stripos($msg, 'quota') !== false || stripos($msg, 'billing') !== false) {
+                return self::result(['error' => 'Na koncie OpenAI skończyły się środki lub limit (429). Doładuj konto na platform.openai.com.', 'fatal' => true, 'http' => $code]);
+            }
+            return self::result(['error' => 'OpenAI chwilowo ogranicza liczbę zapytań (429). Ponowię automatycznie.', 'retry' => true, 'http' => $code]);
+        }
+        if ($code === 0 || $code === 408 || $code === 409 || $code >= 500) {
+            return self::result(['error' => 'Chwilowy błąd po stronie OpenAI (' . $code . '). Ponowię automatycznie.', 'retry' => true, 'http' => $code]);
+        }
+        return self::result(['error' => 'OpenAI: błąd ' . $code . ($msg !== '' ? ' — ' . self::short($msg) : ''), 'fatal' => $code === 400 && $model !== '' && stripos($msg, 'model') !== false, 'bad_request' => true, 'http' => $code]);
+    }
+
+    public static function short(string $s): string {
         $s = trim(preg_replace('~\s+~', ' ', $s) ?? $s);
         // Never echo anything that looks like a key back to the screen or the log.
         $s = preg_replace('~sk-[A-Za-z0-9_\-*]{6,}~', 'sk-…', $s) ?? $s;
