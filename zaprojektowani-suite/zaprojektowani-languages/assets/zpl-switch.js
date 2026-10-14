@@ -14,31 +14,38 @@
 
   // ------------------------------------------------------------- theme
   // The header sits transparent over a dark hero on some pages: the switch then uses its light-on-dark look.
+  // 3.1.1: the look depends only on three classes of the header, so only its class changes are watched, and an update is
+  // scheduled only when they change the look. The header changes its styles while the page scrolls, and every change
+  // used to start three updates here (at once, after 220 ms and after 600 ms), each of them setting classes again.
   var raf = 0;
+  function navDark(nav) {
+    return !!(nav && nav.classList.contains('zpNewNav--heroOverlay') && !nav.classList.contains('is-scrolled') && !nav.classList.contains('is-mega-open'));
+  }
   function syncTheme() {
     raf = 0;
     each(switches(), function (s) {
       var nav = s.closest ? s.closest('#zpNewNav,.zpNewNav') : null;
-      var dark = !!(nav && !s.classList.contains('zpl-switch--drawer') && nav.classList.contains('zpNewNav--heroOverlay') &&
-        !nav.classList.contains('is-scrolled') && !nav.classList.contains('is-mega-open'));
-      s.classList.toggle('zpl-switch--ondark', dark);
+      var dark = !s.classList.contains('zpl-switch--drawer') && navDark(nav);
+      if (s.classList.contains('zpl-switch--ondark') !== dark) s.classList.toggle('zpl-switch--ondark', dark);
     });
-    html.classList.add('zpl-theme');
+    if (!html.classList.contains('zpl-theme')) html.classList.add('zpl-theme');
   }
   function queueTheme() { if (!raf) raf = (window.requestAnimationFrame || setTimeout)(syncTheme); }
   function watchTheme() {
     syncTheme();
-    var later = function () { queueTheme(); setTimeout(queueTheme, 220); setTimeout(queueTheme, 600); };
-    window.addEventListener('scroll', queueTheme, { passive: true });
-    window.addEventListener('resize', later, { passive: true });
-    window.addEventListener('load', later);
+    window.addEventListener('load', queueTheme);
     var nav = doc.getElementById('zpNewNav');
     if (nav && window.MutationObserver) {
-      new MutationObserver(later).observe(nav, { attributes: true, attributeFilter: ['class', 'style'] });
-      var shell = nav.querySelector('.zpNewNav__shell');
-      if (shell) new MutationObserver(later).observe(shell, { attributes: true, attributeFilter: ['class', 'style'] });
+      var seen = navDark(nav);
+      new MutationObserver(function () {
+        var now = navDark(nav);
+        if (now !== seen) { seen = now; queueTheme(); }
+      }).observe(nav, { attributes: true, attributeFilter: ['class'] });
+      return;
     }
-    later();
+    // No header to watch: checked once per frame while the page scrolls or resizes.
+    window.addEventListener('scroll', queueTheme, { passive: true });
+    window.addEventListener('resize', queueTheme, { passive: true });
   }
 
   // ------------------------------------------------------------ choice

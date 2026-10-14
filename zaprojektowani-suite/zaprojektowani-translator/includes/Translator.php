@@ -43,8 +43,9 @@ final class Translator {
     public static function limit(string $kind): int { return $kind === 'title' ? self::MAX_TITLE : ($kind === 'meta' ? self::MAX_META : 0); }
 
     /**
-     * A short version that came back a little too long, fitted where that is safe: a title loses the brand at its end,
-     * a description its last sentences (never the first). Otherwise it stays as written.
+     * 3.1.1: the short version of a machine translation for Google (Sync::short_version), made without OpenAI where that is
+     * safe: a title loses the brand at its end, a description its last sentences (never the first). Otherwise it stays
+     * as written; the caller checks the length again.
      */
     public static function fit(string $en, string $kind): string {
         $max = self::limit($kind);
@@ -74,7 +75,6 @@ Rules:
 - Facts: the studio exists since 2022; "10+ lat doświadczenia zespołu" means the team's 10+ years of experience, never the studio's age. "Domena i hosting w cenie" means domain and hosting are included in the price.
 - Polish city names stay as they are (Katowice, Gliwice, Kraków, Warszawa -> Warsaw); Śląsk -> Silesia, Polska -> Poland.
 - Item types: "title" is an HTML page title (keep it under 65 characters when the Polish one is), "meta" a meta description (similar length), "attr" an image description or a short interface label, "schema" structured data for Google, "text" page text, "slug" is not used here.
-- An item with "max_chars" is the short version Google shows in its results: write it in at most that many characters, counting every letter, space and punctuation mark. Keep the most important words and the meaning; this is the only case where wording may be shortened. A page title keeps the brand at its end (" | Zaprojektowani") when it fits and drops it when it does not. A description stays in complete sentences, without an ellipsis.
 - Established terms on this site: Strona główna = Home; Usługi = Services; Strony internetowe = Websites; Sklepy internetowe = Online stores; Logo i branding = Logo and branding; Identyfikacja wizualna = Visual identity; Kampanie reklamowe = Ad campaigns; Realizacje = Our work; Wiedza = Knowledge (the blog section; baza Wiedza = the Knowledge base); O nas = About us; Kontakt = Contact; FAQ = FAQ; Studio wyceny = Quote Studio; Szybka wycena = Quick quote; Bezpłatna wycena = Free quote; Umów konsultację = Book a consultation; Spis treści = Table of contents; Najczęstsze pytania = Frequently asked questions; Czytaj więcej = Read more; min czytania = min read; Rano = Morning; Po południu = Afternoon; Wieczorem = Evening.
 - An item that is already English, a code or a proper name is returned unchanged. Decorative code-like text made of Polish words is translated like any other text: <szybka_strona /> -> <fast_website />.
 TXT;
@@ -95,13 +95,9 @@ TXT;
         foreach ($batch as $k => $kind) {
             $id = 'a' . (++$n);
             $ids[$id] = (string) $k;
-            // 3.1.1: the short version of a title or description is asked for with its limit, as the text itself.
-            $text = \ZPL\Page::plain((string) $k);
-            $item = ['id' => $id, 'type' => (string) $kind, 'text' => $text];
-            if ($text !== (string) $k && self::limit((string) $kind)) { $item['max_chars'] = self::limit((string) $kind); }
-            $items[] = $item;
+            $items[] = ['id' => $id, 'type' => (string) $kind, 'text' => (string) $k];
             $props[$id] = ['type' => 'string'];
-            $chars += strlen($text);
+            $chars += strlen((string) $k);
         }
         $input = ['page' => ['title' => (string) ($context['title'] ?? ''), 'address' => (string) ($context['path'] ?? '')], 'items' => $items];
         $body = [
@@ -134,10 +130,7 @@ TXT;
         $out = ['ok' => [], 'failed' => []];
         foreach ($ids as $id => $pl) {
             $en = isset($data[$id]) && is_string($data[$id]) ? self::clean((string) $data[$id]) : '';
-            $kind = (string) ($kinds[$pl] ?? 'text');
-            $text = \ZPL\Page::plain((string) $pl);
-            $why = $en === '' ? 'brak tłumaczenia' : self::problem($text, $en, $kind, $text !== (string) $pl);
-            if ($why === '' && $text !== (string) $pl) { $en = self::fit($en, $kind); }
+            $why = $en === '' ? 'brak tłumaczenia' : self::problem($pl, $en, (string) ($kinds[$pl] ?? 'text'));
             if ($why === '') { $out['ok'][$pl] = $en; } else { $out['failed'][$pl] = $why; }
         }
         return $out;
@@ -151,7 +144,7 @@ TXT;
     }
 
     /** '' when the English text can be used, otherwise a short Polish reason (shown in the panel). */
-    public static function problem(string $pl, string $en, string $kind = 'text', bool $short = false): string {
+    public static function problem(string $pl, string $en, string $kind = 'text'): string {
         if (preg_match('~</?\d+/?>~', $pl . $en) && !\ZPL\Html::markers_match($pl, $en)) { return 'znaczniki linków lub pogrubień się nie zgadzają'; }
         // No new HTML: only the numbered markers may look like tags.
         $tags = static function (string $s): int { return (int) preg_match_all('~<(?!/?\d+/?>)[a-z!/]~i', $s); };
@@ -166,7 +159,7 @@ TXT;
         $lp = strlen($pl);
         $le = strlen($en);
         if ($le > 4 * $lp + 80) { return 'tłumaczenie podejrzanie długie'; }
-        if ($lp > 60 && $le < $lp * 0.3 && !$short) { return 'tłumaczenie podejrzanie krótkie'; } // a short version (3.1.1) may be
+        if ($lp > 60 && $le < $lp * 0.3) { return 'tłumaczenie podejrzanie krótkie'; }
         if (self::still_polish($pl, $en)) { return 'tekst nadal po polsku'; }
         return '';
     }

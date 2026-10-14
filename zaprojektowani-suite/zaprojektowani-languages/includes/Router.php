@@ -173,6 +173,20 @@ final class Router {
         return ['en', $pl, false, null];
     }
 
+    /**
+     * 3.1.1: the English address for a path that is one without its /en/ ("/websites-for-law-firms/", requested by Google
+     * on 14.10), or null. Runtime asks only when WordPress has no page there, so a Polish page at that address always wins.
+     */
+    public static function bare_en(string $path): ?string {
+        $path = self::norm_path($path);
+        if ($path === '/' || strpos($path, '/en/') === 0) { return null; }
+        $en = '/en' . $path;
+        $rev = self::reverse();
+        if (isset($rev[$en])) { return self::is_excluded((string) $rev[$en]) ? null : $en; }
+        $legacy = self::legacy();
+        return isset($legacy[$en]) ? (string) $legacy[$en] : null;
+    }
+
     private static function paged_en(string $pl): ?string {
         if (preg_match('~^(.*/)page/(\d+)/$~', $pl, $m) && isset(self::routes()[$m[1]])) {
             return self::routes()[$m[1]] . 'page/' . $m[2] . '/';

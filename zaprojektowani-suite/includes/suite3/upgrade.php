@@ -21,8 +21,9 @@ function zp_suite3_upgrade(string $previous): void {
     // so it comes back on. 3.1.0's drop-in also answers robots and visitors with only consent or statistics cookies;
     // 3.1.1's sends no-cache headers on a MISS too and keys versioned (EN) pages by their version. The live file is
     // replaced here because nothing purges after an update. Runs once WordPress has finished loading (permalinks are
-    // needed for the list of pages).
-    delete_option('zp_suite3_cache_301');
+    // needed for the list of pages). The marker is written as pending first: a first request that ends before wp_loaded
+    // (llms.txt, an EN sitemap, a Geo redirect) would otherwise lose the step, and the retry below picks it up.
+    update_option('zp_suite3_cache_301', ['at' => '', 'result' => 'pending', 'tries' => 0], true);
     add_action('wp_loaded', 'zp_suite3_cache_301', 99);
   }
   if ($previous !== '' && version_compare($previous, '3.1.1', '<')) {
@@ -76,7 +77,10 @@ function zp_suite3_input_vars(): string {
     if (!is_string($old) || strlen($old) > 65536) { return 'unreadable'; }
     if (preg_match('/^\s*max_input_vars\s*=/mi', $old)) { return 'set-in-file'; }
     if (!is_writable(is_file($file) ? $file : ABSPATH) || !is_writable(ABSPATH)) { return 'not-writable'; }
-    $new = $old . ($old !== '' && substr($old, -1) !== "\n" ? "\n" : '') . "; ZP Suite 3.1.1: the home page form in wp-admin needs more than 1000 fields\nmax_input_vars = 5000\n";
+    $lines = "; ZP Suite 3.1.1: the home page form in wp-admin needs more than 1000 fields\nmax_input_vars = 5000\n";
+    // Lines after a [HOST=…] or [PATH=…] header apply only there, so they go before the first section header, if any.
+    if (preg_match('/^[ \t]*\[/m', $old, $m, PREG_OFFSET_CAPTURE)) { $new = substr($old, 0, $m[0][1]) . $lines . substr($old, $m[0][1]); }
+    else { $new = $old . ($old !== '' && substr($old, -1) !== "\n" ? "\n" : '') . $lines; }
     update_option('zp_suite3_user_ini_backup', ['at' => gmdate('c'), 'existed' => is_file($file), 'content' => $old], false);
     $tmp = ABSPATH . '.zp-user-ini-' . bin2hex(random_bytes(8));
     $mode = is_file($file) ? (fileperms($file) & 0777) : 0644;

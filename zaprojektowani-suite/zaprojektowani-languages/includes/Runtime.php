@@ -43,6 +43,16 @@ final class Runtime {
             self::redirect(Router::base() . $rel . '/' . ($query !== '' ? '?' . $query : ''), 301);
         }
 
+        // 3.1.1: an English address asked for without its /en/ gets a 301 to the English page, when WordPress has no page
+        // there (before its own guess at a similar address, template_redirect 10).
+        if ($public && $lang === 'pl') {
+            add_action('template_redirect', static function () use ($rel, $query) {
+                if (!is_404()) { return; }
+                $en = Router::bare_en($rel);
+                if ($en !== null) { self::redirect(Router::base() . $en . ($query !== '' ? '?' . $query : ''), 301); }
+            }, 1);
+        }
+
         // GEO: Poland stays on PL. A detected non-PL visitor entering a Polish URL
         // gets the equivalent /en/ URL. 302 is intentional: this is visitor-specific,
         // not a permanent SEO redirect. A manual choice of PL disables GEO routing, a choice of EN redirects.
