@@ -10,6 +10,9 @@ if (!defined('ABSPATH')) { exit; }
 
 const ZP_SUITE3_404_LOG = 'zp_suite3_404_log';
 const ZP_SUITE3_REDIRECTS = 'zp_suite3_redirects';
+/** 3.2.0: the check that a page really links to a 404 address (bots send our own address as Referer). */
+const ZP_SUITE3_404_VERIFY = 'zp_suite3_404_verify';
+const ZP_SUITE3_404_CHECK_UA = 'ZP Suite link check';
 
 /** Request path with a trailing slash (unless it names a file), without the query string. */
 function zp_suite3_404_path(string $uri = ''): string {
@@ -57,6 +60,8 @@ add_action('template_redirect', static function (): void {
 }, 5);
 
 function zp_suite3_404_record(string $path): void {
+  // The link check itself opens our pages; a page it finds missing is reported through its result, not logged again.
+  if (stripos((string) ($_SERVER['HTTP_USER_AGENT'] ?? ''), ZP_SUITE3_404_CHECK_UA) !== false) { return; }
   $log = get_option(ZP_SUITE3_404_LOG, []);
   $log = is_array($log) ? $log : [];
   $now = time();
@@ -75,7 +80,13 @@ function zp_suite3_404_record(string $path): void {
   if ($ref !== '' && strpos($refPath, '/wp-admin') !== 0 && zp_suite3_404_path($ref) !== $path) {
     $host = (string) wp_parse_url($ref, PHP_URL_HOST); $own = (string) wp_parse_url(home_url('/'), PHP_URL_HOST);
     $entry['ref'] = substr($host . (string) wp_parse_url($ref, PHP_URL_PATH), 0, 200);
-    if ($host !== '' && strcasecmp(preg_replace('~^www\.~', '', $host), preg_replace('~^www\.~', '', $own)) === 0) { $entry['internal'] = true; }
+    if ($host !== '' && strcasecmp(preg_replace('~^www\.~', '', $host), preg_replace('~^www\.~', '', $own)) === 0) {
+      // 3.2.0: a Referer from our own site is only a lead. Scanners send it with addresses no page links to
+      // (/ads.txt, /sellers.json…), so the link check opens that page and looks for the link before it counts.
+      $iref = zp_suite3_404_path((string) wp_parse_url($ref, PHP_URL_PATH));
+      if ($iref !== '' && (empty($entry['internal']) || ($entry['iref'] ?? '') !== $iref)) { $entry['iref'] = $iref; $entry['linked'] = null; $entry['tries'] = 0; }
+      $entry['internal'] = true;
+    }
   }
   $log[$path] = $entry;
   if (count($log) > 300) {
@@ -83,7 +94,108 @@ function zp_suite3_404_record(string $path): void {
     $log = array_slice($log, 0, 280, true);
   }
   update_option(ZP_SUITE3_404_LOG, $log, false);
+  if (!empty($entry['internal']) && ($entry['linked'] ?? null) === null) { zp_suite3_404_verify_soon(); }
 }
+
+/** The own-site page an entry came from: 3.2.0 keeps it as a path; older entries only have "host/path" in 'ref'. */
+function zp_suite3_404_iref(array $e): string {
+  if (!empty($e['iref'])) { return (string) $e['iref']; }
+  $ref = (string) ($e['ref'] ?? ''); $slash = strpos($ref, '/');
+  return $slash === false ? '/' : zp_suite3_404_path(substr($ref, $slash));
+}
+
+/** Entries with an own-site Referer whose link was not checked yet (or a week ago). */
+function zp_suite3_404_unchecked(array $log): array {
+  $out = []; $week = time() - 7 * DAY_IN_SECONDS;
+  foreach ($log as $path => $e) {
+    if (!is_array($e) || empty($e['internal']) || !empty($e['hidden'])) { continue; }
+    $linked = $e['linked'] ?? null;
+    if ($linked === null || (int) ($e['checked'] ?? 0) < $week) { $out[(string) $path] = zp_suite3_404_iref($e); }
+  }
+  return $out;
+}
+
+function zp_suite3_404_verify_soon(): void {
+  if (function_exists('wp_next_scheduled') && !wp_next_scheduled(ZP_SUITE3_404_VERIFY)) { wp_schedule_single_event(time() + 60, ZP_SUITE3_404_VERIFY); }
+}
+
+/**
+ * Own-site paths a page's HTML points to: links, images (srcset too), forms, and addresses written in scripts
+ * (JSON escapes them as https:\/\/…). Paths are normalised like the log's keys.
+ */
+function zp_suite3_404_links(string $html, string $base): array {
+  $own = strtolower((string) preg_replace('~^www\.~', '', (string) wp_parse_url(home_url('/'), PHP_URL_HOST)));
+  $html = str_replace('\\/', '/', $html);
+  $out = [];
+  $add = static function (string $url) use (&$out, $own, $base): void {
+    $url = trim(html_entity_decode($url, ENT_QUOTES | ENT_HTML5, 'UTF-8'));
+    if ($url === '' || $url[0] === '#' || preg_match('~^(?:mailto|tel|javascript|data|blob|about):~i', $url)) { return; }
+    if (strpos($url, '//') === 0) { $url = 'https:' . $url; }
+    if (preg_match('~^[a-z][a-z0-9+.-]*:~i', $url)) {
+      if (!preg_match('~^https?://~i', $url) || strtolower((string) preg_replace('~^www\.~', '', (string) wp_parse_url($url, PHP_URL_HOST))) !== $own) { return; }
+      $path = (string) wp_parse_url($url, PHP_URL_PATH);
+    } elseif ($url[0] === '/') {
+      $path = (string) wp_parse_url($url, PHP_URL_PATH);
+    } else {
+      $path = (substr($base, -1) === '/' ? $base : dirname($base) . '/') . (string) wp_parse_url($url, PHP_URL_PATH);
+    }
+    $path = zp_suite3_404_path($path === '' ? '/' : $path);
+    if ($path !== '') { $out[$path] = true; }
+  };
+  if (preg_match_all('~\s(href|src|data-src|data-href|action|poster|srcset|data-srcset|imagesrcset)\s*=\s*(["\'])(.*?)\2~is', $html, $m, PREG_SET_ORDER)) {
+    foreach ($m as $a) {
+      if (stripos($a[1], 'srcset') !== false) { foreach (explode(',', $a[3]) as $c) { $add((string) strtok(trim($c), " \t\n")); } }
+      else { $add($a[3]); }
+    }
+  }
+  // Full addresses of this site anywhere else in the page (scripts, JSON-LD, CSS url()).
+  if (preg_match_all('~(?:https?:)?//(?:www\.)?' . preg_quote($own, '~') . '(/[^\s"\'<>()\\\\]*)~i', $html, $m)) {
+    foreach ($m[1] as $p) { $add($p); }
+  }
+  return $out;
+}
+
+/**
+ * 3.2.0: opens each own-site page that sent a visitor to a 404 address and records whether it really links there.
+ * Up to 6 pages per run (WP-Cron); the rest runs a minute later. Our own pages only, read like a visitor without cookies.
+ */
+function zp_suite3_404_verify(): void {
+  $log = get_option(ZP_SUITE3_404_LOG, []);
+  if (!is_array($log)) { return; }
+  $todo = zp_suite3_404_unchecked($log);
+  if (!$todo) { return; }
+  $pages = array_slice(array_values(array_unique($todo)), 0, 6);
+  $results = [];
+  foreach ($pages as $page) {
+    $response = wp_remote_get(home_url($page), [
+      'timeout' => 15, 'redirection' => 3, 'user-agent' => ZP_SUITE3_404_CHECK_UA . '; ' . home_url('/'),
+      'sslverify' => apply_filters('https_local_ssl_verify', false),
+      'headers' => ['Accept-Language' => strpos($page, '/en/') === 0 ? 'en-US,en;q=0.9' : 'pl-PL,pl;q=0.9'],
+    ]);
+    $code = is_wp_error($response) ? 0 : (int) wp_remote_retrieve_response_code($response);
+    if ($code === 200) { $results[$page] = zp_suite3_404_links((string) wp_remote_retrieve_body($response), $page); }
+    elseif (in_array($code, [404, 410], true)) { $results[$page] = []; }   // the page itself is gone: it links to nothing
+    else { $results[$page] = null; }                                       // try again later (at most 3 times)
+  }
+  // Read again: visits may have been logged meanwhile; only the verdict fields are written.
+  $log = get_option(ZP_SUITE3_404_LOG, []);
+  if (!is_array($log)) { return; }
+  $now = time(); $changed = false;
+  foreach ($todo as $path => $page) {
+    if (!array_key_exists($page, $results) || !isset($log[$path]) || !is_array($log[$path]) || zp_suite3_404_iref($log[$path]) !== $page) { continue; }
+    if ($results[$page] === null) {
+      $log[$path]['tries'] = (int) ($log[$path]['tries'] ?? 0) + 1;
+      // The page did not open three times in a row: not counted, the panel says so, and it is tried again in a week.
+      if ($log[$path]['tries'] >= 3) { $log[$path]['linked'] = false; $log[$path]['checked'] = $now; $log[$path]['unreachable'] = true; }
+    } else {
+      $log[$path]['linked'] = isset($results[$page][$path]); $log[$path]['checked'] = $now; $log[$path]['tries'] = 0; unset($log[$path]['unreachable']);
+    }
+    $changed = true;
+  }
+  if ($changed) { update_option(ZP_SUITE3_404_LOG, $log, false); }
+  if (zp_suite3_404_unchecked($log)) { zp_suite3_404_verify_soon(); }
+}
+add_action(ZP_SUITE3_404_VERIFY, 'zp_suite3_404_verify');
 
 /** Counts for the dashboard and "Stan strony": open addresses in the last 30 days (no redirect, not hidden). */
 function zp_suite3_404_summary(): array {
@@ -94,8 +206,10 @@ function zp_suite3_404_summary(): array {
     if (!is_array($e) || (int) ($e['last'] ?? 0) < $since || isset($redirects[$path]) || !empty($e['hidden'])) { continue; }
     $out['open']++; $out['hits'] += (int) ($e['n'] ?? 0);
     if (!empty($e['google'])) { $out['google']++; }
-    if (!empty($e['internal'])) { $out['internal']++; }
+    // 3.2.0: only a link the check found on the page counts; a Referer alone does not (scanners send ours).
+    if (!empty($e['internal']) && ($e['linked'] ?? null) === true) { $out['internal']++; }
   }
+  if (zp_suite3_404_unchecked($log)) { zp_suite3_404_verify_soon(); }
   return $out;
 }
 
@@ -193,8 +307,8 @@ function zp_suite3_404_page(): void {
   echo '<section class="metrics"><section class="metric"><div class="metric-head"><span>Adresy z błędem 404</span></div><div class="metric-value">' . (int) $s['open'] . '</div><div class="metric-foot">ostatnie 30 dni, bez przekierowania</div></section><section class="metric"><div class="metric-head"><span>Odwiedzane przez Google</span></div><div class="metric-value">' . (int) $s['google'] . '</div><div class="metric-foot">te warto przekierować najpierw</div></section><section class="metric"><div class="metric-head"><span>Z linku na Twojej stronie</span></div><div class="metric-value">' . (int) $s['internal'] . '</div><div class="metric-foot">zepsuty link wewnętrzny</div></section><section class="metric"><div class="metric-head"><span>Przekierowania z panelu</span></div><div class="metric-value">' . count($redirects) . '</div><div class="metric-foot">poza przekierowaniami planu SEO</div></section></section>';
 
   uasort($log, static function ($a, $b): int {
-    $wa = (int) ($a['google'] ?? 0) * 3 + (!empty($a['internal']) ? 50 : 0) + (int) ($a['n'] ?? 0);
-    $wb = (int) ($b['google'] ?? 0) * 3 + (!empty($b['internal']) ? 50 : 0) + (int) ($b['n'] ?? 0);
+    $wa = (int) ($a['google'] ?? 0) * 3 + (!empty($a['internal']) && ($a['linked'] ?? null) === true ? 50 : 0) + (int) ($a['n'] ?? 0);
+    $wb = (int) ($b['google'] ?? 0) * 3 + (!empty($b['internal']) && ($b['linked'] ?? null) === true ? 50 : 0) + (int) ($b['n'] ?? 0);
     return $wb <=> $wa ?: ((int) ($b['last'] ?? 0) <=> (int) ($a['last'] ?? 0));
   });
   echo '<section class="card"><header class="card-head"><div><h2>Adresy z błędem 404</h2><p>Najpierw te z linkiem na Twojej stronie i odwiedzane przez Google. Podpowiedź to najbardziej podobny istniejący adres; możesz go zmienić przed zapisaniem.</p></div>' . ($showHidden ? '<a class="button" href="' . esc_url(zp_suite3_url('zp-suite-404')) . '">Ukryj pominięte</a>' : '<a class="button" href="' . esc_url(zp_suite3_url('zp-suite-404', ['zp_hidden' => 1])) . '">Pokaż pominięte</a>') . '</header>';
@@ -205,10 +319,12 @@ function zp_suite3_404_page(): void {
     $rows++;
     $suggest = zp_suite3_404_suggest((string) $path);
     $meta = [];
-    if (!empty($e['internal'])) { $meta[] = '<span class="tag is-bad">link na Twojej stronie</span>'; }
+    $linked = !empty($e['internal']) ? ($e['linked'] ?? null) : false;
+    if ($linked === true) { $meta[] = '<span class="tag is-bad">link na Twojej stronie</span>'; }
     if (!empty($e['google'])) { $meta[] = '<span class="tag is-warn">Google: ' . (int) $e['google'] . '</span>'; }
-    if (!empty($e['ref']) && empty($e['internal'])) { $meta[] = '<small>z: ' . esc_html((string) $e['ref']) . '</small>'; }
-    elseif (!empty($e['ref'])) { $meta[] = '<small>link na: ' . esc_html((string) $e['ref']) . '</small>'; }
+    if ($linked === true) { $meta[] = '<small>link na: ' . esc_html(zp_suite3_404_iref($e)) . '</small>'; }
+    elseif (!empty($e['internal'])) { $meta[] = '<small>z: ' . esc_html(zp_suite3_404_iref($e)) . ($linked === null ? ' · sprawdzam, czy ta strona ma ten link' : (!empty($e['unreachable']) ? ' · nie udało się otworzyć tej strony, sprawdzę ponownie za tydzień' : ' · ta strona nie ma tego linku (zapytanie robota)')) . '</small>'; }
+    elseif (!empty($e['ref'])) { $meta[] = '<small>z: ' . esc_html((string) $e['ref']) . '</small>'; }
     echo '<tr><td><strong><a href="' . esc_url(home_url((string) $path)) . '" target="_blank" rel="noopener noreferrer">' . esc_html((string) $path) . '</a></strong>' . ($meta ? '<div style="margin-top:6px;display:flex;gap:6px;flex-wrap:wrap;align-items:center">' . implode('', $meta) . '</div>' : '') . '</td><td class="num">' . (int) ($e['n'] ?? 0) . '</td><td>' . esc_html(human_time_diff((int) ($e['last'] ?? time()))) . ' temu</td><td>';
     echo zp_suite3_404_form('redirect', (string) $path, '<label class="screen-reader-text" for="zp404-' . md5((string) $path) . '">Cel przekierowania</label><input type="text" id="zp404-' . md5((string) $path) . '" name="to" value="' . esc_attr($suggest) . '" placeholder="/adres-docelowy/">', 'Przekieruj', 'button primary');
     echo '</td><td>' . zp_suite3_404_form(!empty($e['hidden']) ? 'unhide' : 'hide', (string) $path, '', !empty($e['hidden']) ? 'Przywróć' : 'Pomiń', 'button ghost') . '</td></tr>';
