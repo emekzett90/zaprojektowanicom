@@ -16,6 +16,8 @@ final class Sync {
     const MAX_TRIES = 3;
     /** Pages to translate again from scratch at their next read ("Przetłumacz od nowa" in the panel). */
     const FORCE = 'zpte2_force';
+    /** 3.1.1: Polish texts (hash => time) whose machine translations are asked for again although they pass the checks (Migrate::knowledge). */
+    const AGAIN = 'zpte2_retranslate';
     /** Names the site uses for its own sections, fixed in every English text (older translations used others). */
     const TERM_FIXES = ['Pricing Studio' => 'Quote Studio', 'Valuation studio' => 'Quote Studio', 'Valuation Studio' => 'Quote Studio', 'Studio Wyceny' => 'Quote Studio'];
     /** Parts of every page (menu, footer): their texts are shared by all English pages. */
@@ -179,6 +181,24 @@ final class Sync {
         return true;
     }
 
+    /** Texts listed for translating again (hash => time). */
+    public static function again(): array {
+        $a = get_option(self::AGAIN, []);
+        return is_array($a) ? $a : [];
+    }
+
+    /**
+     * Listed texts got their new translations (hash => [pl, en, meta]): every copy that is not a manual correction takes
+     * it, also the copies kept for single pages (they outrank the memory there), and the texts leave the list. The pages
+     * that wait for them or read them again compile the new text.
+     */
+    private static function again_done(array $done): void {
+        foreach ($done as [$pl, $en, $meta]) { Store::strings_replace((string) $pl, (string) $en, (array) $meta); }
+        $list = self::again();
+        foreach (array_keys($done) as $h) { unset($list[$h]); }
+        update_option(self::AGAIN, $list, false);
+    }
+
     /** Category paths that share another category's English page (see ZPL\Router::ALIASES). */
     public static function alias_of(string $path): string {
         $a = \ZPL\Router::ALIASES;
@@ -277,6 +297,7 @@ final class Sync {
         $mem = Store::strings(array_keys($hashes), Store::SHARED);
         $sharedMap = Serve::shared_map();
         $overrides = \ZPL\Dict::overrides('en');
+        $again = self::again();
         $todo = [];
         $known = 0;
         $markShared = [];
@@ -285,8 +306,13 @@ final class Sync {
             $h = Store::hash($k);
             $r = self::pick($own[$h] ?? null, $mem[$h] ?? null);
             if ($r) {
+                // 3.1.1: a text listed for translating again (Migrate::knowledge) goes to OpenAI although its translation
+                // passes the checks, unless the page shows another one for it: the owner's overrides, the site terms, or the
+                // shipped dictionaries above a copy in the memory. The old text is served until the new one arrives.
+                $redo = isset($again[$h]) && !(int) $r->manual && !isset($overrides[$k]) && !isset(Serve::SITE_TERMS[$k])
+                    && ($r === ($own[$h] ?? null) || (int) $r->shared || \ZPL\Dict::lower($k, 'en', $path) === null);
                 // A manual correction stays as the owner wrote it, also when the page is translated again on request.
-                if ((int) $r->manual || (!$force && Translator::broken($k, (string) $r->en) === '')) {
+                if ((int) $r->manual || (!$force && !$redo && Translator::broken($k, (string) $r->en) === '')) {
                     $known++;
                     // Shared texts outrank the plugin's own dictionaries on every page: a text those already
                     // translate (shipped, or curated by another module) keeps that wording unless corrected by hand.
@@ -297,42 +323,20 @@ final class Sync {
                     continue;
                 }
                 // 3.1.1: a broken earlier translation of a text the plugin's own dictionaries translate (shipped, site terms,
-                // manual overrides) is not asked for again: those serve it (compile() leaves the broken copy out). The
-                // earlier translators kept "<szybka_strona />" unchanged, and OpenAI kept it too, three times a day (14.10).
-                if (!(int) $r->manual && (isset($overrides[$k]) || isset($sharedMap[$k]) || \ZPL\Dict::lower($k, 'en', $path) !== null)
+                // manual overrides, a good shared translation) is not asked for again: those serve it (compile() and
+                // compile_shared() leave the broken copy out). The earlier translators kept "<szybka_strona />" unchanged, and
+                // OpenAI kept it too, three times a day (14.10). The shared map counts only with a good translation of its own:
+                // a broken shared text is itself in it until compiled again, and was then never translated again.
+                if (!(int) $r->manual && (isset($overrides[$k]) || self::good_shared($sharedMap, $k) || \ZPL\Dict::lower($k, 'en', $path) !== null)
                     && Translator::broken($k, (string) $r->en) !== '') { $known++; continue; }
                 $todo[$k] = (string) $kind; // translated again; the old text is served until the new one arrives
                 continue;
             }
             // Texts the plugin already translates (manual overrides, shared texts, shipped dictionaries and other
             // modules' curated texts such as the contact forms) never go to OpenAI.
-            if (isset($overrides[$k]) || isset($sharedMap[$k]) || \ZPL\Dict::lower($k, 'en', $path) !== null) { $known++; continue; }
+            if (isset($overrides[$k]) || self::good_shared($sharedMap, $k) || \ZPL\Dict::lower($k, 'en', $path) !== null) { $known++; continue; }
             if (strlen($k) > Translator::MAX_KEY) { continue; }
             $todo[$k] = (string) $kind;
-        }
-        // 3.1.1 (SearchFit): Google shows about 60 characters of a title and 155 of a description. A longer English one
-        // gets a short version beside it (\ZPL\Page::variant): the <title> and description tags use it, and the same text
-        // elsewhere on the page (a post's H1 is often its title) keeps the full translation. A text sent to OpenAI now
-        // gets its short version when its translation arrives (apply_units).
-        $short = [];
-        foreach ($units as $k => $kind) {
-            $max = Translator::limit((string) $kind);
-            if (!$max || isset($todo[$k])) { continue; }
-            $h = Store::hash((string) $k);
-            $en = self::served((string) $k, self::pick($own[$h] ?? null, $mem[$h] ?? null), $overrides, $sharedMap, $path);
-            if ($en !== null && Translator::len($en) > $max) { $short[\ZPL\Page::variant((string) $kind, (string) $k)] = (string) $kind; }
-        }
-        if ($short) {
-            $vh = array_map([Store::class, 'hash'], array_map('strval', array_keys($short)));
-            $vOwn = Store::strings($vh, $id);
-            $vMem = Store::strings($vh, Store::SHARED);
-            foreach ($short as $vk => $kind) {
-                $h = Store::hash((string) $vk);
-                $hashes[$h] = $kind;
-                $r = self::pick($vOwn[$h] ?? null, $vMem[$h] ?? null);
-                if ($r && ((int) $r->manual || Translator::broken(\ZPL\Page::plain((string) $vk), (string) $r->en) === '')) { $known++; continue; }
-                $todo[(string) $vk] = $kind;
-            }
         }
         if ($markShared) {
             // Menu and footer texts already translated for one page now serve every English page.
@@ -449,38 +453,26 @@ final class Sync {
         $ids = self::ids($items);
         $res = Translator::accept($data, $ids, $items);
         $pageId = (int) $job->page_id;
-        $own = $pageId > 0 ? Store::strings(array_map([Store::class, 'hash'], array_keys($res['ok'])), $pageId) : [];
+        $okHashes = array_map([Store::class, 'hash'], array_map('strval', array_keys($res['ok'])));
+        $own = $pageId > 0 ? Store::strings($okHashes, $pageId) : [];
+        $mem = Store::strings($okHashes, Store::SHARED);
+        $again = self::again();
+        $redone = [];
         $sharedHit = false;
         foreach ($res['ok'] as $pl => $en) {
             $pl = (string) $pl;
+            $h = Store::hash($pl);
             $meta = ['kind' => (string) ($items[$pl] ?? 'text'), 'origin' => 'ai', 'model' => (string) $job->model, 'shared' => isset($shared[$pl]) ? 1 : 0];
             Store::string_save(Store::SHARED, $pl, (string) $en, $meta, true);
             // An earlier translation kept for this page only would hide the new one: replace it too.
-            if (isset($own[Store::hash($pl)])) { Store::string_save($pageId, $pl, (string) $en, $meta, true); }
-            if (isset($shared[$pl])) { $sharedHit = true; }
+            if (isset($own[$h])) { Store::string_save($pageId, $pl, (string) $en, $meta, true); }
+            // 3.1.1: a text the memory already shows on every page (a title in lists, asked for by a page that only lists
+            // it) is served from the shared map too: compiled again, or the new translation waited for the next change there.
+            if (isset($shared[$pl]) || (isset($mem[$h]) && (int) $mem[$h]->shared)) { $sharedHit = true; }
+            if (isset($again[$h])) { $redone[$h] = [$pl, (string) $en, $meta]; }
         }
+        if ($redone) { self::again_done($redone); }
         if ($sharedHit) { self::compile_shared(); }
-        // 3.1.1: a title or description longer than Google shows gets its short version right away (see plan()).
-        $short = [];
-        foreach ($res['ok'] as $pl => $en) {
-            $kind = (string) ($items[$pl] ?? 'text');
-            $max = Translator::limit($kind);
-            if ($max && \ZPL\Page::plain((string) $pl) === (string) $pl && Translator::len((string) $en) > $max) { $short[\ZPL\Page::variant($kind, (string) $pl)] = $kind; }
-        }
-        if ($short && $pageId > 0 && ($row = Store::page($pageId))) {
-            $vh = array_map([Store::class, 'hash'], array_map('strval', array_keys($short)));
-            Store::keys_add($pageId, array_combine($vh, array_values($short)));
-            $have = Store::strings($vh, Store::SHARED);
-            $ask = [];
-            $chars = 0;
-            foreach ($short as $vk => $kind) {
-                if (isset($have[Store::hash((string) $vk)])) { continue; }
-                $ask[(string) $vk] = $kind;
-                $chars += Translator::len(\ZPL\Page::plain((string) $vk));
-            }
-            Store::page_update($pageId, ['keys_total' => (int) $row->keys_total + count($short), 'keys_done' => (int) $row->keys_done + count($short) - count($ask)]);
-            if ($ask) { Store::job_add($pageId, 'units', ['items' => $ask, 'shared' => [], 'ctx' => $payload['ctx'] ?? []], $chars); }
-        }
         if ($res['failed']) {
             $retry = [];
             foreach ($res['failed'] as $pl => $why) { $retry[(string) $pl] = (string) ($items[$pl] ?? 'text'); }
@@ -676,6 +668,7 @@ final class Sync {
         if (!$waits) { return 0; }
         $pending = Store::pending_texts();
         self::$pending = $pending;
+        $again = self::again();
         $n = 0;
         foreach ($waits as $job) {
             $payload = json_decode((string) $job->items, true);
@@ -688,7 +681,8 @@ final class Sync {
             $still = [];
             foreach ($items as $k => $kind) {
                 $h = Store::hash((string) $k);
-                if (isset($mem[$h]) && (string) $mem[$h]->en !== '') { $done[$h] = (string) $k; }
+                // A text listed for translating again has its old translation in the memory until the new one arrives.
+                if (isset($mem[$h]) && (string) $mem[$h]->en !== '' && !isset($again[$h])) { $done[$h] = (string) $k; }
                 elseif (isset($pending[$h])) { $still[$k] = $kind; }
                 else { $orphans[$k] = $kind; }
             }
@@ -733,18 +727,22 @@ final class Sync {
         foreach ($keys as $h => $kind) {
             $r = self::pick($own[$h] ?? null, $mem[$h] ?? null);
             if (!$r) { continue; }
+            $pl = (string) $r->pl;
+            if (\ZPL\Page::plain($pl) !== $pl) { continue; } // short versions are made below, never kept as translations
+            $en = null;
             if ($r === ($own[$h] ?? null)) {
                 // 3.1.1: a broken copy kept from the earlier translators gives way to the plugin's own dictionaries when
                 // they translate the text (it was served above them: "<szybka_strona />" on the English law firm page).
-                if (!(int) $r->manual && self::dictionary_knows((string) $r->pl, $path) && Translator::broken((string) $r->pl, (string) $r->en) !== '') { continue; }
-                $map[(string) $r->pl] = self::fix_terms((string) $r->en, (string) $r->pl);
-                continue;
+                if (!(int) $r->manual && self::dictionary_knows($pl, $path) && Translator::broken($pl, (string) $r->en) !== '') { continue; }
+                $en = self::fix_terms((string) $r->en, $pl);
+            } elseif (!(int) $r->shared && ((int) $r->manual || \ZPL\Dict::lower($pl, 'en', $path) === null)) {
+                // Shared texts come from the shared map. The plugin's own dictionaries (shipped, and other modules' curated
+                // texts) keep their wording unless the memory has a manual correction.
+                $en = self::fix_terms((string) $r->en, $pl);
             }
-            if ((int) $r->shared) { continue; } // shared texts come from the shared map
-            // The plugin's own dictionaries (shipped, and other modules' curated texts) keep their wording unless the
-            // memory has a manual correction.
-            if (!(int) $r->manual && \ZPL\Dict::lower((string) $r->pl, 'en', $path) !== null) { continue; }
-            $map[(string) $r->pl] = self::fix_terms((string) $r->en, (string) $r->pl);
+            if ($en !== null) { $map[$pl] = $en; }
+            $short = self::short_version($pl, (string) $kind, $r, $en, $mem[$h] ?? null);
+            if ($short !== '') { $map[\ZPL\Page::variant((string) $kind, $pl)] = $short; }
         }
         $rev = Store::map_save($page_id, Store::hash($path), $map, null);
         Serve::bump($page_id, $rev);
@@ -752,22 +750,36 @@ final class Sync {
     }
 
     /**
-     * The English text a page shows for $k now: the owner's corrections, site terms and shared texts, a manual
-     * correction, the shipped dictionary, then the saved translation. Null when nothing translates it yet.
-     * @param object|null $r the row pick() chose
+     * 3.1.1 (SearchFit): Google shows about 60 characters of a page title and 155 of a description. A longer machine
+     * translation gets a short version, made here without OpenAI (Translator::fit: a title loses " | Zaprojektowani" at its
+     * end, a description its last sentences); the <title> and description tags use it (\ZPL\Page::variant) and the same
+     * text elsewhere on the page keeps the full translation. The owner's wording (overrides in Języki PL/EN, corrections
+     * made by hand), the site terms and the shipped and curated texts stay as written, and so does a text that does not fit.
+     * @param object $r the row pick() chose  @param string|null $en what this page's map serves for $pl  @param object|null $mem the memory row
      */
-    private static function served(string $k, $r, array $overrides, array $sharedMap, string $path): ?string {
-        if (isset($overrides[$k])) { return (string) $overrides[$k]; }
-        if (isset($sharedMap[$k])) { return (string) $sharedMap[$k]; }
-        if ($r && (int) $r->manual) { return (string) $r->en; }
-        $d = \ZPL\Dict::lower($k, 'en', $path);
-        if ($d !== null) { return (string) $d; }
-        return $r && (string) $r->en !== '' ? (string) $r->en : null;
+    private static function short_version(string $pl, string $kind, $r, ?string $en, $mem): string {
+        $max = Translator::limit($kind);
+        if (!$max || isset(\ZPL\Dict::overrides('en')[$pl]) || isset(Serve::SITE_TERMS[$pl])) { return ''; }
+        if (isset(Serve::shared_map()[$pl])) {
+            // The shared map serves the text (above this page's map): a machine translation unless corrected by hand.
+            if (!$mem || !(int) $mem->shared || (int) $mem->manual || (string) $mem->en === '') { return ''; }
+            $en = self::fix_terms((string) $mem->en, $pl);
+        } elseif ($en === null || (int) $r->manual) {
+            return '';
+        }
+        if (Translator::len($en) <= $max) { return ''; }
+        $fit = Translator::fit($en, $kind);
+        return $fit !== $en && Translator::len($fit) <= $max ? $fit : '';
     }
 
     /** The site terms, the shared texts, the owner's corrections or the shipped dictionary translate this text. */
     private static function dictionary_knows(string $pl, string $path): bool {
         return isset(Serve::shared_map()[$pl]) || isset(\ZPL\Dict::overrides('en')[$pl]) || \ZPL\Dict::lower($pl, 'en', $path) !== null;
+    }
+
+    /** The shared map translates this text, and its translation passes the checks. */
+    private static function good_shared(array $sharedMap, string $k): bool {
+        return isset($sharedMap[$k]) && Translator::broken($k, (string) $sharedMap[$k]) === '';
     }
 
     /**
@@ -791,6 +803,9 @@ final class Sync {
             // 3.1.1: the site terms (Serve::SITE_TERMS: Wiedza = Knowledge…) outrank machine translations of the same
             // text, which used to override them in this map; corrections made by hand stay.
             if (!$manual && isset(Serve::SITE_TERMS[(string) $pl])) { continue; }
+            // 3.1.1: a broken machine translation (Polish left in English, lost link markers) is left out: the site terms or
+            // the shipped dictionaries serve the text until read() gets a new translation (it counted as translated before).
+            if (!$manual && Translator::broken((string) $pl, (string) $en) !== '') { continue; }
             $map[(string) $pl] = self::fix_terms((string) $en, (string) $pl);
         }
         $rev = Store::map_save(Store::SHARED, '', $map, null);
@@ -799,9 +814,10 @@ final class Sync {
 
     /** Recompile every page that uses one of these Polish texts (after a manual correction). */
     public static function recompile_using(array $hashes): int {
+        // 3.1.1: the shared map first: the pages' short titles and descriptions (short_version()) depend on it.
+        self::compile_shared();
         $n = 0;
         foreach (Store::pages_using($hashes) as $pid) { self::compile($pid); $n++; }
-        self::compile_shared();
         return $n;
     }
 
