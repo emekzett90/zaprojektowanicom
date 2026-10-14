@@ -32,6 +32,17 @@ final class ZP_Admin_Queue_Health_20261010 {
         'wp_cron_disabled'=>'DISABLE_WP_CRON jest włączone; wykonywanie wymaga zewnętrznego harmonogramu.',
     ];
     public static function allowed(): bool {return is_admin() && current_user_can('manage_options') && !((function_exists('wp_doing_ajax')&&wp_doing_ajax()) || (function_exists('wp_doing_cron')&&wp_doing_cron()) || (defined('REST_REQUEST')&&REST_REQUEST));}
+    /**
+     * 3.2.0: a job in a review state whose WordPress post is already published needs no decision on the dashboard
+     * (e.g. a draft published by hand after a failed scheduling keeps schedule_attention). The module page still shows it.
+     * A publication that the module could not confirm (publish_attention) keeps counting.
+     */
+    private static function waits(array $j,string $state): bool {
+        if(!in_array($state,self::REVIEW,true))return false;
+        if($state==='publish_attention')return true;
+        $post=is_int($j['post_id']??null)||ctype_digit((string)($j['post_id']??''))?(int)$j['post_id']:0;
+        return !($post>0&&get_post_status($post)==='publish');
+    }
     private static function stamp($value): ?int {return is_int($value)&&$value>0&&$value<=4102444800?$value:null;}
     private static function enum($value,array $allowed,string $fallback='unknown'): string {return is_string($value)&&in_array($value,$allowed,true)?$value:$fallback;}
     private static function response($value): bool {return is_string($value)&&preg_match('/^resp_[A-Za-z0-9_-]{1,180}$/D',$value)===1;}
@@ -53,8 +64,8 @@ final class ZP_Admin_Queue_Health_20261010 {
         $complete=$valid;$counts=$valid?array_fill_keys(self::STATES,0):null;$selected=null;$priority=100;$latest=null;$latestAt=-1;$queued=0;$active=0;$known=0;$review=0;$held=0;$manual=0;
         foreach($jobs as$j){if(!is_array($j)){$complete=false;$issues[]='data_invalid';continue;}$state=self::enum($j['state']??null,self::STATES);if($state==='unknown'){$complete=false;$issues[]='data_invalid';}else$counts[$state]++;
             $updated=self::stamp($j['updated_at']??null);if(($updated??0)>$latestAt){$latest=$j;$latestAt=$updated??0;}
-            if($state==='queued')$queued++;if(in_array($state,$spec['background'],true))$active++;if(in_array($state,$spec['manual'],true))$manual++;if(in_array($state,self::REVIEW,true))$review++;if($state==='policy_hold')$held++;if(self::response($j['response_id']??null))$known++;
-            $p=$state!=='queued'&&in_array($state,$spec['background'],true)?0:($state==='queued'?1:(in_array($state,$spec['manual'],true)?2:(in_array($state,self::REVIEW,true)?3:100)));if($p<$priority){$selected=$j;$priority=$p;}
+            if($state==='queued')$queued++;if(in_array($state,$spec['background'],true))$active++;if(in_array($state,$spec['manual'],true))$manual++;$wait=self::waits($j,$state);if($wait)$review++;if($state==='policy_hold')$held++;if(self::response($j['response_id']??null))$known++;
+            $p=$state!=='queued'&&in_array($state,$spec['background'],true)?0:($state==='queued'?1:(in_array($state,$spec['manual'],true)?2:($wait?3:100)));if($p<$priority){$selected=$j;$priority=$p;}
         }
         $selected=$selected??$latest;$state=$selected===null?($valid?'idle':'unknown'):self::enum($selected['state']??null,self::STATES);$stage=$selected===null?'none':self::enum($selected['stage']??null,self::STAGES);$updated=self::stamp($selected['updated_at']??null);$started=self::stamp($selected['started_at']??null);$poll=self::stamp($selected['response_next_poll_at']??null);$age=$updated===null?null:max(0,$now-$updated);$lock=self::lock($spec['lock'],$now);$worker=self::event($spec['worker']);$watchdog=self::event($spec['watchdog']);
         $stateResponse=self::response($selected['response_id']??null);$receiptResponse=false;
