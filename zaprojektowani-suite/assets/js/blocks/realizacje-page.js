@@ -54,6 +54,8 @@ const SPOT_DELAY=6000;
 const REDUCED_MOTION=window.matchMedia('(prefers-reduced-motion: reduce)');
 function spotlightMarkup(p,projectIndex,slideIndex){
   const points=(p.scope||[]).slice(0,3);
+  // The client-site link is named by its own text and the project name (aria-labelledby), which holds
+  // even while its slide is hidden from screen readers (SearchFit 14.10.2026, link-name).
   return `<article class="spotSlide${slideIndex===0?' is-active':''}" data-spot-slide data-project-index="${projectIndex}" data-open="${projectIndex}" data-no="${String(slideIndex+1).padStart(2,'0')}" tabindex="0" role="button" aria-label="${esc(p.brand)} — otwórz szczegóły projektu" aria-hidden="${slideIndex===0?'false':'true'}">
     <img class="spotImg" src="${esc(p.img)}" alt="${esc(p.brand)} — ${esc(p.sub)}" ${slideIndex===0?'fetchpriority="high"':'loading="eager"'}>
     <div class="spotShade" aria-hidden="true"></div>
@@ -62,13 +64,13 @@ function spotlightMarkup(p,projectIndex,slideIndex){
         <span class="spotBadge"><i data-lucide="star" style="width:13px;height:13px"></i> Wyróżniona realizacja</span>
         <span class="spotBadge"><i data-lucide="${catIcon(p.cat)}" style="width:13px;height:13px"></i> ${catLabel(p.cat)}</span>
       </div>
-      <h2>${esc(p.brand)}</h2>
+      <h2 id="zpSpotBrand${slideIndex}">${esc(p.brand)}</h2>
       <div class="sub">${esc(p.sub)}</div>
       <p class="desc">${esc(p.desc)}</p>
       <ul class="spotList">${points.map(s=>`<li><i data-lucide="check"></i>${esc(s)}</li>`).join('')}</ul>
       <div class="spotActions">
         <button class="btn btn--ghostD" data-open="${projectIndex}" type="button"><span>Zobacz case study</span><i data-lucide="arrow-up-right"></i></button>
-        ${hasLive(p)?`<a class="btn btn--ghostD" ${liveAttrs(p)}><span>Zobacz live</span><i data-lucide="external-link"></i></a>`:''}
+        ${hasLive(p)?`<a class="btn btn--ghostD" ${liveAttrs(p)}${p.live?` aria-labelledby="zpSpotLive${slideIndex} zpSpotBrand${slideIndex}"`:''}><span id="zpSpotLive${slideIndex}">Zobacz live</span><i data-lucide="external-link"></i></a>`:''}
       </div>
     </div>
   </article>`;
