@@ -28,7 +28,7 @@ function zp_suite3_check(string $id, string $title, string $state, string $text,
 /** Hooks this site's modules schedule, with a readable name (others are counted, not named). */
 function zp_suite3_cron_names(): array {
   return [
-    'zp_feed_check' => 'Publikacja wpisów z kalendarza', 'zpt2_daily_scan' => 'Codzienny skan tłumacza EN',
+    'zp_feed_check' => 'Publikacja wpisów z kalendarza', 'zpte2_daily' => 'Codzienne sprawdzenie tłumacza EN', 'zpte2_work' => 'Tłumacz EN w tle',
     'zp_admin_stats_daily_20261009' => 'Raporty Google', 'zp_admin_stats_hourly_20261009' => 'Ruch GA4 dziś',
     'zp_senuto_positions_daily_20261010' => 'Pozycje Senuto', 'zp_admin_lighthouse_daily_20261010' => 'Lighthouse',
     'zp_ai_indexnow_flush' => 'IndexNow (zgłaszanie zmian)', 'zp_ai_daily' => 'Widoczność AI i llms.txt',
@@ -286,7 +286,7 @@ function zp_suite3_health_page(): void {
   echo '</tbody></table></div></section>';
 
   // Versions
-  $versions = ['WordPress' => get_bloginfo('version'), 'PHP' => PHP_VERSION, 'ZP Suite' => ZP_SUITE_VERSION, 'Języki PL/EN' => defined('ZPL_VERSION') ? ZPL_VERSION : '—', 'Rank Math' => defined('RANK_MATH_VERSION') ? RANK_MATH_VERSION : '—'];
+  $versions = ['WordPress' => get_bloginfo('version'), 'PHP' => PHP_VERSION, 'ZP Suite' => ZP_SUITE_VERSION, 'Języki PL/EN' => defined('ZPL_VERSION') ? ZPL_VERSION : '—', 'Tłumacz EN' => defined('ZPTE_VERSION') ? ZPTE_VERSION : '—', 'Rank Math' => defined('RANK_MATH_VERSION') ? RANK_MATH_VERSION : '—'];
   echo '<section class="zpAdmin20__card"><h2>Wersje</h2><div class="zpAdmin20__tableWrap"><table class="zpS3-table"><tbody>';
   foreach ($versions as $k => $v) { echo '<tr><td>' . esc_html($k) . '</td><td class="num">' . esc_html((string) $v) . '</td></tr>'; }
   echo '</tbody></table></div></section></div>';

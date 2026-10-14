@@ -1619,30 +1619,17 @@ require_once ZP_SUITE_PATH . 'includes/admin-lighthouse-20261010.php';
 require_once ZP_SUITE_PATH . 'includes/admin-experience-20261009.php';
 require_once ZP_SUITE_PATH . 'includes/admin-workspace-chrome-20261010.php';
 }
-// Codex's own HTML cache stays loaded so it can purge if it was ever switched on (3.0.0 switches it off).
+// Page cache for Polish visitors without cookies (one copy per address and device class since 3.0.1).
 require_once ZP_SUITE_PATH . 'includes/cache-20261009.php';
 require_once ZP_SUITE_PATH . 'includes/admin-translations-20261009.php';
 require_once ZP_SUITE_PATH . 'includes/admin-single-translator-20261010.php';
 ZP_Single_Translator_20261010::register();
-// Versioned EN rewrites reuse the existing Translator UI and server-side API key.
-require_once ZP_SUITE_PATH . 'includes/en-rewrite-transport-20261011.php';
-require_once ZP_SUITE_PATH . 'includes/en-source-guard-20261011.php';
-require_once ZP_SUITE_PATH . 'includes/en-rewrite-20261011.php';
-ZP_EN_Rewrite_20261011::register();
-require_once ZP_SUITE_PATH . 'includes/en-rewrite-diagnostics-20261011.php';
-ZP_EN_Rewrite_Diagnostics_20261011::register();
-require_once ZP_SUITE_PATH . 'includes/en-rewrite-local-repair-20261011.php';
-ZP_EN_Local_Repair_20261011::register();
-require_once ZP_SUITE_PATH . 'includes/en-serving-recovery-20261011.php';
-ZP_EN_Serving_Recovery_20261011::register();
-// Incremental Luna work starts only after the sealed full137 bootstrap.
-require_once ZP_SUITE_PATH . 'includes/en-rewrite-nightly-20261011.php';
-ZP_EN_Rewrite_Nightly_20261011::register();
+// 3.1.0: Codex's EN rewrite layers (transport, source guard, rewrite, diagnostics, local repair, serving recovery,
+// nightly, approved overlay, Luna UI) are no longer loaded: Tłumacz EN 2.0.0 (zaprojektowani-translator/) is the only
+// translator and serves Codex's approved texts from its own copy. Their files and data stay for a rollback to 2.9.66.
 // Editor analysis only: native content and SEO fields are never rewritten.
 require_once ZP_SUITE_PATH . 'includes/rankmath-content-bridge-20261011.php';
 ZP_RankMath_Content_Bridge_20261011::register();
-require_once ZP_SUITE_PATH . 'includes/translator-approved-overlay-20261011.php';
-ZP_Translator_Approved_Overlay_20261011::register();
 // Rounded USD is a public presentation layer after verified full EN translation.
 require_once ZP_SUITE_PATH . 'includes/en-public-currency-20261011.php';
 ZP_EN_Public_Currency_20261011::register();
@@ -1699,6 +1686,3 @@ require_once ZP_SUITE_PATH . 'includes/contact-quick.php';
 /* Duży formularz: zdjęcie zespołu zamiast podglądu „Nowa wiadomość”, na każdej stronie inne niż reszta zdjęć zespołu na niej. */
 require_once ZP_SUITE_PATH . 'includes/contact-team-photo.php';
 
-// Sole Luna admin view replaces the old page callback after all legacy menu registrations.
-require_once ZP_SUITE_PATH . 'includes/admin-luna-translator-ui-20261011.php';
-ZP_Luna_Translator_UI_20261011::register();
