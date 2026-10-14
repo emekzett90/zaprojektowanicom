@@ -81,8 +81,9 @@ if (strpos((string)$zp_logo_dark, 'logo_transparent') !== false || strpos((strin
 // full-size files (2560 px and wider, about 60 KB each); width and height give the box its real proportions
 // before the file arrives. Every header logo uses the same two small files, so each loads once. The dark one on
 // computers keeps the browser's own priority (fetchpriority="auto", so no high one is added later): pages with a
-// dark header hide it at the top, and Chrome raises it by itself where it shows. Any other logo URL is used as
-// before.
+// dark header hide it at the top, and Chrome raises it by itself where it shows. 14.10.2026: the light one too,
+// because phones never show it (1 px) and its high priority made the hero image wait (PageSpeed, LCP). Any other
+// logo URL is used as before.
 $zp_mlogo_light = $zp_logo_light;
 $zp_mlogo_dark = $zp_logo_dark;
 $zp_mlogo_w = 150;
@@ -279,7 +280,7 @@ html body #zpNewNav.zpNewNav--knowledgeArchive:not(.is-mega-open){border-bottom:
   <div class="zpNewNav__shell">
     <div class="zpNewNav__inner">
       <a class="zpNewNav__brand" href="/" aria-label="Zaprojektowani.com">
-        <img class="zpNewNav__logo zpNewNav__logo--light" src="<?php echo esc_url($zp_mlogo_light); ?>" alt="Zaprojektowani.com" loading="eager" decoding="async" width="<?php echo (int) $zp_mlogo_w; ?>" height="<?php echo (int) $zp_mlogo_h; ?>" style="height:<?php echo max(18,min(96,$zp_logo_desktop_h)); ?>px!important;min-height:<?php echo max(18,min(96,$zp_logo_desktop_h)); ?>px!important;max-height:<?php echo max(18,min(96,$zp_logo_desktop_h)); ?>px!important;width:auto!important;">
+        <img class="zpNewNav__logo zpNewNav__logo--light" src="<?php echo esc_url($zp_mlogo_light); ?>" alt="Zaprojektowani.com" loading="eager" decoding="async" fetchpriority="auto" width="<?php echo (int) $zp_mlogo_w; ?>" height="<?php echo (int) $zp_mlogo_h; ?>" style="height:<?php echo max(18,min(96,$zp_logo_desktop_h)); ?>px!important;min-height:<?php echo max(18,min(96,$zp_logo_desktop_h)); ?>px!important;max-height:<?php echo max(18,min(96,$zp_logo_desktop_h)); ?>px!important;width:auto!important;">
         <img class="zpNewNav__logo zpNewNav__logo--dark" src="<?php echo esc_url($zp_mlogo_dark); ?>" alt="Zaprojektowani.com" loading="eager" decoding="async" fetchpriority="auto" width="<?php echo (int) $zp_mlogo_w; ?>" height="<?php echo (int) $zp_mlogo_h; ?>" style="height:<?php echo max(18,min(96,$zp_logo_desktop_h)); ?>px!important;min-height:<?php echo max(18,min(96,$zp_logo_desktop_h)); ?>px!important;max-height:<?php echo max(18,min(96,$zp_logo_desktop_h)); ?>px!important;width:auto!important;">
       </a>
       

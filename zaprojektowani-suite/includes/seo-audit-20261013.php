@@ -11,6 +11,7 @@
  *
  * Links: Seobility asks that internal links with parameters be nofollow. Those are the Studio Wyceny presets
  * (?zpbs_…), which only pre-fill the form; Studio Wyceny itself stays linked without parameters from every page.
+ * Where the Studio reads the preset after # (14.10.2026), the links carry it there and need no nofollow.
  * WhatsApp, Messenger and Google Maps or review links are contact tools, not recommendations, so they get
  * nofollow too. Profiles (Facebook, Instagram, LinkedIn) and client sites stay followed.
  *
@@ -317,6 +318,34 @@ function zp_suite_audit_link_target(string $href, string $host, string $text): ?
   return ($to !== '' ? home_url($final) : $final) . $fragment;
 }
 
+/**
+ * 14.10.2026: a link to Studio wyceny with a preset (?zpbs_service=web&zpbs_package=…) gets the same values after # instead
+ * (/studio-wyceny/#zpbs_service=web&zpbs_package=…), which the Studio reads since thread 23's change (zp_studio_ux_310 in
+ * includes/studio-wyceny.php): the address has no parameters any more and one URL is left for Google. zpbs_service goes
+ * first, because the Studio looks for "#zpbs_service=". Nothing reads zpbs_source and zpbs_step; they stay after # too.
+ */
+function zp_suite_audit_studio_hash(string $href, string $host): ?string {
+  if (strpos($href, 'zpbs_') === false || !function_exists('zp_studio_ux_310')) { return null; }
+  $url = wp_parse_url($href);
+  if (!is_array($url) || !isset($url['path'], $url['query'])) { return null; }
+  $to = strtolower((string) ($url['host'] ?? ''));
+  if ($to !== '' && $to !== $host && !in_array($to, ['zaprojektowani.com', 'www.zaprojektowani.com'], true)) { return null; }
+  if (!preg_match('~^/(?:studio-wyceny|en/quote-studio)/?$~', (string) $url['path'])) { return null; }
+  if (isset($url['fragment']) && $url['fragment'] !== 'zpbsUltimate') { return null; }
+  // On the Studio page itself a link after # would not reload the page, and the Studio reads the preset only on load.
+  $here = (string) wp_parse_url((string) ($_SERVER['REQUEST_URI'] ?? '/'), PHP_URL_PATH);
+  if (rtrim($here, '/') === rtrim((string) $url['path'], '/')) { return null; }
+  $first = []; $rest = [];
+  foreach (explode('&', (string) $url['query']) as $pair) {
+    if ($pair === '') { continue; }
+    if (!preg_match('~^zpbs_[a-z]+=~', $pair)) { return null; }
+    if (strpos($pair, 'zpbs_service=') === 0) { $first[] = $pair; } else { $rest[] = $pair; }
+  }
+  if (!$first && !$rest) { return null; }
+  $path = rtrim((string) $url['path'], '/') . '/';
+  return ($to !== '' ? home_url($path) : $path) . '#' . implode('&', array_merge($first, $rest));
+}
+
 /** One <a> tag with its final address (see above) and the rel tokens it needs merged into its rel attribute. */
 function zp_suite_audit_link_tag(string $tag, string $host, string $text = ''): string {
   if (stripos($tag, 'href') === false || !preg_match_all('~\s([a-zA-Z_:][-a-zA-Z0-9_:.]*)(?:\s*=\s*("[^"]*"|\'[^\']*\'|[^\s"\'=<>`]+))?~', substr($tag, 2), $found, PREG_SET_ORDER | PREG_OFFSET_CAPTURE)) {
@@ -331,7 +360,7 @@ function zp_suite_audit_link_tag(string $tag, string $host, string $text = ''): 
     $attrs[$name] = ['value' => html_entity_decode($value, ENT_QUOTES | ENT_HTML5, 'UTF-8'), 'at' => $a[0][1] + 2, 'len' => strlen($a[0][0])];
   }
   if (!isset($attrs['href'])) { return $tag; }
-  $final = zp_suite_audit_link_target(trim($attrs['href']['value']), $host, $text);
+  $final = zp_suite_audit_studio_hash(trim($attrs['href']['value']), $host) ?? zp_suite_audit_link_target(trim($attrs['href']['value']), $host, $text);
   if ($final !== null) {
     // A rewritten link is internal and has no query, so it never needs nofollow.
     $at = $attrs['href']['at'];
