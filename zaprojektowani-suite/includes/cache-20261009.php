@@ -101,7 +101,10 @@ final class ZP_HTML_Cache_20261009 {
         if ($ttl < 60) { throw new RuntimeException('Niestandardowy czas nonce jest zbyt krótki dla cache formularzy.'); }
         $keep = $keep && is_string($keep['generation'] ?? null) && preg_match('/^[a-f0-9]{32}$/D', $keep['generation']) ? $keep : null;
         // "since": when this generation began. Copies older than that are never read again, so the sweep deletes them.
-        return ['schema' => 1, 'enabled' => $enabled, 'ttl' => $ttl, 'host' => $home['host'], 'paths' => $paths, 'geo_polish_safe' => !$geo_enabled || $polish_stays, 'next_publication' => $next, 'generation' => $keep ? $keep['generation'] : bin2hex(random_bytes(16)), 'since' => $keep ? (int) ($keep['since'] ?? 0) : time()];
+        $policy = ['schema' => 1, 'enabled' => $enabled, 'ttl' => $ttl, 'host' => $home['host'], 'paths' => $paths, 'geo_polish_safe' => !$geo_enabled || $polish_stays, 'next_publication' => $next, 'generation' => $keep ? $keep['generation'] : bin2hex(random_bytes(16)), 'since' => $keep ? (int) ($keep['since'] ?? 0) : time()];
+        // 3.1.1 (thread 25): the drop-in places a visitor the way Geo does, with the same bundled Polish address ranges.
+        if (defined('ZPL_DIR')) { $policy['geo'] = ['on' => $geo_enabled, 'v4' => ZPL_DIR . 'data/geo/pl-v4.bin', 'v6' => ZPL_DIR . 'data/geo/pl-v6.bin']; }
+        return $policy;
     }
     private static function filesystem(): void {
         foreach ([WP_CONTENT_DIR, WP_CONTENT_DIR . '/cache', self::dir()] as $dir) {
