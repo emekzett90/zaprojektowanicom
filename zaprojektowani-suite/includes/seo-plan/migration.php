@@ -285,7 +285,7 @@ function zp_seo_plan_migrate(): void {
 
   // 8. Caches.
   zp_seo_plan_purge_caches();
-  $log[] = 'Wyczyszczono pamięć podręczną map witryny Rank Math' . (defined('LSCWP_V') ? ' i LiteSpeed.' : '.');
+  $log[] = 'Wyczyszczono pamięć podręczną map witryny Rank Math (bez czyszczenia cache całej strony).';
 
   update_option('zp_seo_plan_migrated', ZP_SEO_PLAN_VERSION, false);
   update_option('zp_seo_plan_migrated_at', time(), false);
@@ -309,13 +309,14 @@ function zp_seo_plan_home_options(array &$backup, array $e): array {
   return ['Zapisano tytuł i opis strony głównej w ustawieniach Rank Math.'];
 }
 
+/**
+ * Rank Math's sitemap storage and the plan's own object-cache key only. 14.10.2026: no purge of the whole page
+ * cache, CDN or LiteSpeed (the site's standing rule, so a new plan version cannot purge the live site at install);
+ * pages a migration changes refresh through WordPress's normal per-post invalidation.
+ */
 function zp_seo_plan_purge_caches(): void {
   if (class_exists('\RankMath\Sitemap\Cache')) { \RankMath\Sitemap\Cache::invalidate_storage(); }
   wp_cache_delete('zp_seo_plan_thank_you_slugs');
-  if (defined('LSCWP_V')) { do_action('litespeed_purge_all', 'Zaprojektowani SEO ' . ZP_SEO_PLAN_VERSION); }
-  foreach (['rocket_clean_domain', 'w3tc_flush_all', 'wp_cache_clear_cache'] as $fn) {
-    if (function_exists($fn)) { try { call_user_func($fn); } catch (\Throwable $e) { /* cache plugin error is not fatal */ } }
-  }
 }
 
 /** Puts back every value the migration changed (unless it was edited by hand since). */

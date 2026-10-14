@@ -85,15 +85,10 @@ final class ZPSSEO_Automatic {
         } finally { delete_option('zpsseo_job_lock'); }
         if (empty($q['done'])) { self::dispatch(); }
     }
+    // 14.10.2026: no purge of the whole page cache, CDN or LiteSpeed (the site's standing rule). The queue restarts
+    // every 7 days and on every change of its settings, so this used to purge the live site each time it finished.
     public static function purge() {
-        $log=[];
-        foreach (['rocket_clean_domain','w3tc_flush_all','wp_cache_clear_cache'] as $function) {
-            if (!function_exists($function)) { continue; }
-            try { call_user_func($function); $log[]=$function; }
-            catch (\Throwable $e) { $log[]=$function.': '.$e->getMessage(); }
-        }
-        if (defined('LSCWP_V')) { do_action('litespeed_purge_all','Zaprojektowani Ahrefs Repair'); $log[]='LiteSpeed'; }
-        update_option('zpsseo_cache_result', ['time'=>time(),'integrations'=>$log,'external'=>'Zewnętrzny CDN/serwer: brak potwierdzenia czyszczenia; zależy od integracji hostingu.'],false);
+        update_option('zpsseo_cache_result', ['time'=>time(),'integrations'=>[],'external'=>'Bez czyszczenia cache całej strony (zasada strony); zmienione strony odświeżają się przy zapisie.'],false);
     }
     public static function deactivate() { $s=ZPSSEO_Repair::state(); $s['enabled']=false; ZPSSEO_Repair::save($s); if (class_exists('ZPSSEO_Editorial')) { ZPSSEO_Editorial::restore_metadata(); } wp_clear_scheduled_hook(self::HOOK); delete_option(self::QUEUE); self::purge(); }
 }

@@ -196,7 +196,7 @@ final class ZPSSEO_Repair {
     }
     public static function process($j, &$s) {
         if ($j['type']==='editorial') { return ZPSSEO_Editorial::metadata_job($j['source']); }
-        if ($j['type']==='purge') { ZPSSEO_Automatic::purge(); return 'Wywołano obsługiwane integracje czyszczenia cache przed kontrolą HTTP.'; }
+        if ($j['type']==='purge') { ZPSSEO_Automatic::purge(); return 'Bez czyszczenia cache całej strony przed kontrolą HTTP (zasada strony).'; }
         if ($j['type']==='verify') { return ZPSSEO_Editorial::verify($j['path']); }
         $p = $j['source']; $custom = $s['custom'][$p] ?? ''; $target = $custom ?: ($j['target'] ?? '');
         if ($j['type'] === 'route') {
