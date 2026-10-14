@@ -46,6 +46,9 @@ define('ZP_SPEED_FILES_MIN_RUN', 8000);
 define('ZP_SPEED_FILES_BREAK_RE', '~<style|<link|createElement\(\s*["\'](?:style|link)["\']|document\.write|insertAdjacentHTML|styleSheets|\.sheet\b|insertRule|getComputedStyle~i');
 
 function zp_speed_files_enabled(): bool {
+  // 3.1.0: off unless switched on with the option zp_speed_files_on = '1'. On a cold slow-4G load the style files made
+  // the first paint of /sklepy-internetowe/ 1.4 s later than styles in the page (measured 14.10); 3.1.1 tunes the order.
+  if (get_option('zp_speed_files_on') !== '1') { return false; }
   if (get_option('zp_speed_files_off') === '1') { return false; }
   return !(isset($_GET['zp_files']) && (string) $_GET['zp_files'] === '0');
 }

@@ -19,7 +19,7 @@ Tłumacz EN 2.0.0 (nowy, jeden zamiast trzech)
 Audyt SEO z 13.10 (wygląd strony bez zmian)
 - Obrazki bez opisu (alt) dostały opis: 0 obrazków bez altu na 67 sprawdzonych adresach PL i EN.
 - 62 tytuły stron i wpisów zawierają frazę z Rank Math. Zmiana jest zapisana z kopią i ma przycisk „Cofnij te zmiany”.
-- Lżejszy HTML: style i dane idą do osobnych plików, więc strona główna waży około 516 kB zamiast 1493 kB (style w HTML: 104 kB zamiast 911 kB).
+- Lżejszy HTML (style i dane w osobnych plikach, strona główna około 0,5 MB zamiast 1,5 MB) jest w tej wersji, ale domyślnie wyłączony. Na wolnym internecie w telefonie, przy pierwszej wizycie, strona sklepów pokazywała się z plikami 1,4 s później niż bez nich, a to byłoby wolniej niż dziś. Strony ważą więc tyle co dotąd i wyglądają tak samo, a kolejność ładowania poprawimy w 3.1.1.
 - Pogrubienia zrobione innym znacznikiem z tym samym wyglądem; opinie, „5.0” i nagłówki zostają takie same dla odwiedzających.
 - Jeden H1 na stronie FAQ i Realizacji (PL i EN).
 - Sześć wpisów, które zabierały frazy stronom usług, ma nowe H1 i tytuły (lista A z audytu); wpis o salonach beauty i wpis dla firmy z Katowic mają nowe frazy; 9 wpisów ma zdanie z linkiem do usługi.
