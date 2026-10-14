@@ -120,7 +120,8 @@
   });
 
   // ---------------------------------------------------------- fetch ahead
-  // The other language is fetched when the pointer or finger reaches the switch, so it opens at once.
+  // The other language is fetched when the pointer reaches the switch (Chromium: also on touch, without a second
+  // download), so it opens at once.
   var sel = '[data-zpl-switch] a[data-zpl-lang="' + (lang === 'en' ? 'pl' : 'en') + '"]';
   var rules = false;
   try { rules = !!(window.HTMLScriptElement && HTMLScriptElement.supports && HTMLScriptElement.supports('speculationrules')); } catch (e) {}
@@ -130,8 +131,10 @@
     sr.textContent = JSON.stringify({ prefetch: [{ where: { selector_matches: sel }, eagerness: 'moderate' }] });
     doc.head.appendChild(sr);
   } else {
+    // Mouse and keyboard only: a tap is followed by the click at once, and a second download would only compete.
     var done = {};
     var warm = function (e) {
+      if (e.type === 'pointerover' && e.pointerType && e.pointerType !== 'mouse') return;
       var s = e.target && e.target.closest ? e.target.closest('[data-zpl-switch]') : null;
       var a = s ? s.querySelector('a[data-zpl-lang="' + (lang === 'en' ? 'pl' : 'en') + '"]') : null;
       var href = a ? a.href : '';
@@ -144,7 +147,6 @@
     };
     doc.addEventListener('pointerover', warm, { passive: true });
     doc.addEventListener('focusin', warm);
-    doc.addEventListener('touchstart', warm, { passive: true });
   }
 
   function boot() { try { watchTheme(); } catch (e) {} }
