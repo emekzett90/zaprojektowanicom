@@ -217,6 +217,13 @@ final class Store {
         return is_array($rows) ? $rows : [];
     }
 
+    /** Pages of a stage with no request left (not answered, or waiting for another page's answer). @return object[] */
+    public static function ready_in_stage(string $stage, int $limit = 20): array {
+        global $wpdb;
+        $rows = $wpdb->get_results($wpdb->prepare('SELECT p.* FROM ' . self::table('pages') . ' p WHERE p.stage = %s AND NOT EXISTS (SELECT 1 FROM ' . self::table('jobs') . " j WHERE j.page_id = p.id AND j.state IN ('new','sent','unknown','wait')) ORDER BY p.priority ASC, p.id ASC LIMIT %d", $stage, $limit));
+        return is_array($rows) ? $rows : [];
+    }
+
     /** @return object[] */
     public static function pages(array $where = [], int $limit = 0, int $offset = 0, string $order = 'id DESC'): array {
         global $wpdb;
@@ -471,11 +478,24 @@ final class Store {
 
     // ------------------------------------------------------------------- jobs
 
-    public static function job_add(int $page_id, string $kind, array $items, int $chars): int {
+    /** A request to OpenAI (state new), or a list of texts a page waits for (kind and state "wait"). */
+    public static function job_add(int $page_id, string $kind, array $items, int $chars, string $state = 'new'): int {
         global $wpdb;
         $now = self::now();
-        $wpdb->insert(self::table('jobs'), ['page_id' => $page_id, 'kind' => $kind, 'state' => 'new', 'items' => (string) wp_json_encode($items, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES), 'chars' => $chars, 'created_at' => $now, 'updated_at' => $now]);
+        $wpdb->insert(self::table('jobs'), ['page_id' => $page_id, 'kind' => $kind, 'state' => $state, 'items' => (string) wp_json_encode($items, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES), 'chars' => $chars, 'created_at' => $now, 'updated_at' => $now]);
         return (int) $wpdb->insert_id;
+    }
+
+    /** Polish texts in requests not answered yet, of any page: hash => page id. */
+    public static function pending_texts(): array {
+        global $wpdb;
+        $out = [];
+        $rows = $wpdb->get_results('SELECT page_id, items FROM ' . self::table('jobs') . " WHERE kind = 'units' AND state IN ('new','sent','unknown')", ARRAY_A);
+        foreach ((array) $rows as $r) {
+            $p = json_decode((string) $r['items'], true);
+            foreach (array_keys(is_array($p['items'] ?? null) ? $p['items'] : []) as $k) { $out[self::hash((string) $k)] = (int) $r['page_id']; }
+        }
+        return $out;
     }
 
     public static function job_update(int $id, array $data): void {

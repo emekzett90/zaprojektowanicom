@@ -327,7 +327,7 @@ final class Worker {
     /** Pages in the queue or waiting for answers, plus jobs not finished. */
     public static function left(): int {
         if (!Store::ready()) { return 0; }
-        return Store::queued_count() + Store::count_jobs(['new', 'sent', 'unknown']) + (Import::done() ? 0 : 1);
+        return Store::queued_count() + Store::count_jobs(['new', 'sent', 'unknown', 'wait']) + (Import::done() ? 0 : 1);
     }
 
     private static function complete(): void {
@@ -511,10 +511,9 @@ final class Worker {
     }
 
     private static function advance_pages(): int {
-        $n = 0;
+        $n = Sync::resolve_waits();
         foreach (['translating', 'route'] as $stage) {
-            foreach (Store::in_stage($stage, 20) as $row) {
-                if (Store::count_jobs(['new', 'sent', 'unknown'], (int) $row->id) > 0) { continue; }
+            foreach (Store::ready_in_stage($stage, 20) as $row) {
                 Sync::advance($row);
                 $n++;
             }
