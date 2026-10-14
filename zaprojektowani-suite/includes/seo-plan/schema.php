@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) { exit; }
 
 function zp_seo_plan_business_node(): array {
   $site = home_url('/');
-  $logo = 'https://zaprojektowani.com/wp-content/uploads/2026/05/zaproktowani_znak_wodny_czarny.png';
+  $logo = 'https://zaprojektowani.com/wp-content/uploads/2026/08/znak_wodny_czarny.png'; // 14.10.2026: the 2026/05 file never existed (Google got 404)
   // Filtered by ai.php (prices as offers, team, more profiles).
   return (array) apply_filters('zp_seo_plan_business_node', [
     '@type' => 'ProfessionalService',

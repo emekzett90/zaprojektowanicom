@@ -13,6 +13,10 @@
  * (?zpbs_…), which only pre-fill the form; Studio Wyceny itself stays linked without parameters from every page.
  * WhatsApp, Messenger and Google Maps or review links are contact tools, not recommendations, so they get
  * nofollow too. Profiles (Facebook, Instagram, LinkedIn) and client sites stay followed.
+ *
+ * Links to redirects (Search Console and Senuto audit of 13.10, list C: 99 internal links led to a 301): a Polish
+ * internal link to an address the keyword plan redirects, or to an old category that redirects to its topic's main
+ * category (blog-knowledge.php), points straight at the final address. The redirects themselves stay.
  */
 if (!defined('ABSPATH')) { exit; }
 
@@ -247,8 +251,8 @@ function zp_suite_audit_links_html(string $html): string {
   $host = strtolower((string) wp_parse_url(home_url('/'), PHP_URL_HOST));
   foreach ($parts as $i => $part) {
     if ($i % 2 === 1 || stripos($part, '<a') === false) { continue; }
-    $done = preg_replace_callback('~<a\s[^>]*>~i', static function (array $m) use ($host): string {
-      return zp_suite_audit_link_tag($m[0], $host);
+    $done = preg_replace_callback('~(<a\s[^>]*>)(.*?</a>)?~is', static function (array $m) use ($host): string {
+      return zp_suite_audit_link_tag($m[1], $host, (string) ($m[2] ?? '')) . ($m[2] ?? '');
     }, $part);
     if (is_string($done)) { $parts[$i] = $done; }
   }
@@ -270,8 +274,51 @@ function zp_suite_audit_link_nofollow(string $href, string $host): bool {
   return (bool) preg_match('~(?:^|\.)google\.(?:com|pl)$~', $to) && strpos($path, '/maps') === 0;
 }
 
-/** One <a> tag with the rel tokens it needs merged into its rel attribute. */
-function zp_suite_audit_link_tag(string $tag, string $host): string {
+/**
+ * The final address of an internal Polish link that leads to a redirect, or null. $text is the link's content: the
+ * old /logo-branding/ address goes to logo design when the link speaks of the logo alone, else to visual identity.
+ */
+function zp_suite_audit_link_target(string $href, string $host, string $text): ?string {
+  static $exact = null, $base = '', $categories = [];
+  if ($exact === null) {
+    $exact = (function_exists('zp_seo_plan_active') && zp_seo_plan_active()) ? (array) (zp_seo_plan_data('redirects')['exact'] ?? []) : [];
+    $base = rtrim((string) wp_parse_url(home_url('/'), PHP_URL_PATH), '/');
+  }
+  if ($href === '' || $href[0] === '#' || strpos($href, '?') !== false) { return null; }
+  $url = wp_parse_url($href);
+  if (!is_array($url) || !isset($url['path']) || isset($url['query'])) { return null; }
+  $to = strtolower((string) ($url['host'] ?? ''));
+  if ($to !== '' && $to !== $host && !in_array($to, ['zaprojektowani.com', 'www.zaprojektowani.com'], true)) { return null; }
+  // The same normalization as zp_seo_plan_path(), without its per-call home_url().
+  $path = (string) $url['path'];
+  if ($base !== '' && strpos($path, $base) === 0) { $path = substr($path, strlen($base)); }
+  $path = (string) preg_replace('~/{2,}~', '/', '/' . ltrim(rawurldecode($path), '/'));
+  if ($path !== '/' && substr($path, -1) !== '/' && !preg_match('~\.[a-z0-9]{2,5}$~i', $path)) { $path .= '/'; }
+  $final = null;
+  if ($exact && $path === '/logo-branding/' && preg_match('~\blogo~iu', $words = wp_strip_all_tags($text)) && !preg_match('~brand|identyfikac|wizualn~iu', $words)) {
+    $final = '/projektowanie-logo/';
+  } elseif (isset($exact[$path]) && function_exists('zp_seo_plan_redirect_final')) {
+    $next = zp_seo_plan_redirect_final($path);
+    if ($next !== $path && strpos($next, '/') === 0 && strpos($next, '/wp-') !== 0) { $final = $next; }
+  } elseif (preg_match('~^/category/([^/]+)/$~', $path, $c) && function_exists('zp_suite_wiedza_group_for_term')) {
+    if (!array_key_exists($c[1], $categories)) {
+      $categories[$c[1]] = null;
+      $term = get_term_by('slug', $c[1], 'category');
+      $group = $term ? zp_suite_wiedza_group_for_term($term) : null;
+      if ($group && !empty($group['primary_term_id']) && (int) $group['primary_term_id'] !== (int) $term->term_id) {
+        $link = get_category_link((int) $group['primary_term_id']);
+        if (is_string($link) && $link !== '') { $categories[$c[1]] = zp_seo_plan_path($link); }
+      }
+    }
+    $final = $categories[$c[1]];
+  }
+  if ($final === null || $final === $path) { return null; }
+  $fragment = isset($url['fragment']) ? '#' . $url['fragment'] : '';
+  return ($to !== '' ? home_url($final) : $final) . $fragment;
+}
+
+/** One <a> tag with its final address (see above) and the rel tokens it needs merged into its rel attribute. */
+function zp_suite_audit_link_tag(string $tag, string $host, string $text = ''): string {
   if (stripos($tag, 'href') === false || !preg_match_all('~\s([a-zA-Z_:][-a-zA-Z0-9_:.]*)(?:\s*=\s*("[^"]*"|\'[^\']*\'|[^\s"\'=<>`]+))?~', substr($tag, 2), $found, PREG_SET_ORDER | PREG_OFFSET_CAPTURE)) {
     return $tag;
   }
@@ -283,7 +330,14 @@ function zp_suite_audit_link_tag(string $tag, string $host): string {
     $value = ($raw !== '' && ($raw[0] === '"' || $raw[0] === "'")) ? substr($raw, 1, -1) : $raw;
     $attrs[$name] = ['value' => html_entity_decode($value, ENT_QUOTES | ENT_HTML5, 'UTF-8'), 'at' => $a[0][1] + 2, 'len' => strlen($a[0][0])];
   }
-  if (!isset($attrs['href']) || !zp_suite_audit_link_nofollow(trim($attrs['href']['value']), $host)) { return $tag; }
+  if (!isset($attrs['href'])) { return $tag; }
+  $final = zp_suite_audit_link_target(trim($attrs['href']['value']), $host, $text);
+  if ($final !== null) {
+    // A rewritten link is internal and has no query, so it never needs nofollow.
+    $at = $attrs['href']['at'];
+    return substr($tag, 0, $at) . ' href="' . esc_url($final) . '"' . substr($tag, $at + $attrs['href']['len']);
+  }
+  if (!zp_suite_audit_link_nofollow(trim($attrs['href']['value']), $host)) { return $tag; }
   $rel = isset($attrs['rel']) ? preg_split('~\s+~', strtolower(trim($attrs['rel']['value'])), -1, PREG_SPLIT_NO_EMPTY) : [];
   $want = ['nofollow'];
   if (strtolower(trim($attrs['target']['value'] ?? '')) === '_blank') { $want[] = 'noopener'; }

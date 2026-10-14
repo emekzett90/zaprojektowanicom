@@ -74,7 +74,10 @@ final class ZPSSEO_Repair {
         if (!self::allowed() || !self::state()['enabled'] || is_admin() || wp_doing_ajax() || is_feed() || is_trackback() || is_preview() || (defined('REST_REQUEST') && REST_REQUEST) || isset($_GET['elementor-preview']) || !in_array($_SERVER['REQUEST_METHOD'] ?? '', ['GET','HEAD'], true)) { return; }
         $uri = isset($_SERVER['REQUEST_URI']) ? wp_unslash($_SERVER['REQUEST_URI']) : '';
         $p = self::path($uri); $s = self::state();
-        if (is_404() && empty($_GET) && isset($s['maps'][$p]) && $s['maps'][$p]['kind'] === 'page') {
+        // 14.10.2026: an address the keyword plan redirects (seo-plan/data/redirects.php) goes to the plan's target in one
+        // step; this older map sent some of them to an address that redirected again.
+        $planned = function_exists('zp_seo_plan_active') && zp_seo_plan_active() && isset(zp_seo_plan_data('redirects')['exact'][$p]);
+        if (!$planned && is_404() && empty($_GET) && isset($s['maps'][$p]) && $s['maps'][$p]['kind'] === 'page') {
             $to = self::map_url($p, $s);
             if ($to !== $p && !headers_sent()) { wp_safe_redirect($to, 301, 'Zaprojektowani Ahrefs Repair'); exit; }
         }

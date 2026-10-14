@@ -32,7 +32,7 @@ function zp_seo_plan_redirect(): void {
 /** Target path for a request path, '@410' for a gone URL, or null. */
 function zp_seo_plan_redirect_target(string $path, bool $is404): ?string {
   $r = zp_seo_plan_data('redirects');
-  if (isset($r['exact'][$path])) { return $r['exact'][$path]; }
+  if (isset($r['exact'][$path])) { return zp_seo_plan_redirect_final((string) $r['exact'][$path]); }
   if (!$is404) { return null; }
 
   // Old URLs mapped by the earlier repair module whose target is now merged: one hop to the final post.
@@ -54,12 +54,21 @@ function zp_seo_plan_redirect_target(string $path, bool $is404): ?string {
     $guess = zp_seo_plan_slug_target($rest, $r);
     return $guess ?? '@410';
   }
+  // 14.10.2026: files and pages left in the folders of removed client previews (/bransoletka24/wp-content/…) are gone.
+  if (preg_match('~^/(?:bransoletka24|rutpoz_web|shothome_web|zaprojektowani2)/.~', $path)) { return '@410'; }
   // 2.9.13: a listing page past the last one (old pagination in Search Console, e.g. /en/strony-internetowe/page/4/)
   // → the listing's first page, when that one exists.
   if (preg_match('~^(/.+/)page/\d+/$~', $path, $m) && (get_category_by_path(trim($m[1], '/'), false) || zp_seo_plan_published_path($m[1]))) {
     return $m[1];
   }
   return zp_seo_plan_slug_target($path, $r);
+}
+
+/** 14.10.2026: a target that is itself redirected by an exact rule leads straight to the end (one hop, not two). */
+function zp_seo_plan_redirect_final(string $to): string {
+  $exact = (array) (zp_seo_plan_data('redirects')['exact'] ?? []);
+  for ($hops = 0; $hops < 5 && isset($exact[$to]) && $exact[$to] !== $to; $hops++) { $to = (string) $exact[$to]; }
+  return $to;
 }
 
 /** A 404 URL whose last segment is a merged or existing post slug (old category prefix, "-2" copy). */
