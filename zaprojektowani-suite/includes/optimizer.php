@@ -656,7 +656,9 @@ add_action('wp_footer', function () {
         s.text=node.textContent||'';
         w.setTimeout(done,0);
       }
-      node.parentNode.insertBefore(s,node.nextSibling);
+      /* 3.1.1: the script goes into <head>. Put next to its placeholder in <body>, each one made the browser
+         work out the styles of the whole page again (30-60 ms in our tests), six times in the first seconds. */
+      (d.head||d.documentElement).appendChild(s);
     }catch(e){done();}
   }
   function inject(){
@@ -1502,7 +1504,8 @@ add_action('wp_footer', function () {
         s.async=false;
         s.defer=true;
         if(node.textContent&&node.textContent.trim()) s.text=node.textContent;
-        node.parentNode.insertBefore(s,node.nextSibling);
+        /* 3.1.1: into <head>, so that each script does not restyle the whole page (see the home loader). */
+        (d.head||d.documentElement).appendChild(s);
       }catch(e){}
       if(i<nodes.length){
         if('requestIdleCallback' in w){w.requestIdleCallback(function(){timer=setTimeout(next,80);},{timeout:700});}

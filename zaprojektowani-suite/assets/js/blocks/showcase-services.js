@@ -71,10 +71,14 @@
           const dist=Math.abs((rect.top+rect.height*.5)-center);
           if(dist<best){best=dist;active=card}
         });
+        /* 3.1.1: a class changes only when its state does; toggling it to the same state on every scroll
+           frame still told the page's other scripts that the cards changed. */
         cards.forEach(card=>{
           const visible=card.classList.contains('isVisible');
-          card.classList.toggle('isActive',visible && card===active);
-          card.classList.toggle('isDim',visible && active && card!==active);
+          const isActive=!!(visible && card===active);
+          const isDim=!!(visible && active && card!==active);
+          if(card.classList.contains('isActive')!==isActive) card.classList.toggle('isActive',isActive);
+          if(card.classList.contains('isDim')!==isDim) card.classList.toggle('isDim',isDim);
         });
       };
       const requestActive=()=>{if(activeTicking)return;activeTicking=true;requestAnimationFrame(updateActiveCard)};
@@ -101,8 +105,11 @@
 
         if(!sectionHot) return;
         const vh=window.innerHeight||800;
+        /* 3.1.1: all cards are measured first and moved after. Moving one card before measuring the next
+           made the browser work out the styles again for every card, on every scroll frame. */
+        const rects=cards.map(card=>card.getBoundingClientRect());
         cards.forEach((card, cardIndex)=>{
-          const rect=card.getBoundingClientRect();
+          const rect=rects[cardIndex];
           if(rect.bottom<0 || rect.top>vh) return;
           const progress=(rect.top+rect.height*.5-vh*.5)/vh;
           const move=Math.max(-14,Math.min(14,progress*-18));

@@ -83,11 +83,17 @@ add_action('wp_footer', function(){
     var form=document.querySelector('[data-zp-mini-chat-form]');
     var msg=document.querySelector('[data-zp-mini-chat-msg]');
 
+    /* 3.1.1: once per frame, and the class changes only when the button's state does: reading the
+       scroll position straight after other scripts changed the page made the browser work out its
+       styles again on every scroll step. */
+    var topRaf=0;
     function refreshTop(){
+      topRaf=0;
       if(!topBtn) return;
-      topBtn.classList.toggle('is-visible', (window.scrollY||0) > 580);
+      var show=(window.scrollY||0) > 580;
+      if(topBtn.classList.contains('is-visible')!==show) topBtn.classList.toggle('is-visible', show);
     }
-    window.addEventListener('scroll', refreshTop, {passive:true}); refreshTop();
+    window.addEventListener('scroll', function(){ if(!topRaf) topRaf=requestAnimationFrame(refreshTop); }, {passive:true}); refreshTop();
     if(topBtn){ topBtn.addEventListener('click', function(){ window.scrollTo({top:0, behavior:'smooth'}); }); }
 
     function open(){ if(overlay){ overlay.classList.add('is-open'); overlay.setAttribute('aria-hidden','false'); document.documentElement.classList.add('zp-mini-chat-open'); setTimeout(function(){ var i=overlay.querySelector('input[name="phone"]'); if(i) i.focus(); },120); } }
