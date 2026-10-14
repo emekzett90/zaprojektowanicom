@@ -251,6 +251,12 @@ if (!function_exists('zp_showcase_portfolio_shortcode')) {
         </footer>
 
       </div>
+
+      <div class="zpShowcaseWhite__scrollHint" data-zp-scroll-hint aria-hidden="true">
+        <span class="zpShowcaseWhite__scrollHintMouse"><i></i></span>
+        <span>Przewiń w dół, aby przejrzeć projekty</span>
+        <svg class="zpShowcaseWhite__scrollHintArrow" viewBox="0 0 24 24"><path d="M12 5v14"/><path d="m19 12-7 7-7-7"/></svg>
+      </div>
     </div>
   </div>
 </section>
@@ -379,6 +385,7 @@ if (!function_exists('zp_showcase_portfolio_shortcode')) {
   const barEls = root.querySelectorAll('[data-zp-showcase-bar]');
   const prevBtn = root.querySelector('[data-zp-showcase-prev]');
   const nextBtn = root.querySelector('[data-zp-showcase-next]');
+  const scrollHint = root.querySelector('[data-zp-scroll-hint]');
 
   const pop = document.getElementById('zpShowcasePop');
   const popBody = pop ? pop.querySelector('[data-zp-pop-body]') : null;
@@ -421,6 +428,14 @@ if (!function_exists('zp_showcase_portfolio_shortcode')) {
   let lastRenderedX = null;
   let portfolioInView = true;
   let lastStateX = null;
+  let hintDone = false;
+  let sideAxis = '';
+  let sideAxisUntil = 0;
+  let sideTargetY = null;
+  let sideLastY = 0;
+  let sideLastT = 0;
+  let sideRaf = 0;
+  let sideWheelOn = false;
 
   if (!rail || !spacer || !stage) return;
 
@@ -1031,6 +1046,20 @@ if (!function_exists('zp_showcase_portfolio_shortcode')) {
     root.classList.toggle('is-flowing', p > .075 && p < .965);
     root.classList.toggle('is-ending', p >= .94);
 
+    /* 3.1.1: the "scroll down" hint shows while the pinned rail waits at its start and goes
+       for good once the visitor scrolls into the projects (with the header, at is-flowing). */
+    if (scrollHint && !hintDone) {
+      if (p > .075) {
+        hintDone = true;
+        scrollHint.classList.remove('is-on');
+      } else {
+        scrollHint.classList.toggle('is-on', rect.top < viewportH * .15 && rect.bottom > viewportH);
+      }
+    }
+    /* 3.1.1: the sideways-scroll listener is attached only while the section is pinned, so wheel
+       events elsewhere on the page, and on the way in and out, never wait for this script. */
+    setSideWheel(viewportW > 1500 && rect.top <= 1 && rect.bottom >= viewportH - 1);
+
     writeRailTransform(x, false);
     currentX = x;
     targetX = x;
@@ -1051,6 +1080,59 @@ if (!function_exists('zp_showcase_portfolio_shortcode')) {
     if (!portfolioInView && measured) return;
     ticking = true;
     window.requestAnimationFrame(update);
+  }
+
+  /* 3.1.1: on desktop the projects also follow a sideways scroll (a trackpad swipe, a tilting
+     wheel, Shift + wheel). The rail keeps following the page's vertical scroll, so a sideways
+     step becomes the same step of page scroll inside the pinned section and the counter,
+     progress bar and active card stay in step. The page eases towards the target, because a
+     mouse wheel moves in big steps; a vertical scroll meanwhile stops the easing. Each step is
+     an instant scroll: html has scroll-behavior: smooth, which would turn every step into a
+     smooth scroll of its own. */
+  function sideScrollTo(y){
+    try { window.scrollTo({ top: y, behavior: 'instant' }); } catch (err) { window.scrollTo(0, y); }
+  }
+  function sideFrame(now){
+    sideRaf = 0;
+    if (sideTargetY === null) return;
+    const y = window.scrollY || window.pageYOffset || 0;
+    if (Math.abs(y - sideLastY) > 2) { sideTargetY = null; return; }
+    const left = sideTargetY - sideLastY;
+    if (Math.abs(left) < 1) { sideScrollTo(sideTargetY); sideTargetY = null; return; }
+    const dt = sideLastT ? Math.min(50, now - sideLastT) : 16.7;
+    sideLastT = now;
+    sideLastY += left * (1 - Math.pow(.7, dt / 16.7));
+    sideScrollTo(sideLastY);
+    sideRaf = window.requestAnimationFrame(sideFrame);
+  }
+
+  function setSideWheel(on){
+    if (on === sideWheelOn) return;
+    sideWheelOn = on;
+    if (on) root.addEventListener('wheel', onSideWheel, { passive: false });
+    else root.removeEventListener('wheel', onSideWheel);
+  }
+  function onSideWheel(e){
+    if (e.ctrlKey || e.metaKey || !measured || scrollDistance <= 0) return;
+    let dx = e.deltaX;
+    let dy = e.deltaY;
+    if (e.shiftKey && !dx) { dx = dy; dy = 0; }
+    /* One axis per gesture: a sideways swipe keeps scrolling sideways when it drifts. */
+    if (e.timeStamp > sideAxisUntil) sideAxis = Math.abs(dx) > Math.abs(dy) ? 'x' : 'y';
+    sideAxisUntil = e.timeStamp + 160;
+    if (sideAxis !== 'x') { sideTargetY = null; return; }
+    if (!dx || document.documentElement.classList.contains('zpShowcaseNoScroll')) return;
+    if ((window.innerWidth || document.documentElement.clientWidth || 0) <= 1500) return;
+    const viewportH = getStableViewportHeight();
+    const rect = spacer.getBoundingClientRect();
+    if (rect.top > 1 || rect.bottom < viewportH - 1 || !e.cancelable) return;
+    e.preventDefault();
+    const y = window.scrollY || window.pageYOffset || 0;
+    const top = y + rect.top;
+    const step = dx * (e.deltaMode === 1 ? 40 : e.deltaMode === 2 ? viewportH : 1);
+    if (sideTargetY === null) { sideLastY = y; sideLastT = 0; }
+    sideTargetY = clamp((sideTargetY === null ? y : sideTargetY) + step, top, top + startDelay + scrollDistance);
+    if (!sideRaf) sideRaf = window.requestAnimationFrame(sideFrame);
   }
 
   function scrollToDesktopProgress(progress, behavior = 'smooth'){
@@ -1275,6 +1357,7 @@ if (!function_exists('zp_showcase_portfolio_shortcode')) {
         entries.forEach((entry) => {
           portfolioInView = !!entry.isIntersecting;
           if (portfolioInView) requestUpdate();
+          if (!portfolioInView) setSideWheel(false);
         });
       }, { rootMargin: '48% 0px 48% 0px', threshold: 0 });
       portfolioIo.observe(spacer);
@@ -1596,9 +1679,37 @@ html body .zpShowcasePop__storyIcon svg.lucide{display:block!important;width:17p
 html body .zpShowcasePop__resultsTitle svg.lucide{display:block!important;width:15px!important;height:15px!important;flex:0 0 15px!important;color:#102a4f!important;stroke:currentColor!important;overflow:visible!important}
 </style>
 
+<!-- ZP 3.1.1 — desktop portfolio (above 1500 px, where scrolling down moves the projects sideways): animated "scroll down" hint -->
+<style id="zp-home-portfolio-scroll-hint-311">
+.zpShowcaseWhite__scrollHint{display:none}
+@media (min-width:1501px) and (prefers-reduced-motion:no-preference){
+html body #zpShowcaseWhite .zpShowcaseWhite__scrollHint{position:absolute;left:50%;bottom:clamp(18px,3.2vh,36px);z-index:8;display:inline-flex;align-items:center;gap:12px;padding:7px 20px 7px 7px;border:1px solid rgba(255,255,255,.16);border-radius:999px;background:#071426;color:#fff;font-size:14px;font-weight:650;line-height:1;letter-spacing:.01em;white-space:nowrap;pointer-events:none;opacity:0;visibility:hidden;transform:translate3d(-50%,14px,0);transition:opacity .45s ease,transform .6s cubic-bezier(.16,1,.3,1),visibility 0s linear .6s}
+html body #zpShowcaseWhite .zpShowcaseWhite__scrollHint.is-on{opacity:1;visibility:visible;transform:translate3d(-50%,0,0);transition-delay:0s}
+html body #zpShowcaseWhite .zpShowcaseWhite__scrollHintMouse{position:relative;flex:0 0 34px;width:34px;height:34px;border-radius:999px;background:rgba(255,255,255,.1)}
+html body #zpShowcaseWhite .zpShowcaseWhite__scrollHintMouse::before{content:"";position:absolute;left:10px;top:7px;width:14px;height:20px;border:1.6px solid currentColor;border-radius:8px}
+html body #zpShowcaseWhite .zpShowcaseWhite__scrollHintMouse i{position:absolute;left:16px;top:11px;width:2px;height:5px;border-radius:2px;background:currentColor;animation:zpScrollHintWheel 1.6s cubic-bezier(.45,0,.2,1) infinite paused}
+html body #zpShowcaseWhite .zpShowcaseWhite__scrollHintArrow{flex:0 0 16px;width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;animation:zpScrollHintArrow 1.6s ease-in-out infinite paused}
+html body #zpShowcaseWhite .zpShowcaseWhite__scrollHint.is-on i,html body #zpShowcaseWhite .zpShowcaseWhite__scrollHint.is-on .zpShowcaseWhite__scrollHintArrow{animation-play-state:running}
+}
+@keyframes zpScrollHintWheel{0%{transform:translate3d(0,0,0);opacity:0}25%,65%{opacity:1}100%{transform:translate3d(0,6px,0);opacity:0}}
+@keyframes zpScrollHintArrow{0%,100%{transform:translate3d(0,-2px,0)}50%{transform:translate3d(0,3px,0)}}
+</style>
+
     <?php
     return ob_get_clean();
   }
 
   add_shortcode('zp_showcase_portfolio', 'zp_showcase_portfolio_shortcode');
+}
+
+/* 3.1.1: the portfolio's scroll hint in English, on /en/ pages and after the language switch. */
+if (!function_exists('zp_showcase_portfolio_hint_dictionary')) {
+  function zp_showcase_portfolio_hint_dictionary($map, $lang = 'en') {
+    $map = is_array($map) ? $map : [];
+    $pl = 'Przewiń w dół, aby przejrzeć projekty';
+    $en = 'Scroll down to browse the projects';
+    return $map + ($lang === 'pl' ? [$en => $pl] : [$pl => $en]);
+  }
+
+  add_filter('zpl_dictionary', 'zp_showcase_portfolio_hint_dictionary', 10, 2);
 }
