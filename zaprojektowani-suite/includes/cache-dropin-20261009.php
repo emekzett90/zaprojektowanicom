@@ -2,11 +2,20 @@
 // ZP Suite managed HTML cache 20261009 v1. Direct requests execute no cached content.
 // ZP Suite 3.0.1: one copy per device class (phone or computer), decided exactly like wp_is_mobile(),
 // because the theme strips hero videos and lazy-loads some images for phones on the server.
+// 14.10.2026: search robots and speed tests get the copy too (they see the same Polish page), and so do visitors
+// whose only cookies are the consent and statistics ones; copies are still made only from visits without cookies.
 if (!defined('ABSPATH') || !defined('WP_CONTENT_DIR')) { exit; }
 
 final class ZP_Cache_Early_20261009 {
     public const PREFIX = "<?php exit; ?>\n";
     public const MAX_HTML = 4194304;
+    /**
+     * Cookies that never change the page: the consent choice (Cookiebot) and statistics and ads identifiers set by
+     * scripts (Google, Meta, Microsoft, Hotjar, TikTok, Cloudflare), plus the country noted for the language switch,
+     * which a Polish browser and a robot never use. Any other cookie (logged in, comment, password, language choice,
+     * shop) skips the cache.
+     */
+    public const HARMLESS_COOKIES = '~^(?:CookieConsent(?:BulkSetting-[A-Za-z0-9-]+|BulkTicket)?|_ga(?:_[A-Za-z0-9]+)?|_gid|_gat(?:_[A-Za-z0-9_-]+)?|_gcl_[a-z]+|_gac_[A-Za-z0-9_.-]+|_dc_gtm_[A-Za-z0-9_-]+|FP(?:ID|LC|AU|GCL[A-Z]+)|_fbp|_fbc|_clck|_clsk|_uet[a-z]+|_hj[A-Za-z0-9_]+|_ttp|_tt_enable_cookie|__cf_bm|__cfruid|__cflb|_cfuvid|cf_clearance|zpl_geo_country)$~D';
 
     public static function policy(string $dir): ?array {
         $file = $dir . '/policy.php';
@@ -20,7 +29,7 @@ final class ZP_Cache_Early_20261009 {
 
     public static function eligible(array $p, array $server, array $cookies, ?int $now = null): string {
         if (($server['REQUEST_METHOD'] ?? '') !== 'GET') { return 'method'; }
-        if ($cookies || !empty($server['HTTP_COOKIE'])) { return 'cookies'; }
+        if (($cookies || !empty($server['HTTP_COOKIE'])) && !self::harmless_cookies($server, $cookies)) { return 'cookies'; }
         if (!empty($server['HTTP_AUTHORIZATION']) || !empty($server['REDIRECT_HTTP_AUTHORIZATION']) || !empty($server['PHP_AUTH_USER'])) { return 'authorization'; }
         if (strtolower((string) ($server['HTTPS'] ?? '')) !== 'on' && ($server['HTTPS'] ?? '') !== '1') { return 'https'; }
         if (($server['HTTP_HOST'] ?? '') !== $p['host']) { return 'host'; }
@@ -30,14 +39,44 @@ final class ZP_Cache_Early_20261009 {
         if (empty($p['geo_polish_safe'])) { return 'geo-policy'; }
         $ref = parse_url((string) ($server['HTTP_REFERER'] ?? ''));
         if (is_array($ref) && ($ref['host'] ?? '') === $p['host'] && preg_match('~^/en(?:/|$)~', $ref['path'] ?? '')) { return 'language-switch'; }
-        // Other languages must run Suite's PHP country/preference redirect on every request.
-        $polish = false;
-        foreach (explode(',', (string) ($server['HTTP_ACCEPT_LANGUAGE'] ?? '')) as $part) {
+        // Other languages must run Suite's PHP country/preference redirect on every request. Robots are never
+        // redirected (Geo::decide) and get the Polish page whatever language they send.
+        $polish = self::is_bot((string) ($server['HTTP_USER_AGENT'] ?? ''));
+        foreach ($polish ? [] : explode(',', (string) ($server['HTTP_ACCEPT_LANGUAGE'] ?? '')) as $part) {
             if (preg_match('/^\s*pl(?:-[a-z0-9]+)?\s*(?:;\s*q=([01](?:\.\d+)?))?\s*$/iD', $part, $m) && (!isset($m[1]) || (float) $m[1] > 0)) { $polish = true; }
         }
         if (!$polish) { return 'language'; }
         if ($p['next_publication'] && $p['next_publication'] <= ($now ?? time())) { return 'publication-due'; }
         return '';
+    }
+
+    /** True when every cookie of the request is one of HARMLESS_COOKIES (names from the raw header and from $_COOKIE). */
+    public static function harmless_cookies(array $server, array $cookies): bool {
+        $names = array_map('strval', array_keys($cookies));
+        foreach (explode(';', (string) ($server['HTTP_COOKIE'] ?? '')) as $pair) {
+            $name = trim(explode('=', $pair, 2)[0]);
+            if ($name !== '') { $names[] = $name; }
+        }
+        foreach ($names as $name) { if (!preg_match(self::HARMLESS_COOKIES, $name)) { return false; } }
+        return true;
+    }
+
+    /** The same test as Geo::is_bot_ua() in zaprojektowani-languages/includes/Geo.php: keep the two lists equal. */
+    public static function is_bot(string $ua): bool {
+        $ua = strtolower(trim($ua));
+        if ($ua === '') { return true; }
+        return (bool) preg_match('~(?:bot|crawl|spider|slurp|bingpreview|microsoftpreview|skypeuripreview|facebookexternalhit|whatsapp|embedly|iframely|lighthouse|pagespeed|headless|google-|googleother|mediapartners-google|feedfetcher|apis-google|chatgpt-user|claude-user|claude-web|anthropic|perplexity|mistralai-user|meta-external|cohere-ai|gptbot|ccbot|gtmetrix|pingdom|uptime|ptst|validator|curl/|wget/|python-|go-http-client|okhttp|axios/|node-fetch|java/|libwww|httpclient|scrapy)~i', $ua);
+    }
+
+    /**
+     * WordPress does not run for a copy, so Suite's AI visibility panel would miss these robot visits: one line each
+     * (time, address, user agent) waits here until the panel's next count (seo-plan/ai.php), at most 256 KB.
+     */
+    public static function note_bot(string $dir, array $server): void {
+        $file = $dir . '/bots.log';
+        if (is_link($file) || (is_file($file) && filesize($file) > 262144)) { return; }
+        $line = json_encode([time(), substr((string) ($server['REQUEST_URI'] ?? '/'), 0, 200), substr((string) ($server['HTTP_USER_AGENT'] ?? ''), 0, 300)], JSON_UNESCAPED_SLASHES | JSON_INVALID_UTF8_SUBSTITUTE);
+        if (is_string($line)) { @file_put_contents($file, $line . "\n", FILE_APPEND | LOCK_EX); }
     }
 
     /** 'm' or 'd': the same test as WordPress's wp_is_mobile() (Client Hint first, then the user agent). */
@@ -65,6 +104,8 @@ final class ZP_Cache_Early_20261009 {
     }
 
     public static function store(string $dir, array $p, array $server, string $html, int $status, array $headers, ?int $now = null): bool {
+        // Only a visit without cookies makes a copy: whatever a consent cookie might change on the server stays out of it.
+        if (!empty($server['HTTP_COOKIE'])) { return false; }
         if ($status !== 200 || strlen($html) > self::MAX_HTML || stripos($html, '<!doctype html') === false || stripos($html, '</html>') === false || stripos($html, '<html') === false) { return false; }
         $content_type = false;
         foreach ($headers as $header) {
@@ -99,6 +140,7 @@ final class ZP_Cache_Early_20261009 {
         $hit = self::hit($dir, $p, $_SERVER);
         if ($hit) {
             header('Content-Type: text/html; charset=UTF-8'); header('Cache-Control: private, no-cache, max-age=0'); header('Vary: Accept-Encoding, Cookie, Accept-Language, User-Agent, Sec-CH-UA-Mobile'); header('X-ZP-Cache: HIT'); header('X-ZP-Cache-Device: ' . self::device($_SERVER)); header('X-ZP-Cache-Age: ' . $hit['age']);
+            if (self::is_bot((string) ($_SERVER['HTTP_USER_AGENT'] ?? ''))) { self::note_bot($dir, $_SERVER); }
             echo $hit['html']; exit;
         }
         header('X-ZP-Cache: MISS'); header('X-ZP-Cache-Device: ' . self::device($_SERVER)); $server = $_SERVER; $flushed = false;
