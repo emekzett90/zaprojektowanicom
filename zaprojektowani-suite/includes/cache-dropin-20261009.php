@@ -4,11 +4,14 @@
 // because the theme strips hero videos and lazy-loads some images for phones on the server.
 // 14.10.2026: search robots and speed tests get the copy too (they see the same Polish page), and so do visitors
 // whose only cookies are the consent and statistics ones; copies are still made only from visits without cookies.
+// 3.1.1: a MISS sends the same no-cache headers as a HIT, and a path's version (EN pages) is part of the key.
 if (!defined('ABSPATH') || !defined('WP_CONTENT_DIR')) { exit; }
 
 final class ZP_Cache_Early_20261009 {
     public const PREFIX = "<?php exit; ?>\n";
     public const MAX_HTML = 4194304;
+    /** Sent with every page this file answers or lets WordPress build: browsers and the server's own cache ask again each time. */
+    public const CACHE_CONTROL = 'Cache-Control: private, no-cache, max-age=0';
     /**
      * Cookies that never change the page: the consent choice (Cookiebot) and statistics and ads identifiers set by
      * scripts (Google, Meta, Microsoft, Hotjar, TikTok, Cloudflare), plus the country noted for the language switch,
@@ -88,8 +91,14 @@ final class ZP_Cache_Early_20261009 {
         return 'd';
     }
 
+    /** A Polish page's entry is true and its key is the same as in 3.1.0; an entry with a version (EN pages) adds it to the key. */
     public static function key(array $p, array $server): string {
-        return hash('sha256', $p['generation'] . "\nhttps\n" . $server['HTTP_HOST'] . "\n" . $server['REQUEST_URI'] . "\n" . self::device($server));
+        $entry = $p['paths'][$server['REQUEST_URI']] ?? true;
+        return hash('sha256', $p['generation'] . "\nhttps\n" . $server['HTTP_HOST'] . "\n" . $server['REQUEST_URI'] . "\n" . self::device($server) . (is_string($entry) ? "\n" . $entry : ''));
+    }
+
+    public static function headers(): void {
+        header(self::CACHE_CONTROL); header('Vary: Accept-Encoding, Cookie, Accept-Language, User-Agent, Sec-CH-UA-Mobile'); header('X-LiteSpeed-Cache-Control: no-cache');
     }
 
     public static function hit(string $dir, array $p, array $server, ?int $now = null): ?array {
@@ -110,7 +119,8 @@ final class ZP_Cache_Early_20261009 {
         $content_type = false;
         foreach ($headers as $header) {
             if (stripos($header, 'Content-Type: text/html') === 0) { $content_type = true; }
-            if (preg_match('/^(?:Set-Cookie|Location|WWW-Authenticate):/i', $header) || preg_match('/^Cache-Control:.*(?:no-store|private|no-cache)/i', $header) || preg_match('/^X-Robots-Tag:.*noindex/i', $header)) { return false; }
+            // The drop-in's own Cache-Control line (sent before WordPress ran) is fine; any other no-store/private/no-cache is not.
+            if (preg_match('/^(?:Set-Cookie|Location|WWW-Authenticate):/i', $header) || ($header !== self::CACHE_CONTROL && preg_match('/^Cache-Control:.*(?:no-store|private|no-cache)/i', $header)) || preg_match('/^X-Robots-Tag:.*noindex/i', $header)) { return false; }
         }
         if (!$content_type || preg_match('~<meta\b(?=[^>]*name=["\']robots["\'])(?=[^>]*content=["\'][^"\']*noindex)[^>]*>~i', $html)) { return false; }
         $canonicals = [];
@@ -119,7 +129,8 @@ final class ZP_Cache_Early_20261009 {
             if (preg_match('~\srel\s*=\s*(["\'])canonical\1~i', $link) && preg_match('~\shref\s*=\s*(["\'])(.*?)\1~is', $link, $href)) { $canonicals[] = html_entity_decode($href[2], ENT_QUOTES | ENT_HTML5, 'UTF-8'); }
         }
         if ($canonicals !== ['https://' . $server['HTTP_HOST'] . $server['REQUEST_URI']]) { return false; }
-        $fresh = self::policy($dir); if (!$fresh || $fresh['generation'] !== $p['generation'] || self::eligible($fresh, $server, [], $now) !== '') { return false; }
+        $uri = $server['REQUEST_URI'];
+        $fresh = self::policy($dir); if (!$fresh || $fresh['generation'] !== $p['generation'] || ($fresh['paths'][$uri] ?? null) !== ($p['paths'][$uri] ?? null) || self::eligible($fresh, $server, [], $now) !== '') { return false; }
         $now = $now ?? time(); $expiry = $now + $p['ttl']; if ($p['next_publication']) { $expiry = min($expiry, $p['next_publication']); }
         if ($expiry <= $now) { return false; }
         $key = self::key($p, $server); $meta = ['kind' => 'zp-public-html-v1', 'key' => $key, 'generation' => $p['generation'], 'created' => $now, 'expires' => $expiry, 'length' => strlen($html), 'html_sha256' => hash('sha256', $html)];
@@ -139,11 +150,11 @@ final class ZP_Cache_Early_20261009 {
         if ($reason !== '') { if (!headers_sent()) { header('X-ZP-Cache: BYPASS; ' . $reason); } return; }
         $hit = self::hit($dir, $p, $_SERVER);
         if ($hit) {
-            header('Content-Type: text/html; charset=UTF-8'); header('Cache-Control: private, no-cache, max-age=0'); header('Vary: Accept-Encoding, Cookie, Accept-Language, User-Agent, Sec-CH-UA-Mobile'); header('X-ZP-Cache: HIT'); header('X-ZP-Cache-Device: ' . self::device($_SERVER)); header('X-ZP-Cache-Age: ' . $hit['age']);
+            header('Content-Type: text/html; charset=UTF-8'); self::headers(); header('X-ZP-Cache: HIT'); header('X-ZP-Cache-Device: ' . self::device($_SERVER)); header('X-ZP-Cache-Age: ' . $hit['age']);
             if (self::is_bot((string) ($_SERVER['HTTP_USER_AGENT'] ?? ''))) { self::note_bot($dir, $_SERVER); }
             echo $hit['html']; exit;
         }
-        header('X-ZP-Cache: MISS'); header('X-ZP-Cache-Device: ' . self::device($_SERVER)); $server = $_SERVER; $flushed = false;
+        self::headers(); header('X-ZP-Cache: MISS'); header('X-ZP-Cache-Device: ' . self::device($_SERVER)); $server = $_SERVER; $flushed = false;
         // Start before plugins: this outermost buffer sees Suite's final transformed HTML.
         ob_start(static function ($html, $phase) use ($dir, $p, $server, &$flushed) {
             if (($phase & PHP_OUTPUT_HANDLER_FINAL) === 0) { $flushed = true; return $html; }

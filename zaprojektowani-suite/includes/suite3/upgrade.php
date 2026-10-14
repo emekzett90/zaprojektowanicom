@@ -5,7 +5,7 @@
  */
 if (!defined('ABSPATH')) { exit; }
 
-/** Results of the cache step (3.0.1, again in 3.1.0) that are settled; any other result is retried from wp-admin or cron. */
+/** Results of the cache step (3.0.1, again in 3.1.0 and 3.1.1) that are settled; any other result is retried from wp-admin or cron. */
 const ZP_SUITE3_CACHE_301_SETTLED = ['on', 'not-installed', 'dropin-updated', 'dropin-foreign', 'dropin-missing'];
 
 function zp_suite3_upgrade(string $previous): void {
@@ -15,14 +15,18 @@ function zp_suite3_upgrade(string $previous): void {
       wp_clear_scheduled_hook($hook);
     }
   }
-  if ($previous !== '' && version_compare($previous, '3.1.0', '<')) {
+  if ($previous !== '' && version_compare($previous, '3.1.1', '<')) {
     // Codex's HTML cache keyed pages by address only, while phones get different HTML (no hero video, lazy images).
     // 3.0.1 installs a drop-in that keeps one copy per device class; 3.0.0 had switched the cache off for that reason,
     // so it comes back on. 3.1.0's drop-in also answers robots and visitors with only consent or statistics cookies;
-    // the live file is replaced here because nothing purges after an update. Runs once WordPress has finished loading
-    // (permalinks are needed for the list of pages).
+    // 3.1.1's sends no-cache headers on a MISS too and keys versioned (EN) pages by their version. The live file is
+    // replaced here because nothing purges after an update. Runs once WordPress has finished loading (permalinks are
+    // needed for the list of pages).
     delete_option('zp_suite3_cache_301');
     add_action('wp_loaded', 'zp_suite3_cache_301', 99);
+  }
+  if ($previous !== '' && version_compare($previous, '3.1.1', '<')) {
+    zp_suite3_input_vars();
   }
   if ($previous !== '' && version_compare($previous, '3.1.0', '<') && function_exists('zp_seo_plan_data')) {
     // 3.0.x logged addresses that the SEO plan answers with 410 (gone on purpose); they are not 404s to fix.
@@ -56,3 +60,31 @@ add_action('wp_loaded', static function (): void {
   if (time() - (int) strtotime((string) ($s['at'] ?? '')) < 300) { return; }
   zp_suite3_cache_301();
 }, 100);
+
+/**
+ * 3.1.1: the "Strona główna" form has more fields than the host's max_input_vars (1000 on live), and the nazwa.pl panel
+ * has no setting for it. PHP reads .user.ini in the WordPress folder (again every 5 minutes), so one line is added there,
+ * keeping every line already in the file; the previous content is kept in an option. Nothing is written when the limit
+ * is already 5000 or more, when the file sets max_input_vars itself, or when it is not a plain writable file.
+ */
+function zp_suite3_input_vars(): string {
+  $result = (static function (): string {
+    if ((int) ini_get('max_input_vars') >= 5000) { return 'ok'; }
+    $file = ABSPATH . '.user.ini';
+    if (is_link($file) || (file_exists($file) && !is_file($file))) { return 'not-a-file'; }
+    $old = is_file($file) ? @file_get_contents($file) : '';
+    if (!is_string($old) || strlen($old) > 65536) { return 'unreadable'; }
+    if (preg_match('/^\s*max_input_vars\s*=/mi', $old)) { return 'set-in-file'; }
+    if (!is_writable(is_file($file) ? $file : ABSPATH) || !is_writable(ABSPATH)) { return 'not-writable'; }
+    $new = $old . ($old !== '' && substr($old, -1) !== "\n" ? "\n" : '') . "; ZP Suite 3.1.1: the home page form in wp-admin needs more than 1000 fields\nmax_input_vars = 5000\n";
+    update_option('zp_suite3_user_ini_backup', ['at' => gmdate('c'), 'existed' => is_file($file), 'content' => $old], false);
+    $tmp = ABSPATH . '.zp-user-ini-' . bin2hex(random_bytes(8));
+    $mode = is_file($file) ? (fileperms($file) & 0777) : 0644;
+    if (@file_put_contents($tmp, $new, LOCK_EX) !== strlen($new)) { @unlink($tmp); return 'write-failed'; }
+    @chmod($tmp, $mode);
+    if (is_link($file) || !@rename($tmp, $file)) { @unlink($tmp); return 'write-failed'; }
+    return 'added';
+  })();
+  update_option('zp_suite3_input_vars', ['at' => time(), 'result' => $result], false);
+  return $result;
+}
