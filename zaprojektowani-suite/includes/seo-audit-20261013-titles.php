@@ -10,8 +10,8 @@
  * Addresses and slugs stay. /o-nas/, /kontakt/ and /studio-wyceny/ are left to the work on those pages.
  * The same values are in seo-plan/data/plan.php for the 45 addresses the plan has.
  *
- * Runs once, on an administrator's ordinary wp-admin visit after the update (like rankmath-repair-2914.php, after
- * it). A focus phrase changed by hand since the audit is left alone. Every old value is saved first (option
+ * Runs once, late on admin_init, on an administrator's ordinary wp-admin visit after the update. A focus
+ * phrase changed by hand since the audit is left alone. Every old value is saved first (option
  * zp_seo_audit_titles_backup); the notice after the run links to putting them all back (only values nobody has
  * changed since). Posts whose article prints its own H1 show the post title in it, as the plan's posts do; the
  * English page keeps its translated title until the translator handles the changed post.
