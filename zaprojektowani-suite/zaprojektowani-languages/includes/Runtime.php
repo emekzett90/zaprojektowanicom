@@ -51,7 +51,10 @@ final class Runtime {
                 // 3.2.0: a 301 the owner saved for this address in ZP Suite → Błędy 404 wins (served at priority 5).
                 if (function_exists('zp_suite3_redirects') && function_exists('zp_suite3_404_path') && isset(zp_suite3_redirects()[zp_suite3_404_path()]['to'])) { return; }
                 $en = Router::bare_en($rel);
-                if ($en !== null) { self::redirect(Router::base() . $en . ($query !== '' ? '?' . $query : ''), 301); }
+                if ($en === null) { return; }
+                // 3.2.0: so does WordPress's own 301 for a post whose Polish address changed (normally at 10; it exits).
+                if (function_exists('wp_old_slug_redirect')) { wp_old_slug_redirect(); }
+                self::redirect(Router::base() . $en . ($query !== '' ? '?' . $query : ''), 301);
             }, 1);
         }
 
