@@ -362,6 +362,7 @@ function zp_speed_process(string $html): ?string {
     $ops[] = [$move[0], $move[1], $put];
   }
   foreach (zp_speed_unused_font_preloads($html, $scan) as $op) { $ops[] = $op; }
+  foreach (zp_speed_header_font_preload($html, $scan) as $op) { $ops[] = $op; }
   if (function_exists('zp_speed_lazy_ratio_ops')) { // includes/speed-images.php
     foreach (zp_speed_lazy_ratio_ops($html, $scan) as $op) { $ops[] = $op; }
   }
@@ -542,6 +543,36 @@ function zp_speed_unused_font_preloads(string $html, array $scan): array {
     }
   }
   return $ops;
+}
+
+/*
+ * 3.1.1: the 800 face of Plus Jakarta Sans comes with the other preloaded faces. Every page with the site
+ * header shows text in it on its first screen (the buttons and labels of the header, the call button of the
+ * phone header bar, eyebrows), and without a preload the browser asks for the file only once it lays out that
+ * text. On a slow phone line it then sometimes came after the first paint: the text was drawn in the fallback
+ * font first and moved when the file arrived (Lighthouse layout shift 0.16 to 0.37 in 3 of 12 runs of the home
+ * page). The preload is a copy of the 700 one with the other file name, right after it, and only where the page
+ * declares the face itself and nothing preloads it yet.
+ */
+function zp_speed_header_font_preload(string $html, array $scan): array {
+  $face = 'plus-jakarta-sans-v12-latin_latin-ext-800.woff2';
+  if (strpos($html, 'id="zpNewNav"') === false || strpos($html, $face) === false) { return []; }
+  if (!preg_match('~@font-face\s*\{[^}]*' . preg_quote($face, '~') . '~i', $html)) { return []; }
+  if (!preg_match_all('~<link\b[^>]*>~i', $html, $m, PREG_OFFSET_CAPTURE)) { return []; }
+  $anchor = null;
+  foreach ($m[0] as $tag) {
+    if (!preg_match('~\srel\s*=\s*(["\']?)preload\1[\s/>]~i', $tag[0])) { continue; }
+    if (strpos($tag[0], $face) !== false) { return []; } // already preloaded
+    if ($anchor === null && strpos($tag[0], 'plus-jakarta-sans-v12-latin_latin-ext-700.woff2') !== false
+      && $tag[1] < $scan['head_end'] && !zp_speed_in_skip($scan['skip'], $tag[1])) {
+      $anchor = $tag;
+    }
+  }
+  if ($anchor === null || preg_match('~\smedia\s*=~i', $anchor[0])) { return []; }
+  $copy = str_replace('plus-jakarta-sans-v12-latin_latin-ext-700.woff2', $face, $anchor[0]);
+  $copy = preg_replace('~\sid\s*=\s*(["\'])[^"\']*\1~i', '', $copy);
+  $end = $anchor[1] + strlen($anchor[0]);
+  return [[$end, $end, "\n" . $copy]];
 }
 
 /** Whether a stylesheet the page names mentions $needle (true also when one cannot be checked). */
