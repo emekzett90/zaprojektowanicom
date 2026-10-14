@@ -41,8 +41,15 @@ final class Index {
         }
         ksort($p);
         $old = self::get();
+        // 3.1.1: written only when the list changes (it used to be rewritten with a new time on every run).
+        if ($old === $p && is_array(get_option(self::OPTION, null))) { return; }
         update_option(self::OPTION, ['v' => time(), 'p' => $p], true);
         self::$idx = $p;
-        if ($old !== $p && class_exists('ZPL\\Sitemap') && method_exists('ZPL\\Sitemap', 'forget')) { \ZPL\Sitemap::forget(); }
+        if ($old === $p) { return; }
+        if (class_exists('ZPL\\Sitemap') && method_exists('ZPL\\Sitemap', 'forget')) { \ZPL\Sitemap::forget(); }
+        // 3.1.1: a page got or lost its English version. ZP Suite's HTML cache lists its pages again at the end of the
+        // request (the English page joins or leaves the list) and keeps every other copy. The Polish page's copy keeps its old
+        // hreflang and language switch until it expires (at most 30 minutes).
+        do_action('zp_html_cache_refresh');
     }
 }

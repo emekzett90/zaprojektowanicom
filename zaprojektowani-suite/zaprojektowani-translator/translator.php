@@ -15,10 +15,10 @@
 if (!defined('ABSPATH')) { exit; }
 if (defined('ZPTE_VERSION')) { return; }
 
-define('ZPTE_VERSION', '2.0.0');
+define('ZPTE_VERSION', '2.0.1'); // 2.0.1 (Suite 3.1.1): Wiedza = Knowledge, names and code labels no longer fail, failed pages first after an update
 define('ZPTE_DIR', __DIR__ . '/');
 
-foreach (['Settings', 'Store', 'Log', 'OpenAI', 'Translator', 'Legacy', 'Routes', 'Index', 'Serve', 'Source', 'Sync', 'Import', 'Retire', 'Worker', 'Health', 'Bridge', 'Admin'] as $zpte_class) {
+foreach (['Settings', 'Store', 'Log', 'OpenAI', 'Translator', 'Legacy', 'Routes', 'Index', 'Serve', 'Source', 'Sync', 'Import', 'Retire', 'Migrate', 'Worker', 'Health', 'Bridge', 'Admin'] as $zpte_class) {
     require_once ZPTE_DIR . 'includes/' . $zpte_class . '.php';
 }
 unset($zpte_class);

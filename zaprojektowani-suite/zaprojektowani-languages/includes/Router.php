@@ -187,6 +187,35 @@ final class Router {
         return isset($r[$pl]) || (isset(self::ALIASES[$pl]) && isset($r[self::ALIASES[$pl]])) || self::paged_en($pl) !== null;
     }
 
+    /**
+     * English addresses for ZP Suite's HTML cache (filter zp_html_cache_policy_paths, ZP Suite 3.1.1), each with the version
+     * of its English text: ['/en/x/' => 'en:<8 hex>']. Only for the Polish addresses the cache lists ($pl: path => true),
+     * with the test the page itself uses: its own route that leads back to it (no alias, no redirect) and Dict::has_page
+     * (hreflang, no noindex). The version changes whenever the page's English text can change (plugin versions, and
+     * through zpl_cache_versions Tłumacz EN's menu and page translations and the dollar rate); after
+     * do_action('zp_html_cache_refresh') the cache stops serving the old copies of just the pages whose version changed.
+     * @param mixed $en
+     * @param mixed $pl
+     */
+    public static function cache_paths($en, $pl): array {
+        $out = is_array($en) ? $en : [];
+        $routes = self::routes();
+        $rev = self::reverse();
+        $ok = [];
+        foreach (is_array($pl) ? $pl : [] as $k => $p) {
+            $p = self::norm_path(is_string($k) ? $k : (string) $p);
+            $e = $routes[$p] ?? null;
+            if (!is_string($e) || strpos($e, '/en/') !== 0 || ($rev[$e] ?? null) !== $p || isset(self::AUDITED_LEGACY_EN[$e]) || self::is_excluded($p) || !Dict::has_page($p)) { continue; }
+            $ok[$p] = $e;
+        }
+        if (!$ok) { return $out; }
+        // One version for every page ('*') and one per Polish address, read by the modules without loading any translation.
+        $ver = (array) apply_filters('zpl_cache_versions', [], array_keys($ok));
+        $all = (defined('ZP_SUITE_VERSION') ? ZP_SUITE_VERSION : '') . '|' . ZPL_VERSION . '|' . (string) ($ver['*'] ?? '');
+        foreach ($ok as $p => $e) { $out[$e] = 'en:' . substr(hash('sha256', $all . '|' . $p . '|' . (string) ($ver[$p] ?? '')), 0, 8); }
+        return $out;
+    }
+
     /** English path for a Polish source path (fallback: /en + path). */
     public static function en_path(string $pl): string {
         $pl = self::norm_path($pl);
