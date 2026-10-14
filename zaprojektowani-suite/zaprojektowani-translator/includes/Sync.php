@@ -283,9 +283,10 @@ final class Sync {
         foreach ($units as $k => $kind) {
             $k = (string) $k;
             $h = Store::hash($k);
-            $r = $own[$h] ?? ($mem[$h] ?? null);
-            if ($r && (string) $r->en !== '') {
-                if (!$force && ((int) $r->manual || Translator::broken($k, (string) $r->en) === '')) {
+            $r = self::pick($own[$h] ?? null, $mem[$h] ?? null);
+            if ($r) {
+                // A manual correction stays as the owner wrote it, also when the page is translated again on request.
+                if ((int) $r->manual || (!$force && Translator::broken($k, (string) $r->en) === '')) {
                     $known++;
                     if (isset($shared[$k]) && !isset($mem[$h])) { $markShared[$k] = (string) $r->en; }
                     elseif (isset($shared[$k]) && !(int) $mem[$h]->shared) { $markShared[$k] = (string) $mem[$h]->en; }
@@ -306,24 +307,37 @@ final class Sync {
         }
         Store::keys_save($id, Store::hash($path), $hashes);
 
-        // 6. OpenAI jobs, in document order, a few fragments each.
+        // 6. OpenAI jobs, in document order, a few fragments each. A text already on its way to OpenAI for another
+        //    page (a title or lead shown in several lists) is not sent again: this page waits for that answer.
         $ctx = ['title' => Source::title($html) ?: Source::h1($html), 'path' => $path];
+        $await = [];
+        if ($todo) {
+            $pending = self::pending();
+            foreach ($todo as $k => $kind) {
+                if (isset($pending[Store::hash((string) $k)])) { $await[$k] = $kind; unset($todo[$k]); }
+            }
+        }
         $jobs = 0;
         foreach (Translator::batches($todo) as $batch) {
             $chars = 0;
-            foreach (array_keys($batch) as $k) { $chars += Translator::len((string) $k); }
+            foreach (array_keys($batch) as $k) { $chars += Translator::len((string) $k); self::$pending[Store::hash((string) $k)] = $id; }
             $sh = array_values(array_intersect(array_keys($batch), array_keys($shared)));
             Store::job_add($id, 'units', ['items' => $batch, 'shared' => $sh, 'ctx' => $ctx], $chars);
             $jobs++;
         }
+        if ($await) {
+            Store::job_add($id, 'wait', ['items' => $await, 'shared' => array_values(array_intersect(array_keys($await), array_keys($shared))), 'ctx' => $ctx], 0, 'wait');
+        }
+        $message = $jobs ? 'Tłumaczę ' . count($todo) . ' fragmentów (' . $jobs . ' ' . ($jobs === 1 ? 'zapytanie' : 'zapytań') . ').' : '';
+        if ($await) { $message = trim($message . ' Czekam na ' . count($await) . ' wspólnych fragmentów tłumaczonych dla innej strony.'); }
         Store::page_update($id, [
             'source_hash' => $hash, 'source_modified' => $row->kind === 'post' && (int) $row->post_id > 0 ? (string) get_post_field('post_modified_gmt', (int) $row->post_id) : null,
             'keys_total' => count($units), 'keys_done' => $known, 'keys_failed' => 0, 'queued' => 0, 'tries' => 0,
-            'stage' => $jobs ? 'translating' : '', 'checked_at' => $now,
+            'stage' => $jobs || $await ? 'translating' : '', 'checked_at' => $now,
             'status' => $row->status === 'error' ? ((int) $row->keys_done > 0 ? 'done' : 'new') : $row->status,
-            'message' => $jobs ? 'Tłumaczę ' . count($todo) . ' fragmentów (' . $jobs . ' ' . ($jobs === 1 ? 'zapytanie' : 'zapytań') . ').' : '',
+            'message' => $message,
         ]);
-        if (!$jobs) {
+        if (!$jobs && !$await) {
             self::advance(Store::page($id));
             return 'done';
         }
@@ -474,7 +488,7 @@ final class Sync {
     public static function advance($row): void {
         if (!$row) { return; }
         $id = (int) $row->id;
-        if (Store::count_jobs(['new', 'sent', 'unknown'], $id) > 0) { return; }
+        if (Store::count_jobs(['new', 'sent', 'unknown', 'wait'], $id) > 0) { return; }
         self::compile($id);
         $row = Store::page($id);
         if (!$row) { return; }
@@ -575,13 +589,74 @@ final class Sync {
 
     /** Remove a page's English version (post unpublished, deleted, noindex…). @param object $row */
     public static function retire($row, string $why): void {
-        foreach (Store::jobs(['new', 'unknown'], 200, (int) $row->id) as $j) { Store::job_update((int) $j->id, ['state' => 'dropped']); }
+        foreach (Store::jobs(['new', 'unknown', 'wait'], 200, (int) $row->id) as $j) { Store::job_update((int) $j->id, ['state' => 'dropped']); }
         foreach (Store::jobs(['sent'], 200, (int) $row->id) as $j) { OpenAI::cancel((string) $j->response_id); Store::job_update((int) $j->id, ['state' => 'dropped']); }
         $had = $row->status !== 'off' && (string) $row->en_path !== '';
         Store::page_update((int) $row->id, ['status' => 'off', 'queued' => 0, 'stage' => '', 'checked_at' => Store::now(), 'message' => OpenAI::short($why)]);
         if ($had) { Routes::rebuild(); }
         Index::rebuild();
         Worker::page_finished();
+    }
+
+    // ------------------------------------------------------------- shared waits
+
+    /** Texts in requests not answered yet (this request's own new jobs included): hash => page id. */
+    private static $pending = null;
+
+    private static function pending(): array {
+        if (self::$pending === null) { self::$pending = Store::pending_texts(); }
+        return self::$pending;
+    }
+
+    /**
+     * Pages waiting for texts another page sent: the wait ends when those answers are in. A text whose request
+     * ended without an answer (failed, dropped with its page) is sent by the waiting page itself.
+     */
+    public static function resolve_waits(): int {
+        $waits = Store::jobs(['wait'], 50);
+        if (!$waits) { return 0; }
+        $pending = Store::pending_texts();
+        self::$pending = $pending;
+        $n = 0;
+        foreach ($waits as $job) {
+            $payload = json_decode((string) $job->items, true);
+            $items = is_array($payload['items'] ?? null) ? $payload['items'] : [];
+            $sharedKeys = array_flip(is_array($payload['shared'] ?? null) ? $payload['shared'] : []);
+            $pageId = (int) $job->page_id;
+            $mem = $items ? Store::strings(array_map(static function ($k) { return Store::hash((string) $k); }, array_keys($items)), Store::SHARED) : [];
+            $done = [];
+            $orphans = [];
+            $still = [];
+            foreach ($items as $k => $kind) {
+                $h = Store::hash((string) $k);
+                if (isset($mem[$h]) && (string) $mem[$h]->en !== '') { $done[$h] = (string) $k; }
+                elseif (isset($pending[$h])) { $still[$k] = $kind; }
+                else { $orphans[$k] = $kind; }
+            }
+            if (!$done && !$orphans) { continue; }
+            $n++;
+            // A title or lead of this page translated for a list elsewhere is shown on every English page.
+            $mark = [];
+            foreach ($done as $h => $k) { if (isset($sharedKeys[$k]) && !(int) $mem[$h]->shared) { $mark[] = $h; } }
+            if ($mark) { Store::mark_shared($mark); self::compile_shared(); }
+            if ($done && ($row = Store::page($pageId))) {
+                Store::page_update($pageId, ['keys_done' => min((int) $row->keys_total, (int) $row->keys_done + count($done))]);
+            }
+            foreach (Translator::batches($orphans) as $batch) {
+                $chars = 0;
+                foreach (array_keys($batch) as $k) { $chars += Translator::len((string) $k); $pending[Store::hash((string) $k)] = $pageId; }
+                $sh = array_values(array_intersect(array_keys($batch), array_keys($sharedKeys)));
+                Store::job_add($pageId, 'units', ['items' => $batch, 'shared' => $sh, 'ctx' => $payload['ctx'] ?? []], $chars);
+            }
+            if ($still) {
+                $sh = array_values(array_intersect(array_keys($still), array_keys($sharedKeys)));
+                Store::job_update((int) $job->id, ['items' => (string) wp_json_encode(['items' => $still, 'shared' => $sh, 'ctx' => $payload['ctx'] ?? []], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)]);
+            } else {
+                Store::job_update((int) $job->id, ['state' => 'done']);
+            }
+        }
+        self::$pending = $pending;
+        return $n;
     }
 
     // ---------------------------------------------------------------- compile
@@ -597,12 +672,13 @@ final class Sync {
         $mem = Store::strings(array_keys($keys), Store::SHARED);
         $map = [];
         foreach ($keys as $h => $kind) {
-            if (isset($own[$h]) && (string) $own[$h]->en !== '') {
-                $map[(string) $own[$h]->pl] = self::fix_terms((string) $own[$h]->en, (string) $own[$h]->pl);
+            $r = self::pick($own[$h] ?? null, $mem[$h] ?? null);
+            if (!$r) { continue; }
+            if ($r === ($own[$h] ?? null)) {
+                $map[(string) $r->pl] = self::fix_terms((string) $r->en, (string) $r->pl);
                 continue;
             }
-            $r = $mem[$h] ?? null;
-            if (!$r || (string) $r->en === '' || (int) $r->shared) { continue; } // shared texts come from the shared map
+            if ((int) $r->shared) { continue; } // shared texts come from the shared map
             // The shipped dictionary keeps its wording unless the memory has a manual correction.
             if (!(int) $r->manual && \ZPL\Dict::base((string) $r->pl, 'en', $path) !== null) { continue; }
             $map[(string) $r->pl] = self::fix_terms((string) $r->en, (string) $r->pl);
@@ -610,6 +686,20 @@ final class Sync {
         $rev = Store::map_save($page_id, Store::hash($path), $map, null);
         Serve::bump($page_id, $rev);
         return count($map);
+    }
+
+    /**
+     * The translation a page uses: its own copy (kept from the earlier translators), unless the memory holds a
+     * manual correction and the copy is not one, so a correction saved in the panel shows on every page.
+     * @param object|null $own zpen_strings row of the page
+     * @param object|null $mem zpen_strings row of the memory
+     * @return object|null
+     */
+    private static function pick($own, $mem) {
+        $o = $own && (string) $own->en !== '' ? $own : null;
+        $m = $mem && (string) $mem->en !== '' ? $mem : null;
+        if ($o && $m && (int) $m->manual && !(int) $o->manual) { return $m; }
+        return $o ?: $m;
     }
 
     /** The shared map (titles, leads, menu and footer texts) from the translation memory. */
