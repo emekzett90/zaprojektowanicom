@@ -229,6 +229,9 @@ final class ZP_HTML_Cache_20261009 {
     }
     private static function disabled_policy(): array { return ['schema' => 1, 'enabled' => false, 'ttl' => 1800, 'host' => '', 'paths' => [], 'geo_polish_safe' => false, 'next_publication' => 0, 'generation' => bin2hex(random_bytes(16))]; }
     public static function purge(): void {
+        // 3.1.1: read the switch fresh. A long request (a translator step of ~20 s) keeps the value it read first, and the
+        // owner may have switched the cache off meanwhile; acting on the old value would switch it back on.
+        if (function_exists('wp_cache_delete')) { wp_cache_delete(self::STATE, 'options'); }
         $state = get_option(self::STATE, []); if (empty($state['enabled'])) { return; }
         $backup = get_option(self::BACKUP, []);
         if (is_link(self::dropin()) || !is_file(self::dropin()) || hash_file('sha256', self::dropin()) !== ($backup['dropin_installed_sha'] ?? '')) { return; }
@@ -261,6 +264,7 @@ final class ZP_HTML_Cache_20261009 {
     }
     public static function refresh(): void {
         if (self::$purge_queued) { return; }
+        if (function_exists('wp_cache_delete')) { wp_cache_delete(self::STATE, 'options'); }
         $state = get_option(self::STATE, []); if (empty($state['enabled'])) { return; }
         $backup = get_option(self::BACKUP, []);
         if (is_link(self::dropin()) || !is_file(self::dropin()) || hash_file('sha256', self::dropin()) !== ($backup['dropin_installed_sha'] ?? '') || hash_file('sha256', self::dropin()) !== hash_file('sha256', self::template())) { self::purge(); return; }
@@ -269,6 +273,8 @@ final class ZP_HTML_Cache_20261009 {
             for ($try = 0; $try < 3; $try++) {
                 clearstatcache(true, $file); $raw = is_file($file) && !is_link($file) ? (string) @file_get_contents($file) : '';
                 $current = strpos($raw, self::PREFIX) === 0 ? json_decode(substr($raw, strlen(self::PREFIX)), true) : null;
+                // A cache switched off on disk stays off: only the switch in the panel turns it on again (3.1.1).
+                if (is_array($current) && ($current['enabled'] ?? null) === false) { return; }
                 // No valid policy to keep: a full refresh with a new generation.
                 if (!is_array($current) || ($current['enabled'] ?? null) !== true || !is_string($current['generation'] ?? null) || !preg_match('/^[a-f0-9]{32}$/D', $current['generation'])) { self::purge(); return; }
                 $policy = self::policy(true, $current);
