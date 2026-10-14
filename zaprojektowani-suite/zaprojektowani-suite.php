@@ -33,6 +33,8 @@ function zp_suite_backend_request(): bool {
 
 require_once ZP_SUITE_PATH . 'includes/suite3/upgrade.php';
 require_once ZP_SUITE_PATH . 'includes/frontend-quality.php';
+// SEO audit 13.10.2026: image descriptions (PL/EN) and the other fixes from that audit.
+require_once ZP_SUITE_PATH . 'includes/seo-audit-20261013.php';
 
 // v2.9.3 — speed: style blocks printed in <body> are gathered (same order) and body:has() rules become a <body> attribute check (no visual change). Loads first.
 require_once ZP_SUITE_PATH . 'includes/speed-293.php';
@@ -40,6 +42,8 @@ require_once ZP_SUITE_PATH . 'includes/speed-293.php';
 require_once ZP_SUITE_PATH . 'includes/speed-server.php';
 // Lazy images keep their file's shape before the file arrives (Chrome: "Lazy-loaded images should have explicit dimensions").
 require_once ZP_SUITE_PATH . 'includes/speed-images.php';
+// SEO audit 13.10.2026: a lighter HTML document; inline CSS and the mobile portfolio cards move to static files (same look).
+require_once ZP_SUITE_PATH . 'includes/speed-html-weight.php';
 
 // v2.3.0 — nationwide service pages reuse the Katowice templates; gating helpers load first.
 require_once ZP_SUITE_PATH . 'includes/seo-plan/service-kind.php';
