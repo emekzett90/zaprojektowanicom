@@ -708,7 +708,11 @@ var ZP_LB_ASSETS = (function () {
       var trigger = scope.querySelector('.package-scope__trigger');
       var panel = scope.querySelector('.package-scope__panel');
       if (trigger) trigger.setAttribute('aria-expanded', open ? 'true' : 'false');
-      if (panel) panel.setAttribute('aria-hidden', open ? 'false' : 'true');
+      if (panel) {
+        panel.setAttribute('aria-hidden', open ? 'false' : 'true');
+        // A closed panel is also inert, so its links and buttons cannot take focus (SearchFit 14.10.2026).
+        panel.inert = !open;
+      }
     }
 
     function closeOthers(except) {

@@ -71,6 +71,53 @@ function zp_suite_strip_image_slots($html) {
 }
 add_filter('the_content', 'zp_suite_strip_image_slots', 999);
 
+/**
+ * SearchFit 14.10.2026 (label-content-name-mismatch): the theme's category link in the post sidebar
+ * (a.zpPostSide__category) and the picture link of a related post (a.zpRelPosts__media) have an aria-label
+ * without the words shown on the link (on /en/ the label and the text are also translated apart), so saying
+ * what is on screen does not reach the link. Their markup belongs to the theme, so the final HTML (Polish, and
+ * English after translation) puts the shown words in front of that label and keeps the rest of it.
+ */
+function zp_suite_label_in_name_html(string $html): string {
+  if (strpos($html, 'zpPostSide__category') === false && strpos($html, 'zpRelPosts__media') === false) { return $html; }
+  $parts = preg_split('~(<script\b[^>]*>.*?</script\s*>|<style\b[^>]*>.*?</style\s*>|<textarea\b[^>]*>.*?</textarea\s*>|<!--.*?-->)~is', $html, -1, PREG_SPLIT_DELIM_CAPTURE);
+  if (!is_array($parts)) { return $html; }
+  foreach ($parts as $i => $part) {
+    if ($i % 2 === 1 || (strpos($part, 'zpPostSide__category') === false && strpos($part, 'zpRelPosts__media') === false)) { continue; }
+    $done = preg_replace_callback('~(<a\s[^>]*?\bclass\s*=\s*["\'][^"\']*?\b(?:zpPostSide__category|zpRelPosts__media)\b[^>]*>)([^<]*+(?:<(?!a\s|/a\s*>)[^<]*+)*+)(</a\s*>)~is', static function (array $m): string {
+      return zp_suite_label_in_name_tag($m[1], $m[2]) . $m[2] . $m[3];
+    }, $part);
+    if (is_string($done)) { $parts[$i] = $done; }
+  }
+  return implode('', $parts);
+}
+
+/** The opening tag with the link's shown words in front of its aria-label, or unchanged when they are already in it. */
+function zp_suite_label_in_name_tag(string $tag, string $inner): string {
+  // aria-labelledby names the link instead of aria-label, so that case is left alone.
+  if (preg_match('~\saria-labelledby\s*=~i', $tag) || !preg_match('~\saria-label\s*=\s*(["\'])(.*?)\1~is', $tag, $m, PREG_OFFSET_CAPTURE)) { return $tag; }
+  $label = trim(html_entity_decode($m[2][0], ENT_QUOTES | ENT_HTML5, 'UTF-8'));
+  // Shown words as accessibility checks read them: text only (no icons, no image alt), tags joined without a space.
+  $inner = preg_replace('~<(svg|script|style|template|noscript)\b[^>]*>.*?</\1\s*>~is', '', $inner) ?? '';
+  $inner = preg_replace('~<br\b[^>]*>~i', ' ', $inner) ?? '';
+  $visible = trim(preg_replace('~\s+~u', ' ', html_entity_decode(strip_tags($inner), ENT_QUOTES | ENT_HTML5, 'UTF-8')) ?? '');
+  $shown = zp_suite_label_tokens($visible);
+  if ($label === '' || !preg_grep('~\p{L}~u', $shown)) { return $tag; }
+  $name = zp_suite_label_tokens($label);
+  for ($at = 0; $at + count($shown) <= count($name); $at++) {
+    if (array_slice($name, $at, count($shown)) === $shown) { return $tag; }
+  }
+  return substr($tag, 0, $m[0][1]) . ' aria-label="' . esc_attr($visible . ' – ' . $label) . '"' . substr($tag, $m[0][1] + strlen($m[0][0]));
+}
+
+/** Lower-case words of a text, compared the way axe-core does (letters and digits only, text in brackets left out). */
+function zp_suite_label_tokens(string $text): array {
+  if (class_exists('Normalizer')) { $text = (string) Normalizer::normalize($text, Normalizer::FORM_KD); }
+  do { $before = $text; $text = preg_replace('~\([^()]*\)~u', '', $text) ?? ''; } while ($text !== $before);
+  $text = preg_replace('~[^\p{L}\p{N}]+~u', ' ', mb_strtolower($text, 'UTF-8')) ?? '';
+  return preg_split('~\s+~u', trim($text), -1, PREG_SPLIT_NO_EMPTY) ?: [];
+}
+
 /** Run on the final HTML, including early routes and late footer images. */
 function zp_suite_quality_html(string $html): string {
   if (is_admin() || !class_exists('WP_HTML_Tag_Processor') || stripos($html, '<html') === false || stripos($html, '<body') === false) { return $html; }
@@ -84,6 +131,8 @@ function zp_suite_quality_html(string $html): string {
   if (function_exists('zp_suite_audit_alt_html')) { $html = zp_suite_audit_alt_html($html); }
   // Links with tracking parameters and chat or map shortcuts get rel="nofollow" (same file).
   if (function_exists('zp_suite_audit_links_html')) { $html = zp_suite_audit_links_html($html); }
+  // SearchFit 14.10.2026: theme links whose aria-label leaves out their visible words (see above).
+  $html = zp_suite_label_in_name_html($html);
   $tags = new WP_HTML_Tag_Processor($html);
   $marked = 0;
   while ($tags->next_tag('IMG')) {
