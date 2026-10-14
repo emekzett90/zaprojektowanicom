@@ -72,8 +72,13 @@
       return rect.top < 180 && rect.bottom > 160;
     }
 
+    /* 3.1.1: a class is set only when it changes. Setting it again on every scroll frame, even unchanged,
+       woke every script that watches the header for changes (the language switch queued three updates
+       and two timers per frame). */
+    function setCls(el,name,on){ if(el && el.classList.contains(name)!==!!on) el.classList.toggle(name,!!on); }
+
     function syncHeroOverlay(){
-      nav.classList.toggle('zpNewNav--heroOverlay', shouldUseHeroOverlay());
+      setCls(nav,'zpNewNav--heroOverlay', shouldUseHeroOverlay());
     }
 
     /* v2.2.588 — hydratacja ikon w DWÓCH etapach zamiast jednego długiego taska.
@@ -324,8 +329,8 @@
     function setScrolledState(initialY){
       var y=typeof initialY==='number' ? initialY : (w.scrollY || d.documentElement.scrollTop || 0);
       syncHeroOverlay();
-      nav.classList.toggle('is-scrolled', y>18);
-      d.body.classList.toggle('zp-nav-scrolled', y>18);
+      setCls(nav,'is-scrolled', y>18);
+      setCls(d.body,'zp-nav-scrolled', y>18);
       applyMobileGlass(y);
       updateSpacer();
     }
