@@ -1,6 +1,6 @@
 {
  "format": 1,
- "zaktualizowano": "2026-10-14T23:28:59+02:00",
+ "zaktualizowano": "2026-10-14T23:34:46+02:00",
  "wpisy": [
   {
    "slug": "papier-firmowy",
@@ -14,7 +14,7 @@
    "slug": "kreatory-stron-internetowych",
    "sciezka": "/strony-internetowe/kreatory-stron-internetowych/",
    "plik": "wpisy/kreatory-stron-internetowych.json",
-   "sha256": "92ab0da9cf8dc8a01a91f6b23ee2bd7c0030766c25c2e0362d4fc34882c5f3d8",
+   "sha256": "fb5c109ff4be24d67f15b52d4a2ce51921b5038e772fda76f3aa5299106ccd0b",
    "publikacja": "2026-10-19T08:00:00+02:00",
    "paczka": 5
   },
@@ -86,60 +86,6 @@
  "linki": [
   {
    "we_wpisie": "/strony-internetowe/jak-stworzyc-strone-internetowa/",
-   "fragment": "Kreator to platforma, na której wybierasz szablon",
-   "slowa": "Kreator",
-   "do": "/strony-internetowe/kreatory-stron-internetowych/"
-  },
-  {
-   "we_wpisie": "/strony-internetowe/wordpress-wix-czy-webflow/",
-   "fragment": "Wybierz kreator, gdy priorytetem jest szybkie uruchomienie",
-   "slowa": "kreator",
-   "do": "/strony-internetowe/kreatory-stron-internetowych/"
-  },
-  {
-   "we_wpisie": "/logo-branding/logo-logotyp-sygnet-roznice/",
-   "fragment": "firma remontowa o nazwie",
-   "slowa": "firma remontowa",
-   "do": "/logo-branding/logo-firmy-budowlanej/"
-  },
-  {
-   "we_wpisie": "/logo-branding/logo-salonu-kosmetycznego/",
-   "fragment": "Pomagają w tym mockupy, czyli wizualizacje logo w realnym otoczeniu",
-   "slowa": "mockupy",
-   "do": "/logo-branding/mockup-co-to-jest/"
-  },
-  {
-   "we_wpisie": "/logo-branding/projekt-wizytowki/",
-   "fragment": "pokazujemy je na mockupach",
-   "slowa": "mockupach",
-   "do": "/logo-branding/mockup-co-to-jest/"
-  },
-  {
-   "we_wpisie": "/logo-branding/projekt-wizytowki/",
-   "fragment": "Dlatego wizytówka powinna korzystać z tych samych elementów co papier firmowy",
-   "slowa": "papier firmowy",
-   "do": "/logo-branding/papier-firmowy/"
-  },
-  {
-   "we_wpisie": "/logo-branding/identyfikacja-wizualna-firmy/",
-   "fragment": "ikonografię, szablony dokumentów",
-   "slowa": "szablony dokumentów",
-   "do": "/logo-branding/papier-firmowy/"
-  },
-  {
-   "we_wpisie": "/sklepy-internetowe/sklep-b2b/",
-   "fragment": "Karty produktów mogą wtedy zdobywać pozycje w Google",
-   "slowa": "zdobywać pozycje w Google",
-   "do": "/sklepy-internetowe/seo-sklepu-internetowego/"
-  },
-  {
-   "we_wpisie": "/sklepy-internetowe/kategorie-produktow-w-sklepie-internetowym/",
-   "fragment": "Automatyczne dopisywanie treści SEO",
-   "slowa": "treści SEO",
-   "do": "/sklepy-internetowe/seo-sklepu-internetowego/"
-  },
-  {
-   "we_wpisie": "/strony-internetowe/jak-stworzyc-strone-internetowa/",
    "fragment": "Sprawdź szybkość strony i jej wygląd na telefonie.",
    "slowa": "szybkość strony",
    "do": "/seo-i-konwersja/core-web-vitals/"
@@ -203,6 +149,60 @@
    "fragment": "zacznij od wersji mobilnej",
    "slowa": "wersji mobilnej",
    "do": "/strony-internetowe/nowoczesne-strony-internetowe/"
+  },
+  {
+   "we_wpisie": "/strony-internetowe/jak-stworzyc-strone-internetowa/",
+   "fragment": "Kreator to platforma, na której wybierasz szablon",
+   "slowa": "Kreator",
+   "do": "/strony-internetowe/kreatory-stron-internetowych/"
+  },
+  {
+   "we_wpisie": "/strony-internetowe/wordpress-wix-czy-webflow/",
+   "fragment": "Wybierz kreator, gdy priorytetem jest szybkie uruchomienie",
+   "slowa": "kreator",
+   "do": "/strony-internetowe/kreatory-stron-internetowych/"
+  },
+  {
+   "we_wpisie": "/logo-branding/logo-logotyp-sygnet-roznice/",
+   "fragment": "firma remontowa o nazwie",
+   "slowa": "firma remontowa",
+   "do": "/logo-branding/logo-firmy-budowlanej/"
+  },
+  {
+   "we_wpisie": "/logo-branding/logo-salonu-kosmetycznego/",
+   "fragment": "Pomagają w tym mockupy, czyli wizualizacje logo w realnym otoczeniu",
+   "slowa": "mockupy",
+   "do": "/logo-branding/mockup-co-to-jest/"
+  },
+  {
+   "we_wpisie": "/logo-branding/projekt-wizytowki/",
+   "fragment": "pokazujemy je na mockupach",
+   "slowa": "mockupach",
+   "do": "/logo-branding/mockup-co-to-jest/"
+  },
+  {
+   "we_wpisie": "/logo-branding/projekt-wizytowki/",
+   "fragment": "Dlatego wizytówka powinna korzystać z tych samych elementów co papier firmowy",
+   "slowa": "papier firmowy",
+   "do": "/logo-branding/papier-firmowy/"
+  },
+  {
+   "we_wpisie": "/logo-branding/identyfikacja-wizualna-firmy/",
+   "fragment": "ikonografię, szablony dokumentów",
+   "slowa": "szablony dokumentów",
+   "do": "/logo-branding/papier-firmowy/"
+  },
+  {
+   "we_wpisie": "/sklepy-internetowe/sklep-b2b/",
+   "fragment": "Karty produktów mogą wtedy zdobywać pozycje w Google",
+   "slowa": "zdobywać pozycje w Google",
+   "do": "/sklepy-internetowe/seo-sklepu-internetowego/"
+  },
+  {
+   "we_wpisie": "/sklepy-internetowe/kategorie-produktow-w-sklepie-internetowym/",
+   "fragment": "Automatyczne dopisywanie treści SEO",
+   "slowa": "treści SEO",
+   "do": "/sklepy-internetowe/seo-sklepu-internetowego/"
   },
   {
    "we_wpisie": "/logo-branding/ksiega-znaku-co-to-jest-co-zawiera-i-kiedy-firma-jej-potrzebuje/",
