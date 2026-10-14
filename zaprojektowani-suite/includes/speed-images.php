@@ -59,27 +59,26 @@ function zp_speed_lazy_ratio_ops(string $html, array $scan): array {
     }
   }
   if ($ops && isset($scan['head_end']) && $scan['head_end'] > 0) {
-    // On the measured PL desktop homepage, inspect all boxes before changing any.
-    // Group IMG load corrections before the next paint; DCL/window-load passes
-    // stay synchronous, and every other page keeps its individual load behavior.
+    // 3.1.1: on every page, each pass first reads the boxes of all its images and only then changes any, in the
+    // next frame (before it is painted): the page start, the load event and each image that arrives. Before,
+    // pages other than the PL desktop home read and changed one image after the other in the same task, and
+    // each read after a change made the browser work out the styles of the page again (31 times on the phone
+    // home page, about 35 ms of the 270 ms task that runs the page's scripts).
     $ops[] = [$scan['head_end'], $scan['head_end'], '<style id="zp-speed-img-ar">' . zp_speed_img_box_css($html) . '</style>'
       . '<script id="zp-speed-img-ar-guard">(function(w,d){function r(i){var p=i.style.getPropertyValue("--zp-ar").split("/");return p[0]/p[1]}'
-      . 'function p(i,fast){if(!i.style.getPropertyValue("--zp-ar"))return null;var s=getComputedStyle(i),e=0,z=fast?s.boxSizing:"";if(fast&&z!="border-box")return {i:i,remove:false};'
+      . 'function p(i){if(!i.style.getPropertyValue("--zp-ar"))return null;var s=getComputedStyle(i),e=0;if(s.boxSizing!="border-box")return {i:i,remove:false};'
       . '["Top","Right","Bottom","Left"].forEach(function(k){e+=(parseFloat(s["padding"+k])||0)+(parseFloat(s["border"+k+"Width"])||0)});'
-      . 'return {i:i,remove:(fast?z:s.boxSizing)=="border-box"&&e>0}}'
+      . 'return {i:i,remove:e>0}}'
       . 'function a(q){if(!q)return;var i=q.i,u=i.currentSrc||i.src||"";if(q.remove){i.style.removeProperty("--zp-ar");return}'
       . 'if(!u||u.indexOf("data:")==0||!i.naturalWidth||i.zpArSrc==u)return;i.zpArSrc=u;'
       . 'var t=new Image;t.onload=function(){var x=t.naturalWidth,y=t.naturalHeight,b=r(i);'
       . 'if(x>0&&y>0&&b>0&&Math.abs(x/y-b)>b*1e-6&&(i.currentSrc||i.src)==u)i.style.setProperty("--zp-ar",x+"/"+y)};t.src=u}'
-      . 'function c(i){a(p(i))}'
-      . 'function b(){var h=d.body;return !!(h&&h.classList&&(h.classList.contains("home")||h.classList.contains("front-page"))&&d.getElementById("zhHero")&&/^pl(?:-|$)/i.test(d.documentElement.lang||"")&&w.matchMedia&&w.matchMedia("(min-width:1101px)").matches)}'
-      . 'function batch(n){var fast=w.matchMedia("(min-width:1240px)").matches,q=[].map.call(n,function(i){return p(i,fast)});q.forEach(a)}var pending=[],scheduled=false;'
-      . 'function flush(){scheduled=false;var n=pending;pending=[];if(!b()){n.forEach(c);return}batch(n)}'
-      . 'function l(i){if(!b()||typeof w.requestAnimationFrame!=="function"){c(i);return}if(!i.style.getPropertyValue("--zp-ar"))return;'
-      . 'if(pending.indexOf(i)<0)pending.push(i);if(!scheduled){scheduled=true;try{w.requestAnimationFrame(flush)}catch(e){flush()}}}'
-      . 'function all(){var n=[].slice.call(d.querySelectorAll("img[style*=\'--zp-ar\']"));pending.forEach(function(i){if(n.indexOf(i)<0)n.push(i)});pending=[];'
-      . 'if(!b()){n.forEach(c);return}batch(n)}'
-      . 'd.addEventListener("load",function(e){if(e.target&&e.target.tagName=="IMG")l(e.target)},true);'
+      . 'var pending=[],scheduled=false;'
+      . 'function run(){scheduled=false;var n=pending;pending=[];n.forEach(function(i){i.zpArQ=0});n.map(p).forEach(a)}'
+      . 'function add(i){if(i&&!i.zpArQ&&i.style&&i.style.getPropertyValue("--zp-ar")){i.zpArQ=1;pending.push(i)}}'
+      . 'function later(){if(scheduled)return;scheduled=true;if(typeof w.requestAnimationFrame=="function"){try{w.requestAnimationFrame(run);return}catch(e){}}run()}'
+      . 'function all(){[].forEach.call(d.querySelectorAll("img[style*=\'--zp-ar\']"),add);later()}'
+      . 'd.addEventListener("load",function(e){if(e.target&&e.target.tagName=="IMG"){add(e.target);later()}},true);'
       . 'd.addEventListener("DOMContentLoaded",all);w.addEventListener("load",all)})(window,document)</script>'];
   }
   return $ops;
