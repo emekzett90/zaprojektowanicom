@@ -18,8 +18,6 @@ final class ZP_Admin_Workspace_Chrome_20261010 {
             'zp-suite-content-20261009' => ['Pakiet artykułów', 'calendar'],
             'zp-suite-photos-20261009' => ['Zdjęcia artykułów', 'calendar'],
             'zp-suite-html-cache' => ['Cache HTML', 'performance'],
-            'zp-suite-gsc-quality' => ['Korekty jakości artykułów', 'calendar'],
-            'zp-suite-gsc-quality-translation' => ['Korekta tłumaczenia', 'calendar'],
         ];
     }
 

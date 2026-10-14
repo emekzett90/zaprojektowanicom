@@ -29,70 +29,8 @@ final class ZP_Frontend_Accessibility_20261010 {
             . '</style>';
     }
 
-    public static function html(string $html): string {
-        if (!self::eligible() || strlen($html) > 4194304 || strpos($html, 'zpMobileStickyCta') === false
-            || stripos($html, '<html') === false || stripos($html, '</html>') === false
-            || !class_exists('WP_HTML_Tag_Processor') || !method_exists('WP_HTML_Tag_Processor', 'next_token')) { return $html; }
-        foreach (headers_list() as $header) {
-            if (stripos($header, 'content-type:') === 0 && stripos($header, 'text/html') === false) { return $html; }
-            if (stripos($header, 'content-encoding:') === 0) { return $html; }
-        }
-        $tags = new WP_HTML_Tag_Processor($html);
-        $nav_depth = 0; $pending = null;
-        while ($tags->next_token()) {
-            $tag = $tags->get_tag();
-            $closer = $tags->is_tag_closer();
-            if ($tag === 'NAV') {
-                if (!$closer && ($nav_depth > 0 || ($tags->get_attribute('id') === 'zpMobileStickyCta' && $tags->has_class('zpMobileStickyCta')))) { $nav_depth++; }
-                elseif ($closer && $nav_depth > 0 && --$nav_depth === 0) { break; }
-                continue;
-            }
-            if ($nav_depth === 0) { continue; }
-            if ($tag === 'A' && !$closer) {
-                $pending = null;
-                $tags->release_bookmark('zp_a11y_link');
-                if ($tags->has_class('zpMobileStickyCta__item') && is_string($tags->get_attribute('aria-label')) && $tags->set_bookmark('zp_a11y_link')) {
-                    $pending = ['name' => $tags->get_attribute('aria-label'), 'label' => '', 'depth' => 0];
-                }
-                continue;
-            }
-            if ($pending === null) { continue; }
-            if ($tag === 'SPAN') {
-                if (!$closer && ($pending['depth'] > 0 || $tags->has_class('zpMobileStickyCta__label'))) { $pending['depth']++; }
-                elseif ($closer && $pending['depth'] > 0) { $pending['depth']--; }
-            } elseif ($tags->get_token_type() === '#text' && $pending['depth'] > 0) {
-                $pending['label'] .= $tags->get_modifiable_text();
-            }
-            if ($tag === 'A' && $closer) {
-                $label = trim(html_entity_decode($pending['label'], ENT_QUOTES | ENT_HTML5, 'UTF-8'));
-                // Existing dictionary already translates these exact visible labels in both directions.
-                if (in_array($label, ['Start','Zamów','Telefon','Home','Order','Phone'], true)
-                    && stripos($pending['name'], $label) === false && $tags->set_bookmark('zp_a11y_end')) {
-                    if (!$tags->seek('zp_a11y_link')) { return $html; }
-                    $tags->set_attribute('aria-label', $label);
-                    if (!$tags->seek('zp_a11y_end')) { return $html; }
-                    $tags->release_bookmark('zp_a11y_end');
-                }
-                $tags->release_bookmark('zp_a11y_link'); $pending = null;
-            }
-        }
-        return $tags->get_updated_html();
-    }
-
-    public static function buffer($chunk, int $phase = 0) {
-        static $buffer = '';
-        if (!is_string($chunk)) { return $chunk; }
-        if ($phase & PHP_OUTPUT_HANDLER_CLEAN) { $buffer = ''; return ''; }
-        $buffer .= $chunk;
-        if (!($phase & PHP_OUTPUT_HANDLER_FINAL)) { return ''; }
-        $html = $buffer; $buffer = '';
-        try { return self::html($html); } catch (Throwable $error) { return $html; }
-    }
-
-    public static function boot(): void {
-        if (self::eligible()) { ob_start([self::class, 'buffer']); }
-    }
 }
 
+// 3.0.0: the sticky bar's aria-labels now match their visible labels in includes/mobile-sticky-cta.php, so the
+// whole-page output buffer that rewrote them on every page view is gone.
 add_action('wp_head', [ZP_Frontend_Accessibility_20261010::class, 'head'], PHP_INT_MAX);
-add_action('template_redirect', [ZP_Frontend_Accessibility_20261010::class, 'boot'], -500);

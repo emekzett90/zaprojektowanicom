@@ -335,30 +335,8 @@ add_action('admin_menu', static function (): void {
     add_submenu_page('zp-suite', 'Ustawienia ZP Suite', 'Ustawienia', 'manage_options', 'zp-suite-settings', 'zp_admin20_settings_page');
 }, 11000);
 
-add_action('admin_menu', static function (): void {
-    global $submenu;
-    $hidden = [
-        'zp-suite-home-cms' => ['Strona główna CMS', 'zp_suite_render_admin_page'],
-        'zp-suite-publikacja' => ['Publikacja', 'zp_feed_admin_page'],
-        'zp-suite-speed' => ['Optymalizacja', 'zp_speed_render_admin_page'],
-        'zp-suite-content-20261009' => ['Pakiet artykułów', [ZP_Content_Batch_20261009::class, 'page']],
-        'zp-suite-photos-20261009' => ['Zdjęcia artykułów', [ZP_Content_Batch_20261009::class, 'photo_page']],
-        'zp-suite-html-cache' => ['Cache HTML', [ZP_HTML_Cache_20261009::class, 'page']],
-        'zp-suite-gsc-quality' => ['Korekty jakości', [ZP_GSC_Quality_20261009::class, 'page']],
-        'zp-suite-gsc-quality-translation' => ['Korekta tłumaczenia', [ZP_GSC_Quality_Translation_20261009::class, 'page']],
-    ];
-    $requested = isset($_GET['page']) ? sanitize_key(wp_unslash($_GET['page'])) : '';
-    foreach ($hidden as $page => $screen) {
-        remove_submenu_page('zp-suite', $page);
-        // WordPress 7.1 resolves hidden screens under admin_page_, so preserve native callbacks on their exact request.
-        if ($requested === $page && is_callable($screen[1])) { add_submenu_page('', $screen[0], $screen[0], 'manage_options', $page, $screen[1]); }
-    }
-    if (empty($submenu['zp-suite']) || !is_array($submenu['zp-suite'])) { return; }
-    $rank = array_flip(array_column(zp_admin20_nav(), 1));
-    foreach ($submenu['zp-suite'] as &$item) { if (($item[2] ?? '') === 'zp-suite') { $item[0] = 'Pulpit'; } }
-    unset($item);
-    usort($submenu['zp-suite'], static fn($a, $b) => ($rank[$a[2] ?? ''] ?? 99) <=> ($rank[$b[2] ?? ''] ?? 99));
-}, PHP_INT_MAX - 1);
+// 3.0.0: the menu order, section labels and hidden pages are set in includes/suite3/admin-ui.php.
+// The hidden pages stay registered under ZP Suite, so WordPress knows their titles (no strip_tags(null) notice).
 
 add_filter('admin_body_class', static function (string $classes): string {
     $page = isset($_GET['page']) ? sanitize_key(wp_unslash($_GET['page'])) : '';
@@ -369,6 +347,8 @@ add_filter('admin_body_class', static function (string $classes): string {
 add_action('admin_head', static function (): void {
     $page = isset($_GET['page']) ? sanitize_key(wp_unslash($_GET['page'])) : '';
     if (!str_starts_with($page, 'zp-suite') && !in_array($page, ['zp-translator-v2', 'zp-tlumacz-en', 'zpl-languages', 'zpl-skaner'], true)) { return; }
+    // 3.0.0: assets/admin/zp-suite-3.css replaces these inline styles when the new panel is loaded.
+    if (function_exists('zp_suite3_open')) { return; }
     echo '<style id="zp-admin20-css">' . zp_admin20_css() . '</style>';
 }, 99);
 

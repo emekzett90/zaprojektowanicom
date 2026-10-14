@@ -22,13 +22,13 @@ if (!function_exists('zp_suite_render_mobile_sticky_cta')) {
     ?>
     <nav class="zpMobileStickyCta" id="zpMobileStickyCta" aria-label="Szybka nawigacja Zaprojektowani">
       <div class="zpMobileStickyCta__inner">
-        <a class="zpMobileStickyCta__item" href="/" aria-label="Przejdź na stronę główną">
+        <a class="zpMobileStickyCta__item" href="/" aria-label="Start">
           <span class="zpMobileStickyCta__icon" aria-hidden="true"><i data-lucide="home"></i></span>
           <span class="zpMobileStickyCta__label">Start</span>
           <span class="zpMobileStickyCta__sub">Strona główna</span>
         </a>
 
-        <a class="zpMobileStickyCta__item zpMobileStickyCta__item--primary" href="/studio-wyceny/" aria-label="Przejdź do Studio Wyceny">
+        <a class="zpMobileStickyCta__item zpMobileStickyCta__item--primary" href="/studio-wyceny/" aria-label="Zamów">
           <span class="zpMobileStickyCta__icon" aria-hidden="true"><i data-lucide="file-check-2"></i></span>
           <span class="zpMobileStickyCta__label">Zamów</span>
           <span class="zpMobileStickyCta__sub">Studio wyceny</span>
@@ -41,7 +41,7 @@ if (!function_exists('zp_suite_render_mobile_sticky_cta')) {
           <span class="zpMobileStickyCta__sub">Napisz teraz</span>
         </a>
 
-        <a class="zpMobileStickyCta__item" href="tel:+48501054253" aria-label="Zadzwoń do Zaprojektowani">
+        <a class="zpMobileStickyCta__item" href="tel:+48501054253" aria-label="Telefon">
           <span class="zpMobileStickyCta__icon" aria-hidden="true"><i data-lucide="phone-call"></i></span>
           <span class="zpMobileStickyCta__label">Telefon</span>
           <span class="zpMobileStickyCta__sub">501 054 253</span>

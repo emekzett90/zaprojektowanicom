@@ -1,0 +1,28 @@
+Zaprojektowani Suite 3.0.0 — 14.10.2026
+
+Podstawa: wersja Codexa 2.9.66 (13.10.2026). Wygląd strony bez zmian; 106 adresów PL i EN sprawdzonych przed i po wydaniu daje ten sam HTML (poza poprawką aria-label poniżej).
+
+Strona
+- Lżejsza wtyczka. Panel, raporty, kalendarz i przygotowanie artykułów wczytują się tylko w wp-admin, w cronie i w REST API. Zwykła odsłona strony wczytuje mniej kodu: w testach 4,3 MB zamiast 5,5 MB pamięci PHP, a sama wtyczka wczytuje się o ok. 40% krócej.
+- Usunięte 16 jednorazowych modułów Codexa z 9–11.10 (diagnostyki zdjęć, kompresji i kolejek, jednorazowe naprawy Rank Math, raport jakości GSC, ramka panelu /zp-suite/). Swoją pracę już wykonały; ich zapisane dane zostają w bazie.
+- Mobilny pasek przycisków: aria-label „Start”, „Zamów”, „Telefon” zgodne z widocznym napisem. Codex robił to buforem całej strony; teraz poprawka jest u źródła.
+- Jeden opis meta: Hello Elementor nie dodaje drugiego, gdy działa Rank Math.
+- Schema Article wpisów z pakietów artykułów działa jak dotąd, wczytywana tylko dla tych wpisów.
+- Własny cache HTML Codexa: jeśli był włączony, zostaje wyłączony (ten sam zapis strony dostawał telefon i komputer). LiteSpeed Cache bez zmian.
+- Nowe: dziennik błędów 404. Wtyczka zapisuje adresy, które kończą się „nie znaleziono” (PL i EN), bez skanerów typu .php czy wp-login. Przekierowania 301 dodane w panelu działają od razu, tylko na adresy tej strony i tylko tam, gdzie nie ma strony.
+
+Panel ZP Suite
+- Nowy wygląd: jeden pasek sekcji u góry zamiast bocznego menu, płaski (bez cieni i gradientów), większe i czytelniejsze teksty. Menu WordPressa pokazuje jedną pozycję na sekcję: Pulpit, Treści, Widoczność, Zapytania, Tłumacz EN, Strona, Stan strony, Ustawienia.
+- Pulpit: kliknięcia i wyświetlenia z Search Console z wykresem, frazy w TOP 10 z Senuto z trendem tygodniowym, nowe zapytania, lista „Do zrobienia”, postęp Tłumacza EN, najbliższe wpisy.
+- Nowa zakładka „Stan strony”: zaplanowane zadania (cron), OPcache, limit pól formularza (max_input_vars), pamięć PHP, dane wczytywane przy każdej odsłonie, połączenie z Google, publikacja wpisów, robots.txt, mapy strony (także polskie adresy w mapach EN), błędy 404. Każdy problem ma opis, co zrobić.
+- Nowa zakładka „Błędy 404 i przekierowania”: lista adresów z podpowiedzią celu, przekierowanie jednym kliknięciem, lista przekierowań z licznikiem użyć.
+- Strona główna CMS: ten sam płaski wygląd; pola i zapis bez zmian.
+
+Bez zmian w tej wersji
+- Tłumacz EN i dane tłumaczeń Codexa (opcje, meta wpisów, wersje EN). Nowy tłumacz powstaje osobno.
+- Wtyczka ZP Translator v2 2.0.1.
+
+Cofnięcie do wersji Codexa
+1. Wtyczki → Dodaj nową → Wyślij wtyczkę → plik zaprojektowani-suite-20261013.zip (ZP Suite 2.9.66) → „Zastąp bieżącą wersję przesłaną”.
+2. Nic nie trzeba przywracać: 3.0.0 nie usuwa danych.
+3. Jeśli cache HTML Codexa był włączony (opcja zp_suite3_cache_switched_off ma datę), włącz go w ZP Suite → Strona → Wydajność → Cache HTML.
