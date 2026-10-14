@@ -233,6 +233,11 @@ final class Sync {
         // 3. The Polish page as visitors get it.
         $src = Source::fetch($path, (int) $row->post_id, max(3, min(12, $deadline - time() - 3)));
         if (!$src['ok']) {
+            // A post or category confirmed public above that answers 404 is a hiccup of this one request (security rule,
+            // cache, maintenance), not a removed page: its English version stays and the read is repeated.
+            if ($src['gone'] && in_array((int) $src['code'], [404, 410], true) && ((int) $row->post_id > 0 || (int) $row->term_id > 0)) {
+                $src['gone'] = false;
+            }
             if ($src['gone']) {
                 self::retire($row, $src['error'] . '.');
                 return 'skip';
