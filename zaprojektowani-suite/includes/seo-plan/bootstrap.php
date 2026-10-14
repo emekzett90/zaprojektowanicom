@@ -101,3 +101,4 @@ require_once __DIR__ . '/migration.php';
 require_once __DIR__ . '/admin.php';
 require_once __DIR__ . '/feed.php';
 require_once __DIR__ . '/feed-admin.php';
+require_once __DIR__ . '/og-image.php';
