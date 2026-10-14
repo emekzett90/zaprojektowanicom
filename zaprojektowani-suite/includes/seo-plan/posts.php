@@ -462,6 +462,114 @@ function zp_seo_posts_clean_legacy_schema(string $html, string $canonical, bool 
   }, $html);
 }
 
+/** A node of an old block: 'keep' (FAQPage, HowTo), the page-level type it is, 'service' or '' (left as it is). */
+function zp_seo_posts_old_block_role($node): string {
+  if (!$node instanceof \stdClass) { return ''; }
+  $types = array_map('strval', (array) ($node->{'@type'} ?? []));
+  if (array_intersect($types, ['FAQPage', 'HowTo'])) { return 'keep'; }
+  if (in_array('WebPage', $types, true)) { return 'webpage'; }
+  if (in_array('WebSite', $types, true)) { return 'website'; }
+  if (in_array('BreadcrumbList', $types, true)) { return 'breadcrumb'; }
+  if (array_intersect($types, ['Organization', 'LocalBusiness', 'ProfessionalService', 'Corporation'])) { return 'organization'; }
+  // A Service in a post is a copy of the service page's one, with the old address.
+  return in_array('Service', $types, true) ? 'service' : '';
+}
+
+/** References and own addresses of a kept node: old addresses of the post become $url, references to removed nodes the current ones. */
+function zp_seo_posts_old_block_repoint($value, string $url, array $old_paths, array $removed, string $key = '') {
+  if ($value instanceof \stdClass) {
+    $props = get_object_vars($value);
+    if (array_keys($props) === ['@id'] && is_string($props['@id']) && array_key_exists($props['@id'], $removed)) {
+      return $removed[$props['@id']] === null ? null : (object) ['@id' => $removed[$props['@id']]];
+    }
+    foreach ($props as $k => $part) {
+      $new = zp_seo_posts_old_block_repoint($part, $url, $old_paths, $removed, (string) $k);
+      if ($new === null && $part !== null) { unset($value->{$k}); } else { $value->{$k} = $new; }
+    }
+    return $value;
+  }
+  if (is_array($value)) {
+    $out = [];
+    foreach ($value as $part) {
+      $new = zp_seo_posts_old_block_repoint($part, $url, $old_paths, $removed, $key);
+      if ($new !== null || $part === null) { $out[] = $new; }
+    }
+    return $out;
+  }
+  if (is_string($value) && in_array($key, ['@id', 'url', 'mainEntityOfPage', 'item'], true) && isset($old_paths[zp_seo_posts_schema_path($value)])) {
+    $hash = strpos($value, '#');
+    return $url . ($hash === false ? '' : substr($value, $hash));
+  }
+  return $value;
+}
+
+/**
+ * SearchFit 14.10, point 3: six of Mat's posts (and their English pages) have a second, older JSON-LD block in the
+ * article: WebPage, BreadcrumbList, FAQPage and HowTo, in two of them also WebSite, Organization and Service, under the
+ * addresses the posts had before the move (now 301) and with the old titles. Rank Math describes the page, the site
+ * and the business, and schema.php adds the breadcrumbs, so such a block keeps only FAQPage and HowTo, pointed at the
+ * post's current address. When Rank Math's graph already has a FAQPage, the whole block goes. Only a block with one of
+ * the page-level types is old; the FAQ-only blocks of the plugin's articles stay byte-for-byte.
+ */
+function zp_seo_posts_clean_old_blocks(string $html, string $url): string {
+  $canonical = zp_seo_posts_schema_path($url);
+  if ($canonical === '') { return $html; }
+  $site = home_url('/');
+  return (string) preg_replace_callback('~(<script\b[^>]*application/ld\+json[^>]*>)(.*?)(</script>)~is', static function (array $m) use ($url, $canonical, $site): string {
+    $data = json_decode(trim($m[2]));
+    if (json_last_error() !== JSON_ERROR_NONE) { return $m[0]; }
+    $in_graph = $data instanceof \stdClass && isset($data->{'@graph'}) && is_array($data->{'@graph'});
+    $nodes = $in_graph ? $data->{'@graph'} : (is_array($data) ? $data : [$data]);
+    $roles = array_map('zp_seo_posts_old_block_role', $nodes);
+    if (!array_intersect($roles, ['webpage', 'website', 'breadcrumb', 'organization'])) { return $m[0]; }
+    if (!empty($GLOBALS['zp_seo_posts_rankmath_faq'])) { return ''; }
+    // What the ids of removed nodes become (null: the reference goes), and the post's old addresses.
+    $now = ['webpage' => $url . '#webpage', 'website' => $site . '#website', 'breadcrumb' => $url . '#breadcrumb', 'organization' => $site . '#organization', 'service' => null];
+    $removed = [];
+    $old_paths = [];
+    foreach ($nodes as $i => $node) {
+      if (array_key_exists($roles[$i], $now) && is_string($node->{'@id'} ?? null)) { $removed[$node->{'@id'}] = $now[$roles[$i]]; }
+      if ($roles[$i] !== 'webpage' && $roles[$i] !== 'keep') { continue; }
+      foreach (['@id', 'url'] as $key) {
+        $path = zp_seo_posts_schema_path($node->{$key} ?? '');
+        if ($path !== '' && $path !== '/' && $path !== $canonical) { $old_paths[$path] = true; }
+      }
+    }
+    $kept = [];
+    $faq = false;
+    foreach ($nodes as $i => $node) {
+      if ($roles[$i] !== 'keep' && $roles[$i] !== '') { continue; }
+      $kept[] = zp_seo_posts_old_block_repoint($node, $url, $old_paths, $removed);
+      if ($roles[$i] === 'keep' && in_array('FAQPage', array_map('strval', (array) ($node->{'@type'} ?? [])), true)) { $faq = true; }
+    }
+    if (!$kept) { return ''; }
+    // Content rendered before wp_head: Rank Math's filter (below) then drops its own FAQPage, so the page keeps one.
+    if ($faq && !isset($GLOBALS['zp_seo_posts_rankmath_faq'])) { $GLOBALS['zp_seo_posts_inline_faq'] = true; }
+    if ($in_graph) { $data->{'@graph'} = $kept; } else { $data = $kept; }
+    $json = wp_json_encode($data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP);
+    return is_string($json) ? $m[1] . $json . $m[3] : $m[0];
+  }, $html);
+}
+
+/**
+ * Point 3: whether Rank Math's final graph (after the content modules at 120 and 125) has a FAQPage, for the content
+ * filter. A post rendered before wp_head already kept the old block's FAQPage, so then the graph's one goes instead.
+ */
+add_filter('rank_math/json_ld', function ($data, $jsonld = null) {
+  if (!is_array($data) || is_admin() || !zp_seo_plan_active() || !is_singular('post')) { return $data; }
+  $faq = false;
+  foreach ($data as $key => $node) {
+    $types = is_array($node) ? array_map('strval', (array) ($node['@type'] ?? [])) : [];
+    if (!in_array('FAQPage', $types, true)) { continue; }
+    if (empty($GLOBALS['zp_seo_posts_inline_faq'])) { $faq = true; continue; }
+    if (count($types) === 1) { unset($data[$key]); continue; }
+    $data[$key]['@type'] = array_values(array_diff($types, ['FAQPage']));
+    unset($data[$key]['mainEntity']);
+  }
+  $GLOBALS['zp_seo_posts_rankmath_faq'] = $faq;
+  return $data;
+}, 200, 2);
+
 /** Attribute lookup for bounded head tags; no serialization of the surrounding HTML. */
 function zp_seo_posts_schema_attribute(string $tag, string $name): ?string {
   if (!class_exists('WP_HTML_Tag_Processor')) { return null; }
@@ -547,6 +655,8 @@ function zp_seo_posts_placeholders(string $html): string {
   // supplies the current Article; keep inline FAQPage/HowTo siblings and canonical Articles.
   if (stripos($html, 'application/ld+json') !== false) {
     $html = zp_seo_posts_clean_legacy_schema($html, zp_seo_posts_schema_path((string) get_permalink($id)));
+    // SearchFit 14.10, point 3: the old second block (page-level nodes under the pre-move address).
+    $html = zp_seo_posts_clean_old_blocks($html, (string) get_permalink($id));
   }
 
   $fix = zp_seo_posts_placeholder_fixes()[(string) get_post_field('post_name', $id)] ?? null;
