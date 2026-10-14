@@ -21,8 +21,8 @@ function zp_suite3_bytes($value): int {
   return $unit === 'g' ? $n * 1073741824 : ($unit === 'm' ? $n * 1048576 : ($unit === 'k' ? $n * 1024 : $n));
 }
 
-function zp_suite3_check(string $id, string $title, string $state, string $text, string $url = ''): array {
-  return ['id' => $id, 'title' => $title, 'state' => $state, 'text' => $text, 'url' => $url];
+function zp_suite3_check(string $id, string $title, string $state, string $text, string $url = '', string $action = '', string $confirm = ''): array {
+  return ['id' => $id, 'title' => $title, 'state' => $state, 'text' => $text, 'url' => $url, 'action' => $action, 'confirm' => $confirm];
 }
 
 /** Hooks this site's modules schedule, with a readable name (others are counted, not named). */
@@ -117,6 +117,17 @@ function zp_suite3_health_checks(bool $deep = false): array {
       $checks[] = zp_suite3_check('page_cache', 'Cache stron wymaga uwagi', 'warn', $c['error'] !== '' ? $c['error'] : 'WP_CACHE jest wyłączone w wp-config.php, więc cache nie podaje stron.', $url);
     } else {
       $checks[] = zp_suite3_check('page_cache', 'Cache stron wyłączony', 'warn', 'Strony są składane w PHP przy każdej odsłonie (około 1 s zamiast 0,1 s). ' . ($upgrade_error !== '' ? 'Aktualizacja zgłosiła: ' . $upgrade_error . '. ' : '') . 'Włącz go przyciskiem „Włącz ponownie cache HTML” na stronie Cache HTML.', $url);
+    }
+  }
+
+  // Titles with the Rank Math phrase (SEO audit 13.10): their undo link is otherwise only in the notice shown once, to
+  // whoever opens wp-admin first after the update.
+  if (function_exists('zp_seo_audit_titles_restore') && defined('ZP_SEO_AUDIT_TITLES_RESULT')) {
+    $titles = get_option(ZP_SEO_AUDIT_TITLES_RESULT, []);
+    if (is_array($titles) && !empty($titles['rows']) && empty($titles['restored'])) {
+      $changed = count(array_filter((array) $titles['rows'], static fn($row) => is_array($row) && in_array('updated', $row, true)));
+      $undo = wp_nonce_url(admin_url('admin-post.php?action=zp_seo_audit_titles_restore'), 'zp_seo_audit_titles_restore');
+      $checks[] = zp_suite3_check('seo_titles', 'Tytuły z frazą z audytu SEO 13.10', 'info', sprintf('Zmienione strony i wpisy: %d. Poprzednie tytuły i frazy Rank Math są zapisane. Przycisk je przywraca; tytuły, które później zmienisz ręcznie, zostają.', $changed), $undo, 'Cofnij tytuły', 'Przywrócić poprzednie tytuły i frazy Rank Math?');
     }
   }
 
@@ -261,7 +272,8 @@ function zp_suite3_health_page(): void {
   echo '<section class="card"><div class="health-list">';
   foreach ($checks as $c) {
     echo '<div class="health-row is-' . esc_attr($c['state']) . '" id="health-' . esc_attr($c['id']) . '"><span class="dashicons dashicons-' . esc_attr($icons[$c['state']]) . '" aria-hidden="true"></span><div><h3>' . esc_html($c['title']) . '</h3><p>' . esc_html($c['text']) . '</p></div>';
-    echo $c['url'] !== '' && $c['state'] !== 'ok' ? '<a class="button health-act" href="' . esc_url($c['url']) . '">Otwórz</a>' : '<span></span>';
+    $confirm = ($c['confirm'] ?? '') !== '' ? ' onclick="return confirm(' . esc_attr(wp_json_encode($c['confirm'])) . ')"' : '';
+    echo $c['url'] !== '' && $c['state'] !== 'ok' ? '<a class="button health-act" href="' . esc_url($c['url']) . '"' . $confirm . '>' . esc_html(($c['action'] ?? '') !== '' ? $c['action'] : 'Otwórz') . '</a>' : '<span></span>';
     echo '</div>';
   }
   echo '</div><div class="subtle-foot">Sprawdzenie map strony, robots.txt i strony głównej: co 6 godzin albo po „Sprawdź ponownie”.</div></section>';
