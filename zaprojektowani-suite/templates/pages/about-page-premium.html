@@ -326,6 +326,58 @@ Self-contained shortcode template: [zp_o_nas]
     .zpAboutX__awardFeature{padding:24px!important}
   }
 
+
+  /* =========================================================
+     3.0 (13.10.2026) — O nas: spacing fixes and flat surfaces
+     Mat 13.10: no gradients and no drop shadows. The bottom fades on the cut-out photos stay.
+     ========================================================= */
+  /* front-fixes-290.css lifts the team portraits by 116px; the heads then ran into the heading
+     (desktop and tablet) and into the card above (tablet). The process photo is taller than its box
+     and ran into the paragraph above it. */
+  @media(min-width:1181px){
+    #zpAboutX .zpAboutX__teamSection .zpAboutX__teamGrid{padding-top:340px}
+    #zpAboutX .zpAboutX__sticky .zpAboutX__processPhoto{margin-top:112px!important}
+  }
+  @media(min-width:761px) and (max-width:1180px){
+    #zpAboutX .zpAboutX__teamSection .zpAboutX__teamGrid{padding-top:340px;row-gap:330px!important}
+    #zpAboutX .zpAboutX__sticky .zpAboutX__processPhoto{margin-top:90px!important}
+  }
+  /* Phones: the hero photo box was 500px for a 265px photo, leaving a 220px hole under the buttons. */
+  @media(max-width:520px){
+    #zpAboutX .zpAboutX__heroVisual{min-height:min(500px,calc(79vw + 28px))}
+    #zpAboutX .zpAboutX__heroVisual .zpAboutX__heroPerson{bottom:56px}
+  }
+  @media(max-width:760px){
+    #zpAboutX .zpAboutX__hero{padding-bottom:40px}
+    #zpAboutX .zpAboutX__awards .zpAboutX__award{min-height:0;padding:24px}
+    #zpAboutX .zpAboutX__awards .zpAboutX__award strong{margin-top:20px}
+    #zpAboutX .zpAboutX__awardCards .zpAboutX__studioAward{min-height:0}
+    #zpAboutX .zpAboutX__reviewsGrid .zpAboutX__review{min-height:0}
+  }
+  /* The "4 kategorie / 2026" pill took the note's white text colour and showed up empty. */
+  #zpAboutX .zpAboutX__awardsNote .zpAboutX__awardsNoteBadge{display:inline-flex;margin-top:0;color:#071426;line-height:1}
+
+  /* Flat colours instead of gradients. */
+  #zpAboutX .zpAboutX__hero{background:#fff}
+  #zpAboutX .zpAboutX__hero h1 strong{background:none;-webkit-background-clip:border-box;background-clip:border-box;color:var(--navy2);-webkit-text-fill-color:currentColor}
+  #zpAboutX .zpAboutX__eyebrow:before{background:var(--navy2)}
+  #zpAboutX .zpAboutX__history .zpAboutX__eyebrow:before,#zpAboutX .zpAboutX__studioAwards .zpAboutX__eyebrow:before,#zpAboutX .zpAboutX__reviews .zpAboutX__eyebrow:before,#zpAboutX .zpAboutX__cta .zpAboutX__eyebrow:before{background:#8ec8f7}
+  #zpAboutX .zpAboutX__btn:before{background:var(--navy)}
+  #zpAboutX .zpAboutX__btn--dark:before{background:var(--navy2)}
+  #zpAboutX .zpAboutX__award--dark,#zpAboutX .zpAboutX__member--dark,#zpAboutX .zpAboutX__trustindex,#zpAboutX .zpAboutX__studioAwards,#zpAboutX .zpAboutX__cta{background:var(--navy)}
+  #zpAboutX .zpAboutX__trustindexLogo{background:rgba(255,255,255,.04)}
+  #zpAboutX .zpAboutX__awardFeature{background:rgba(255,255,255,.045)}
+  #zpAboutX .zpAboutX__review--featured{background:rgba(255,255,255,.06)}
+  #zpAboutX .zpAboutX__timeline:after{background:#8ec8f7}
+
+  /* No shadows: hover keeps the lift and the border colour. */
+  #zpAboutX .zpAboutX__heroVisual:before,#zpAboutX .zpAboutX__sticky .zpAboutX__processPhoto:before{display:none!important}
+  #zpAboutX .zpAboutX__heroVisual .zpAboutX__heroPerson,#zpAboutX .zpAboutX__sticky .zpAboutX__processPhoto img{filter:none!important}
+  #zpAboutX .zpAboutX__heroCard{background:#fff;box-shadow:none;-webkit-backdrop-filter:none;backdrop-filter:none}
+  #zpAboutX .zpAboutX__heroProof span:before,#zpAboutX .zpAboutX__trustindexLogo,#zpAboutX .zpAboutX__awardTrophy{box-shadow:none}
+  #zpAboutX .zpAboutX__award:hover,#zpAboutX .zpAboutX__member:hover,#zpAboutX .zpAboutX__trustindex:hover,#zpAboutX .zpAboutX__caps .zpAboutX__cap--link:hover{box-shadow:none}
+  #zpAboutX .zpAboutX__timeline:after,#zpAboutX .zpAboutX__timeline .zpAboutX__year:before,#zpAboutX .zpAboutX__timeline .zpAboutX__year.is-visible:before{box-shadow:none}
+
   </style>
 
   <section class="zpAboutX__hero">

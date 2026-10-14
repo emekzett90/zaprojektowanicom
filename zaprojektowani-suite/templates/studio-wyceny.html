@@ -137,6 +137,8 @@ html body .elementor-section:has(#zpStudioV19FrameShell){background:#fff!importa
   function tryApply(){
     var params=new URLSearchParams(window.location.search||'');
     var service=params.get('zpbs_service')||params.get('service');
+    /* 3.0: to samo po # (np. /studio-wyceny/#zpbs_service=shop&zpbs_package=Sklep%20Rozwojowy), żeby linki do Studia nie musiały mieć parametrów w adresie. */
+    if(!service&&/^#zpbs_service=/.test(window.location.hash||'')){params=new URLSearchParams(window.location.hash.slice(1));service=params.get('zpbs_service');}
     if(['web','shop','brand','ads'].indexOf(service)<0) return;
     var root=document.getElementById('zpbsUltimate');
     if(!root) return;
