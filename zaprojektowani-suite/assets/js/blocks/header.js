@@ -682,8 +682,11 @@
     }
     function schedule(){if(raf) return; raf=w.requestAnimationFrame(sync)}
     function scheduleInitial(){
-      var vw=w.innerWidth || d.documentElement.clientWidth || 0;
-      if(vw<=1100){schedule();return;}
+      /* 3.1.1: a media query instead of innerWidth, which made the browser work out the styles of the
+         whole page again right after the icon changes above (about 30 ms on a phone at page start). */
+      var compact;
+      try{compact=w.matchMedia('(max-width:1100px)').matches;}catch(e){compact=(w.innerWidth || d.documentElement.clientWidth || 0)<=1100;}
+      if(compact){schedule();return;}
       if('requestIdleCallback' in w){w.requestIdleCallback(schedule,{timeout:900});}
       else{w.setTimeout(schedule,180);}
     }

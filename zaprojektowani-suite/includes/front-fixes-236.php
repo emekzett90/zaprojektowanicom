@@ -39,7 +39,9 @@ add_action('wp_footer', function(){
         revealEarly();
       });
     }
-    if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',revealEarly,{once:true}); else revealEarly();
+    /* 3.1.1: also the first pass runs in the next frame, before it is painted, so its measuring does not
+       make the browser work out the styles of the page once more during the page start. */
+    if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',scheduleReveal,{once:true}); else scheduleReveal();
     window.addEventListener('scroll',scheduleReveal,{passive:true});
     window.addEventListener('resize',scheduleReveal,{passive:true});
   })();
