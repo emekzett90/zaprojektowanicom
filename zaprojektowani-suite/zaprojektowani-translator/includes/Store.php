@@ -190,10 +190,10 @@ final class Store {
         self::page_update($id, ['queued' => 1, 'priority' => $prio]);
     }
 
-    /** Next page to read (queued and not waiting for OpenAI). @return object|null */
+    /** Next page to read (queued, not waiting for OpenAI; a page that just failed to load waits 10 minutes). @return object|null */
     public static function next_queued() {
         global $wpdb;
-        $row = $wpdb->get_row('SELECT * FROM ' . self::table('pages') . " WHERE queued = 1 AND stage = '' AND status <> 'off' ORDER BY priority ASC, id ASC LIMIT 1");
+        $row = $wpdb->get_row($wpdb->prepare('SELECT * FROM ' . self::table('pages') . " WHERE queued = 1 AND stage = '' AND status <> 'off' AND (tries = 0 OR checked_at IS NULL OR checked_at < %s) ORDER BY priority ASC, id ASC LIMIT 1", gmdate('Y-m-d H:i:s', time() - 10 * MINUTE_IN_SECONDS)));
         return $row ?: null;
     }
 
@@ -333,6 +333,14 @@ final class Store {
         return $n;
     }
 
+    /** Translations of the memory shown on every English page from now on (menu, footer, titles). */
+    public static function mark_shared(array $hashes): void {
+        global $wpdb;
+        foreach (array_chunk(array_values(array_unique($hashes)), 300) as $chunk) {
+            $wpdb->query($wpdb->prepare('UPDATE ' . self::table('strings') . ' SET shared = 1 WHERE scope = 0 AND shared = 0 AND hash IN (' . implode(',', array_fill(0, count($chunk), '%s')) . ')', $chunk));
+        }
+    }
+
     public static function string_edit(int $id, string $en): void {
         global $wpdb;
         $wpdb->update(self::table('strings'), ['en' => $en, 'manual' => 1, 'origin' => 'manual', 'updated_at' => self::now()], ['id' => $id]);
@@ -350,6 +358,23 @@ final class Store {
         foreach (array_chunk(array_values(array_unique($hashes)), 300) as $chunk) {
             $wpdb->query($wpdb->prepare('DELETE FROM ' . self::table('strings') . ' WHERE scope = %d AND manual = 0 AND hash IN (' . implode(',', array_fill(0, count($chunk), '%s')) . ')', array_merge([$scope], $chunk)));
         }
+    }
+
+    /**
+     * Translations whose Polish or English text contains $q (newest first); without $q the latest ones.
+     * @return object[] rows with id, scope, pl, en, origin, shared, manual, model, updated_at
+     */
+    public static function find_strings(string $q, int $limit = 50, int $offset = 0): array {
+        global $wpdb;
+        $t = self::table('strings');
+        $cols = 'id, scope, hash, pl, en, kind, origin, shared, manual, model, updated_at';
+        if ($q === '') {
+            $rows = $wpdb->get_results($wpdb->prepare("SELECT {$cols} FROM {$t} WHERE en <> '' ORDER BY updated_at DESC, id DESC LIMIT %d OFFSET %d", $limit, $offset));
+        } else {
+            $like = '%' . $wpdb->esc_like($q) . '%';
+            $rows = $wpdb->get_results($wpdb->prepare("SELECT {$cols} FROM {$t} WHERE pl LIKE %s OR en LIKE %s ORDER BY scope ASC, updated_at DESC LIMIT %d OFFSET %d", $like, $like, $limit, $offset));
+        }
+        return is_array($rows) ? $rows : [];
     }
 
     public static function count_strings(array $where = []): int {
@@ -407,6 +432,19 @@ final class Store {
             $wpdb->insert($t, $data);
         }
         return $rev;
+    }
+
+    /** Remember which texts the Polish page has now (hash => kind); the served map stays until it is compiled. */
+    public static function keys_save(int $page_id, string $path_hash, array $keys): void {
+        global $wpdb;
+        $t = self::table('maps');
+        $json = (string) wp_json_encode((object) $keys, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+        $exists = $wpdb->get_var($wpdb->prepare("SELECT page_id FROM {$t} WHERE page_id = %d", $page_id));
+        if ($exists !== null) {
+            $wpdb->update($t, ['keys_list' => $json, 'path_hash' => $path_hash, 'updated_at' => self::now()], ['page_id' => $page_id]);
+        } else {
+            $wpdb->insert($t, ['page_id' => $page_id, 'path_hash' => $path_hash, 'rev' => 0, 'map' => '{}', 'keys_list' => $json, 'updated_at' => self::now()]);
+        }
     }
 
     /** Pages whose current Polish version uses one of these keys. @return int[] page ids */

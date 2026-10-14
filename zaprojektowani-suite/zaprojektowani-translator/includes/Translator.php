@@ -140,6 +140,21 @@ TXT;
         return '';
     }
 
+    /**
+     * Daily check of a saved translation: only faults that show on the page (broken link markers or fields,
+     * Polish text left in English). Length and wording of earlier translations are left as they are.
+     */
+    public static function broken(string $pl, string $en): string {
+        if (preg_match('~</?\d+/?>~', $pl . $en) && !\ZPL\Html::markers_match($pl, $en)) { return 'znaczniki linków lub pogrubień się nie zgadzają'; }
+        preg_match_all('~\{\d+\}~', $pl, $a);
+        preg_match_all('~\{\d+\}~', $en, $b);
+        $a = $a[0]; $b = $b[0]; sort($a); sort($b);
+        if ($a !== $b) { return 'zmienione pola {n}'; }
+        if ($en !== $pl && self::polish_score($en) >= 3) { return 'tekst nadal po polsku'; }
+        if ($en === $pl && self::still_polish($pl, $en)) { return 'tekst nadal po polsku'; }
+        return '';
+    }
+
     /** URLs, e-mails and phone numbers that must survive translation unchanged. */
     private static function fixed_tokens(string $s): array {
         $out = [];

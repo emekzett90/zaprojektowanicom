@@ -62,7 +62,7 @@ final class Serve {
         if (!Import::done()) {
             // Until the copy is finished, the addresses of the earlier translators keep working as they did.
             foreach (Legacy::all_routes() as $pl => $en) {
-                if (!isset($routes[$pl]) && !isset($mine[$pl]) && !Routes::polish($en)) { $routes[$pl] = $en; }
+                if (!isset($routes[$pl]) && !isset($mine[$pl])) { $routes[$pl] = $en; }
             }
             foreach (Routes::FIXED as $pl => $en) { if (!isset($mine[$pl])) { $routes[$pl] = $en; } }
         }
@@ -180,10 +180,10 @@ final class Serve {
     public static function has_page($has, $source) {
         if ($has) { return true; }
         $source = (string) $source;
-        if (isset(Routes::all()[$source])) { return true; }
+        if (Index::has($source)) { return true; }
         if (!Import::done()) {
             $legacy = Legacy::all_routes();
-            if (isset($legacy[$source]) || isset(Routes::FIXED[$source])) { return (bool) Legacy::page_map($source); }
+            if (isset($legacy[$source]) || isset(Routes::FIXED[$source]) || array_key_exists($source, Legacy::codex_active())) { return (bool) Legacy::page_map($source); }
         }
         return false;
     }
@@ -191,9 +191,10 @@ final class Serve {
     /** @param mixed $pages */
     public static function sitemap_pages($pages) {
         $pages = is_array($pages) ? $pages : [];
-        foreach (array_keys(Routes::all()) as $pl) { $pages[] = (string) $pl; }
+        foreach (Index::pages() as $pl) { $pages[] = (string) $pl; }
         if (!Import::done()) {
             foreach (array_keys(Legacy::all_routes()) as $pl) { $pages[] = (string) $pl; }
+            foreach (array_keys(Legacy::codex_active()) as $pl) { $pages[] = (string) $pl; }
         }
         return array_values(array_unique($pages));
     }

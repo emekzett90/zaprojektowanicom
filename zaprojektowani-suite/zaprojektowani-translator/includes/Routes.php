@@ -76,7 +76,7 @@ final class Routes {
         $taken = [];
         foreach ((array) $rows as $row) {
             [$pl, $en] = [(string) $row[0], (string) $row[1]];
-            if (!self::valid_en($en) || isset($taken[$en])) { continue; }
+            if (!self::valid_en($en) || isset($taken[$en]) || self::external($pl)) { continue; }
             $r[$pl] = $en;
             $taken[$en] = true;
         }
@@ -101,6 +101,17 @@ final class Routes {
         if (class_exists('ZPL\\Dict')) { \ZPL\Dict::flush(); }
         if (class_exists('ZPL\\Sitemap') && method_exists('ZPL\\Sitemap', 'forget')) { \ZPL\Sitemap::forget(); }
         wp_cache_delete('routes', 'zpte2');
+    }
+
+    /**
+     * The address comes from the language module itself (its shipped data or its routes option, which the owner
+     * can edit in Języki PL/EN → Adresy URL): this module never changes it.
+     */
+    public static function external(string $pl): bool {
+        $data = \ZPL\Router::data();
+        if (isset($data['routes'][$pl])) { return true; }
+        $custom = get_option('zpl_routes', []);
+        return is_array($custom) && isset($custom[$pl]) && is_string($custom[$pl]) && $custom[$pl] !== '';
     }
 
     public static function valid_en(string $en): bool {

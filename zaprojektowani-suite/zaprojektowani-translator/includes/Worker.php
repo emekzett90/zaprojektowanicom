@@ -4,402 +4,557 @@ namespace ZPTE;
 if (!defined('ABSPATH')) { exit; }
 
 /**
- * WP-Cron: once a day (03:00 site time) the planner queues pages, then a worker translates them in short
- * bounded steps (24 s each, with an admin-browser fallback) until the queue is empty or the daily budget is used.
+ * Runs the translator in short steps (≤ 22 s, below common hosting limits), one at a time (lock), until the
+ * queue is empty:
+ *  - first the copy of the earlier translations (Import), with no API calls;
+ *  - then pages: read → OpenAI jobs in the background (up to 6 at once) → answers → English page.
+ * Steps chain themselves through a request to this site's own REST address, with WP-Cron as a fallback, so
+ * the work continues at night without visitors. Open panel = another fallback. Every 03:00 (site time) the
+ * daily check queues new, edited and all other pages; publishing or updating a post queues it at once.
  */
 final class Worker {
-    const DAILY = 'zpte_daily';
-    const WORK = 'zpte_work';
-    const SCAN = 'zpte_scan_retry';
-    const LOCK = 'zpte_lock';
-    const STEP = 24;          // stay below the common 30-second hosting limit
-    const STATE = 'zpte_progress';
-    const LOCK_TTL = 180;
+    const DAILY = 'zpte2_daily';
+    const WORK = 'zpte2_work';
+    const LOCK = 'zpte2_lock';
+    const STATE = 'zpte2_state';
+    const TICK = 'zpte2_tick_key';
+    const STEP = 22;
+    const LOCK_TTL = 90;
+    const IN_FLIGHT = 6;
+    const SENT_MAX_AGE = 1800;  // no answer after 30 minutes: ask again
+    const UNKNOWN_WAIT = 600;   // sending ended without an answer: maybe accepted, so wait before sending again
+
     private static $token = '';
 
     public static function boot(): void {
         add_action(self::DAILY, [self::class, 'daily']);
-        add_action(self::WORK, [self::class, 'work']);
-        add_action(self::SCAN, [self::class, 'plan'], 10, 1);
+        add_action(self::WORK, [self::class, 'cron']);
         add_action('init', [self::class, 'maintain'], 20);
+        add_action('rest_api_init', [self::class, 'rest']);
+        add_action('wp_after_insert_post', [self::class, 'saved'], 20, 4);
         add_action('transition_post_status', [self::class, 'status_changed'], 10, 3);
         add_action('before_delete_post', [self::class, 'deleted']);
+        add_action('created_category', [self::class, 'term_changed']);
+        add_action('edited_category', [self::class, 'term_changed']);
     }
 
-    /** Tables, first-run settings and the daily event (self-healing after updates or a cron reset). */
+    // ------------------------------------------------------------------ state
+
+    public static function state(): array {
+        $s = get_option(self::STATE, []);
+        $s = is_array($s) ? $s : [];
+        $run = array_merge(['started' => 0, 'total' => 0, 'done' => 0, 'errors' => 0, 'who' => '', 'finished' => 0], is_array($s['run'] ?? null) ? $s['run'] : []);
+        $s = array_merge(['work' => 0, 'phase' => 'idle', 'message' => '', 'step_at' => 0, 'daily_at' => 0, 'retry_at' => 0, 'current' => ''], $s);
+        $s['run'] = $run;
+        // Names the older status screen reads.
+        $s['state'] = $s['phase'];
+        $s['total'] = $run['total'];
+        $s['done'] = $run['done'];
+        $s['errors'] = $run['errors'];
+        $s['updated_at'] = $s['step_at'];
+        $s['finished_at'] = $run['finished'];
+        return $s;
+    }
+
+    private static function update(array $data): void {
+        $s = get_option(self::STATE, []);
+        $s = is_array($s) ? $s : [];
+        if (isset($data['run']) && is_array($data['run'])) { $data['run'] = array_merge(is_array($s['run'] ?? null) ? $s['run'] : [], $data['run']); }
+        update_option(self::STATE, array_merge($s, $data), true);
+    }
+
+    /** One page of the current run finished (translated, unchanged, skipped). */
+    public static function page_finished(bool $error = false): void {
+        $s = self::state();
+        self::update(['run' => ['done' => (int) $s['run']['done'] + 1, 'errors' => (int) $s['run']['errors'] + ($error ? 1 : 0)], 'current' => '']);
+    }
+
+    public static function running(): bool {
+        $t = (int) get_option(self::LOCK);
+        return $t > 0 && $t >= time() - self::LOCK_TTL;
+    }
+
+    /** Waiting for the owner (key, credit, model) or for a limit to renew. */
+    public static function paused(): string {
+        if (Settings::api_key() === '') { return 'Brak klucza API OpenAI. Wklej go w Ustawieniach.'; }
+        if ($a = Log::current_alert()) { return (string) $a['m']; }
+        $s = self::state();
+        if ((int) $s['retry_at'] > time()) { return (string) $s['message']; }
+        return '';
+    }
+
+    // ------------------------------------------------------------ scheduling
+
+    /** Tables, the daily event and a watchdog. Front-end requests only check one autoloaded option. */
     public static function maintain(): void {
-        if (function_exists('zp_en_legacy_paid_blocked') && \zp_en_legacy_paid_blocked()) { return; }
         if (!Bridge::ready()) { return; }
-        Store::install();
-        Settings::migrate();
-        Settings::ensure_since();
+        $admin = is_admin() || wp_doing_cron();
+        if ($admin) {
+            Store::install();
+            self::schedule_daily(false);
+        }
+        $s = self::state();
+        if (!empty($s['work']) && !self::running() && !wp_next_scheduled(self::WORK)) {
+            wp_schedule_single_event(time() + 5, self::WORK);
+        }
+        if ($admin && !Import::done() && !wp_next_scheduled(self::WORK) && !self::running()) {
+            self::update(['work' => 1]);
+            wp_schedule_single_event(time() + 2, self::WORK);
+        }
+    }
+
+    /** Next 03:00 in the site's time zone (Europe/Warsaw on the live site). */
+    public static function next_daily(): int {
+        $at = new \DateTimeImmutable('today 03:00', wp_timezone());
+        if ($at->getTimestamp() <= time() + 60) { $at = $at->modify('+1 day'); }
+        return $at->getTimestamp();
+    }
+
+    private static function schedule_daily(bool $reset): void {
         $next = wp_next_scheduled(self::DAILY);
         if (!Settings::get('enabled')) {
             if ($next) { wp_clear_scheduled_hook(self::DAILY); }
             return;
         }
-        // Preserve overdue events: WordPress must execute them, not postpone them by another day.
-        // A single event is recalculated after every scan so DST never turns 03:00 into 02:00/04:00.
-        if ($next && $next > time() && (int) wp_date('G', $next) !== 3) {
+        // A single event recalculated every day keeps 03:00 right across summer and winter time.
+        if ($next && ($reset || ($next > time() && (int) wp_date('G', $next) !== 3))) {
             wp_clear_scheduled_hook(self::DAILY);
-            $candidate = self::next_daily();
-            if ($candidate > $next) { $candidate = time() + 5; }
-            wp_schedule_single_event($candidate, self::DAILY);
-            $next = $candidate;
+            $next = 0;
         }
         if (!$next) { wp_schedule_single_event(self::next_daily(), self::DAILY); }
-        // Reconcile the newly included backlog once after this upgrade. Keep the
-        // flag while no API key is configured; the ordinary daily scan also remains.
-        if (get_option('zpte_coverage_rescan') === '1' && Settings::api_key() !== '') {
-            if (wp_next_scheduled(self::SCAN, ['cron']) || wp_schedule_single_event(time() + 60, self::SCAN, ['cron'])) {
-                delete_option('zpte_coverage_rescan');
-            }
-        }
-        // A killed request must not strand the persisted queue. The work hook is also a watchdog.
-        if (Store::queued_count() && !wp_next_scheduled(self::WORK) && !self::running() && !Log::current_alert()) {
-            $state = self::state();
-            self::kick(max(5, (int) $state['retry_at'] - time()));
-        }
     }
 
-    public static function unschedule(): void {
-        wp_clear_scheduled_hook(self::DAILY);
-        wp_clear_scheduled_hook(self::WORK);
-        wp_unschedule_hook(self::SCAN);
-        delete_option(self::LOCK);
-    }
-
-    /** Next 03:00 in the site's time zone. */
-    public static function next_daily(): int {
-        $tz = wp_timezone();
-        $at = new \DateTimeImmutable('today 03:00', $tz);
-        if ($at->getTimestamp() <= time() + 300) { $at = $at->modify('+1 day'); }
-        return $at->getTimestamp();
+    /** Was today's 03:00 check missed (no traffic at night, WP-Cron off)? */
+    private static function daily_due(): bool {
+        if (!Settings::get('enabled') || !Import::done()) { return false; }
+        $today = (new \DateTimeImmutable('today 03:00', wp_timezone()))->getTimestamp();
+        return time() >= $today && (int) self::state()['daily_at'] < $today;
     }
 
     public static function daily(): void {
-        if (function_exists('zp_en_legacy_paid_blocked') && \zp_en_legacy_paid_blocked()) { return; }
+        self::schedule_daily(true);
         if (!Settings::get('enabled')) { return; }
-        wp_clear_scheduled_hook(self::DAILY);
-        wp_schedule_single_event(self::next_daily(), self::DAILY);
         self::plan('cron');
     }
 
-    // ---------------------------------------------------------------- planner
-
-    /** Queue what needs translating and start the worker. Returns a short summary. */
-    public static function plan(string $who = 'cron'): string {
-        if (function_exists('zp_en_legacy_paid_blocked') && \zp_en_legacy_paid_blocked()) { return 'Poprzednia kolejka jest zachowana jako archiwum. Aktualne tłumaczenia Luna są obsługiwane w karcie powyżej.'; }
-        if ($who === 'cron' && !Settings::get('enabled')) { return 'Codzienny harmonogram jest wyłączony.'; }
-        if (!Bridge::hooks_ready()) {
-            $m = 'Moduł językowy nie ma haków dla Tłumacza EN (potrzebny zaprojektowani-languages 1.0.13+) — nic nie tłumaczę.';
-            Log::add($m, 'error');
-            return $m;
-        }
-        if (Settings::api_key() === '') {
-            $m = 'Brak klucza API OpenAI — nic nie tłumaczę. Wklej klucz w ZP Suite → Tłumacz EN → Ustawienia.';
-            Log::add($m, 'warning');
-            return $m;
-        }
+    /** Queue everything that needs a look; returns the counts for the log and the panel. */
+    public static function plan(string $who): array {
+        if (!Bridge::ready()) { return []; }
         Store::install();
-        if (!self::lock()) {
-            if (!wp_next_scheduled(self::SCAN, [$who])) { wp_schedule_single_event(time() + 60, self::SCAN, [$who]); }
-            return 'Trwa przetwarzanie kolejki — postęp aktualizuje się poniżej. Sprawdzenie nowych treści zostało zaplanowane ponownie za minutę.';
+        if (!Import::done()) {
+            self::update(['work' => 1]);
+            self::chain(1);
+            return ['import' => 1];
         }
-        try {
-        wp_clear_scheduled_hook(self::SCAN, [$who]);
-        if ($who !== 'cron') { Log::clear_alert(); self::update_state(['retry_at' => 0, 'state' => 'queued']); }
-        $n = self::plan_posts();
-        $m = self::plan_changed();
-        $r = self::plan_retry();
-        $g = Settings::get('gaps') ? self::plan_existing() : 0;
-        update_option('zpte_last_plan', time(), false);
+        $c = Sync::plan_all();
         $q = Store::queued_count();
-        $summary = sprintf('Sprawdzenie (%s): nowe %d, zmienione %d, ponowne próby %d, strony EN do uzupełnienia %d — w kolejce %d.', $who === 'cron' ? 'codzienne' : 'ręczne', $n, $m, $r, $g, $q);
-        Log::add($summary);
-        self::begin($q);
-        if ($q > 0) { self::kick(5); }
-        else { self::complete(); }
-        return $summary;
-        } finally { self::unlock(); }
+        $s = self::state();
+        $fresh = !(int) $s['run']['started'] || (int) $s['run']['finished'] || !$s['work'];
+        self::update([
+            'work' => 1, 'phase' => 'translating', 'daily_at' => in_array($who, ['cron', 'tick', 'import'], true) ? time() : (int) $s['daily_at'],
+            'run' => $fresh ? ['started' => time(), 'total' => $q, 'done' => 0, 'errors' => 0, 'who' => $who, 'finished' => 0] : ['total' => max((int) $s['run']['total'], (int) $s['run']['done'] + $q)],
+            'message' => 'Sprawdzam strony i tłumaczę nowe teksty.',
+        ]);
+        $label = ['cron' => 'codzienne', 'tick' => 'codzienne', 'import' => 'pierwsze po przeniesieniu', 'manual' => 'ręczne'][$who] ?? $who;
+        Log::add(sprintf('Sprawdzenie (%s): nowe %d, zmienione %d, pozostałe %d — w kolejce %d.', $label, $c['new'] ?? 0, $c['changed'] ?? 0, $c['recheck'] ?? 0, $q));
+        self::chain(1);
+        return $c;
     }
 
-    /** Published posts/pages without an English version: new ones always, older ones when switched on. */
-    private static function plan_posts(): int {
-        $types = Settings::types();
-        if (!$types) { return 0; }
-        $since = Settings::since_gmt();
-        $older = (bool) Settings::get('older');
-        $args = [
-            'post_type' => $types,
-            'post_status' => 'publish',
-            'has_password' => false,
-            'posts_per_page' => 500,
-            'orderby' => 'date',
-            'order' => 'DESC',
-            'fields' => 'ids',
-            'no_found_rows' => true,
-            'suppress_filters' => true,
-            'ignore_sticky_posts' => true,
-        ];
-        if (!$older) { $args['date_query'] = [['column' => 'post_date_gmt', 'after' => $since, 'inclusive' => true]]; }
-        $added = 0;
-        $page = 1;
-        do {
-        $args['paged'] = $page++;
-        $posts = (array) get_posts($args);
-        foreach ($posts as $pid) {
-            $pid = (int) $pid;
-            if ($row = Store::path_by_post($pid)) {
-                // Switched off because the post was hidden or noindexed: back in when it is edited or published again.
-                if ($row->status === 'skipped' && $row->kind !== 'existing' && !(int) $row->queued
-                    && (string) get_post_field('post_modified_gmt', $pid) > (string) $row->checked_at) {
-                    Store::queue((int) $row->id, $row->kind === 'new' ? 10 : 40);
-                    $added++;
+    /** Run the next step soon: a request to this site's REST address now, WP-Cron as the fallback. */
+    public static function chain(int $delay): void {
+        $at = time() + max(1, $delay) + 25;
+        $next = wp_next_scheduled(self::WORK);
+        if ($next && $next > $at) { wp_unschedule_event($next, self::WORK); $next = false; }
+        if (!$next) { wp_schedule_single_event($at, self::WORK); }
+        if ($delay <= 3) { self::tick_async(); }
+    }
+
+    private static function tick_async(): void {
+        wp_remote_post(rest_url('zpte/v1/tick'), [
+            'timeout' => 0.01,
+            'blocking' => false,
+            'sslverify' => (bool) apply_filters('https_local_ssl_verify', false),
+            'body' => ['key' => self::tick_key()],
+            'headers' => ['Cache-Control' => 'no-cache'],
+        ]);
+    }
+
+    public static function tick_key(): string {
+        $k = (string) get_option(self::TICK, '');
+        if (strlen($k) < 24) {
+            $k = wp_generate_password(32, false, false);
+            update_option(self::TICK, $k, false);
+        }
+        return $k;
+    }
+
+    /** Address for an outside scheduler (hosting cron or an uptime monitor): runs a step, starts a missed daily check. */
+    public static function tick_url(): string {
+        return add_query_arg('key', self::tick_key(), rest_url('zpte/v1/tick'));
+    }
+
+    public static function rest(): void {
+        register_rest_route('zpte/v1', '/tick', [
+            'methods' => ['GET', 'POST'],
+            'permission_callback' => '__return_true',
+            'callback' => [self::class, 'tick'],
+        ]);
+    }
+
+    /** @param \WP_REST_Request $r */
+    public static function tick($r) {
+        $key = $r->get_param('key');
+        if (!is_string($key) || !hash_equals(self::tick_key(), $key)) {
+            return new \WP_Error('zpte_key', 'Nieprawidłowy klucz.', ['status' => 403]);
+        }
+        do_action('litespeed_control_set_nocache', 'zpte tick');
+        ignore_user_abort(true);
+        if (self::daily_due()) { self::plan('tick'); }
+        $s = self::state();
+        $out = ['ok' => true, 'busy' => false, 'work' => !empty($s['work']) || !Import::done()];
+        if ($out['work']) { $out = array_merge($out, self::work('tick')); }
+        $res = new \WP_REST_Response($out);
+        $res->header('Cache-Control', 'no-store, max-age=0');
+        $res->header('X-LiteSpeed-Cache-Control', 'no-cache');
+        $res->header('X-Robots-Tag', 'noindex, nofollow');
+        return $res;
+    }
+
+    public static function cron(): void {
+        if (self::daily_due()) { self::plan('tick'); }
+        self::work('cron');
+    }
+
+    // ------------------------------------------------------------------- step
+
+    /** One bounded step. @return array{busy:bool,left:int} */
+    public static function work(string $who = 'cron'): array {
+        if (!Bridge::ready()) { return ['busy' => false, 'left' => 0]; }
+        if (!self::lock()) { return ['busy' => true, 'left' => -1]; }
+        $left = 0;
+        try {
+            if (function_exists('set_time_limit')) { @set_time_limit(self::STEP + 20); }
+            Store::install();
+            Retire::maybe();
+            $deadline = time() + self::STEP;
+
+            // 1. The earlier translations first: no API, a few seconds.
+            if (!Import::done()) {
+                self::update(['work' => 1, 'phase' => 'import', 'message' => 'Przenoszę obecne tłumaczenia EN i adresy.']);
+                if (Import::step($deadline - 3)) { self::chain(1); return ['busy' => false, 'left' => 1]; }
+                self::plan('import');
+            }
+
+            // 2. Pages and OpenAI answers.
+            $pause = self::paused();
+            self::update(['phase' => $pause !== '' ? 'paused' : 'translating']);
+            while (time() < $deadline - 2) {
+                $did = self::poll($deadline);
+                if ($pause === '') {
+                    $did += self::submit($deadline);
+                    $pause = self::paused();
+                }
+                $did += self::advance_pages();
+                if (Store::count_jobs(['new']) < self::IN_FLIGHT * 3) { $did += self::read_next($deadline); }
+                if ($did > 0) { continue; }
+                if (Store::count_jobs(['sent']) > 0 && time() < $deadline - 5) { sleep(2); continue; }
+                break;
+            }
+            $left = self::left();
+            if ($left === 0) {
+                self::complete();
+            } elseif ($pause !== '') {
+                // Nothing moves until the owner fixes the key or the limit renews; check again later.
+                $s = self::state();
+                $retry = (int) $s['retry_at'] > time() ? (int) $s['retry_at'] - time() : 15 * MINUTE_IN_SECONDS;
+                self::update(['phase' => 'paused', 'message' => $pause]);
+                self::chain($retry);
+            } else {
+                self::update(['message' => 'Tłumaczę: ' . $left . ' w toku.']);
+                self::chain(Store::count_jobs(['new']) || Store::next_queued() ? 1 : 2);
+            }
+        } catch (\Throwable $e) {
+            $m = 'Błąd modułu: ' . $e->getMessage() . ' (' . basename($e->getFile()) . ':' . $e->getLine() . '). Ponowię za 5 minut.';
+            Log::add($m, 'error');
+            self::update(['phase' => 'error', 'message' => OpenAI::short($m), 'retry_at' => time() + 300]);
+            self::chain(300);
+            $left = 1;
+        } finally {
+            self::update(['step_at' => time()]);
+            self::unlock();
+        }
+        return ['busy' => false, 'left' => $left];
+    }
+
+    /** Pages in the queue or waiting for answers, plus jobs not finished. */
+    public static function left(): int {
+        if (!Store::ready()) { return 0; }
+        return Store::queued_count() + Store::count_jobs(['new', 'sent', 'unknown']) + (Import::done() ? 0 : 1);
+    }
+
+    private static function complete(): void {
+        $s = self::state();
+        $run = $s['run'];
+        $wasRunning = !empty($s['work']) && !(int) $run['finished'];
+        self::update(['work' => 0, 'phase' => 'idle', 'current' => '', 'retry_at' => 0,
+            'run' => ['finished' => time(), 'total' => max((int) $run['total'], (int) $run['done'])],
+            'message' => 'Wszystko sprawdzone. Następne sprawdzenie: ' . wp_date('j.m H:i', (int) (wp_next_scheduled(self::DAILY) ?: self::next_daily())) . '.']);
+        if ($wasRunning) {
+            $errors = (int) $run['errors'];
+            Log::add('Koniec przebiegu: sprawdzono ' . (int) $run['done'] . ' stron' . ($errors ? ', ' . $errors . ' z problemem (zakładka Strony)' : '') . '. Wersji EN: ' . Index::count() . '.', $errors ? 'warning' : 'info');
+        }
+        Store::prune_jobs();
+    }
+
+    // ------------------------------------------------------------------- jobs
+
+    /** Collect finished background answers. */
+    private static function poll(int $deadline): int {
+        $n = 0;
+        foreach (Store::jobs(['sent'], 40) as $job) {
+            if (time() >= $deadline - 3) { break; }
+            $touched = strtotime((string) $job->updated_at . ' UTC');
+            if ($touched && $touched > time() - 2) { continue; }
+            $age = time() - (int) strtotime((string) $job->sent_at . ' UTC');
+            $r = OpenAI::fetch((string) $job->response_id);
+            if (!empty($r['lost'])) {
+                Store::job_update((int) $job->id, ['state' => 'new', 'response_id' => '', 'error' => (string) $r['error']]);
+                $n++;
+                continue;
+            }
+            if (!$r['ok']) {
+                if ($r['fatal']) { Log::alert($r['error']); break; }
+                Store::job_update((int) $job->id, ['error' => OpenAI::short((string) $r['error'])]);
+                if ($age > self::SENT_MAX_AGE) { self::resend($job, 'Brak odpowiedzi OpenAI przez 30 minut — wysyłam ponownie.'); $n++; }
+                continue;
+            }
+            if (empty($r['done'])) {
+                if ($age > self::SENT_MAX_AGE) { OpenAI::cancel((string) $job->response_id); self::resend($job, 'Odpowiedź OpenAI trwała ponad 30 minut — wysyłam ponownie.'); $n++; }
+                else { Store::job_update((int) $job->id, []); }
+                continue;
+            }
+            self::finish_job($job, (array) $r['answer']);
+            $n++;
+        }
+        return $n;
+    }
+
+    /** @param object $job */
+    private static function resend($job, string $why): void {
+        $tries = (int) $job->tries + 1;
+        if ($tries >= 3) { self::job_failed($job, $why); return; }
+        Store::job_update((int) $job->id, ['state' => 'new', 'response_id' => '', 'tries' => $tries, 'error' => OpenAI::short($why)]);
+    }
+
+    /** @param object $job */
+    private static function finish_job($job, array $answer): void {
+        Log::count((int) $job->chars, (int) ($answer['in'] ?? 0), (int) ($answer['out'] ?? 0), (string) ($job->model ?: Settings::model()));
+        $data = $answer['data'] ?? null;
+        if (is_array($data) && (string) ($answer['error'] ?? '') === '') {
+            if ($job->kind === 'slug') {
+                if (!Sync::apply_slug($job, $data)) { self::resend($job, 'Model nie podał angielskiego adresu.'); return; }
+            } else {
+                Sync::apply_units($job, $data);
+            }
+            Store::job_update((int) $job->id, ['state' => 'done', 'error' => '']);
+            if (Log::current_alert()) { Log::clear_alert(); }
+            return;
+        }
+        if (!empty($answer['truncated']) && $job->kind === 'units') {
+            $payload = json_decode((string) $job->items, true);
+            $items = is_array($payload['items'] ?? null) ? $payload['items'] : [];
+            if (count($items) > 1) {
+                // Too long for one answer: the fragments are sent again in two halves.
+                $half = (int) ceil(count($items) / 2);
+                foreach ([array_slice($items, 0, $half, true), array_slice($items, $half, null, true)] as $part) {
+                    $chars = 0;
+                    foreach (array_keys($part) as $k) { $chars += Translator::len((string) $k); }
+                    $sh = array_values(array_intersect(array_keys($part), (array) ($payload['shared'] ?? [])));
+                    Store::job_add((int) $job->page_id, 'units', ['items' => $part, 'shared' => $sh, 'ctx' => $payload['ctx'] ?? []], $chars);
+                }
+                Store::job_update((int) $job->id, ['state' => 'dropped', 'error' => 'Podzielono na mniejsze zapytania.']);
+                return;
+            }
+        }
+        $why = (string) ($answer['error'] ?? '') ?: 'Nieczytelna odpowiedź OpenAI.';
+        if ($job->kind === 'slug' && (int) $job->tries >= 1) {
+            // Second failure of an address request: an address from the English title.
+            Store::job_update((int) $job->id, ['tries' => (int) $job->tries + 1]);
+            if (Sync::apply_slug((object) array_merge((array) $job, ['tries' => 2]), [])) { Store::job_update((int) $job->id, ['state' => 'done', 'error' => OpenAI::short($why)]); return; }
+        }
+        self::resend($job, $why);
+    }
+
+    /** @param object $job */
+    private static function job_failed($job, string $why): void {
+        Store::job_update((int) $job->id, ['state' => 'failed', 'error' => OpenAI::short($why)]);
+        $row = Store::page((int) $job->page_id);
+        if (!$row) { return; }
+        if ($job->kind === 'units') {
+            $payload = json_decode((string) $job->items, true);
+            $n = is_array($payload['items'] ?? null) ? count($payload['items']) : 0;
+            Store::page_update((int) $row->id, ['keys_failed' => (int) $row->keys_failed + $n, 'message' => 'Nie przetłumaczono ' . $n . ' fragmentów: ' . OpenAI::short($why)]);
+        }
+        Log::add($row->path . ': ' . $why, 'warning');
+    }
+
+    /** Send new requests while fewer than IN_FLIGHT wait for answers. */
+    private static function submit(int $deadline): int {
+        $limit = Log::limit_reached();
+        if ($limit !== '') { self::limit_pause($limit); return 0; }
+        foreach (Store::jobs(['unknown'], 30) as $j) {
+            if ((int) strtotime((string) $j->updated_at . ' UTC') < time() - self::UNKNOWN_WAIT) { Store::job_update((int) $j->id, ['state' => 'new', 'response_id' => '']); }
+        }
+        $inflight = Store::count_jobs(['sent']);
+        $n = 0;
+        foreach (Store::jobs(['new'], self::IN_FLIGHT * 2) as $job) {
+            if ($inflight >= self::IN_FLIGHT || time() >= $deadline - 4) { break; }
+            if ((string) $job->error !== '' && (int) strtotime((string) $job->updated_at . ' UTC') > time() - 45 * max(1, (int) $job->tries)) { continue; }
+            if ((int) $job->chars > 0 && ($l = Log::limit_reached((int) $job->chars)) !== '') { self::limit_pause($l); break; }
+            $body = self::body($job);
+            if ($body === null) { Store::job_update((int) $job->id, ['state' => 'dropped', 'error' => 'Puste zapytanie.']); continue; }
+            // Marked before sending: if this request dies half-way, the job is not sent twice at once.
+            Store::job_update((int) $job->id, ['state' => 'unknown', 'model' => Settings::model(), 'effort' => Settings::effort(), 'sent_at' => Store::now()]);
+            $r = OpenAI::submit($body);
+            if ($r['ok']) {
+                Store::job_update((int) $job->id, ['state' => 'sent', 'response_id' => (string) $r['id'], 'error' => '']);
+                $inflight++;
+                $n++;
+                if (isset($r['answer'])) {
+                    $fresh = Store::jobs(['sent'], 1, (int) $job->page_id);
+                    foreach ($fresh as $f) { if ((int) $f->id === (int) $job->id) { self::finish_job($f, (array) $r['answer']); } }
                 }
                 continue;
             }
-            $path = Bridge::path_of_post($pid);
-            if ($path === '' || Bridge::ineligible($path) !== '') { continue; }
-            if (Store::path_by_path($path)) { continue; }
-            if (Bridge::shipped($path)) {
-                // Already has an English version: only its gaps are filled (with the other English pages).
-                if (Settings::get('gaps')) { Store::path_add($path, ['post_id' => $pid, 'kind' => 'existing', 'status' => 'published', 'source_modified' => (string) get_post_field('post_modified_gmt', $pid)]); }
-                continue;
+            if ($r['fatal']) {
+                Store::job_update((int) $job->id, ['state' => 'new', 'error' => OpenAI::short((string) $r['error'])]);
+                Log::alert((string) $r['error']);
+                self::update(['phase' => 'paused', 'message' => OpenAI::short((string) $r['error'])]);
+                break;
             }
-            $isNew = (string) get_post_field('post_date_gmt', $pid) >= $since;
-            if (!$isNew && !$older) { continue; }
-            $id = Store::path_add($path, ['post_id' => $pid, 'kind' => $isNew ? 'new' : 'older', 'status' => 'queued']);
-            if ($id) { Store::queue($id, $isNew ? 10 : 40); $added++; }
+            if ($r['retry']) {
+                // A connection error may come after OpenAI accepted the request: such a job waits before it is sent again.
+                Store::job_update((int) $job->id, ['state' => (int) $r['http'] === 0 ? 'unknown' : 'new', 'error' => OpenAI::short((string) $r['error'])]);
+                self::update(['retry_at' => time() + 60, 'message' => OpenAI::short((string) $r['error'])]);
+                Log::add((string) $r['error'], 'warning');
+                break;
+            }
+            $tries = (int) $job->tries + 1;
+            if ($tries >= 3) { self::job_failed($job, (string) $r['error']); continue; }
+            Store::job_update((int) $job->id, ['state' => 'new', 'tries' => $tries, 'error' => OpenAI::short((string) $r['error'])]);
         }
-        } while (count($posts) === 500);
-        return $added;
+        return $n;
     }
 
-    /** Pages whose post was edited since the last check (re-sync only translates the changed fragments). */
-    private static function plan_changed(): int {
+    /** @param object $job */
+    private static function body($job): ?array {
+        $payload = json_decode((string) $job->items, true);
+        if (!is_array($payload)) { return null; }
+        if ($job->kind === 'slug') {
+            return Translator::slug_request((array) ($payload['page'] ?? []), (array) ($payload['segments'] ?? []), (int) $job->id);
+        }
+        $items = is_array($payload['items'] ?? null) ? $payload['items'] : [];
+        if (!$items) { return null; }
+        [$body] = Translator::units_request($items, (array) ($payload['ctx'] ?? []), (int) $job->id);
+        return $body;
+    }
+
+    private static function limit_pause(string $which): void {
+        if ($which === 'day') {
+            $at = (new \DateTimeImmutable('tomorrow 00:05', wp_timezone()))->getTimestamp();
+            $m = 'Dzienny limit znaków wyczerpany. Dokończę po północy.';
+        } else {
+            $at = (new \DateTimeImmutable('first day of next month 00:05', wp_timezone()))->getTimestamp();
+            $m = 'Miesięczny limit kosztów OpenAI wyczerpany. Podnieś go w Ustawieniach albo dokończę w nowym miesiącu.';
+        }
+        $s = self::state();
+        if ((int) $s['retry_at'] < $at - 60) { Log::add($m, 'warning'); }
+        self::update(['retry_at' => $at, 'phase' => 'paused', 'message' => $m]);
+    }
+
+    private static function advance_pages(): int {
         $n = 0;
-        foreach (Store::paths(['post' => true, 'status' => ['published', 'draft', 'error', 'working', 'queued']]) as $row) {
-            if ((int) $row->queued) { continue; }
-            $post = get_post((int) $row->post_id);
-            if (!$post || $post->post_status !== 'publish' || $post->post_password !== '') {
-                if ($row->kind !== 'existing') { Sync::retire($row, 'Wpis nie jest już publiczny — wersję angielską wyłączono.'); }
-                continue;
-            }
-            if ((int) $row->tries >= 4 && $row->source_modified === null && (string) $post->post_modified_gmt <= (string) $row->checked_at) { continue; }
-            if ($row->source_modified === null || (string) $post->post_modified_gmt > (string) $row->source_modified) {
-                if ((string) $post->post_modified_gmt > (string) $row->checked_at) { Store::path_update((int) $row->id, ['tries' => 0]); }
-                Store::queue((int) $row->id, $row->kind === 'existing' ? 30 : 20);
+        foreach (['translating', 'route'] as $stage) {
+            foreach (Store::in_stage($stage, 20) as $row) {
+                if (Store::count_jobs(['new', 'sent', 'unknown'], (int) $row->id) > 0) { continue; }
+                Sync::advance($row);
                 $n++;
             }
         }
         return $n;
     }
 
-    /** Pages that failed, stopped half-way, or went live with a few untranslated fragments (up to 4 attempts). */
-    private static function plan_retry(): int {
-        $n = 0;
-        foreach (Store::paths(['status' => ['error', 'working', 'published']]) as $row) {
-            if ((int) $row->queued) { continue; }
-            if ($row->status === 'published' && (int) $row->keys_failed === 0) { continue; }
-            if ((int) $row->tries >= 4) { continue; }
-            Store::queue((int) $row->id, 30);
-            $n++;
+    private static function read_next(int $deadline): int {
+        if (time() >= $deadline - 8) { return 0; }
+        $row = Store::next_queued();
+        if (!$row) { return 0; }
+        self::update(['current' => (string) $row->path]);
+        $r = Sync::read($row, $deadline, Sync::take_force((int) $row->id));
+        if ($r === 'retry') {
+            $fresh = Store::page((int) $row->id);
+            if ($fresh && !(int) $fresh->queued) { self::page_finished(true); }
         }
-        return $n;
+        return 1;
     }
 
-    /**
-     * Existing English pages: all eligible routes daily, with the least recently checked first.
-     */
-    private static function plan_existing(): int {
-        $routes = \ZPL\Router::routes();
-        foreach ($routes as $pl => $en) {
-            $pl = (string) $pl;
-            if (Bridge::ineligible($pl) !== '' || Store::path_by_path($pl)) { continue; }
-            $pid = url_to_postid(home_url($pl));
-            Store::path_add($pl, ['kind' => 'existing', 'status' => 'published', 'post_id' => max(0, (int) $pid)]);
-        }
-        // Every existing EN route is inspected daily. Already translated fragments come from memory.
-        $rows = Store::paths(['kind' => 'existing', 'status' => ['published'], 'queued' => 0], 0, 0, 'checked_at IS NULL DESC, checked_at ASC, id ASC');
-        $added = 0;
-        foreach ($rows as $row) {
-            if ((int) $row->tries >= 4) { continue; }
-            Store::queue((int) $row->id, 50);
-            $added++;
-        }
-        return $added;
+    /** Re-check after a settings change or a "try again" in the panel. */
+    public static function resume(): void {
+        Log::clear_alert();
+        self::update(['retry_at' => 0, 'work' => 1, 'phase' => 'translating', 'message' => 'Wznowiono.']);
+        self::chain(1);
     }
 
-    // ----------------------------------------------------------------- worker
-
-    /** Run the worker now (0) or in $delay seconds. */
-    public static function kick(int $delay): void {
-        if (function_exists('zp_en_legacy_paid_blocked') && \zp_en_legacy_paid_blocked()) { return; }
-        $next = wp_next_scheduled(self::WORK);
-        if ($next && $next <= time() + max(0, $delay)) {
-            if ($delay === 0) { spawn_cron(); }
-            return;
-        }
-        if ($next) { wp_unschedule_event($next, self::WORK); }
-        wp_schedule_single_event(time() + max(0, $delay), self::WORK);
-        if ($delay === 0) { spawn_cron(); }
-    }
-
-    /** Persisted state contains counts and public paths only, never credentials or API bodies. */
-    public static function state(): array {
-        $s = get_option(self::STATE, []);
-        return array_merge(['state' => 'idle', 'total' => 0, 'done' => 0, 'errors' => 0, 'started_at' => 0,
-            'updated_at' => 0, 'finished_at' => 0, 'retry_at' => 0, 'current' => '', 'page_total' => 0,
-            'page_done' => 0, 'message' => 'Kolejka nie została jeszcze uruchomiona.'], is_array($s) ? $s : []);
-    }
-
-    private static function update_state(array $data): void {
-        update_option(self::STATE, array_merge(self::state(), $data, ['updated_at' => time()]), false);
-    }
-
-    private static function begin(int $queued): void {
+    /** Something was queued from the panel: count it in the current run (or start one) and run soon. */
+    public static function kick(int $pages = 1): void {
         $s = self::state();
-        if (!$s['started_at'] || $s['finished_at']) {
-            self::update_state(['state' => 'queued', 'total' => $queued, 'done' => 0, 'errors' => 0,
-                'started_at' => time(), 'finished_at' => 0, 'current' => '', 'page_done' => 0, 'page_total' => 0]);
-        } else {
-            self::update_state(['total' => max((int) $s['total'], (int) $s['done'] + $queued)]);
-        }
+        $open = !empty($s['work']) && !(int) $s['run']['finished'] && (int) $s['run']['started'];
+        self::update(['work' => 1, 'run' => $open ? ['total' => (int) $s['run']['total'] + $pages]
+            : ['started' => time(), 'total' => max($pages, Store::queued_count()), 'done' => 0, 'errors' => 0, 'who' => 'manual', 'finished' => 0]]);
+        self::chain(1);
     }
 
-    public static function page_progress(string $path, int $total, int $done): void {
-        self::update_state(['state' => 'running', 'current' => $path, 'page_total' => $total,
-            'page_done' => min($total, $done), 'message' => 'Tłumaczę i zapisuję fragmenty strony.']);
-    }
-
-    private static function complete(): void {
-        $s = self::state();
-        $message = (int) $s['errors'] > 0
-            ? 'Zakończono kolejkę z brakami. Strony wymagające uwagi: ' . (int) $s['errors'] . '. Szczegóły w zakładce Strony i Dziennik.'
-            : 'Zakończono tłumaczenie. Wszystkie strony z tej kolejki zostały sprawdzone i zapisane.';
-        if (!(int) $s['total']) { $message = 'Sprawdzenie zakończone — brak stron do przetłumaczenia.'; }
-        self::update_state(['state' => (int) $s['errors'] ? 'completed_errors' : 'completed', 'finished_at' => time(),
-            'current' => '', 'page_total' => 0, 'page_done' => 0, 'retry_at' => 0, 'message' => $message]);
-        Log::add($message, (int) $s['errors'] ? 'warning' : 'info');
-        wp_clear_scheduled_hook(self::WORK);
-    }
-
-    /** Safe for authenticated polling; status reads never perform API calls. */
+    /** Progress of the current run for the panel (and the ZP Suite summary). */
     public static function progress(): array {
         $s = self::state();
-        $q = Store::queued_count();
-        $active = self::running();
-        $s['queued'] = $q;
-        $s['running'] = $active;
-        $s['total'] = max((int) $s['total'], (int) $s['done'] + $q);
-        $fraction = $s['current'] && $s['page_total'] ? min(1, (int) $s['page_done'] / (int) $s['page_total']) : 0;
-        $s['percent'] = $s['total'] ? min($q ? 99 : 100, (int) floor(100 * ((int) $s['done'] + $fraction) / $s['total'])) : ($s['finished_at'] ? 100 : 0);
-        if (!$q && $s['finished_at']) { $s['percent'] = 100; }
-        if ($q && !$active && !in_array($s['state'], ['blocked', 'retry', 'limit'], true)) {
-            $s['state'] = 'queued';
-            $s['message'] = 'Kolejka czeka na kolejny krok. Otwarty panel uruchamia ją automatycznie.';
-        }
-        if ($q && !$active && (int) $s['updated_at'] < time() - self::LOCK_TTL) {
-            $s['message'] .= ' Ostatni krok nie odpowiedział; kolejka zostanie wznowiona z zapisanych fragmentów.';
-        }
-        $s['can_step'] = $q > 0 && !$active && !Log::current_alert() && (int) $s['retry_at'] <= time()
-            && Bridge::hooks_ready() && Settings::api_key() !== '';
-        $s['counts'] = [
-            'published_new' => Store::count_paths(['kind' => ['new', 'older'], 'status' => 'published']),
-            'drafts' => Store::count_paths(['status' => 'draft']),
-            'error_pages' => Store::count_paths(['attention' => true]),
-            'filled_existing' => Store::count_paths(['kind' => 'existing', 'ai' => true]),
+        $run = $s['run'];
+        $ready = Store::ready();
+        $queued = $ready ? Store::queued_count() : 0;
+        $done = (int) $run['done'];
+        $total = max((int) $run['total'], $done);
+        $work = !empty($s['work']) || !Import::done();
+        if ($work && $queued > 0) { $total = max($total, $done + $queued); }
+        $percent = $total > 0 ? (int) floor(min($done, $total) * 100 / $total) : ($work ? 0 : 100);
+        if ($work && $percent >= 100) { $percent = 99; }
+        if (!$work) { $percent = 100; }
+        $import = Import::state();
+        $running = self::running();
+        return [
+            'work' => $work, 'phase' => (string) $s['phase'], 'message' => (string) $s['message'],
+            'percent' => $percent, 'done' => min($done, $total), 'total' => $total, 'queued' => $queued,
+            'errors' => (int) $run['errors'], 'en' => Index::count(),
+            'attention' => $ready ? Store::count_pages(['attention' => true, 'status' => ['new', 'done', 'partial', 'error']]) : 0,
+            'current' => (string) $s['current'], 'running' => $running,
+            'paused' => self::paused(), 'retry_at' => (int) $s['retry_at'],
+            // Background steps stopped (no loopback, no WP-Cron): the open panel runs them.
+            'stalled' => $work && !$running && (int) $s['step_at'] < time() - 45 && (int) $s['retry_at'] <= time(),
+            'step_at' => (int) $s['step_at'],
+            'import' => Import::done() ? null : ['pages' => (int) $import['pages'], 'of' => count((array) $import['list'])],
         ];
-        $s['usage'] = Log::usage();
-        $s['next_daily'] = ($next = wp_next_scheduled(self::DAILY)) ? wp_date('Y-m-d H:i', $next) : '—';
-        $s['retry_label'] = $s['retry_at'] ? Admin::day_time((int) $s['retry_at']) : '';
-        if (!Bridge::hooks_ready() || Settings::api_key() === '') {
-            $s['state'] = 'blocked'; $s['message'] = 'Uzupełnij klucz API i sprawdź moduł językowy w ustawieniach.';
-        } elseif ($alert = Log::current_alert()) {
-            $s['state'] = 'blocked'; $s['message'] = (string) $alert['m'];
-        }
-        if (function_exists('zp_en_legacy_paid_blocked') && \zp_en_legacy_paid_blocked()) { $s['can_step']=false;$s['running']=false;$s['state']='archived';$s['message']='Archiwum poprzedniego mechanizmu. Bieżący stan i nocne aktualizacje Luna pokazano w karcie powyżej.'; }
-        return $s;
     }
 
-    /** Explicit settings change or administrator retry releases an API/limit pause. */
-    public static function resume(): void {
-        if (function_exists('zp_en_legacy_paid_blocked') && \zp_en_legacy_paid_blocked()) { return; }
-        self::update_state(['retry_at' => 0, 'state' => 'queued']);
-        if (Store::queued_count()) { self::kick(5); }
-    }
-
-    public static function work(): void {
-        if (function_exists('zp_en_legacy_paid_blocked') && \zp_en_legacy_paid_blocked()) { return; }
-        if (!Bridge::hooks_ready() || Settings::api_key() === '' || Log::current_alert()) { return; }
-        $state = self::state();
-        if ((int) $state['retry_at'] > time()) { self::kick((int) $state['retry_at'] - time()); return; }
-        if (!self::lock()) { return; }
-        try {
-        if (function_exists('set_time_limit')) { @set_time_limit(self::STEP + 4); }
-        $deadline = time() + self::STEP;
-        OpenAI::deadline($deadline);
-        $stop = '';
-        $row = null;
-        // Replace a near-due event: it might otherwise fire while this lock is held and disappear.
-        wp_clear_scheduled_hook(self::WORK);
-        self::kick(self::LOCK_TTL + 10);
-        self::begin(Store::queued_count());
-        self::update_state(['state' => 'running', 'retry_at' => 0, 'message' => 'Przetwarzam kolejkę.']);
-        try {
-            while (time() < $deadline - 4) {
-                if (Log::over_limit()) { $stop = 'limit'; break; }
-                $row = Store::next_queued();
-                if (!$row) { break; }
-                self::page_progress((string) $row->path, (int) $row->keys_total, (int) $row->keys_ai);
-                $res = Sync::run($row, $deadline);
-                if (in_array($res, [Sync::FATAL, Sync::RETRY, Sync::LIMIT], true)) { $stop = $res; break; }
-                if ($res === Sync::PARTIAL) { break; }
-                $fresh = Store::path((int) $row->id);
-                $s = self::state();
-                self::update_state(['done' => (int) $s['done'] + 1,
-                    'errors' => (int) $s['errors'] + ($fresh && ($fresh->status === 'error' || (int) $fresh->tries > 0 || (int) $fresh->keys_failed > 0) ? 1 : 0),
-                    'current' => '', 'page_done' => 0, 'page_total' => 0]);
-            }
-        } catch (\Throwable $e) {
-            $message = 'Błąd modułu: ' . $e->getMessage() . ' (' . basename($e->getFile()) . ':' . $e->getLine() . ')';
-            Log::alert($message);
-            self::update_state(['message' => $message]);
-            $stop = 'error';
-        } finally {
-            OpenAI::deadline(0);
-        }
-        if ($stop === 'limit') {
-            $tz = wp_timezone();
-            $tomorrow = (new \DateTimeImmutable('tomorrow 00:05', $tz))->getTimestamp();
-            self::update_state(['state' => 'limit', 'retry_at' => $tomorrow, 'message' => 'Osiągnięto dzienny limit znaków. Dokończę automatycznie po jego odnowieniu.']);
-            wp_clear_scheduled_hook(self::WORK); self::kick($tomorrow - time());
-            return;
-        }
-        if ($stop === Sync::FATAL || $stop === 'error') {
-            self::update_state(['state' => 'blocked', 'message' => (string) (Log::current_alert()['m'] ?? self::state()['message'])]);
-            wp_clear_scheduled_hook(self::WORK);
-            return;
-        }
-        if (Store::queued_count() > 0) {
-            $delay = $stop === Sync::RETRY ? 5 * MINUTE_IN_SECONDS : 5;
-            self::update_state(['state' => $stop === Sync::RETRY ? 'retry' : 'queued', 'retry_at' => time() + $delay,
-                'message' => $stop === Sync::RETRY ? 'Chwilowy błąd połączenia lub API. Ponowię automatycznie za 5 minut; zapisany postęp pozostaje.' : 'Zapisano krok. Kontynuuję pozostałe fragmenty.']);
-            wp_clear_scheduled_hook(self::WORK); self::kick($delay);
-        } else { self::complete(); }
-        } finally { self::unlock(); }
-    }
+    // ------------------------------------------------------------------ lock
 
     private static function lock(): bool {
         $token = time() . ':' . wp_generate_uuid4();
         if (add_option(self::LOCK, $token, '', false)) { self::$token = $token; return true; }
         $old = (string) get_option(self::LOCK);
         if ((int) $old > 0 && (int) $old < time() - self::LOCK_TTL) {
-            // Compare-and-delete: never remove another request's newly acquired lock.
+            // Compare-and-delete: never remove a lock another request has just taken.
             global $wpdb;
             $deleted = $wpdb->query($wpdb->prepare("DELETE FROM {$wpdb->options} WHERE option_name = %s AND option_value = %s", self::LOCK, $old));
-            if ($deleted) { wp_cache_delete(self::LOCK, 'options'); }
+            wp_cache_delete(self::LOCK, 'options');
+            wp_cache_delete('notoptions', 'options');
             if ($deleted && add_option(self::LOCK, $token, '', false)) { self::$token = $token; return true; }
         }
         return false;
@@ -410,35 +565,44 @@ final class Worker {
         global $wpdb;
         $wpdb->query($wpdb->prepare("DELETE FROM {$wpdb->options} WHERE option_name = %s AND option_value = %s", self::LOCK, self::$token));
         wp_cache_delete(self::LOCK, 'options');
+        wp_cache_delete('notoptions', 'options');
         self::$token = '';
     }
 
-    public static function running(): bool {
-        $t = (int) get_option(self::LOCK);
-        return $t > 0 && $t >= time() - self::LOCK_TTL;
+    public static function unschedule(): void {
+        wp_clear_scheduled_hook(self::DAILY);
+        wp_clear_scheduled_hook(self::WORK);
+        delete_option(self::LOCK);
     }
 
-    // ------------------------------------------------------- post status hooks
+    // ------------------------------------------------------- content changes
 
-    /** A translated post that stops being public loses its English version at once (no 404s left in the English sitemap). */
+    /** Published or updated: translate at once (only what changed), and refresh the lists that show it. */
+    public static function saved($post_id, $post = null, $update = false, $before = null): void {
+        if (!Settings::get('auto') || !Store::ready() || !Bridge::ready()) { return; }
+        if (!$post instanceof \WP_Post || wp_is_post_revision((int) $post_id) || wp_is_post_autosave((int) $post_id)) { return; }
+        if ($post->post_status !== 'publish' || $post->post_password !== '' || !in_array($post->post_type, Settings::types(), true)) { return; }
+        if (Sync::plan_post((int) $post_id)) { self::kick(1); }
+    }
+
+    /** A post that stops being public loses its English version at once (no 404s in the English sitemap). */
     public static function status_changed($new, $old, $post): void {
-        if ($old === $new || ($old !== 'publish' && $new !== 'publish') || !($post instanceof \WP_Post) || !Bridge::ready() || get_option('zpte_db') !== Store::DB_VERSION) { return; }
-        $row = Store::path_by_post((int) $post->ID);
-        if (!$row || $row->kind === 'existing') { return; }
-        if ($old === 'publish') {
-            Sync::retire($row, 'Wpis nie jest już publiczny — wersję angielską wyłączono.');
-        } elseif ($row->status === 'skipped' && Settings::get('enabled') && Settings::api_key() !== '') {
-            // Published again: its English version comes back with the next worker run.
-            Store::queue((int) $row->id, $row->kind === 'new' ? 10 : 40);
-            self::kick(60);
-        }
+        if ($old !== 'publish' || $new === 'publish' || !$post instanceof \WP_Post || !Store::ready() || !Bridge::ready()) { return; }
+        $row = Store::page_by_post((int) $post->ID);
+        if ($row && $row->status !== 'off') { Sync::retire($row, 'Wpis nie jest już publiczny — wersję angielską wyłączono.'); }
     }
 
     public static function deleted($post_id): void {
-        if (!Bridge::ready() || get_option('zpte_db') !== Store::DB_VERSION) { return; }
-        $row = Store::path_by_post((int) $post_id);
-        if (!$row) { return; }
-        if ($row->kind !== 'existing') { Sync::retire($row, 'Wpis usunięty.'); }
-        Store::path_delete((int) $row->id);
+        if (!Store::ready() || !Bridge::ready()) { return; }
+        $row = Store::page_by_post((int) $post_id);
+        if ($row && $row->status !== 'off') { Sync::retire($row, 'Wpis usunięty.'); }
+    }
+
+    public static function term_changed($term_id): void {
+        if (!Settings::get('auto') || !Settings::get('terms') || !Store::ready() || !Bridge::ready()) { return; }
+        $path = Sync::path_of_term((int) $term_id);
+        if ($path === '' || Sync::ineligible($path) !== '' || Sync::alias_of($path) !== '') { return; }
+        $id = Sync::ensure($path, 'term', 0, (int) $term_id);
+        if ($id) { Store::queue($id, 30); self::update(['work' => 1]); self::chain(5); }
     }
 }

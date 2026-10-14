@@ -131,18 +131,12 @@ final class Import {
         $id = Store::page_add($source, ['post_id' => $post_id, 'term_id' => $term_id, 'kind' => $kind, 'origin' => substr((string) ($info['origin'] ?? 'import'), 0, 12)]);
         if (!$id) { return; }
 
-        // English address: the fixed one, or the earlier translator's one unless it was made of Polish words.
-        $routes = \ZPL\Router::routes();
+        // English address: the fixed one, or the earlier translator's one. An address made of Polish words keeps
+        // working until the page has an English one (the worker asks for it right after the copy).
         $en = (string) ($info['en'] ?? '');
-        $current = (string) ($routes[$source] ?? '');
-        $owned = $current === '' || !self::shipped_route($source);
         $polish = $en !== '' && Routes::polish($en);
         $data = [];
-        if (!empty($info['fixed'])) {
-            $data['en_path'] = $en;
-        } elseif ($en !== '' && !$polish && $owned) {
-            $data['en_path'] = $en;
-        }
+        if (!Routes::external($source) && $en !== '' && Routes::valid_en($en)) { $data['en_path'] = $en; }
 
         // Translations: the rewrite and v2 maps (what is served today), plus Tłumacz EN 1's own page strings.
         $map = Legacy::page_map($source);
@@ -155,7 +149,9 @@ final class Import {
             Store::strings_insert($id, $map, substr((string) ($info['origin'] ?? 'import'), 0, 12));
             $keys = [];
             foreach ($map as $pl => $tr) { $keys[Store::hash((string) $pl)] = 'text'; }
-            $rev = Store::map_save($id, Store::hash($source), $map, $keys);
+            $served = [];
+            foreach ($map as $pl => $tr) { $served[(string) $pl] = Sync::fix_terms((string) $tr); }
+            $rev = Store::map_save($id, Store::hash($source), $served, $keys);
             Serve::bump($id, $rev);
             $data['status'] = 'done';
             $data['keys_total'] = count($map);
@@ -163,16 +159,8 @@ final class Import {
             $data['translated_at'] = Store::now();
         }
         if ($data) { Store::page_update($id, $data); }
-        // An address made of Polish words gets an English one in the next worker step (the old one then redirects).
+        // An address made of Polish words gets an English one in the next worker steps (the old one then redirects).
         if ($polish && empty($info['fixed'])) { Store::page_update($id, ['message' => 'Angielski adres do poprawy (polskie słowa).']); Store::queue($id, 5); }
         if (!empty($info['fixed']) && $en !== '' && '/en' . $source !== $en) { Routes::moved('/en' . $source, $en); }
-    }
-
-    /** The route comes from the language module's own data or its routes option (not from a translator). */
-    private static function shipped_route(string $source): bool {
-        $data = \ZPL\Router::data();
-        if (isset($data['routes'][$source])) { return true; }
-        $custom = get_option('zpl_routes', []);
-        return is_array($custom) && isset($custom[$source]);
     }
 }

@@ -14,6 +14,8 @@ if (!defined('ABSPATH')) { exit; }
  */
 final class Sync {
     const MAX_TRIES = 3;
+    /** Pages to translate again from scratch at their next read ("Przetłumacz od nowa" in the panel). */
+    const FORCE = 'zpte2_force';
     /** Names the site uses for its own sections, fixed in every English text (older translations used others). */
     const TERM_FIXES = ['Pricing Studio' => 'Quote Studio', 'Valuation studio' => 'Quote Studio', 'Valuation Studio' => 'Quote Studio', 'Studio Wyceny' => 'Quote Studio'];
     /** Parts of every page (menu, footer): their texts are shared by all English pages. */
@@ -159,6 +161,24 @@ final class Sync {
         return true;
     }
 
+    /** Translate this page again from scratch at its next read (all fragments, also those already translated). */
+    public static function force(int $page_id): void {
+        $f = get_option(self::FORCE, []);
+        $f = is_array($f) ? $f : [];
+        $f[$page_id] = time();
+        update_option(self::FORCE, $f, false);
+        Store::queue($page_id, 3);
+    }
+
+    /** Was a full translation asked for this page? (Asked once: the flag is cleared.) */
+    public static function take_force(int $page_id): bool {
+        $f = get_option(self::FORCE, []);
+        if (!is_array($f) || !isset($f[$page_id])) { return false; }
+        unset($f[$page_id]);
+        update_option(self::FORCE, $f, false);
+        return true;
+    }
+
     /** Category paths that share another category's English page (see ZPL\Router::ALIASES). */
     public static function alias_of(string $path): string {
         $a = \ZPL\Router::ALIASES;
@@ -240,6 +260,7 @@ final class Sync {
         $hash = md5(implode("\n", array_keys($units)));
         if (!$force && $hash === (string) $row->source_hash && (int) $row->keys_failed === 0 && $row->status === 'done' && !self::needs_route($row)) {
             Store::page_update($id, ['queued' => 0, 'tries' => 0, 'checked_at' => $now, 'message' => '']);
+            Worker::page_finished();
             return 'done';
         }
 
@@ -424,7 +445,7 @@ final class Sync {
         if ($slug === '') { return false; }
         $en = Routes::build((string) $row->path, $slug);
         if ($en === '') {
-            Store::page_update((int) $row->id, ['stage' => '', 'status' => 'partial', 'message' => 'Brak angielskiej nazwy dla części adresu ' . Routes::parent_of((string) $row->path) . ' — dodaj ją w Adresach EN.']);
+            self::park($row, 'Brak angielskiej nazwy dla części adresu ' . Routes::parent_of((string) $row->path) . ' — dodaj ją w Adresach EN.');
             Log::add($row->path . ': brak angielskiej nazwy części adresu, strona czeka.', 'warning');
             return true;
         }
@@ -457,7 +478,7 @@ final class Sync {
         if (self::needs_route($row)) {
             if ($failed > max(2, (int) floor($total * 0.05))) {
                 // Too much is missing to open a new English page: next daily check tries again.
-                Store::page_update($id, ['stage' => '', 'status' => 'partial', 'message' => 'Za dużo nieprzetłumaczonych fragmentów (' . $failed . ') — strona EN poczeka na kolejne sprawdzenie.']);
+                self::park($row, 'Za dużo nieprzetłumaczonych fragmentów (' . $failed . ') — strona EN poczeka na kolejne sprawdzenie.');
                 return;
             }
             $direct = self::direct_route($row);
@@ -466,13 +487,32 @@ final class Sync {
                 self::finish(Store::page($id));
                 return;
             }
-            if (Store::count_jobs(['new', 'sent', 'unknown'], $id) === 0) {
-                Store::job_add($id, 'slug', self::slug_payload($row), 0);
-                Store::page_update($id, ['stage' => 'route', 'message' => 'Tworzę angielski adres strony.']);
+            if ($row->stage === 'route') {
+                // The address request failed three times (Worker::finish_job): an address from the English
+                // title, otherwise the page keeps its current address until the next check.
+                $payload = self::slug_payload($row);
+                $slug = Translator::slug_from_title((string) ($payload['page']['title_en'] ?? ''));
+                $en = $slug !== '' ? Routes::build((string) $row->path, $slug) : '';
+                if ($en !== '') {
+                    Routes::assign($id, $en);
+                    self::finish(Store::page($id));
+                    return;
+                }
+                self::park($row, 'Nie udało się utworzyć angielskiego adresu — spróbuję przy następnym sprawdzeniu.');
+                return;
             }
+            Store::job_add($id, 'slug', self::slug_payload($row), 0);
+            Store::page_update($id, ['stage' => 'route', 'message' => 'Tworzę angielski adres strony.']);
             return;
         }
         self::finish($row);
+    }
+
+    /** The page waits for the next check (its current English version, if any, stays). @param object $row */
+    private static function park($row, string $message): void {
+        Store::page_update((int) $row->id, ['stage' => '', 'queued' => 0, 'status' => (int) $row->keys_done > 0 ? 'partial' : 'error', 'message' => OpenAI::short($message)]);
+        Index::rebuild();
+        Worker::page_finished(true);
     }
 
     /** Categories with a known English name get their address without asking the model. @param object $row */

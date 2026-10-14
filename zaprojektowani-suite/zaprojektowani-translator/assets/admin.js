@@ -1,65 +1,73 @@
+/* Tłumacz EN: live progress. While work is queued and the background steps have stopped, this open panel runs them. */
 (function () {
     'use strict';
-    var box = document.getElementById('zpte-progress');
-    if (!box || typeof zpteAdmin === 'undefined') return;
-    var cfg = zpteAdmin, working = false, stopped = false, timer, failures = 0;
-    var formatter = new Intl.NumberFormat('pl-PL');
+    var cfg = window.zpte2Admin;
+    var box = document.getElementById('zpte2-progress');
+    if (!cfg || !box || !window.fetch || !window.URLSearchParams) { return; }
+    var state = null;
+    var failures = 0;
+    var timer = 0;
+    var busy = false;
+
     function set(name, value) {
-        document.querySelectorAll('[data-zpte="' + name + '"]').forEach(function (node) { node.textContent = value; });
+        var els = box.querySelectorAll('[data-zpte2="' + name + '"]');
+        for (var i = 0; i < els.length; i++) { els[i].textContent = value; }
     }
-    function render(s) {
-        box.dataset.state = s.state;
-        ['done', 'total', 'queued', 'errors'].forEach(function (key) { set(key, formatter.format(s[key] || 0)); });
-        set('percent', s.percent + '%');
-        var bar = box.querySelector('[role="progressbar"]');
-        bar.setAttribute('aria-valuenow', s.percent);
-        bar.firstElementChild.style.width = s.percent + '%';
-        set('message', s.message);
-        set('current', s.current ? s.current + (s.page_total ? ' · teksty: ' + s.page_done + ' / ' + s.page_total : '') : '');
-        set('retry', s.retry_label && (s.state === 'retry' || s.state === 'limit') ? 'Następna próba: ' + s.retry_label : '');
-        if (s.counts) { Object.keys(s.counts).forEach(function (key) { set(key, formatter.format(s.counts[key])); }); }
-        if (s.usage) { set('chars', formatter.format(s.usage.chars)); set('requests', formatter.format(s.usage.requests)); }
-        document.getElementById('zpte-poll-status').textContent = 'Stan z ' + new Date().toLocaleTimeString('pl-PL') + '. Zostaw ten ekran otwarty, a tłumaczenie pójdzie dalej.';
+
+    function render(p) {
+        var pct = Math.max(0, Math.min(100, parseInt(p.percent, 10) || 0));
+        set('percent', pct + '%');
+        var bar = box.querySelector('.zpte2-bar');
+        if (bar) {
+            bar.setAttribute('aria-valuenow', String(pct));
+            var fill = bar.querySelector('span');
+            if (fill) { fill.style.width = pct + '%'; }
+        }
+        set('message', p.message || (p.work ? 'Tłumaczę…' : 'Czekam na następne sprawdzenie.'));
+        set('done', String(p.done || 0));
+        set('total', String(p.total || 0));
+        set('queued', String(p.queued || 0));
+        set('en', String(p.en || 0));
+        set('attention', String(p.attention || 0));
+        set('current', p.work && p.current ? 'Teraz: ' + p.current : '');
+        box.setAttribute('data-work', p.work ? '1' : '0');
     }
-    async function request(action) {
-        var controller = new AbortController(), timeout = setTimeout(function () { controller.abort(); }, action === 'zpte_step' ? 40000 : 15000);
-        try {
-            var response = await fetch(cfg.url, {
-                method: 'POST', credentials: 'same-origin', cache: 'no-store', signal: controller.signal,
-                headers: {'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'},
-                body: new URLSearchParams({action: action, nonce: cfg.nonce}).toString()
+
+    function schedule(ms) {
+        window.clearTimeout(timer);
+        timer = window.setTimeout(tick, ms);
+    }
+
+    function tick() {
+        if (busy) { return; }
+        if (document.hidden) { schedule(15000); return; }
+        busy = true;
+        var action = state && state.work && state.stalled ? 'zpte2_step' : 'zpte2_status';
+        var body = new URLSearchParams();
+        body.append('action', action);
+        body.append('nonce', cfg.nonce);
+        fetch(cfg.url, { method: 'POST', credentials: 'same-origin', body: body })
+            .then(function (r) { return r.ok ? r.json() : null; })
+            .then(function (res) {
+                busy = false;
+                if (!res || !res.success || !res.data || !res.data.progress) {
+                    // Session ended or the page is stale: stop asking until the panel is reloaded.
+                    if (res && res.data && res.data.reload) { return; }
+                    throw new Error('status');
+                }
+                if (res.data.nonce) { cfg.nonce = res.data.nonce; }
+                state = res.data.progress;
+                failures = 0;
+                render(state);
+                schedule(state.work ? (state.stalled ? 1000 : 4000) : 30000);
+            })
+            .catch(function () {
+                busy = false;
+                failures++;
+                schedule(Math.min(60000, 5000 * failures));
             });
-            if (response.status === 401 || response.status === 403) {
-                stopped = true;
-                throw new Error('Sesja lub uprawnienia wygasły. Odśwież panel, aby wznowić podgląd.');
-            }
-            var result = await response.json();
-            if (!response.ok || !result.success || !result.data.progress) throw new Error('Panel nie otrzymał aktualnego statusu. Ponawiam połączenie; zapisany postęp pozostaje.');
-            if (result.data.nonce) cfg.nonce = result.data.nonce;
-            return result.data.progress;
-        } finally { clearTimeout(timeout); }
     }
-    function report(error) {
-        document.getElementById('zpte-poll-status').textContent = stopped ? error.message : 'Chwilowy brak odpowiedzi serwera. Ponawiam; ostatni pokazany postęp może być nieaktualny.';
-    }
-    async function step() {
-        if (working || stopped) return;
-        working = true;
-        try { await request('zpte_step'); }
-        catch (error) { report(error); }
-        finally { working = false; }
-        // Read a fresh snapshot so an older worker response cannot move the displayed counters backwards.
-        if (!stopped) { clearTimeout(timer); timer = setTimeout(poll, 500); }
-    }
-    async function poll() {
-        if (stopped) return;
-        try {
-            var s = await request('zpte_status');
-            failures = 0;
-            render(s);
-            if (s.can_step && !working) step();
-        } catch (error) { failures++; report(error); }
-        if (!stopped) timer = setTimeout(poll, Math.min(15000, 3000 * Math.max(1, failures)));
-    }
-    poll();
+
+    document.addEventListener('visibilitychange', function () { if (!document.hidden) { schedule(300); } });
+    schedule(box.getAttribute('data-work') === '1' ? 1500 : 30000);
 }());
