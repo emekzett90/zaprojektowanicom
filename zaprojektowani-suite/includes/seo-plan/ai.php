@@ -603,6 +603,8 @@ function zp_ai_profiles(): array {
   foreach ($all as $url) {
     $url = esc_url_raw(trim((string) $url), ['https']);
     if ($url === '' || stripos($url, 'zaprojektowani.com') !== false && wp_parse_url($url, PHP_URL_HOST) === wp_parse_url(home_url('/'), PHP_URL_HOST)) { continue; }
+    // SearchFit 14.10.2026: there is no LinkedIn company page (also not under /zaprojektowanicom); a saved copy stays in the panel.
+    if (preg_match('~^https://(?:www\.)?linkedin\.com/company/zaprojektowani(?:com)?/?$~i', $url)) { continue; }
     $out[untrailingslashit(strtolower($url))] = untrailingslashit($url);
   }
   return array_values($out);

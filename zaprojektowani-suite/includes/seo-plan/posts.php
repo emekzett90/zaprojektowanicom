@@ -109,6 +109,21 @@ function zp_seo_posts_text_fixes_en(string $html): string {
 add_filter('the_content', 'zp_seo_posts_text_fixes_en', 21);
 add_filter('elementor/frontend/the_content', 'zp_seo_posts_text_fixes_en', 21);
 
+/**
+ * SearchFit 14.10.2026, point 7: Clickmade moved its brief article, and the old address now answers 404. The brief post
+ * (/logo-branding/brief-do-logo-i-identyfikacji-wizualnej/, and its English page, which shows the same content) links to
+ * the article's current address when printed; the saved post stays as it is. Only this exact address changes.
+ */
+function zp_seo_posts_moved_links(string $html): string {
+  if ($html === '' || strpos($html, 'clickmade.pl/blog/jak-przygotowac-brief-dla-grafika-aby-') === false) { return $html; }
+  // The same address written with http, www or without the closing slash counts too.
+  $old = '~https?://(?:www\.)?clickmade\.pl/blog/jak-przygotowac-brief-dla-grafika-aby-otrzymac-idealny-projekt(?=/|[\s"\'#?<]|$)~';
+  return (string) (preg_replace($old, 'https://clickmade.pl/blog/jak-przygotowac-brief-dla-grafika-by-otrzymac-idealny-projekt', $html) ?? $html);
+}
+
+add_filter('the_content', 'zp_seo_posts_moved_links', 21);
+add_filter('elementor/frontend/the_content', 'zp_seo_posts_moved_links', 21);
+
 function zp_seo_posts_transform(string $html): string {
   static $busy = false;
   if ($busy || $html === '' || !zp_seo_plan_active() || zp_seo_plan_is_en() || is_admin() || !is_singular('post')) { return $html; }
