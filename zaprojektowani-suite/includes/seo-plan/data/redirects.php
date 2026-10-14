@@ -12,6 +12,19 @@ return [
     // moved from a file that never existed to the real one (404 log of 3.0.1).
     '/logo-branding/' => '/identyfikacja-wizualna/',
     '/wp-content/uploads/2026/05/zaproktowani_znak_wodny_czarny.png' => '/wp-content/uploads/2026/08/znak_wodny_czarny.png',
+    // 3.2.0 (404 log of 3.1.0, 14.10): old files and addresses Google still asks for go to what replaced them: the
+    // former banner to the share image, the old logos to the current ones, the root icons browsers ask for to the
+    // site icon, the WordPress sitemap to Rank Math's, the old "logo" tag to its category. The pictures of the
+    // Google Ads guide merged into /kampanie-reklamowe/ are gone, and no page shows them any more.
+    '/wp-content/uploads/2025/09/BANNER.jpg' => '/wp-content/uploads/2026/05/social_media.png',
+    '/wp-content/uploads/2025/09/logo_transparent.webp' => '/wp-content/uploads/2026/05/logo_zaprojektowani.webp',
+    '/wp-content/uploads/2025/10/logo_ciemne.png' => '/wp-content/uploads/2026/08/znak_wodny_czarny.png',
+    '/apple-touch-icon.png' => '/wp-content/uploads/2026/05/cropped-sygnet_ciemny-180x180.png',
+    '/apple-touch-icon-precomposed.png' => '/wp-content/uploads/2026/05/cropped-sygnet_ciemny-180x180.png',
+    '/wp-sitemap.xml' => '/sitemap_index.xml',
+    '/tag/logo/' => '/category/logo-branding/',
+    '/wp-content/uploads/2026/01/google_ads_poradnik.webp' => '@410',
+    '/wp-content/uploads/2026/01/google_ads_poradnik2.webp' => '@410',
     // 2.9.14: the former campaign archive has the current same-topic category as its successor.
     '/category/kampanie-meta-ads/' => '/category/reklamy/',
     '/wiedza/facebook-ads-dla-firm-lokalnych-co-dziala-najlepiej/' => '/meta-ads/facebook-ads-dla-firm-lokalnych/',
