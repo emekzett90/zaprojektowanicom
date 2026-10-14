@@ -376,11 +376,8 @@ final class Admin {
             $label = $origins[(string) $r->origin] ?? (string) $r->origin;
             if ((int) $r->manual) { $label = 'poprawka'; }
             $scope = (int) $r->scope === 0 ? ((int) $r->shared ? 'cała strona (menu, stopka, tytuły)' : 'wszystkie strony z tym tekstem') : 'tylko strona ' . (string) (Store::page((int) $r->scope)->path ?? '#' . (int) $r->scope);
-            // 3.1.1: short versions of titles and descriptions for Google carry a mark in their key; shown as a label.
-            $plain = \ZPL\Page::plain((string) $r->pl);
-            $short = $plain !== (string) $r->pl ? (strpos((string) $r->pl, \ZPL\Page::VARIANTS['title']) === 0 ? 'Tytuł w Google, do ' . Translator::MAX_TITLE . ' znaków' : 'Opis w Google, do ' . Translator::MAX_META . ' znaków') : '';
             echo '<div class="zpte2-text">' . self::form('string_save', ['id' => (int) $r->id, 'q' => $q], '', 'zpte2-text-form')
-                . '<p class="zpte2-pl" lang="pl">' . ($short !== '' ? '<span class="zpte2-pill">' . esc_html($short) . '</span> ' : '') . esc_html($plain) . '</p>'
+                . '<p class="zpte2-pl" lang="pl">' . esc_html((string) $r->pl) . '</p>'
                 . '<label class="screen-reader-text" for="zpte2-s' . (int) $r->id . '">Tłumaczenie</label><textarea id="zpte2-s' . (int) $r->id . '" name="en" rows="' . (strlen((string) $r->en) > 180 ? 4 : 2) . '" lang="en">' . esc_textarea((string) $r->en) . '</textarea>'
                 . '<p class="zpte2-meta"><span class="zpte2-pill">' . esc_html($label) . '</span> ' . esc_html($scope . ' · ' . self::when((string) $r->updated_at)) . ' <button class="button button-small">Zapisz poprawkę</button></p></form></div>';
         }

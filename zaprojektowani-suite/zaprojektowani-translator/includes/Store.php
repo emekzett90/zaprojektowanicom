@@ -357,6 +357,13 @@ final class Store {
         }
     }
 
+    /** 3.1.1: a new translation for every copy of a Polish text (the memory and single pages), manual corrections excepted. */
+    public static function strings_replace(string $pl, string $en, array $meta = []): void {
+        global $wpdb;
+        $wpdb->query($wpdb->prepare('UPDATE ' . self::table('strings') . ' SET en = %s, origin = %s, model = %s, updated_at = %s WHERE hash = %s AND manual = 0',
+            $en, substr((string) ($meta['origin'] ?? ''), 0, 12), substr((string) ($meta['model'] ?? ''), 0, 60), self::now(), self::hash($pl)));
+    }
+
     public static function string_edit(int $id, string $en): void {
         global $wpdb;
         $wpdb->update(self::table('strings'), ['en' => $en, 'manual' => 1, 'origin' => 'manual', 'updated_at' => self::now()], ['id' => $id]);
@@ -461,13 +468,6 @@ final class Store {
         } else {
             $wpdb->insert($t, ['page_id' => $page_id, 'path_hash' => $path_hash, 'rev' => 0, 'map' => '{}', 'keys_list' => $json, 'updated_at' => self::now()]);
         }
-    }
-
-    /** 3.1.1: add keys (hash => kind) to a page's list, e.g. the short version of its title once its translation is known. */
-    public static function keys_add(int $page_id, array $keys): void {
-        $row = self::page($page_id);
-        if (!$row || !$keys) { return; }
-        self::keys_save($page_id, self::hash((string) $row->path), self::keys_of($page_id) + $keys);
     }
 
     /** Pages whose current Polish version uses one of these keys. @return int[] page ids */
