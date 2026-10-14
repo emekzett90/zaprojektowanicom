@@ -75,6 +75,8 @@ final class Import {
                     }
                     $s['strings'] += Store::strings_insert(Store::SHARED, $plain, 'zpte', false);
                     $s['strings'] += Store::strings_insert(Store::SHARED, $shared, 'zpte', true);
+                    // A title already copied from a page's translations is still shown on every English page.
+                    if ($shared) { Store::mark_shared(array_map([Store::class, 'hash'], array_map('strval', array_keys($shared)))); }
                     break;
                 case 'finish':
                     Sync::compile_shared();
@@ -110,8 +112,7 @@ final class Import {
             $out[$source] = array_merge($out[$source] ?? [], ['en' => $en, 'origin' => $out[$source]['origin'] ?? 'codex']);
         }
         foreach (Legacy::v2_routes() as $source => $en) {
-            $pub = Legacy::v2_published($source);
-            $out[$source] = array_merge($out[$source] ?? [], ['en' => $en, 'origin' => 'v2', 'post_id' => (int) ($pub['snapshot']['post_id'] ?? 0)]);
+            $out[$source] = array_merge($out[$source] ?? [], ['en' => $en, 'origin' => 'v2', 'post_id' => (int) (Legacy::v2_snapshot($source)['post_id'] ?? 0)]);
         }
         foreach (Routes::FIXED as $source => $en) {
             $out[$source] = array_merge($out[$source] ?? ['origin' => 'v2'], ['en' => $en, 'fixed' => 1]);
@@ -147,7 +148,11 @@ final class Import {
         $map = array_diff_key($map, Serve::SITE_TERMS);
         foreach ($map as $pl => $tr) { $map[$pl] = Sync::fix_terms((string) $tr, (string) $pl); }
         if ($map) {
-            Store::strings_insert($id, $map, substr((string) ($info['origin'] ?? 'import'), 0, 12));
+            $origin = substr((string) ($info['origin'] ?? 'import'), 0, 12);
+            Store::strings_insert($id, $map, $origin);
+            // The same text on another page (a lead shown in a list, a heading used twice) reuses this translation
+            // instead of going to OpenAI again. Translations already in the memory stay as they are.
+            Store::strings_insert(Store::SHARED, $map, $origin);
             $keys = [];
             foreach ($map as $pl => $tr) { $keys[Store::hash((string) $pl)] = 'text'; }
             $served = [];
