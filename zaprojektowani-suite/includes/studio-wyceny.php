@@ -364,7 +364,8 @@ HTML;
 /* 3.0 (14.10.2026) — Studio wyceny: wygodniejsza obsługa, głównie na telefonie.
    Jedna warstwa CSS + JS na końcu shortcode'u, bez gradientów i cieni. Nie zmienia tekstu
    wierszy podsumowania ani pól data-field, więc brief wysyłany do zp_studio_submit jest taki sam.
-   Komunikaty to te same zdania co w dotychczasowych oknach, więc wersja EN ma je już w słowniku.
+   Komunikaty to te same zdania co w dotychczasowych oknach. Skrypt dopisuje je sam, poza treścią strony,
+   więc tłumacz EN ich nie widzi: na /en/ biorą angielską wersję z tłumaczeń, które te okna miały w dyn.json.
    - telefon: dolny pasek w jednym rzędzie (Wstecz | pakiet + „Krok X z 5" | Dalej) z paskiem postępu,
      znika podczas wpisywania; pola 16 px (iPhone nie powiększa strony), większe pola do dotknięcia,
      podsumowanie w jednej kolumnie, bez pigułki „0X / 05";
@@ -440,6 +441,12 @@ html body.zpbs-studio-page #zpbsUltimate[data-mode="brief"] .zpbsSticky [data-st
   function near(e,s){var t=e.target&&e.target.closest?e.target.closest(s):null;return t&&root.contains(t)?t:null;}
   function stop(e){e.preventDefault();e.stopPropagation();if(e.stopImmediatePropagation)e.stopImmediatePropagation();}
   function observe(el,fn,opts){if(el&&window.MutationObserver){new MutationObserver(fn).observe(el,opts);}}
+  /* Język strony w chwili pokazania tekstu: ZPL.lang() z modułu języków (działa też po przełączeniu PL→EN
+     bez przeładowania), inaczej lang="en" albo adres /en/. Polski lang na żywo to pl-PL. */
+  function en(){
+    try{if(window.ZPL&&typeof window.ZPL.lang==='function')return window.ZPL.lang()==='en';}catch(x){}
+    return document.documentElement.getAttribute('lang')==='en'||/^\/en(\/|$)/.test(location.pathname);
+  }
 
   /* Pasek na dole: nazwa wybranego pakietu nad „Krok X z 5 · …". Tytuł „Brief — …" zostaje ukryty (EN go nie tłumaczy). */
   var stickyText=qs('.zpbsStickyText'),stickyTitle=qs('[data-sticky-title]'),pkgLine=null;
@@ -476,6 +483,12 @@ html body.zpbs-studio-page #zpbsUltimate[data-mode="brief"] .zpbsSticky [data-st
     email:'Podaj poprawny adres e-mail.',
     message:'Napisz chociaż kilka zdań o projekcie, celu albo zakresie.'
   };
+  var MSG_EN={
+    brandName:'When ordering a logo and branding, enter the name of the brand we\'re to prepare the design for.',
+    name:'Fill in your full name so we know who to get back to.',
+    email:'Enter a valid email address.',
+    message:'Write at least a few sentences about the project, the goal or the scope.'
+  };
   function field(k){return qs('[data-field="'+k+'"]');}
   function valid(k){
     var el=field(k),v=el?String(el.value||'').trim():'';
@@ -493,7 +506,7 @@ html body.zpbs-studio-page #zpbsUltimate[data-mode="brief"] .zpbsSticky [data-st
     var id='zpbs-err-'+k,s=document.getElementById(id);
     box(el).classList.add('is-zp-invalid');
     if(!s){s=document.createElement('small');s.className='zpbsFieldError';s.id=id;s.setAttribute('role','alert');box(el).appendChild(s);}
-    s.textContent=MSG[k];
+    s.textContent=(en()?MSG_EN:MSG)[k];
     el.setAttribute('aria-invalid','true');el.setAttribute('aria-describedby',id);
   }
   function clearErr(k){
@@ -533,7 +546,7 @@ html body.zpbs-studio-page #zpbsUltimate[data-mode="brief"] .zpbsSticky [data-st
     qsa('.zpbsMiniCard.is-disabled').forEach(function(card){
       var body=card.querySelector('.zpbsMiniCard__body');
       card.setAttribute('aria-disabled','true');
-      if(body&&!body.querySelector('.zpbsAddonIncluded')){var s=document.createElement('span');s.className='zpbsAddonIncluded';s.textContent='Ten dodatek jest już w pakiecie';body.appendChild(s);}
+      if(body&&!body.querySelector('.zpbsAddonIncluded')){var s=document.createElement('span');s.className='zpbsAddonIncluded';s.textContent=en()?'This add-on is already in the package':'Ten dodatek jest już w pakiecie';body.appendChild(s);}
     });
   }
   document.addEventListener('click',function(e){
@@ -546,12 +559,11 @@ html body.zpbs-studio-page #zpbsUltimate[data-mode="brief"] .zpbsSticky [data-st
 
   /* „?": na dotyk podpowiedź otwiera się w karcie i nie zaznacza karty. Tekst siedzi w treści strony,
      więc EN go tłumaczy; na EN dymek na hover dostaje przetłumaczony tekst. */
-  var isEn=/^en/i.test(document.documentElement.getAttribute('lang')||'');
   function tipFor(card){
     var body=card.querySelector('.zpbsMiniCard__body'),s=body&&body.querySelector('.zpbsTipText');
     if(body&&!s){
       s=document.createElement('span');s.className='zpbsTipText';s.textContent=card.getAttribute('data-tip')||'';body.appendChild(s);
-      if(isEn)observe(s,function(){var t=s.textContent.trim();if(t&&card.getAttribute('data-tip')!==t)card.setAttribute('data-tip',t);},{childList:true,characterData:true,subtree:true});
+      if(en())observe(s,function(){var t=s.textContent.trim();if(t&&card.getAttribute('data-tip')!==t)card.setAttribute('data-tip',t);},{childList:true,characterData:true,subtree:true});
     }
     return s;
   }
