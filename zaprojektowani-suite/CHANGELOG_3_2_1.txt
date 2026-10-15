@@ -1,25 +1,26 @@
 Zaprojektowani Suite 3.2.1 — 15.10.2026
 
-Podstawa: 3.2.0 (na stronie od 15.10, 04:48). Trzy poprawki po instalacji 3.2.0, niewidoczne dla odwiedzających: wygląd strony i teksty bez zmian. Aktualizacja nie kasuje żadnych danych.
+Podstawa: 3.2.0 (na stronie od 15.10, 04:48). Trzy poprawki po instalacji 3.2.0. Wygląd strony i teksty bez zmian; zmienia się tylko obrazek w podglądzie udostępnionego linku i dwa stare adresy dostają przekierowanie. Aktualizacja nie kasuje żadnych danych.
 
 Obrazki do udostępniania (og:image)
 - Linki do stron usług (np. /projektowanie-logo/, /strony-internetowe-katowice/) pokazywały na Facebooku, LinkedInie i w komunikatorach ogólny obrazek social_media.png zamiast zdjęcia z hero strony. Przyczyna: social_media.png jest obrazkiem wyróżniającym większości stron, a 3.2.0 zostawiała stronie jej obrazek wyróżniający.
-- Teraz obrazek wyróżniający, który ma 3 lub więcej opublikowanych stron (albo domyślny obrazek Rank Math), nie jest własnym obrazkiem strony: strona udostępnia zdjęcie ze swojego hero (uploads/zp-og/, 1200×630, z opisem alt hero, po angielsku na /en/). Rank Math nie dokłada przed nim ogólnego obrazka ani pierwszego zdjęcia z treści.
-- Strona z własnym obrazkiem wyróżniającym albo z obrazkiem wybranym w Rank Math zostaje przy nim. Wpisy bez zmian.
+- Teraz obrazek wyróżniający, który ma 3 lub więcej opublikowanych stron (albo domyślny obrazek Rank Math), nie jest własnym obrazkiem strony: przy udostępnieniu strona pokazuje zdjęcie ze swojego hero (uploads/zp-og/, 1200×630, z opisem alt hero, po angielsku na /en/). Rank Math nie dokłada przed nim ogólnego obrazka ani pierwszego zdjęcia z treści.
+- Strona z własnym obrazkiem wyróżniającym albo z obrazkiem wybranym w Rank Math zostaje przy nim. Wpisy i strona główna bez zmian; na nich sprawdzanie kończy się od razu, bez dodatkowych zapytań do bazy.
 
 Błędy 404 na pulpicie
-- Wiersz „Adresy z błędem 404: 108 … 16 odwiedzanych przez Google” liczył wszystko: pliki (apple-touch-icon, ads.txt, manifest.json, obrazki), zapytania skanerów, adresy już przekierowane i wizyty Google sprzed miesięcy.
+- Wiersz „Adresy z błędem 404: 108 … 16 odwiedzanych przez Google” liczył wszystko: pliki (apple-touch-icon, ads.txt, manifest.json, obrazki), zapytania skanerów i adresy już przekierowane, a „odwiedzane przez Google” obejmowało też pliki i adresy, które już działają.
 - Teraz żółte ostrzeżenie liczy tylko adresy stron, o które Google pytał w ostatnich 30 dniach, bez przekierowania w planie SEO ani w panelu, które przy sprawdzeniu w tle nadal odpowiadają 404. Pozostałe adresy są tylko informacją w Stanie strony i nie trafiają na pulpit. Czerwony wiersz „Linki na stronie prowadzą do błędu 404” działa jak w 3.2.0.
-- Wtyczka sama sprawdza w tle (do 6 adresów naraz, bez liczenia tego jako wizyty), co dziś odpowiada pod adresem z dziennika. Adres, który już przekierowuje, ma w panelu notkę „teraz odpowiada 301 (przekierowanie)”. Gdy serwer jest zajęty albo odmawia (5xx, 403, 429), sprawdzenie wraca jeszcze dwa razy; potem adres liczy się dalej jako brakujący.
-- Dziennik zapisuje datę ostatniej wizyty Google. Adresy przekierowane przez plan SEO znikają z listy w panelu, tak jak te z przekierowaniem z panelu.
-- Karta „Nowe w wersji” na pulpicie opisuje 3.2.1.
-- Dwa stare adresy artykułów, o które pytał Google, dostają 301 na te same artykuły pod obecnym adresem (adres z zapytaniem zostaje):
+- Wtyczka sama sprawdza w tle (do 6 adresów naraz, bez liczenia tego jako wizyty), co dziś odpowiada pod takim adresem, i powtarza to co 12 godzin, dopóki adres daje 404. Przekierowanie dodane w Rank Math, ponownie opublikowana strona albo nowy adres EN przestają się więc liczyć najpóźniej po 12 godzinach. Gdy serwer jest zajęty albo odmawia (5xx, 403, 429), sprawdzenie jest ponawiane do 3 razy; potem adres liczy się dalej jako brakujący.
+- Panel Błędy 404: kafelek „Do przekierowania” pokazuje tę samą liczbę co pulpit, te adresy są na górze listy z oznaczeniem „do przekierowania”, a adres, który już przekierowuje, ma notkę „teraz odpowiada 301 (przekierowanie)”. Adresy przekierowane przez plan SEO znikają z listy, tak jak te z przekierowaniem z panelu. Licznik przy „Stanie strony” liczy od nowa po każdym sprawdzeniu.
+- Dziennik zapisuje datę ostatniej wizyty Google, więc adres, o który Google przestał pytać, po 30 dniach przestaje się liczyć. Google rozpoznajemy po nazwie robota; skaner, który podaje się za Googlebota, może trafić do ostrzeżenia, a taki adres ukryjesz przyciskiem „Pomiń”.
+- Dwa stare adresy artykułów, o które pytał Google, dostają 301 na te same artykuły pod obecnym adresem (parametry adresu, np. ?utm_source=, przechodzą dalej):
   /wiedza/strona-internetowa-dla-firmy-z-katowic/ → /sklepy-internetowe/strona-internetowa-dla-firmy-z-katowic-co-powinna-zawierac-zeby-zdobywac-lokalnych-klientow/
   /wiedza/dlaczego-profesjonalne-logo-ma-znaczenie-dla-firmy-efekty/ → /logo-branding/dlaczego-profesjonalne-logo-ma-znaczenie-dla-firmy/
+- Karta „Nowe w wersji” na pulpicie opisuje 3.2.1.
 
 Wiedza: 4,1 s przy pierwszym wejściu
 - To nie błąd: pierwsze wejście po zmianie wersji buduje od nowa indeks wpisów, a cache stron zaczyna się od zera. Kolejne wejścia korzystają z zapamiętanego indeksu. 3.2.1 też zmienia wersję, więc pierwsze wejście na /wiedza/ po instalacji znowu potrwa dłużej.
-- Indeks był jednak pamiętany tylko godzinę, więc wolniejsze wczytanie wracało co godzinę przy pierwszym wejściu spoza cache. Teraz jest pamiętany 12 godzin. Każda zmiana wpisu, jego zdjęcia albo kategorii (także publikacja zaplanowanego wpisu) i każda nowa wersja wtyczki budują go od nowa, więc lista wpisów jest zawsze aktualna.
+- Indeks był jednak pamiętany tylko godzinę, więc wolniejsze wczytanie wracało co godzinę przy pierwszym wejściu spoza cache. Teraz jest pamiętany 12 godzin. Od nowa budują go: zapisanie, publikacja (także zaplanowana), usunięcie albo przywrócenie wpisu, zmiana jego zdjęcia wyróżniającego lub kategorii, usunięcie albo edycja tego zdjęcia w Bibliotece mediów, zmiana struktury adresów, każda nowa wersja wtyczki i jej ponowne włączenie.
 
 Tłumacz EN
 - Bez zmian. Jak po każdej aktualizacji tłumacz od razu czyta ponownie strony EN i wysyła do OpenAI tylko nowe albo zmienione teksty. 3.2.1 nie dodaje tekstów na stronach (opis alt obrazka do udostępniania to opis zdjęcia hero, który ma już tłumaczenie), więc nie powinno być nic do wysłania.
@@ -27,8 +28,9 @@ Tłumacz EN
 Po instalacji (iMac)
 - Wtyczki: ZP Suite w wersji 3.2.1, bez komunikatu o błędzie.
 - Źródło strony /projektowanie-logo/ i /tworzenie-stron-internetowych/ (z unikalnym ?v=): og:image i twitter:image z uploads/zp-og/, nie social_media.png.
-- Po 1–2 minutach (sprawdzenie w tle) pulpit: wiersz 404 pokazuje tylko adresy stron, o które Google pytał w ostatnich 30 dniach i które dalej dają 404, albo znika.
-- Błędy 404: przy adresach, które już przekierowują (np. /websites-for-law-firms/), notka „teraz odpowiada 301 (przekierowanie)”.
+- Facebook i LinkedIn pamiętają stary podgląd linku przez kilka dni, więc wcześniej udostępnione linki mogą jeszcze pokazywać social_media.png. Nowy podgląd od razu: developers.facebook.com/tools/debug/ („Pobierz ponownie”) i linkedin.com/post-inspector/. Bez czyszczenia LiteSpeed ani CDN.
+- Po 1–2 minutach (sprawdzenie w tle) pulpit: wiersz 404 pokazuje tylko adresy stron, o które Google pytał w ostatnich 30 dniach i które dalej dają 404, albo znika. W panelu Błędy 404 te same adresy mają oznaczenie „do przekierowania”.
+- Błędy 404: przy adresach stron, które już przekierowują (np. /websites-for-law-firms/), notka „teraz odpowiada 301 (przekierowanie)”.
 - Strona główna, /en/, /wiedza/, /projektowanie-logo/: wygląd bez zmian, konsola bez nowych błędów i ostrzeżeń.
 
 Cofnięcie
