@@ -204,7 +204,7 @@ $zp_logo_light = 'https://zaprojektowani.com/wp-content/uploads/2026/05/ZP_CIEMN
             }
             $zp_thumb = get_the_post_thumbnail_url($zp_post_id, 'large');
             if (!$zp_thumb) {
-              $zp_thumb = 'https://zaprojektowani.com/wp-content/uploads/2026/05/kiedy-warto-zalozyc-sklep-2-scaled.webp';
+              $zp_thumb = 'https://zaprojektowani.com/wp-content/uploads/2026/05/kiedy-warto-zalozyc-sklep-2.webp';
             }
             $zp_cats = get_the_category($zp_post_id);
             $zp_cat_names = [];
@@ -249,7 +249,7 @@ $zp_logo_light = 'https://zaprojektowani.com/wp-content/uploads/2026/05/ZP_CIEMN
         <?php else : ?>
           <article class="zpMegaFooter__post">
             <a href="/wiedza/">
-              <img src="https://zaprojektowani.com/wp-content/uploads/2026/05/kiedy-warto-zalozyc-sklep-2-scaled.webp" alt="Wiedza Zaprojektowani" loading="lazy" decoding="async">
+              <img src="https://zaprojektowani.com/wp-content/uploads/2026/05/kiedy-warto-zalozyc-sklep-2.webp" alt="Wiedza Zaprojektowani" loading="lazy" decoding="async">
               <div class="zpMegaFooter__postOverlay"></div>
               <div class="zpMegaFooter__postContent">
                 <div class="zpMegaFooter__postTop"><span class="zpMegaFooter__postMeta">Wiedza</span><span class="zpMegaFooter__reads"><i data-lucide="calendar-days"></i> blog</span></div>

@@ -7,6 +7,10 @@ if (!defined('ABSPATH')) { exit; }
  * 2.9.13: 'exact' += 22 (14 moved, 8 gone) and old listing pages past the last one → the listing, the 404s from that report still open after 2.9.12. */
 return [
   'exact' => [
+    // 15.10.2026: the two old inline image addresses still saved in post 1446 and both article sitemaps.
+    // Their current media-library files (attachments 1669/1670, also used by post 1671) keep the same image slots.
+    '/wp-content/uploads/2026/05/kiedy-warto-zalozyc-sklep-2-scaled.webp' => '/wp-content/uploads/2026/05/kiedy-warto-zalozyc-sklep-2.webp',
+    '/wp-content/uploads/2026/05/kiedy-warto-zalozyc-sklep-3-scaled.webp' => '/wp-content/uploads/2026/05/kiedy-warto-zalozyc-sklep-3.webp',
     // 3.2.1 (404 log of 3.2.0, 15.10): two old addresses of articles that Google and visitors still ask for, to the
     // same article at its current address (the panel's suggestion, checked by hand).
     '/wiedza/strona-internetowa-dla-firmy-z-katowic/' => '/sklepy-internetowe/strona-internetowa-dla-firmy-z-katowic-co-powinna-zawierac-zeby-zdobywac-lokalnych-klientow/',

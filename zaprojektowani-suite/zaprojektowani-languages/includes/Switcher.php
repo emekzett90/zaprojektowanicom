@@ -47,7 +47,43 @@ final class Switcher {
      */
     public static function early(string $lang): string {
         $l = $lang === 'en' ? 'en' : 'pl';
-        return '<script id="zpl-vt">(function(){try{var s=sessionStorage.getItem("zpl_vt");if(!s)return;sessionStorage.removeItem("zpl_vt");var v=JSON.parse(s);'
+        // pagereveal can fire before deferred assets. Handle only this native transition's promises here.
+        $guard = <<<'JS'
+(function(w){
+  if(w.ZPLTrackTransition)return;
+  w.ZPLTrackTransition=function(e){
+    var t=e&&e.viewTransition;
+    if(!t)return;
+    var active=true;
+    function report(error){
+      w.ZPLTransitionError=error;
+      w.dispatchEvent(new CustomEvent('zpl-transition-error',{detail:{error:error}}));
+    }
+    function resize(){
+      if(active&&typeof t.skipTransition==='function'){
+        try{t.skipTransition();}catch(error){report(error);}
+      }
+    }
+    function cleanup(){
+      active=false;w.removeEventListener('resize',resize);
+      // The opt-in belongs to this language switch only. Leaving it on the incoming page
+      // starts another native transition on an ordinary link, whose destination never opted in.
+      var style=w.document.getElementById('zpl-vt-css');
+      if(style&&style.parentNode)style.parentNode.removeChild(style);
+    }
+    w.addEventListener('resize',resize,{passive:true});
+    if(t.ready&&typeof t.ready.catch==='function')t.ready.catch(function(error){
+      var name=error&&error.name,message=String(error&&error.message||'');
+      if(name==='AbortError'||(name==='InvalidStateError'&&/(?:viewport.*(?:size|chang)|viewtransition opt-in disabled)/i.test(message)))return;
+      report(error);
+    });
+    if(t.finished&&typeof t.finished.then==='function')t.finished.then(cleanup,cleanup);
+    else cleanup();
+  };
+  w.addEventListener('pagereveal',w.ZPLTrackTransition);
+})(window);
+JS;
+        return '<script id="zpl-vt">' . $guard . '(function(){try{var s=sessionStorage.getItem("zpl_vt");if(!s)return;sessionStorage.removeItem("zpl_vt");var v=JSON.parse(s);'
             . 'if(!v||Date.now()-v.t>20000||v.to!=="' . $l . '")return;var d=document,h=d.head||d.getElementsByTagName("head")[0];'
             . 'if(!(window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches)&&window.CSS&&CSS.supports&&CSS.supports("view-transition-name: none")){'
             . 'var st=d.createElement("style");st.id="zpl-vt-css";st.textContent="@view-transition{navigation:auto}::view-transition-group(root){animation-duration:.3s}";h.appendChild(st);'

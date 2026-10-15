@@ -391,21 +391,45 @@ var ZP_LB_ASSETS = (function () {
             scope: ["Logo kliniki", "Paleta nude & gold", "Karty zabiegowe", "Wizytówki premium", "Brandbook z wytycznymi", "Przygotowanie kierunku wizualnego pod stronę www i social media", "Uporządkowanie zastosowań znaku w praktycznych materiałach", "Dopasowanie stylu do odbiorców, branży i pozycjonowania marki"],
           },
 };
+        /* Missing landing-page projects use the same CMS records as the home
+           portfolio. Preserve the bespoke galleries of the existing cards. */
+        const portfolioData = document.getElementById("zp-lb-portfolio-data");
+        if (portfolioData) {
+          try {
+            const text = (value) => String(value || "").replace(/[&<>"']/g, (char) => ({
+              "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;",
+            })[char]);
+            JSON.parse(portfolioData.textContent).forEach((item) => {
+              if (!item || !item.brand || projectDetails[item.brand]) return;
+              projectDetails[item.brand] = {
+                year: text(item.year), type: text(item.type), category: text(item.tag),
+                subtitle: text(item.sub), image: text(item.img), lead: text(item.desc),
+                tags: (item.meta || []).map(text), scope: (item.scope || []).map(text),
+                challenge: text(item.challenge), solution: text(item.solution), effect: text(item.effect),
+                results: (item.results || []).map((row) => row.map(text)),
+              };
+            });
+          } catch (e) { /* Existing static case studies remain available. */ }
+        }
         const dialog = document.getElementById("projectDialog");
         const dialogContent = document.getElementById("dialogContent");
         const imageZoom = document.getElementById("imageZoom");
         const zoomImage = document.getElementById("zoomImage");
+        // The language module sets <html lang> before this script runs. Localize
+        // generated labels immediately, without waiting for DOM translation.
+        const dialogEnglish = /^en(?:-|$)/i.test(document.documentElement.lang || "");
+        const dialogText = (pl, en) => dialogEnglish ? en : pl;
         let lastProjectTrigger = null;
         const openZoom = (src, alt) => {
           zoomImage.src = src;
-          zoomImage.alt = alt || "Powiększony podgląd projektu";
+          zoomImage.alt = alt || dialogText("Powiększony podgląd projektu", "Enlarged project preview");
           imageZoom.showModal();
         };
         const wireZoomButtons = () => {
           dialogContent.querySelectorAll("[data-zoom]").forEach((button) => {
             button.addEventListener("click", () => {
               const img = button.querySelector("img");
-              openZoom(button.dataset.zoom, img ? img.alt : "Podgląd projektu");
+              openZoom(button.dataset.zoom, img ? img.alt : dialogText("Podgląd projektu", "Project preview"));
             });
           });
         };
@@ -413,55 +437,58 @@ var ZP_LB_ASSETS = (function () {
           const brand = card.dataset.project;
           const p = projectDetails[brand];
           if (!p) return;
+          const displayBrand = String(brand || "").replace(/[&<>"']/g, (char) => ({
+            "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;",
+          })[char]);
           lastProjectTrigger = card;
           const gallery = (p.gallery || []).length
-            ? `<section class="dialog-section"><div class="dialog-section-head"><div><span class="dialog-section-label">Projekt w użyciu</span><h4>Nie tylko na jednej planszy.</h4></div><p>Pokazujemy system w realnych materiałach — od dokumentów i wizytówek po cyfrowe punkty styku.</p></div><div class="dialog-gallery">${p.gallery.map(([src, alt, orient]) => `<button type="button" data-zoom="${src}" data-orient="${orient}" aria-label="Powiększ: ${alt}"><img src="${src}" alt="${alt}" loading="lazy" decoding="async"></button>`).join("")}</div>${(p.variants || []).length ? `<div class="dialog-variants">${p.variants.map(([src, alt]) => `<button type="button" data-zoom="${src}" aria-label="Powiększ: ${alt}"><img src="${src}" alt="${alt}" loading="lazy" decoding="async"></button>`).join("")}</div>` : ""}</section>`
+            ? `<section class="dialog-section"><div class="dialog-section-head"><div><span class="dialog-section-label">${dialogText("Projekt w użyciu", "The design in use")}</span><h4>${dialogText("Nie tylko na jednej planszy.", "Beyond a single presentation.")}</h4></div><p>${dialogText("Pokazujemy system w realnych materiałach — od dokumentów i wizytówek po cyfrowe punkty styku.", "See the identity across real materials, from documents and business cards to digital touchpoints.")}</p></div><div class="dialog-gallery">${p.gallery.map(([src, alt, orient]) => `<button type="button" data-zoom="${src}" data-orient="${orient}" aria-label="${dialogText("Powiększ", "Enlarge")}: ${alt}"><img src="${src}" alt="${alt}" loading="lazy" decoding="async"></button>`).join("")}</div>${(p.variants || []).length ? `<div class="dialog-variants">${p.variants.map(([src, alt]) => `<button type="button" data-zoom="${src}" aria-label="${dialogText("Powiększ", "Enlarge")}: ${alt}"><img src="${src}" alt="${alt}" loading="lazy" decoding="async"></button>`).join("")}</div>` : ""}</section>`
             : "";
           /* Projekty dociągnięte z bazy wtyczki nie mają rozbicia na wyzwanie/rozwiązanie/efekt —
              pokazujemy wtedy ich oryginalny opis (p.detail) zamiast wymyślać treść. */
           const story = (p.challenge && p.solution && p.effect)
             ? `<div class="dialog-story">
-                <article><em>01 / wyzwanie</em><h4>Punkt wyjścia</h4><p>${p.challenge}</p></article>
-                <article><em>02 / rozwiązanie</em><h4>Kierunek marki</h4><p>${p.solution}</p></article>
-                <article><em>03 / efekt</em><h4>System gotowy do pracy</h4><p>${p.effect}</p></article>
+                <article><em>${dialogText("01 / wyzwanie", "01 / challenge")}</em><h4>${dialogText("Punkt wyjścia", "Starting point")}</h4><p>${p.challenge}</p></article>
+                <article><em>${dialogText("02 / rozwiązanie", "02 / solution")}</em><h4>${dialogText("Kierunek marki", "Brand direction")}</h4><p>${p.solution}</p></article>
+                <article><em>${dialogText("03 / efekt", "03 / result")}</em><h4>${dialogText("System gotowy do pracy", "Ready-to-use system")}</h4><p>${p.effect}</p></article>
               </div>`
             : (p.detail
-                ? `<div class="dialog-story dialog-story--single"><article><em>o projekcie</em><h4>Jak podeszliśmy do marki</h4><p>${p.detail}</p></article></div>`
+                ? `<div class="dialog-story dialog-story--single"><article><em>${dialogText("o projekcie", "about the project")}</em><h4>${dialogText("Jak podeszliśmy do marki", "Our approach to the brand")}</h4><p>${p.detail}</p></article></div>`
                 : "");
           const results = (p.results || []).length
             ? `<section class="dialog-section">
-                <div class="dialog-section-head"><div><span class="dialog-section-label">Najważniejsze elementy</span><h4>Co daje ten system?</h4></div><p>Każdy element odpowiada na konkretną potrzebę marki i razem tworzy spójną całość.</p></div>
+                <div class="dialog-section-head"><div><span class="dialog-section-label">${dialogText("Najważniejsze elementy", "Key elements")}</span><h4>${dialogText("Co daje ten system?", "What does the system deliver?")}</h4></div><p>${dialogText("Każdy element odpowiada na konkretną potrzebę marki i razem tworzy spójną całość.", "Each element meets a specific brand need, working together as one consistent identity.")}</p></div>
                 <div class="dialog-results">${p.results.map(([title, copy]) => `<article class="dialog-result"><strong>${title}</strong><p>${copy}</p></article>`).join("")}</div>
               </section>`
             : "";
           dialogContent.innerHTML = `
             <div class="dialog-shell">
               <div class="dialog-hero">
-                <button class="dialog-media" type="button" data-zoom="${p.image}" aria-label="Powiększ projekt ${brand}"><img src="${p.image}" alt="${brand} — ${p.subtitle}"></button>
+                <button class="dialog-media" type="button" data-zoom="${p.image}" aria-label="${dialogText("Powiększ projekt", "Enlarge project")} ${displayBrand}"><img src="${p.image}" alt="${displayBrand} — ${p.subtitle}"></button>
                 <div class="dialog-intro">
                   <span class="dialog-badge">${p.category} / ${p.year}</span>
-                  <h3 id="dialogTitle">${brand}</h3>
+                  <h3 id="dialogTitle">${displayBrand}</h3>
                   <span class="dialog-subtitle">${p.subtitle}</span>
                   <p class="dialog-lead">${p.lead}</p>
                   <div class="dialog-tags">${(p.tags || []).map((tag) => `<span>${tag}</span>`).join("")}</div>
                 </div>
               </div>
               <div class="dialog-facts">
-                <div class="dialog-fact"><span>Marka</span><strong>${brand}</strong></div>
-                <div class="dialog-fact"><span>Branża</span><strong>${p.category}</strong></div>
-                <div class="dialog-fact"><span>Zakres</span><strong>${p.type}</strong></div>
-                <div class="dialog-fact"><span>Rok</span><strong>${p.year}</strong></div>
+                <div class="dialog-fact"><span>${dialogText("Marka", "Brand")}</span><strong>${displayBrand}</strong></div>
+                <div class="dialog-fact"><span>${dialogText("Branża", "Industry")}</span><strong>${p.category}</strong></div>
+                <div class="dialog-fact"><span>${dialogText("Zakres", "Scope")}</span><strong>${p.type}</strong></div>
+                <div class="dialog-fact"><span>${dialogText("Rok", "Year")}</span><strong>${p.year}</strong></div>
               </div>
               ${story}
               ${results}
               ${gallery}
               <section class="dialog-section">
-                <div class="dialog-section-head"><div><span class="dialog-section-label">Zakres realizacji</span><h4>Od znaku do wdrożenia.</h4></div><p>Projekt kończy się uporządkowanym zestawem elementów przygotowanych do codziennego użycia.</p></div>
+                <div class="dialog-section-head"><div><span class="dialog-section-label">${dialogText("Zakres realizacji", "Project scope")}</span><h4>${dialogText("Od znaku do wdrożenia.", "From logo to implementation.")}</h4></div><p>${dialogText("Projekt kończy się uporządkowanym zestawem elementów przygotowanych do codziennego użycia.", "The project delivers an organized set of assets ready for everyday use.")}</p></div>
                 <div class="dialog-scope">${(p.scope || []).map((item) => `<span>${item}</span>`).join("")}</div>
               </section>
               <div class="dialog-cta">
-                <div><h4>Chcesz podobnie dopracować własną markę?</h4><p>Wybierz zakres i opowiedz nam krótko o swoim projekcie.</p></div>
-                <a class="btn btn-primary" href="https://zaprojektowani.com/studio-wyceny/?zpbs_service=brand&amp;zpbs_package=Branding%20Premium&amp;zpbs_source=logo-branding-katowice#zpbsUltimate">Przejdź do Studia Wyceny <svg viewBox="0 0 24 24"><path d="M7 17 17 7M7 7h10v10"></path></svg></a>
+                <div><h4>${dialogText("Chcesz podobnie dopracować własną markę?", "Want the same attention to detail for your brand?")}</h4><p>${dialogText("Wybierz zakres i opowiedz nam krótko o swoim projekcie.", "Choose your scope and tell us a little about your project.")}</p></div>
+                <a class="btn btn-primary" href="https://zaprojektowani.com/${dialogEnglish ? "en/quote-studio/" : "studio-wyceny/"}?zpbs_service=brand&amp;zpbs_package=Branding%20Premium&amp;zpbs_source=logo-branding-katowice#zpbsUltimate">${dialogText("Przejdź do Studia Wyceny", "Go to the Quote Studio")} <svg viewBox="0 0 24 24"><path d="M7 17 17 7M7 7h10v10"></path></svg></a>
               </div>
             </div>`;
           dialog.showModal();

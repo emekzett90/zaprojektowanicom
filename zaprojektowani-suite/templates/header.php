@@ -288,19 +288,28 @@ html body #zpNewNav.zpNewNav--knowledgeArchive:not(.is-mega-open){border-bottom:
 <nav class="zpNewNav__desktop" aria-label="Menu główne">
         <ul class="zpNewNav__menu">
 <?php
-/* Suite 2.5.0: SEO-plan subpages in the existing mega menu and mobile menu. Shown only on the
-   Polish site while the SEO plan is on and the page is published; the English site keeps its menu. */
+/* Suite 2.5.0: SEO-plan subpages in the existing mega menu and mobile menu. */
 $zp_menu_250 = static function (string $path): bool {
   return function_exists('zp_seo_plan_active') && zp_seo_plan_active() && function_exists('zp_seo_plan_is_en') && !zp_seo_plan_is_en()
     && function_exists('zp_seo_plan_link_is_live') && zp_seo_plan_link_is_live($path);
 };
-$zp_menu_250_item = static function (string $path, string $icon, string $title, string $desc) use ($zp_menu_250): string {
-  if (!$zp_menu_250($path)) { return ''; }
+/* Industry pages now have English versions. Only list an English page with its own
+   published source, owned route and translation; a service alias is not an industry page. */
+$zp_menu_industry_live = static function (string $path) use ($zp_menu_250): bool {
+  if (!function_exists('zp_seo_plan_is_en') || !zp_seo_plan_is_en()) { return $zp_menu_250($path); }
+  if (!function_exists('zp_seo_plan_active') || !zp_seo_plan_active() || !function_exists('zp_seo_plan_link_is_live') || !zp_seo_plan_link_is_live($path)
+    || !class_exists('\\ZPL\\Router') || !class_exists('\\ZPL\\Dict')) { return false; }
+  $en = \ZPL\Router::routes()[$path] ?? '';
+  return strpos($en, '/en/') === 0 && (\ZPL\Router::reverse()[$en] ?? '') === $path
+    && !\ZPL\Router::is_excluded($path) && \ZPL\Dict::has_page($path);
+};
+$zp_menu_250_item = static function (string $path, string $icon, string $title, string $desc, ?bool $visible = null) use ($zp_menu_250): string {
+  if (!($visible ?? $zp_menu_250($path))) { return ''; }
   return '<a class="zpNewNav__megaLink" href="' . esc_url($path) . '"><span class="zpNewNav__megaIco"><i data-lucide="' . esc_attr($icon) . '"></i></span><span><span class="zpNewNav__megaTitle">' . esc_html($title) . '</span>'
     . ($desc !== '' ? '<span class="zpNewNav__megaDesc">' . esc_html($desc) . '</span>' : '') . '</span></a>';
 };
-$zp_menu_250_m = static function (string $path, string $icon, string $title, string $desc) use ($zp_menu_250): string {
-  if (!$zp_menu_250($path)) { return ''; }
+$zp_menu_250_m = static function (string $path, string $icon, string $title, string $desc, ?bool $visible = null) use ($zp_menu_250): string {
+  if (!($visible ?? $zp_menu_250($path))) { return ''; }
   return '<a href="' . esc_url($path) . '"><span class="zpNewNav__mSubIcon"><i data-lucide="' . esc_attr($icon) . '"></i></span><span><strong>' . esc_html($title) . '</strong><em>' . esc_html($desc) . '</em></span><span class="zpNewNav__mGo"><i data-lucide="arrow-up-right"></i></span></a>';
 };
 $zp_menu_250_industry = [
@@ -315,16 +324,17 @@ $zp_menu_250_industry = [
 ];
 /* Suite 2.9.7 (Mat 8.10): on computers each industry shows its cover photo in a small circle instead of the icon
    (assets/img/branze/<key>-krag.webp, includes/seo-plan/industries.php); the phone menu keeps its icons. */
-$zp_menu_297_item = static function (string $path, string $icon, string $title) use ($zp_menu_250, $zp_menu_250_item): string {
+$zp_menu_297_item = static function (string $path, string $icon, string $title) use ($zp_menu_industry_live, $zp_menu_250_item): string {
+  $live = $zp_menu_industry_live($path);
   $key = function_exists('zp_seo_industry_key') ? zp_seo_industry_key($path) : '';
-  if ($key === '' || !$zp_menu_250($path)) { return $zp_menu_250_item($path, $icon, $title, ''); }
+  if ($key === '' || !$live) { return $zp_menu_250_item($path, $icon, $title, '', $live); }
   return '<a class="zpNewNav__megaLink" href="' . esc_url($path) . '"><span class="zpNewNav__megaIco zpNewNav__megaIco--photo"><img src="' . esc_url(zp_seo_industry_img($key . '-krag.webp')) . '" width="96" height="96" alt="" loading="lazy" decoding="async"></span><span><span class="zpNewNav__megaTitle">' . esc_html($title) . '</span></span></a>';
 };
 $zp_menu_250_ind_desk = '';
 $zp_menu_250_ind_mob = '';
 foreach ($zp_menu_250_industry as $zp_ind) {
   $zp_menu_250_ind_desk .= $zp_menu_297_item($zp_ind[0], $zp_ind[1], $zp_ind[2]);
-  $zp_menu_250_ind_mob .= $zp_menu_250_m($zp_ind[0], $zp_ind[1], $zp_ind[2], $zp_ind[3]);
+  $zp_menu_250_ind_mob .= $zp_menu_250_m($zp_ind[0], $zp_ind[1], $zp_ind[2], $zp_ind[3], $zp_menu_industry_live($zp_ind[0]));
 }
 /* Suite 2.6.0: items that pointed to the same address as another item now lead to their own
    SEO-plan pages (only once that page is published; until then they keep their old link), the

@@ -27,7 +27,8 @@ if (function_exists('curl_init') && function_exists('curl_exec')) {
     curl_setopt_array($zp_curl, array(CURLOPT_RETURNTRANSFER => true, CURLOPT_TIMEOUT => 900, CURLOPT_CONNECTTIMEOUT => 20, CURLOPT_USERAGENT => $zp_agent, CURLOPT_SSL_VERIFYPEER => false, CURLOPT_SSL_VERIFYHOST => 0, CURLOPT_FOLLOWLOCATION => false));
     if (curl_exec($zp_curl) === false) { $zp_error = curl_error($zp_curl); }
     else { $zp_status = (int) curl_getinfo($zp_curl, CURLINFO_HTTP_CODE); }
-    curl_close($zp_curl);
+    // PHP 8 uses a CurlHandle object and releases it automatically; curl_close is deprecated in PHP 8.5.
+    if (PHP_VERSION_ID < 80000) { curl_close($zp_curl); }
 } else {
     $zp_context = stream_context_create(array('http' => array('method' => 'GET', 'timeout' => 900, 'user_agent' => $zp_agent, 'follow_location' => 0, 'ignore_errors' => true), 'ssl' => array('verify_peer' => false, 'verify_peer_name' => false)));
     if (@file_get_contents($zp_url, false, $zp_context) === false) { $zp_error = 'no connection (no curl, and the https stream failed)'; }

@@ -17,7 +17,7 @@ if (!defined('ABSPATH')) { exit; }
  * it scrolls inside when it is still taller than the window, so its bottom bar is never cut off.
  */
 add_action('wp_head', function () {
-  if (!zp_seo_plan_active() || zp_seo_plan_is_en() || is_admin()) { return; }
+  if (!zp_seo_plan_active() || is_admin()) { return; }
   echo '<style id="zp-seo-plan-menu-250">'
     . '.zpNewNav__megaCol--branze .zpNewNav__megaHead.zpNewNav__megaHead--branze{margin-top:0!important;margin-bottom:14px!important}'
     . '.zpNewNav__megaList.zpNewNav__megaList--branze{gap:2px 61px!important}'
