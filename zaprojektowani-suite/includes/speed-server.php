@@ -69,6 +69,8 @@ function zp_speed_prime_options(): void {
     'zp_suite_shop_katowice_visual_fix_160_version', 'zp_suite_shop_katowice_visual_fix_161_version', 'zp_suite_shop_katowice_visual_fix_162_version',
     'zp_suite_shothome_home_migration', 'zp_suite_strony_internetowe_katowice_v2_live_version', 'zp_suite_trust_logos_version',
     'zp_suite_trust_logos_version_22103', 'zp_suite_version_done',
+    // 3.2.1: the featured images several pages share (og-image.php), read on the hero pages.
+    '_transient_zp_og_shared_thumbs', '_transient_timeout_zp_og_shared_thumbs',
   ];
   if (function_exists('wp_prime_option_caches')) {
     wp_prime_option_caches($names);
