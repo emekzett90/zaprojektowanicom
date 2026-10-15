@@ -177,9 +177,13 @@ function zp_suite3_health_checks(bool $deep = false): array {
     $s = zp_suite3_404_summary();
     if ($s['internal'] > 0) {
       $checks[] = zp_suite3_check('404_internal', 'Linki na stronie prowadzą do błędu 404', 'bad', zp_suite3_plural($s['internal'], 'adres z błędem 404 ma', 'adresy z błędem 404 mają', 'adresów z błędem 404 ma') . ' odnośnik z Twojej własnej strony. Przekieruj je albo popraw link.', zp_suite3_url('zp-suite-404'));
-    } elseif (($s['act'] ?? $s['open']) > 0) {
+    }
+    // 3.2.1: shown next to the red row too, so it always matches the panel's "Do przekierowania".
+    if ((int) $s['act'] > 0) {
       // 3.2.1: a task only for page addresses Google asked for in the last 30 days that nothing redirects yet.
       $checks[] = zp_suite3_check('404', 'Adresy z błędem 404', 'warn', zp_suite3_plural((int) $s['act'], 'adres strony bez przekierowania, o który', 'adresy stron bez przekierowania, o które', 'adresów stron bez przekierowania, o które') . ' Google pytał w ostatnich 30 dniach. Sprawdź podpowiedź celu i przekieruj.', zp_suite3_url('zp-suite-404'));
+    } elseif ($s['internal'] > 0) {
+      // The red row above already sends the owner to the panel.
     } elseif ($s['open'] > 0) {
       // Files, scanner requests, page addresses Google did not ask for in 30 days (people, other bots) and ones that answer
       // again: listed in the panel, nothing to do now.
@@ -198,7 +202,10 @@ function zp_suite3_health_checks(bool $deep = false): array {
   }
   $order = ['bad' => 0, 'warn' => 1, 'info' => 2, 'ok' => 3];
   usort($checks, static fn($a, $b) => $order[$a['state']] <=> $order[$b['state']]);
-  $problems = count(array_filter($checks, static fn($c) => in_array($c['state'], ['bad', 'warn'], true)));
+  // 3.2.1: the quick count keeps the problems of the last full check while it is valid (the 404 check clears the count).
+  $counted = $checks;
+  if (!$deep) { $kept = get_transient('zp_suite3_health_deep'); if (is_array($kept)) { $counted = array_merge($counted, $kept); } }
+  $problems = count(array_filter($counted, static fn($c) => in_array($c['state'] ?? '', ['bad', 'warn'], true)));
   if ($deep || get_transient('zp_suite3_health_problems') === false) { set_transient('zp_suite3_health_problems', $problems, 6 * HOUR_IN_SECONDS); }
   return $cache[$deep ? 1 : 0] = $checks;
 }
@@ -207,7 +214,10 @@ function zp_suite3_health_checks(bool $deep = false): array {
 function zp_suite3_health_problem_count(): int {
   $n = get_transient('zp_suite3_health_problems');
   if ($n === false) {
-    $n = count(array_filter(zp_suite3_health_checks(false), static fn($c) => in_array($c['state'], ['bad', 'warn'], true)));
+    zp_suite3_health_checks(false);
+    // The quick checks store their count with the last full check's problems (3.2.1).
+    $n = get_transient('zp_suite3_health_problems');
+    if ($n === false) { $n = count(array_filter(zp_suite3_health_checks(false), static fn($c) => in_array($c['state'], ['bad', 'warn'], true))); }
   }
   return (int) $n;
 }

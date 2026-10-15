@@ -387,15 +387,16 @@ function zp_suite3_404_page(): void {
   $s = zp_suite3_404_summary();
   echo '<section class="metrics"><section class="metric"><div class="metric-head"><span>Adresy z błędem 404</span></div><div class="metric-value">' . (int) $s['open'] . '</div><div class="metric-foot">ostatnie 30 dni, bez przekierowania</div></section><section class="metric"><div class="metric-head"><span>Do przekierowania</span></div><div class="metric-value">' . (int) $s['act'] . '</div><div class="metric-foot">strony, o które Google pytał w 30 dniach</div></section><section class="metric"><div class="metric-head"><span>Z linku na Twojej stronie</span></div><div class="metric-value">' . (int) $s['internal'] . '</div><div class="metric-foot">zepsuty link wewnętrzny</div></section><section class="metric"><div class="metric-head"><span>Przekierowania z panelu</span></div><div class="metric-value">' . count($redirects) . '</div><div class="metric-foot">poza przekierowaniami planu SEO</div></section></section>';
 
-  // 3.2.1: the addresses the dashboard counts ("do przekierowania") come first. The mark is not saved.
+  // 3.2.1: links on the site first (the red dashboard row), then the addresses the yellow row counts ("do przekierowania"),
+  // then the rest by Google visits and hits. The mark is not saved.
   $since = time() - 30 * DAY_IN_SECONDS;
   foreach ($log as $p => $x) { if (is_array($x)) { $log[$p]['_act'] = zp_suite3_404_actionable((string) $p, $x, $since); } }
   uasort($log, static function ($a, $b): int {
-    $wa = (!empty($a['_act']) ? 1000 : 0) + (int) ($a['google'] ?? 0) * 3 + (!empty($a['internal']) && ($a['linked'] ?? null) === true ? 50 : 0) + (int) ($a['n'] ?? 0);
-    $wb = (!empty($b['_act']) ? 1000 : 0) + (int) ($b['google'] ?? 0) * 3 + (!empty($b['internal']) && ($b['linked'] ?? null) === true ? 50 : 0) + (int) ($b['n'] ?? 0);
-    return $wb <=> $wa ?: ((int) ($b['last'] ?? 0) <=> (int) ($a['last'] ?? 0));
+    $tier = static fn(array $e): int => !empty($e['internal']) && ($e['linked'] ?? null) === true ? 2 : (!empty($e['_act']) ? 1 : 0);
+    $w = static fn(array $e): int => (int) ($e['google'] ?? 0) * 3 + (int) ($e['n'] ?? 0);
+    return ($tier($b) <=> $tier($a)) ?: (($w($b) <=> $w($a)) ?: ((int) ($b['last'] ?? 0) <=> (int) ($a['last'] ?? 0)));
   });
-  echo '<section class="card"><header class="card-head"><div><h2>Adresy z błędem 404</h2><p>Najpierw te z linkiem na Twojej stronie i odwiedzane przez Google. Podpowiedź to najbardziej podobny istniejący adres; możesz go zmienić przed zapisaniem.</p></div>' . ($showHidden ? '<a class="button" href="' . esc_url(zp_suite3_url('zp-suite-404')) . '">Ukryj pominięte</a>' : '<a class="button" href="' . esc_url(zp_suite3_url('zp-suite-404', ['zp_hidden' => 1])) . '">Pokaż pominięte</a>') . '</header>';
+  echo '<section class="card"><header class="card-head"><div><h2>Adresy z błędem 404</h2><p>Najpierw te z linkiem na Twojej stronie, potem adresy do przekierowania (strony, o które Google pytał w ostatnich 30 dniach). Podpowiedź to najbardziej podobny istniejący adres; możesz go zmienić przed zapisaniem.</p></div>' . ($showHidden ? '<a class="button" href="' . esc_url(zp_suite3_url('zp-suite-404')) . '">Ukryj pominięte</a>' : '<a class="button" href="' . esc_url(zp_suite3_url('zp-suite-404', ['zp_hidden' => 1])) . '">Pokaż pominięte</a>') . '</header>';
   $rows = 0;
   echo '<div class="table-scroller"><table class="content-table"><thead><tr><th>Adres</th><th class="num">Wejścia</th><th>Ostatnio</th><th>Przekieruj na</th><th></th></tr></thead><tbody>';
   foreach ($log as $path => $e) {
