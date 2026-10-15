@@ -855,7 +855,9 @@ function zp_suite_wiedza_index_kept(){
     'minutes'  => $minutes,
     'modified' => $modified,
   ];
-  set_transient($cache_key, $payload, HOUR_IN_SECONDS);
+  // 3.2.1: 12 hours instead of 1. Every change to a post, its picture or its category (also a scheduled publication)
+  // and every new plugin version build it again, so a longer life only spares the slow rebuild (up to a few seconds).
+  set_transient($cache_key, $payload, 12 * HOUR_IN_SECONDS);
   return $payload;
 }
 
