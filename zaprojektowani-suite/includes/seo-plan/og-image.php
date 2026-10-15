@@ -112,16 +112,42 @@ function zp_og_make(string $source, string $file): bool {
   return true;
 }
 
+/**
+ * 3.2.1: the site-wide share picture used as a featured image (on live, social_media.png is the featured image of
+ * most service pages) is not a page's own picture: Rank Math's default image, or a featured image that three or more
+ * published pages share. Kept for 12 hours; a page's own featured image is never shared that widely.
+ */
+function zp_og_generic_thumbnail(int $id): bool {
+  $thumb = (int) get_post_thumbnail_id($id);
+  if ($thumb <= 0) { return false; }
+  if (class_exists('\\RankMath\\Helper') && (int) \RankMath\Helper::get_settings('titles.open_graph_image_id') === $thumb) { return true; }
+  $shared = get_transient('zp_og_shared_thumbs');
+  if (!is_array($shared)) {
+    global $wpdb;
+    $all = array_map('intval', (array) $wpdb->get_col("SELECT pm.meta_value FROM {$wpdb->postmeta} pm INNER JOIN {$wpdb->posts} p ON p.ID = pm.post_id WHERE pm.meta_key = '_thumbnail_id' AND p.post_type = 'page' AND p.post_status = 'publish'"));
+    $shared = array_keys(array_filter(array_count_values(array_filter($all)), static fn($n) => $n >= 3));
+    set_transient('zp_og_shared_thumbs', $shared, 12 * HOUR_IN_SECONDS);
+  }
+  return in_array($thumb, $shared, true);
+}
+// A page saved with another featured image is judged again on its next view.
+add_action('save_post_page', static function (): void { delete_transient('zp_og_shared_thumbs'); });
+
 /** The share image of the page being shown, or null where Rank Math keeps its own. */
 function zp_og_page_image(): ?array {
   if (is_admin() || !zp_seo_plan_active()) { return null; }
+  // The Polish path, also on /en/ (as the hero itself, see service-heroes.php). 3.2.1: pages without a hero picture
+  // (posts, the home page, archives) stop here, before the checks below read anything.
+  static $sources = null;
+  $sources ??= zp_og_hero_sources();
+  $path = zp_seo_service_hero_path();
+  if (!isset($sources[$path])) { return null; }
   $id = (int) get_queried_object_id();
-  // An image chosen for the page in Rank Math, or its featured image, stays the page's share image.
-  if ($id && (get_post_meta($id, 'rank_math_facebook_image', true) || get_post_meta($id, 'rank_math_twitter_image', true) || has_post_thumbnail($id))) {
+  // An image chosen for the page in Rank Math, or its own featured image, stays the page's share image.
+  if ($id && (get_post_meta($id, 'rank_math_facebook_image', true) || get_post_meta($id, 'rank_math_twitter_image', true) || (has_post_thumbnail($id) && !zp_og_generic_thumbnail($id)))) {
     return null;
   }
-  // The Polish path, also on /en/ (as the hero itself, see service-heroes.php).
-  return zp_og_image(zp_seo_service_hero_path());
+  return zp_og_image($path);
 }
 
 /** Rank Math's image list (RankMath\OpenGraph\Image): the hero image is added where the page has none of its own. */
@@ -135,5 +161,13 @@ add_action('rank_math/opengraph/facebook/add_additional_images', 'zp_og_add_imag
 add_action('rank_math/opengraph/twitter/add_additional_images', 'zp_og_add_image');
 // Rank Math adds its site-wide image only to a page without images; this keeps it out whatever the order of its steps.
 add_filter('rank_math/opengraph/pre_set_default_image', static function ($skip) {
+  return $skip ?: zp_og_page_image() !== null;
+});
+// 3.2.1: where the hero picture is the share image, Rank Math does not put the generic featured image or the first
+// picture of the content before it (it looks for those before the additional images are added).
+add_filter('rank_math/opengraph/pre_set_featured_image', static function ($skip) {
+  return $skip ?: zp_og_page_image() !== null;
+});
+add_filter('rank_math/opengraph/pre_set_content_image', static function ($skip) {
   return $skip ?: zp_og_page_image() !== null;
 });
