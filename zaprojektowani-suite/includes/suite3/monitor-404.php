@@ -217,7 +217,11 @@ function zp_suite3_404_verify(): void {
     if ($final || $log[$path]['rtries'] >= 3) { $log[$path]['now'] = $final ? $code : 0; $log[$path]['nowat'] = $now; $log[$path]['rtries'] = 0; }
     $changed = true;
   }
-  if ($changed) { update_option(ZP_SUITE3_404_LOG, $log, false); }
+  if ($changed) {
+    update_option(ZP_SUITE3_404_LOG, $log, false);
+    // 3.2.1: the "Stan strony" badge counts again with the new results instead of keeping its count for 6 hours.
+    delete_transient('zp_suite3_health_problems');
+  }
   if (zp_suite3_404_unchecked($log) || zp_suite3_404_recheck_due($log)) { zp_suite3_404_verify_soon(); }
 }
 add_action(ZP_SUITE3_404_VERIFY, 'zp_suite3_404_verify');
@@ -275,12 +279,17 @@ function zp_suite3_404_actionable(string $path, array $e, int $since): bool {
   return $now === 0 || $now === 404;
 }
 
-/** Candidates not opened since their last 404 visit (at most 3 failed tries; then they count as still missing). */
+/**
+ * Candidates not opened since their last 404 visit (at most 3 failed tries; then they count as still missing), and
+ * those that still answered 404 (or nothing) over 12 hours ago: a redirect in Rank Math, a page published again or a
+ * new English address answer before a 404 is logged, so only a new check sees that they are fixed.
+ */
 function zp_suite3_404_recheck_due(array $log): array {
-  $out = []; $since = time() - 30 * DAY_IN_SECONDS; $redirects = zp_suite3_redirects();
+  $out = []; $since = time() - 30 * DAY_IN_SECONDS; $stale = time() - 12 * HOUR_IN_SECONDS; $redirects = zp_suite3_redirects();
   foreach ($log as $path => $e) {
     if (!is_array($e) || isset($redirects[$path]) || !zp_suite3_404_candidate((string) $path, $e, $since)) { continue; }
-    if ((int) ($e['nowat'] ?? 0) < (int) ($e['last'] ?? 0)) { $out[] = (string) $path; }
+    $nowat = (int) ($e['nowat'] ?? 0);
+    if ($nowat < (int) ($e['last'] ?? 0) || (in_array((int) ($e['now'] ?? 0), [0, 404], true) && $nowat < $stale)) { $out[] = (string) $path; }
   }
   return $out;
 }
@@ -376,11 +385,14 @@ function zp_suite3_404_page(): void {
   $n = isset($_GET['zp_notice']) ? sanitize_key((string) $_GET['zp_notice']) : '';
   if (isset($messages[$n])) { echo '<div class="zpAdmin20__notice" role="status">' . esc_html($messages[$n]) . '</div>'; }
   $s = zp_suite3_404_summary();
-  echo '<section class="metrics"><section class="metric"><div class="metric-head"><span>Adresy z błędem 404</span></div><div class="metric-value">' . (int) $s['open'] . '</div><div class="metric-foot">ostatnie 30 dni, bez przekierowania</div></section><section class="metric"><div class="metric-head"><span>Odwiedzane przez Google</span></div><div class="metric-value">' . (int) $s['google'] . '</div><div class="metric-foot">te warto przekierować najpierw</div></section><section class="metric"><div class="metric-head"><span>Z linku na Twojej stronie</span></div><div class="metric-value">' . (int) $s['internal'] . '</div><div class="metric-foot">zepsuty link wewnętrzny</div></section><section class="metric"><div class="metric-head"><span>Przekierowania z panelu</span></div><div class="metric-value">' . count($redirects) . '</div><div class="metric-foot">poza przekierowaniami planu SEO</div></section></section>';
+  echo '<section class="metrics"><section class="metric"><div class="metric-head"><span>Adresy z błędem 404</span></div><div class="metric-value">' . (int) $s['open'] . '</div><div class="metric-foot">ostatnie 30 dni, bez przekierowania</div></section><section class="metric"><div class="metric-head"><span>Do przekierowania</span></div><div class="metric-value">' . (int) $s['act'] . '</div><div class="metric-foot">strony, o które Google pytał w 30 dniach</div></section><section class="metric"><div class="metric-head"><span>Z linku na Twojej stronie</span></div><div class="metric-value">' . (int) $s['internal'] . '</div><div class="metric-foot">zepsuty link wewnętrzny</div></section><section class="metric"><div class="metric-head"><span>Przekierowania z panelu</span></div><div class="metric-value">' . count($redirects) . '</div><div class="metric-foot">poza przekierowaniami planu SEO</div></section></section>';
 
+  // 3.2.1: the addresses the dashboard counts ("do przekierowania") come first. The mark is not saved.
+  $since = time() - 30 * DAY_IN_SECONDS;
+  foreach ($log as $p => $x) { if (is_array($x)) { $log[$p]['_act'] = zp_suite3_404_actionable((string) $p, $x, $since); } }
   uasort($log, static function ($a, $b): int {
-    $wa = (int) ($a['google'] ?? 0) * 3 + (!empty($a['internal']) && ($a['linked'] ?? null) === true ? 50 : 0) + (int) ($a['n'] ?? 0);
-    $wb = (int) ($b['google'] ?? 0) * 3 + (!empty($b['internal']) && ($b['linked'] ?? null) === true ? 50 : 0) + (int) ($b['n'] ?? 0);
+    $wa = (!empty($a['_act']) ? 1000 : 0) + (int) ($a['google'] ?? 0) * 3 + (!empty($a['internal']) && ($a['linked'] ?? null) === true ? 50 : 0) + (int) ($a['n'] ?? 0);
+    $wb = (!empty($b['_act']) ? 1000 : 0) + (int) ($b['google'] ?? 0) * 3 + (!empty($b['internal']) && ($b['linked'] ?? null) === true ? 50 : 0) + (int) ($b['n'] ?? 0);
     return $wb <=> $wa ?: ((int) ($b['last'] ?? 0) <=> (int) ($a['last'] ?? 0));
   });
   echo '<section class="card"><header class="card-head"><div><h2>Adresy z błędem 404</h2><p>Najpierw te z linkiem na Twojej stronie i odwiedzane przez Google. Podpowiedź to najbardziej podobny istniejący adres; możesz go zmienić przed zapisaniem.</p></div>' . ($showHidden ? '<a class="button" href="' . esc_url(zp_suite3_url('zp-suite-404')) . '">Ukryj pominięte</a>' : '<a class="button" href="' . esc_url(zp_suite3_url('zp-suite-404', ['zp_hidden' => 1])) . '">Pokaż pominięte</a>') . '</header>';
@@ -394,6 +406,7 @@ function zp_suite3_404_page(): void {
     $meta = [];
     $linked = !empty($e['internal']) ? ($e['linked'] ?? null) : false;
     if ($linked === true) { $meta[] = '<span class="tag is-bad">link na Twojej stronie</span>'; }
+    if (!empty($e['_act'])) { $meta[] = '<span class="tag is-warn">do przekierowania</span>'; }
     if (!empty($e['google'])) { $meta[] = '<span class="tag is-warn">Google: ' . (int) $e['google'] . '</span>'; }
     $answers = zp_suite3_404_answers_now($e);
     if ($answers > 0 && $answers !== 404) { $meta[] = '<small>teraz odpowiada ' . $answers . ($answers >= 300 && $answers < 400 ? ' (przekierowanie)' : '') . '</small>'; }
