@@ -64,11 +64,17 @@ final class Switcher {
         try{t.skipTransition();}catch(error){report(error);}
       }
     }
-    function cleanup(){active=false;w.removeEventListener('resize',resize);}
+    function cleanup(){
+      active=false;w.removeEventListener('resize',resize);
+      // The opt-in belongs to this language switch only. Leaving it on the incoming page
+      // starts another native transition on an ordinary link, whose destination never opted in.
+      var style=w.document.getElementById('zpl-vt-css');
+      if(style&&style.parentNode)style.parentNode.removeChild(style);
+    }
     w.addEventListener('resize',resize,{passive:true});
     if(t.ready&&typeof t.ready.catch==='function')t.ready.catch(function(error){
       var name=error&&error.name,message=String(error&&error.message||'');
-      if(name==='AbortError'||(name==='InvalidStateError'&&/viewport.*(?:size|chang)/i.test(message)))return;
+      if(name==='AbortError'||(name==='InvalidStateError'&&/(?:viewport.*(?:size|chang)|viewtransition opt-in disabled)/i.test(message)))return;
       report(error);
     });
     if(t.finished&&typeof t.finished.then==='function')t.finished.then(cleanup,cleanup);

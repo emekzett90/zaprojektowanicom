@@ -9,7 +9,7 @@ if (!defined('ABSPATH')) { exit; }
 const ZP_SUITE3_CACHE_301_SETTLED = ['on', 'not-installed', 'dropin-updated', 'dropin-foreign', 'dropin-missing'];
 
 function zp_suite3_upgrade(string $previous): void {
-  if ($previous !== '' && version_compare($previous, '3.2.2', '<')) {
+  if ($previous !== '' && version_compare($previous, '3.2.3', '<')) {
     // Replacement runs with the old PHP constants in memory. Refresh our own HTML cache on the first new
     // request so the new menu, portfolio and language assets are visible immediately in both languages.
     add_action('wp_loaded', static function (): void { do_action('zp_html_cache_purge'); }, 100);

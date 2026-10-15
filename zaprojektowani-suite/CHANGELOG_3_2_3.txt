@@ -1,0 +1,13 @@
+Zaprojektowani Suite 3.2.3 — 15.10.2026
+
+Uzupełnienie końcowej kontroli produkcyjnej po 3.2.2:
+- Przełączenie języka usuwa tymczasowy opt-in View Transitions po zakończeniu animacji.
+  Kolejne zwykłe przejście do innej podstrony nie dziedziczy animacji językowej ani błędu
+  InvalidStateError: ViewTransition opt-in disabled. Prawidłowy PL/EN cross-fade pozostaje.
+- Podglądy projektów logo na stronach brandingu mają komplet stałych etykiet i przycisków EN.
+  Treści, obrazy, oryginalne galerie i polskie etykiety pozostają zgodne z projektem.
+- Własny cache HTML Suite odświeża się raz po aktualizacji, aby nowe skrypty były widoczne.
+- Wersje: Suite 3.2.3, Języki PL/EN 1.1.3, Tłumacz EN 2.0.3.
+
+Wydanie zawiera także wszystkie naprawy 3.2.2: menu 8 branż EN, 22 projekty logo,
+obsługę błędów Spline, kompatybilność Elementora i Meta, aktualizację crona oraz monitor 404.
