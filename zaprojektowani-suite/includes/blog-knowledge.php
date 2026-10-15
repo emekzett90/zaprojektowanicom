@@ -789,6 +789,14 @@ function zp_suite_wiedza_maybe_flush_term_cache($object_id, $terms, $tt_ids, $ta
 }
 
 function zp_suite_wiedza_maybe_flush_meta_cache($meta_id, $post_id, $meta_key){
+  // 3.2.1: deleting a picture from the Media Library removes it as the featured image of every post at once (post 0).
+  if ((string) $meta_key === '_thumbnail_id' && !(int) $post_id) { zp_suite_wiedza_flush_index_cache(); return; }
+  // 3.2.1: a featured image edited in the Media Library (new crop or files) changes the addresses in the cards.
+  if (in_array((string) $meta_key, ['_wp_attachment_metadata', '_wp_attached_file'], true) && current_filter() === 'updated_post_meta' && get_post_type((int) $post_id) === 'attachment') {
+    global $wpdb;
+    if ($wpdb->get_var($wpdb->prepare("SELECT 1 FROM {$wpdb->postmeta} WHERE meta_key = '_thumbnail_id' AND meta_value = %s LIMIT 1", (string) (int) $post_id))) { zp_suite_wiedza_flush_index_cache(); }
+    return;
+  }
   // 3.1.1: no _zp_post_reads / _zp_post_views: the kept index fills in read counts on every render.
   $watched = ['_thumbnail_id', '_zp_blog_img', '_zp_blog_read', '_zp_blog_tag'];
   if (in_array((string) $meta_key, $watched, true) && get_post_type((int) $post_id) === 'post') {
@@ -807,6 +815,8 @@ add_action('delete_category', 'zp_suite_wiedza_flush_index_cache', 10, 0);
 add_action('added_post_meta', 'zp_suite_wiedza_maybe_flush_meta_cache', 10, 3);
 add_action('updated_post_meta', 'zp_suite_wiedza_maybe_flush_meta_cache', 10, 3);
 add_action('deleted_post_meta', 'zp_suite_wiedza_maybe_flush_meta_cache', 10, 3);
+// 3.2.1: card links follow the permalink structure.
+add_action('update_option_permalink_structure', 'zp_suite_wiedza_flush_index_cache', 10, 0);
 
 /**
  * Cache only the server-rendered post grid. The page shell and AJAX nonce stay
@@ -855,7 +865,9 @@ function zp_suite_wiedza_index_kept(){
     'minutes'  => $minutes,
     'modified' => $modified,
   ];
-  set_transient($cache_key, $payload, HOUR_IN_SECONDS);
+  // 3.2.1: 12 hours instead of 1. Every change to a post, its picture or its category (also a scheduled publication)
+  // and every new plugin version build it again, so a longer life only spares the slow rebuild (up to a few seconds).
+  set_transient($cache_key, $payload, 12 * HOUR_IN_SECONDS);
   return $payload;
 }
 

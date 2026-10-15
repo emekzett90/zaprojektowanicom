@@ -7,6 +7,10 @@ if (!defined('ABSPATH')) { exit; }
  * 2.9.13: 'exact' += 22 (14 moved, 8 gone) and old listing pages past the last one → the listing, the 404s from that report still open after 2.9.12. */
 return [
   'exact' => [
+    // 3.2.1 (404 log of 3.2.0, 15.10): two old addresses of articles that Google and visitors still ask for, to the
+    // same article at its current address (the panel's suggestion, checked by hand).
+    '/wiedza/strona-internetowa-dla-firmy-z-katowic/' => '/sklepy-internetowe/strona-internetowa-dla-firmy-z-katowic-co-powinna-zawierac-zeby-zdobywac-lokalnych-klientow/',
+    '/wiedza/dlaczego-profesjonalne-logo-ma-znaczenie-dla-firmy-efekty/' => '/logo-branding/dlaczego-profesjonalne-logo-ma-znaczenie-dla-firmy/',
     // 14.10.2026 (Search Console and Senuto audit of 13.10, list C): the old /logo-branding/ address leads to visual
     // identity, not the Katowice page (29 posts link to it as "branding"); the company logo of the structured data
     // moved from a file that never existed to the real one (404 log of 3.0.1).
