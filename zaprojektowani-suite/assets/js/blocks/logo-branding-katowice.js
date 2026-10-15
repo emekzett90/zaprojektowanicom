@@ -391,6 +391,26 @@ var ZP_LB_ASSETS = (function () {
             scope: ["Logo kliniki", "Paleta nude & gold", "Karty zabiegowe", "Wizytówki premium", "Brandbook z wytycznymi", "Przygotowanie kierunku wizualnego pod stronę www i social media", "Uporządkowanie zastosowań znaku w praktycznych materiałach", "Dopasowanie stylu do odbiorców, branży i pozycjonowania marki"],
           },
 };
+        /* Missing landing-page projects use the same CMS records as the home
+           portfolio. Preserve the bespoke galleries of the existing cards. */
+        const portfolioData = document.getElementById("zp-lb-portfolio-data");
+        if (portfolioData) {
+          try {
+            const text = (value) => String(value || "").replace(/[&<>"']/g, (char) => ({
+              "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;",
+            })[char]);
+            JSON.parse(portfolioData.textContent).forEach((item) => {
+              if (!item || !item.brand || projectDetails[item.brand]) return;
+              projectDetails[item.brand] = {
+                year: text(item.year), type: text(item.type), category: text(item.tag),
+                subtitle: text(item.sub), image: text(item.img), lead: text(item.desc),
+                tags: (item.meta || []).map(text), scope: (item.scope || []).map(text),
+                challenge: text(item.challenge), solution: text(item.solution), effect: text(item.effect),
+                results: (item.results || []).map((row) => row.map(text)),
+              };
+            });
+          } catch (e) { /* Existing static case studies remain available. */ }
+        }
         const dialog = document.getElementById("projectDialog");
         const dialogContent = document.getElementById("dialogContent");
         const imageZoom = document.getElementById("imageZoom");
@@ -413,6 +433,9 @@ var ZP_LB_ASSETS = (function () {
           const brand = card.dataset.project;
           const p = projectDetails[brand];
           if (!p) return;
+          const displayBrand = String(brand || "").replace(/[&<>"']/g, (char) => ({
+            "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;",
+          })[char]);
           lastProjectTrigger = card;
           const gallery = (p.gallery || []).length
             ? `<section class="dialog-section"><div class="dialog-section-head"><div><span class="dialog-section-label">Projekt w użyciu</span><h4>Nie tylko na jednej planszy.</h4></div><p>Pokazujemy system w realnych materiałach — od dokumentów i wizytówek po cyfrowe punkty styku.</p></div><div class="dialog-gallery">${p.gallery.map(([src, alt, orient]) => `<button type="button" data-zoom="${src}" data-orient="${orient}" aria-label="Powiększ: ${alt}"><img src="${src}" alt="${alt}" loading="lazy" decoding="async"></button>`).join("")}</div>${(p.variants || []).length ? `<div class="dialog-variants">${p.variants.map(([src, alt]) => `<button type="button" data-zoom="${src}" aria-label="Powiększ: ${alt}"><img src="${src}" alt="${alt}" loading="lazy" decoding="async"></button>`).join("")}</div>` : ""}</section>`
@@ -437,17 +460,17 @@ var ZP_LB_ASSETS = (function () {
           dialogContent.innerHTML = `
             <div class="dialog-shell">
               <div class="dialog-hero">
-                <button class="dialog-media" type="button" data-zoom="${p.image}" aria-label="Powiększ projekt ${brand}"><img src="${p.image}" alt="${brand} — ${p.subtitle}"></button>
+                <button class="dialog-media" type="button" data-zoom="${p.image}" aria-label="Powiększ projekt ${displayBrand}"><img src="${p.image}" alt="${displayBrand} — ${p.subtitle}"></button>
                 <div class="dialog-intro">
                   <span class="dialog-badge">${p.category} / ${p.year}</span>
-                  <h3 id="dialogTitle">${brand}</h3>
+                  <h3 id="dialogTitle">${displayBrand}</h3>
                   <span class="dialog-subtitle">${p.subtitle}</span>
                   <p class="dialog-lead">${p.lead}</p>
                   <div class="dialog-tags">${(p.tags || []).map((tag) => `<span>${tag}</span>`).join("")}</div>
                 </div>
               </div>
               <div class="dialog-facts">
-                <div class="dialog-fact"><span>Marka</span><strong>${brand}</strong></div>
+                <div class="dialog-fact"><span>Marka</span><strong>${displayBrand}</strong></div>
                 <div class="dialog-fact"><span>Branża</span><strong>${p.category}</strong></div>
                 <div class="dialog-fact"><span>Zakres</span><strong>${p.type}</strong></div>
                 <div class="dialog-fact"><span>Rok</span><strong>${p.year}</strong></div>

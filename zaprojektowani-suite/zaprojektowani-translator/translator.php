@@ -15,7 +15,7 @@
 if (!defined('ABSPATH')) { exit; }
 if (defined('ZPTE_VERSION')) { return; }
 
-define('ZPTE_VERSION', '2.0.2'); // 2.0.2 (Suite 3.2.0): English sources, names and brand tag lines the model keeps unchanged are no longer failures
+define('ZPTE_VERSION', '2.0.3'); // 2.0.3 (Suite 3.2.2): shared translations for the industry menu.
 define('ZPTE_DIR', __DIR__ . '/');
 
 foreach (['Settings', 'Store', 'Log', 'OpenAI', 'Translator', 'Legacy', 'Routes', 'Index', 'Serve', 'Source', 'Sync', 'Import', 'Retire', 'Migrate', 'Worker', 'Health', 'Bridge', 'Admin'] as $zpte_class) {

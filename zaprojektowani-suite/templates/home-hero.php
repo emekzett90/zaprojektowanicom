@@ -914,7 +914,7 @@ pointer-events:auto!important;
       if(mq&&mq('(max-width:1100px)').matches)return false;
       var c=d.createElement('canvas');
       var gl=c.getContext('webgl2',{failIfMajorPerformanceCaveat:true})||c.getContext('webgl',{failIfMajorPerformanceCaveat:true});
-      if(!gl)return splineCapability=true;
+      if(!gl||(typeof gl.isContextLost==='function'&&gl.isContextLost()))return splineCapability=true;
       var ext=gl.getExtension('WEBGL_debug_renderer_info');
       var renderer=ext?String(gl.getParameter(ext.UNMASKED_RENDERER_WEBGL)||''):String(gl.getParameter(gl.RENDERER)||'');
       var skip=/SwiftShader|llvmpipe|software rasterizer|software renderer/i.test(renderer);
@@ -941,7 +941,48 @@ pointer-events:auto!important;
   }
   try{var conn=navigator.connection||navigator.webkitConnection||{};if(conn.saveData===true)return;}catch(e){}
 
-  var started=false;
+  var started=false,failed=false;
+  function failSpline(error){
+    if(failed)return;
+    failed=true;
+    sceneReady=false;
+    hero.classList.remove('is-spline-loading','is-spline-loaded');
+    hero.setAttribute('data-spline-state','fallback');
+    sp.style.pointerEvents='none';
+    // The existing poster stays visible. Do not let a blocked GPU trigger the viewer's automatic reload loop.
+    try{var app=splineApp();if(app&&typeof app.dispose==='function')app.dispose();}catch(e){}
+    try{sp.removeAttribute('url');}catch(e){}
+    w.__zpSplineError=error;
+    try{hero.dispatchEvent(new CustomEvent('zh-spline-error',{detail:{error:error}}));}catch(e){}
+  }
+  function prepareViewer(){
+    if(!w.customElements||!customElements.whenDefined){failSpline(new Error('Web components unavailable'));return;}
+    customElements.whenDefined('spline-viewer').then(function(){
+      if(failed)return;
+      var app=splineApp(),canvas=splineCanvas();
+      if(!app||typeof app.load!=='function'){failSpline(new Error('Spline runtime unavailable'));return;}
+      // The pinned viewer 1.10.57 chains app.load(...).then(onLoaded) without a rejection handler.
+      // Guard this instance before setting its URL; onLoaded must not run after a failed renderer start.
+      var originalLoad=app.load,originalOnLoaded=sp.onLoaded;
+      app.load=function(){
+        try{return Promise.resolve(originalLoad.apply(app,arguments)).catch(function(error){failSpline(error);});}
+        catch(error){failSpline(error);return Promise.resolve();}
+      };
+      sp.onLoaded=function(){
+        if(failed)return;
+        try{if(typeof originalOnLoaded==='function')return originalOnLoaded.apply(sp,arguments);}
+        catch(error){failSpline(error);}
+      };
+      if(canvas){
+        // Spline's own context-loss listener immediately retries with another canvas. On a blocked GPU it
+        // repeatedly fails; keep the poster until the next page view instead of allocating more contexts.
+        if(typeof sp._handleContextLost==='function')canvas.removeEventListener('webglcontextlost',sp._handleContextLost);
+        canvas.addEventListener('webglcontextlost',function(){failSpline(new Error('WebGL context lost'));},{once:true});
+      }
+      var url=sp.getAttribute('data-url');
+      if(url&&!sp.getAttribute('url'))sp.setAttribute('url',url);
+    }).catch(failSpline);
+  }
   function addPreconnect(){
     try{
       [
@@ -966,14 +1007,14 @@ pointer-events:auto!important;
     sc.onerror=function(){
       /* v2.2.669: fallback CDN — unpkg bywa niedostepny; ta sama paczka i wersja z jsDelivr. */
       try{
-        if(d.querySelector('script[data-zh-spline-viewer-fb]')){hero.classList.remove('is-spline-loading');return;}
+        if(d.querySelector('script[data-zh-spline-viewer-fb]')){failSpline(new Error('Spline viewer could not be loaded'));return;}
         var fb=d.createElement('script');
         fb.type='module';
         fb.src='https://cdn.jsdelivr.net/npm/@splinetool/viewer@1.10.57/build/spline-viewer.js';
         fb.setAttribute('data-zh-spline-viewer-fb','1');
-        fb.onerror=function(){try{hero.classList.remove('is-spline-loading');}catch(e){}};
+        fb.onerror=function(){failSpline(new Error('Spline viewer could not be loaded'));};
         d.head.appendChild(fb);
-      }catch(e){try{hero.classList.remove('is-spline-loading');}catch(e2){}}
+      }catch(e){failSpline(e);}
     };
     d.head.appendChild(sc);
   }
@@ -983,9 +1024,8 @@ pointer-events:auto!important;
     started=true;
     try{hero.classList.add('is-spline-loading');sp.setAttribute('events-target','global');sp.setAttribute('loading-anim-type','none');sp.setAttribute('mouse-events','global');sp.style.pointerEvents='auto';}catch(e){}
     addPreconnect();
-    var url=sp.getAttribute('data-url');
-    if(url && !sp.getAttribute('url')) sp.setAttribute('url',url);
     loadViewerScript();
+    prepareViewer();
   }
   /* 2.9.10 — the robot draws only while it can be seen. Below 1101 px the page hides it
      (display:none), and a scene started in a wider window (e.g. Chrome DevTools opened at the
@@ -1019,7 +1059,7 @@ pointer-events:auto!important;
   }
   function syncSplineRun(){
     var app=splineApp();
-    if(!sceneReady||!app) return;
+    if(failed||!sceneReady||!app) return;
     try{
       if(!heroInView||(mqNarrow&&mqNarrow.matches)){ playTries=0; if(drawing) pauseDrawing(app); return; }
       if(drawing) return;
@@ -1047,7 +1087,9 @@ pointer-events:auto!important;
   }
   sp.addEventListener('load-start',function(){sceneReady=false;drawing=true;});
   sp.addEventListener('load-complete',function(){
+    if(failed)return;
     sceneReady=true;
+    hero.setAttribute('data-spline-state','ready');
     drawing=true;
     hookCanvasMeasure();
     setTimeout(hookCanvasMeasure,400);
@@ -1082,7 +1124,7 @@ pointer-events:auto!important;
   if(d.readyState==='loading') d.addEventListener('DOMContentLoaded',startAfterFirstPaint,{once:true});
   else startAfterFirstPaint();
 })();</script>
-<script>(function(){var hero=document.getElementById('zhHero');var sp=document.getElementById('zhSpline');var stage=document.getElementById('zhStage');var reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion:reduce)').matches;var fine=!window.matchMedia||window.matchMedia('(pointer:fine)').matches;var SA=false;try{SA=window.zpSyntheticAudit===true||false /* v711: identical production behavior in browser audits */||false;}catch(e){}if(SA){try{document.documentElement.classList.add('zp-synthetic-audit');}catch(e){}}if(!hero)return;var wm=hero.querySelector('.zh__wm');if(wm){wm.setAttribute('aria-label',(wm.textContent||'zaprojektowani').trim());}if(sp&&!SA&&(sp.getAttribute('url')||sp.getAttribute('data-url'))){try{sp.setAttribute('events-target','global');sp.setAttribute('loading-anim-type','none');}catch(e){}var done=false,canvasPoll=null;var reveal=function(){if(done)return;done=true;if(canvasPoll)clearInterval(canvasPoll);requestAnimationFrame(function(){requestAnimationFrame(function(){hero.classList.add('is-spline-loaded');hideBrand();});});};sp.addEventListener('load',reveal,{once:true});sp.addEventListener('load-complete',reveal,{once:true});canvasPoll=setInterval(function(){try{if(sp.shadowRoot && sp.shadowRoot.querySelector('canvas'))reveal();}catch(e){}},120);setTimeout(function(){if(canvasPoll)clearInterval(canvasPoll);},9000);}function hideBrand(){var n=0,t2=setInterval(function(){try{var sr=sp&&sp.shadowRoot;if(sr){['#logo','a#logo','#hints','[id="logo"]','[id="hints"]'].forEach(function(sel){sr.querySelectorAll(sel).forEach(function(l){l.style.setProperty('display','none','important');l.style.setProperty('visibility','hidden','important');l.style.setProperty('opacity','0','important');l.style.setProperty('pointer-events','none','important');});});}}catch(e){}if(++n>36)clearInterval(t2);},250);}function countUp(el){var target=parseFloat(el.getAttribute('data-count'))||0;var dec=parseInt(el.getAttribute('data-dec')||'0',10);var suf=el.getAttribute('data-suffix')||'';el.textContent=(dec?target.toFixed(dec):target)+suf;}[].forEach.call(hero.querySelectorAll('[data-count]'),countUp);var prog=document.getElementById('zhProg');/* 3.1.1: the bar sits in the hero, so it is worked out once per frame and only while the hero can be seen; it measured the whole page on every scroll before. */var progRaf=0,progSeen=true;function progUpdate(){progRaf=0;if(!prog||!progSeen)return;var d=document.documentElement;var max=(d.scrollHeight-d.clientHeight)||1;prog.style.height=Math.max(0,Math.min(100,(d.scrollTop/max)*100))+'%';}function onScroll(){if(!prog||progRaf||!progSeen)return;progRaf=requestAnimationFrame(progUpdate);}if(!SA){window.addEventListener('scroll',onScroll,{passive:true});progUpdate();if(prog&&'IntersectionObserver' in window){try{new IntersectionObserver(function(es){progSeen=es[es.length-1].isIntersecting;if(progSeen)onScroll();}).observe(hero);}catch(e){}}}if(reduce||SA)return;var mag=document.getElementById('zhMagnet');if(mag&&fine){mag.addEventListener('mousemove',function(e){var r=mag.getBoundingClientRect();var mx=(e.clientX-r.left-r.width/2)/(r.width/2),my=(e.clientY-r.top-r.height/2)/(r.height/2);mag.style.transform='translate('+(mx*7).toFixed(1)+'px,'+((my*5)-2).toFixed(1)+'px)';});mag.addEventListener('mouseleave',function(){mag.style.transform='';});}if(sp&&!SA){try{sp.setAttribute('events-target','global');sp.setAttribute('mouse-events','global');}catch(e){}}var layers=[].slice.call(hero.querySelectorAll('[data-px]'));var tx=0,ty=0,cx=0,cy=0,raf=null;function isMob(){return window.matchMedia&&window.matchMedia('(max-width:1100px)').matches;}function clamp(v,min,max){return Math.max(min,Math.min(max,v));}function syncSplinePointerMode(){if(!sp||SA)return;try{sp.setAttribute('events-target','global');sp.setAttribute('mouse-events','global');if(sp.getAttribute('url'))sp.style.pointerEvents='auto';}catch(e){}}syncSplinePointerMode();window.addEventListener('resize',syncSplinePointerMode,{passive:true});function applyRobotTransform(){layers.forEach(function(el){var d=parseFloat(el.getAttribute('data-px'))||1;var prefix=(el.className.indexOf('__kin')>-1)?'translateY(-52%)':'';el.style.transform=prefix+'translate3d('+(cx*d).toFixed(2)+'px,'+(cy*d).toFixed(2)+'px,0)';});if(stage){var mob=isMob();if(mob){stage.style.setProperty('transform','none','important');return;}var base='';var depth=1;var rotY=(-cx)*.38*depth;var moveX=(cx)*.75*depth;stage.style.setProperty('transform',base+'perspective(1400px)rotateY('+rotY.toFixed(2)+'deg)rotateX('+(cy*.28*depth).toFixed(2)+'deg)translate3d('+moveX.toFixed(1)+'px,'+(cy*.45*depth).toFixed(1)+'px,0)','important');}}function loop(){cx+=(tx-cx)*.12;cy+=(ty-cy)*.12;applyRobotTransform();if(Math.abs(tx-cx)>.025||Math.abs(ty-cy)>.025){raf=requestAnimationFrame(loop);}else{raf=null;}}function trackHeroPointer(e){var x,y;if(e&&e.touches&&e.touches[0]){x=e.touches[0].clientX;y=e.touches[0].clientY;}else if(e&&e.changedTouches&&e.changedTouches[0]){x=e.changedTouches[0].clientX;y=e.changedTouches[0].clientY;}else if(e&&typeof e.clientX==='number'){x=e.clientX;y=e.clientY;}else{return;}var r=hero.getBoundingClientRect();if(x<r.left||x>r.right||y<r.top||y>r.bottom)return;var px=clamp((x-r.left)/Math.max(r.width,1),0,1);var py=clamp((y-r.top)/Math.max(r.height,1),0,1);tx=(px-.5)*16;ty=(py-.5)*-10;if(!raf)raf=requestAnimationFrame(loop);}function resetPointer(){tx=0;ty=0;if(!raf)raf=requestAnimationFrame(loop);}/* v2.2.526: parallax pointer-tracking is desktop-only. On mobile the touchmove handler
+<script>(function(){var hero=document.getElementById('zhHero');var sp=document.getElementById('zhSpline');var stage=document.getElementById('zhStage');var reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion:reduce)').matches;var fine=!window.matchMedia||window.matchMedia('(pointer:fine)').matches;var SA=false;try{SA=window.zpSyntheticAudit===true||false /* v711: identical production behavior in browser audits */||false;}catch(e){}if(SA){try{document.documentElement.classList.add('zp-synthetic-audit');}catch(e){}}if(!hero)return;var wm=hero.querySelector('.zh__wm');if(wm){wm.setAttribute('aria-label',(wm.textContent||'zaprojektowani').trim());}if(sp&&!SA&&(sp.getAttribute('url')||sp.getAttribute('data-url'))){try{sp.setAttribute('events-target','global');sp.setAttribute('loading-anim-type','none');}catch(e){}var done=false;var reveal=function(){if(done||hero.getAttribute('data-spline-state')==='fallback')return;done=true;requestAnimationFrame(function(){requestAnimationFrame(function(){if(hero.getAttribute('data-spline-state')==='fallback')return;hero.classList.remove('is-spline-loading');hero.classList.add('is-spline-loaded');hideBrand();});});};sp.addEventListener('load-complete',reveal,{once:true});}function hideBrand(){var n=0,t2=setInterval(function(){try{var sr=sp&&sp.shadowRoot;if(sr){['#logo','a#logo','#hints','[id="logo"]','[id="hints"]'].forEach(function(sel){sr.querySelectorAll(sel).forEach(function(l){l.style.setProperty('display','none','important');l.style.setProperty('visibility','hidden','important');l.style.setProperty('opacity','0','important');l.style.setProperty('pointer-events','none','important');});});}}catch(e){}if(++n>36)clearInterval(t2);},250);}function countUp(el){var target=parseFloat(el.getAttribute('data-count'))||0;var dec=parseInt(el.getAttribute('data-dec')||'0',10);var suf=el.getAttribute('data-suffix')||'';el.textContent=(dec?target.toFixed(dec):target)+suf;}[].forEach.call(hero.querySelectorAll('[data-count]'),countUp);var prog=document.getElementById('zhProg');/* 3.1.1: the bar sits in the hero, so it is worked out once per frame and only while the hero can be seen; it measured the whole page on every scroll before. */var progRaf=0,progSeen=true;function progUpdate(){progRaf=0;if(!prog||!progSeen)return;var d=document.documentElement;var max=(d.scrollHeight-d.clientHeight)||1;prog.style.height=Math.max(0,Math.min(100,(d.scrollTop/max)*100))+'%';}function onScroll(){if(!prog||progRaf||!progSeen)return;progRaf=requestAnimationFrame(progUpdate);}if(!SA){window.addEventListener('scroll',onScroll,{passive:true});progUpdate();if(prog&&'IntersectionObserver' in window){try{new IntersectionObserver(function(es){progSeen=es[es.length-1].isIntersecting;if(progSeen)onScroll();}).observe(hero);}catch(e){}}}if(reduce||SA)return;var mag=document.getElementById('zhMagnet');if(mag&&fine){mag.addEventListener('mousemove',function(e){var r=mag.getBoundingClientRect();var mx=(e.clientX-r.left-r.width/2)/(r.width/2),my=(e.clientY-r.top-r.height/2)/(r.height/2);mag.style.transform='translate('+(mx*7).toFixed(1)+'px,'+((my*5)-2).toFixed(1)+'px)';});mag.addEventListener('mouseleave',function(){mag.style.transform='';});}if(sp&&!SA){try{sp.setAttribute('events-target','global');sp.setAttribute('mouse-events','global');}catch(e){}}var layers=[].slice.call(hero.querySelectorAll('[data-px]'));var tx=0,ty=0,cx=0,cy=0,raf=null;function isMob(){return window.matchMedia&&window.matchMedia('(max-width:1100px)').matches;}function clamp(v,min,max){return Math.max(min,Math.min(max,v));}function syncSplinePointerMode(){if(!sp||SA)return;try{sp.setAttribute('events-target','global');sp.setAttribute('mouse-events','global');if(sp.getAttribute('url'))sp.style.pointerEvents='auto';}catch(e){}}syncSplinePointerMode();window.addEventListener('resize',syncSplinePointerMode,{passive:true});function applyRobotTransform(){layers.forEach(function(el){var d=parseFloat(el.getAttribute('data-px'))||1;var prefix=(el.className.indexOf('__kin')>-1)?'translateY(-52%)':'';el.style.transform=prefix+'translate3d('+(cx*d).toFixed(2)+'px,'+(cy*d).toFixed(2)+'px,0)';});if(stage){var mob=isMob();if(mob){stage.style.setProperty('transform','none','important');return;}var base='';var depth=1;var rotY=(-cx)*.38*depth;var moveX=(cx)*.75*depth;stage.style.setProperty('transform',base+'perspective(1400px)rotateY('+rotY.toFixed(2)+'deg)rotateX('+(cy*.28*depth).toFixed(2)+'deg)translate3d('+moveX.toFixed(1)+'px,'+(cy*.45*depth).toFixed(1)+'px,0)','important');}}function loop(){cx+=(tx-cx)*.12;cy+=(ty-cy)*.12;applyRobotTransform();if(Math.abs(tx-cx)>.025||Math.abs(ty-cy)>.025){raf=requestAnimationFrame(loop);}else{raf=null;}}function trackHeroPointer(e){var x,y;if(e&&e.touches&&e.touches[0]){x=e.touches[0].clientX;y=e.touches[0].clientY;}else if(e&&e.changedTouches&&e.changedTouches[0]){x=e.changedTouches[0].clientX;y=e.changedTouches[0].clientY;}else if(e&&typeof e.clientX==='number'){x=e.clientX;y=e.clientY;}else{return;}var r=hero.getBoundingClientRect();if(x<r.left||x>r.right||y<r.top||y>r.bottom)return;var px=clamp((x-r.left)/Math.max(r.width,1),0,1);var py=clamp((y-r.top)/Math.max(r.height,1),0,1);tx=(px-.5)*16;ty=(py-.5)*-10;if(!raf)raf=requestAnimationFrame(loop);}function resetPointer(){tx=0;ty=0;if(!raf)raf=requestAnimationFrame(loop);}/* v2.2.526: parallax pointer-tracking is desktop-only. On mobile the touchmove handler
    ran on every scroll/touch (getBoundingClientRect + rAF + style writes) yet the robot tilt
    is invisible on mobile — pure main-thread waste that made scrolling janky. */
 if(fine&&window.matchMedia&&window.matchMedia('(min-width:1101px)').matches){hero.addEventListener('mousemove',trackHeroPointer,{passive:true});hero.addEventListener('pointermove',trackHeroPointer,{passive:true});hero.addEventListener('mouseleave',resetPointer,{passive:true});window.addEventListener('blur',resetPointer,true);}applyRobotTransform();})();</script>

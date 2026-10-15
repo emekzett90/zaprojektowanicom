@@ -165,12 +165,13 @@ function zp_suite3_404_links(string $html, string $base): array {
 function zp_suite3_404_verify(): void {
   $log = get_option(ZP_SUITE3_404_LOG, []);
   if (!is_array($log)) { return; }
+  $observed = $log;
   $todo = zp_suite3_404_unchecked($log);
   $recheck = array_slice(zp_suite3_404_recheck_due($log), 0, 6);
   if (!$todo && !$recheck) { return; }
   $pages = array_slice(array_values(array_unique($todo)), 0, 6);
   $results = [];
-  // 3.2.1: what each page address Google asked for answers now, without following redirects.
+  // Check the destination too: Elementor can regenerate a CSS file while its source page still links to it.
   $answers = [];
   foreach ($recheck as $path) {
     $response = wp_remote_head(home_url($path), [
@@ -210,6 +211,9 @@ function zp_suite3_404_verify(): void {
   }
   foreach ($answers as $path => $code) {
     if (!isset($log[$path]) || !is_array($log[$path])) { continue; }
+    // A new 404 during this request is newer evidence than our HEAD result. Leave it due for another check.
+    if ((int) ($log[$path]['last'] ?? 0) !== (int) ($observed[$path]['last'] ?? 0)
+      || (int) ($log[$path]['n'] ?? 0) !== (int) ($observed[$path]['n'] ?? 0)) { continue; }
     // Only a clear answer is kept: the page (2xx), a redirect (3xx), 404 or 410. A busy server (5xx), a refusal
     // (403, 429) or no answer is tried again; after 3 such tries the address counts as still missing.
     $final = ($code >= 200 && $code < 400) || $code === 404 || $code === 410;
@@ -235,8 +239,8 @@ function zp_suite3_404_summary(): array {
     if (!is_array($e) || (int) ($e['last'] ?? 0) < $since || isset($redirects[$path]) || zp_suite3_404_plan_mapped((string) $path) || !empty($e['hidden'])) { continue; }
     $out['open']++; $out['hits'] += (int) ($e['n'] ?? 0);
     if (!empty($e['google'])) { $out['google']++; }
-    // 3.2.0: only a link the check found on the page counts; a Referer alone does not (scanners send ours).
-    if (!empty($e['internal']) && ($e['linked'] ?? null) === true) { $out['internal']++; }
+    // Both ends are checked: a real source link and a destination that still answers 404.
+    if (zp_suite3_404_internal_broken($e)) { $out['internal']++; }
     // 3.2.1: an address linked from the site is already in the red row, so it is not counted again in the yellow one.
     elseif (zp_suite3_404_actionable((string) $path, $e, $since)) { $out['act']++; }
   }
@@ -269,6 +273,11 @@ function zp_suite3_404_answers_now(array $e): int {
   return isset($e['now'], $e['nowat']) && (int) $e['nowat'] >= (int) ($e['last'] ?? 0) ? (int) $e['now'] : 0;
 }
 
+/** A confirmed own-site link only needs repair while its destination still returns 404. */
+function zp_suite3_404_internal_broken(array $e): bool {
+  return !empty($e['internal']) && ($e['linked'] ?? null) === true && zp_suite3_404_answers_now($e) === 404;
+}
+
 /**
  * 3.2.1: an address worth a redirect: a candidate that still answers 404. The background check opens each candidate
  * (a page published again, a redirect 3.2.0 or Rank Math added, an English address the language module now sends
@@ -281,16 +290,18 @@ function zp_suite3_404_actionable(string $path, array $e, int $since): bool {
 }
 
 /**
- * Candidates not opened since their last 404 visit (at most 3 failed tries; then they count as still missing), and
- * those that still answered 404 (or nothing) over 12 hours ago: a redirect in Rank Math, a page published again or a
- * new English address answer before a 404 is logged, so only a new check sees that they are fixed.
+ * Google page candidates and linked destinations (including CSS/images), checked since their last 404 visit.
+ * Linked destinations are checked again after 12 hours even when repaired, so an old successful answer cannot
+ * hide a newly broken link. Failed checks retry at most 3 times before waiting 12 hours.
  */
 function zp_suite3_404_recheck_due(array $log): array {
   $out = []; $since = time() - 30 * DAY_IN_SECONDS; $stale = time() - 12 * HOUR_IN_SECONDS; $redirects = zp_suite3_redirects();
   foreach ($log as $path => $e) {
-    if (!is_array($e) || isset($redirects[$path]) || !zp_suite3_404_candidate((string) $path, $e, $since)) { continue; }
+    if (!is_array($e) || !empty($e['hidden']) || (int) ($e['last'] ?? 0) < $since || isset($redirects[$path]) || zp_suite3_404_plan_mapped((string) $path)) { continue; }
+    $internal = !empty($e['internal']) && ($e['linked'] ?? null) !== false;
+    if (!$internal && !zp_suite3_404_candidate((string) $path, $e, $since)) { continue; }
     $nowat = (int) ($e['nowat'] ?? 0);
-    if ($nowat < (int) ($e['last'] ?? 0) || (in_array((int) ($e['now'] ?? 0), [0, 404], true) && $nowat < $stale)) { $out[] = (string) $path; }
+    if ($nowat < (int) ($e['last'] ?? 0) || (($internal || in_array((int) ($e['now'] ?? 0), [0, 404], true)) && $nowat < $stale)) { $out[] = (string) $path; }
   }
   return $out;
 }
@@ -391,9 +402,9 @@ function zp_suite3_404_page(): void {
   // 3.2.1: links on the site first (the red dashboard row), then the addresses the yellow row counts ("do przekierowania"),
   // then the rest by Google visits and hits. The mark is not saved.
   $since = time() - 30 * DAY_IN_SECONDS;
-  foreach ($log as $p => $x) { if (is_array($x)) { $log[$p]['_act'] = !(!empty($x['internal']) && ($x['linked'] ?? null) === true) && zp_suite3_404_actionable((string) $p, $x, $since); } }
+  foreach ($log as $p => $x) { if (is_array($x)) { $log[$p]['_act'] = !zp_suite3_404_internal_broken($x) && zp_suite3_404_actionable((string) $p, $x, $since); } }
   uasort($log, static function ($a, $b): int {
-    $tier = static fn(array $e): int => !empty($e['internal']) && ($e['linked'] ?? null) === true ? 2 : (!empty($e['_act']) ? 1 : 0);
+    $tier = static fn(array $e): int => zp_suite3_404_internal_broken($e) ? 2 : (!empty($e['_act']) ? 1 : 0);
     $w = static fn(array $e): int => (int) ($e['google'] ?? 0) * 3 + (int) ($e['n'] ?? 0);
     return ($tier($b) <=> $tier($a)) ?: (($w($b) <=> $w($a)) ?: ((int) ($b['last'] ?? 0) <=> (int) ($a['last'] ?? 0)));
   });
@@ -407,12 +418,12 @@ function zp_suite3_404_page(): void {
     $suggest = zp_suite3_404_suggest((string) $path);
     $meta = [];
     $linked = !empty($e['internal']) ? ($e['linked'] ?? null) : false;
-    if ($linked === true) { $meta[] = '<span class="tag is-bad">link na Twojej stronie</span>'; }
+    if (zp_suite3_404_internal_broken($e)) { $meta[] = '<span class="tag is-bad">link na Twojej stronie</span>'; }
     if (!empty($e['_act'])) { $meta[] = '<span class="tag is-warn">do przekierowania</span>'; }
     if (!empty($e['google'])) { $meta[] = '<span class="tag is-warn">Google: ' . (int) $e['google'] . '</span>'; }
     $answers = zp_suite3_404_answers_now($e);
     if ($answers > 0 && $answers !== 404) { $meta[] = '<small>teraz odpowiada ' . $answers . ($answers >= 300 && $answers < 400 ? ' (przekierowanie)' : '') . '</small>'; }
-    if ($linked === true) { $meta[] = '<small>link na: ' . esc_html(zp_suite3_404_iref($e)) . '</small>'; }
+    if ($linked === true) { $meta[] = '<small>link na: ' . esc_html(zp_suite3_404_iref($e)) . ($answers === 0 ? ' · sprawdzam, czy adres nadal odpowiada 404' : '') . '</small>'; }
     elseif (!empty($e['internal'])) { $meta[] = '<small>z: ' . esc_html(zp_suite3_404_iref($e)) . ($linked === null ? ' · sprawdzam, czy ta strona ma ten link' : (!empty($e['unreachable']) ? ' · nie udało się otworzyć tej strony, sprawdzę ponownie za tydzień' : ' · ta strona nie ma tego linku (zapytanie robota)')) . '</small>'; }
     elseif (!empty($e['ref'])) { $meta[] = '<small>z: ' . esc_html((string) $e['ref']) . '</small>'; }
     echo '<tr><td><strong><a href="' . esc_url(home_url((string) $path)) . '" target="_blank" rel="noopener noreferrer">' . esc_html((string) $path) . '</a></strong>' . ($meta ? '<div style="margin-top:6px;display:flex;gap:6px;flex-wrap:wrap;align-items:center">' . implode('', $meta) . '</div>' : '') . '</td><td class="num">' . (int) ($e['n'] ?? 0) . '</td><td>' . esc_html(human_time_diff((int) ($e['last'] ?? time()))) . ' temu</td><td>';

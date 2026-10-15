@@ -48,6 +48,72 @@ function zp_suite_logo_branding_katowice_get_section($key){
   return zp_suite_logo_branding_katowice_default_section($key);
 }
 
+/**
+ * Keep the approved landing-page cards and add missing logo projects from the
+ * homepage CMS. Both logo service pages use this template; new projects must
+ * not require a second, manually maintained copy of their case-study content.
+ */
+function zp_suite_logo_branding_katowice_portfolio($html){
+  $result = ['html' => $html, 'items' => []];
+  if (!function_exists('zp_suite_portfolio_items') || !preg_match('#<div\b[^>]*class="portfolio-grid"[^>]*>#s', $html, $grid)) {
+    return $result;
+  }
+
+  preg_match_all('#\bdata-project="([^"]+)"#', $html, $existing);
+  $seen = [];
+  foreach ($existing[1] as $brand) {
+    $seen[zp_suite_portfolio_content_key(html_entity_decode($brand, ENT_QUOTES, 'UTF-8'))] = true;
+  }
+
+  $cards = '';
+  $is_en = function_exists('zpl_language') && zpl_language() === 'en';
+  $tool_icons = [
+    'Illustrator' => 'adobe-illustrator.svg',
+    'Photoshop' => 'adobe-photoshop.svg',
+    'InDesign' => 'adobe-indesign.svg',
+  ];
+  foreach (zp_suite_portfolio_items('logo') as $item) {
+    $brand = trim((string)($item['brand'] ?? ''));
+    $key = zp_suite_portfolio_content_key($brand);
+    if (!empty($item['isCta']) || $brand === '' || empty($item['img']) || isset($seen[$key])) {
+      continue;
+    }
+    $seen[$key] = true;
+    $result['items'][] = $item;
+    $image = esc_url($item['img']);
+    $category = esc_html($item['tag'] ?? '');
+    $subtitle = esc_html($item['sub'] ?? '');
+    $cards .= '<article class="project-card" tabindex="0" role="button" data-project="' . esc_attr($brand) . '"'
+      . ' data-category="' . esc_attr($item['tag'] ?? '') . '" data-copy="' . esc_attr($item['desc'] ?? '') . '" data-image="' . $image . '">'
+      . '<div class="project-image"><img src="' . $image . '" alt="' . esc_attr($brand . ' — ' . ($item['type'] ?? '')) . '" loading="lazy" decoding="async"></div>'
+      . '<div class="project-copy"><div class="project-meta"><span>' . $category . '</span><i>↗</i></div>'
+      . '<h3>' . esc_html($brand) . '</h3><p>' . $subtitle . '</p><div class="project-card__footer"><div class="project-scope">';
+    foreach (array_slice((array)($item['meta'] ?? []), 0, 3) as $tag) {
+      $cards .= '<span>' . esc_html($tag) . '</span>';
+    }
+    $cards .= '</div><div class="project-tools">';
+    foreach ((array)($item['tools'] ?? []) as $tool) {
+      if (isset($tool_icons[$tool])) {
+        $cards .= '<img src="' . esc_url(ZP_SUITE_URL . 'assets/logo-branding/' . $tool_icons[$tool]) . '" alt="' . esc_attr($tool) . '" title="' . esc_attr('Adobe ' . $tool) . '" loading="lazy" decoding="async">';
+      }
+    }
+    $cards .= '</div></div></div></article>';
+  }
+
+  $html = str_replace($grid[0], $grid[0] . $cards, $html);
+  $count = 0;
+  $html = preg_replace('#\s+data-rail-index="\d+"#', '', $html);
+  $html = preg_replace_callback('#<article\b(?=[^>]*class="project-card")#', static function($m) use (&$count){
+    return $m[0] . ' data-rail-index="' . sprintf('%02d', ++$count) . '"';
+  }, $html);
+  $label = $is_en ? 'Portfolio / ' . $count . ' brand stories' : 'Portfolio / ' . $count . ' historii marek';
+  $html = preg_replace('#Portfolio / \d+ historii marek#', esc_html($label), $html, 1);
+  $html = preg_replace('#(class="portfolio-rail-progress"[^>]*aria-valuemax=")\d+#s', '${1}' . $count, $html, 1);
+  $html = preg_replace('#(class="portfolio-rail-count"[^>]*>)01 / \d+#', '${1}01 / ' . sprintf('%02d', $count), $html, 1);
+  $result['html'] = $html;
+  return $result;
+}
+
 function zp_suite_logo_branding_katowice_clean_html($html){
   $html = str_replace('http://zaprojektowani.com/', 'https://zaprojektowani.com/', (string)$html);
   $html = preg_replace('#<script\s+src=["\'][^"\']*lucide\.min\.js[^"\']*["\']\s*></script>#i', '', $html);

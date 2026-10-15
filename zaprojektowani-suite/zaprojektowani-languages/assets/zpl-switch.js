@@ -9,6 +9,11 @@
   var rest = typeof cfg.rest === 'string' ? cfg.rest : '';
   window.ZPLSwitch = { lang: lang };
 
+  // The incoming page installs the same guard early in <head>; this document owns the outgoing transition.
+  window.addEventListener('pageswap', function (e) {
+    if (typeof window.ZPLTrackTransition === 'function') window.ZPLTrackTransition(e);
+  });
+
   function switches() { return doc.querySelectorAll('[data-zpl-switch]'); }
   function each(list, fn) { Array.prototype.forEach.call(list, fn); }
 

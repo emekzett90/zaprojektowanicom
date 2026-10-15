@@ -284,7 +284,7 @@ function zp_suite3_dashboard(): void {
   }
   echo '</div></section>';
 
-  echo '<section class="navy-card"><div class="eyebrow">Nowe w wersji ' . esc_html(ZP_SUITE_VERSION) . '</div><h2>Zdjęcia z hero w udostępnionych linkach i ostrzeżenie 404 tylko o tym, co trzeba poprawić.</h2><p>Link do strony usługi udostępniony na Facebooku lub LinkedInie pokazuje zdjęcie z hero tej strony zamiast ogólnego obrazka. Ostrzeżenie o błędach 404 liczy tylko adresy stron, o które Google pytał w ostatnich 30 dniach i które nadal dają 404. Z wersji 3.2.0: płynniejsza strona główna, robot nie wchodzi od nowa, strony EN w cache. Szczegóły i zadania po aktualizacji są w „Stanie strony”.</p><a class="button" href="' . esc_url(zp_suite3_url('zp-suite-health')) . '">Stan strony</a></section>';
+  echo '<section class="navy-card"><div class="eyebrow">Nowe w wersji ' . esc_html(ZP_SUITE_VERSION) . '</div><h2>Branże w menu EN, aktualne portfolio logo i poprawiona diagnostyka strony.</h2><p>Menu EN zawiera gotowe strony dla branż. Portfolio stron logo korzysta z aktualnych projektów głównej. Monitor 404 ponownie sprawdza naprawione pliki, CRON obsługuje PHP 8.5, a robot zachowuje obraz zastępczy przy awarii WebGL. Poprawiono też zgodność z Elementorem i gotowość animacji przełącznika języka. Szczegóły są w „Stanie strony”.</p><a class="button" href="' . esc_url(zp_suite3_url('zp-suite-health')) . '">Stan strony</a></section>';
   echo '</aside></div>';
 
   echo '<div class="quick-grid">';
