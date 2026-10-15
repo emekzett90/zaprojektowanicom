@@ -237,7 +237,8 @@ function zp_suite3_404_summary(): array {
     if (!empty($e['google'])) { $out['google']++; }
     // 3.2.0: only a link the check found on the page counts; a Referer alone does not (scanners send ours).
     if (!empty($e['internal']) && ($e['linked'] ?? null) === true) { $out['internal']++; }
-    if (zp_suite3_404_actionable((string) $path, $e, $since)) { $out['act']++; }
+    // 3.2.1: an address linked from the site is already in the red row, so it is not counted again in the yellow one.
+    elseif (zp_suite3_404_actionable((string) $path, $e, $since)) { $out['act']++; }
   }
   if (zp_suite3_404_unchecked($log) || zp_suite3_404_recheck_due($log)) { zp_suite3_404_verify_soon(); }
   return $out;
@@ -390,7 +391,7 @@ function zp_suite3_404_page(): void {
   // 3.2.1: links on the site first (the red dashboard row), then the addresses the yellow row counts ("do przekierowania"),
   // then the rest by Google visits and hits. The mark is not saved.
   $since = time() - 30 * DAY_IN_SECONDS;
-  foreach ($log as $p => $x) { if (is_array($x)) { $log[$p]['_act'] = zp_suite3_404_actionable((string) $p, $x, $since); } }
+  foreach ($log as $p => $x) { if (is_array($x)) { $log[$p]['_act'] = !(!empty($x['internal']) && ($x['linked'] ?? null) === true) && zp_suite3_404_actionable((string) $p, $x, $since); } }
   uasort($log, static function ($a, $b): int {
     $tier = static fn(array $e): int => !empty($e['internal']) && ($e['linked'] ?? null) === true ? 2 : (!empty($e['_act']) ? 1 : 0);
     $w = static fn(array $e): int => (int) ($e['google'] ?? 0) * 3 + (int) ($e['n'] ?? 0);
