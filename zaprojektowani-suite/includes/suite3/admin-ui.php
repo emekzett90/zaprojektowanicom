@@ -284,7 +284,7 @@ function zp_suite3_dashboard(): void {
   }
   echo '</div></section>';
 
-  echo '<section class="navy-card"><div class="eyebrow">Nowe w wersji ' . esc_html(ZP_SUITE_VERSION) . '</div><h2>Płynniejsza strona i pulpit bez fałszywych alarmów.</h2><p>Strona główna przewija się płynniej, robot nie wchodzi od nowa, strony EN są w cache, a błędy 404 liczą się tylko z linków, które naprawdę są na stronie. Szczegóły i zadania po aktualizacji są w „Stanie strony”.</p><a class="button" href="' . esc_url(zp_suite3_url('zp-suite-health')) . '">Stan strony</a></section>';
+  echo '<section class="navy-card"><div class="eyebrow">Nowe w wersji ' . esc_html(ZP_SUITE_VERSION) . '</div><h2>Zdjęcia z hero w udostępnieniach i 404 tylko do zrobienia.</h2><p>Strony usług udostępniają na Facebooku i LinkedInie zdjęcie ze swojego hero zamiast ogólnego obrazka. Ostrzeżenie o błędach 404 liczy tylko adresy stron, o które Google pytał w ostatnich 30 dniach i które nadal dają 404. Z wersji 3.2.0: płynniejsza strona główna, robot nie wchodzi od nowa, strony EN w cache. Szczegóły i zadania po aktualizacji są w „Stanie strony”.</p><a class="button" href="' . esc_url(zp_suite3_url('zp-suite-health')) . '">Stan strony</a></section>';
   echo '</aside></div>';
 
   echo '<div class="quick-grid">';

@@ -177,8 +177,12 @@ function zp_suite3_health_checks(bool $deep = false): array {
     $s = zp_suite3_404_summary();
     if ($s['internal'] > 0) {
       $checks[] = zp_suite3_check('404_internal', 'Linki na stronie prowadzą do błędu 404', 'bad', zp_suite3_plural($s['internal'], 'adres z błędem 404 ma', 'adresy z błędem 404 mają', 'adresów z błędem 404 ma') . ' odnośnik z Twojej własnej strony. Przekieruj je albo popraw link.', zp_suite3_url('zp-suite-404'));
+    } elseif (($s['act'] ?? $s['open']) > 0) {
+      // 3.2.1: a task only for page addresses Google asked for in the last 30 days that nothing redirects yet.
+      $checks[] = zp_suite3_check('404', 'Adresy z błędem 404', 'warn', zp_suite3_plural((int) $s['act'], 'adres strony bez przekierowania, o który', 'adresy stron bez przekierowania, o które', 'adresów stron bez przekierowania, o które') . ' Google pytał w ostatnich 30 dniach. Sprawdź podpowiedź celu i przekieruj.', zp_suite3_url('zp-suite-404'));
     } elseif ($s['open'] > 0) {
-      $checks[] = zp_suite3_check('404', 'Adresy z błędem 404', 'warn', zp_suite3_plural($s['open'], 'adres', 'adresy', 'adresów') . ' bez przekierowania w ostatnich 30 dniach, w tym ' . (int) $s['google'] . ' odwiedzanych przez Google. Przekierujesz je jednym kliknięciem.', zp_suite3_url('zp-suite-404'));
+      // Files, scanner requests, addresses Google no longer asks for and ones that answer again: listed in the panel, nothing to do now.
+      $checks[] = zp_suite3_check('404', 'Adresy z błędem 404', 'info', zp_suite3_plural($s['open'], 'adres', 'adresy', 'adresów') . ' z błędem 404 w ostatnich 30 dniach: pliki, zapytania robotów i adresy, które już przekierowują albo działają. Żaden adres strony, o który Google pytał w tym czasie, nie czeka na przekierowanie.', zp_suite3_url('zp-suite-404'));
     } else {
       $checks[] = zp_suite3_check('404', 'Brak nowych błędów 404', 'ok', 'Od 30 dni każdy błędny adres ma przekierowanie albo nikt go nie odwiedził.', zp_suite3_url('zp-suite-404'));
     }
