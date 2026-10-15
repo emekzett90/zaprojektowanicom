@@ -182,9 +182,14 @@ final class Router {
         if ($path === '/' || strpos($path, '/en/') === 0) { return null; }
         $en = '/en' . $path;
         $rev = self::reverse();
-        if (isset($rev[$en])) { return self::is_excluded((string) $rev[$en]) ? null : $en; }
+        // 3.2.0: only an English address without its /en/. When the English page is this very Polish address's own
+        // version (the same slug in both languages), the Polish page itself is missing: WordPress answers (404, old
+        // slug), and Tłumacz EN retires the page instead of reading "Polski adres przekierowuje na /en/…" forever.
+        if (isset($rev[$en])) { return $rev[$en] === $path || self::is_excluded((string) $rev[$en]) ? null : $en; }
         $legacy = self::legacy();
-        return isset($legacy[$en]) ? (string) $legacy[$en] : null;
+        if (!isset($legacy[$en])) { return null; }
+        $to = (string) $legacy[$en];
+        return ($rev[$to] ?? null) === $path ? null : $to;
     }
 
     private static function paged_en(string $pl): ?string {
