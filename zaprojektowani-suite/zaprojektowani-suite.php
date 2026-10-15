@@ -269,6 +269,8 @@ register_activation_hook(__FILE__, 'zp_suite_activate_home_defaults_once');
 register_activation_hook(__FILE__, 'zp_suite_legal_create_or_update_pages');
 register_activation_hook(__FILE__, 'zp_suite_blog_activate');
 register_activation_hook(__FILE__, 'zp_suite_campaigns_activate');
+// 3.2.1: posts changed while the plugin was off are not in a Wiedza index kept from before.
+register_activation_hook(__FILE__, 'zp_suite_wiedza_flush_index_cache');
 add_action('plugins_loaded', function(){
   $previous = (string) get_option('zp_suite_version_done', '');
   if ($previous === ZP_SUITE_VERSION) { return; }
@@ -281,6 +283,8 @@ add_action('plugins_loaded', function(){
     zp_suite_upgrade_108_home_seo_rankmath();
   }
 
+  // 3.2.1: a version installed again after a rollback must not reuse its own older Wiedza index (kept 12 hours).
+  if (function_exists('zp_suite_wiedza_flush_index_cache')) { zp_suite_wiedza_flush_index_cache(); }
   update_option('zp_suite_version_done', ZP_SUITE_VERSION, false);
 }, 5);
 
