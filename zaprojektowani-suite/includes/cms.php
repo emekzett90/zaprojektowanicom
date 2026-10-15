@@ -995,6 +995,22 @@ function zp_suite_portfolio_results_value($value){
   return $out;
 }
 
+/**
+ * SearchFit 14.10.2026, point 7: client sites that no longer open (https://drugaszansa.net/ answers 404). The project
+ * keeps its "live" label and buttons where they were, with the same look, but they no longer link anywhere: "live" is
+ * emptied and "liveGone" tells the templates to print them without the address. Saved CMS data stays as it is.
+ */
+function zp_suite_portfolio_live_gone(array $rows){
+  foreach ($rows as $i => $row) {
+    $live = is_array($row) ? untrailingslashit(strtolower(trim((string)($row['live'] ?? '')))) : '';
+    if (in_array($live, ['https://drugaszansa.net', 'http://drugaszansa.net', 'https://www.drugaszansa.net'], true)) {
+      $rows[$i]['live'] = '';
+      $rows[$i]['liveGone'] = true;
+    }
+  }
+  return $rows;
+}
+
 function zp_suite_portfolio_items($mode='web'){
   $items = zp_suite_cms_get('portfolio.'.$mode, []);
 
@@ -1281,7 +1297,7 @@ function zp_suite_portfolio_items($mode='web'){
     ];
   }
   $out[] = ['isCta'=>true,'mode'=>$mode,'brand'=> $mode==='logo' ? 'Tu może być Twoje logo' : 'Tu może być Twoja strona','sub'=>'otrzymaj darmową wycenę','type'=>'Darmowa wycena','year'=>'2026','tag'=>'Twój projekt','live'=>'/studio-wyceny/'];
-  return $out;
+  return zp_suite_portfolio_live_gone($out);
 }
 function zp_suite_json($data){ return wp_json_encode($data, JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES); }
 function zp_suite_source_icon($source){ return (stripos((string)$source,'facebook')!==false) ? 'https://zaprojektowani.com/wp-content/uploads/2026/05/fb_logo-scaled.webp' : 'https://zaprojektowani.com/wp-content/uploads/2026/05/google_logo-scaled.webp'; }

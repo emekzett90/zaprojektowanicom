@@ -29,12 +29,33 @@ final class Runtime {
         if (preg_match('~\.[a-z0-9]{2,5}$~i', $rel) && !preg_match('~\.html?$~i', $rel)) { return; }
 
         $query = (string) wp_parse_url($uri, PHP_URL_QUERY);
-        [$lang, $source, $mapped, $redirect] = Router::resolve($rel, $query, in_array((string) ($_SERVER['REQUEST_METHOD'] ?? 'GET'), ['GET', 'HEAD'], true));
+        $public = in_array((string) ($_SERVER['REQUEST_METHOD'] ?? 'GET'), ['GET', 'HEAD'], true);
+        [$lang, $source, $mapped, $redirect] = Router::resolve($rel, $query, $public);
         if ($redirect !== null) { self::redirect(Router::base() . $redirect . ($query !== '' ? '?' . $query : ''), 301); }
         if (Router::is_excluded($source)) {
             if ($lang === 'en') { self::redirect(Router::base() . $source . ($query !== '' ? '?' . $query : ''), 302); }
             Router::$excluded = true;
             return;
+        }
+        // 3.1.1: an English address without the closing slash ("/en", "/en/contact") gets a 301 to the one with it, as
+        // WordPress gives Polish ones ("/kontakt" → "/kontakt/"). /en answered 200 as a second copy of /en/ (SearchFit, 14.10).
+        if ($public && $lang === 'en' && substr($rel, -1) !== '/' && !preg_match('~\.html?$~i', $rel)) {
+            self::redirect(Router::base() . $rel . '/' . ($query !== '' ? '?' . $query : ''), 301);
+        }
+
+        // 3.1.1: an English address asked for without its /en/ gets a 301 to the English page, when WordPress has no page
+        // there (before its own guess at a similar address, template_redirect 10).
+        if ($public && $lang === 'pl') {
+            add_action('template_redirect', static function () use ($rel, $query) {
+                if (!is_404()) { return; }
+                // 3.2.0: a 301 the owner saved for this address in ZP Suite → Błędy 404 wins (served at priority 5).
+                if (function_exists('zp_suite3_redirects') && function_exists('zp_suite3_404_path') && isset(zp_suite3_redirects()[zp_suite3_404_path()]['to'])) { return; }
+                $en = Router::bare_en($rel);
+                if ($en === null) { return; }
+                // 3.2.0: so does WordPress's own 301 for a post whose Polish address changed (normally at 10; it exits).
+                if (function_exists('wp_old_slug_redirect')) { wp_old_slug_redirect(); }
+                self::redirect(Router::base() . $en . ($query !== '' ? '?' . $query : ''), 301);
+            }, 1);
         }
 
         // GEO: Poland stays on PL. A detected non-PL visitor entering a Polish URL

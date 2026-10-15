@@ -44,7 +44,7 @@ final class Import {
                     $s['list'] = self::sources();
                     $s['cursor'] = 0;
                     $s['step'] = 'pages';
-                    Log::add('Przenoszę obecne tłumaczenia EN: ' . count($s['list']) . ' stron.', 'info');
+                    Log::add('Przenoszę obecne tłumaczenia EN: ' . Admin::n(count($s['list']), 'strona', 'strony', 'stron') . '.', 'info');
                     break;
                 case 'pages':
                     $chunk = array_slice($s['list'], (int) $s['cursor'], self::STEP_PAGES, true);
@@ -87,7 +87,7 @@ final class Import {
                     $s['list'] = [];
                     self::save($s);
                     Serve::flush();
-                    Log::add('Obecne tłumaczenia EN przeniesione: ' . (int) $s['pages'] . ' stron, ' . (int) $s['strings'] . ' tekstów z pamięci tłumaczeń. Poprzednie tłumacze wyłączone, ich dane zostają bez zmian.', 'info');
+                    Log::add('Obecne tłumaczenia EN przeniesione: ' . Admin::n((int) $s['pages'], 'strona', 'strony', 'stron') . ', ' . Admin::n((int) $s['strings'], 'tekst', 'teksty', 'tekstów') . ' z pamięci tłumaczeń. Poprzednie tłumacze wyłączone, ich dane zostają bez zmian.', 'info');
                     return false;
             }
             self::save($s);

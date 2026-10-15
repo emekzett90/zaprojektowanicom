@@ -283,11 +283,12 @@ final class Store {
     }
 
     /** Translations shown on every English page (titles, excerpts, menu, footer). Polish key => English. */
-    public static function shared_strings(): array {
+    /** Shared texts: [pl => en], or with $manual [pl => [en, manual]]. */
+    public static function shared_strings(bool $manual = false): array {
         global $wpdb;
         $out = [];
-        $rows = $wpdb->get_results('SELECT pl, en FROM ' . self::table('strings') . " WHERE scope = 0 AND shared = 1 AND en <> ''", ARRAY_N);
-        foreach ((array) $rows as $r) { $out[(string) $r[0]] = (string) $r[1]; }
+        $rows = $wpdb->get_results('SELECT pl, en, manual FROM ' . self::table('strings') . " WHERE scope = 0 AND shared = 1 AND en <> ''", ARRAY_N);
+        foreach ((array) $rows as $r) { $out[(string) $r[0]] = $manual ? [(string) $r[1], (int) $r[2]] : (string) $r[1]; }
         return $out;
     }
 
@@ -354,6 +355,13 @@ final class Store {
         foreach (array_chunk(array_values(array_unique($hashes)), 300) as $chunk) {
             $wpdb->query($wpdb->prepare('UPDATE ' . self::table('strings') . ' SET shared = 1 WHERE scope = 0 AND shared = 0 AND hash IN (' . implode(',', array_fill(0, count($chunk), '%s')) . ')', $chunk));
         }
+    }
+
+    /** 3.1.1: a new translation for every copy of a Polish text (the memory and single pages), manual corrections excepted. */
+    public static function strings_replace(string $pl, string $en, array $meta = []): void {
+        global $wpdb;
+        $wpdb->query($wpdb->prepare('UPDATE ' . self::table('strings') . ' SET en = %s, origin = %s, model = %s, updated_at = %s WHERE hash = %s AND manual = 0',
+            $en, substr((string) ($meta['origin'] ?? ''), 0, 12), substr((string) ($meta['model'] ?? ''), 0, 60), self::now(), self::hash($pl)));
     }
 
     public static function string_edit(int $id, string $en): void {

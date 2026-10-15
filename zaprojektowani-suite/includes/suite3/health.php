@@ -7,12 +7,24 @@
  */
 if (!defined('ABSPATH')) { exit; }
 
-/* Remember when WP-Cron last ran (at most one write per 5 minutes), so a stopped cron is visible. */
+/* Remember when WP-Cron last ran (at most one write per 5 minutes), so a stopped cron is visible. 3.1.1: runs started by the
+   server's cron (zp-cron.php) are noted apart, so "Stan strony" can say whether that cron works. */
 add_action('init', static function (): void {
   if (!wp_doing_cron()) { return; }
   $last = (int) get_option('zp_suite3_cron_last', 0);
   if (time() - $last > 300) { update_option('zp_suite3_cron_last', time(), false); }
+  if (strpos((string) ($_SERVER['HTTP_USER_AGENT'] ?? ''), 'ZP Suite cron') !== false && time() - (int) get_option('zp_suite3_cron_server', 0) > 240) { update_option('zp_suite3_cron_server', time(), false); }
 }, 1);
+
+/** 3.1.1: the line for the server's cron. The nazwa.pl panel runs only "php <file>" (no "?" or quotes), every 5 minutes. */
+function zp_suite3_cron_command(): string {
+  return 'php ' . WP_PLUGIN_DIR . '/' . basename(dirname(__DIR__, 2)) . '/zp-cron.php ' . (string) wp_parse_url(home_url('/'), PHP_URL_HOST);
+}
+
+/** True when the server's cron started WP-Cron in the last 15 minutes. */
+function zp_suite3_cron_server_on(): bool {
+  return time() - (int) get_option('zp_suite3_cron_server', 0) < 900;
+}
 
 function zp_suite3_bytes($value): int {
   $value = trim((string) $value);
@@ -66,11 +78,11 @@ function zp_suite3_health_checks(bool $deep = false): array {
   $last = (int) get_option('zp_suite3_cron_last', 0);
   $cron_off = defined('DISABLE_WP_CRON') && DISABLE_WP_CRON;
   if ($overdue > 3 && $oldest > 3 * HOUR_IN_SECONDS) {
-    $checks[] = zp_suite3_check('cron', 'Zaplanowane zadania się spóźniają', 'bad', sprintf('%s dłużej niż kwadrans, najstarsze %s.%s Automatyczna publikacja i tłumaczenie mogą stać. Najpewniej pomoże cron na serwerze (nazwa.pl: Zadania cron, co 5 minut, adres %s).', zp_suite3_plural($overdue, 'zadanie czeka', 'zadania czekają', 'zadań czeka'), human_time_diff(time() - $oldest), $names ? ' Wśród nich: ' . implode(', ', $names) . '.' : '', site_url('wp-cron.php')), $health . '#cron');
+    $checks[] = zp_suite3_check('cron', 'Zaplanowane zadania się spóźniają', 'bad', sprintf('%s dłużej niż kwadrans, najstarsze %s.%s Automatyczna publikacja i tłumaczenie mogą stać. %s', zp_suite3_plural($overdue, 'zadanie czeka', 'zadania czekają', 'zadań czeka'), human_time_diff(time() - $oldest), $names ? ' Wśród nich: ' . implode(', ', $names) . '.' : '', zp_suite3_cron_server_on() ? 'Cron na serwerze działa, więc sprawdź zadania w sekcji Zaplanowane zadania.' : 'Najpewniej pomoże cron na serwerze (nazwa.pl → Zadania CRON, co 5 minut, polecenie z sekcji Zaplanowane zadania).'), $health . '#cron');
   } elseif ($overdue > 0) {
     $checks[] = zp_suite3_check('cron', 'Zadania zaplanowane działają z opóźnieniem', 'warn', sprintf('%s dłużej niż kwadrans (najstarsze %s). WP-Cron uruchamia się dopiero przy odwiedzinach strony.', zp_suite3_plural($overdue, 'zadanie czeka', 'zadania czekają', 'zadań czeka'), human_time_diff(time() - $oldest)), $health . '#cron');
   } else {
-    $checks[] = zp_suite3_check('cron', 'Zaplanowane zadania działają', 'ok', ($cron_off ? 'Cron uruchamia serwer.' : 'WP-Cron uruchamia się przy odwiedzinach.') . ($last ? ' Ostatnie uruchomienie: ' . human_time_diff($last) . ' temu.' : ''), $health . '#cron');
+    $checks[] = zp_suite3_check('cron', 'Zaplanowane zadania działają', 'ok', (zp_suite3_cron_server_on() ? 'Cron na serwerze uruchamia je co 5 minut.' : ($cron_off ? 'Cron uruchamia serwer.' : 'WP-Cron uruchamia się przy odwiedzinach.')) . ($last ? ' Ostatnie uruchomienie: ' . human_time_diff($last) . ' temu.' : ''), $health . '#cron');
   }
 
   // PHP and server
@@ -84,7 +96,13 @@ function zp_suite3_health_checks(bool $deep = false): array {
   }
   $vars = (int) ini_get('max_input_vars');
   if ($vars > 0 && $vars < 3000) {
-    $checks[] = zp_suite3_check('input_vars', 'Limit pól formularza: ' . $vars, 'warn', 'Formularz „Strona główna” w ZP Suite ma blisko tylu pól. Przy zapisie część zmian może przepaść bez komunikatu. Ustaw max_input_vars na 5000 w ustawieniach PHP hostingu.', zp_suite3_url('zp-suite-home-cms'));
+    // 3.1.1: the update adds max_input_vars = 5000 to .user.ini (upgrade.php); PHP reads that file again within 5 minutes.
+    $iv = get_option('zp_suite3_input_vars', []); $added = is_array($iv) && ($iv['result'] ?? '') === 'added';
+    if ($added && time() - (int) ($iv['at'] ?? 0) < 900) {
+      $checks[] = zp_suite3_check('input_vars', 'Limit pól formularza: ' . $vars . ' (zmiana w drodze)', 'info', 'Aktualizacja dopisała max_input_vars = 5000 do pliku .user.ini w folderze WordPressa. PHP wczyta go w ciągu kilku minut.', zp_suite3_url('zp-suite-home-cms'));
+    } else {
+      $checks[] = zp_suite3_check('input_vars', 'Limit pól formularza: ' . $vars, 'warn', ($added ? 'Plik .user.ini w folderze WordPressa ma max_input_vars = 5000, ale serwer go nie stosuje. Poproś nazwa.pl o ustawienie max_input_vars na 5000. ' : '') . 'Formularz „Strona główna” w ZP Suite ma blisko tylu pól; gdy serwer przyjmie tylko część, ZP Suite nic nie zapisze i pokaże komunikat.' . ($added ? '' : ' Ustaw max_input_vars na 5000 w ustawieniach PHP hostingu.'), zp_suite3_url('zp-suite-home-cms'));
+    }
   }
   $mem = zp_suite3_bytes(ini_get('memory_limit'));
   if ($mem > 0 && $mem < 256 * 1048576) {
@@ -287,8 +305,10 @@ function zp_suite3_health_page(): void {
     $late = $next < $now - 900;
     echo '<tr><td>' . esc_html($label) . '</td><td>' . ($late ? '<span class="tag is-warn">spóźnione ' . esc_html(human_time_diff($next)) . '</span>' : esc_html(zp_suite3_date($next))) . '</td></tr>';
   }
-  $last = (int) get_option('zp_suite3_cron_last', 0);
-  echo '</tbody></table></div><p class="zpAdmin20__muted" style="margin-top:12px">Ostatnie uruchomienie WP-Cron: ' . esc_html($last ? human_time_diff($last) . ' temu' : 'brak zapisu (pojawi się po pierwszym uruchomieniu)') . '. ' . (defined('DISABLE_WP_CRON') && DISABLE_WP_CRON ? 'Cron uruchamia serwer.' : 'Cron startuje przy odwiedzinach; stały cron na serwerze co 5 minut jest pewniejszy.') . '</p></section>';
+  $last = (int) get_option('zp_suite3_cron_last', 0); $server = (int) get_option('zp_suite3_cron_server', 0);
+  echo '</tbody></table></div><p class="zpAdmin20__muted" style="margin-top:12px">Ostatnie uruchomienie WP-Cron: ' . esc_html($last ? human_time_diff($last) . ' temu' : 'brak zapisu (pojawi się po pierwszym uruchomieniu)') . '. ' . esc_html(zp_suite3_cron_server_on() ? 'Cron na serwerze: ostatnio ' . human_time_diff($server) . ' temu.' : ($server ? 'Cron na serwerze nie odezwał się od ' . zp_suite3_date($server) . '.' : (defined('DISABLE_WP_CRON') && DISABLE_WP_CRON ? 'Cron uruchamia serwer.' : 'Cron startuje przy odwiedzinach; stały cron na serwerze co 5 minut jest pewniejszy.'))) . '</p>';
+  // 3.1.1: the exact line for nazwa.pl → Zadania CRON (every 5 minutes). It asks this site for wp-cron.php and waits for it.
+  echo '<p class="zpAdmin20__muted">Polecenie dla crona na serwerze (nazwa.pl → Zadania CRON, co 5 minut): <code style="user-select:all;word-break:break-all">' . esc_html(zp_suite3_cron_command()) . '</code>. Nie ustawiaj DISABLE_WP_CRON.</p></section>';
 
   // Largest autoloaded options
   global $wpdb;

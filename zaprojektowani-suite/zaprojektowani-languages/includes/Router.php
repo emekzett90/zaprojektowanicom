@@ -173,6 +173,25 @@ final class Router {
         return ['en', $pl, false, null];
     }
 
+    /**
+     * 3.1.1: the English address for a path that is one without its /en/ ("/websites-for-law-firms/", requested by Google
+     * on 14.10), or null. Runtime asks only when WordPress has no page there, so a Polish page at that address always wins.
+     */
+    public static function bare_en(string $path): ?string {
+        $path = self::norm_path($path);
+        if ($path === '/' || strpos($path, '/en/') === 0) { return null; }
+        $en = '/en' . $path;
+        $rev = self::reverse();
+        // 3.2.0: only an English address without its /en/. When the English page is this very Polish address's own
+        // version (the same slug in both languages), the Polish page itself is missing: WordPress answers (404, old
+        // slug), and Tłumacz EN retires the page instead of reading "Polski adres przekierowuje na /en/…" forever.
+        if (isset($rev[$en])) { return $rev[$en] === $path || self::is_excluded((string) $rev[$en]) ? null : $en; }
+        $legacy = self::legacy();
+        if (!isset($legacy[$en])) { return null; }
+        $to = (string) $legacy[$en];
+        return ($rev[$to] ?? null) === $path ? null : $to;
+    }
+
     private static function paged_en(string $pl): ?string {
         if (preg_match('~^(.*/)page/(\d+)/$~', $pl, $m) && isset(self::routes()[$m[1]])) {
             return self::routes()[$m[1]] . 'page/' . $m[2] . '/';
@@ -185,6 +204,35 @@ final class Router {
         $pl = self::norm_path($pl);
         $r = self::routes();
         return isset($r[$pl]) || (isset(self::ALIASES[$pl]) && isset($r[self::ALIASES[$pl]])) || self::paged_en($pl) !== null;
+    }
+
+    /**
+     * English addresses for ZP Suite's HTML cache (filter zp_html_cache_policy_paths, ZP Suite 3.1.1), each with the version
+     * of its English text: ['/en/x/' => 'en:<8 hex>']. Only for the Polish addresses the cache lists ($pl: path => true),
+     * with the test the page itself uses: its own route that leads back to it (no alias, no redirect) and Dict::has_page
+     * (hreflang, no noindex). The version changes whenever the page's English text can change (plugin versions, and
+     * through zpl_cache_versions Tłumacz EN's menu and page translations and the dollar rate); after
+     * do_action('zp_html_cache_refresh') the cache stops serving the old copies of just the pages whose version changed.
+     * @param mixed $en
+     * @param mixed $pl
+     */
+    public static function cache_paths($en, $pl): array {
+        $out = is_array($en) ? $en : [];
+        $routes = self::routes();
+        $rev = self::reverse();
+        $ok = [];
+        foreach (is_array($pl) ? $pl : [] as $k => $p) {
+            $p = self::norm_path(is_string($k) ? $k : (string) $p);
+            $e = $routes[$p] ?? null;
+            if (!is_string($e) || strpos($e, '/en/') !== 0 || ($rev[$e] ?? null) !== $p || isset(self::AUDITED_LEGACY_EN[$e]) || self::is_excluded($p) || !Dict::has_page($p)) { continue; }
+            $ok[$p] = $e;
+        }
+        if (!$ok) { return $out; }
+        // One version for every page ('*') and one per Polish address, read by the modules without loading any translation.
+        $ver = (array) apply_filters('zpl_cache_versions', [], array_keys($ok));
+        $all = (defined('ZP_SUITE_VERSION') ? ZP_SUITE_VERSION : '') . '|' . ZPL_VERSION . '|' . (string) ($ver['*'] ?? '');
+        foreach ($ok as $p => $e) { $out[$e] = 'en:' . substr(hash('sha256', $all . '|' . $p . '|' . (string) ($ver[$p] ?? '')), 0, 8); }
+        return $out;
     }
 
     /** English path for a Polish source path (fallback: /en + path). */

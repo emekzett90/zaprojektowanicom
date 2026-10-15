@@ -553,6 +553,10 @@ final class Geo {
         if ($ua === '') { return true; }
         // AI fetchers without "bot" in their name (Claude-User, Perplexity-User…) and link previews (Outlook, Teams,
         // Skype) get the address they asked for too.
-        return (bool) preg_match('~(?:bot|crawl|spider|slurp|bingpreview|microsoftpreview|skypeuripreview|facebookexternalhit|whatsapp|embedly|iframely|lighthouse|pagespeed|headless|google-|googleother|mediapartners-google|feedfetcher|apis-google|chatgpt-user|claude-user|claude-web|anthropic|perplexity|mistralai-user|meta-external|cohere-ai|gptbot|ccbot|gtmetrix|pingdom|uptime|ptst|validator|curl/|wget/|python-|go-http-client|okhttp|axios/|node-fetch|java/|libwww|httpclient|scrapy)~i', $ua);
+        // 3.1.1: Lighthouse 10+ (Chrome DevTools, the command line) no longer says "Lighthouse" in its user agent; PageSpeed
+        // Insights still adds "Chrome-Lighthouse". Its phone is "Android 11; moto g power (2022))": Chrome itself has sent
+        // "Android 10; K" on every phone since 2023 and app browsers put " Build/…" before the bracket, so only Lighthouse
+        // matches. Keep the list equal to ZP_Cache_Early_20261009::is_bot() in includes/cache-dropin-20261009.php.
+        return (bool) preg_match('~(?:bot|crawl|spider|slurp|bingpreview|microsoftpreview|skypeuripreview|facebookexternalhit|whatsapp|embedly|iframely|lighthouse|pagespeed|android 11; moto g power \(2022\)\)|headless|google-|googleother|mediapartners-google|feedfetcher|apis-google|chatgpt-user|claude-user|claude-web|anthropic|perplexity|mistralai-user|meta-external|cohere-ai|gptbot|ccbot|gtmetrix|pingdom|uptime|ptst|validator|curl/|wget/|python-|go-http-client|okhttp|axios/|node-fetch|java/|libwww|httpclient|scrapy)~i', $ua);
     }
 }

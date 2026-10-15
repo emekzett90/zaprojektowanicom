@@ -31,7 +31,7 @@ final class Routes {
         'poradniki' => 'guides',
         'seo-content-marketing' => 'seo-content-marketing',
         'reklamy' => 'advertising',
-        'wiedza' => 'insights',
+        'wiedza' => 'knowledge', // 3.1.1: was insights (Mat, 14.10); /en/insights/ redirects
         'bez-kategorii' => 'uncategorized',
         'category' => 'category',
     ];
@@ -80,9 +80,14 @@ final class Routes {
             $r[$pl] = $en;
             $taken[$en] = true;
         }
+        $prev = self::all();
         update_option(self::OPTION, ['v' => time(), 'r' => $r], true);
         self::$routes = $r;
         self::flush();
+        // 3.1.1: ZP Suite's HTML cache lists the English addresses it may keep (\ZPL\Router::cache_paths). A changed address
+        // lists them again at the end of the request: the old one, which now redirects, leaves the list and the new one
+        // joins it; other copies stay. The option name (zpte2_) is not one the cache watches.
+        if ($prev !== $r) { do_action('zp_html_cache_refresh'); }
     }
 
     /** Remember that $old (English) now lives at $new; earlier redirects to $old follow along. */

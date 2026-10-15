@@ -7,7 +7,9 @@ final class ZP_HTML_Cache_20261009 {
     public const BACKUP = 'zp_html_cache_20261009_backup';
     public const STATE = 'zp_html_cache_20261009_state';
     public const PREFIX = "<?php exit; ?>\n";
+    public const SWEEP = 'zp_html_cache_sweep_20261009';
     private static $purge_queued = false;
+    private static $refresh_queued = false;
 
     public static function allowed(): bool { return current_user_can('manage_options') && current_user_can('activate_plugins'); }
     public static function dir(): string { return WP_CONTENT_DIR . '/cache/zp-suite-html'; }
@@ -64,7 +66,8 @@ final class ZP_HTML_Cache_20261009 {
         foreach ($matches[0] as $match) { $at = $match[1]; if (in_array($at + strspn($match[0], " \t"), $actual_if_offsets, true)) { return substr($raw, 0, $at) . "define( 'WP_CACHE', true ); // ZP Suite HTML cache 20261009\n" . substr($raw, $at); } }
         throw new RuntimeException('Brak standardowej granicy ABSPATH; konfiguracja nie będzie zmieniana.');
     }
-    public static function policy(bool $enabled = true): array {
+    /** With $keep (the current policy), the generation stays: copies of pages whose entry did not change remain valid. */
+    public static function policy(bool $enabled = true, ?array $keep = null): array {
         $home = wp_parse_url(home_url('/')); if (($home['scheme'] ?? '') !== 'https' || empty($home['host']) || isset($home['port'])) { throw new RuntimeException('Cache wymaga kanonicznego HTTPS bez niestandardowego portu.'); }
         $paths = []; $posts = get_posts(['post_type' => ['post', 'page'], 'post_status' => 'publish', 'numberposts' => -1, 'suppress_filters' => true]);
         foreach ($posts as $post) {
@@ -75,7 +78,15 @@ final class ZP_HTML_Cache_20261009 {
             if (($url['scheme'] ?? '') !== 'https' || ($url['host'] ?? '') !== $home['host'] || isset($url['query']) || !preg_match('~^/[A-Za-z0-9%._/-]*$~D', $path) || preg_match('~^/(?:en(?:/|$)|wp-|oferta(?:/|$)|oferty(?:/|$)|offer(?:/|$)|brief(?:/|$)|studio-wyceny(?:/|$)|dziekujemy|thank-you|konto(?:/|$)|koszyk(?:/|$)|zamowienie(?:/|$))~i', $path)) { continue; }
             $paths[$path] = true;
         }
-        if (!$paths) { throw new RuntimeException('Brak publicznych kanonicznych ścieżek do cache.'); } ksort($paths);
+        if (!$paths) { throw new RuntimeException('Brak publicznych kanonicznych ścieżek do cache.'); }
+        // 3.1.1: other modules add their own public pages with a version (the EN translator: "/en/…/" => "en:<version>").
+        // Only a drop-in that knows that kind of entry serves them (3.1.0's needs true), and the version is part of the key.
+        if (function_exists('apply_filters')) {
+            foreach ((array) apply_filters('zp_html_cache_policy_paths', [], $paths) as $path => $entry) {
+                if (is_string($path) && !isset($paths[$path]) && preg_match('~^/[A-Za-z0-9%._/-]*$~D', $path) && is_string($entry) && preg_match('/^[a-z]{2}:[A-Za-z0-9._-]{1,40}$/D', $entry)) { $paths[$path] = $entry; }
+            }
+        }
+        ksort($paths);
         $next = 0;
         foreach (get_posts(['post_type' => ['post', 'page'], 'post_status' => 'future', 'numberposts' => -1, 'suppress_filters' => true]) as $post) {
             if ($post->post_date_gmt !== '0000-00-00 00:00:00') { $date = new DateTimeImmutable($post->post_date_gmt, new DateTimeZone('UTC')); }
@@ -88,7 +99,12 @@ final class ZP_HTML_Cache_20261009 {
         $ttl = 1800;
         if (function_exists('apply_filters')) { foreach (['zp_suite_contact', 'zp_wiedza_nonce', 'zp_studio_submit', 'zp_studio_domain_check', 'zp_suite_live_search'] as $action) { $ttl = min($ttl, (int) floor((float) apply_filters('nonce_life', 86400, $action) / 4)); } }
         if ($ttl < 60) { throw new RuntimeException('Niestandardowy czas nonce jest zbyt krótki dla cache formularzy.'); }
-        return ['schema' => 1, 'enabled' => $enabled, 'ttl' => $ttl, 'host' => $home['host'], 'paths' => $paths, 'geo_polish_safe' => !$geo_enabled || $polish_stays, 'next_publication' => $next, 'generation' => bin2hex(random_bytes(16))];
+        $keep = $keep && is_string($keep['generation'] ?? null) && preg_match('/^[a-f0-9]{32}$/D', $keep['generation']) ? $keep : null;
+        // "since": when this generation began. Copies older than that are never read again, so the sweep deletes them.
+        $policy = ['schema' => 1, 'enabled' => $enabled, 'ttl' => $ttl, 'host' => $home['host'], 'paths' => $paths, 'geo_polish_safe' => !$geo_enabled || $polish_stays, 'next_publication' => $next, 'generation' => $keep ? $keep['generation'] : bin2hex(random_bytes(16)), 'since' => $keep ? (int) ($keep['since'] ?? 0) : time()];
+        // 3.1.1 (thread 25): the drop-in places a visitor the way Geo does, with the same bundled Polish address ranges.
+        if (defined('ZPL_DIR')) { $policy['geo'] = ['on' => $geo_enabled, 'v4' => ZPL_DIR . 'data/geo/pl-v4.bin', 'v6' => ZPL_DIR . 'data/geo/pl-v6.bin']; }
+        return $policy;
     }
     private static function filesystem(): void {
         foreach ([WP_CONTENT_DIR, WP_CONTENT_DIR . '/cache', self::dir()] as $dir) {
@@ -114,8 +130,27 @@ final class ZP_HTML_Cache_20261009 {
         if ($written !== strlen($data) || is_link($file) || (is_file($file) ? hash_file('sha256', $file) : hash('sha256', '')) !== $expected || !@rename($tmp, $file)) { @unlink($tmp); throw new RuntimeException('Atomowy zapis nie powiódł się; oryginał chroniony.'); }
         clearstatcache(true, $file); if (!hash_equals(hash('sha256', $data), (string) hash_file('sha256', $file))) { throw new RuntimeException('Weryfikacja zapisu pliku nie powiodła się.'); }
     }
-    private static function write_policy(array $policy): void {
-        $file = self::dir() . '/policy.php'; self::atomic($file, self::PREFIX . wp_json_encode($policy), 0600, is_file($file) ? (string) hash_file('sha256', $file) : hash('sha256', ''));
+    /**
+     * 3.1.1: policy writes take a lock, so a purge's new generation and a refresh that keeps the old one never cross.
+     * With $expected (the hash of the file the policy was composed from), the write happens only if nobody wrote since.
+     * 3.2.0: with $keep_off, a policy file that says the cache is off stays as it is (checked under the same lock that
+     * deactivate() writes under), so a purge that started before the owner switched the cache off cannot switch it back on.
+     */
+    private static function write_policy(array $policy, ?string $expected = null, bool $keep_off = false): bool {
+        $file = self::dir() . '/policy.php'; $lock_file = self::dir() . '/.policy.lock';
+        $lock = !is_link($lock_file) && is_dir(self::dir()) ? @fopen($lock_file, 'c') : false;
+        if ($lock) { @chmod($lock_file, 0600); flock($lock, LOCK_EX); }
+        try {
+            clearstatcache(true, $file); $current = is_file($file) ? (string) hash_file('sha256', $file) : hash('sha256', '');
+            if ($expected !== null && !hash_equals($expected, $current)) { throw new RuntimeException('Polityka cache zmieniła się w trakcie odświeżania.'); }
+            if ($keep_off && is_file($file) && !is_link($file)) {
+                $raw = (string) @file_get_contents($file);
+                $on_disk = strpos($raw, self::PREFIX) === 0 ? json_decode(substr($raw, strlen(self::PREFIX)), true) : null;
+                if (is_array($on_disk) && ($on_disk['enabled'] ?? null) === false) { return false; }
+            }
+            self::atomic($file, self::PREFIX . wp_json_encode($policy), 0600, $current);
+            return true;
+        } finally { if ($lock) { flock($lock, LOCK_UN); fclose($lock); } }
     }
     public static function enable(string $review_hash): void {
         $review = self::preflight(); if (!preg_match('/^[a-f0-9]{64}$/D', $review_hash) || !hash_equals($review['review_hash'], $review_hash)) { throw new RuntimeException('Przegląd zmienił się. Odśwież panel.'); }
@@ -184,12 +219,12 @@ final class ZP_HTML_Cache_20261009 {
         if (!$resume && empty($state['enabled'])) { return 'dropin-updated'; }
         self::filesystem();
         $policy = self::policy();
-        self::write_policy($policy);
+        // Without $resume the cache was on when this started; if the owner switched it off meanwhile, it stays off.
+        if (!self::write_policy($policy, null, !$resume)) { return 'dropin-updated'; }
         update_option(self::STATE, ['enabled' => true, 'paths' => count($policy['paths']), 'ttl' => $policy['ttl'], 'at_utc' => gmdate('c')], false);
         delete_option('zp_html_cache_20261009_error');
-        // Copies made before 3.0.1 belong to the old generation and are never read again.
-        $count = 0;
-        foreach (glob(self::dir() . '/zpc-*.php') ?: [] as $old) { if (++$count > 2000) { break; } if (!is_link($old) && preg_match('/\/zpc-[a-f0-9]{64}\.php$/D', $old)) { @unlink($old); } }
+        // Copies of the old generation are never read again; the sweep deletes them (3.1.1).
+        self::schedule_sweep();
         return 'on';
     }
     /** Short state for "Stan strony": on, off, not installed, or the reason it cannot serve. */
@@ -203,6 +238,9 @@ final class ZP_HTML_Cache_20261009 {
     }
     private static function disabled_policy(): array { return ['schema' => 1, 'enabled' => false, 'ttl' => 1800, 'host' => '', 'paths' => [], 'geo_polish_safe' => false, 'next_publication' => 0, 'generation' => bin2hex(random_bytes(16))]; }
     public static function purge(): void {
+        // 3.1.1: read the switch fresh. A long request (a translator step of ~20 s) keeps the value it read first, and the
+        // owner may have switched the cache off meanwhile; acting on the old value would switch it back on.
+        if (function_exists('wp_cache_delete')) { wp_cache_delete(self::STATE, 'options'); }
         $state = get_option(self::STATE, []); if (empty($state['enabled'])) { return; }
         $backup = get_option(self::BACKUP, []);
         if (is_link(self::dropin()) || !is_file(self::dropin()) || hash_file('sha256', self::dropin()) !== ($backup['dropin_installed_sha'] ?? '')) { return; }
@@ -210,10 +248,11 @@ final class ZP_HTML_Cache_20261009 {
             // 3.0.1: an older drop-in of this module is replaced by the device-aware one (that step also refreshes).
             if (hash_file('sha256', self::dropin()) !== hash_file('sha256', self::template())) { self::upgrade_dropin(false); return; }
             $policy = self::policy();
-            // Two requests can refresh at the same moment; the loser's hash check fails although the policy is fresh.
-            try { self::write_policy($policy); } catch (RuntimeException $race) { usleep(50000); clearstatcache(); self::write_policy($policy); }
-            $files = glob(self::dir() . '/zpc-*.php') ?: []; $count = 0;
-            foreach ($files as $file) { if (++$count > 1000) { break; } if (!is_link($file) && preg_match('/\/zpc-[a-f0-9]{64}\.php$/D', $file)) { @unlink($file); } }
+            // A new generation makes every copy unreachable at once. 3.1.1: copies are no longer deleted here (that cost every
+            // save up to 1000 file deletions); the sweep deletes them. A write by older code mid-update can fail the hash check once.
+            try { $written = self::write_policy($policy, null, true); } catch (RuntimeException $race) { usleep(50000); clearstatcache(); $written = self::write_policy($policy, null, true); }
+            if (!$written) { return; }
+            self::schedule_sweep();
             // 3.0.1: a later successful refresh clears an old failure note (it used to stay on the page for good).
             if (get_option('zp_html_cache_20261009_error', '') !== '') { delete_option('zp_html_cache_20261009_error'); }
         } catch (Throwable $error) {
@@ -225,6 +264,62 @@ final class ZP_HTML_Cache_20261009 {
         if (self::$purge_queued || empty(get_option(self::STATE, [])['enabled'])) { return; }
         self::$purge_queued = true; add_action('shutdown', [self::class, 'purge'], PHP_INT_MAX);
     }
+    /**
+     * 3.1.1: for a change to some pages only (an EN translation's new version): the policy is composed again with the same
+     * generation, so only the pages whose entry changed lose their copies. Once per request, at its end; a purge wins.
+     */
+    public static function queue_refresh(): void {
+        if (self::$refresh_queued || self::$purge_queued || empty(get_option(self::STATE, [])['enabled'])) { return; }
+        self::$refresh_queued = true; add_action('shutdown', [self::class, 'refresh'], PHP_INT_MAX - 1);
+    }
+    public static function refresh(): void {
+        if (self::$purge_queued) { return; }
+        if (function_exists('wp_cache_delete')) { wp_cache_delete(self::STATE, 'options'); }
+        $state = get_option(self::STATE, []); if (empty($state['enabled'])) { return; }
+        $backup = get_option(self::BACKUP, []);
+        if (is_link(self::dropin()) || !is_file(self::dropin()) || hash_file('sha256', self::dropin()) !== ($backup['dropin_installed_sha'] ?? '') || hash_file('sha256', self::dropin()) !== hash_file('sha256', self::template())) { self::purge(); return; }
+        try {
+            $file = self::dir() . '/policy.php';
+            for ($try = 0; $try < 3; $try++) {
+                clearstatcache(true, $file); $raw = is_file($file) && !is_link($file) ? (string) @file_get_contents($file) : '';
+                $current = strpos($raw, self::PREFIX) === 0 ? json_decode(substr($raw, strlen(self::PREFIX)), true) : null;
+                // A cache switched off on disk stays off: only the switch in the panel turns it on again (3.1.1).
+                if (is_array($current) && ($current['enabled'] ?? null) === false) { return; }
+                // No valid policy to keep: a full refresh with a new generation.
+                if (!is_array($current) || ($current['enabled'] ?? null) !== true || !is_string($current['generation'] ?? null) || !preg_match('/^[a-f0-9]{32}$/D', $current['generation'])) { self::purge(); return; }
+                $policy = self::policy(true, $current);
+                if (wp_json_encode($policy) === substr($raw, strlen(self::PREFIX))) { return; }
+                // Compare-and-swap: a purge that wrote a new generation meanwhile is kept, and the policy is composed again from it.
+                try { self::write_policy($policy, hash('sha256', $raw)); return; } catch (RuntimeException $race) { usleep(50000); }
+            }
+            throw new RuntimeException('race');
+        } catch (Throwable $error) {
+            update_option('zp_html_cache_20261009_error', 'Nie odświeżono polityki cache; sprawdź uprawnienia katalogu.', false);
+        }
+    }
+    public static function schedule_sweep(): void {
+        if (function_exists('wp_next_scheduled') && !wp_next_scheduled(self::SWEEP)) { wp_schedule_event(time() + 900, 'zp_html_cache_15m', self::SWEEP); }
+    }
+    /**
+     * 3.1.1: deletes copies that are never served again, every 15 minutes: those made before the current generation began and
+     * those past the longest life (1800 s, plus 5 minutes), whatever their generation or version. Temporary files of cut-off
+     * writes go after 10 minutes. Up to 5000 files per run; nothing outside this folder, and never LiteSpeed or the CDN.
+     */
+    public static function sweep(): int {
+        $dir = self::dir(); if (is_link($dir) || !is_dir($dir)) { return 0; }
+        $since = 0; $raw = is_file($dir . '/policy.php') && !is_link($dir . '/policy.php') ? (string) @file_get_contents($dir . '/policy.php') : '';
+        $policy = strpos($raw, self::PREFIX) === 0 ? json_decode(substr($raw, strlen(self::PREFIX)), true) : null;
+        if (is_array($policy) && is_int($policy['since'] ?? null)) { $since = $policy['since']; }
+        $now = time(); $deleted = 0;
+        foreach (array_merge(glob($dir . '/zpc-*.php') ?: [], glob($dir . '/.zpc-*.php') ?: []) as $file) {
+            if ($deleted >= 5000) { break; }
+            if (is_link($file) || !preg_match('~/(?:zpc-[a-f0-9]{64}|\.zpc-[a-f0-9]{24})\.php$~D', $file)) { continue; }
+            $mtime = (int) @filemtime($file); if ($mtime <= 0) { continue; }
+            $old = basename($file)[0] === '.' ? $mtime < $now - 600 : ($mtime < $now - 2100 || ($since > 0 && $mtime < $since - 2));
+            if ($old && @unlink($file)) { $deleted++; }
+        }
+        return $deleted;
+    }
     public static function option_changed(string $option): void {
         // Counters, admin progress/logs and lookup memoization do not change rendered content.
         if (in_array($option, ['zp_ai_stats', 'zpte_log', 'zpte_usage', 'zpte_progress', 'zpte_last_plan', 'zp_speed_img_sizes', 'zp_speed_live_paths'], true)) { return; }
@@ -232,6 +327,8 @@ final class ZP_HTML_Cache_20261009 {
         // cron write these every few minutes, and each write used to empty the whole cache. 3.1.0: quote requests from Studio
         // wyceny and the llms.txt build time are on no page; the weekly style-file test counts only when it flips (below).
         if (strpos($option, 'zp_suite3_') === 0 || in_array($option, ['zpl_geo_stats', 'zpl_missing', 'zpte_alert', 'zp_speed_att_ids', 'zp_suite_version_done', 'zp_suite_leads', 'zp_ai_feed_seen', 'zp_ai_changed', 'zp_ai_access_test', 'zp_ai_indexnow_last', 'zp_ai_indexnow_retry', 'zp_ai_indexnow_queue', 'zp_websub_last', 'zp_feed_guard_at', 'zp_feed_status', 'zp_feed_log', 'zp_ai_log', 'zp_studio_wyceny_orders', 'zp_ai_llms_built', 'zp_speed_files_ok'], true)) { return; }
+        // 3.1.1: added and deleted options count too, so the locks that cron jobs add and delete on every run are left out.
+        if (preg_match('/_lock$/D', $option) || $option === 'zp_studio_wyceny_unread_orders') { return; }
         if (apply_filters('zp_html_cache_ignore_option', false, $option)) { return; }
         if (preg_match('/^(?:zp_(?!html_cache_)|zpl_|zpte_|rank-math-|theme_mods_|widget_|sidebars_widgets|page_on_front|show_on_front|blogname|blogdescription|permalink_structure)/', $option)) { self::queue_purge(); }
     }
@@ -288,6 +385,15 @@ add_action('admin_menu', static function () { add_submenu_page('zp-suite', 'Cach
 add_action('admin_post_zp_html_cache_20261009', [ZP_HTML_Cache_20261009::class, 'handle']);
 foreach (['save_post', 'deleted_post', 'trashed_post', 'untrashed_post', 'transition_post_status', 'wp_update_nav_menu', 'switch_theme', 'upgrader_process_complete', 'created_term', 'edited_term', 'delete_term'] as $hook) { add_action($hook, [ZP_HTML_Cache_20261009::class, 'queue_purge'], PHP_INT_MAX, 0); }
 foreach (['updated_post_meta', 'added_post_meta', 'deleted_post_meta'] as $hook) { add_action($hook, [ZP_HTML_Cache_20261009::class, 'meta_changed'], PHP_INT_MAX, 3); }
-add_action('updated_option', [ZP_HTML_Cache_20261009::class, 'option_changed'], PHP_INT_MAX, 1);
+// 3.1.1: an option that is added or deleted changes pages as much as one that is updated.
+foreach (['updated_option', 'added_option', 'deleted_option'] as $hook) { add_action($hook, [ZP_HTML_Cache_20261009::class, 'option_changed'], PHP_INT_MAX, 1); }
+// 3.1.1: other modules ask for a refresh that keeps the generation (an EN page's new version) or for a full one.
+add_action('zp_html_cache_refresh', [ZP_HTML_Cache_20261009::class, 'queue_refresh'], 10, 0);
+add_action('zp_html_cache_purge', [ZP_HTML_Cache_20261009::class, 'queue_purge'], 10, 0);
+add_filter('cron_schedules', static function (array $schedules): array { $schedules['zp_html_cache_15m'] = ['interval' => 900, 'display' => 'ZP Suite · sprzątanie cache HTML']; return $schedules; });
+add_action(ZP_HTML_Cache_20261009::SWEEP, [ZP_HTML_Cache_20261009::class, 'sweep']);
 add_action('update_option_zp_speed_files_ok', [ZP_HTML_Cache_20261009::class, 'speed_files_changed'], PHP_INT_MAX, 2);
-if (function_exists('register_deactivation_hook')) { register_deactivation_hook(dirname(__DIR__) . '/zaprojektowani-suite.php', [ZP_HTML_Cache_20261009::class, 'deactivate']); }
+if (function_exists('register_deactivation_hook')) {
+    register_deactivation_hook(dirname(__DIR__) . '/zaprojektowani-suite.php', [ZP_HTML_Cache_20261009::class, 'deactivate']);
+    register_deactivation_hook(dirname(__DIR__) . '/zaprojektowani-suite.php', static function (): void { wp_clear_scheduled_hook(ZP_HTML_Cache_20261009::SWEEP); });
+}

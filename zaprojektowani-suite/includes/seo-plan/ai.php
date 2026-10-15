@@ -603,6 +603,8 @@ function zp_ai_profiles(): array {
   foreach ($all as $url) {
     $url = esc_url_raw(trim((string) $url), ['https']);
     if ($url === '' || stripos($url, 'zaprojektowani.com') !== false && wp_parse_url($url, PHP_URL_HOST) === wp_parse_url(home_url('/'), PHP_URL_HOST)) { continue; }
+    // SearchFit 14.10.2026: there is no LinkedIn company page (also not under /zaprojektowanicom); a saved copy stays in the panel.
+    if (preg_match('~^https://(?:www\.)?linkedin\.com/company/zaprojektowani(?:com)?/?$~i', $url)) { continue; }
     $out[untrailingslashit(strtolower($url))] = untrailingslashit($url);
   }
   return array_values($out);
@@ -621,7 +623,8 @@ function zp_ai_offer_node(array $o): array {
     'url' => home_url($o['path']),
     'priceCurrency' => 'PLN',
     'priceSpecification' => $spec,
-    'itemOffered' => ['@type' => 'Service', 'name' => $o['name']],
+    // SearchFit 14.10, point 8: a Service names its provider, the business node of schema.php.
+    'itemOffered' => ['@type' => 'Service', 'name' => $o['name'], 'provider' => ['@id' => home_url('/') . '#organization']],
     'areaServed' => ['@type' => 'Country', 'name' => 'Polska'],
   ];
   if ($o['note'] !== '') { $node['description'] = $o['note']; }

@@ -691,7 +691,11 @@ function zp_suite_wiedza_read_label($count){
   return number_format_i18n($count) . ' ' . $word;
 }
 
-function zp_suite_wiedza_card_markup($post_id, $i = 0){
+/**
+ * 3.1.1: with $read_slot the read count is left as a slot (zp_suite_wiedza_read_slot()) for the kept index,
+ * which fills in the current counts on every render.
+ */
+function zp_suite_wiedza_card_markup($post_id, $i = 0, $read_slot = false){
   $post_id = (int)$post_id;
   $cats = get_the_category($post_id);
   $cat_slugs = (!empty($cats) && !is_wp_error($cats)) ? wp_list_pluck($cats, 'slug') : [];
@@ -700,8 +704,7 @@ function zp_suite_wiedza_card_markup($post_id, $i = 0){
   $tag = get_post_meta($post_id,'_zp_blog_tag',true) ?: $first_cat;
   $title = get_the_title($post_id);
   $excerpt = zp_suite_wiedza_fast_excerpt($post_id, 42);
-  $reads = zp_suite_wiedza_read_count($post_id);
-  $views_label = zp_suite_wiedza_read_label($reads);
+  $views_label = $read_slot ? zp_suite_wiedza_read_slot($post_id) : esc_html(zp_suite_wiedza_read_label(zp_suite_wiedza_read_count($post_id)));
   $cat_pills = [];
   if (!empty($cats) && !is_wp_error($cats)) {
     foreach (array_slice($cats, 0, 3) as $c) { $cat_pills[] = $c->name; }
@@ -712,7 +715,7 @@ function zp_suite_wiedza_card_markup($post_id, $i = 0){
   <article class="zpKBPost" style="--i:<?php echo (int)$i; ?>" data-zp-post data-title="<?php echo esc_attr(mb_strtolower($title.' '.$excerpt.' '.$first_cat)); ?>" data-cats="<?php echo esc_attr(implode(' ', $cat_slugs)); ?>" data-date="<?php echo esc_attr(get_the_date('U',$post_id)); ?>">
     <a class="zpKBPost__media" href="<?php echo esc_url(get_permalink($post_id)); ?>" aria-label="<?php echo esc_attr($title); ?>">
       <?php echo zp_suite_wiedza_image_markup($post_id, 'medium_large', 'zpKBPost__img', $title, '(max-width: 760px) calc(100vw - 32px), (max-width: 1280px) 50vw, 360px'); ?>
-      <span class="zpKBPost__views"><i data-lucide="eye"></i><?php echo esc_html($views_label); ?></span>
+      <span class="zpKBPost__views"><i data-lucide="eye"></i><?php echo $views_label; ?></span>
       <span class="zpKBPost__tagStack">
         <?php foreach($cat_pills as $pill): ?><em><?php echo esc_html($pill); ?></em><?php endforeach; ?>
       </span>
@@ -729,7 +732,43 @@ function zp_suite_wiedza_card_markup($post_id, $i = 0){
 }
 
 function zp_suite_wiedza_index_cache_key(){
-  return 'zp_suite_wiedza_index_' . str_replace('.', '_', (string) ZP_SUITE_VERSION);
+  return 'zp_suite_wiedza_index_v2_' . str_replace('.', '_', (string) ZP_SUITE_VERSION);
+}
+
+/** 3.1.1: where a kept card shows its read count. Escaped text never contains "<!--", so no title or excerpt can match it. */
+function zp_suite_wiedza_read_slot($post_id){
+  return '<!--zp-kb-reads:' . (int) $post_id . '-->';
+}
+
+/**
+ * 3.1.1: zp_suite_wiedza_read_count() for many posts in one query: the first _zp_post_reads value, or the first
+ * _zp_post_views value when that is below 1, never below 0. Returns post ID => count.
+ */
+function zp_suite_wiedza_read_counts($post_ids){
+  global $wpdb;
+  $post_ids = array_values(array_unique(array_filter(array_map('intval', (array) $post_ids))));
+  if (!$post_ids) { return []; }
+  $rows = $wpdb->get_results("SELECT post_id, meta_key, meta_value FROM {$wpdb->postmeta} WHERE meta_key IN ('_zp_post_reads', '_zp_post_views') AND post_id IN (" . implode(',', $post_ids) . ') ORDER BY meta_id ASC', ARRAY_N);
+  $first = [];
+  foreach ((array) $rows as $row) {
+    $key = (int) $row[0] . '|' . $row[1];
+    if (!isset($first[$key])) { $first[$key] = (int) maybe_unserialize($row[2]); }
+  }
+  $out = [];
+  foreach ($post_ids as $id) {
+    $reads = $first[$id . '|_zp_post_reads'] ?? 0;
+    if ($reads < 1) { $reads = $first[$id . '|_zp_post_views'] ?? 0; }
+    $out[$id] = max(0, $reads);
+  }
+  return $out;
+}
+
+/** 3.1.1: what one post adds to the average reading time above the index (the rule templates/wiedza-blog.php used). */
+function zp_suite_wiedza_stats_minutes($post){
+  $saved = get_post_meta($post->ID, '_zp_blog_read', true);
+  if ($saved && preg_match('/(\d+)/', (string) $saved, $match)) { return max(1, (int) $match[1]); }
+  $words = preg_split('/\s+/u', trim(wp_strip_all_tags(strip_shortcodes((string) $post->post_content))), -1, PREG_SPLIT_NO_EMPTY);
+  return max(1, (int) ceil((is_array($words) ? count($words) : 0) / 220));
 }
 
 function zp_suite_wiedza_flush_index_cache($unused = null){
@@ -750,7 +789,8 @@ function zp_suite_wiedza_maybe_flush_term_cache($object_id, $terms, $tt_ids, $ta
 }
 
 function zp_suite_wiedza_maybe_flush_meta_cache($meta_id, $post_id, $meta_key){
-  $watched = ['_thumbnail_id', '_zp_blog_img', '_zp_blog_read', '_zp_blog_tag', '_zp_post_reads', '_zp_post_views'];
+  // 3.1.1: no _zp_post_reads / _zp_post_views: the kept index fills in read counts on every render.
+  $watched = ['_thumbnail_id', '_zp_blog_img', '_zp_blog_read', '_zp_blog_tag'];
   if (in_array((string) $meta_key, $watched, true) && get_post_type((int) $post_id) === 'post') {
     zp_suite_wiedza_flush_index_cache();
   }
@@ -771,11 +811,15 @@ add_action('deleted_post_meta', 'zp_suite_wiedza_maybe_flush_meta_cache', 10, 3)
 /**
  * Cache only the server-rendered post grid. The page shell and AJAX nonce stay
  * dynamic, while every article/link remains present in the initial HTML.
+ *
+ * 3.1.1: the kept copy also holds the figures above the index (number of posts, reading minutes, last update),
+ * so a render no longer loads every post with its content. Read counts change with every reader, so they are
+ * filled in on each render (one query) instead of throwing the kept grid away.
  */
-function zp_suite_wiedza_index_payload(){
+function zp_suite_wiedza_index_kept(){
   $cache_key = zp_suite_wiedza_index_cache_key();
   $cached = get_transient($cache_key);
-  if (is_array($cached) && isset($cached['html'], $cached['count'])) {
+  if (is_array($cached) && isset($cached['html'], $cached['count'], $cached['ids'], $cached['minutes'], $cached['modified'])) {
     return $cached;
   }
 
@@ -793,16 +837,41 @@ function zp_suite_wiedza_index_payload(){
   ]);
 
   $html = '';
+  $ids = [];
+  $minutes = 0;
+  $modified = 0;
   foreach ($query->posts as $i => $post) {
-    $html .= zp_suite_wiedza_card_markup($post->ID, $i);
+    $html .= zp_suite_wiedza_card_markup($post->ID, $i, true);
+    $ids[] = (int) $post->ID;
+    $minutes += zp_suite_wiedza_stats_minutes($post);
+    $post_modified = strtotime((string) $post->post_modified_gmt . ' GMT');
+    if ($post_modified > $modified) { $modified = $post_modified; }
   }
 
   $payload = [
-    'html'  => $html,
-    'count' => (int) $query->post_count,
+    'html'     => $html,
+    'count'    => (int) $query->post_count,
+    'ids'      => $ids,
+    'minutes'  => $minutes,
+    'modified' => $modified,
   ];
   set_transient($cache_key, $payload, HOUR_IN_SECONDS);
   return $payload;
+}
+
+/** The index with the current read counts, and the figures for the numbers above it. */
+function zp_suite_wiedza_index_payload(){
+  $kept = zp_suite_wiedza_index_kept();
+  $reads = zp_suite_wiedza_read_counts($kept['ids']);
+  $slots = [];
+  foreach ($reads as $post_id => $count) { $slots[zp_suite_wiedza_read_slot($post_id)] = esc_html(zp_suite_wiedza_read_label($count)); }
+  return [
+    'html'     => strtr((string) $kept['html'], $slots),
+    'count'    => (int) $kept['count'],
+    'reads'    => (int) array_sum($reads),
+    'minutes'  => (int) $kept['minutes'],
+    'modified' => (int) $kept['modified'],
+  ];
 }
 
 function zp_suite_wiedza_ajax_search(){
@@ -890,7 +959,7 @@ function zp_suite_wiedza_register_read(){
   $new = $current + 1;
   update_post_meta($post_id, '_zp_post_reads', $new);
   set_transient($dedupe_key, 1, 12 * HOUR_IN_SECONDS);
-  zp_suite_wiedza_flush_index_cache();
+  // 3.1.1: the kept Wiedza index stays; it fills in read counts on every render.
 
   wp_send_json_success(['count' => $new, 'counted' => true]);
 }

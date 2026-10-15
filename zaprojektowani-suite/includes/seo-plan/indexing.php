@@ -30,6 +30,14 @@ function zp_websub_main_feed(): bool {
 add_action('rss2_head', function () {
   if (zp_websub_main_feed()) { echo "\t<atom:link rel=\"hub\" href=\"" . esc_url(ZP_WEBSUB_HUB) . "\" />\n"; }
 });
+
+// SEO audit of 13.10.2026: dozens of feeds (of posts, categories and comments) sat in Search Console as
+// "crawled, not indexed". A feed is never a search result, so its address says noindex; feed readers, WebSub
+// and Google still read it and find the new posts in it.
+add_filter('wp_headers', function ($headers, $wp) {
+  if (!empty($wp->query_vars['feed']) && zp_seo_plan_active()) { $headers['X-Robots-Tag'] = 'noindex, follow'; }
+  return $headers;
+}, 10, 2);
 add_action('atom_head', function () {
   if (zp_websub_main_feed()) { echo "\t<link rel=\"hub\" href=\"" . esc_url(ZP_WEBSUB_HUB) . "\" />\n"; }
 });

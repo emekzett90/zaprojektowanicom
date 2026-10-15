@@ -219,12 +219,14 @@ function zp_suite3_todo(): array {
     }
   }
   $t = zp_suite3_translator_summary();
-  if ($t && (int) ($t['problems'] ?? 0) > 0) { $row('Tłumaczenia EN do sprawdzenia', (int) $t['problems'] . ' treści z błędem lub bez wyniku.', zp_suite3_url(zp_suite3_translator_page()), 'translation', 'warn'); }
+  if ($t && (int) ($t['problems'] ?? 0) > 0) { $row('Tłumaczenia EN do sprawdzenia', zp_suite3_plural((int) $t['problems'], 'treść', 'treści', 'treści') . ' z błędem lub bez wyniku.', zp_suite3_url(zp_suite3_translator_page()), 'translation', 'warn'); }
   if (class_exists('ZP_Admin_Queue_Health_20261010')) {
     try {
       $queues = ZP_Admin_Queue_Health_20261010::data();
       foreach (($queues['queues'] ?? []) as $key => $queue) {
-        if (is_array($queue) && !empty($queue['issues'])) { $row((string) ($queue['label'] ?? 'Kolejka treści'), 'Kolejka zatrzymała się. Otwórz moduł, żeby zobaczyć przyczynę.', zp_suite3_url($key === 'photos' ? 'zp-suite-article-photos' : 'zp-suite-prepare'), 'update', 'warn'); }
+        // The real reason: a job waiting for the owner's decision is not a stalled queue (3.1.1).
+        $why = is_array($queue) ? ZP_Admin_Queue_Health_20261010::explain($queue) : null;
+        if ($why) { $row((string) ($queue['label'] ?? 'Kolejka treści'), $why['text'], zp_suite3_url($key === 'photos' ? 'zp-suite-article-photos' : 'zp-suite-prepare'), $why['kind'] === 'review' ? 'clipboard' : 'update', $why['kind'] === 'fault' ? 'bad' : 'warn'); }
       }
     } catch (Throwable $e) {}
   }
@@ -282,7 +284,7 @@ function zp_suite3_dashboard(): void {
   }
   echo '</div></section>';
 
-  echo '<section class="navy-card"><div class="eyebrow">Nowe w wersji ' . esc_html(ZP_SUITE_VERSION) . '</div><h2>Lżejsza wtyczka i prostszy panel.</h2><p>Strona wczytuje mniej kodu, panel ma jedno menu u góry, a nowa zakładka „Stan strony” pokazuje problemy i błędy 404 z gotowymi przekierowaniami.</p><a class="button" href="' . esc_url(zp_suite3_url('zp-suite-health')) . '">Stan strony</a></section>';
+  echo '<section class="navy-card"><div class="eyebrow">Nowe w wersji ' . esc_html(ZP_SUITE_VERSION) . '</div><h2>Płynniejsza strona i pulpit bez fałszywych alarmów.</h2><p>Strona główna przewija się płynniej, robot nie wchodzi od nowa, strony EN są w cache, a błędy 404 liczą się tylko z linków, które naprawdę są na stronie. Szczegóły i zadania po aktualizacji są w „Stanie strony”.</p><a class="button" href="' . esc_url(zp_suite3_url('zp-suite-health')) . '">Stan strony</a></section>';
   echo '</aside></div>';
 
   echo '<div class="quick-grid">';

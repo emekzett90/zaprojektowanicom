@@ -178,7 +178,9 @@ function zp_seo_related_render(array $links, string $self = ''): string {
     if ($path === '' || $path === $self || isset($seen[$path]) || !zp_seo_related_is_service($path) || !zp_seo_plan_link_is_live($path)) { continue; }
     $seen[$path] = true;
     $meta = zp_seo_related_card_meta($path);
-    $cards .= '<a class="zpu-related__card" href="' . esc_url(home_url($path)) . '" aria-label="' . esc_attr('Poznaj usługę: ' . $meta['title']) . '">'
+    // No aria-label (SearchFit 14.10.2026): the card's name is its visible text (tag, title, snippet,
+    // "Poznaj usługę"), so the name a voice user reads out always matches what is on screen.
+    $cards .= '<a class="zpu-related__card" href="' . esc_url(home_url($path)) . '">'
       . '<span class="zpu-related__media"><img src="' . esc_url($meta['image']) . '" alt="" loading="lazy" decoding="async"><span class="zpu-related__tag">' . esc_html($meta['label']) . '</span></span>'
       . '<div class="zpu-related__body"><h3>' . esc_html($meta['title']) . '</h3>'
       . '<p class="zpu-related__snippet">' . esc_html($meta['excerpt']) . '</p>'

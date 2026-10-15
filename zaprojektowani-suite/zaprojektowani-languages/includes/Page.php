@@ -12,6 +12,32 @@ final class Page {
 
     private static function schema_key(string $key): bool { return !empty(self::SCHEMA_KEYS[$key]) || ($key !== '' && in_array($key, self::$extraSchema, true)); }
 
+    /**
+     * 3.1.1: a shorter English page title (Google shows about 60 characters) or meta description (about 155) is kept
+     * under its own key, so the same text elsewhere on the page (a post's H1 is often its title) keeps the full
+     * translation. The <title> element and description tags look for it first; Tłumacz EN writes it.
+     */
+    const VARIANTS = ['title' => '⟦title⟧ ', 'meta' => '⟦meta⟧ '];
+
+    /** Key of the short version of a text of this kind ('' for kinds without one). */
+    public static function variant(string $kind, string $k): string { return isset(self::VARIANTS[$kind]) ? self::VARIANTS[$kind] . $k : ''; }
+
+    /** 3.1.1: the owner set the English for this text in Języki PL/EN (the exact text or its number template). */
+    private static function owner_has(array $owner, string $k): bool {
+        if (!$owner) { return false; }
+        if (isset($owner[$k])) { return true; }
+        $tp = Dict::template($k);
+        return $tp !== null && isset($owner[$tp[0]]);
+    }
+
+    /** The text of a key, without the mark of a short version. */
+    public static function plain(string $k): string {
+        foreach (self::VARIANTS as $mark) {
+            if (strpos($k, $mark) === 0) { return substr($k, strlen($mark)); }
+        }
+        return $k;
+    }
+
     /** @var array<string,int> */
     public static $stats = ['found' => 0, 'hit' => 0, 'miss' => 0];
     /** @var array<string,string> missing keys => kind */
@@ -129,11 +155,15 @@ final class Page {
         $lang = $opts['lang'] ?? 'en';
         $locale = $opts['locale'] ?? 'en_US';
 
-        $lookup = static function (string $k, string $kind) use ($t) {
+        // 3.1.1: the owner's own English for a text (overrides in Języki PL/EN) always wins, also over a short version made
+        // for Google before the override was set; overrides change without Tłumacz EN compiling anything, so this is asked here.
+        $owner = $lang === 'en' && function_exists('get_option') ? Dict::overrides('en') : [];
+        $lookup = static function (string $k, string $kind) use ($t, $owner) {
             // Script data holds names/codes too: never count it towards coverage or the missing list.
             if ($kind === 'data') { return $t($k, $kind); }
             self::$stats['found']++;
-            $tr = $t($k, $kind);
+            $tr = isset(self::VARIANTS[$kind]) && !self::owner_has($owner, $k) ? $t(self::VARIANTS[$kind] . $k, $kind) : null;
+            if ($tr === null) { $tr = $t($k, $kind); }
             if ($tr === null) { self::$stats['miss']++; self::$missing[$k] = $kind; return null; }
             self::$stats['hit']++;
             return $tr;

@@ -215,6 +215,11 @@ add_action('wp_footer', function () {
  * - keep visual layout intact
  */
 
+/** 3.1.1: an image of a post or page (WordPress media classes, a post's featured image), not a small logo named "…logo…". */
+function zp_suite_2245_is_content_image($class) {
+  return (bool) preg_match('/(?:^|\s)(?:attachment-|wp-image-|wp-post-image|size-|zpsingleposthero__|zpkbcatcard__img)/', strtolower((string) $class));
+}
+
 function zp_suite_2245_img_sizes_by_class($class, $src) {
   $class = strtolower((string) $class);
   $src_l = strtolower((string) $src);
@@ -254,7 +259,14 @@ function zp_suite_2245_img_sizes_by_class($class, $src) {
     return '(max-width: 640px) 74px, 124px';
   }
 
-  if (strpos($class, 'zpnewhero__techitem') !== false || strpos($src_l, 'logo') !== false) {
+  // 3.1.1 (SearchFit 14.10.2026): a post's featured image is drawn across the whole width (375 px of 375 on a phone,
+  // 1441 px of 1440 on a computer). With "logo" in its file name the rule below took it for a small logo, so the twenty
+  // logo posts (PL and EN) fetched the 300 px copy; their images in the text and on cards got the same hint.
+  if (strpos($class, 'zpsingleposthero__image') !== false) {
+    return '100vw';
+  }
+
+  if (strpos($class, 'zpnewhero__techitem') !== false || (strpos($src_l, 'logo') !== false && !zp_suite_2245_is_content_image($class))) {
     return '(max-width: 640px) 44px, 72px';
   }
 
@@ -397,7 +409,7 @@ function zp_suite_2245_optimize_img_tag($tag) {
     strpos($src_l, 'anna_nowak') !== false ||
     strpos($src_l, 'piotr_mazur') !== false ||
     strpos($src_l, 'dentysta') !== false ||
-    strpos($src_l, 'logo') !== false ||
+    (strpos($src_l, 'logo') !== false && !zp_suite_2245_is_content_image($class_l)) || // 3.1.1: not a post's own image (above)
     strpos($class_l, 'zpheroreviewcard') !== false
   ) {
     if (strpos($class_l, 'zpnewnav') === false && strpos($class_l, 'zptrustpinned__logoimg') === false) {

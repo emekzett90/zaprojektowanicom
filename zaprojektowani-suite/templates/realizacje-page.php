@@ -175,7 +175,7 @@ window.zpRealizacjeProjects = <?php echo wp_json_encode($zp_real_projects, JSON_
           <?php if ($services): ?><div class="chips"><?php foreach ($services as $service): ?><span><?php echo esc_html($service); ?></span><?php endforeach; ?></div><?php endif; ?>
           <div class="cardActions">
             <a class="more" href="#case-<?php echo esc_attr($slug); ?>" data-open="<?php echo (int)$i; ?>"><span>Zobacz case study</span><i data-lucide="arrow-up-right"></i></a>
-            <?php if (!empty($p['live'])): ?><a class="livePill" href="<?php echo esc_url($p['live']); ?>" target="_blank" rel="noopener"><span>live</span><i data-lucide="external-link"></i></a><?php endif; ?>
+            <?php if (!empty($p['live']) || !empty($p['liveGone'])): ?><a class="livePill" <?php echo !empty($p['live']) ? 'href="' . esc_url($p['live']) . '" target="_blank" rel="noopener"' : 'tabindex="-1"'; ?>><span>live</span><i data-lucide="external-link"></i></a><?php endif; ?>
           </div>
         </div>
       </article>

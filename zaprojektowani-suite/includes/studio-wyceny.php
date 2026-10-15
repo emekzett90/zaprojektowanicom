@@ -376,7 +376,8 @@ HTML;
    - po zmianie kroku fokus trafia na tytuł kroku;
    - komputer (Mat 14.10, nagłówki kroków i „0X / 05" bez zmian): pasek na dole płaski, bez cienia, z linią postępu,
      „Dalej" bez gradientu; klik w „?" nie zaznacza karty (dymek jest po najechaniu); podgląd briefu z boku
-     przewija się, gdy ekran jest niski, więc opis projektu i przyciski kontaktu nie chowają się pod paskiem;
+     nie ma własnego przewijania (Mat 14.10 wieczorem), bo ucinało głowę Marty, która ma wystawać nad ramkę;
+     przyklejony podgląd stoi 60 px niżej (156 px zamiast 96 px), więc menu u góry nie zasłania jej głowy;
    - funkcje w podglądzie i podsumowaniu: nazwy łamią się między słowami, nie w środku słowa, i stoją od lewej. */
 function zp_studio_ux_310(){
   return <<<'HTML'
@@ -436,7 +437,7 @@ html body.zpbs-studio-page #zpbsUltimate[data-mode="brief"] .zpbsSticky::before{
 html body.zpbs-studio-page #zpbsUltimate[data-mode="brief"] .zpbsSticky::after{content:""!important;display:block!important;position:absolute!important;left:0!important;top:-1px!important;height:3px!important;width:20%!important;background:#8ec8f7!important;pointer-events:none!important;transition:width .3s ease!important}
 }
 @media (min-width:1181px){
-html body.zpbs-studio-page #zpbsUltimate[data-mode="brief"] .zpbsSide{max-height:calc(100vh - 172px)!important;overflow-x:hidden!important;overflow-y:auto!important;scrollbar-width:thin;scrollbar-color:#cfd6e0 transparent}
+html body.zpbs-studio-page #zpbsUltimate[data-mode="brief"] .zpbsSide{top:156px!important}
 }
 html body.zpbs-studio-page #zpbsUltimate[data-mode="brief"][data-step="2"] .zpbsSticky::after{width:40%!important}
 html body.zpbs-studio-page #zpbsUltimate[data-mode="brief"][data-step="3"] .zpbsSticky::after{width:60%!important}

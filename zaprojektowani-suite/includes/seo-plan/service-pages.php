@@ -496,7 +496,7 @@ function zp_seo_service_spec(string $variant): ?array {
           ['keep', 7], ['keep', 8],
           ['new', 'Ile trwa stworzenie strony internetowej?', 'Termin zależy od zakresu i tempa przekazywania materiałów. Strona wizytówka lub landing page powstaje szybciej niż serwis firmowy z kilkunastoma podstronami i treściami SEO. Po briefie podajemy harmonogram z etapami i datą publikacji.' . $AS('/strony-internetowe/makieta-strony-internetowej/', ' Jednym z pierwszych etapów jest ', 'makieta strony internetowej', ', czyli plan układu podstron przed projektem graficznym.')],
         ],
-        'replace' => [
+        'replace' => array_merge([
           ['<p class="hero-eyebrow">Strony internetowe • Katowice</p>', '<p class="hero-eyebrow">Strony internetowe • cała Polska</p>'],
           ['Tworzymy strony dla firm z Katowic, Śląska i całej Polski: od', 'Projektujemy i tworzymy strony internetowe dla firm z całej Polski: od'],
           ['<h2 class="section-title">Wybierz zakres — od landing page po <strong>serwis premium.</strong></h2>', '<h2 class="section-title">Strona wizytówka, firmowa czy <strong>rozbudowany serwis?</strong></h2>'],
@@ -509,7 +509,7 @@ function zp_seo_service_spec(string $variant): ?array {
           ['<p>Aktualizacje, kopie zapasowe, drobne zmiany i rozwój: nowe sekcje, podstrony SEO, landing pages pod kampanie.</p>', '<p>Aktualizacje, kopie zapasowe i drobne zmiany w ramach usługi ' . $L('/opieka-wordpress/', 'opieka nad stroną WordPress') . ', a do tego rozwój: nowe sekcje, podstrony SEO, landing pages pod kampanie.</p>'],
           ['<p class="section-kicker">Katowice • Śląsk • cała Polska</p>', '<p class="section-kicker">Cała Polska • siedziba w Katowicach</p>'],
           ['Z Katowic projektujemy marki dla firm z całej Polski. Brief, prezentacje kierunków, konsultacje i przekazanie plików możemy przeprowadzić online — etap po etapie.', 'Pracujemy z firmami z całej Polski, a nasze studio mieści się w Katowicach. Brief, makiety, prezentacje projektu, konsultacje i odbiór strony prowadzimy online — etap po etapie. Firmy ze Śląska zapraszamy też do biura: ' . $local('strony-katowice', 'strony internetowe w Katowicach') . '.'],
-        ],
+        ], $demand_pl ? zp_seo_service_national_copy('strony') : []),
       ];
 
     case 'strony-local':
@@ -610,7 +610,7 @@ function zp_seo_service_spec(string $variant): ?array {
           ['new', 'Czym różni się logo, logotyp i sygnet?', '<strong>Logotyp</strong> to znak zbudowany z samego napisu — nazwy firmy w dopracowanym kroju. <strong>Sygnet</strong> to symbol graficzny, który działa też samodzielnie, np. jako ikona czy avatar. <strong>Logo</strong> to potoczna nazwa całego znaku: logotypu, sygnetu albo ich połączenia. Formę dobieramy do nazwy, branży i miejsc użycia. Przykłady pokazujemy w poradniku ' . $A('/logo-branding/logo-logotyp-sygnet-roznice/', 'logo, logotyp czy sygnet') . '.'],
           ['keep', 2], ['keep', 3], ['keep', 4], ['keep', 5], ['keep', 8], ['keep', 9], ['keep', 10], ['keep', 13], ['keep', 14], ['keep', 15],
         ],
-        'replace' => [
+        'replace' => array_merge([
           ['<p class="hero-eyebrow">Logo &amp; branding • Katowice</p>', '<p class="hero-eyebrow">Projektowanie logo • cała Polska</p>'],
           ['Tworzymy <strong>logo, identyfikacje wizualne i brandbooki</strong>, które dobrze wyglądają nie tylko na prezentacji. Projektujemy system gotowy na stronę internetową, social media, druk, opakowania i materiały sprzedażowe.', 'Projektujemy <strong>logo i logotypy dla firm z całej Polski</strong> — od strategii i koncepcji, przez warianty znaku, po komplet plików do druku i internetu. Każdy projekt sprawdzamy na stronie, w social mediach, w druku i na materiałach sprzedażowych.'],
           ['z pełną księgą znaku i zasadami wdrożenia.', 'z pełną księgą znaku i zasadami wdrożenia. Orientacyjne kwoty opisujemy w poradniku ' . $L($cost_logo, 'ile kosztuje logo') . '.'],
@@ -626,7 +626,7 @@ function zp_seo_service_spec(string $variant): ?array {
           ['Dodatkowe materiały, opakowania lub rozbudowane wdrożenie wyceniamy indywidualnie.', 'Dodatkowe materiały, opakowania lub rozbudowane wdrożenie wyceniamy indywidualnie. Więcej w poradniku ' . $L($cost_logo, 'ile kosztuje logo dla firmy') . '.'],
           ['uporządkowany zestaw gotowy dla drukarni i zespołu digital.', 'uporządkowany zestaw gotowy dla drukarni i zespołu digital. Czym jest ' . $A('/logo-branding/logo-wektorowe-pliki-logo/', 'logo wektorowe') . ' i do czego służy każdy format, wyjaśniamy w osobnym poradniku.'],
           ['przygotowany do legalnego, codziennego użycia przez firmę.', 'przygotowany do legalnego, codziennego użycia przez firmę. Jeśli chcesz mieć wyłączność na znak, sprawdź, jak wygląda ' . $A('/logo-branding/jak-zastrzec-logo/', 'zastrzeżenie logo') . ' w Urzędzie Patentowym.'],
-        ],
+        ], $demand_pl ? zp_seo_service_national_copy('logo') : []),
       ];
 
     case 'identity-national':
@@ -642,7 +642,7 @@ function zp_seo_service_spec(string $variant): ?array {
           ['keep', 4], ['keep', 6], ['keep', 7], ['keep', 11], ['keep', 12], ['keep', 14],
           ['new', 'Czy pracujecie z firmami z całej Polski?', 'Tak. Identyfikację wizualną projektujemy dla firm z całej Polski — warsztat marki, prezentacje i odbiory prowadzimy online. Z firmami ze Śląska spotykamy się też w naszym biurze w Katowicach.'],
         ],
-        'replace' => [
+        'replace' => array_merge([
           ['<p class="hero-eyebrow">Logo &amp; branding • Katowice</p>', '<p class="hero-eyebrow">Identyfikacja wizualna • branding</p>'],
           ['Tworzymy <strong>logo, identyfikacje wizualne i brandbooki</strong>, które dobrze wyglądają nie tylko na prezentacji. Projektujemy system gotowy na stronę internetową, social media, druk, opakowania i materiały sprzedażowe.', 'Projektujemy <strong>identyfikację wizualną firm: logo, kolory, typografię i księgę znaku</strong>. Budujemy system, dzięki któremu marka wygląda spójnie na stronie, w social mediach, w druku i w materiałach sprzedażowych — dla firm z całej Polski.'],
           ['<h2 class="section-title"> Wybierz zakres dopasowany do <strong>etapu Twojej marki.</strong> </h2>', '<h2 class="section-title">Ile kosztuje identyfikacja wizualna? <strong>Wybierz zakres.</strong></h2>'],
@@ -658,7 +658,7 @@ function zp_seo_service_spec(string $variant): ?array {
           ['<p class="section-kicker">FAQ / logo i branding</p>', '<p class="section-kicker">FAQ / identyfikacja wizualna</p>'],
           ['dzięki którym marka pozostaje spójna na stronie, w social mediach i druku.', 'dzięki którym marka pozostaje spójna na stronie, w social mediach i druku. Sam znak projektujemy w ramach usługi ' . $L('/projektowanie-logo/', 'projektowanie logo') . '.'],
           ['odpowiadały obecnemu etapowi rozwoju firmy.', 'odpowiadały obecnemu etapowi rozwoju firmy. Szczegóły w poradniku ' . $L('/logo-branding/rebranding-firmy/', 'rebranding firmy') . '.'],
-        ],
+        ], $demand_pl ? zp_seo_service_national_copy('identity') : []),
       ];
 
     case 'logo-local':
@@ -689,6 +689,97 @@ function zp_seo_service_spec(string $variant): ?array {
       ];
   }
   return null;
+}
+
+/**
+ * Polish copy of the nationwide pages in the sections they shared word for word with their Katowice page
+ * (SEO audit of 13.10.2026, list B: 72% common text on /tworzenie-stron-internetowych/, 67% between logo and
+ * identity). Same elements and about the same length, so the layout stays; headings carry the plan's phrases
+ * instead of slogans alone. Polish only: the English pages keep the text their dictionary was made from.
+ * Kind => [old, new] pairs for zp_seo_service_transform().
+ */
+function zp_seo_service_national_copy(string $kind): array {
+  $copy = [
+    'strony' => [
+      ['po wdrożenie WordPress, SEO techniczne, analitykę i szybkie formularze. Wszystko pod realne zapytania — nie tylko ładną wizytówkę.', 'po wdrożenie na WordPressie, SEO techniczne i pomiar zapytań. Każda strona ma prowadzić klienta do kontaktu, a nie tylko dobrze wyglądać.'],
+      ['<h2 class="section-title">Strona porządkuje ofertę. <strong>Sklep domyka sprzedaż.</strong></h2>', '<h2 class="section-title">Strona firmowa porządkuje ofertę. <strong>Sklep domyka sprzedaż.</strong></h2>'],
+      ['<h2 class="section-title">Inna branża. <strong>Inna droga do klienta.</strong></h2>', '<h2 class="section-title">Strony dla branż. <strong>Inna droga do klienta.</strong></h2>'],
+      ['Inaczej projektuje się stronę kancelarii, inaczej kliniki, salonu beauty, dewelopera czy producenta. Dlatego strukturę, treści, UX i SEO budujemy <strong>pod konkretną branżę</strong> — tak, żeby strona realnie prowadziła klienta do kontaktu.', 'Klient kancelarii szuka zaufania, pacjent kliniki spokoju, a kupujący od dewelopera konkretów o lokalach. Zanim zaprojektujemy stronę, poznajemy <strong>pytania i obawy klientów Twojej branży</strong> — od nich zależą struktura, treści, UX i SEO.'],
+      ['Nie widzisz swojej branży? Opisz projekt w Studio Wyceny — dopasujemy strukturę strony, SEO i zakres wdrożenia do Twojej firmy.', 'Twojej branży nie ma na liście? Opisz firmę w Studio Wyceny — zaproponujemy strukturę strony, treści i zakres wdrożenia.'],
+      ['Nie zaczynamy od przypadkowego układu ani szablonowej sekcji. Najpierw poznajemy firmę, ofertę i cel strony — a każdy etap ma', 'Tworzenie strony internetowej dzielimy na sześć etapów: od celu i briefu po publikację. Każdy etap ma'],
+      ['Wybierasz punkt startu: landing page, strona firmowa Starter, Premium albo projekt indywidualny — zawsze pod konkretny cel biznesowy.', 'Ustalamy, co strona ma przynosić: zapytania, rezerwacje albo sprzedaż. Do celu dobieramy pakiet, od landing page po projekt indywidualny.'],
+      ['W konfiguratorze podajesz branżę, funkcje, materiały i termin. Możesz wgrać logo, teksty, inspiracje i link do obecnej strony.', 'Brief wypełniasz online: branża, funkcje, termin, logo, teksty i strony, które Ci się podobają.'],
+      ['Sprawdzamy zakres, cele, SEO i wymagania techniczne. Interaktywną ofertę otrzymujesz zwykle w 3–4 dni robocze.', 'Sprawdzamy cele, frazy SEO i technikę. Ofertę z zakresem, ceną i terminem dostajesz zwykle w 3–4 dni robocze.'],
+      ['Projektujemy architekturę podstron, makiety, treści i wersję mobilną — z myślą o ścieżce od wejścia do kontaktu.', 'Układamy podstrony, makiety i treści, a potem projekt graficzny. Wersję na telefon projektujemy od początku, nie na końcu.'],
+      ['Budujemy stronę, konfigurujemy SEO techniczne, analitykę, formularze, szybkość ładowania i bezpieczeństwo.', 'Budujemy na WordPressie: szybko, bezpiecznie i z łatwą edycją. Ustawiamy SEO techniczne, analitykę i formularze.'],
+      ['Nie zamykamy projektu na sztucznej liczbie poprawek. Dopracowujemy stronę, aż będzie spójna z marką i zaakceptowana.', 'Liczba poprawek nie jest sztucznie ograniczona. Dopracowujemy stronę, aż będzie spójna z marką i gotowa do publikacji.'],
+      ['<h2 class="section-title">Dwie marki. Dwa cele. <strong>Jeden sposób myślenia.</strong></h2>', '<h2 class="section-title">Dwie strony. Dwa cele. <strong>Jeden sposób myślenia.</strong></h2>'],
+      ['Wynik strony powstaje na styku struktury, treści, techniki i obsługi zapytań. Dlatego pokazujemy nie tylko projekt, ale też liczby, które przyszły po wdrożeniu.', 'Projekt strony internetowej oceniamy po tym, co dzieje się po publikacji. Dlatego przy realizacjach pokazujemy liczby z pierwszych sześciu miesięcy.'],
+      ['Kompleksowy redesign wizerunku online: odświeżona identyfikacja, pełny projekt strony i autorski system rezerwacji wizyt. Struktura i treści ułożone pod lokalne frazy oraz szybkie umówienie wizyty — od pierwszego wejścia po potwierdzoną rezerwację.', 'Nowa identyfikacja, pełny projekt strony i autorski system rezerwacji wizyt. Treści ułożyliśmy pod lokalne frazy, a droga od pierwszego wejścia do potwierdzonej rezerwacji ma dwa kroki i nie wymaga telefonu.'],
+      ['Elegancka strona firmowa z rozbudowaną strukturą podstron usługowych, premium oprawą wizualną i systemem umawiania wizyt. Projekt łączy zaufanie, ekspercki charakter i wygodną ścieżkę pierwszego kontaktu.', 'Strona firmowa kancelarii z 14 podstronami usług, każdą pod osobne frazy. Oprawa premium buduje zaufanie, a system umawiania wizyt skraca drogę od eksperckiej treści do konsultacji.'],
+      ['Zakres dobieramy do etapu firmy i celu strony. Bez pakowania niepotrzebnych elementów do oferty.', 'Projektowanie stron www to więcej niż wygląd. Zakres dobieramy do celu, bez zbędnych dodatków.'],
+      ['Zaczynamy od celu biznesowego: co strona ma przynosić i komu ma służyć. Projektujemy architekturę podstron, ścieżkę użytkownika od wejścia do kontaktu, plan treści oraz strukturę pod SEO lokalne i usługowe — zanim powstanie pierwszy piksel projektu.', 'Zanim powstanie pierwszy piksel, ustalamy, komu strona ma służyć i co ma przynosić. Na tej podstawie planujemy podstrony, ścieżkę od wejścia do kontaktu, treści i strukturę pod frazy, którymi klienci szukają Twoich usług w Google.'],
+      ['Makiety, projekt graficzny, copywriting, mikrocopy i sekcje zaufania — spójne z marką i pisane pod decyzję użytkownika.', 'Makiety, projekt i teksty powstają razem, więc nagłówki, przyciski i opinie prowadzą do jednej decyzji.'],
+      ['Czyste, rozwijalne wdrożenie — po starcie łatwo dodasz blog, podstrony, landing pages albo sklep.', 'Strona na WordPressie, którą edytujesz sam. Blog, landing page czy sklep dodasz bez przebudowy.'],
+      ['Nagłówki, schema, indeksacja, Core Web Vitals, optymalizacja obrazów i mobile-first od pierwszego dnia.', 'Nagłówki, dane strukturalne, mapa witryny, lekkie obrazy i dobre Core Web Vitals od dnia publikacji.'],
+      ['GA4, zdarzenia, szybkie formularze, integracje i pomiar zapytań — żeby było widać, co strona naprawdę przynosi.', 'GA4, zdarzenia i formularze ustawiamy tak, żeby każde zapytanie było policzone, a rozwój strony oparty na danych.'],
+      ['<h2 class="section-title">Strona ma wyglądać premium. <strong class="gradient-text">I działać jak premium.</strong></h2>', '<h2 class="section-title">Strona www ma wyglądać premium. <strong class="gradient-text">I działać jak premium.</strong></h2>'],
+      ['<h2>Strona nie żyje <strong class="gradient-text">w osobnym silosie.</strong></h2>', '<h2>Strony www <strong class="gradient-text">od jednego zespołu.</strong></h2>'],
+      ['W jednym zespole łączymy projekt, treść, WordPress, sklepy, branding i kampanie. Dzięki temu strona od początku powstaje pod SEO i marketing — a problem nie krąży między pięcioma wykonawcami.', 'Projekt, teksty, wdrożenie, logo i kampanie prowadzi u nas jeden zespół. Dzięki temu strona od początku powstaje pod SEO i reklamy, a zadania nie krążą między pięcioma wykonawcami.'],
+      ['<h2 class="section-title"> Jedno studio. <strong>Współpraca bez granic lokalizacji.</strong> </h2>', '<h2 class="section-title">Jedno studio. <strong>Strony dla firm z całej Polski.</strong></h2>'],
+      ['<h2 class="section-title">Zanim klikniesz <strong>„start”.</strong></h2>', '<h2 class="section-title">Pytania o <strong>tworzenie stron.</strong></h2>'],
+      ['Konkretnie o zakresie, cenach, materiałach, SEO i tym, czego potrzebujemy, żeby zacząć projekt strony.', 'Odpowiadamy na pytania, które słyszymy przed każdym projektem: o cenę, czas, materiały, SEO i opiekę po publikacji.'],
+      ['<h2>Pokaż firmę tak, jak <strong class="gradient-text">na to zasługuje.</strong></h2>', '<h2>Ile kosztuje strona <strong class="gradient-text">dla Twojej firmy?</strong></h2>'],
+      ['Opisz projekt w Studio Wyceny: branżę, cel strony, funkcje i materiały. Interaktywną ofertę z zakresem i terminem otrzymasz zwykle w 3–4 dni robocze.', 'Strony tworzymy od 3 999 zł, z domeną i hostingiem w cenie. W Studio Wyceny policzysz swój projekt, a ofertę dostaniesz zwykle w 3–4 dni robocze.'],
+    ],
+    'logo' => [
+      ['Każdy etap kończy się konkretną decyzją.', 'Projektowanie logo to siedem kroków i siedem decyzji.'],
+      ['Poznajemy branżę, odbiorców, konkurencję i miejsca użycia logo.', 'Pytamy o branżę, klientów, konkurencję i miejsca użycia znaku.'],
+      ['<p>Porządkujemy skojarzenia, ton, kolorystykę i typografię.</p>', '<p>Wybieramy skojarzenia, kolory i kroje pisma dla znaku.</p>'],
+      ['Przygotowujemy kierunki wynikające ze strategii i wybranego pakietu.', 'Pokazujemy koncepcje oparte na strategii; ich liczba zależy od pakietu.'],
+      ['<p>Pracujemy nad proporcjami, typografią i wariantami logo.</p>', '<p>Szlifujemy proporcje, odstępy i krój pisma logotypu.</p>'],
+      ['Sprawdzamy znak na stronie, wizytówce, avatarze, dokumencie, opakowaniu i szyldzie.', 'Znak sprawdzamy w małym i dużym formacie: od faviconu i avatara po szyld i opakowanie.'],
+      ['Budujemy system kolorów, fontów, układów i materiałów marki.', 'W większych pakietach dokładamy kolory, fonty i materiały marki.'],
+      ['Przekazujemy uporządkowane formaty oraz jasne zasady użycia.', 'Dostajesz logo w SVG, PDF, PNG i JPG oraz zasady jego użycia.'],
+      ['Zakres zależy od pakietu, ale zawsze przygotowujemy materiały z myślą o realnym wdrożeniu.', 'Logo dostajesz w wariantach i formatach na stronę, do social mediów, na wizytówkę i do druku.'],
+      ['<p>Układy poziome i pionowe oraz wersje na jasne i ciemne tło.</p>', '<p>Układ poziomy i pionowy, gotowy na jasne i ciemne tło.</p>'],
+      ['<p>SVG, PDF, PNG i JPG — gotowe do digitalu, dokumentów i druku.</p>', '<p>Wektorowe SVG i PDF oraz PNG i JPG do sieci i dokumentów.</p>'],
+      ['<p>Spójne wartości kolorów, fonty i zasady budowania układów.</p>', '<p>Wartości kolorów do druku i na ekran oraz fonty użyte w znaku.</p>'],
+      ['<p>Karta stylu albo pełny brandbook — zgodnie z wybranym zakresem.</p>', '<p>Zasady użycia znaku w karcie stylu albo brandbooku.</p>'],
+      ['<p>Favicon, avatar, cover i elementy do social mediów.</p>', '<p>Favicon, avatar i cover do profili społecznościowych.</p>'],
+      ['<p>Pliki przygotowane pod konkretne materiały i ustalony zakres.</p>', '<p>Pliki dla drukarni pod materiały objęte zakresem.</p>'],
+      ['Każdy projekt zaczyna się od innego problemu i kończy systemem dopasowanym do odbiorców, zastosowań i poziomu marki.', 'Każde logo projektujemy od zera: pod branżę, odbiorców i miejsca, w których znak będzie pracować na co dzień.'],
+      ['<h2> Branding nie kończy się <strong class="gradient-text">na pliku.</strong> </h2>', '<h2>Logo firmy nie kończy się <strong class="gradient-text">na pliku.</strong></h2>'],
+      ['Ten sam zespół może przenieść markę na stronę, sklep, social media i kampanie. Dzięki temu identyfikacja nie rozjeżdża się przy pierwszym wdrożeniu.', 'Nowe logo możemy od razu wdrożyć na stronie, w sklepie, social mediach i kampaniach, więc znak wszędzie wygląda tak, jak go zaprojektowaliśmy.'],
+      ['<h2 class="section-title"> Jedno studio. <strong>Współpraca bez granic lokalizacji.</strong> </h2>', '<h2 class="section-title">Jedno studio. <strong>Projektowanie logo online.</strong></h2>'],
+      ['<h2> Zbudujmy markę, którą da się rozpoznać <strong class="gradient-text">bez czytania nazwy.</strong> </h2>', '<h2>Projekt logo, które klienci rozpoznają <strong class="gradient-text">bez czytania nazwy.</strong></h2>'],
+      ['<h2 class="section-title"> Zanim zaczniemy <strong>budować markę.</strong> </h2>', '<h2 class="section-title">Pytania o <strong>projekt logo.</strong></h2>'],
+      ['W Studio Wyceny opiszesz etap rozwoju marki, potrzebny zakres identyfikacji i miejsca wdrożenia. Na tej podstawie zaproponujemy właściwy punkt startu.', 'Projekt logo kosztuje od 999 zł. W Studio Wyceny opiszesz firmę i miejsca, w których znak ma działać, a my zaproponujemy właściwy pakiet.'],
+    ],
+    'identity' => [
+      ['Każdy etap kończy się konkretną decyzją. Wiesz, nad czym pracujemy, po co i co wydarzy się dalej.', 'Identyfikację budujemy w siedmiu etapach. Po każdym wiesz, co ustaliliśmy i co dalej.'],
+      ['Poznajemy branżę, odbiorców, konkurencję i miejsca użycia logo.', 'Ustalamy, kim są odbiorcy marki i jak ma wyróżnić się na rynku.'],
+      ['<p>Porządkujemy skojarzenia, ton, kolorystykę i typografię.</p>', '<p>Strategię zamieniamy na ton, paletę i typografię.</p>'],
+      ['Przygotowujemy kierunki wynikające ze strategii i wybranego pakietu.', 'Projektujemy znak, który będzie sercem całego systemu identyfikacji.'],
+      ['<p>Pracujemy nad proporcjami, typografią i wariantami logo.</p>', '<p>Dopracowujemy logo i warianty, na których oprze się system.</p>'],
+      ['Sprawdzamy znak na stronie, wizytówce, avatarze, dokumencie, opakowaniu i szyldzie.', 'System testujemy na realnych nośnikach: stronie, dokumentach, opakowaniu i szyldzie.'],
+      ['Budujemy system kolorów, fontów, układów i materiałów marki.', 'Projektujemy kolory, kroje, układy i wzory materiałów.'],
+      ['Przekazujemy uporządkowane formaty oraz jasne zasady użycia.', 'Przekazujemy pliki i księgę znaku albo kartę stylu.'],
+      ['Zakres zależy od pakietu, ale zawsze przygotowujemy materiały z myślą o realnym wdrożeniu.', 'Identyfikacja wizualna to zasady i pliki dla każdego, kto tworzy materiały Twojej marki.'],
+      ['<p>Układy poziome i pionowe oraz wersje na jasne i ciemne tło.</p>', '<p>Logo i jego wersje dopasowane do każdego nośnika i tła.</p>'],
+      ['<p>SVG, PDF, PNG i JPG — gotowe do digitalu, dokumentów i druku.</p>', '<p>Pliki wektorowe i rastrowe dla drukarni, webmastera i agencji.</p>'],
+      ['<p>Spójne wartości kolorów, fonty i zasady budowania układów.</p>', '<p>Paleta, kroje pisma i zasady układów dla materiałów.</p>'],
+      ['<p>Karta stylu albo pełny brandbook — zgodnie z wybranym zakresem.</p>', '<p>Brandbook albo karta stylu: zasady dla Ciebie i podwykonawców.</p>'],
+      ['<p>Favicon, avatar, cover i elementy do social mediów.</p>', '<p>Grafiki do social mediów i favicon w nowych barwach.</p>'],
+      ['<p>Pliki przygotowane pod konkretne materiały i ustalony zakres.</p>', '<p>Wzory materiałów firmowych gotowe do druku.</p>'],
+      ['<h2> Branding nie kończy się <strong class="gradient-text">na pliku.</strong> </h2>', '<h2>Branding firmy nie kończy się <strong class="gradient-text">na pliku.</strong></h2>'],
+      ['Ten sam zespół może przenieść markę na stronę, sklep, social media i kampanie. Dzięki temu identyfikacja nie rozjeżdża się przy pierwszym wdrożeniu.', 'Ten sam zespół może wdrożyć identyfikację na stronie, w sklepie, social mediach i kampaniach, więc system nie rozjedzie się przy pierwszym użyciu.'],
+      ['<h2 class="section-title"> Jedno studio. <strong>Współpraca bez granic lokalizacji.</strong> </h2>', '<h2 class="section-title">Jedno studio. <strong>Branding bez granic lokalizacji.</strong></h2>'],
+      ['<h2 class="section-title"> Zanim zaczniemy <strong>budować markę.</strong> </h2>', '<h2 class="section-title">Pytania o <strong>branding firmy.</strong></h2>'],
+      ['W Studio Wyceny opiszesz etap rozwoju marki, potrzebny zakres identyfikacji i miejsca wdrożenia. Na tej podstawie zaproponujemy właściwy punkt startu.', 'Mini Branding kosztuje od 1499 zł, a Branding Premium z księgą znaku od 2999 zł. W Studio Wyceny opiszesz markę, a my zaproponujemy zakres.'],
+    ],
+  ];
+  return $copy[$kind] ?? [];
 }
 
 /* ------------------------------------------------------------ page creation */

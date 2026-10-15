@@ -74,6 +74,8 @@ if (!function_exists('zp_showcase_portfolio_shortcode')) {
       $scope = is_array($item['scope'] ?? null) ? $item['scope'] : [];
       $desc = $item['desc'] ?? '';
       $live = $item['live'] ?? '';
+      // SearchFit 14.10.2026: a client site that no longer opens keeps its button, without the link (zp_suite_portfolio_live_gone()).
+      $live_gone = !$live && !empty($item['liveGone']);
       $num = str_pad((string)($index + 1), 2, '0', STR_PAD_LEFT);
       /* v2.2.709 mobile stability: do not decode every portfolio image at once.
          The real image is hydrated only for the current card and its neighbours. */
@@ -112,7 +114,7 @@ if (!function_exists('zp_showcase_portfolio_shortcode')) {
           <?php endif; ?>
           <div class="zpShowcaseMobile__actions">
             <button class="zpShowcaseMobile__detailsBtn" type="button" data-zp-mobile-details><span>Szczegóły</span><i data-lucide="chevron-down" aria-hidden="true"></i></button>
-            <?php if ($live) : ?><a class="zpShowcaseMobile__liveBtn" href="<?php echo esc_url($live); ?>" target="_blank" rel="noopener"><span>Zobacz live</span><i data-lucide="external-link" aria-hidden="true"></i></a><?php endif; ?>
+            <?php if ($live || $live_gone) : ?><a class="zpShowcaseMobile__liveBtn" <?php echo $live ? 'href="' . esc_url($live) . '" target="_blank" rel="noopener"' : 'tabindex="-1"'; ?>><span>Zobacz live</span><i data-lucide="external-link" aria-hidden="true"></i></a><?php endif; ?>
           </div>
           <div class="zpShowcaseMobile__details" hidden>
             <?php if ($desc) : ?><p><?php echo esc_html($desc); ?></p><?php endif; ?>
@@ -251,6 +253,12 @@ if (!function_exists('zp_showcase_portfolio_shortcode')) {
         </footer>
 
       </div>
+
+      <div class="zpShowcaseWhite__scrollHint" data-zp-scroll-hint aria-hidden="true">
+        <span class="zpShowcaseWhite__scrollHintMouse"><i></i></span>
+        <span>Przewiń w dół, aby przejrzeć projekty</span>
+        <svg class="zpShowcaseWhite__scrollHintArrow" viewBox="0 0 24 24"><path d="M12 5v14"/><path d="m19 12-7 7-7-7"/></svg>
+      </div>
     </div>
   </div>
 </section>
@@ -379,6 +387,7 @@ if (!function_exists('zp_showcase_portfolio_shortcode')) {
   const barEls = root.querySelectorAll('[data-zp-showcase-bar]');
   const prevBtn = root.querySelector('[data-zp-showcase-prev]');
   const nextBtn = root.querySelector('[data-zp-showcase-next]');
+  const scrollHint = root.querySelector('[data-zp-scroll-hint]');
 
   const pop = document.getElementById('zpShowcasePop');
   const popBody = pop ? pop.querySelector('[data-zp-pop-body]') : null;
@@ -421,6 +430,14 @@ if (!function_exists('zp_showcase_portfolio_shortcode')) {
   let lastRenderedX = null;
   let portfolioInView = true;
   let lastStateX = null;
+  let hintDone = false;
+  let sideAxis = '';
+  let sideAxisUntil = 0;
+  let sideTargetY = null;
+  let sideLastY = 0;
+  let sideLastT = 0;
+  let sideRaf = 0;
+  let sideWheelOn = false;
 
   if (!rail || !spacer || !stage) return;
 
@@ -453,6 +470,10 @@ if (!function_exists('zp_showcase_portfolio_shortcode')) {
       return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'})[m];
     });
   }
+
+  /* liveGone: the client site no longer opens, its buttons stay without the link (zp_suite_portfolio_live_gone()). */
+  const hasLive = item => !!(item.live || item.liveGone);
+  const liveAttrs = item => item.live ? `href="${esc(item.live)}" target="_blank" rel="noopener"` : 'tabindex="-1"';
 
   function currentItems(){ return activeMode === 'logo' ? logoItems : webItems; }
   function setText(nodeList, value){ nodeList.forEach(el => el.textContent = value); }
@@ -650,7 +671,7 @@ if (!function_exists('zp_showcase_portfolio_shortcode')) {
       }
 
       const meta = (item.meta || []).map(m => `<span>${esc(m)}</span>`).join('');
-      const live = item.live ? `<a class="zpShowcaseWhite__btn zpShowcaseWhite__btn--live" href="${esc(item.live)}" target="_blank" rel="noopener">Live ${arrowIcon()}</a>` : '';
+      const live = hasLive(item) ? `<a class="zpShowcaseWhite__btn zpShowcaseWhite__btn--live" ${liveAttrs(item)}>Live ${arrowIcon()}</a>` : '';
 
       return `
         <article class="zpShowcaseWhite__card" data-zp-card data-index="${index}" tabindex="0" aria-label="Otwórz szczegóły projektu ${esc(item.brand)}">
@@ -728,7 +749,7 @@ if (!function_exists('zp_showcase_portfolio_shortcode')) {
 
   function renderPopup(item){
     const isLogo = activeMode === 'logo';
-    const live = item.live ? `<a href="${esc(item.live)}" target="_blank" rel="noopener">Zobacz live ${arrowIcon()}</a>` : '';
+    const live = hasLive(item) ? `<a ${liveAttrs(item)}>Zobacz live ${arrowIcon()}</a>` : '';
     const scope = (item.scope || []).map(s => `<li><i data-lucide="check"></i><span>${esc(s)}</span></li>`).join('');
     const tools = (item.tools || []).map(t => `<span class="zpShowcasePop__tool"><i data-lucide="check-circle-2"></i>${esc(t)}</span>`).join('');
     const storyRows = [
@@ -748,7 +769,7 @@ if (!function_exists('zp_showcase_portfolio_shortcode')) {
       <div class="zpShowcasePop__layout ${isLogo ? 'zpShowcasePop__layout--logo' : 'zpShowcasePop__layout--web'}">
         <div class="zpShowcasePop__visual" style="--pop-img:url('${esc(fullUploadUrl(item.img))}')"><div class="zpShowcasePop__visualInner"><img class="zpShowcasePop__img" src="${esc(fullUploadUrl(item.img))}" alt="${esc(item.brand)} — ${esc(item.sub)}" loading="eager" decoding="async"></div></div>
         <div class="zpShowcasePop__info">
-          <div class="zpShowcasePop__top"><span class="zpShowcasePop__pill"><i data-lucide="tag"></i>${esc(item.tag)}</span><span class="zpShowcasePop__pill"><i data-lucide="calendar-days"></i>${esc(item.year || '2026')}</span>${item.live ? '<span class="zpShowcasePop__pill"><i data-lucide="radio"></i>live</span>' : ''}</div>
+          <div class="zpShowcasePop__top"><span class="zpShowcasePop__pill"><i data-lucide="tag"></i>${esc(item.tag)}</span><span class="zpShowcasePop__pill"><i data-lucide="calendar-days"></i>${esc(item.year || '2026')}</span>${hasLive(item) ? '<span class="zpShowcasePop__pill"><i data-lucide="radio"></i>live</span>' : ''}</div>
           <h3 class="zpShowcasePop__title" id="zpShowcasePopTitle">${esc(item.brand)}</h3>
           <p class="zpShowcasePop__subtitle">${esc(item.sub)}</p>
           <p class="zpShowcasePop__text">${esc(item.desc)}</p>
@@ -1031,6 +1052,20 @@ if (!function_exists('zp_showcase_portfolio_shortcode')) {
     root.classList.toggle('is-flowing', p > .075 && p < .965);
     root.classList.toggle('is-ending', p >= .94);
 
+    /* 3.1.1: the "scroll down" hint shows while the pinned rail waits at its start and goes
+       for good once the visitor scrolls into the projects (with the header, at is-flowing). */
+    if (scrollHint && !hintDone) {
+      if (p > .075) {
+        hintDone = true;
+        scrollHint.classList.remove('is-on');
+      } else {
+        scrollHint.classList.toggle('is-on', rect.top < viewportH * .15 && rect.bottom > viewportH);
+      }
+    }
+    /* 3.1.1: the sideways-scroll listener is attached only while the section is pinned, so wheel
+       events elsewhere on the page, and on the way in and out, never wait for this script. */
+    setSideWheel(viewportW > 1500 && rect.top <= 1 && rect.bottom >= viewportH - 1);
+
     writeRailTransform(x, false);
     currentX = x;
     targetX = x;
@@ -1051,6 +1086,59 @@ if (!function_exists('zp_showcase_portfolio_shortcode')) {
     if (!portfolioInView && measured) return;
     ticking = true;
     window.requestAnimationFrame(update);
+  }
+
+  /* 3.1.1: on desktop the projects also follow a sideways scroll (a trackpad swipe, a tilting
+     wheel, Shift + wheel). The rail keeps following the page's vertical scroll, so a sideways
+     step becomes the same step of page scroll inside the pinned section and the counter,
+     progress bar and active card stay in step. The page eases towards the target, because a
+     mouse wheel moves in big steps; a vertical scroll meanwhile stops the easing. Each step is
+     an instant scroll: html has scroll-behavior: smooth, which would turn every step into a
+     smooth scroll of its own. */
+  function sideScrollTo(y){
+    try { window.scrollTo({ top: y, behavior: 'instant' }); } catch (err) { window.scrollTo(0, y); }
+  }
+  function sideFrame(now){
+    sideRaf = 0;
+    if (sideTargetY === null) return;
+    const y = window.scrollY || window.pageYOffset || 0;
+    if (Math.abs(y - sideLastY) > 2) { sideTargetY = null; return; }
+    const left = sideTargetY - sideLastY;
+    if (Math.abs(left) < 1) { sideScrollTo(sideTargetY); sideTargetY = null; return; }
+    const dt = sideLastT ? Math.min(50, now - sideLastT) : 16.7;
+    sideLastT = now;
+    sideLastY += left * (1 - Math.pow(.7, dt / 16.7));
+    sideScrollTo(sideLastY);
+    sideRaf = window.requestAnimationFrame(sideFrame);
+  }
+
+  function setSideWheel(on){
+    if (on === sideWheelOn) return;
+    sideWheelOn = on;
+    if (on) root.addEventListener('wheel', onSideWheel, { passive: false });
+    else root.removeEventListener('wheel', onSideWheel);
+  }
+  function onSideWheel(e){
+    if (e.ctrlKey || e.metaKey || !measured || scrollDistance <= 0) return;
+    let dx = e.deltaX;
+    let dy = e.deltaY;
+    if (e.shiftKey && !dx) { dx = dy; dy = 0; }
+    /* One axis per gesture: a sideways swipe keeps scrolling sideways when it drifts. */
+    if (e.timeStamp > sideAxisUntil) sideAxis = Math.abs(dx) > Math.abs(dy) ? 'x' : 'y';
+    sideAxisUntil = e.timeStamp + 160;
+    if (sideAxis !== 'x') { sideTargetY = null; return; }
+    if (!dx || document.documentElement.classList.contains('zpShowcaseNoScroll')) return;
+    if ((window.innerWidth || document.documentElement.clientWidth || 0) <= 1500) return;
+    const viewportH = getStableViewportHeight();
+    const rect = spacer.getBoundingClientRect();
+    if (rect.top > 1 || rect.bottom < viewportH - 1 || !e.cancelable) return;
+    e.preventDefault();
+    const y = window.scrollY || window.pageYOffset || 0;
+    const top = y + rect.top;
+    const step = dx * (e.deltaMode === 1 ? 40 : e.deltaMode === 2 ? viewportH : 1);
+    if (sideTargetY === null) { sideLastY = y; sideLastT = 0; }
+    sideTargetY = clamp((sideTargetY === null ? y : sideTargetY) + step, top, top + startDelay + scrollDistance);
+    if (!sideRaf) sideRaf = window.requestAnimationFrame(sideFrame);
   }
 
   function scrollToDesktopProgress(progress, behavior = 'smooth'){
@@ -1275,6 +1363,7 @@ if (!function_exists('zp_showcase_portfolio_shortcode')) {
         entries.forEach((entry) => {
           portfolioInView = !!entry.isIntersecting;
           if (portfolioInView) requestUpdate();
+          if (!portfolioInView) setSideWheel(false);
         });
       }, { rootMargin: '48% 0px 48% 0px', threshold: 0 });
       portfolioIo.observe(spacer);
@@ -1596,9 +1685,37 @@ html body .zpShowcasePop__storyIcon svg.lucide{display:block!important;width:17p
 html body .zpShowcasePop__resultsTitle svg.lucide{display:block!important;width:15px!important;height:15px!important;flex:0 0 15px!important;color:#102a4f!important;stroke:currentColor!important;overflow:visible!important}
 </style>
 
+<!-- ZP 3.1.1 — desktop portfolio (above 1500 px, where scrolling down moves the projects sideways): animated "scroll down" hint -->
+<style id="zp-home-portfolio-scroll-hint-311">
+.zpShowcaseWhite__scrollHint{display:none}
+@media (min-width:1501px) and (prefers-reduced-motion:no-preference){
+html body #zpShowcaseWhite .zpShowcaseWhite__scrollHint{position:absolute;left:50%;bottom:clamp(18px,3.2vh,36px);z-index:8;display:inline-flex;align-items:center;gap:12px;padding:7px 20px 7px 7px;border:1px solid rgba(255,255,255,.16);border-radius:999px;background:#071426;color:#fff;font-size:14px;font-weight:650;line-height:1;letter-spacing:.01em;white-space:nowrap;pointer-events:none;opacity:0;visibility:hidden;transform:translate3d(-50%,14px,0);transition:opacity .45s ease,transform .6s cubic-bezier(.16,1,.3,1),visibility 0s linear .6s}
+html body #zpShowcaseWhite .zpShowcaseWhite__scrollHint.is-on{opacity:1;visibility:visible;transform:translate3d(-50%,0,0);transition-delay:0s}
+html body #zpShowcaseWhite .zpShowcaseWhite__scrollHintMouse{position:relative;flex:0 0 34px;width:34px;height:34px;border-radius:999px;background:rgba(255,255,255,.1)}
+html body #zpShowcaseWhite .zpShowcaseWhite__scrollHintMouse::before{content:"";position:absolute;left:10px;top:7px;width:14px;height:20px;border:1.6px solid currentColor;border-radius:8px}
+html body #zpShowcaseWhite .zpShowcaseWhite__scrollHintMouse i{position:absolute;left:16px;top:11px;width:2px;height:5px;border-radius:2px;background:currentColor;animation:zpScrollHintWheel 1.6s cubic-bezier(.45,0,.2,1) infinite paused}
+html body #zpShowcaseWhite .zpShowcaseWhite__scrollHintArrow{flex:0 0 16px;width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;animation:zpScrollHintArrow 1.6s ease-in-out infinite paused}
+html body #zpShowcaseWhite .zpShowcaseWhite__scrollHint.is-on i,html body #zpShowcaseWhite .zpShowcaseWhite__scrollHint.is-on .zpShowcaseWhite__scrollHintArrow{animation-play-state:running}
+}
+@keyframes zpScrollHintWheel{0%{transform:translate3d(0,0,0);opacity:0}25%,65%{opacity:1}100%{transform:translate3d(0,6px,0);opacity:0}}
+@keyframes zpScrollHintArrow{0%,100%{transform:translate3d(0,-2px,0)}50%{transform:translate3d(0,3px,0)}}
+</style>
+
     <?php
     return ob_get_clean();
   }
 
   add_shortcode('zp_showcase_portfolio', 'zp_showcase_portfolio_shortcode');
+}
+
+/* 3.1.1: the portfolio's scroll hint in English, on /en/ pages and after the language switch. */
+if (!function_exists('zp_showcase_portfolio_hint_dictionary')) {
+  function zp_showcase_portfolio_hint_dictionary($map, $lang = 'en') {
+    $map = is_array($map) ? $map : [];
+    $pl = 'Przewiń w dół, aby przejrzeć projekty';
+    $en = 'Scroll down to browse the projects';
+    return $map + ($lang === 'pl' ? [$en => $pl] : [$pl => $en]);
+  }
+
+  add_filter('zpl_dictionary', 'zp_showcase_portfolio_hint_dictionary', 10, 2);
 }

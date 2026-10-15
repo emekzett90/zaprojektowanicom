@@ -90,11 +90,19 @@ final class Admin {
     }
 
     /** 1 strona, 2 strony, 5 stron. */
-    public static function pages_word(int $n): string {
-        if ($n === 1) { return 'strona'; }
+    public static function pages_word(int $n): string { return self::word($n, 'strona', 'strony', 'stron'); }
+
+    /** Polish form for a number: one (1), few (2–4, 22–24…, not 12–14) or many (the rest). */
+    public static function word(int $n, string $one, string $few, string $many): string {
+        if ($n === 1) { return $one; }
         $d = $n % 10;
         $h = $n % 100;
-        return $d >= 2 && $d <= 4 && ($h < 12 || $h > 14) ? 'strony' : 'stron';
+        return $d >= 2 && $d <= 4 && ($h < 12 || $h > 14) ? $few : $many;
+    }
+
+    /** "1 fragment", "3 fragmenty", "5 fragmentów" (3.1.1: messages said "1 fragmentów"). */
+    public static function n(int $n, string $one, string $few, string $many): string {
+        return $n . ' ' . self::word($n, $one, $few, $many);
     }
 
     private static function usd(float $v): string {
@@ -255,7 +263,7 @@ final class Admin {
         $next = (int) (wp_next_scheduled(Worker::DAILY) ?: 0);
         echo '<div class="zpte2-grid">';
         echo '<section class="zpte2-card"><h2>Koszt OpenAI</h2><dl class="zpte2-dl">'
-            . '<dt>Dziś</dt><dd>' . esc_html(self::usd((float) $today['usd']) . ' · ' . number_format_i18n((int) $today['chars']) . ' znaków' . ($daily > 0 ? ' z ' . number_format_i18n($daily) : '') . ' · ' . (int) $today['requests'] . ' zapytań') . '</dd>'
+            . '<dt>Dziś</dt><dd>' . esc_html(self::usd((float) $today['usd']) . ' · ' . number_format_i18n((int) $today['chars']) . ' ' . self::word((int) $today['chars'], 'znak', 'znaki', 'znaków') . ($daily > 0 ? ' z ' . number_format_i18n($daily) : '') . ' · ' . self::n((int) $today['requests'], 'zapytanie', 'zapytania', 'zapytań')) . '</dd>'
             . '<dt>Ten miesiąc</dt><dd>' . esc_html(self::usd((float) $month['usd']) . ($cap > 0 ? ' z limitu ' . self::usd($cap) : '')) . '</dd>'
             . '<dt>Model</dt><dd>' . esc_html(Settings::model() . ' · rozumowanie ' . (Settings::EFFORTS[Settings::effort()] ?? Settings::effort())) . '</dd></dl></section>';
         echo '<section class="zpte2-card"><h2>Harmonogram</h2><dl class="zpte2-dl">'
@@ -323,11 +331,11 @@ final class Admin {
             if ($r->stage !== '' && isset($stage[$r->stage])) { $state .= ', ' . $stage[$r->stage]; }
             elseif ((int) $r->queued) { $state .= ', w kolejce'; }
             $cls = $r->status === 'error' || (int) $r->keys_failed > 0 ? 'bad' : ($r->status === 'done' ? 'ok' : ($r->status === 'off' ? 'off' : 'warn'));
-            echo '<tr><td><a href="' . esc_url(home_url($path)) . '" target="_blank" rel="noopener">' . esc_html($path) . '</a></td>';
-            echo '<td>' . ($en !== '' ? '<a href="' . esc_url(home_url($en)) . '" target="_blank" rel="noopener">' . esc_html($en) . '</a>' . ($live ? '' : ' <small>(jeszcze niewidoczna)</small>') . (Routes::polish($en) ? ' <small class="zpte2-warn">polskie słowa</small>' : '') : '—') . '</td>';
+            echo '<tr><td class="zpte2-break"><a href="' . esc_url(home_url($path)) . '" target="_blank" rel="noopener">' . esc_html($path) . '</a></td>';
+            echo '<td class="zpte2-break">' . ($en !== '' ? '<a href="' . esc_url(home_url($en)) . '" target="_blank" rel="noopener">' . esc_html($en) . '</a>' . ($live ? '' : ' <small>(jeszcze niewidoczna)</small>') . (Routes::polish($en) ? ' <small class="zpte2-warn">polskie słowa</small>' : '') : '—') . '</td>';
             echo '<td><span class="zpte2-pill is-' . esc_attr($cls) . '">' . esc_html($state) . '</span>' . ((string) $r->message !== '' ? '<small>' . esc_html((string) $r->message) . '</small>' : '') . '</td>';
             echo '<td>' . (int) $r->keys_done . ' / ' . (int) $r->keys_total . ((int) $r->keys_failed ? '<small class="zpte2-warn">' . (int) $r->keys_failed . ' bez tłumaczenia</small>' : '') . '</td>';
-            echo '<td>' . esc_html(self::when($r->checked_at)) . '</td><td class="zpte2-row-actions">';
+            echo '<td class="zpte2-when">' . esc_html(self::when($r->checked_at)) . '</td><td class="zpte2-row-actions">';
             if ($r->status !== 'off') {
                 echo self::button('page_check', 'Sprawdź teraz', ['id' => (int) $r->id]);
                 echo self::button('page_force', 'Przetłumacz od nowa', ['id' => (int) $r->id], 'button-link', 'Przetłumaczyć całą stronę od nowa? Ręczne poprawki zostaną.');
@@ -446,7 +454,7 @@ final class Admin {
         echo '<div class="zpte2-card zpte2-table-wrap"><table class="zpte2-table"><thead><tr><th scope="col">Kiedy</th><th scope="col">Rodzaj</th><th scope="col">Co się stało</th></tr></thead><tbody>';
         foreach ($log as $e) {
             $l = (string) ($e['l'] ?? 'info');
-            echo '<tr class="is-' . esc_attr($l) . '"><td>' . esc_html(self::day_time((int) ($e['t'] ?? 0))) . '</td><td>' . esc_html($labels[$l] ?? $l) . '</td><td>' . esc_html((string) ($e['m'] ?? '')) . '</td></tr>';
+            echo '<tr class="is-' . esc_attr($l) . '"><td class="zpte2-when">' . esc_html(self::day_time((int) ($e['t'] ?? 0))) . '</td><td>' . esc_html($labels[$l] ?? $l) . '</td><td class="zpte2-break">' . esc_html((string) ($e['m'] ?? '')) . '</td></tr>';
         }
         echo '</tbody></table></div>';
     }

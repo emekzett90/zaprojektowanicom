@@ -17,10 +17,21 @@ if (!defined('ABSPATH')) { exit; }
 final class Serve {
     /**
      * Words of the menu, footer and other parts shown on every page. Same as the earlier site dictionary, with
-     * "Wiedza" and "Studio wyceny" named like their English addresses (/en/insights/, /en/quote-studio/).
+     * "Wiedza" and "Studio wyceny" named like their English addresses (/en/knowledge/, /en/quote-studio/).
+     * 3.1.1: "Wiedza" is Knowledge (Mat, 14.10; it was Insights): these exact texts outrank the shipped dictionaries,
+     * which still say Insights. "<szybka_strona />" is the code label on the website service pages.
      */
     const SITE_TERMS = [
-        'Wiedza' => 'Insights', 'Studio wyceny' => 'Quote Studio', 'Studio Wyceny' => 'Quote Studio', 'Przejdź do Studio Wyceny' => 'Go to the Quote Studio',
+        'Wiedza' => 'Knowledge', 'Wiedza i poradniki' => 'Knowledge and guides', 'Baza Wiedza' => 'Knowledge base', 'Otwórz bazę Wiedza' => 'Open the Knowledge base',
+        'Jak korzystać z Wiedzy?' => 'How to use the Knowledge base?', 'Hero Wiedza — Zaprojektowani' => 'Knowledge hero — Zaprojektowani',
+        'Zostań w tym samym obszarze tematycznym albo przejdź do całej bazy Wiedza.' => 'Stay in the same topic area or go to the full Knowledge base.',
+        'Portfolio pokazuje efekt. Jeśli chcesz wejść głębiej w proces, ceny i zakres, przejdź do odpowiedniej usługi albo poradników w naszej bazie Wiedza.' => 'The portfolio shows the results. If you want to dive deeper into the process, prices and scope, go to the relevant service or to the guides in our Knowledge base.',
+        'Wiedza: strony WWW, sklepy, SEO i branding | Zaprojektowani' => 'Knowledge: Websites, Stores, SEO & Branding | Zaprojektowani',
+        'Wiedza o stronach internetowych, SEO i brandingu — Zaprojektowani' => 'Knowledge about websites, SEO and branding — Zaprojektowani',
+        'Wiedza — poradniki o stronach internetowych, sklepach, SEO i brandingu' => 'Knowledge — guides on websites, stores, SEO and branding',
+        'Wiedza o stronach internetowych, sklepach WooCommerce, SEO, brandingu i kampaniach Meta Ads. Praktyczne poradniki dla firm, które chcą lepiej działać online.' => 'Knowledge about websites, WooCommerce stores, SEO, branding and Meta Ads campaigns. Practical guides for businesses that want to perform better online.',
+        '<szybka_strona />' => '<fast_website />',
+        'Studio wyceny' => 'Quote Studio', 'Studio Wyceny' => 'Quote Studio', 'Przejdź do Studio Wyceny' => 'Go to the Quote Studio',
         'Strona główna' => 'Home', 'Usługi' => 'Services', 'Realizacje' => 'Our work', 'O nas' => 'About us', 'Kontakt' => 'Contact', 'Menu główne' => 'Main menu',
         'Strony internetowe' => 'Websites', 'Sklepy internetowe' => 'Online stores', 'Strony & sklepy' => 'Websites & stores', 'Strony i sklepy' => 'Websites & stores', 'Strony WordPress' => 'WordPress websites',
         'Logo & branding' => 'Logo & branding', 'Logo i branding' => 'Logo & branding', 'Identyfikacja wizualna' => 'Visual identity', 'Projekt logo' => 'Logo design', 'Brandbook' => 'Brand book', 'Start marki' => 'Brand launch',
@@ -42,7 +53,30 @@ final class Serve {
         add_filter('zpl_has_page', [self::class, 'has_page'], 10, 2);
         add_filter('zpl_sitemap_pages', [self::class, 'sitemap_pages']);
         add_filter('zpl_approved_revision', [self::class, 'revision_filter'], 10, 2);
+        add_filter('zpl_cache_versions', [self::class, 'cache_versions'], 10, 2);
         add_action('rest_api_init', [self::class, 'rest'], 20);
+    }
+
+    /**
+     * 3.1.1: versions of this module's English texts for ZP Suite's HTML cache (filter zpl_cache_versions, see
+     * \ZPL\Router::cache_paths): '*' for the menu, footer and post titles (shared map) and the module version, and each
+     * Polish address its page map's version. Both change only when a translation really changes (Serve::bump). One query,
+     * no translation is loaded (Serve::revision() loads them: 1-2 ms a page).
+     * @param mixed $v
+     * @param mixed $paths
+     */
+    public static function cache_versions($v, $paths) {
+        $v = is_array($v) ? $v : [];
+        $mv = get_option('zpte2_map_versions', []);
+        $mv = is_array($mv) ? $mv : [];
+        $v['*'] = (string) ($v['*'] ?? '') . '|zpte:' . ZPTE_VERSION . ':' . (int) ($mv[Store::SHARED] ?? 0) . ':' . (Import::done() ? 1 : 0);
+        if (!Store::ready() || !is_array($paths) || !$paths) { return $v; }
+        global $wpdb;
+        $want = array_flip(array_map('strval', $paths));
+        foreach ((array) $wpdb->get_results('SELECT id, path FROM ' . Store::table('pages'), ARRAY_N) as $r) {
+            if (isset($want[(string) $r[1]])) { $v[(string) $r[1]] = (string) (int) ($mv[(int) $r[0]] ?? 0); }
+        }
+        return $v;
     }
 
     public static function flush(): void {
@@ -160,16 +194,22 @@ final class Serve {
     public static function bump(int $page_id, int $rev): void {
         $v = get_option('zpte2_map_versions', []);
         $v = is_array($v) ? $v : [];
+        // 3.1.1: a page read again with the same translations keeps its copies in ZP Suite's HTML cache. A changed map
+        // changes the version of its English page (of every English page for the shared map: menu, footer, post titles,
+        // see cache_versions()); the cache then lists its pages again at the end of the request, keeping the other copies.
+        $same = isset($v[$page_id]) && (int) $v[$page_id] === $rev;
         $v[$page_id] = $rev;
         update_option('zpte2_map_versions', $v, true);
         self::flush();
+        if (!$same) { do_action('zp_html_cache_refresh'); }
     }
 
     private static function reverse(array $map): array {
         $out = [];
         foreach ($map as $pl => $en) {
             $k = \ZPL\Html::norm((string) $en);
-            if ($k !== '' && !isset($out[$k])) { $out[$k] = (string) $pl; }
+            // A short title or description (3.1.1) switches back to its Polish text, without the mark of its key.
+            if ($k !== '' && !isset($out[$k])) { $out[$k] = \ZPL\Page::plain((string) $pl); }
         }
         return $out;
     }
