@@ -21,9 +21,17 @@ final class ZP_Cache_Early_20261009 {
      * which a Polish browser and a robot never use. Any other cookie (logged in, comment, password, language choice,
      * shop) skips the cache.
      */
-    /** 3.1.1: on English pages also the PL/EN choice of the switch (Geo reads it on Polish pages only; no English page sets it on the server). */
+    /**
+     * 3.1.1: on English pages also the PL/EN choice of the switch (Geo reads it on Polish pages only; no English page sets it on the server).
+     * 3.2.4: on Polish pages too when the choice is Polish (polish_choice()): Geo then answers 'pref', the Polish page with no redirect.
+     */
     public const EN_COOKIES = '~^zpl_lang_(?:pref|session)$~D';
-    public const HARMLESS_COOKIES = '~^(?:CookieConsent(?:BulkSetting-[A-Za-z0-9-]+|BulkTicket)?|_ga(?:_[A-Za-z0-9]+)?|_gid|_gat(?:_[A-Za-z0-9_-]+)?|_gcl_[a-z]+|_gac_[A-Za-z0-9_.-]+|_dc_gtm_[A-Za-z0-9_-]+|FP(?:ID|LC|AU|GCL[A-Z]+)|_fbp|_fbc|_clck|_clsk|_uet[a-z]+|_hj[A-Za-z0-9_]+|_ttp|_tt_enable_cookie|__cf_bm|__cfruid|__cflb|_cfuvid|cf_clearance|zpl_geo_country)$~D';
+    /**
+     * 3.2.4: also what WordPress leaves in a browser after the login page or a logout: the panel's own settings
+     * (wp-settings-N, wp-settings-time-N, kept for a year), the login page's cookie test and its language. The front end
+     * reads none of them for a visitor who is not logged in; wordpress_logged_in_* still skips the cache.
+     */
+    public const HARMLESS_COOKIES = '~^(?:CookieConsent(?:BulkSetting-[A-Za-z0-9-]+|BulkTicket)?|_ga(?:_[A-Za-z0-9]+)?|_gid|_gat(?:_[A-Za-z0-9_-]+)?|_gcl_[a-z]+|_gac_[A-Za-z0-9_.-]+|_dc_gtm_[A-Za-z0-9_-]+|FP(?:ID|LC|AU|GCL[A-Z]+)|_fbp|_fbc|_clck|_clsk|_uet[a-z]+|_hj[A-Za-z0-9_]+|_ttp|_tt_enable_cookie|__cf_bm|__cfruid|__cflb|_cfuvid|cf_clearance|zpl_geo_country|wp-settings-(?:time-)?\d+|wordpress_test_cookie|wp_lang)$~D';
 
     public static function policy(string $dir): ?array {
         $file = $dir . '/policy.php';
@@ -39,7 +47,8 @@ final class ZP_Cache_Early_20261009 {
         if (($server['REQUEST_METHOD'] ?? '') !== 'GET') { return 'method'; }
         $uri = (string) ($server['REQUEST_URI'] ?? '');
         $en = self::is_en($p, $uri);
-        if (($cookies || !empty($server['HTTP_COOKIE'])) && !self::harmless_cookies($server, $cookies, $en)) { return 'cookies'; }
+        $polish_choice = !$en && self::polish_choice($cookies);
+        if (($cookies || !empty($server['HTTP_COOKIE'])) && !self::harmless_cookies($server, $cookies, $en || $polish_choice)) { return 'cookies'; }
         if (!empty($server['HTTP_AUTHORIZATION']) || !empty($server['REDIRECT_HTTP_AUTHORIZATION']) || !empty($server['PHP_AUTH_USER'])) { return 'authorization'; }
         if (strtolower((string) ($server['HTTPS'] ?? '')) !== 'on' && ($server['HTTPS'] ?? '') !== '1') { return 'https'; }
         if (($server['HTTP_HOST'] ?? '') !== $p['host']) { return 'host'; }
@@ -51,8 +60,9 @@ final class ZP_Cache_Early_20261009 {
         $ref = parse_url((string) ($server['HTTP_REFERER'] ?? ''));
         if (is_array($ref) && ($ref['host'] ?? '') === $p['host'] && preg_match('~^/en(?:/|$)~', $ref['path'] ?? '')) { return 'language-switch'; }
         // Other languages must run Suite's PHP country/preference redirect on every request. Robots are never
-        // redirected (Geo::decide) and get the Polish page whatever language they send.
-        $polish = self::is_bot((string) ($server['HTTP_USER_AGENT'] ?? ''));
+        // redirected (Geo::decide) and get the Polish page whatever language they send. 3.2.4: neither is a visitor who
+        // chose Polish with the switch (Geo::decide answers 'pref' before it looks at the language or the country).
+        $polish = $polish_choice || self::is_bot((string) ($server['HTTP_USER_AGENT'] ?? ''));
         foreach ($polish ? [] : explode(',', (string) ($server['HTTP_ACCEPT_LANGUAGE'] ?? '')) as $part) {
             if (preg_match('/^\s*pl(?:-[a-z0-9]+)?\s*(?:;\s*q=([01](?:\.\d+)?))?\s*$/iD', $part, $m) && (!isset($m[1]) || (float) $m[1] > 0)) { $polish = true; }
         }
@@ -67,6 +77,19 @@ final class ZP_Cache_Early_20261009 {
     public static function is_en(array $p, string $uri): bool {
         $entry = $p['paths'][$uri] ?? null;
         return is_string($entry) && strpos($entry, 'en:') === 0 && strpos($uri, '/en/') === 0;
+    }
+
+    /**
+     * 3.2.4: the switch's cookies choose Polish the way Geo::decide() reads them (Geo::preference(), session_preference()):
+     * this visit's choice is Polish, or there is none and the lasting one is Polish. The page is then the same as without
+     * cookies: Geo adds its country script only for visitors with neither cookie, and no copy ever holds that script.
+     */
+    public static function polish_choice(array $cookies): bool {
+        $pref = strtolower(trim((string) ($cookies['zpl_lang_pref'] ?? '')));
+        $session = strtolower(trim((string) ($cookies['zpl_lang_session'] ?? '')));
+        if (!in_array($pref, ['pl', 'en'], true)) { $pref = ''; }
+        if (!in_array($session, ['pl', 'en'], true)) { $session = ''; }
+        return $session === 'pl' || ($session === '' && $pref === 'pl');
     }
 
     /**

@@ -1,0 +1,20 @@
+Zaprojektowani Suite 3.2.4 — 17.10.2026
+
+Podstawa: 3.2.3 (Codex, na stronie od 15.10). Wygląd strony, teksty i zachowanie przełącznika języka bez zmian.
+Aktualizacja nie kasuje żadnych danych.
+
+Szybka kopia strony (cache HTML) dla większej liczby przeglądarek
+- Strona otwierana z gotowej kopii odpowiada w ok. 0,1 s, składana od nowa w ok. 0,8 s (pomiary z 14.10).
+  Do 3.2.3 każde ciasteczko spoza listy zgody i statystyk wyłączało kopię, także takie, które nie zmieniają strony.
+- Teraz kopię dostaje też przeglądarka z ciasteczkami, które WordPress zostawia po wizycie na stronie logowania
+  albo po wylogowaniu: ustawienia panelu (wp-settings-N, wp-settings-time-N), test ciasteczek strony logowania
+  (wordpress_test_cookie) i jej język (wp_lang). Front strony ich nie czyta.
+- Na polskich stronach kopię dostaje też gość, który wybrał polski przełącznikiem PL/EN (zpl_lang_session=pl albo
+  zpl_lang_pref=pl bez wyboru z tej wizyty). Języki PL/EN i tak pokazują mu polską stronę bez przekierowania.
+  Wybór angielskiego nadal omija kopię na polskich stronach, bo Języki PL/EN przekierowują wtedy na /en/.
+- Bez zmian: zalogowani (wordpress_logged_in_*), autorzy komentarzy, strony z hasłem i inne nieznane ciasteczka
+  zawsze dostają stronę składaną na żywo. Kopie nadal powstają wyłącznie z wizyt bez żadnych ciasteczek.
+- Nowy plik advanced-cache.php instaluje się sam przy pierwszym odświeżeniu cache po aktualizacji
+  (tylko w miejsce własnego pliku Suite; wp-config.php bez zmian).
+
+Wersje: Suite 3.2.4, Języki PL/EN 1.1.3, Tłumacz EN 2.0.3.
