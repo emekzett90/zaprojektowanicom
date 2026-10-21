@@ -7,11 +7,11 @@ if (!defined('ABSPATH')) { exit; }
  *
  * What a visitor sees first is the chooser, a separate document in an iframe, and the contact form, so the
  * page itself had almost no text about prices and its H1 sat in the hidden brief. Now:
- *  - below the chooser there is a price list in the layout of the "Poradnik" sections on the service
- *    pages (guide.php): the prices Mat confirmed, what they include, what the quote depends on, how the
- *    quote works and questions about prices, with links to the cost guides and the service pages. The contact
- *    form follows this section; both hide
- *    while the brief is open, like the contact form,
+ *  - the page gets a price list in the layout of the "Poradnik" sections on the service pages (guide.php):
+ *    the prices Mat confirmed, what they include, what the quote depends on, how the quote works and
+ *    questions about prices, with links to the cost guides and the service pages. Since 21.10.2026 it is the
+ *    last section of the page, below the contact form (the short contact form of contact-quick.php stands
+ *    under the chooser instead); it hides while the brief is open, like the contact form,
  *  - those questions go into the schema as FAQPage,
  *  - the H1 keeps the plan's wording until the visitor opens the brief (the brief still names the service),
  *  - the chooser gets the project count from the settings (?n=); its own file is noindex, indexifembedded,
@@ -165,12 +165,11 @@ add_filter('do_shortcode_tag', function ($output, $tag) {
   if (function_exists('zp_seo_plan_projects_count')) {
     $output = (string) preg_replace('~(chooser-v19\.html\?v=[^"\'&#\s]+)~', '${1}&#038;n=' . zp_seo_plan_projects_count(), $output, 1);
   }
-  // 2.7.2: pricing must come before Contact. Insert immediately before the chooser contact
-  // wrapper; if that optional form is unavailable, keep the section at the end as a safe fallback.
-  $section = zp_seo_studio_section();
-  $marker = '<div class="zpStudioChooserContact"';
-  $pos = strpos($output, $marker);
-  return $pos === false ? $output . $section : substr($output, 0, $pos) . $section . substr($output, $pos);
+  // 21.10.2026 (Mat): the price list goes to the very bottom of the page, below the contact form; under the
+  // chooser with the packages stands the short contact form instead (contact-quick.php). Only styles and
+  // scripts follow the contact wrapper in the shortcode output, so appending the section puts it right after
+  // the form; it stays hidden while the brief is open, like the form and the chooser.
+  return $output . zp_seo_studio_section();
 }, 20, 2);
 
 add_filter('rank_math/json_ld', function ($data, $jsonld = null) {
