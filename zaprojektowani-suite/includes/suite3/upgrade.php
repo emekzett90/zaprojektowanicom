@@ -28,6 +28,12 @@ function zp_suite3_upgrade(string $previous): void {
     // request so the new menu, portfolio and language assets are visible immediately in both languages.
     add_action('wp_loaded', static function (): void { do_action('zp_html_cache_purge'); }, 100);
   }
+  if ($previous !== '' && version_compare($previous, '3.2.51', '<')) {
+    // 3.2.51: a new advanced-cache.php (copies also for browsers with WordPress's leftover login cookies and for visitors
+    // who chose Polish with the switch). A purge puts it in place (ZP_HTML_Cache_20261009::purge → upgrade_dropin), only
+    // over this module's own drop-in; a second purge queued by the step above in the same request is not repeated.
+    add_action('wp_loaded', static function (): void { do_action('zp_html_cache_purge'); }, 100);
+  }
   if ($previous === '' || version_compare($previous, '3.0.0', '<')) {
     // Cron events of the one-off module that 3.0.0 removed (photo refresh of one published post, 10.10).
     foreach (['zp_published_prepared_photos_worker_20261010', 'zp_published_prepared_photos_watchdog_20261010'] as $hook) {
