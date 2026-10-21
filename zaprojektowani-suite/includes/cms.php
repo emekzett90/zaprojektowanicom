@@ -1297,10 +1297,10 @@ function zp_suite_portfolio_items($mode='web'){
     ];
   }
   $out[] = ['isCta'=>true,'mode'=>$mode,'brand'=> $mode==='logo' ? 'Tu może być Twoje logo' : 'Tu może być Twoja strona','sub'=>'otrzymaj darmową wycenę','type'=>'Darmowa wycena','year'=>'2026','tag'=>'Twój projekt','live'=>'/studio-wyceny/'];
-  return zp_suite_portfolio_live_gone($out);
+  return apply_filters('zp_portfolio_projects_20261015', zp_suite_portfolio_live_gone($out), $mode);
 }
 function zp_suite_json($data){ return wp_json_encode($data, JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES); }
-function zp_suite_source_icon($source){ return (stripos((string)$source,'facebook')!==false) ? 'https://zaprojektowani.com/wp-content/uploads/2026/05/fb_logo-scaled.webp' : 'https://zaprojektowani.com/wp-content/uploads/2026/05/google_logo-scaled.webp'; }
+function zp_suite_source_icon($source){ return ZP_SUITE_URL . 'assets/strony-internetowe/' . ((stripos((string)$source,'facebook')!==false) ? 'review-facebook.webp' : 'review-google.webp'); }
 
 function zp_suite_sanitize_repeater($rows){
   $clean=[];

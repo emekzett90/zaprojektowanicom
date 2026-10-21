@@ -1,0 +1,81 @@
+ZAPROJEKTOWANI SUITE 3.2.42 — CASE STUDIES
+
+Aktualizacja przygotowana na bazie zaprojektowani-suite 3.2.41.
+Obejmuje stronę zbiorczą case studies oraz realizacje Siemianowski,
+Apartament Piękna, Altiora Linea i Świat Grilli w wersjach PL i EN.
+
+1. Standardowa szerokość sekcji
+   Kontenery hero, rozdziałów, FAQ i szybkiego kontaktu mają maksymalnie
+   1750 px na desktopie. Na mniejszych ekranach pozostają elastyczne.
+
+2. Nagłówki zgodne z podstroną „Tworzenie stron internetowych”
+   Wykorzystano rytm nagłówków podstrony /tworzenie-stron-internetowych/:
+   podstawowa grubość 500, wyróżnienia 750, interlinia 1.045,
+   odstęp między literami -0.055em. Wielkości dostosowano do kolumn.
+   Akcentowane frazy są zapisane osobno dla języka polskiego i angielskiego.
+   Tekst nagłówków i pozostała treść są zachowane.
+
+3. Ciemniejsze tła
+   Ciemne sekcje wykorzystują głęboki granat #071426 i czerń #05070b,
+   zgodnie z podstroną usługową. Usunięto jaśniejszy granat #142e52
+   z tła tych sekcji. Wyróżnienia w nagłówkach na ciemnym tle korzystają
+   z gradientu biel — #b7dcff — #74a8ef.
+
+4. Logo klienta w hero
+   Logo ma własny wiersz nad zdjęciem osoby. Zwiększono jego widoczny
+   rozmiar i usunięto układ, w którym portret zasłaniał znak.
+
+5. Logotypy technologii
+   Usunięto białe podkładki i dodatkowe wypełnienie wokół logo.
+   Znaki są większe, białe na ciemnym tle i delikatnie powiększają się
+   przy najechaniu. Na jasnym tle pozostają czytelne.
+   WooCommerce otrzymał osobną kopię istniejącego SVG z dopasowanym
+   obszarem viewBox. Sam rysunek logo nie został zmieniony.
+   Logo imoje jest lokalną kopią oryginalnego przezroczystego pliku.
+
+6. Mockupy z przezroczystym tłem
+   Mockupy urządzeń Apartamentu Piękna i Świata Grilli są wyświetlane
+   bez dodatkowego jasnego/niebieskawego panelu, obramowania i narożników.
+   Dodano delikatny ruch w pionie. Preferencja ograniczenia animacji
+   wyłącza unoszenie i powiększenia.
+
+7. Końcowe CTA
+   Przyciski mają własny układ oraz odstęp również po zawinięciu.
+   Sekcja zawiera zdjęcie zespołu z wtopioną dolną krawędzią.
+
+8. FAQ z Mateuszem
+   Wspólne FAQ case studies oraz indeksu zawiera to samo zdjęcie Mateusza,
+   które wykorzystuje obecny serwis. Dołączono lokalną kopię oryginału.
+
+9. Zdjęcie zespołu w sekcji sposobu pracy
+   Na stronie zbiorczej zdjęcie znajduje się nad nagłówkiem
+   „Kierunek wizualny to dopiero początek”. Wystaje nad ciemną sekcję,
+   a jego dół jest płynnie wtopiony w tło.
+
+10. Logotypy klientów na stronie zbiorczej
+    Cztery znaki są wyśrodkowane w równych kolumnach.
+    Zastosowano współczynniki skali 1.15 dla Apartamentu Piękna
+    i 1.17 dla Świata Grilli. Na telefonach układ przechodzi w dwie kolumny.
+
+INSTALACJA
+
+Wgraj ZIP jako aktualizację istniejącej wtyczki Zaprojektowani Suite.
+Numer wersji po aktualizacji: 3.2.42.
+Nowy arkusz stylów ładuje się wyłącznie na stronach case studies.
+Wersjonowanie zasobów i istniejący mechanizm odświeżania cache Suite
+korzystają z nowego numeru wydania. Jeżeli hosting lub CDN przechowuje
+HTML niezależnie, po aktualizacji odśwież również ten cache.
+
+WERYFIKACJA
+
+- Sprawdzono składnię zmodyfikowanych plików PHP w PHP 8.3.
+- Wszystkie 10 wariantów indeksu i realizacji PL/EN generuje HTML
+  bez ostrzeżeń w lokalnym środowisku z zastąpionymi funkcjami WordPressa.
+- Sprawdzono zachowanie treści, kolejności rozdziałów i odpowiedzi FAQ,
+  oddzielne logo hero, zdjęcia FAQ/CTA oraz oznaczenia przezroczystych grafik.
+- Odczytano rzeczywiste style i wygląd podstrony usługowej jako wzorzec.
+- Pełny podgląd zmodyfikowanych stron w przeglądarce nie był dostępny
+  z powodu ograniczenia środowiska podglądu. Test lokalny nie zastępuje
+  uruchomienia w motywie i konfiguracji produkcyjnego WordPressa.
+
+Archiwum zawiera kompletną wtyczkę w katalogu zaprojektowani-suite.

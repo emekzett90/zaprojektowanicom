@@ -859,3 +859,42 @@ body.zp-service-hero-page .hero h1 .gradient-text,
 .zpCampaignPage .hero h1 .gradient-text {
   line-height: inherit !important;
 }
+
+/* Shared desktop team photo: reveal heads above the preceding section while
+   containing the lower edge inside this dark section. The clip is local to
+   the widget; only the photograph receives the bottom fade. */
+@media (min-width: 1101px) {
+  #zp-logo-branding-katowice .team-section {
+    --zp-team-photo-width: min(840px, 55vw);
+  }
+
+  :is(#zp-strony-internetowe-katowice, #zpCampaignPage) .team-section {
+    --zp-team-photo-width: min(920px, 61vw);
+  }
+
+  :is(#zp-logo-branding-katowice, #zp-strony-internetowe-katowice, #zpCampaignPage) .team-section {
+    --zp-team-rise: 120px;
+    z-index: 10 !important;
+    overflow: visible !important;
+    clip-path: inset(calc(-1 * var(--zp-team-rise)) 0 0) !important;
+  }
+
+  :is(#zp-logo-branding-katowice, #zp-strony-internetowe-katowice, #zpCampaignPage) .team-section .team-inner > .team-visual {
+    top: calc(-1 * var(--zp-team-rise)) !important;
+    bottom: auto !important;
+    width: var(--zp-team-photo-width) !important;
+    max-width: var(--zp-team-photo-width) !important;
+    height: auto !important;
+    max-height: calc(100% + var(--zp-team-rise)) !important;
+    object-fit: contain !important;
+    object-position: right top !important;
+    -webkit-mask-image: linear-gradient(to top, transparent 0%, #000 15%, #000 100%) !important;
+    mask-image: linear-gradient(to top, transparent 0%, #000 15%, #000 100%) !important;
+  }
+}
+
+@media (min-width: 1101px) and (max-width: 1360px) {
+  #zp-logo-branding-katowice .team-section {
+    --zp-team-photo-width: 58vw;
+  }
+}

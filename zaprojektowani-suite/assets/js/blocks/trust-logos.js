@@ -22,7 +22,6 @@
 
   function bootSection(section){
     if (section.dataset.zpTrustPinnedReady === '1') return;
-    section.dataset.zpTrustPinnedReady = '1';
 
     const spacer = section.querySelector('[data-zp-trust-spacer]');
     const logos = Array.from(section.querySelectorAll('[data-zp-logo]'));
@@ -32,45 +31,16 @@
     const bar = section.querySelector('[data-zp-trust-bar]');
 
     if (!spacer || !logos.length) return;
+    section.dataset.zpTrustPinnedReady = '1';
+    section.classList.add('is-visible');
 
     initLucide();
 
-    /* v2.2.666: the section holds ~70 lazy logo <img> (rows + marquee clones) and on
-       mobile it additionally sits under content-visibility:auto — on weak hardware the
-       first scroll into it triggered fetch+decode+full layout at once (visible lag).
-       After window load, in idle time, warm every lazy image (fetch + decode) and lift
-       content-visibility so the section is pre-rendered before the user reaches it.
-       Skipped for synthetic audits and Save-Data, so Lighthouse flows are untouched. */
-    function warmAssets(){
-      try {
-        var doc = document.documentElement;
-        var isAudit = doc.classList.contains('zp-synthetic-audit') ||
-          false ||
-          false /* v711: identical production behavior in browser audits */;
-        if (isAudit) return;
-        var conn = window.navigator && window.navigator.connection;
-        if (conn && conn.saveData) return;
-        var seen = {};
-        Array.prototype.forEach.call(section.querySelectorAll('img[loading="lazy"]'), function(img){
-          img.loading = 'eager';
-          var src = img.currentSrc || img.src;
-          if (!src || seen[src]) return;
-          seen[src] = 1;
-          if (typeof img.decode === 'function') { img.decode().catch(function(){}); }
-        });
-        section.style.contentVisibility = 'visible';
-        section.style.containIntrinsicSize = 'auto';
-      } catch(e) {}
-    }
-    function scheduleWarm(){
-      var run = function(){
-        if ('requestIdleCallback' in window) { window.requestIdleCallback(warmAssets, { timeout: 2600 }); }
-        else { window.setTimeout(warmAssets, 700); }
-      };
-      if (document.readyState === 'complete') { run(); }
-      else { window.addEventListener('load', run, { once: true }); }
-    }
-    scheduleWarm();
+    // Keep every below-hero image native-lazy, including the repeated mobile
+    // marquee and the hidden desktop portrait. Promoting them to eager near
+    // the viewport made the page's load event wait for this entire section.
+    // Native lazy loading discovers approaching images without that load gate;
+    // decoding stays asynchronous. The reveal/controller still starts now.
 
     const totalCount = logos.length;
     function getMobileLogos(){
@@ -193,7 +163,7 @@
     }
 
     function applyDesktopLogos(visibleCount, softProgress){
-      if (visibleCount === lastDesktopVisibleCount) return;
+      // Local opacity thresholds change inside each count bucket; evaluate them on every frame.
       lastDesktopVisibleCount = visibleCount;
 
       logos.forEach((logo, index) => {
@@ -328,6 +298,9 @@
       }, 220);
     }, { passive: true });
 
+    window.addEventListener('pageshow', function(){ syncMode(); setSpacer(); requestUpdate(); });
+    if(document.fonts && document.fonts.ready){document.fonts.ready.then(function(){setSpacer();requestUpdate();});}
+
     if (document.readyState === 'complete') {
       syncMode();
     } else {
@@ -338,28 +311,9 @@
 
   function scheduleSection(section){
     if (!section || section.dataset.zpTrustPinnedReady === '1') return;
-
-    if ('IntersectionObserver' in window) {
-      const starter = new IntersectionObserver(function(entries){
-        entries.forEach(function(entry){
-          if (entry.isIntersecting) {
-            starter.disconnect();
-            bootSection(section);
-          }
-        });
-      }, {
-        threshold: 0,
-        rootMargin: '900px 0px 900px 0px'
-      });
-      starter.observe(section);
-      return;
-    }
-
-    if ('requestIdleCallback' in window) {
-      requestIdleCallback(function(){ bootSection(section); }, { timeout: 1600 });
-    } else {
-      setTimeout(function(){ bootSection(section); }, 520);
-    }
+    // DOM is already available in this deferred block script. The visuals keep their
+    // original scroll timeline; initialization itself has no visibility/idle gate.
+    bootSection(section);
   }
 
   sections.forEach(scheduleSection);

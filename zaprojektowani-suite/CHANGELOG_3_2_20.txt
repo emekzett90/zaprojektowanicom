@@ -1,0 +1,18 @@
+Zaprojektowani Suite 3.2.20 — dokumenty i zapytania, 16.10.2026
+
+- Cztery dokumenty ze stopki: regulamin, prywatność, RODO i cookies; 40 sekcji.
+- Wspólny układ o szerokości do 1750 px, natywna typografia i navy gradient, spisy treści,
+  wzajemne linki, układ mobilny oraz działające otwieranie ustawień Cookiebot.
+- Pełna, kuratorowana wersja EN tych samych dokumentów, bez nowych duplikatów stron.
+- Studio Wyceny: niezaznaczona wymagana akceptacja regulaminu dla wszystkich usług;
+  walidacja na froncie i serwerze, zapis wersji/treści/języka/czasu UTC przy zgłoszeniu.
+- Jasne rozdzielenie bezpłatnego zapytania i osobnej umowy projektowej; spójny ekran
+  podziękowania po zapytaniu o logo, bez zmiany adresu i pomiaru konwersji.
+- Migracja zachowuje ID, kopię oryginalnej treści/Elementora i rewizję. Sukces wersji
+  zależy od odczytu zapisanej treści oraz danych Elementora; odświeżenie jego cache.
+- Google Maps output=embed objęte istniejącą kontrolą Cookiebot; usunięty precheck
+  uśpionego modalu kontaktowego.
+
+Dane dokumentów zgodnie z dyspozycją użytkownika: AP Studio, NIP 9930682613,
+REGON 389224502, adres firmy Krakowska 30 w Tarnowie; odrębny adres korespondencyjny
+Modelarska 18/2 w Katowicach.

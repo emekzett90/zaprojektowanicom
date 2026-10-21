@@ -42,13 +42,13 @@ function zp_suite_wiedza_topic_groups(){
     ],
     'seo-konwersja' => [
       'label' => 'SEO i konwersja',
-      'slugs' => ['seo','seo-i-konwersja','seo-content-marketing','ux-cro-analityka'],
+      'slugs' => ['seo-i-konwersja','seo','seo-content-marketing','ux-cro-analityka'],
       'description' => 'Widoczność w Google, content, architektura informacji, CRO, analityka i jakość leadów.',
       'service_url' => home_url('/wiedza/'),
     ],
     'kampanie-reklamowe' => [
       'label' => 'Kampanie reklamowe',
-      'slugs' => ['reklamy','meta-ads','kampanie-reklamowe-meta-ads'],
+      'slugs' => ['kampanie-reklamowe','reklamy','meta-ads','kampanie-reklamowe-meta-ads'],
       'description' => 'Meta Ads, przygotowanie strony pod kampanie, landing page i pomiar zapytań.',
       'service_url' => home_url('/kampanie-reklamowe/'),
     ],

@@ -23,7 +23,8 @@ $zp_real_cat_icon = static function($cat){
   return 'monitor';
 };
 $zp_real_project_slug = static function($project){
-  return sanitize_title(($project['brand'] ?? '') . '-' . ($project['type'] ?? 'projekt'));
+  $stable = (string) ($project['project_slug'] ?? '');
+  return preg_match('~^[a-z0-9]+(?:-[a-z0-9]+)*$~D', $stable) ? $stable : sanitize_title(($project['brand'] ?? '') . '-' . ($project['type'] ?? 'projekt'));
 };
 
 $zp_real_counts = ['web'=>0,'shop'=>0,'branding'=>0];
@@ -165,7 +166,7 @@ window.zpRealizacjeProjects = <?php echo wp_json_encode($zp_real_projects, JSON_
         <div class="cardMedia">
           <img src="<?php echo esc_url($p['img'] ?? ''); ?>" alt="<?php echo esc_attr(($p['brand'] ?? '') . ' — ' . ($p['sub'] ?? '')); ?>" loading="lazy" decoding="async">
           <span class="cat"><i data-lucide="<?php echo esc_attr($zp_real_cat_icon($cat)); ?>"></i><?php echo esc_html($zp_real_cat_label($cat)); ?></span>
-          <span class="cardGo" aria-hidden="true"><i data-lucide="arrow-up-right"></i></span>
+          <?php if (!empty($p['isNew'])): ?><span class="zpCS41__portfolioNew">NEW</span><?php else: ?><span class="cardGo" aria-hidden="true"><i data-lucide="arrow-up-right"></i></span><?php endif; ?>
         </div>
         <div class="cardBody">
           <div class="microRow"><span><?php echo esc_html($p['type'] ?? 'Projekt'); ?></span><b><?php echo esc_html($p['year'] ?? ''); ?></b></div>
@@ -175,6 +176,7 @@ window.zpRealizacjeProjects = <?php echo wp_json_encode($zp_real_projects, JSON_
           <?php if ($services): ?><div class="chips"><?php foreach ($services as $service): ?><span><?php echo esc_html($service); ?></span><?php endforeach; ?></div><?php endif; ?>
           <div class="cardActions">
             <a class="more" href="#case-<?php echo esc_attr($slug); ?>" data-open="<?php echo (int)$i; ?>"><span>Zobacz case study</span><i data-lucide="arrow-up-right"></i></a>
+            <?php if (!empty($p['case_url'])): ?><a class="more zpCaseStudyLink" href="<?php echo esc_url($p['case_url']); ?>"><span>Pełny opis realizacji</span><i data-lucide="arrow-up-right"></i></a><?php endif; ?>
             <?php if (!empty($p['live']) || !empty($p['liveGone'])): ?><a class="livePill" <?php echo !empty($p['live']) ? 'href="' . esc_url($p['live']) . '" target="_blank" rel="noopener"' : 'tabindex="-1"'; ?>><span>live</span><i data-lucide="external-link"></i></a><?php endif; ?>
           </div>
         </div>
@@ -184,6 +186,8 @@ window.zpRealizacjeProjects = <?php echo wp_json_encode($zp_real_projects, JSON_
 
   <div class="empty" data-empty><i data-lucide="search-x"></i><h3>Brak realizacji dla tego filtra</h3><p>Spróbuj innej frazy albo kategorii — możesz szukać po nazwie marki, branży, technologii lub usłudze.</p><button class="btn btn--ghost" data-reset><span>Wyczyść filtry</span><i data-lucide="rotate-ccw"></i></button></div>
 </main>
+
+<?php if (function_exists('zp_cs41_portfolio_bridge')) { echo zp_cs41_portfolio_bridge(); } ?>
 
 <section class="portfolioSeoBridge" aria-labelledby="portfolioSeoBridgeTitle">
   <div class="portfolioSeoBridge__in">

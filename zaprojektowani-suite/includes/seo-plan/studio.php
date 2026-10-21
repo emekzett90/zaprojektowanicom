@@ -54,7 +54,7 @@ function zp_seo_plan_live_link(string $path, string $text, string $fallback = ''
 /** Questions about prices: shown in the last card and sent as FAQPage. */
 function zp_seo_studio_faq(): array {
   return [
-    ['Czy wycena jest bezpłatna?', 'Tak. Wycena strony internetowej, sklepu albo kampanii jest bezpłatna i nie zobowiązuje do zamówienia. Pakiety logo mają stałe ceny, więc w ich przypadku od razu wysyłasz zgłoszenie zamówienia, a my potwierdzamy szczegóły.'],
+    ['Czy wycena jest bezpłatna?', 'Tak. Wysłanie zapytania o stronę, sklep, logo lub kampanię jest bezpłatne i nie zawiera umowy o realizację projektu. Przy logo od razu widzisz cenę wybranego pakietu; zakres, termin i warunki współpracy potwierdzamy osobno.'],
     ['Jak szybko dostanę wycenę?', 'W ciągu 48–72 godzin od wysłania briefu. Jeśli zostawisz numer telefonu, możemy też oddzwonić i doprecyzować zakres w rozmowie.'],
     ['Dlaczego ceny w cenniku są podane „od”?', 'Bo strona wizytówka i serwis z kilkudziesięcioma podstronami to zupełnie inna ilość pracy. Cena „od” to najmniejszy kompletny projekt danego typu, a końcową kwotę ustalamy na podstawie zakresu z briefu, zanim zaczniemy pracę.'],
     ['Czy cena strony obejmuje domenę i hosting?', 'Tak. Cena strony internetowej obejmuje domenę i hosting. Pomożemy wybrać adres domeny, a gotową stronę publikujemy i przekazujemy z pełnymi dostępami.'],
@@ -119,7 +119,7 @@ function zp_seo_studio_guide_body(): string {
     . '<li>Jeśli coś wymaga doprecyzowania, dzwonimy albo piszemy. Wycena jest bezpłatna i nie zobowiązuje do zamówienia.</li>'
     . '</ol>'
     . '<div class="zpGuide__noteBox"><p>Studio Wyceny działa trochę jak kalkulator strony internetowej, ale kwotę liczy człowiek, który zna Twój zakres. '
-    . 'Pakiety logo i brandingu mają stałe ceny, więc tam od razu widzisz sumę i wysyłasz zamówienie.</p></div>'
+    . 'Pakiety logo i brandingu mają stałe ceny, więc od razu widzisz sumę i wysyłasz bezpłatne zapytanie. Umowę o realizację projektu zawieramy osobno.</p></div>'
 
     . '<h2 id="pytania-o-cennik">Pytania o cennik i wycenę</h2>'
     . $faq;

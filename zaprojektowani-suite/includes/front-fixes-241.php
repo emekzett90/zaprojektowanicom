@@ -23,8 +23,11 @@ function zp_suite_241_clean_header_stabilizer(){
     if(d.body && d.body.classList && (d.body.classList.contains('zp-logo-branding-page') || d.body.classList.contains('zp-logo-branding-shortcode'))){
       nav.classList.add('zpNewNav--heroOverlay');
     }
-    nav.classList.toggle('is-scrolled', y>18);
-    if(d.body) d.body.classList.toggle('zp-nav-scrolled', y>18);
+    // Case Studies uses the native controller's hero boundary, not the generic 18px threshold.
+    if(nav.getAttribute('data-zp-case-header')!=='1'){
+      nav.classList.toggle('is-scrolled', y>18);
+      if(d.body) d.body.classList.toggle('zp-nav-scrolled', y>18);
+    }
   }
   /* 3.1.1: after the page start, the load and pageshow the check runs once in the next frame, before
      it is painted, instead of in the middle of other scripts' changes. */

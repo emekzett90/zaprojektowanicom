@@ -93,7 +93,7 @@ function zp_suite_thank_summary_rows($type, $payload){
     $rows = [
       ['Usługa', zp_suite_thank_payload_value($payload, 'Usługa', 'Logo & Branding')],
       ['Pakiet', zp_suite_thank_payload_value($payload, 'Pakiet', 'Wybrany pakiet logo')],
-      ['Termin', zp_suite_thank_payload_value($payload, 'Termin', 'Po akceptacji briefu')],
+      ['Termin', zp_suite_thank_payload_value($payload, 'Termin', 'Po potwierdzeniu warunków')],
       ['Kontakt', zp_suite_thank_payload_value($payload, 'Kontakt', 'E-mail')],
       ['Marka', zp_suite_thank_payload_value($payload, 'Marka', '')],
       ['Branża', zp_suite_thank_payload_value($payload, 'Branża', '')],
@@ -139,6 +139,47 @@ function zp_suite_thank_summary_html($prefix, $rows){
   return $out;
 }
 
+/** The form submits a free enquiry; paid design work needs separately agreed terms. */
+function zp_suite_thank_logo_copy(){
+  return [
+    'Dziękujemy za zapytanie' => 'Thank you for your enquiry',
+    'Otrzymaliśmy zapytanie' => 'We have received your enquiry',
+    'Twoje zapytanie o logo dotarło.' => 'We have received your logo enquiry.',
+    'Przeanalizujemy informacje o Twojej marce i potwierdzimy zakres oraz dalsze kroki. Wysłanie formularza jest bezpłatne i nie oznacza zawarcia umowy o realizację projektu.' => 'We will review the information about your brand and confirm the scope and next steps. Submitting the form is free of charge and does not constitute entering into a contract for the project.',
+    'Podsumowanie zapytania' => 'Enquiry summary',
+    'Zapisaliśmy Twoje zapytanie i przejdziemy teraz do analizy informacji o projekcie.' => 'We have saved your enquiry and will now review the project information.',
+    ' Data zgłoszenia: ' => ' Submitted on: ',
+    'Szczegóły zapytania będą dostępne po wejściu z linku potwierdzającego wysyłkę formularza.' => 'Your enquiry details will be available when you follow the form submission confirmation link.',
+    'Kwota z formularza' => 'Amount from the form',
+    'Zakres, cenę i warunki realizacji potwierdzimy osobno przed rozpoczęciem prac.' => 'We will confirm the scope, price and terms separately before starting work.',
+    'do potwierdzenia' => 'to be confirmed',
+    'Po potwierdzeniu warunków' => 'After the terms have been confirmed',
+    'Ustalimy kolejne kroki' => 'We will agree on the next steps',
+    'Po analizie briefu potwierdzimy zakres, warunki współpracy i sposób rozpoczęcia projektu.' => 'After reviewing the brief, we will confirm the scope, terms of cooperation and how the project will begin.',
+    'Co po wysłaniu zapytania?' => 'What happens after you send an enquiry?',
+    'Najpierw analizujemy zapytanie i uzgadniamy warunki dalszej współpracy. Prace projektowe rozpoczynamy po osobnym ustaleniu zakresu, ceny i terminu.' => 'We first review the enquiry and agree on the terms of further cooperation. Design work begins after the scope, price and timeline have been agreed separately.',
+    'Potwierdzamy zakres i warunki' => 'We confirm the scope and terms',
+    'Prześlemy informacje o zakresie, cenie, terminie oraz formalnościach potrzebnych do rozpoczęcia projektu.' => 'We will send information about the scope, price, timeline and formalities needed to begin the project.',
+    'Uzgadniamy start projektu' => 'We agree on the project start',
+    'Dopiero po odrębnej akceptacji warunków przechodzimy do realizacji.' => 'Work begins only after the terms have been accepted separately.',
+    'Masz pytanie do zgłoszenia?' => 'Have a question about your enquiry?',
+    'Napisz lub zadzwoń — najlepiej podaj numer zgłoszenia, żebyśmy szybciej odnaleźli zapytanie.' => 'Email or call us, quoting your enquiry number so we can find it quickly.',
+  ];
+}
+
+function zp_suite_thank_logo_text($text){
+  return function_exists('zpl_language') && zpl_language() === 'en' ? (zp_suite_thank_logo_copy()[$text] ?? $text) : $text;
+}
+
+add_filter('zpl_priority_dictionary', function($layers, $lang, $source){
+  $layers = is_array($layers) ? $layers : [];
+  if ($source !== '/dziekujemy-za-zamowienie-logo/' || !class_exists('ZPL\\Html')) { return $layers; }
+  $map = [];
+  foreach (zp_suite_thank_logo_copy() as $pl => $en) { $map[\ZPL\Html::norm($lang === 'pl' ? $en : $pl)] = $lang === 'pl' ? $pl : $en; }
+  array_unshift($layers, $map);
+  return $layers;
+}, PHP_INT_MAX, 3);
+
 function zp_suite_thank_render_template($type){
   $map = [
     'logo' => ['file'=>'logo.html','prefix'=>'zpThankLogo'],
@@ -160,12 +201,12 @@ function zp_suite_thank_render_template($type){
 
   if ($order_id) {
     $txt = $type === 'logo'
-      ? 'Zapisaliśmy Twoje zamówienie i przejdziemy teraz do weryfikacji informacji potrzebnych do rozpoczęcia projektu.'
+      ? zp_suite_thank_logo_text('Zapisaliśmy Twoje zapytanie i przejdziemy teraz do analizy informacji o projekcie.')
       : 'Zapisaliśmy Twoje zapytanie i przejdziemy teraz do analizy informacji potrzebnych do przygotowania wyceny.';
-    if ($created) { $txt .= ' Data zgłoszenia: ' . $created . '.'; }
+    if ($created) { $txt .= ($type === 'logo' ? zp_suite_thank_logo_text(' Data zgłoszenia: ') : ' Data zgłoszenia: ') . $created . '.'; }
   } else {
     $txt = $type === 'logo'
-      ? 'Zamówienie zostało wysłane. Szczegóły z formularza zostaną pokazane tutaj po wejściu z linku potwierdzającego.'
+      ? zp_suite_thank_logo_text('Szczegóły zapytania będą dostępne po wejściu z linku potwierdzającego wysyłkę formularza.')
       : 'Zapytanie zostało wysłane. Szczegóły z formularza zostaną pokazane tutaj po wejściu z linku potwierdzającego.';
   }
   $html = preg_replace('/<p class="'.preg_quote($prefix,'/').'__orderText">[\s\S]*?<\/p>/', '<p class="'.$prefix.'__orderText">'.esc_html($txt).'</p>', $html, 1);
@@ -175,7 +216,7 @@ function zp_suite_thank_render_template($type){
 
   if ($type === 'logo') {
     $sum = zp_suite_thank_payload_value($payload, ['Suma','Podsumowanie'], 'do potwierdzenia');
-    $price = '<div class="'.$prefix.'__price"><span>Wartość zamówienia</span><strong>'.esc_html($sum).'</strong><small>Kwota wynika z wybranego pakietu, terminu i dodatków zapisanych w formularzu.</small></div>';
+    $price = '<div class="'.$prefix.'__price"><span>'.esc_html(zp_suite_thank_logo_text('Kwota z formularza')).'</span><strong>'.esc_html($sum).'</strong><small>'.esc_html(zp_suite_thank_logo_text('Zakres, cenę i warunki realizacji potwierdzimy osobno przed rozpoczęciem prac.')).'</small></div>';
   } else {
     $budget = zp_suite_thank_payload_value($payload, 'Budżet', 'po analizie');
     $price = '<div class="'.$prefix.'__price"><span>Status wyceny</span><strong>po analizie</strong><small>Budżet z formularza: '.esc_html($budget).'. Finalny koszt przygotujemy po sprawdzeniu zakresu i materiałów.</small></div>';

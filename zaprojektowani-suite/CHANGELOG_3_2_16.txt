@@ -1,0 +1,6 @@
+3.2.16 — 15.10.2026
+
+Grafiki portfolio branżowego wypełniają całą część zdjęciową kart. Zachowano poprawkę kolizji licznika.
+Nagłówki, opisy i kickery case studies na potwierdzonym ciemnym tle mają jasną paletę; jasny wariant strony logo zachowuje ciemne teksty i białe karty.
+Grafiki hero branż na desktopie powiększono o7% i wyrównano ich górę z kickerem. Pozostałe hero bez zmian.
+Mateusz w FAQ powiększony o kolejne15% względem3.2.15. Cała lewa kolumna FAQ wyrównana do początku listy pytań z zachowaniem ograniczenia szerokości na mobile.

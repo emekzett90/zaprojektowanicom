@@ -145,6 +145,32 @@ $zp_logo_light = 'https://zaprojektowani.com/wp-content/uploads/2026/05/ZP_CIEMN
         </nav>
       </section>
 
+      <?php $zp_industry_links = zp_footer_v3_industry_links(); $zp_industry_is_en = function_exists('zp_seo_plan_is_en') && zp_seo_plan_is_en(); ?>
+      <?php if ($zp_industry_links) : ?>
+      <section class="zpFootIndustries is-open" data-zp-foot-industries aria-labelledby="zpFootIndustriesTitle">
+        <div class="zpFootIndustries__head">
+          <div>
+            <span class="zpFootIndustries__eyebrow"><?php echo esc_html($zp_industry_is_en ? 'Choose your industry' : 'Wybierz swoją branżę'); ?></span>
+            <h2 class="zpFootIndustries__heading" id="zpFootIndustriesTitle"><?php echo esc_html($zp_industry_is_en ? 'Websites' : 'Strony internetowe'); ?> <strong><?php echo esc_html($zp_industry_is_en ? 'for industries' : 'dla branż'); ?></strong></h2>
+          </div>
+          <p class="zpFootIndustries__desc"><?php echo esc_html($zp_industry_is_en ? 'Explore industry-specific websites, from offer structure to enquiries and SEO.' : 'Zobacz strony dopasowane do potrzeb Twojej branży — od układu oferty po kontakt i SEO.'); ?></p>
+        </div>
+        <button class="zpFootIndustries__toggle" type="button" aria-expanded="true" aria-controls="zpFootIndustriesList" data-zp-foot-industries-toggle>
+          <span><?php echo esc_html($zp_industry_is_en ? 'Explore all industries' : 'Zobacz wszystkie branże'); ?> (<?php echo esc_html((string) count($zp_industry_links)); ?>)</span>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="zpFootIndustries__grid" id="zpFootIndustriesList">
+          <?php foreach ($zp_industry_links as $zp_industry_i => $zp_industry) : ?>
+          <li><a class="zpFootIndustries__link" href="<?php echo esc_url($zp_industry['href']); ?>">
+            <span class="zpFootIndustries__num" aria-hidden="true"><?php echo esc_html(str_pad((string) ($zp_industry_i + 1), 2, '0', STR_PAD_LEFT)); ?></span>
+            <span class="zpFootIndustries__name"><?php echo esc_html($zp_industry['text']); ?></span>
+            <span class="zpFootIndustries__arrow" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 18 18 6M8 6h10v10" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          </a></li>
+          <?php endforeach; ?>
+        </ul>
+      </section>
+      <?php endif; ?>
+
       <section class="zpFootLocal" aria-label="Strony lokalne">
         <p class="zpFootLocal__text"><span class="zpFootLocal__pin"><?php echo zp_footer_v3_icon('pin'); ?></span><span><strong>Studio w Katowicach.</strong> <span>Projektujemy dla firm z całej Polski.</span></span></p>
         <ul class="zpFootLocal__links">

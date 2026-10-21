@@ -102,8 +102,8 @@ if (!function_exists('zp_showcase_portfolio_shortcode')) {
           <span class="zpShowcaseMobile__shade" aria-hidden="true"></span>
         </div>
         <div class="zpShowcaseMobile__top">
-          <span><?php echo esc_html($type); ?></span>
-          <i><?php echo esc_html($num); ?></i>
+          <span data-zp-project-type><?php echo esc_html($type); ?></span>
+          <?php if (!empty($item['isNew'])) : ?><span class="zpPortfolioNew" aria-label="Nowa realizacja">NEW</span><?php else : ?><i><?php echo esc_html($num); ?></i><?php endif; ?>
         </div>
         <div class="zpShowcaseMobile__content">
           <h3><?php echo esc_html($brand); ?><small><?php echo esc_html($sub); ?></small></h3>
@@ -121,7 +121,15 @@ if (!function_exists('zp_showcase_portfolio_shortcode')) {
             <?php if (!empty($scope)) : ?>
               <ul><?php foreach (array_slice($scope, 0, 5) as $s) : ?><li><?php echo esc_html($s); ?></li><?php endforeach; ?></ul>
             <?php endif; ?>
+            <?php if (!empty($item['isNew'])) : ?>
+              <div class="zpPortfolioStory">
+                <?php foreach (['challenge'=>'Wyzwanie', 'solution'=>'Rozwiązanie', 'effect'=>'Gotowy projekt'] as $key=>$label) : ?>
+                  <?php if (!empty($item[$key])) : ?><h4><?php echo esc_html(function_exists('zpl_language') && zpl_language()==='en' ? ['challenge'=>'The challenge','solution'=>'Our approach','effect'=>'The finished website'][$key] : $label); ?></h4><p><?php echo esc_html($item[$key]); ?></p><?php endif; ?>
+                <?php endforeach; ?>
+              </div>
+            <?php endif; ?>
             <div class="zpShowcaseMobile__links">
+              <?php if (!empty($item['case_url'])) : ?><a href="<?php echo esc_url($item['case_url']); ?>">Pełny opis realizacji</a><?php endif; ?>
               <a href="/studio-wyceny/">Zamów podobny projekt</a>
             </div>
           </div>
@@ -594,7 +602,7 @@ if (!function_exists('zp_showcase_portfolio_shortcode')) {
 
   function portfolioImgAttrs(item, index){
     const src = esc(fullUploadUrl(item && item.img ? item.img : ''));
-    const eager = index === 0;
+    const eager = false; // 3.2.36: portfolio is below the fold, including its first card.
     const base = 'class="zpShowcaseWhite__img" decoding="async" draggable="false" sizes="(max-width: 720px) 92vw, (max-width: 1180px) 58vw, 620px"';
 
     if (isMobileView()) {
@@ -677,7 +685,7 @@ if (!function_exists('zp_showcase_portfolio_shortcode')) {
         <article class="zpShowcaseWhite__card" data-zp-card data-index="${index}" tabindex="0" aria-label="Otwórz szczegóły projektu ${esc(item.brand)}">
           <div class="zpShowcaseWhite__media"><img ${portfolioImgAttrs(item, index)} alt="${esc(item.brand)} — ${esc(item.sub)}"></div>
           <div class="zpShowcaseWhite__veil"></div>
-          <div class="zpShowcaseWhite__top"><span class="zpShowcaseWhite__pill">${esc(item.type)}</span><span class="zpShowcaseWhite__index">${String(index + 1).padStart(2, '0')}</span></div>
+          <div class="zpShowcaseWhite__top"><span class="zpShowcaseWhite__pill" data-zp-project-type>${esc(item.type)}</span>${item.isNew ? '<span class="zpPortfolioNew">NEW</span>' : '<span class="zpShowcaseWhite__index">' + String(index + 1).padStart(2, '0') + '</span>'}</div>
           <div class="zpShowcaseWhite__content">
             <h3 class="zpShowcaseWhite__name">${esc(item.brand)}<span class="zpShowcaseWhite__sub">${esc(item.sub)}</span></h3>
             <div class="zpShowcaseWhite__meta">${meta}</div>
@@ -760,6 +768,7 @@ if (!function_exists('zp_showcase_portfolio_shortcode')) {
     const story = storyRows.length ? `<div class="zpShowcasePop__story">${storyRows.map((row,index) => `<article class="zpShowcasePop__storyCard${index === 1 ? ' zpShowcasePop__storyCard--navy' : ''}"><span class="zpShowcasePop__storyIcon"><i data-lucide="${row[0]}"></i></span><div><small>${esc(row[1])}</small><p>${esc(row[2])}</p></div></article>`).join('')}</div>` : '';
     const resultRows = Array.isArray(item.results) ? item.results.filter(row => Array.isArray(row) && (row[0] || row[1])) : [];
     const results = resultRows.length ? `<div class="zpShowcasePop__resultsTitle"><i data-lucide="badge-check"></i>Najważniejsze efekty</div><div class="zpShowcasePop__results">${resultRows.map(row => `<article class="zpShowcasePop__result"><strong>${esc(row[0])}</strong><span>${esc(row[1])}</span></article>`).join('')}</div>` : '';
+    const caseLink = item.case_url ? `<a href="${esc(item.case_url)}">Pełny opis realizacji ${arrowIcon()}</a>` : '';
     const primaryHref = isLogo ? '/logo-branding-katowice/' : '/zamowienie-strony-sklepu-internetowego/';
     const primaryText = isLogo ? 'Zamów logo w tym stylu' : 'Zamów podobny projekt';
     const secondaryHref = isLogo ? '/kontakt/' : '/strony-internetowe-katowice/';
@@ -783,7 +792,7 @@ if (!function_exists('zp_showcase_portfolio_shortcode')) {
           ${tools ? `<div class="zpShowcasePop__tools">${tools}</div>` : ''}
           <div><div class="zpShowcasePop__scopeTitle"><i data-lucide="list-checks"></i>Zakres prac</div><ul class="zpShowcasePop__scope">${scope}</ul></div>
           ${results}
-          <div class="zpShowcasePop__cta"><a href="${esc(primaryHref)}">${esc(primaryText)} ${arrowIcon()}</a>${live || `<a href="${esc(secondaryHref)}">${esc(secondaryText)} ${arrowIcon()}</a>`}</div>
+          <div class="zpShowcasePop__cta"><a href="${esc(primaryHref)}">${esc(primaryText)} ${arrowIcon()}</a>${live || `<a href="${esc(secondaryHref)}">${esc(secondaryText)} ${arrowIcon()}</a>`}${caseLink}</div>
         </div>
       </div>`;
   }

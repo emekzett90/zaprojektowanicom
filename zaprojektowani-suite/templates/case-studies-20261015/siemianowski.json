@@ -1,0 +1,153 @@
+{
+  "brand": "Siemianowski",
+  "slug": "strona-internetowa-siemianowski",
+  "en_path": "/en/websites/siemianowski-branding-website-administrator-listings/",
+  "legacy_titles": [
+    "Case study Siemianowski — elegancka strona kancelarii i system budowania zaufania"
+  ],
+  "cover": "assets/strony-internetowe/project-detail-siemianowski.webp",
+  "second": "assets/logo-branding/siemianowski-stationery-overview.jpg",
+  "live": "https://siemianowski.pl/",
+  "pl": {
+    "title": "Siemianowski — branding, strona kancelarii i system syndyka",
+    "seo_title": "Siemianowski: branding, strona i system syndyka | Case study",
+    "description": "Case study Siemianowski: pełny branding, rozbudowana strona kancelarii i autorski system dodawania przedmiotów oferowanych do sprzedaży przez syndyka.",
+    "keyword": "Siemianowski",
+    "tag": "Branding + strona + system syndyka",
+    "lead": "Dla Kancelarii Adwokata i Doradcy Restrukturyzacyjnego Arkadiusza Siemianowskiego przygotowaliśmy branding, kompletną stronę internetową oraz system syndyka do dodawania przedmiotów i publikowania ofert sprzedaży. Połączyliśmy wizerunek kancelarii z narzędziem do jej codziennej pracy.",
+    "intro": "W tej realizacji równie ważne były dwa zadania: uporządkowanie informacji o usługach prawnych oraz zapewnienie osobnej, czytelnej ścieżki dla osób zainteresowanych majątkiem oferowanym do sprzedaży.",
+    "cover_alt": "Siemianowski — prezentacja projektu strony kancelarii w granatowej i jasnej kolorystyce",
+    "cover_caption": "Projekt strony internetowej Siemianowski. Wizualizacja realizacji Zaprojektowani.",
+    "second_alt": "Identyfikacja Siemianowski na papierze firmowym, wizytówkach i telefonie",
+    "second_caption": "System identyfikacji kancelarii. Wizualizacja projektu papeterii i materiałów marki.",
+    "card_title": "Wizerunek i funkcje w jednym serwisie",
+    "card_copy": "Klient: Kancelaria Adwokata i Doradcy Restrukturyzacyjnego Arkadiusz Siemianowski. Zakres: branding, projekt i wdrożenie strony, struktura usług oraz system ofert syndyka.",
+    "scope": [
+      "Logo i spójny system identyfikacji wizualnej kancelarii",
+      "Kompletny projekt oraz wdrożenie strony internetowej",
+      "Architektura informacji dla usług prawnych i restrukturyzacyjnych",
+      "Prezentacja kancelarii i ścieżki kontaktu",
+      "Autorski system syndyka do dodawania przedmiotów aukcji i ofert sprzedaży",
+      "Widoki dostosowane do komputerów i urządzeń mobilnych"
+    ],
+    "sections": [
+      [
+        "kontekst",
+        "Dwie potrzeby, jeden spójny projekt",
+        "<p>Strona kancelarii powinna pomóc odbiorcy zrozumieć, czym zajmuje się zespół i jak przejść do kontaktu. W przypadku Siemianowski dochodzi drugi obszar: publikowanie przedmiotów oferowanych do sprzedaży w ramach działalności syndyka. Te zadania wymagają różnych informacji i innego sposobu przeglądania.</p><p>Dlatego nie potraktowaliśmy serwisu wyłącznie jako wizytówki. Zakres objął markę, rozbudowaną stronę oraz dedykowane rozwiązanie do obsługi ofert. Publiczna witryna łączy informacje o kancelarii z wydzieloną sekcją „Na sprzedaż”, dzięki czemu odbiorca może od razu wybrać właściwą ścieżkę.</p>"
+      ],
+      [
+        "branding",
+        "Branding kancelarii: od znaku do strony",
+        "<p>Przygotowaliśmy system identyfikacji, który łączy logo, typografię, kolorystykę i sposób prezentowania materiałów. Granat, jasne powierzchnie i ciepły akcent tworzą rozpoznawalny charakter projektu. Ten sam język wizualny przełożyliśmy na stronę i papeterię.</p><p>Spójność ma znaczenie także w szczegółach. Logo powinno pozostać czytelne w nagłówku serwisu, na wizytówce i na dokumencie. Projektowanie tych elementów razem pozwala ustalić proporcje, kontrast i hierarchię przed ich wdrożeniem na poszczególnych nośnikach. Więcej o takim zakresie opisujemy w usłudze <a href=\"/identyfikacja-wizualna/\">identyfikacja wizualna</a>.</p>"
+      ],
+      [
+        "strona",
+        "Strona internetowa uporządkowana według potrzeb klienta",
+        "<p>Architekturę informacji oparliśmy na obszarach działalności kancelarii. Użytkownik może przejść do konkretnej usługi, poznać sposób pracy i znaleźć kontakt. Rozbudowane menu oddziela restrukturyzację i upadłość od pozostałych zagadnień prawnych. Treść strony prowadzi od ogólnego rozpoznania zakresu do bardziej szczegółowych informacji.</p><p>W projekcie ważna była spokojna hierarchia: wyraźne nagłówki, czytelne opisy oraz widoczne następne kroki. Wizerunek kancelarii towarzyszy treści, zamiast zastępować ją dekoracją. Tę samą zasadę stosujemy przy <a href=\"/strony-internetowe-dla-kancelarii/\">projektowaniu stron dla kancelarii</a>: struktura wynika z zakresu usług i sytuacji odbiorcy.</p>"
+      ],
+      [
+        "system-syndyka",
+        "Autorski system syndyka i dodawanie przedmiotów aukcji",
+        "<p>Osobną częścią wdrożenia jest system syndyka, który umożliwia dodawanie przedmiotów aukcji oraz publikowanie ofert sprzedaży w serwisie kancelarii. Dzięki temu oferty stanowią odrębny, zarządzany obszar strony, a nie kolejne ręcznie składane podstrony pomieszane z opisami usług.</p><p>Rozwiązanie łączy zaplecze do wprowadzania przedmiotów z ich publiczną prezentacją. Właściciel strony może rozwijać ofertę w obrębie własnego serwisu, a zainteresowany odbiorca ma osobne miejsce do jej przeglądania. Zakres systemu koncentruje się na dodawaniu i publikowaniu ofert w serwisie kancelarii.</p><p>Takie narzędzie projektuje się wokół konkretnego sposobu pracy. Już przy planowaniu strony trzeba oddzielić treść usługową od informacji o sprzedawanym przedmiocie oraz ustalić, jak odbiorca przechodzi od oferty do kontaktu z kancelarią.</p>"
+      ],
+      [
+        "wdrozenie",
+        "Wdrożenie, treść i widok mobilny",
+        "<p>Projekt strony został wdrożony na WordPressie. Układy dopasowaliśmy do komputerów i mniejszych ekranów, zachowując czytelność nawigacji, opisów oraz przycisków kontaktu. Dla użytkownika ważna jest ciągłość: niezależnie od urządzenia powinien rozpoznać kancelarię i odnaleźć właściwą część serwisu.</p><p>Rozbudowa o dedykowany system wymaga uporządkowania także od strony administracyjnej. Treść o kancelarii i przedmioty oferowane do sprzedaży mają różne zadania, dlatego nie powinny korzystać z jednej przypadkowej struktury. Przy podobnym projekcie warto ustalić od początku, kto będzie edytował informacje i które elementy wymagają osobnego panelu.</p>"
+      ],
+      [
+        "rezultat",
+        "Rezultat: marka, strona i narzędzie do publikowania ofert",
+        "<p>Efektem prac jest kompletna obecność kancelarii w internecie: spójna identyfikacja, rozbudowana strona oraz system syndyka do dodawania przedmiotów i publikowania ofert. To rezultat funkcjonalny i projektowy, który można zobaczyć w realizacji.</p><p>Jeśli planujesz podobny serwis, zacznij od listy usług i działań, które zespół ma wykonywać samodzielnie po wdrożeniu. Inaczej wycenia się stronę informacyjną, a inaczej witrynę z dedykowanym modułem. Zobacz <a href=\"/tworzenie-stron-internetowych/\">tworzenie stron internetowych</a> lub opisz potrzebne funkcje w <a href=\"/studio-wyceny/\">Studiu Wyceny</a>.</p>"
+      ]
+    ],
+    "faq": [
+      [
+        "Czy projekt obejmował samą stronę kancelarii?",
+        "Nie. Zakres obejmował branding, kompletną stronę internetową oraz autorski system syndyka do dodawania przedmiotów aukcji i publikowania ofert sprzedaży."
+      ],
+      [
+        "Czy system ofert to to samo co sklep internetowy?",
+        "System syndyka służy w tej realizacji do dodawania i publicznej prezentacji przedmiotów oferowanych do sprzedaży. Sklep internetowy ma inną ścieżkę obsługi zamówienia, dlatego zakres takich rozwiązań ustalamy oddzielnie."
+      ],
+      [
+        "Gdzie można zobaczyć realizację?",
+        "Publiczna strona działa pod adresem siemianowski.pl. Portfolio i przedstawione wizualizacje pokazują zakres prac Zaprojektowani."
+      ]
+    ],
+    "cta": "Potrzebujesz strony kancelarii z własnym systemem?",
+    "cta_text": "Opisz usługi, typy publikowanych informacji i czynności, które chcesz wykonywać w panelu. Dobierzemy zakres brandingu, strony oraz dedykowanych funkcji."
+  },
+  "en": {
+    "title": "Siemianowski — branding, law firm website and administrator listings",
+    "seo_title": "Siemianowski: branding, website and listings | Case study",
+    "description": "Siemianowski case study: complete branding, a law firm website and a custom system for adding assets and publishing insolvency administrator sale listings.",
+    "keyword": "Siemianowski",
+    "tag": "Branding + website + administrator system",
+    "lead": "For the law firm of Arkadiusz Siemianowski, an advocate and restructuring adviser, we created the branding, a complete website and a custom system for adding assets and publishing sale listings handled by an insolvency administrator. The project connects the firm’s identity with a practical publishing tool.",
+    "intro": "The work addressed two distinct needs: making the firm’s legal services easier to navigate and providing a separate route for people looking for assets offered for sale.",
+    "cover_alt": "Siemianowski law firm website presentation in navy and light colours",
+    "cover_caption": "Siemianowski website design. A project visualisation by Zaprojektowani.",
+    "second_alt": "Siemianowski identity on stationery, business cards and a phone",
+    "second_caption": "The firm’s identity system. A visualisation of stationery and brand materials.",
+    "card_title": "Brand identity and function in one website",
+    "card_copy": "Client: the law firm of Arkadiusz Siemianowski, advocate and restructuring adviser. Scope: branding, website design and development, service architecture and administrator listings.",
+    "scope": [
+      "Logo and a consistent visual identity for the firm",
+      "Complete website design and development",
+      "Information architecture for legal and restructuring services",
+      "Firm presentation and clear contact routes",
+      "Custom administrator system for adding auction assets and sale listings",
+      "Layouts for desktop and mobile devices"
+    ],
+    "sections": [
+      [
+        "kontekst",
+        "Two needs within one coherent project",
+        "<p>A law firm website needs to explain what the team does and how a visitor can make contact. Siemianowski also needed a separate area for assets offered for sale by an insolvency administrator. These visitors need different information and a different browsing route.</p><p>We therefore approached the project as more than a brochure website. The scope included the brand, a substantial website and a dedicated publishing system. The public site combines the firm’s services with a distinct “For sale” area, helping visitors choose the relevant part of the website.</p>"
+      ],
+      [
+        "branding",
+        "Law firm branding, from the logo to the website",
+        "<p>We created a visual identity that brings together the logo, typography, colours and presentation of brand materials. Navy, light surfaces and a warm accent give the project a recognisable character. The same visual language carries through the website and stationery.</p><p>Consistency also matters at a smaller scale. A logo needs to remain readable in the website header, on a business card and on a document. Designing these applications together makes it possible to establish proportion, contrast and hierarchy before implementation. Our <a href=\"/identyfikacja-wizualna/\">visual identity service</a> explains this wider scope.</p>"
+      ],
+      [
+        "strona",
+        "A website structured around the visitor’s needs",
+        "<p>We organised the information around the firm’s practice areas. Visitors can explore a specific service, understand the firm’s approach and find contact information. The extended menu separates restructuring and insolvency from the other areas of legal support. Content leads from an overview to more detailed information.</p><p>A calm hierarchy was central to the design: clear headings, readable descriptions and visible next steps. The firm’s visual identity supports the content rather than replacing it with decoration. We use the same approach when <a href=\"/strony-internetowe-dla-kancelarii/\">designing websites for law firms</a>: the structure follows the services and the visitor’s situation.</p>"
+      ],
+      [
+        "system-syndyka",
+        "A custom administrator system for auction assets and sale listings",
+        "<p>A separate part of the implementation is the administrator system for adding auction assets and publishing sale listings on the firm’s website. Listings form their own managed area instead of becoming manually assembled pages mixed with service descriptions.</p><p>The solution connects the asset publishing interface with its public presentation. The site owner can develop this content within the firm’s own website, while interested visitors have a dedicated place to browse. The system’s scope centres on adding assets and publishing listings within the firm’s website.</p><p>A tool of this kind needs to follow the team’s actual workflow. Planning should distinguish service content from asset information and define how a visitor moves from a listing to contact with the firm.</p>"
+      ],
+      [
+        "wdrozenie",
+        "Implementation, content and mobile layouts",
+        "<p>The website was implemented on WordPress. We adapted the layouts to desktop and smaller screens while keeping navigation, descriptions and contact actions readable. Visitors should recognise the firm and find the relevant area regardless of the device they use.</p><p>A dedicated module also requires a clear administrative structure. Information about the firm and assets offered for sale serve different purposes. They should not share an improvised publishing structure. For a similar project, establish who will edit each type of information and which tasks need their own interface.</p>"
+      ],
+      [
+        "rezultat",
+        "The outcome: a brand, a website and a publishing tool",
+        "<p>The work produced a complete online presence: a consistent identity, an extensive website and an administrator system for adding assets and publishing sale listings. These are concrete design and functional deliverables visible in the project.</p><p>When planning a similar site, start with the services and the tasks your team needs to carry out independently after launch. An information website and a site with a custom module have different requirements. Explore <a href=\"/tworzenie-stron-internetowych/\">website development</a> or describe the functions you need in our <a href=\"/studio-wyceny/\">Quote Studio</a>.</p>"
+      ]
+    ],
+    "faq": [
+      [
+        "Did the project cover only the law firm website?",
+        "No. The scope included branding, a complete website and a custom administrator system for adding auction assets and publishing sale listings."
+      ],
+      [
+        "Is the listing system the same as an online store?",
+        "The administrator system in this project supports adding assets and presenting sale listings publicly. An online store follows a different order-handling process, so we define these solutions separately."
+      ],
+      [
+        "Where can I see the project?",
+        "The public website is available at siemianowski.pl. Our portfolio and project visualisations show the work carried out by Zaprojektowani."
+      ]
+    ],
+    "cta": "Need a law firm website with a custom system?",
+    "cta_text": "Describe your services, the information you publish and the tasks you need to manage in the admin area. We will define the branding, website and custom functionality scope."
+  }
+}

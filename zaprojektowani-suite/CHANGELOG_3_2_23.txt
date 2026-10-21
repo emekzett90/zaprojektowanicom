@@ -1,0 +1,5 @@
+Zaprojektowani Suite 3.2.23 — 2026-10-16
+
+Studio Wyceny, logo/branding PL: dodatkowe pobieranie danych REGON przez publiczny endpoint skanfirmy.pl bez własnego klucza, gdy MF nie zwraca wyniku. Jawne źródło danych i podgląd przed użyciem. Dla jednoosobowych działalności i spółek cywilnych dostawca udostępnia tylko nazwę, miejscowość i status; pełny adres i REGON pozostają do ręcznego uzupełnienia. Nie zapisujemy tych ograniczonych odpowiedzi we współdzielonym cache serwera. Istniejące ręczne dane pozostają zachowane.
+
+Wersja EN nadal bez polskich pól i pobierania danych. Serwerowy odczyt przekazuje dostawcy wyłącznie NIP, bez danych kontaktowych i IP klienta. Zaktualizowana polityka prywatności PL/EN i niezależna rewizja wdrożenia treści dokumentów, zachowująca ich datę, ID i pierwszą kopię zapasową.

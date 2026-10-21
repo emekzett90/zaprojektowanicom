@@ -1,0 +1,92 @@
+/* Keep the existing mobile composition, but never make first-screen content wait for motion. */
+@media (max-width:1100px){
+  html body.home #zhHero:not(#zpx),
+  html body.front-page #zhHero:not(#zpx){
+    content-visibility:visible!important;
+    contain:none!important;
+    opacity:1!important;
+    visibility:visible!important;
+    pointer-events:auto!important;
+    transform:none!important;
+    filter:none!important;
+  }
+  html body #zhHero:not(#zpx),
+  html body #zhHero:not(#zpx) *,
+  html body #zhHero:not(#zpx) *::before,
+  html body #zhHero:not(#zpx) *::after{
+    animation:none!important;
+    transition:none!important;
+    will-change:auto!important;
+  }
+  html body.home #zhHero:not(#zpx) .zh__copy,
+  html body.front-page #zhHero:not(#zpx) .zh__copy,
+  html body #zhHero:not(#zpx) .zh__eb,
+  html body #zhHero:not(#zpx) .zh__title,
+  html body #zhHero:not(#zpx) .zh__svcRot,
+  html body #zhHero:not(#zpx) .zh__lead,
+  html body #zhHero:not(#zpx) .zh__actions,
+  html body #zhHero:not(#zpx) .zh__chips,
+  html body #zhHero:not(#zpx) .zh__side,
+  html body #zhHero:not(#zpx) .zh__actions>*,
+  html body #zhHero:not(#zpx) .zh__chips>*,
+  html body #zhHero:not(#zpx) .zh__side>*{
+    animation:none!important;
+    transition:none!important;
+    will-change:auto!important;
+    opacity:1!important;
+    visibility:visible!important;
+    transform:none!important;
+    translate:none!important;
+    scale:none!important;
+    filter:none!important;
+  }
+  html body.home #zhHero:not(#zpx) .zh__title:not(.zh__title--ghost),
+  html body.front-page #zhHero:not(#zpx) .zh__title:not(.zh__title--ghost),
+  html body #zhHero:not(#zpx) .zh__title .zh__grad{
+    opacity:1!important;
+    visibility:visible!important;
+    animation:none!important;
+    transition:none!important;
+    filter:none!important;
+    transform:none!important;
+  }
+  html body.home #zhHero:not(#zpx) .zh__crewImg,
+  html body.front-page #zhHero:not(#zpx) .zh__crewImg{
+    opacity:1!important;
+    visibility:visible!important;
+    animation:none!important;
+    transform:none!important;
+    translate:none!important;
+    scale:none!important;
+    filter:none!important;
+  }
+  /* Preserve the centre portrait's existing scale without moving the crew container. */
+  html body.home #zhHero:not(#zpx) .zh__crewImg--2,
+  html body.front-page #zhHero:not(#zpx) .zh__crewImg--2{transform:scale(.94)!important}
+  html body #zhHero:not(#zpx) .zh__gflip{display:none!important}
+  html body #zhHero #zhSvcRot>span{transform:none!important}
+  html body #zhHero:not(#zpx) .zh__stage{
+    animation:none!important;
+    transition:none!important;
+    will-change:auto!important;
+    opacity:.66!important;
+    visibility:visible!important;
+    filter:none!important;
+  }
+  /* Mobile already uses this static poster; avoid a fade or perpetual float underneath the title. */
+  html body.home #zhHero:not(#zpx) .zh__poster,
+  html body.front-page #zhHero:not(#zpx) .zh__poster{
+    opacity:1!important;
+    visibility:visible!important;
+    animation:none!important;
+  }
+  html body #zhHero:not(#zpx) .zh__stage::before{opacity:.5!important}
+  html body #zhHero:not(#zpx) .zh__stage::after{opacity:1!important}
+  /* Preserve translucent cards without recomputing a 28px live blur over the hero artwork. */
+  html body.home #zhHero:not(#zpx) .zh__rev,
+  html body.front-page #zhHero:not(#zpx) .zh__rev,
+  html body #zhHero:not(#zpx) .zh__btn--g{
+    -webkit-backdrop-filter:none!important;
+    backdrop-filter:none!important;
+  }
+}

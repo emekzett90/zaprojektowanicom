@@ -83,7 +83,7 @@ add_action('wp_footer', function(){
           <button type="button" data-zp-estimate-contact="phone"><i data-lucide="phone-call"></i><span>Proszę o telefon</span></button>
           <button type="button" data-zp-estimate-contact="email"><i data-lucide="mail"></i><span>Wolę e-mail</span></button>
         </div>
-        <label class="zpEstimateModal__consent"><input type="checkbox" name="consent" value="1" required checked> <span>Wyrażam zgodę na kontakt w sprawie zapytania.</span></label>
+        <label class="zpEstimateModal__consent"><input type="checkbox" name="consent" value="1" required> <span>Wyrażam zgodę na kontakt w sprawie zapytania.</span></label>
         <button class="zpEstimateModal__submit" type="submit">Wyślij prośbę o wycenę</button>
         <div class="zpEstimateModal__msg" aria-live="polite"></div>
       </form>

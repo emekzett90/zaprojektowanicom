@@ -1,0 +1,143 @@
+ZAPROJEKTOWANI SUITE 3.2.31 — ŁADOWANIE STRONY GŁÓWNEJ NA MOBILE
+Data przygotowania: 17.10.2026
+Baza: pełna Zaprojektowani Suite 3.2.30 z przesłanego archiwum.
+
+INSTALACJA
+
+1. W WordPressie otwórz Wtyczki > Dodaj nową > Wyślij wtyczkę na serwer.
+2. Wybierz zaprojektowani-suite-3.2.31-mobile-fix.zip i kliknij Zainstaluj.
+3. Wybierz zastąpienie obecnej wtyczki przesłaną wersją. Nie odinstalowuj
+   wcześniej Suite. Zachowany jest katalog zaprojektowani-suite.
+4. Wróć do ekranu Wtyczki i sprawdź, czy aktywna Suite pokazuje wersję 3.2.31.
+   Wejście do panelu po podmianie pozwala wykonać migrację własnego cache.
+
+To pełna paczka wtyczki, obejmująca wszystkie pliki dostarczonej Suite,
+wbudowane moduły językowe oraz lokalne zasoby. Do tych poprawek nie trzeba
+dodatkowo podmieniać mu-plugins ani instalować osobnych wtyczek językowych
+ze starszych archiwów. Aktualizacja korzysta z istniejącej instalacji
+WordPressa, treści, ustawień, tłumaczeń, motywu i mediów na serwerze.
+
+Przy włączonym własnym cache Suite aktualizacja odświeża jego rozpoznany
+plik advanced-cache.php oraz generację kopii stron. Nie nadpisuje pliku
+innej wtyczki i nie włącza ręcznie wyłączonego cache. Pierwsza wizyta bez
+gotowej kopii może ją odbudować. Oceń również kolejne wejście w zwykłej
+karcie telefonu, z zapamiętanym wyborem języka polskiego.
+
+CO ZMIENIONO
+
+1. Cache przy zapamiętanym języku polskim.
+   Wcześniej ciasteczka zpl_lang_pref=pl i zpl_lang_session=pl powodowały
+   pominięcie szybkiego cache HTML mimo wyświetlania tej samej polskiej strony.
+   Teraz jednoznaczny, poprawny wybór PL może odczytać gotową kopię PL.
+   Kolejność wyboru języka odpowiada istniejącemu Geo::decide(): wybór sesji
+   ma pierwszeństwo przed zapamiętaną preferencją. Wybór EN nadal przechodzi
+   przez odpowiednie przekierowanie WordPressa. Niejednoznaczne lub podwójne
+   ciasteczka językowe, logowanie i pozostałe nieznane ciasteczka nadal omijają
+   cache. Pozostaje rozdzielenie kopii według urządzenia i wersji strony EN.
+   Żądania z ciasteczkami nadal nie zapisują nowych współdzielonych kopii HTML.
+
+2. Obrazy sekcji logotypów pod hero.
+   Usunięto mechanizm, który w pobliżu ekranu zmieniał wszystkie obrazy lazy
+   tej sekcji na eager, wywoływał decode() i wymuszał renderowanie całej sekcji.
+   Dotyczył także powielonych elementów karuzeli i ukrytych wariantów desktop.
+   Kopie mobilnego paska logotypów również otrzymały loading="lazy".
+   Kontroler sekcji nadal uruchamia się od razu. Zachowano wygląd, zachowanie
+   desktop, animacje oraz rytm karuzeli 1150 ms. Przeglądarka może pobierać
+   obrazy lazy odpowiednio wcześnie, ale nie są już one sztucznie włączane
+   do zestawu obrazów blokujących zakończenie ładowania dokumentu.
+
+3. Trzy portrety zespołu w pierwszym ekranie.
+   Renderer hero nadaje im teraz jawne loading="eager". Dzięki temu późniejszy
+   ogólny filtr obrazów nie oznacza ich jako lazy. Zachowano decoding="async",
+   źródła, wymiary 322x440, 342x440, 321x440 i istniejące pozycjonowanie.
+
+4. Starszy mechanizm oczekiwania w mobile hero.
+   Moduł 318 ustawia gotowość hero i nagłówka podczas parsowania. Usunięto
+   jego obserwator DOM, dodatkowe oczekiwanie na font i timery oraz stan
+   wyłączający kliknięcia w hero. Gotowy nagłówek, font i pozycje elementów
+   pozostają obsługiwane przez dotychczasowy header-first.
+   Istniejące animacje zespołu i reguły desktop pozostawiono.
+
+USTALENIA Z OBECNEJ STRONY — PRZED AKTUALIZACJĄ
+
+Publiczne żądania do https://zaprojektowani.com/ wykonano 17.10.2026
+z nagłówkiem przeglądarki iPhone Safari i polskim Accept-Language.
+
+Wariant bez ciasteczek:
+  X-ZP-Cache: HIT
+  X-ZP-Cache-Device: m
+  TTFB: 0.628228 s
+  Czas pobrania w tym żądaniu: 1.076388 s
+
+Wariant z Cookie: zpl_lang_pref=pl; zpl_lang_session=pl:
+  X-ZP-Cache: BYPASS; cookies
+  TTFB: 1.527461 s
+  Czas pobrania w tym żądaniu: 1.975153 s
+
+Obie odpowiedzi zawierały identyczny HTML, 1 557 497 bajtów.
+SHA-256 obu odpowiedzi:
+0bd7810183fd8fa71f1910477e5c0d5ab388d5deb67328882b6579ebd0590c68
+
+Jest to pojedyncze porównanie odpowiedzi serwera sprzed aktualizacji,
+wykazujące różnicę obsługi cache. Nie jest pomiarem szybkości Safari
+po zainstalowaniu 3.2.31 ani gwarancją stałej oszczędności czasu.
+
+W HTML sekcji #zpTrustPinned znaleziono 73 elementy img, ale tylko 12
+unikalnych adresów obrazów. Przed JavaScriptem 48 elementów miało eager,
+25 lazy. Powtórzenia służą karuzeli; 73 elementy nie oznaczają 73 osobnych
+pobrań. Usunięty skrypt promował pozostałe lazy do eager.
+
+Dobre wyniki Lighthouse nie wykluczają takiego zachowania. Widoczny pierwszy
+ekran i zakończenie ładowania całego dokumentu to różne momenty. Zdarzenie
+window.load uwzględnia m.in. obrazy eager, skrypty i ramki, a obrazy lazy
+nie muszą go opóźniać. Pasek postępu przeglądarki ma własny sposób prezentacji
+i nie stanowi bezpośredniego odczytu LCP.
+Odniesienie techniczne:
+https://developer.mozilla.org/en-US/docs/Web/API/Window/load_event
+
+WERYFIKACJA PACZKI
+
+- Zachowano wszystkie 1722 pliki źródłowej Suite; zmieniono 8 z nich.
+- Dodano niniejszy opis wydania.
+- Sprawdzono kompletność statycznych zależności dołączanych z kodu.
+- Kontrola składni 686 plików PHP: bez błędów, PHP 8.3.6.
+- Testy cache i zgodności z rzeczywistym Geo::decide(): 115 sprawdzeń PASS.
+- Testy migracji własnego cache, zachowania OFF, plików obcych i retry:
+  38 sprawdzeń PASS.
+- Logotypy: 12 wariantów szerokości, Save-Data i dostępności observera PASS.
+- Hero: rzeczywisty renderer PHP z filtrami oraz kolejność skryptów head
+  przy 7 szerokościach mobile/desktop PASS. Wszystkie trzy portrety zachowują
+  eager również po ogólnym filtrze obrazów; obrazy niżej nadal mogą być lazy.
+- Ten sam test obrazów logotypów wykazuje regresję na pierwotnym kodzie.
+- Test rendererów pokazuje lazy dla trzech portretów w wersji pierwotnej,
+  a eager w wersji poprawionej.
+
+ZAKRES I GRANICE WERYFIKACJI
+
+Poprawki przygotowano i sprawdzono lokalnie. W tej pracy nie instalowano
+nowej wersji na produkcji. Archiwum wystarcza do naprawy tych mechanizmów
+w istniejącej Suite, ale nie stanowi pełnego backupu WordPressa: nie zawiera
+bazy danych, całego motywu, mediów i konfiguracji usług zewnętrznych.
+Nie wykonano testu nowej wersji na fizycznym telefonie ani pełnego uruchomienia
+z produkcyjną bazą danych. Nie zmieniano konfiguracji Cookiebot/GTM ani
+zewnętrznego kontenera tagów. Ich ewentualny udział wymaga pomiaru w konkretnej
+sesji; dostarczone dane nie uzasadniają przypisania im potwierdzonej winy.
+
+LISTA ZMIENIONYCH PLIKÓW
+
+assets/js/blocks/trust-logos.js
+templates/trust-logos.php
+includes/cache-dropin-20261009.php
+includes/suite3/upgrade.php
+includes/front-fixes-311.php
+includes/front-fixes-318.php
+includes/header-first.php (wyłącznie komentarz)
+zaprojektowani-suite.php (wersja 3.2.31)
+
+POWRÓT DO POPRZEDNIEJ WERSJI
+
+Oryginalny zaprojektowani-suite.zip z przesłanego archiwum zawiera 3.2.30.
+Można podmienić nim pliki analogicznie do aktualizacji. Cofnięcie plików
+wtyczki nie cofa automatycznie zainstalowanego pliku advanced-cache.php;
+jeśli potrzebny jest również powrót mechanizmu cache, trzeba odtworzyć go
+z poprzedniej wersji przez istniejące ustawienia cache Suite.

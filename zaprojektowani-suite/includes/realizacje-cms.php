@@ -1193,7 +1193,8 @@ function zp_suite_realizacje_projects(){
 
   $out = array_merge($priority, $out);
   // SearchFit 14.10.2026: a client site that no longer opens keeps its live buttons, without the link (includes/cms.php).
-  return function_exists('zp_suite_portfolio_live_gone') ? zp_suite_portfolio_live_gone($out) : $out;
+  $out = function_exists('zp_suite_portfolio_live_gone') ? zp_suite_portfolio_live_gone($out) : $out;
+  return apply_filters('zp_portfolio_projects_20261015', $out, 'realizacje');
 }
 /* 2.9.8: zdjęcie projektu z danych Realizacji (to samo, które pokazuje /realizacje/), np. dla karty
    „Strony internetowe” na stronie głównej. Pusty tekst, gdy projektu nie ma albo nie ma zdjęcia. */

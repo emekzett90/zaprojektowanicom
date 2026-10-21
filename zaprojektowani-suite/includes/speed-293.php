@@ -73,9 +73,17 @@ function zp_speed_buffer($chunk, $phase = 0) {
   $buffer = '';
   try {
     if (function_exists('zp_suite_quality_html')) { $html = zp_suite_quality_html($html); }
-    $out = zp_speed_should_process($html) ? zp_speed_process($html) : null;
+    $process = zp_speed_should_process($html);
+    $out = $process ? zp_speed_process($html) : null;
     // SEO audit 13.10.2026: inline CSS and the mobile portfolio cards to static files (speed-html-weight.php).
     if (is_string($out) && function_exists('zp_speed_weight_html')) { $out = zp_speed_weight_html($out); }
+    if ($process && function_exists('zp_css_delivery_enabled') && zp_css_delivery_enabled()) {
+      if (!is_string($out)) { $out = $html; }
+      $out = zp_css_delivery_html($out);
+      $out = zp_css_route_prune_html($out);
+    }
+    if ($process && function_exists('zp_home_first_paint_html')) { $out = zp_home_first_paint_html(is_string($out) ? $out : $html); }
+    if ($process && function_exists('zp_mobile_shell_html_3234')) { $out = zp_mobile_shell_html_3234(is_string($out) ? $out : $html); }
   } catch (\Throwable $e) {
     $out = null;
   }
@@ -92,6 +100,7 @@ function zp_speed_should_process(string $html): bool {
   if (isset($_GET['zp_speed']) && (string) $_GET['zp_speed'] === '0') { return false; }
   if (defined('REST_REQUEST') && REST_REQUEST) { return false; }
   if (function_exists('is_feed') && is_feed()) { return false; }
+  if (function_exists('is_preview') && is_preview()) { return false; }
   if (function_exists('is_customize_preview') && is_customize_preview()) { return false; }
   if (isset($_GET['elementor-preview']) || isset($_GET['fl_builder']) || isset($_GET['et_fb'])) { return false; }
   if (isset($GLOBALS['pagenow']) && in_array($GLOBALS['pagenow'], ['wp-login.php', 'wp-signup.php', 'wp-activate.php'], true)) { return false; }
@@ -692,14 +701,19 @@ add_action('wp_footer', function () {
 (function(w,d){
   'use strict';
   if(!('IntersectionObserver' in w) || !w.CSSLayerBlockRule || !w.CSSAnimation || typeof w.Element.prototype.getAnimations!=='function') return;
-  function staysOnScreen(el, box){
+  function staysOnScreen(el, box, positions){
     if(el.closest('#zpNewNav,dialog,[role="dialog"],[aria-modal="true"]')) return true;
     for(var e=el; e && e!==box.parentElement; e=e.parentElement){
-      if(w.getComputedStyle(e).position==='fixed') return true;
+      var fixed=positions.get(e);
+      if(typeof fixed==='undefined'){
+        fixed=w.getComputedStyle(e).position==='fixed';
+        positions.set(e, fixed);
+      }
+      if(fixed) return true;
     }
     return false;
   }
-  function markLoops(box){
+  function collectLoops(box, marks, seen, positions){
     var list;
     try{ list=box.getAnimations({subtree:true}); }catch(e){ return; }
     for(var i=0;i<list.length;i++){
@@ -709,17 +723,27 @@ add_action('wp_footer', function () {
       var attr=pseudo==='' ? 'data-zp-loop' : pseudo==='::before' ? 'data-zp-loop-b' : pseudo==='::after' ? 'data-zp-loop-a' : '';
       var el=eff.target;
       if(!attr || el.hasAttribute(attr) || eff.getTiming().iterations!==Infinity) continue;
-      if(staysOnScreen(el, box)) continue;
-      el.setAttribute(attr,'');
+      var queued=seen.get(el);
+      if(queued && queued[attr]) continue;
+      if(staysOnScreen(el, box, positions)) continue;
+      if(!queued){ queued={}; seen.set(el, queued); }
+      queued[attr]=true;
+      marks.push({el:el, attr:attr});
     }
   }
   function start(){
     var io=new IntersectionObserver(function(entries){
+      var marks=[], updates=[], seen=new WeakMap(), positions=new WeakMap(), states=new WeakMap();
+      // Finish all animation/style reads before applying section pause markers.
       entries.forEach(function(entry){
         var box=entry.target, off=!entry.isIntersecting;
-        if(off) markLoops(box);
-        if(box.classList.contains('zp-anim-off')!==off) box.classList.toggle('zp-anim-off', off);
+        if(off) collectLoops(box, marks, seen, positions);
+        var previous=states.has(box) ? states.get(box) : box.classList.contains('zp-anim-off');
+        states.set(box, off);
+        if(previous!==off) updates.push({box:box, off:off});
       });
+      marks.forEach(function(mark){ mark.el.setAttribute(mark.attr,''); });
+      updates.forEach(function(update){ update.box.classList.toggle('zp-anim-off', update.off); });
     }, {rootMargin:'50% 0px'});
     d.querySelectorAll('section,footer').forEach(function(box){
       if(!box.closest('#zpNewNav')) io.observe(box);

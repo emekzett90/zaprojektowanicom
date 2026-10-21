@@ -1,0 +1,14 @@
+Zaprojektowani Suite 3.2.21 — 16.10.2026
+
+Studio Wyceny:
+- WEB i SHOP: proste, opcjonalne pole „Preferowana domena” zamiast generatora i statusów dostępności.
+- Logo i branding: opcjonalny NIP, pobieranie nazwy/REGON/adresu z publicznego rejestru, podgląd do użycia i ręczna edycja.
+- CEIDG po skonfigurowaniu prywatnego tokenu serwerowego; domyślnie oficjalny Wykaz podatników VAT MF.
+- NIP i dane firmy zapisane przy zapytaniu; brak wyniku rejestru nie blokuje zapytania.
+- Tekst poradnika i FAQ pod Studio rozróżnia bezpłatne zapytanie od umowy projektowej (PL/EN).
+
+Dokumenty:
+- Mniejszy odstęp pod menu na telefonie i desktopie.
+- Migracja odświeża link arkusza CSS również przy niezmienionej dacie dokumentu, zachowując pierwotny backup i ID.
+- Prywatność PL/EN opisuje opcjonalne pobieranie danych firmy po NIP.
+- Pozostaje nazwa AP Studio, NIP 9930682613, REGON 389224502 i osobne adresy firmy oraz do korespondencji zgodnie z dyspozycją użytkownika.

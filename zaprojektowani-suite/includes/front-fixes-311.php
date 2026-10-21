@@ -72,6 +72,8 @@ try{
   if(w.top!==w.self||!w.matchMedia)return;
   if(w.matchMedia('(prefers-reduced-motion:reduce)').matches)return;
   MOB=w.matchMedia('(max-width:1100px)').matches;
+  /* 3.2.32: mobile paints its final state in CSS, without font promises or entrance timers. */
+  if(MOB){w.__zpHeroEnd=release;release();return;}
   if(!MOB)h.classList.add('zp-hero-pre');
   d.addEventListener('DOMContentLoaded',arm);
   w.setTimeout(go,10000);
@@ -276,6 +278,8 @@ try{
   if(w.top!==w.self)return;
   if(w.matchMedia&&w.matchMedia('(prefers-reduced-motion:reduce)').matches)return;
   MOB=!!(w.matchMedia&&w.matchMedia('(max-width:1100px)').matches);lw=w.innerWidth;
+  /* 3.2.32: keep the native mobile gradient; no ghost H1, observers or late layout measurements. */
+  if(MOB)return;
   d.addEventListener('DOMContentLoaded',later);d.addEventListener('zpl:change',later);
   w.addEventListener('resize',function(){if(w.innerWidth===lw)return;lw=w.innerWidth;w.clearTimeout(rt);rt=w.setTimeout(later,150);});
   if(d.fonts&&d.fonts.addEventListener)d.fonts.addEventListener('loadingdone',later);
@@ -303,7 +307,9 @@ if (!function_exists('zp_suite_311_hero_markup')) {
       ];
       $imgs = '';
       foreach ($people as $i => $p) {
-        $imgs .= '<img class="zh__crewImg zh__crewImg--' . ($i + 1) . '" src="' . esc_url($base . $p[0]) . '" alt="" width="' . $p[1] . '" height="' . $p[2] . '" decoding="async">';
+        // These portraits are above the home title. An explicit loading policy keeps
+        // the generic image optimizer from treating them as below-the-fold content.
+        $imgs .= '<img class="zh__crewImg zh__crewImg--' . ($i + 1) . '" src="' . esc_url($base . $p[0]) . '" alt="" width="' . $p[1] . '" height="' . $p[2] . '" loading="eager" decoding="async">';
       }
       $crew = '<div class="zh__crew" aria-hidden="true" data-zpl-skip>' . $imgs . '</div>';
       $output = preg_replace('~<p class="zh__eb">~', $crew . '<p class="zh__eb">', $output, 1);

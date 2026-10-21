@@ -152,6 +152,12 @@ if (!function_exists('zp_suite_313_mobile_ui_footer')) {
     ]);
   }
   function revealHeader(){
+    // 3.2.34: mobile home header is already visible; only preserve legacy state tokens.
+    if(d.body && d.body.classList.contains('zp-mobile-shell-3234')){
+      html.classList.add('zp-mobile-header-ready');
+      html.classList.remove('zp-mobile-ui-pending');
+      return;
+    }
     if(!isMobileHeader()){
       html.classList.add('zp-mobile-header-ready');
       return;

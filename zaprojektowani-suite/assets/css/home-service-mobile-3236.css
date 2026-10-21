@@ -1,0 +1,24 @@
+/* Phone-only corrections. Individual scale/translate preserve existing parallax transforms. */
+@media(max-width:760px){
+ html body #zpShowcaseServices#zpShowcaseServices .zpSSCard--web .zpSSCard__visual{overflow:hidden!important}
+ html body #zpShowcaseServices#zpShowcaseServices .zpSSCard--web .zpSSCard__mock--webLaptop img{scale:1.10!important;transform-origin:left center!important}
+ html body #zpShowcaseServices#zpShowcaseServices .zpSSCard--shop .zpSSCard__laptop3d img{scale:.95!important;transform-origin:center!important}
+ html body #zpShowcaseServices#zpShowcaseServices .zpSSCard--brand,
+ html body #zpShowcaseServices#zpShowcaseServices .zpSSCard--brand .zpSSCard__content,
+ html body #zpShowcaseServices#zpShowcaseServices .zpSSCard--brand .zpSSCard__visual,
+ html body #zpShowcaseServices#zpShowcaseServices .zpSSCard--ads,
+ html body #zpShowcaseServices#zpShowcaseServices .zpSSCard--ads .zpSSCard__content,
+ html body #zpShowcaseServices#zpShowcaseServices .zpSSCard--ads .zpSSCard__visual{overflow:visible!important}
+ html body #zpShowcaseServices#zpShowcaseServices .zpSSCard--brand .zpSSCard__mock--brandStationery{overflow:visible!important}
+ html body #zpShowcaseServices#zpShowcaseServices .zpSSCard--brand .zpSSCard__mock--brandStationery img{scale:.93!important;transform-origin:center!important}
+ html body #zpShowcaseServices#zpShowcaseServices .zpSSCard--ads .zpSSCard__mock--ads{left:0!important;right:-16%!important;overflow:visible!important}
+ html body #zpShowcaseServices#zpShowcaseServices .zpSSCard--ads .zpSSCard__mock--ads img{object-position:center!important;max-width:none!important}
+ html body #zpShowcaseServices#zpShowcaseServices .zpSSCard:is(.zpSSCard--web,.zpSSCard--shop,.zpSSCard--brand,.zpSSCard--ads) .zpSSCard__mock img{animation:zpServicePhotoFloat3236 6.4s ease-in-out infinite!important;animation-play-state:paused!important;will-change:auto}
+ html body #zpShowcaseServices#zpShowcaseServices .zpSSCard.zp-photo-inview-3236 .zpSSCard__mock img{animation-play-state:running!important}
+ @keyframes zpServicePhotoFloat3236{0%,100%{translate:0 0}50%{translate:0 -8px}}
+}
+@media(max-width:760px) and (prefers-reduced-motion:reduce){html body #zpShowcaseServices#zpShowcaseServices .zpSSCard .zpSSCard__mock img{animation:none!important;translate:none!important}}
+/* Badge lives in the image overlay in both portfolio views. */
+#zpShowcaseWhite#zpShowcaseWhite .zpPortfolioNew{display:inline-flex!important;align-items:center;justify-content:center;flex:0 0 auto;padding:9px 14px;min-height:32px;border:1px solid rgba(255,255,255,.5);border-radius:999px;background:#fff!important;color:#10182a!important;font:800 12px/1 "Plus Jakarta Sans Local","Plus Jakarta Sans",sans-serif;letter-spacing:.08em;box-shadow:0 6px 18px rgba(7,20,38,.14)}
+#zpShowcaseWhite .zpPortfolioStory h4{margin:20px 0 8px;font-size:18px;line-height:1.4}
+#zpShowcaseWhite .zpPortfolioStory p{font-size:15px;line-height:1.7}

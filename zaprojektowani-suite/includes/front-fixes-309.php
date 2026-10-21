@@ -20,6 +20,8 @@ html.zp-hero-intro-pending #CybotCookiebotDialogBodyUnderlay *{visibility:hidden
 </style>
 <script id="zp-suite-309-hero-intro-gate-js">(function(d,w){'use strict';
 if(w.ZPHeroIntroGate)return;
+/* 3.2.32: the mobile hero has no entrance; the consent UI need not wait for it. */
+if(w.matchMedia&&w.matchMedia('(max-width:1100px)').matches)return;
 var root=d.documentElement,timer=0,gate={active:false,release:release};
 w.ZPHeroIntroGate=gate;
 function release(reason){

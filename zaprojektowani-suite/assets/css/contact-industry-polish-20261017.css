@@ -1,0 +1,171 @@
+/* Contact: same contrast between the light heading and its stronger service-hero accent.
+   Static gradient keeps the existing mobile loading / reduced-motion work intact. */
+html body .zh.zh--contact h1.zh__title {
+  font-weight: 480 !important;
+  font-variation-settings: "wght" 480 !important;
+}
+html body .zh.zh--contact h1.zh__title strong.zh__grad.zpContactHeroAccent {
+  display: inline !important;
+  position: static !important;
+  color: #dff3ff !important;
+  font-family: inherit !important;
+  font-size: inherit !important;
+  font-weight: 750 !important;
+  font-variation-settings: "wght" 750 !important;
+  line-height: inherit !important;
+  letter-spacing: inherit !important;
+  background: none !important;
+  padding: .015em .025em .09em !important;
+  margin: -.015em -.025em -.09em !important;
+  text-shadow: none !important;
+  -webkit-text-fill-color: currentColor !important;
+  -webkit-box-decoration-break: clone !important;
+  box-decoration-break: clone !important;
+  animation: none !important;
+  transition: none !important;
+  will-change: auto !important;
+}
+html body .zh.zh--contact h1.zh__title strong.zh__grad.zpContactHeroAccent::before,
+html body .zh.zh--contact h1.zh__title strong.zh__grad.zpContactHeroAccent::after {
+  content: none !important;
+  display: none !important;
+}
+@supports ((-webkit-background-clip: text) or (background-clip: text)) {
+  html body .zh.zh--contact h1.zh__title strong.zh__grad.zpContactHeroAccent {
+    color: transparent !important;
+    background-image: linear-gradient(105deg, #79baf0 0%, #bfe5ff 20%, #fff 42%, #dff3ff 58%, #9fd3fb 78%, #fff 100%) !important;
+    background-size: 100% 100% !important;
+    background-position: 50% 50% !important;
+    -webkit-background-clip: text !important;
+    background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+  }
+}
+
+/* The established industry template, images and hero dimensions remain unchanged. */
+body.zp-industry-polish .zpIndustryWork .zpIndustryWork__kicker,
+body.zp-industry-polish .zpIndustryWork .zpIndustryWork__kind {
+  font-size: 12px;
+  letter-spacing: .025em;
+  text-transform: none;
+}
+body.zp-industry-polish .zpIndustryWork .zpIndustryWork__lead { font-size: 16px; }
+body.zp-industry-polish .zpIndustryWork .zpIndustryWork__scope,
+body.zp-industry-polish .zpIndustryWork .zpIndustryWork__why { font-size: 15px; }
+body.zp-industry-polish .zpIndustryWork .zpIndustryWork__actions a,
+body.zp-industry-polish .zpIndustryWork .zpIndustryWork__footer a { font-size: 14px; }
+body.zp-industry-polish #zp-strony-internetowe-katowice #zakres .scope-card > p { font-size: 16px; line-height: 1.75; }
+
+/* One new, fully server-rendered planning section per industry. */
+.zpIndustryPlan {
+  --zp-plan-ink: #121424;
+  --zp-plan-muted: #566176;
+  --zp-plan-line: #dce1e9;
+  position: relative;
+  margin: 0;
+  padding: clamp(58px, 6.6vw, 104px) 0;
+  background: #fff;
+  color: var(--zp-plan-ink);
+  font-family: "Plus Jakarta Sans Local", "Plus Jakarta Sans", system-ui, sans-serif;
+  scroll-margin-top: 110px;
+}
+.zpIndustryPlan, .zpIndustryPlan__inner, .zpIndustryPlan__example { box-sizing: border-box; }
+.zpIndustryPlan__inner {
+  width: min(1750px, calc(100% - clamp(32px, 6vw, 96px)));
+  margin: 0 auto;
+}
+.zpIndustryPlan__head {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr);
+  gap: clamp(28px, 5vw, 80px);
+  align-items: end;
+  margin-bottom: clamp(32px, 4vw, 54px);
+}
+.zpIndustryPlan .zpIndustryPlan__kicker {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0 0 16px;
+  color: #4d5788;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.5;
+  letter-spacing: .015em;
+  text-transform: none;
+}
+.zpIndustryPlan__kicker::before { content: ""; width: 28px; height: 1px; background: #4d5788; }
+html body #zpIndustryPlan .zpIndustryPlan__head h2 {
+  max-width: 20ch;
+  margin: 0;
+  color: var(--zp-plan-ink);
+  font-family: inherit;
+  font-size: clamp(38px, 4.2vw, 66px);
+  font-weight: 480;
+  line-height: 1.08;
+  letter-spacing: -.055em;
+  text-wrap: balance;
+}
+html body #zpIndustryPlan .zpIndustryPlan__head h2 strong {
+  display: inline;
+  color: #4d5788;
+  font-weight: 750;
+  background-image: linear-gradient(105deg, #121424, #4d5788);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+  padding-bottom: .09em;
+}
+.zpIndustryPlan .zpIndustryPlan__lead { max-width: 53ch; margin: 0; color: var(--zp-plan-muted); font-size: 17px; line-height: 1.75; }
+.zpIndustryPlan__layout { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, .8fr); gap: clamp(32px, 5vw, 88px); align-items: start; }
+.zpIndustryPlan .zpIndustryPlan__list { display: grid; margin: 0; padding: 0; list-style: none; border-top: 1px solid var(--zp-plan-line); }
+.zpIndustryPlan .zpIndustryPlan__list > li { display: grid; grid-template-columns: 38px minmax(0, 1fr); gap: 18px; margin: 0; padding: 25px 0; border-bottom: 1px solid var(--zp-plan-line); }
+.zpIndustryPlan__number { padding-top: 3px; color: #697391; font-size: 13px; line-height: 1.5; font-weight: 600; font-variant-numeric: tabular-nums; }
+html body #zpIndustryPlan .zpIndustryPlan__list h3 { margin: 0 0 9px; color: var(--zp-plan-ink); font-family: inherit; font-size: clamp(20px, 1.65vw, 27px); line-height: 1.25; font-weight: 700; letter-spacing: -.035em; }
+.zpIndustryPlan .zpIndustryPlan__list p { max-width: 70ch; margin: 0; color: var(--zp-plan-muted); font-size: 16px; line-height: 1.75; }
+.zpIndustryPlan__example { padding: clamp(26px, 3vw, 46px); border: 1px solid var(--zp-plan-line); border-radius: 28px; background: #f5f6fa; }
+.zpIndustryPlan .zpIndustryPlan__label { margin: 0 0 14px; color: #4d5788; font-size: 13px; line-height: 1.5; font-weight: 650; text-transform: none; letter-spacing: .015em; }
+html body #zpIndustryPlan .zpIndustryPlan__example h3 { margin: 0 0 28px; color: var(--zp-plan-ink); font-family: inherit; font-size: clamp(25px, 2.3vw, 36px); font-weight: 650; line-height: 1.18; letter-spacing: -.04em; text-wrap: balance; }
+.zpIndustryPlan .zpIndustryPlan__steps { display: grid; gap: 20px; margin: 0 0 28px; padding: 0; list-style: none; counter-reset: zp-plan-step; }
+.zpIndustryPlan .zpIndustryPlan__steps > li { display: grid; grid-template-columns: 30px minmax(0, 1fr); align-items: start; gap: 14px; margin: 0; padding: 0; color: #354157; font-size: 16px; line-height: 1.65; counter-increment: zp-plan-step; }
+.zpIndustryPlan__steps > li::before { content: counter(zp-plan-step); display: grid; place-items: center; width: 30px; height: 30px; border: 1px solid #cbd2e3; border-radius: 50%; color: #4d5788; background: #fff; font-size: 12px; font-weight: 700; }
+.zpIndustryPlan .zpIndustryPlan__materials { margin: 0; padding-top: 26px; border-top: 1px solid #d7ddea; color: #354157; font-size: 15px; line-height: 1.75; }
+.zpIndustryPlan .zpIndustryPlan__note { margin: 18px 0 0; color: #657087; font-size: 13px; line-height: 1.7; }
+.zpIndustryPlan .zpIndustryPlan__work { display: block; margin-top: 20px; color: #354570; font-size: 14px; line-height: 1.65; text-decoration: underline; text-underline-offset: 4px; }
+.zpIndustryPlan a.zpIndustryPlan__cta { display: inline-flex; justify-content: space-between; align-items: center; gap: 22px; min-height: 50px; margin: 26px 0 0; padding: 12px 22px; border: 1px solid #121424; border-radius: 999px; color: #fff; background: linear-gradient(110deg, #121424, #313954); font-size: 14px; font-weight: 700; line-height: 1.4; text-decoration: none; }
+.zpIndustryPlan a.zpIndustryPlan__cta:hover { color: #fff; background: #121424; }
+.zpIndustryPlan__cta > span { font-size: 18px; }
+.zpIndustryPlan__reading { display: flex; align-items: start; justify-content: space-between; flex-wrap: wrap; gap: 20px 32px; margin-top: clamp(34px, 4vw, 54px); padding-top: 26px; border-top: 1px solid var(--zp-plan-line); }
+.zpIndustryPlan .zpIndustryPlan__reading > p { margin: 0; padding-top: 11px; color: var(--zp-plan-muted); font-size: 15px; line-height: 1.6; }
+.zpIndustryPlan__reading > div { display: flex; flex-wrap: wrap; gap: 8px 28px; }
+.zpIndustryPlan__reading a { display: inline-flex; align-items: center; gap: 12px; min-height: 44px; color: #313f68; font-size: 14px; line-height: 1.55; font-weight: 650; text-decoration: underline; text-underline-offset: 4px; text-decoration-color: #b4bdd1; }
+.zpIndustryPlan__reading a:hover { color: #121424; text-decoration-color: currentColor; }
+.zpIndustryPlan a:focus-visible { outline: 3px solid #4d5788; outline-offset: 5px; border-radius: 5px; }
+@media (max-width: 1100px) {
+  .zpIndustryPlan__head { grid-template-columns: 1fr; gap: 24px; }
+  .zpIndustryPlan .zpIndustryPlan__lead { max-width: 72ch; }
+  .zpIndustryPlan__layout { grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr); gap: 28px; }
+  .zpIndustryPlan__example { padding: 26px; }
+}
+@media (max-width: 800px) {
+  .zpIndustryPlan__layout { grid-template-columns: 1fr; gap: 30px; }
+  .zpIndustryPlan .zpIndustryPlan__list p { max-width: none; }
+  .zpIndustryPlan__reading { flex-direction: column; gap: 12px; }
+  .zpIndustryPlan__reading > div { flex-direction: column; gap: 6px; }
+  .zpIndustryPlan .zpIndustryPlan__reading > p { padding-top: 0; }
+}
+@media (max-width: 480px) {
+  .zpIndustryPlan { padding: 52px 0; }
+  .zpIndustryPlan__inner { width: calc(100% - 32px); }
+  html body #zpIndustryPlan .zpIndustryPlan__head h2 { font-size: clamp(32px, 9vw, 42px); }
+  .zpIndustryPlan .zpIndustryPlan__lead { font-size: 16px; }
+  .zpIndustryPlan .zpIndustryPlan__list > li { grid-template-columns: 28px minmax(0, 1fr); gap: 12px; padding: 22px 0; }
+  .zpIndustryPlan__example { padding: 24px; border-radius: 24px; }
+  .zpIndustryPlan .zpIndustryPlan__steps > li { gap: 12px; }
+  .zpIndustryPlan a.zpIndustryPlan__cta { width: 100%; box-sizing: border-box; }
+}
+@media (forced-colors: active) {
+  html body .zh.zh--contact h1.zh__title strong.zh__grad.zpContactHeroAccent,
+  html body #zpIndustryPlan .zpIndustryPlan__head h2 strong { color: CanvasText !important; background: none !important; -webkit-text-fill-color: currentColor !important; }
+}

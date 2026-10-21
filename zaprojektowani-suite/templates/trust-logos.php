@@ -12,7 +12,7 @@ v5.0:
 - Lucide przez data-lucide, bez zewnętrznych bibliotek
 ========================================================= -->
 
-<?php $zp_projects_count = (int) zp_suite_opt('stats.projects_count', zp_suite_opt('hero.projects_count', 114)); $zp_google_rating = zp_suite_opt('stats.google_rating','5.0'); $zp_recommendations = zp_suite_opt('stats.recommendations','120'); ?>
+<?php $zp_projects_count = (int) zp_suite_opt('stats.projects_count', zp_suite_opt('hero.projects_count', 114)); $zp_google_rating = (string)(zp_reviews_snapshot()['aggregate']['rating'] ?? '4.9'); $zp_recommendations = (int)(zp_reviews_snapshot()['aggregate']['reviewCount'] ?? 146); ?>
 <section class="zpTrustPinned" id="zpTrustPinned" data-zp-trust-pinned aria-labelledby="zpTrustPinnedTitle">
   <div class="zpTrustPinned__spacer" data-zp-trust-spacer>
     <div class="zpTrustPinned__sticky" data-zp-trust-sticky>
@@ -47,13 +47,13 @@ v5.0:
           <div class="zpTrustPinned__stat">
             <i class="zpTrustPinned__statIcon" data-lucide="star" aria-hidden="true"></i>
             <div class="zpTrustPinned__num"><?php echo esc_html($zp_google_rating); ?></div>
-            <span>Google</span>
+            <span>Trustindex</span>
           </div>
 
           <div class="zpTrustPinned__stat">
             <i class="zpTrustPinned__statIcon" data-lucide="thumbs-up" aria-hidden="true"></i>
             <div class="zpTrustPinned__num"><?php echo esc_html($zp_recommendations); ?></div>
-            <span>poleceń</span>
+            <span>opinii w Trustindex</span>
           </div>
         </div>
 
@@ -158,7 +158,7 @@ v5.0:
                           <img
                             src="<?php echo esc_url($logo['image'] ?? ''); ?>"
                             alt=""
-                            loading="eager"
+                            loading="lazy"
                             decoding="async"
                             fetchpriority="low"
                           >
@@ -203,3 +203,8 @@ v5.0:
 <!-- =========================================================
 /ZAPROJEKTOWANI — TRUST LOGOS / PINNED LOGO REVEAL + MATEUSZ v5.0 MOBILE FASTER + BIGGER LOGOS
 ========================================================= -->
+
+<style id="zp-trust-reliable-start-26">
+html body .zpTrustPinned:not([data-zp-trust-pinned-ready="1"]) .zpTrustPinned__head,html body .zpTrustPinned:not([data-zp-trust-pinned-ready="1"]) .zpTrustPinned__stats{opacity:1!important;transform:none!important;filter:none!important}
+</style>
+<noscript><style>html body .zpTrustPinned .zpTrustPinned__spacer{min-height:0!important;height:auto!important}html body .zpTrustPinned .zpTrustPinned__sticky{position:relative!important;height:auto!important;min-height:0!important}html body .zpTrustPinned .zpTrustPinned__head,html body .zpTrustPinned .zpTrustPinned__stats,html body .zpTrustPinned .zpTrustPinned__logo{opacity:1!important;visibility:visible!important;transform:none!important}html body .zpTrustPinned .zpTrustPinned__logo--clone,html body .zpTrustPinned .zpTrustPinned__person,html body .zpTrustPinned .zpTrustPinned__mobileMarquee{display:none!important}</style></noscript>

@@ -96,7 +96,7 @@ final class Router {
             foreach (is_array($extra) ? $extra : [] as $old => $new) {
                 if (is_string($old) && is_string($new) && $old !== $new && !isset($l[$old]) && strpos($old, '/en/') === 0 && strpos($new, '/en/') === 0) { $l[$old] = $new; }
             }
-            self::$legacy = $l;
+            self::$legacy = (array) apply_filters('zpl_resolved_legacy_routes', $l);
         }
         return self::$legacy;
     }

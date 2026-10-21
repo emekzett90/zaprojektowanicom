@@ -1,0 +1,13 @@
+/* Native /realizacje/ bridge; no iframe, no JavaScript, no external images. */
+html body .zpCS41Bridge{padding:70px 0;background:linear-gradient(120deg,#020407 0%,#071426 60%,#142e52 100%);color:#fff;font-family:'Plus Jakarta Sans Local','Plus Jakarta Sans',system-ui,sans-serif}
+html body .zpCS41Bridge *{box-sizing:border-box}
+html body .zpCS41Bridge__inner{width:min(1440px,calc(100% - 48px));margin:auto;display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,.7fr);gap:60px;align-items:center}
+html body .zpCS41Bridge__kicker{font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;margin:0 0 24px;color:#aec4df}
+html body .zpCS41Bridge h2{font-size:clamp(30px,3.3vw,50px);font-weight:600;line-height:1.15;letter-spacing:-.045em;color:#fff;margin:0 0 24px}
+html body .zpCS41Bridge p:not(.zpCS41Bridge__kicker){color:#c7d5e8;font-size:16px;line-height:1.85;margin:0;max-width:65ch}
+html body .zpCS41Bridge__steps{display:grid;gap:13px;margin-bottom:30px;font-size:14px;color:#c7d5e8}
+html body .zpCS41Bridge a{display:inline-flex;align-items:center;justify-content:center;gap:20px;padding:18px 25px;min-height:56px;border-radius:999px;color:#071426!important;background:#fff;font-size:14px;font-weight:800;text-decoration:none}
+html body .zpCS41Bridge a svg{width:20px;height:20px;flex:0 0 20px}
+html body .zpCS41Bridge a:focus-visible{outline:3px solid #9ad1ff;outline-offset:5px}
+html body #zpRealizacjePage .zpCS41__portfolioNew{position:absolute;right:18px;top:18px;padding:8px 13px;background:#fff;color:#071426;border-radius:999px;font-size:10px;font-weight:800;letter-spacing:.04em;z-index:3;line-height:1.5;box-shadow:0 4px 20px #07142622}
+@media(max-width:760px){html body .zpCS41Bridge{padding:52px 0}html body .zpCS41Bridge__inner{grid-template-columns:1fr;gap:30px}html body .zpCS41Bridge__steps{grid-template-columns:repeat(3,1fr);gap:10px;font-size:11px}html body .zpCS41Bridge a{width:100%}}

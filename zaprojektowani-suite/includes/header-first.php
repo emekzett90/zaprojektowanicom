@@ -7,7 +7,8 @@
  * header stylesheet restarted the entrance animation, so the header appeared after the hero photo and title.
  * Now the header starts in its final state: the classes are set before the body is parsed, the entrance
  * animations are off on phones and tablets (up to 1100 px), and the two icons are printed as the same SVG
- * Lucide makes. The home hero still waits for the header (front-fixes-318). Desktop is unchanged.
+ * Lucide makes. Since 3.2.31 the home hero is ready at parsing time too (front-fixes-318), without an asset wait.
+ * Desktop is unchanged.
  *
  * The bar's labels (weight 720 and 800) are drawn with Jakarta's 800 file, which no page preloads, so they first
  * showed in the browser's default font and widened when the file arrived. The page now carries those glyphs

@@ -23,6 +23,7 @@ const esc=s=>String(s||'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&
 const hasLive=p=>!!(p.live||p.liveGone);
 const liveAttrs=p=>p.live?`href="${esc(p.live)}" target="_blank" rel="noopener"`:'tabindex="-1"';
 const slugify=s=>String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'').slice(0,90);
+const stableSlug=p=>/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(String(p.project_slug||''))?String(p.project_slug):slugify((p.brand||'projekt')+'-'+(p.type||'case-study'));
 
 /* On mobile the search/categories belong below the portfolio heading.
    Move the existing toolbar instead of duplicating controls, so filtering state
@@ -148,7 +149,7 @@ startSpotAuto();
 const grid=root.querySelector('[data-grid]');
 function renderGrid(){
   grid.innerHTML=PROJECTS.map((p,i)=>{
-    const slug=slugify((p.brand||'projekt')+'-'+(p.type||'case-study'));
+    const slug=stableSlug(p);
     return `
   <article class="card" id="case-${slug}" data-cat="${esc(p.cat)}" data-i="${i}" data-project-slug="${slug}" tabindex="0" aria-label="${esc(p.brand)} — zobacz case study">
     <div class="cardMedia"><img src="${esc(p.img)}" alt="${esc(p.brand)} — ${esc(p.sub)}" loading="lazy" decoding="async"><span class="cat"><i data-lucide="${catIcon(p.cat)}"></i>${catLabel(p.cat)}</span><span class="cardGo" aria-hidden="true"><i data-lucide="arrow-up-right"></i></span></div>
@@ -251,7 +252,7 @@ function openModal(i){
   const p=PROJECTS[cur];
   const isBrandingCase=String(p.cat||'').split(/\s+/).includes('branding')&&!String(p.cat||'').split(/\s+/).includes('web')&&!String(p.cat||'').split(/\s+/).includes('shop');
   sheet.classList.toggle('is-branding-case',isBrandingCase);
-  const projectSlug=slugify((p.brand||'projekt')+'-'+(p.type||'case-study'));
+  const projectSlug=stableSlug(p);
   if(history && typeof history.replaceState==='function'){
     history.replaceState(null,'','#case-'+projectSlug);
   }
@@ -343,7 +344,7 @@ spotSlider.addEventListener('keydown',e=>{if(e.key==='ArrowRight'){e.preventDefa
 /* deep link do case study: #case-nazwa-projektu + podgląd ?modal=N */
 const hashSlug=(location.hash||'').replace(/^#case-/,'');
 if(hashSlug){
-  const hashIndex=PROJECTS.findIndex(p=>slugify((p.brand||'projekt')+'-'+(p.type||'case-study'))===hashSlug);
+  const hashIndex=PROJECTS.findIndex(p=>stableSlug(p)===hashSlug||slugify((p.brand||'projekt')+'-'+(p.type||'case-study'))===hashSlug);
   if(hashIndex>-1){window.setTimeout(()=>openModal(hashIndex),80);}
 }else{
   const mp=new URLSearchParams(location.search).get('modal');

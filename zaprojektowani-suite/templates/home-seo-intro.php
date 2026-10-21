@@ -3,7 +3,7 @@ if (!defined('ABSPATH')) { exit; }
 // Suite 2.9.4 (Mat 8.10: "za sztywno"): the same texts, laid out as a lead with the service links
 // beside it and three short points with their own headings below (styles in includes/home-294.php).
 ?>
-<section class="zpHomeSeoIntro zpHomeSeoIntro--294" id="seo-strony-internetowe-katowice" aria-labelledby="zpHomeSeoIntroTitle">
+<section class="zpHomeSeoIntro zpHomeSeoIntro--294 zpHomeSeoIntro--map" id="seo-strony-internetowe-katowice" aria-labelledby="zpHomeSeoIntroTitle">
   <div class="zpHomeSeoIntro__inner">
     <div class="zpHomeSeoIntro__copy">
       <span class="zpHomeSeoIntro__kicker">Strony internetowe • sklepy • branding</span>
@@ -11,13 +11,14 @@ if (!defined('ABSPATH')) { exit; }
       <p>
         Tworzymy strony internetowe, sklepy internetowe WooCommerce, logo i <a class="zpSeoLink" href="<?php echo esc_url(zp_seo_plan_url('/identyfikacja-wizualna/', '/logo-branding-katowice/')); ?>">identyfikację wizualną</a> dla firm z całej Polski. Siedzibę mamy w Katowicach, więc z firmami ze Śląska spotykamy się też na miejscu: zobacz <a class="zpSeoLink" href="/strony-internetowe-katowice/" data-zp-local="1">strony internetowe Katowice</a>. Łączymy projekt graficzny, treści, SEO, szybkość działania, UX i kampanie Meta Ads, żeby nowa strona była nie tylko ładnym widokiem, ale realnym narzędziem do zdobywania zapytań.
       </p>
-    </div>
     <nav class="zpHomeSeoIntro__links" aria-label="Najważniejsze usługi Zaprojektowani.com">
       <a href="/strony-internetowe-katowice/"><span>01</span> Tworzenie stron internetowych</a>
       <a href="/sklepy-internetowe-katowice/"><span>02</span> Tworzenie sklepów internetowych</a>
       <a href="/logo-branding-katowice/"><span>03</span> Projektowanie logo</a>
       <a href="/kampanie-reklamowe/"><span>04</span> Kampanie Meta Ads</a>
     </nav>
+    </div>
+    <?php if (function_exists('zp_refine_home_map_3240')) { echo zp_refine_home_map_3240(); } ?>
     <div class="zpHomeSeoIntro__points">
       <div class="zpHomeSeoIntro__point">
         <h3>Najpierw oferta i ścieżka klienta</h3>

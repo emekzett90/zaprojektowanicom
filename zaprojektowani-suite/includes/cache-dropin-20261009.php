@@ -8,6 +8,8 @@
 // 3.1.1: English pages ("en:<version>" from Tłumacz EN) are served from the cache to every browser language: Geo never
 // redirects an English page and its HTML reads no language cookie. A visitor whom Geo places in Poland gets the Polish copy
 // whatever the browser's language, and so does Lighthouse 10+, which no longer says "Lighthouse" in its user agent.
+// 3.2.31: a verified explicit Polish preference may read the same Polish copy. A session's English choice,
+// unknown/auth cookies and ambiguous raw cookie headers still run WordPress; only cookie-free visits write copies.
 if (!defined('ABSPATH') || !defined('WP_CONTENT_DIR')) { exit; }
 
 final class ZP_Cache_Early_20261009 {
@@ -18,10 +20,10 @@ final class ZP_Cache_Early_20261009 {
     /**
      * Cookies that never change the page: the consent choice (Cookiebot) and statistics and ads identifiers set by
      * scripts (Google, Meta, Microsoft, Hotjar, TikTok, Cloudflare), plus the country noted for the language switch,
-     * which a Polish browser and a robot never use. Any other cookie (logged in, comment, password, language choice,
+     * which a Polish browser and a robot never use. Any other cookie (logged in, comment, password,
      * shop) skips the cache.
      */
-    /** 3.1.1: on English pages also the PL/EN choice of the switch (Geo reads it on Polish pages only; no English page sets it on the server). */
+    /** Language cookies are harmless on EN, and on PL only after an unambiguous effective Polish choice is verified. */
     public const EN_COOKIES = '~^zpl_lang_(?:pref|session)$~D';
     public const HARMLESS_COOKIES = '~^(?:CookieConsent(?:BulkSetting-[A-Za-z0-9-]+|BulkTicket)?|_ga(?:_[A-Za-z0-9]+)?|_gid|_gat(?:_[A-Za-z0-9_-]+)?|_gcl_[a-z]+|_gac_[A-Za-z0-9_.-]+|_dc_gtm_[A-Za-z0-9_-]+|FP(?:ID|LC|AU|GCL[A-Z]+)|_fbp|_fbc|_clck|_clsk|_uet[a-z]+|_hj[A-Za-z0-9_]+|_ttp|_tt_enable_cookie|__cf_bm|__cfruid|__cflb|_cfuvid|cf_clearance|zpl_geo_country)$~D';
 
@@ -39,7 +41,12 @@ final class ZP_Cache_Early_20261009 {
         if (($server['REQUEST_METHOD'] ?? '') !== 'GET') { return 'method'; }
         $uri = (string) ($server['REQUEST_URI'] ?? '');
         $en = self::is_en($p, $uri);
-        if (($cookies || !empty($server['HTTP_COOKIE'])) && !self::harmless_cookies($server, $cookies, $en)) { return 'cookies'; }
+        $language = self::language_cookies($server, $cookies);
+        if ($language === null) { return 'cookies'; }
+        // Geo::decide() checks the session first, then the remembered preference, before browser language/country.
+        // No other combination is newly allowed on PL; in particular a session's EN choice must still redirect.
+        $polish_choice = $language['session'] === 'pl' || ($language['session'] === null && $language['pref'] === 'pl');
+        if (($cookies || !empty($server['HTTP_COOKIE'])) && !self::harmless_cookies($server, $cookies, $en, $polish_choice)) { return 'cookies'; }
         if (!empty($server['HTTP_AUTHORIZATION']) || !empty($server['REDIRECT_HTTP_AUTHORIZATION']) || !empty($server['PHP_AUTH_USER'])) { return 'authorization'; }
         if (strtolower((string) ($server['HTTPS'] ?? '')) !== 'on' && ($server['HTTPS'] ?? '') !== '1') { return 'https'; }
         if (($server['HTTP_HOST'] ?? '') !== $p['host']) { return 'host'; }
@@ -52,7 +59,7 @@ final class ZP_Cache_Early_20261009 {
         if (is_array($ref) && ($ref['host'] ?? '') === $p['host'] && preg_match('~^/en(?:/|$)~', $ref['path'] ?? '')) { return 'language-switch'; }
         // Other languages must run Suite's PHP country/preference redirect on every request. Robots are never
         // redirected (Geo::decide) and get the Polish page whatever language they send.
-        $polish = self::is_bot((string) ($server['HTTP_USER_AGENT'] ?? ''));
+        $polish = $polish_choice || self::is_bot((string) ($server['HTTP_USER_AGENT'] ?? ''));
         foreach ($polish ? [] : explode(',', (string) ($server['HTTP_ACCEPT_LANGUAGE'] ?? '')) as $part) {
             if (preg_match('/^\s*pl(?:-[a-z0-9]+)?\s*(?:;\s*q=([01](?:\.\d+)?))?\s*$/iD', $part, $m) && (!isset($m[1]) || (float) $m[1] > 0)) { $polish = true; }
         }
@@ -70,16 +77,46 @@ final class ZP_Cache_Early_20261009 {
     }
 
     /**
-     * True when every cookie of the request is one of HARMLESS_COOKIES (names from the raw header and from $_COOKIE);
-     * on an English page ($en) EN_COOKIES are harmless too.
+     * Read only canonical language choices, agreeing with PHP's parsed cookies. A duplicate/malformed language pair,
+     * missing/extra parsed language cookie or encoded/ambiguous value fails closed; PHP/Geo resolves it instead.
+     * Geo accepts some noncanonical values too, but those need not use the early cache. No cookie value is logged.
+     * Other names retain the existing harmless_cookies() policy, including harmless cookies repeated across scopes.
      */
-    public static function harmless_cookies(array $server, array $cookies, bool $en = false): bool {
+    public static function language_cookies(array $server, array $cookies): ?array {
+        $raw = [];
+        foreach (explode(';', (string) ($server['HTTP_COOKIE'] ?? '')) as $pair) {
+            $pair = ltrim($pair, " \t");
+            if (trim($pair) === '') { continue; }
+            $parts = explode('=', $pair, 2);
+            $name = trim($parts[0]);
+            if (!preg_match(self::EN_COOKIES, $name)) { continue; }
+            if (count($parts) !== 2 || $name !== $parts[0] || array_key_exists($name, $raw)) { return null; }
+            $raw[$name] = $parts[1];
+        }
+        $language = ['pref' => null, 'session' => null];
+        foreach ($language as $kind => $unused) {
+            $name = 'zpl_lang_' . $kind;
+            $has_raw = array_key_exists($name, $raw);
+            $has_parsed = array_key_exists($name, $cookies);
+            if (!$has_raw && !$has_parsed) { continue; }
+            if (!$has_raw || !$has_parsed || !is_string($cookies[$name])
+                || !in_array($raw[$name], ['pl', 'en'], true) || $raw[$name] !== $cookies[$name]) { return null; }
+            $language[$kind] = $raw[$name];
+        }
+        return $language;
+    }
+
+    /**
+     * True when every cookie of the request is one of HARMLESS_COOKIES (names from the raw header and from $_COOKIE);
+     * language cookie names are allowed only on EN or after language_cookies() proved an effective Polish choice.
+     */
+    public static function harmless_cookies(array $server, array $cookies, bool $en = false, bool $polish_choice = false): bool {
         $names = array_map('strval', array_keys($cookies));
         foreach (explode(';', (string) ($server['HTTP_COOKIE'] ?? '')) as $pair) {
             $name = trim(explode('=', $pair, 2)[0]);
             if ($name !== '') { $names[] = $name; }
         }
-        foreach ($names as $name) { if (!preg_match(self::HARMLESS_COOKIES, $name) && !($en && preg_match(self::EN_COOKIES, $name))) { return false; } }
+        foreach ($names as $name) { if (!preg_match(self::HARMLESS_COOKIES, $name) && !(($en || $polish_choice) && preg_match(self::EN_COOKIES, $name))) { return false; } }
         return true;
     }
 

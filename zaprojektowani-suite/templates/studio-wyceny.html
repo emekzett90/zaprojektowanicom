@@ -245,6 +245,7 @@ html body .elementor-section:has(#zpStudioV19FrameShell){background:#fff!importa
               </header>
               <div class="zpbsQuoteNotice" data-quote-notice><strong>To jest prośba o wycenę, nie zamówienie.</strong><span>Po analizie briefu wrócimy z finalnym kosztem, rekomendowanym zakresem i kolejnymi krokami w ciągu 48–72 godzin.</span></div>
               <div class="zpbsFinal"><div class="zpbsFinalRows" data-final-summary></div></div>
+              {{ZP_STUDIO_LEGAL}}
             </section>
           </div>
 
@@ -377,12 +378,12 @@ html body .elementor-section:has(#zpStudioV19FrameShell){background:#fff!importa
       },
       brand:{
         kick:'Logo & Branding',
-        title:'Zamówienie <em>logo i brandingu</em>.',
-        lead:'Wybierz pakiet logo i brandingu, dopasuj termin realizacji, dodaj potrzebne materiały i wyślij zamówienie. Po otrzymaniu zgłoszenia wrócimy z potwierdzeniem oraz kolejnymi krokami.',
-        subject:'Zamówienie Logo & Branding',
-        final:'Sprawdź zamówienie i wyślij zgłoszenie.',
+        title:'Zapytanie o <em>logo i branding</em>.',
+        lead:'Wybierz pakiet logo i brandingu, dopasuj termin realizacji, dodaj potrzebne materiały i wyślij bezpłatne zapytanie. Po otrzymaniu zgłoszenia wrócimy z potwierdzeniem oraz kolejnymi krokami.',
+        subject:'Zapytanie Logo & Branding',
+        final:'Sprawdź szczegóły i wyślij zapytanie.',
         help:'Masz jasny zakres i cenę przed wysłaniem.',
-        helpCopy:'Wybierasz pakiet, termin oraz dodatki, a na końcu widzisz podsumowanie ceny. Po wysłaniu zgłoszenia potwierdzimy szczegóły i rozpoczniemy proces projektowy.',
+        helpCopy:'Wybierasz pakiet, termin oraz dodatki, a na końcu widzisz podsumowanie ceny. Po wysłaniu zapytania potwierdzimy szczegóły oraz kolejne kroki.',
         p:[
           ['Logo Startowe','Dla startów i mikrofirm',999,'sparkles',['999 zł','4 koncepcje','5 rund','instrukcja PDF'],'Logo, podstawowy sygnet, warianty znaku, pliki do internetu i druku, favicon, avatar, znaki wodne, mockupy i prawa autorskie.'],
           ['Mini Branding','Karta stylu + materiały',1499,'layers',['1499 zł','6 koncepcji','10 rund','karta stylu'],'Rozszerzony system logo z kartą stylu, wizytówką, stopką e-mail, teczką firmową, znakami wodnymi, instrukcją PDF i prawami autorskimi.'],
@@ -554,7 +555,7 @@ html body .elementor-section:has(#zpStudioV19FrameShell){background:#fff!importa
       var labels={
         web:['Pakiet','wybór podstawy','Zakres','funkcje i budżet','Materiały','treści, domena, pliki','Dane','kontakt i opis','Wysyłka','podsumowanie briefu'],
         shop:['Pakiet','poziom sklepu','Sprzedaż','płatności i dostawy','Produkty','materiały i integracje','Dane','kontakt i opis','Wysyłka','podsumowanie sklepu'],
-        brand:['Pakiet','zakres i cena','Dopasuj','termin i dodatki','Marka','materiały i styl','Dane','kontakt i brief','Zamówienie','podsumowanie ceny'],
+        brand:['Pakiet','zakres i cena','Dopasuj','termin i dodatki','Marka','materiały i styl','Dane','kontakt i brief','Zapytanie','podsumowanie ceny'],
         ads:['Pakiet','poziom obsługi','Kampania','cel i budżet','Materiały','platformy i dane','Dane','kontakt i brief','Wysyłka','podsumowanie kampanii']
       };
       var l=labels[state.service]||labels.web;
@@ -659,6 +660,7 @@ html body .elementor-section:has(#zpStudioV19FrameShell){background:#fff!importa
     function featureCard(a){return '<button class="zpbsMiniCard zpbsFeatureCard" type="button" data-chip="features" data-value="'+esc(a.label)+'" data-tip="'+esc(a.tip||a.desc)+'"><span class="zpbsMiniCard__check"><i data-lucide="'+esc(a.icon||'check')+'"></i></span><span class="zpbsMiniCard__body"><strong>'+esc(a.label)+'</strong><small>'+esc(a.desc)+'</small></span><span class="zpbsTipMark" aria-label="Info">?</span></button>'}
 
     function renderDynamicSteps(){
+      rememberPreferredDomain();
       var s2=$('[data-step-two]'),s3=$('[data-step-three]'); if(!s2||!s3)return;
 
       if(state.service==='web'){
@@ -705,54 +707,46 @@ html body .elementor-section:has(#zpStudioV19FrameShell){background:#fff!importa
       if(br&&br.dataset.bound!=='1'){br.dataset.bound='1';br.addEventListener('input',function(){state.budget=Number(br.value)||0;setText('[data-budget-value]',money(state.budget));refresh()})}
     }
 
-    function slugify(v){
-      var map={'ą':'a','ć':'c','ę':'e','ł':'l','ń':'n','ó':'o','ś':'s','ż':'z','ź':'z','Ą':'a','Ć':'c','Ę':'e','Ł':'l','Ń':'n','Ó':'o','Ś':'s','Ż':'z','Ź':'z'};
-      return String(v||'').trim().replace(/[ąćęłńóśżźĄĆĘŁŃÓŚŻŹ]/g,function(ch){return map[ch]||ch}).toLowerCase().replace(/https?:\/\//g,'').replace(/www\./g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'').replace(/-{2,}/g,'-').slice(0,42)
+    // Drafts stay in this page only, and survive package/service re-renders.
+    var preferredDomainDrafts={web:'',shop:''};
+    function rememberPreferredDomain(){
+      var input=$('[data-field="preferredDomain"]'),service=input&&input.getAttribute('data-domain-service');
+      if(input&&(service==='web'||service==='shop'))preferredDomainDrafts[service]=input.value;
     }
-    function getBaseCandidate(){
-      var fields=['[data-field="company"]','[data-field="brandName"]','[data-field="industry"]','[data-field="goal"]'];
-      for(var i=0;i<fields.length;i++){var el=$(fields[i]);if(el&&String(el.value||'').trim())return slugify(el.value)}
-      return 'twoja-marka';
+    function preferredDomainCopy(){
+      var lang=document.documentElement.lang||'';
+      try{if(window.ZPL&&typeof window.ZPL.lang==='function')lang=window.ZPL.lang()}catch(e){}
+      return /^en(?:-|$)/i.test(lang)
+        ? {label:'Preferred domain',placeholder:'e.g. yourcompany.com',hint:'Optional. Enter a domain you already own or the address you would like to use.'}
+        : {label:'Preferowana domena',placeholder:'np. twojafirma.pl',hint:'Opcjonalnie. Wpisz domenę, którą już masz, lub adres, który chcesz wykorzystać.'};
     }
-    function statusFor(name,idx){
-      if(idx===0)return{label:'do potwierdzenia',cls:'maybe',action:'sprawdź'};
-      var n=name.length+idx;
-      if(n%5===0)return{label:'zajęta',cls:'bad',action:'alternatywa'};
-      if(n%3===0)return{label:'możliwa',cls:'maybe',action:'do weryfikacji'};
-      return{label:'propozycja',cls:'ok',action:'zapisz'};
+    function syncPreferredDomainCopy(){
+      var copy=preferredDomainCopy();
+      $$('[data-preferred-domain-box]').forEach(function(box){
+        var label=$('[data-preferred-domain-label]',box),input=$('[data-field="preferredDomain"]',box),hint=$('[data-preferred-domain-hint]',box);
+        if(label)label.textContent=copy.label;if(input)input.placeholder=copy.placeholder;if(hint)hint.textContent=copy.hint;
+      });
     }
-    function renderDomainResults(box){
-      var input=$('[data-domain-input]',box),base=slugify(input&&input.value?input.value:'')||getBaseCandidate();
-      if(input&&!String(input.value||'').trim())input.value=base;
-      var active=$$('.zpbsTld.is-on',box).map(function(b){return b.dataset.tld});
-      if(!active.length)active=['pl','com'];
-      var variants=[base,base+'-studio',base+'-online',base+'-pro',base+'-premium','poznaj-'+base],domains=[];
-      active.forEach(function(tld){variants.slice(0,3).forEach(function(v){domains.push(v+'.'+tld)})});
-      domains=domains.filter(function(v,i,a){return a.indexOf(v)===i}).slice(0,5);
-      var results=$('[data-domain-results]',box); if(!results)return;
-      results.innerHTML=domains.map(function(d,i){var st=statusFor(d,i);return'<div class="zpbsDomainRow"><strong class="zpbsDomainName">'+esc(d)+'</strong><span class="zpbsDomainTag zpbsDomainTag--'+st.cls+'">'+esc(st.label)+'</span><span class="zpbsDomainAction">'+esc(st.action)+'</span></div>'}).join('');
-    }
+    document.addEventListener('zpl:change',syncPreferredDomainCopy);
     function createDomainBox(){
       var div=document.createElement('div');
-      div.className='zpbsDomainBox';
-      div.setAttribute('data-domain-box','1');
-      div.innerHTML='<div class="zpbsDomainHead"><div><h4>Sprawdź domenę i propozycje nazw</h4><p>Wpisz nazwę marki albo roboczy pomysł. Pokażemy krótką listę domen i zapiszesz preferowaną opcję w zgłoszeniu.</p></div><span class="zpbsDomainBadge"><i data-lucide="radar"></i> domena + propozycje</span></div><div class="zpbsDomainGrid"><label class="zpbsDomainInputWrap"><span>Nazwa / pomysł na domenę</span><input class="zpbsDomainInput" type="text" data-domain-input data-field="domainIdea" placeholder="np. nazwa firmy, marka, usługa"></label><button class="zpbsDomainBtn" type="button" data-domain-check><i data-lucide="search"></i> Sprawdź</button></div><div class="zpbsTlds" aria-label="Końcówki domen"><button class="zpbsTld is-on" type="button" data-tld="pl">.pl</button><button class="zpbsTld is-on" type="button" data-tld="com">.com</button><button class="zpbsTld" type="button" data-tld="com.pl">.com.pl</button><button class="zpbsTld" type="button" data-tld="eu">.eu</button><button class="zpbsTld" type="button" data-tld="online">.online</button></div><div class="zpbsDomainResults" data-domain-results></div><p class="zpbsDomainNote">Ten moduł zbiera preferencje domeny w briefie — nie rezerwuje domen automatycznie.</p>';
+      div.className='zpbsSection zpbsPreferredDomain';
+      div.setAttribute('data-preferred-domain-box','1');
+      div.setAttribute('data-zpl-skip','');div.setAttribute('translate','no');
+      div.innerHTML='<label class="zpbsField zpbsFull"><span data-preferred-domain-label></span><input type="text" name="preferredDomain" data-field="preferredDomain" inputmode="url" autocomplete="url" autocapitalize="none" spellcheck="false" aria-describedby="zpbsPreferredDomainHint"><small class="zpbsDomainNote" id="zpbsPreferredDomainHint" data-preferred-domain-hint></small></label>';
+      var input=$('[data-field="preferredDomain"]',div);input.setAttribute('data-domain-service',state.service);input.value=preferredDomainDrafts[state.service]||'';
+      input.addEventListener('input',rememberPreferredDomain);input.addEventListener('change',rememberPreferredDomain);
       return div;
     }
     function ensureDomainBox(){
-      var service=root.dataset.service,s3=$('[data-step-three]'); if(!s3)return;
-      var existing=$('[data-domain-box]',s3);
+      var service=root.dataset.service,s3=$('[data-step-three]');if(!s3)return;
+      var existing=$('[data-preferred-domain-box]',s3);
       if(service!=='web'&&service!=='shop'){if(existing)existing.remove();return}
       if(!existing){
-        existing=createDomainBox();
-        var firstSection=s3.querySelector('.zpbsSection');
-        if(firstSection)s3.insertBefore(existing,firstSection); else s3.appendChild(existing);
-        $$('.zpbsTld',existing).forEach(function(btn){btn.addEventListener('click',function(){btn.classList.toggle('is-on');renderDomainResults(existing)})});
-        var input=$('[data-domain-input]',existing),check=$('[data-domain-check]',existing);
-        if(input){input.addEventListener('input',function(){renderDomainResults(existing)});input.addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();renderDomainResults(existing)}})}
-        if(check)check.addEventListener('click',function(){renderDomainResults(existing)});
+        existing=createDomainBox();var firstSection=s3.querySelector('.zpbsSection');
+        if(firstSection)s3.insertBefore(existing,firstSection);else s3.appendChild(existing);
       }
-      renderDomainResults(existing); lucide();
+      syncPreferredDomainCopy();
     }
 
     function data(){
@@ -762,7 +756,7 @@ html body .elementor-section:has(#zpStudioV19FrameShell){background:#fff!importa
         payment:list(state.payment),shipping:list(state.shipping),platforms:list(state.platforms),goals:list(state.goals),addons:list(state.addons),
         contactPref:state.contactPref||'E-mail',industry:getField('industry')||'—',goal:getField('goal')||'—',pages:getField('pages')||'—',
         content:getField('content')||'—',brandName:getField('brandName')||'—',slogan:getField('slogan')||'—',uses:getField('uses')||'—',
-        website:getField('website')||'—',geo:getField('geo')||'—',domainIdea:getField('domainIdea')||'—',preferredDomain:getField('preferredDomain')||'—',files:state.files.length?state.files.map(function(f){return f.name}).join(', '):'—',
+        website:getField('website')||'—',geo:getField('geo')||'—',preferredDomain:getField('preferredDomain')||'—',files:state.files.length?state.files.map(function(f){return f.name}).join(', '):'—',
         name:getField('name')||'—',email:getField('email')||'—',phone:getField('phone')||'—',company:getField('company')||'—',
         links:getField('links')||'—',message:getField('message')||'Tu pojawi się opis projektu, kiedy zaczniesz pisać brief.'
       }
@@ -777,9 +771,9 @@ html body .elementor-section:has(#zpStudioV19FrameShell){background:#fff!importa
       var briefProgressBar=$('[data-mail-progress-bar]'); if(briefProgressBar)briefProgressBar.style.width=briefProgress+'%';
       var common=state.service==='brand' ? [['Usługa',d.service],['Pakiet',d.pkg],['Kontakt',d.contactPref]] : [['Usługa',d.service],['Pakiet',d.pkg],['Budżet',d.budget],['Kontakt',d.contactPref]],extra=[];
       if(state.service==='brand')extra=[['Suma',d.price],['Termin',d.deadline],['Dodatki',d.addons],['Marka',d.brandName],['Branża',d.industry]];
-      if(state.service==='shop')extra=[['Płatności',d.payment],['Dostawy',d.shipping],['Funkcje',d.features],['Produkty',d.pages],['Branża',d.industry],['Preferowana domena',d.preferredDomain],['Pomysł na domenę',d.domainIdea]];
+      if(state.service==='shop')extra=[['Płatności',d.payment],['Dostawy',d.shipping],['Funkcje',d.features],['Produkty',d.pages],['Branża',d.industry],['Preferowana domena',d.preferredDomain]];
       if(state.service==='ads')extra=[['Platformy',d.platforms],['Cele',d.goals],['Zakres',d.addons],['Strona',d.website],['Obszar',d.geo]];
-      if(state.service==='web')extra=[['Termin',d.deadline],['Funkcje',d.features],['Branża',d.industry],['Cel',d.goal],['Podstrony',d.pages],['Preferowana domena',d.preferredDomain],['Pomysł na domenę',d.domainIdea]];
+      if(state.service==='web')extra=[['Termin',d.deadline],['Funkcje',d.features],['Branża',d.industry],['Cel',d.goal],['Podstrony',d.pages],['Preferowana domena',d.preferredDomain]];
       var mr=$('[data-mail-rows]');
       if(mr){
         var mailRows=common.slice(2).concat(extra.slice(0,state.service==='brand'?5:4));
@@ -795,7 +789,7 @@ html body .elementor-section:has(#zpStudioV19FrameShell){background:#fff!importa
           fr.innerHTML+='<div class="zpbsFinalTotal"><div><span>Dodatki suma</span><strong>'+money(addonsSum)+'</strong></div><div class="zpbsFinalAddons">'+addonsList+'</div><div class="zpbsFinalGrand"><span>Podsumowanie</span><strong>'+d.price+'</strong></div></div>';
         }
       }
-      setText('[data-sticky-title]',(state.service==='brand'?'Zamówienie':'Brief')+' — '+d.pkg);
+      setText('[data-sticky-title]',(state.service==='brand'?'Zapytanie':'Brief')+' — '+d.pkg);
       setText('[data-sticky-meta]','Krok '+state.step+' z 5 · '+(state.service==='brand'?'Suma: '+d.price:'Budżet: '+d.budget));
       setText('[data-sticky-step]',String(state.step).padStart(2,'0'));
     }
@@ -822,7 +816,7 @@ html body .elementor-section:has(#zpStudioV19FrameShell){background:#fff!importa
       var bar=$('[data-zpbs-progress]'); if(bar)bar.style.width=(state.step*20)+'%';
       var prev=$('[data-prev]'),next=$('[data-next]'),sp=$('[data-sticky-prev]'),sn=$('[data-sticky-next]');
       if(prev)prev.disabled=state.step===1; if(sp)sp.disabled=false;
-      var html=state.step===5?'<span>'+(state.service==='brand'?'Wyślij zamówienie':'Wyślij brief')+'</span><i data-lucide="send"></i>':'<span>Dalej</span><i data-lucide="arrow-right"></i>';
+      var html=state.step===5?'<span>Wyślij zapytanie</span><i data-lucide="send"></i>':'<span>Dalej</span><i data-lucide="arrow-right"></i>';
       if(next)next.innerHTML=html;
       if(sn)sn.innerHTML=state.step===5?(state.service==='brand'?'Wyślij':'Wyślij')+' <i data-lucide="send"></i>':'Dalej <i data-lucide="arrow-right"></i>';
       refresh(); lucide();
@@ -836,10 +830,11 @@ html body .elementor-section:has(#zpStudioV19FrameShell){background:#fff!importa
     }
     function validateStep(step){
       if(step!==4)return true;
+      if(window.zpStudioCompanyValidate&&!window.zpStudioCompanyValidate())return false;
       var name=getField('name'),email=getField('email'),msg=getField('message');
       if(root.dataset.service==='brand'){
         var brandName=getField('brandName');
-        if(!brandName || brandName.length<2){modal('Brakuje nazwy marki','Przy zamówieniu logo i brandingu wpisz nazwę marki, dla której mamy przygotować projekt.');go(3);return false}
+        if(!brandName || brandName.length<2){modal('Brakuje nazwy marki','Przy zapytaniu o logo i branding wpisz nazwę marki, dla której mamy przygotować projekt.');go(3);return false}
       }
       if(name.length<2){modal('Brakuje imienia','Uzupełnij imię i nazwisko, żebyśmy wiedzieli, do kogo wrócić.');return false}
       if(!email||email.indexOf('@')<1){modal('Brakuje e-maila','Podaj poprawny adres e-mail.');return false}
@@ -864,7 +859,7 @@ html body .elementor-section:has(#zpStudioV19FrameShell){background:#fff!importa
     function submitOrNext(){
       if(state.step===5){
         if(!validateStep(4))return;
-        modal(state.service==='brand'?'Zamówienie wysłane':'Prośba o wycenę wysłana',state.service==='brand'?'Dziękujemy — otrzymaliśmy Twoje zgłoszenie. Potwierdzenie trafi również na podany adres e-mail.':'Dziękujemy — otrzymaliśmy brief. Wrócimy z finalnym kosztem i rekomendacją zakresu w ciągu 48–72 godzin.',true);
+        modal(state.service==='brand'?'Zapytanie wysłane':'Prośba o wycenę wysłana',state.service==='brand'?'Dziękujemy — otrzymaliśmy Twoje zgłoszenie. Potwierdzenie trafi również na podany adres e-mail.':'Dziękujemy — otrzymaliśmy brief. Wrócimy z finalnym kosztem i rekomendacją zakresu w ciągu 48–72 godzin.',true);
         return;
       }
       go(state.step+1);
@@ -1103,7 +1098,7 @@ ZAPROJEKTOWANI — STUDIO WYCENY UX WOW PATCH v2.0.8
   }
 
   function summaryData(){
-    var pkg=text(qs('[data-sticky-title]')).replace(/^Brief — /,'').replace(/^Zamówienie — /,'') || '—';
+    var pkg=text(qs('[data-sticky-title]')).replace(/^Brief — /,'').replace(/^(?:Zamówienie|Zapytanie) — /,'') || '—';
     var meta=text(qs('[data-sticky-meta]')) || '—';
     var service=(root.getAttribute('data-service')||'web');
     var rows=[['Pakiet',pkg],['Status',meta]];
@@ -1161,30 +1156,6 @@ ZAPROJEKTOWANI — STUDIO WYCENY UX WOW PATCH v2.0.8
     luc();
   }
 
-  function markDomainRows(){
-    qsa('.zpbsDomainRow').forEach(function(row){
-      if(row.dataset.zpDomainPick==='1') return;
-      row.dataset.zpDomainPick='1';
-      row.style.cursor='pointer';
-      row.addEventListener('click',function(){
-        var name=text(row.querySelector('.zpbsDomainName'));
-        var box=row.closest('[data-domain-box]');
-        if(box){
-          var hidden=qs('[data-field="preferredDomain"]',box);
-          if(!hidden){
-            hidden=document.createElement('input');
-            hidden.type='hidden';
-            hidden.setAttribute('data-field','preferredDomain');
-            box.appendChild(hidden);
-          }
-          hidden.value=name;
-          qsa('.zpbsDomainRow',box).forEach(function(x){x.classList.remove('is-on')});
-          row.classList.add('is-on');
-          toast('Dodano domenę do zgłoszenia',name,'globe');
-        }
-      });
-    });
-  }
 
   function initListeners(){
     root.addEventListener('click',function(e){
@@ -1230,7 +1201,6 @@ ZAPROJEKTOWANI — STUDIO WYCENY UX WOW PATCH v2.0.8
     badgePackages();
     enhanceCheckout();
     ensureStickySummaryButton();
-    markDomainRows();
     luc();
   }
 
@@ -1288,7 +1258,7 @@ ZAPROJEKTOWANI — STUDIO WYCENY HOTFIX v2.0.9
 
   function summaryRows(){
     var rows=[];
-    var pkg=text(qs('[data-sticky-title]')).replace(/^Brief — /,'').replace(/^Zamówienie — /,'') || '—';
+    var pkg=text(qs('[data-sticky-title]')).replace(/^Brief — /,'').replace(/^(?:Zamówienie|Zapytanie) — /,'') || '—';
     rows.push(['Pakiet',pkg]);
     var meta=text(qs('[data-sticky-meta]')) || '—'; rows.push(['Status',meta]);
     var addons=[];qsa('.zpbsAddonCard.is-on').forEach(function(c){var s=c.querySelector('strong');if(s)addons.push(text(s));});

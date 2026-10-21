@@ -3309,48 +3309,78 @@ transform:translateX(-50%)!important;
 @media(max-width:900px){#zpKnowledgePro .zpKBTopicIntro,#zpKnowledgePro .zpKBSeoHub__head{grid-template-columns:1fr}#zpKnowledgePro .zpKBTopicGrid{grid-template-columns:repeat(2,minmax(0,1fr))}#zpKnowledgePro .zpKBQuickStart{align-items:flex-start;flex-direction:column}#zpKnowledgePro .zpKBQuickStart__actions{justify-content:flex-start}}
 @media(max-width:620px){#zpKnowledgePro .zpKBSeoHub{padding-top:46px}#zpKnowledgePro .zpKBTopicIntro{margin-bottom:22px}#zpKnowledgePro .zpKBTopicGrid{grid-template-columns:1fr}#zpKnowledgePro .zpKBTopicCard{min-height:0}#zpKnowledgePro .zpKBSeoHub__copy p{font-size:15.5px}#zpKnowledgePro .zpKBQuickStart__actions{display:grid;width:100%;grid-template-columns:1fr}#zpKnowledgePro .zpKBQuickStart__actions a{text-align:center}#zpKnowledgePro .zpKBIndex__head{padding:22px}#zpKnowledgePro .zpKBToolbar{padding:0;border:0;background:transparent}}
 </style>
-<section class="zpKBSeoHub" aria-labelledby="zpKBSeoHubTitle">
-  <div class="zpKBInner">
-    <nav class="zpKBSeoHub__crumbs" aria-label="Okruszki">
-      <a href="<?php echo esc_url(home_url('/')); ?>">Strona główna</a><span aria-hidden="true">/</span><span>Wiedza</span>
-    </nav>
-    <header class="zpKBTopicIntro">
-      <div>
-        <span class="zpKBSeoHub__eyebrow">Znajdź właściwy temat</span>
-        <h2 id="zpKBSeoHubTitle">Wybierz obszar i przejdź od razu do konkretnych poradników.</h2>
-      </div>
-      <p>Nie musisz przeglądać całego bloga. Wiedza jest podzielona na kilka głównych klastrów — wybierz ten, który odpowiada decyzji, przed którą teraz stoisz.</p>
-    </header>
-    <?php if (!empty($zp_kb_topics)): $zp_kb_topic_icons=['strony-internetowe'=>'layout-template','sklepy-internetowe'=>'shopping-bag','logo-branding'=>'sparkles','seo-konwersja'=>'search','kampanie-reklamowe'=>'megaphone','case-study'=>'briefcase-business']; ?>
-      <nav class="zpKBTopicGrid" aria-label="Główne obszary wiedzy">
-        <?php foreach ($zp_kb_topics as $topic_key => $topic): $icon=$zp_kb_topic_icons[$topic_key] ?? 'book-open'; ?>
-          <a class="zpKBTopicCard" href="<?php echo esc_url($topic['url']); ?>">
-            <span class="zpKBTopicCard__top"><span class="zpKBTopicIcon"><i data-lucide="<?php echo esc_attr($icon); ?>"></i></span><span class="zpKBTopicCount"><strong><?php echo (int)$topic['count']; ?></strong> poradników</span></span>
-            <span class="zpKBTopicCard__body"><h3><?php echo esc_html($topic['label']); ?></h3><p><?php echo esc_html($topic['description']); ?></p></span>
-            <span class="zpKBTopicCard__link">Otwórz temat <i aria-hidden="true">↗</i></span>
-          </a>
-        <?php endforeach; ?>
-      </nav>
-    <?php endif; ?>
-    <div class="zpKBQuickStart" aria-label="Szybkie skróty">
-      <div class="zpKBQuickStart__copy"><span class="zpKBQuickStart__icon"><i data-lucide="compass"></i></span><div><strong>Nie wiesz, od którego artykułu zacząć?</strong><span>Przejdź do wyszukiwarki, zobacz realizacje albo od razu opisz swój projekt.</span></div></div>
-      <div class="zpKBQuickStart__actions"><a href="#zpKBIndex">Przeszukaj całą bazę</a><a href="<?php echo esc_url(home_url('/realizacje/')); ?>">Zobacz realizacje</a><a href="<?php echo esc_url(home_url('/studio-wyceny/')); ?>">Wyceń projekt</a></div>
-    </div>
-    <div class="zpKBSeoHub__head">
-      <div class="zpKBSeoHub__copy">
-        <span class="zpKBSeoHub__eyebrow">Baza wiedzy Zaprojektowani</span>
-        <h2>Poradniki o stronach internetowych, sklepach, SEO, brandingu i kampaniach.</h2>
-        <p>Ta baza wiedzy porządkuje tematy, które najczęściej pojawiają się przed rozpoczęciem projektu i podczas rozwoju strony. Znajdziesz tu praktyczne materiały o <a href="<?php echo esc_url(home_url('/strony-internetowe-katowice/')); ?>">projektowaniu stron internetowych</a>, <a href="<?php echo esc_url(home_url('/sklepy-internetowe-katowice/')); ?>">sklepach WooCommerce</a>, <a href="<?php echo esc_url(home_url('/logo-branding-katowice/')); ?>">logo i identyfikacji wizualnej</a>, SEO, UX oraz kampaniach reklamowych.</p>
-        <p>Artykuły są ułożone wokół konkretnych decyzji: jaki zakres projektu wybrać, ile może kosztować wdrożenie, kiedy landing page wystarczy, jak przygotować sklep do sprzedaży, co powinien zawierać brandbook i jak połączyć stronę z reklamami oraz analityką. Jeśli chcesz najpierw zobaczyć efekt końcowy, przejdź też do naszych <a href="<?php echo esc_url(home_url('/realizacje/')); ?>">realizacji stron, sklepów i brandingu</a>.</p>
-      </div>
-      <aside class="zpKBSeoHub__note">
-        <strong>Jak korzystać z Wiedzy?</strong>
-        <p>Wybierz obszar powyżej albo przejdź do indeksu wszystkich artykułów. Każdy wpis jest dostępny przez zwykły link HTML, więc poradniki pozostają czytelne dla użytkowników i robotów wyszukiwarek również bez JavaScriptu.</p>
-      </aside>
-    </div>
-  </div>
-</section>
+<style id="zp-knowledge-layout-20261015">
+/* Preserve the cached baseline styles; use DOM order and the complete article height. */
+html body #zpKnowledgePro>.zpKBFeatured,html body #zpKnowledgePro>.zpKBIndex,html body #zpKnowledgePro>.zpKBFooterCTA{order:0!important}
+html body #zpKnowledgePro>.zpKBIndex{content-visibility:visible!important;contain-intrinsic-size:none!important}
+@media(max-width:760px){
+ html body #zpKnowledgePro{display:block!important}
+ html body section#zhHero.zh--knowledge .zh__copy{overflow:visible!important;clip-path:none!important}
+ html body section#zhHero.zh--knowledge .zh__title{width:100%!important;max-width:100%!important;font-family:"Plus Jakarta Sans Local","Plus Jakarta Sans",system-ui,sans-serif!important;font-size:clamp(34px,10.5vw,48px)!important;font-weight:480!important;font-variation-settings:"wght" 480!important;line-height:.98!important;letter-spacing:-.058em!important;margin:0!important;padding:0 0 .18em!important;overflow:visible!important;clip-path:none!important;contain:none!important;text-wrap:balance!important;word-break:normal!important;overflow-wrap:normal!important;hyphens:none}
+ html body section#zhHero.zh--knowledge .zh__title>.zh__grad{display:inline!important;line-height:inherit!important;vertical-align:baseline!important;font-family:inherit!important;font-weight:720!important;font-variation-settings:"wght" 720!important;letter-spacing:inherit!important;padding:0 .025em .12em!important;margin:0 -.025em -.12em!important;overflow:visible!important;background:linear-gradient(105deg,#a8d8ff 0%,#e2f4ff 19%,#fff 40%,#eef9ff 60%,#b9e2ff 79%,#fff 100%)!important;background-size:280% 100%!important;background-position:0% 50%!important;-webkit-background-clip:text!important;background-clip:text!important;color:transparent!important;-webkit-text-fill-color:transparent!important;-webkit-box-decoration-break:clone!important;box-decoration-break:clone!important;animation:zpServiceHeroGradientFlow698 4.8s ease-in-out 1s infinite alternate!important}
+ html body section#zhHero.zh--knowledge .zh__inner{height:auto!important;min-height:0!important;padding-bottom:0!important}
+ html body section#zhHero.zh--knowledge .zh__mobileBrandMock{height:auto!important;min-height:0!important;margin:18px auto -28px!important}
+ html body section#zhHero.zh--knowledge .zkPerson--mobile{height:auto!important;min-height:0!important;margin:0!important}
+ html body section#zhHero.zh--knowledge .zkStats--mobile{min-height:0!important;margin:0 auto!important;padding:6px 0 0!important}
+ html body section#zhHero.zh--knowledge .zh__mobileScroll{height:auto!important;min-height:24px!important;margin:6px auto 12px!important}
+}
+@media(max-width:760px) and (prefers-reduced-motion:reduce){
+ html body section#zhHero.zh--knowledge .zh__title>.zh__grad{animation:none!important;background-position:50% 50%!important}
+}
+html body #zpKnowledgePro .zpKBIndex__side{position:static!important;min-width:0;display:grid!important;gap:14px!important;align-content:start}
+html body #zpKnowledgePro .zpKBIndex__side .zpKBSideCard{padding:22px!important;border:1px solid var(--line)!important;border-radius:24px!important;background:#fff!important;box-shadow:none!important}
+html body #zpKnowledgePro .zpKBIndex__side .zpKBSideCard h3{font-size:24px!important;line-height:1.2!important;max-width:none;letter-spacing:-.035em!important}
+html body #zpKnowledgePro .zpKBIndex__side .zpKBPath{min-height:56px!important;padding:12px 14px!important;border-radius:16px!important}
+html body #zpKnowledgePro .zpKBIndex__side .zpKBPath span{font-size:14px!important;line-height:1.2!important}
+html body #zpKnowledgePro .zpKBIndex__side .zpKBSeoHub{padding:0!important;margin:0;border:0!important;overflow:visible!important;background:#fff!important}
+html body #zpKnowledgePro .zpKBIndex__side .zpKBSeoHub::before{content:none!important}
+#zpKnowledgePro .zpKBTopicsPanel{min-width:0}
+#zpKnowledgePro .zpKBTopicsPanel>summary{display:none}
+#zpKnowledgePro .zpKBTopicsPanel:not([open])>summary{display:flex}
+#zpKnowledgePro .zpKBHelp{margin:0 0 12px;border:1px solid var(--line);border-radius:18px;background:#fff;overflow:hidden}
+#zpKnowledgePro .zpKBHelp:last-child{margin-bottom:0}
+#zpKnowledgePro .zpKBHelp>summary,#zpKnowledgePro .zpKBTopicsPanel>summary{align-items:center;justify-content:space-between;gap:16px;min-height:58px;padding:16px 18px;list-style:none;cursor:pointer;font-size:14px;line-height:1.4;font-weight:700;color:#071426}
+#zpKnowledgePro .zpKBHelp>summary{display:flex}
+#zpKnowledgePro .zpKBHelp>summary::-webkit-details-marker,#zpKnowledgePro .zpKBTopicsPanel>summary::-webkit-details-marker{display:none}
+#zpKnowledgePro .zpKBHelp>summary::after,#zpKnowledgePro .zpKBTopicsPanel>summary::after{content:"+";flex:none;font-size:20px;font-weight:500;line-height:1}
+#zpKnowledgePro .zpKBHelp[open]>summary::after,#zpKnowledgePro .zpKBTopicsPanel[open]>summary::after{content:"−"}
+#zpKnowledgePro .zpKBHelp>summary:focus-visible,#zpKnowledgePro .zpKBTopicsPanel>summary:focus-visible{outline:3px solid #386fa7;outline-offset:-4px;border-radius:16px}
+#zpKnowledgePro .zpKBHelp__content{padding:0 18px 18px}
+#zpKnowledgePro .zpKBIndex__side .zpKBTopicIntro,#zpKnowledgePro .zpKBIndex__side .zpKBSeoHub__head{display:block;margin:0;padding:0;border:0;border-radius:0;background:none}
+#zpKnowledgePro .zpKBIndex__side .zpKBTopicIntro{margin-bottom:18px}
+#zpKnowledgePro .zpKBIndex__side .zpKBTopicIntro h2,#zpKnowledgePro .zpKBIndex__side .zpKBSeoHub__head h2{font-size:24px;line-height:1.2;letter-spacing:-.035em;margin:0 0 14px}
+#zpKnowledgePro .zpKBIndex__side .zpKBTopicIntro p,#zpKnowledgePro .zpKBIndex__side .zpKBSeoHub__copy p{font-size:13px;line-height:1.75;margin:0 0 14px}
+#zpKnowledgePro .zpKBIndex__side .zpKBSeoHub__eyebrow{font-size:9px;margin-bottom:10px}
+#zpKnowledgePro .zpKBIndex__side .zpKBSeoHub__note{padding:16px;border-radius:14px;margin-top:18px}
+#zpKnowledgePro .zpKBIndex__side .zpKBTopicGrid{grid-template-columns:1fr;gap:10px}
+#zpKnowledgePro .zpKBIndex__side .zpKBTopicCard{min-height:0;gap:12px;padding:16px;border-radius:16px;transform:none}
+#zpKnowledgePro .zpKBIndex__side .zpKBTopicCard__body h3{font-size:16px;line-height:1.25}
+#zpKnowledgePro .zpKBIndex__side .zpKBTopicIcon{width:30px;height:30px;border-radius:10px}
+#zpKnowledgePro .zpKBIndex__side .zpKBTopicIcon svg{width:16px;height:16px}
+#zpKnowledgePro .zpKBIndex__side .zpKBQuickStart{display:block;padding:16px;border-radius:16px;margin:18px 0 0}
+#zpKnowledgePro .zpKBIndex__side .zpKBQuickStart__copy{align-items:flex-start;gap:10px}
+#zpKnowledgePro .zpKBIndex__side .zpKBQuickStart__actions{display:grid;grid-template-columns:1fr;gap:8px;margin-top:14px;justify-content:stretch}
+#zpKnowledgePro .zpKBIndex__side .zpKBQuickStart__actions a{min-height:40px;white-space:normal;text-align:center}
+#zpKnowledgePro .zpKBIndex__side .zpKBSeoHub__crumbs{gap:7px;margin:16px 0 0;font-size:11px}
+@media(max-width:1080px){
+ html body #zpKnowledgePro .zpKBIndex__layout{display:flex!important;flex-direction:column!important;gap:24px!important}
+ html body #zpKnowledgePro .zpKBIndex__main{order:1;width:100%}
+ html body #zpKnowledgePro .zpKBIndex__side{order:-1!important;width:100%!important;max-width:100%!important;overflow:visible!important;gap:10px!important}
+ #zpKnowledgePro .zpKBTopicsPanel{border:1px solid var(--line);border-radius:18px;overflow:hidden}
+ #zpKnowledgePro .zpKBTopicsPanel>summary{display:flex}
+ html body #zpKnowledgePro .zpKBIndex__side .zpKBSideCard{padding:0 18px 18px!important;border:0!important;border-radius:0!important}
+ html body #zpKnowledgePro .zpKBIndex__side .zpKBSideCard>.zpKBLabel,html body #zpKnowledgePro .zpKBIndex__side .zpKBSideCard>h3{display:none}
+ html body #zpKnowledgePro .zpKBIndex__side .zpKBSideHint{display:none!important}
+ html body #zpKnowledgePro .zpKBIndex__side .zpKBPathsMini{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:8px!important;width:100%!important;max-width:100%!important;margin:0!important;padding:0!important;overflow:visible!important;scroll-snap-type:none!important;touch-action:auto!important}
+ html body #zpKnowledgePro .zpKBIndex__side .zpKBPath{flex:none!important;width:100%!important;max-width:100%!important;min-width:0!important;min-height:58px!important;padding:10px 12px!important;box-shadow:none!important}
+ html body #zpKnowledgePro .zpKBIndex__side .zpKBPath span{font-size:13px!important}
+ html body #zpKnowledgePro .zpKBIndex__side .zpKBPath strong{font-size:9px!important;letter-spacing:0!important}
+ #zpKnowledgePro .zpKBIndex__side .zpKBHelp{margin-bottom:10px}
+ #zpKnowledgePro .zpKBIndex__side .zpKBHelp:last-child{margin-bottom:0}
+}
+</style>
 
+<!-- Featured article and existing recommendations remain directly below the hero. -->
 <div class="zpKBFeatured">
     <div class="zpKBInner"><div class="zpKBFeatured__grid">
       <?php if ($zp_kb_featured->have_posts()): $zp_kb_featured->the_post(); $fid=get_the_ID(); ?>
@@ -3396,21 +3426,77 @@ transform:translateX(-50%)!important;
     </div></div>
   </div>
 
+<!-- Article search and results share their sidebar with compact topic and SEO guides. -->
   <div class="zpKBIndex" id="zpKBIndex">
     <div class="zpKBInner"><div class="zpKBIndex__layout">
       <main class="zpKBIndex__main">
-        <header class="zpKBIndex__head"><div><span class="zpKBLabel">Indeks wiedzy</span><h2>Centrum wiedzy</h2></div><p class="zpKBIndex__lead">Znajdź poradnik, który pomoże Ci lepiej zaplanować stronę internetową, sklep WooCommerce, branding, SEO albo kampanię reklamową — zanim podejmiesz decyzję o wdrożeniu.</p></header>
+        <header class="zpKBIndex__head"><div><span class="zpKBLabel">Indeks wiedzy</span><h2>Poradniki i case studies</h2></div><p class="zpKBIndex__lead">Znajdź poradnik, który pomoże Ci lepiej zaplanować stronę internetową, sklep WooCommerce, branding, SEO albo kampanię reklamową — zanim podejmiesz decyzję o wdrożeniu.</p></header>
         <div class="zpKBToolbar"><span class="zpKBMobileFilterLabel"><i data-lucide="sliders-horizontal"></i>Filtruj</span><label class="zpKBSearch"><i data-lucide="search"></i><input type="search" name="zp_kb_search" data-zp-kb-search placeholder="Szukaj: WooCommerce, SEO, branding, strona internetowa..."></label><select class="zpKBSort" name="zp_kb_sort" data-zp-kb-sort aria-label="Sortowanie wpisów"><option value="newest">Najnowsze</option><option value="oldest">Najstarsze</option><option value="title">A–Z</option></select><div class="zpKBView" aria-label="Zmień układ wpisów"><button type="button" class="is-active" data-zp-view="grid" aria-label="Widok kart"><i data-lucide="layout-grid"></i></button><button type="button" data-zp-view="list" aria-label="Widok listy"><i data-lucide="rows-3"></i></button><button type="button" data-zp-view="compact" aria-label="Widok kompaktowy"><i data-lucide="panel-top"></i></button></div></div>
         <div class="zpKBCatsHint" aria-hidden="true"><span>Przesuń w prawo</span><i data-lucide="arrow-right"></i></div><nav class="zpKBCats" aria-label="Kategorie wpisów"><a class="zpKBCat is-active" href="<?php echo esc_url(home_url('/wiedza/')); ?>" data-zp-cat="all">Wszystkie</a><?php if(!empty($zp_kb_topics)): foreach($zp_kb_topics as $topic_key=>$topic): ?><a class="zpKBCat" href="<?php echo esc_url($topic['url']); ?>" data-zp-cat="<?php echo esc_attr($topic_key); ?>"><?php echo esc_html($topic['label']); ?> <span><?php echo (int)$topic['count']; ?></span></a><?php endforeach; else: foreach($zp_kb_cats as $cat): ?><a class="zpKBCat" href="<?php echo esc_url(get_category_link($cat)); ?>" data-zp-cat="<?php echo esc_attr($cat->slug); ?>"><?php echo esc_html($cat->name); ?> <span><?php echo (int)$cat->count; ?></span></a><?php endforeach; endif; ?></nav>
         <div class="zpKBStatus"><span><b data-zp-kb-count><?php echo (int) $zp_kb_posts_count; ?></b> wpisów w aktualnym widoku</span><span class="zpKBLoader" aria-hidden="true"><i></i><i></i><i></i> szukam</span></div><div class="zpKBEmpty">Nie znaleziono wpisów dla tej frazy albo kategorii. Zmień filtr lub wpisz szersze zapytanie.</div><div class="zpKBPosts" data-zp-kb-results><?php echo $zp_kb_posts_html; ?></div>
       </main>
-      <aside class="zpKBIndex__side" aria-label="Ścieżki tematyczne"><div class="zpKBSideCard"><span class="zpKBLabel">Ścieżki tematyczne</span><h3>Wybierz obszar i przejdź do powiązanych poradników.</h3><p>Najważniejsze tematy są zgrupowane w kilka czytelnych klastrów. Linki prowadzą również do archiwów kategorii, więc działają bez JavaScriptu.</p><div class="zpKBSideHint" aria-hidden="true"><span>Przesuń w prawo</span><i data-lucide="arrow-right"></i></div><div class="zpKBPathsMini"><?php if(!empty($zp_kb_topics)): foreach($zp_kb_topics as $topic_key=>$topic): ?><a class="zpKBPath" href="<?php echo esc_url($topic['url']); ?>" data-zp-path-cat="<?php echo esc_attr($topic_key); ?>"><span><?php echo esc_html($topic['label']); ?></span><strong><?php echo (int)$topic['count']; ?> wpisów</strong><i data-lucide="arrow-down-right"></i></a><?php endforeach; else: foreach($zp_kb_cats as $path_cat): ?><a class="zpKBPath" href="<?php echo esc_url(get_category_link($path_cat)); ?>" data-zp-path-cat="<?php echo esc_attr($path_cat->slug); ?>"><span><?php echo esc_html($path_cat->name); ?></span><strong><?php echo (int)$path_cat->count; ?> wpisów</strong><i data-lucide="arrow-down-right"></i></a><?php endforeach; endif; ?></div></div></aside>
+      <aside class="zpKBIndex__side" aria-label="Ścieżki tematyczne"><details class="zpKBTopicsPanel"><summary>Wybierz obszar</summary><div class="zpKBSideCard"><span class="zpKBLabel">Ścieżki tematyczne</span><h3>Wybierz obszar i przejdź do powiązanych poradników.</h3><p>Wybierz obszar, aby zobaczyć powiązane poradniki i realizacje. Licznik przy temacie pokazuje, ile materiałów znajdziesz w kategorii.</p><div class="zpKBSideHint" aria-hidden="true"><span>Przesuń w prawo</span><i data-lucide="arrow-right"></i></div><div class="zpKBPathsMini"><?php if(!empty($zp_kb_topics)): foreach($zp_kb_topics as $topic_key=>$topic): ?><a class="zpKBPath" href="<?php echo esc_url($topic['url']); ?>" data-zp-path-cat="<?php echo esc_attr($topic_key); ?>"><span><?php echo esc_html($topic['label']); ?></span><strong><?php echo (int)$topic['count']; ?> wpisów</strong><i data-lucide="arrow-down-right"></i></a><?php endforeach; else: foreach($zp_kb_cats as $path_cat): ?><a class="zpKBPath" href="<?php echo esc_url(get_category_link($path_cat)); ?>" data-zp-path-cat="<?php echo esc_attr($path_cat->slug); ?>"><span><?php echo esc_html($path_cat->name); ?></span><strong><?php echo (int)$path_cat->count; ?> wpisów</strong><i data-lucide="arrow-down-right"></i></a><?php endforeach; endif; ?></div></div></details><section class="zpKBSeoHub" aria-labelledby="zpKBSeoHubTitle">
+  <details class="zpKBHelp">
+    <summary>Jak korzystać z bazy wiedzy</summary>
+    <div class="zpKBHelp__content">
+    <div class="zpKBSeoHub__head">
+      <div class="zpKBSeoHub__copy">
+        <span class="zpKBSeoHub__eyebrow">Baza wiedzy Zaprojektowani</span>
+        <h2>Poradniki o stronach internetowych, sklepach, SEO, brandingu i kampaniach.</h2>
+        <p>Ta baza wiedzy porządkuje tematy, które najczęściej pojawiają się przed rozpoczęciem projektu i podczas rozwoju strony. Znajdziesz tu praktyczne materiały o <a href="<?php echo esc_url(home_url('/tworzenie-stron-internetowych/')); ?>">projektowaniu stron internetowych</a>, <a href="<?php echo esc_url(home_url('/tworzenie-sklepow-internetowych/')); ?>">sklepach WooCommerce</a>, <a href="<?php echo esc_url(home_url('/projektowanie-logo/')); ?>">logo i identyfikacji wizualnej</a>, SEO, UX oraz kampaniach reklamowych.</p>
+        <p>Artykuły są ułożone wokół konkretnych decyzji: jaki zakres projektu wybrać, ile może kosztować wdrożenie, kiedy landing page wystarczy, jak przygotować sklep do sprzedaży, co powinien zawierać brandbook i jak połączyć stronę z reklamami oraz analityką. Jeśli chcesz najpierw zobaczyć efekt końcowy, przejdź też do naszych <a href="<?php echo esc_url(home_url('/realizacje/')); ?>">realizacji stron, sklepów i brandingu</a>.</p>
+      </div>
+      <aside class="zpKBSeoHub__note">
+        <strong>Jak korzystać z Wiedzy?</strong>
+        <p>Zacznij od wybranego tematu albo wpisz hasło w wyszukiwarce artykułów. Jeśli szukasz przykładu gotowego projektu, wybierz kategorię Case study lub przejdź do realizacji.</p>
+      </aside>
     </div>
+    <div class="zpKBQuickStart" aria-label="Szybkie skróty">
+      <div class="zpKBQuickStart__copy"><span class="zpKBQuickStart__icon"><i data-lucide="compass"></i></span><div><strong>Nie wiesz, od którego artykułu zacząć?</strong><span>Przejdź do wyszukiwarki, zobacz realizacje albo od razu opisz swój projekt.</span></div></div>
+      <div class="zpKBQuickStart__actions"><a href="#zpKBIndex">Przeszukaj całą bazę</a><a href="<?php echo esc_url(home_url('/realizacje/')); ?>">Zobacz realizacje</a><a href="<?php echo esc_url(home_url('/studio-wyceny/')); ?>">Wyceń projekt</a></div>
+    </div>
+    <nav class="zpKBSeoHub__crumbs" aria-label="Okruszki">
+      <a href="<?php echo esc_url(home_url('/')); ?>">Strona główna</a><span aria-hidden="true">/</span><span>Wiedza</span>
+    </nav>
+    </div>
+  </details>
+  <details class="zpKBHelp">
+    <summary>Przewodnik po tematach</summary>
+    <div class="zpKBHelp__content">
+    <header class="zpKBTopicIntro">
+      <div>
+        <span class="zpKBSeoHub__eyebrow">Znajdź właściwy temat</span>
+        <h2 id="zpKBSeoHubTitle">Wybierz obszar i przejdź od razu do konkretnych poradników.</h2>
+      </div>
+      <p>Wybierz temat, który odpowiada temu, czego teraz potrzebujesz: strony, sklepu, brandingu, SEO albo kampanii. W każdym obszarze znajdziesz poradniki i praktyczne przykłady.</p>
+    </header>
+    <?php if (!empty($zp_kb_topics)): $zp_kb_topic_icons=['strony-internetowe'=>'layout-template','sklepy-internetowe'=>'shopping-bag','logo-branding'=>'sparkles','seo-konwersja'=>'search','kampanie-reklamowe'=>'megaphone','case-study'=>'briefcase-business']; ?>
+      <nav class="zpKBTopicGrid" aria-label="Główne obszary wiedzy">
+        <?php foreach ($zp_kb_topics as $topic_key => $topic): $icon=$zp_kb_topic_icons[$topic_key] ?? 'book-open'; ?>
+          <a class="zpKBTopicCard" href="<?php echo esc_url($topic['url']); ?>">
+            <span class="zpKBTopicCard__top"><span class="zpKBTopicIcon"><i data-lucide="<?php echo esc_attr($icon); ?>"></i></span><span class="zpKBTopicCount"><strong><?php echo (int)$topic['count']; ?></strong> poradników</span></span>
+            <span class="zpKBTopicCard__body"><h3><?php echo esc_html($topic['label']); ?></h3><p><?php echo esc_html($topic['description']); ?></p></span>
+            <span class="zpKBTopicCard__link">Otwórz temat <i aria-hidden="true">↗</i></span>
+          </a>
+        <?php endforeach; ?>
+      </nav>
+    <?php endif; ?>
+    </div>
+  </details>
+</section></aside>
+    </div>
+
+
+    </div>
+  </div>
+
+
+<script id="zp-knowledge-topics-20261015">
+(function(){var root=document.getElementById('zpKnowledgePro'),topics=root&&root.querySelector('.zpKBTopicsPanel');if(!topics||!window.matchMedia)return;var mobile=window.matchMedia('(max-width:1080px)');function sync(){topics.open=!mobile.matches}sync();if(mobile.addEventListener)mobile.addEventListener('change',sync);else if(mobile.addListener)mobile.addListener(sync)})();
+</script>
 
       <section class="zpKBFooterCTA" aria-label="Studio wyceny Zaprojektowani"><div class="zpKBFooterCTA__bleed" aria-hidden="true"></div><div class="zpKBFooterCTA__mark" aria-hidden="true">zaprojektowani</div><div class="zpKBFooterCTA__copy"><span class="zpKBFooterCTA__eyebrow">Twój projekt może być następny</span><h2>Zbudujmy stronę internetową, sklep WooCommerce albo markę, która od pierwszego kontaktu wygląda profesjonalnie.</h2><p>Opisz nam, co chcesz stworzyć. Dobierzemy zakres, kierunek wizualny, funkcje, SEO, analitykę, branding i plan wdrożenia — bez przypadkowych rozwiązań.</p></div><div class="zpKBFooterCTA__panel"><div class="zpKBFooterCTA__frame"><span>Tu może być Twój projekt!</span></div><div class="zpKBFooterCTA__actions"><a class="zpKBFooterCTA__btn" href="/studio-wyceny/"><span>Otrzymaj darmową wycenę</span><i data-lucide="arrow-up-right"></i></a><a class="zpKBFooterCTA__btn zpKBFooterCTA__btn--ghost" href="/strony-internetowe-katowice/"><span>Zobacz ofertę</span><i data-lucide="arrow-up-right"></i></a></div></div>
 </section>
-    </div>
-  </div>
 
   <script>
   (function(){var zpWiedzaVideo2154=true;var root=document.querySelector('[data-zp-knowledge-pro]');if(!root)return;try{root.setAttribute('data-ready','1')}catch(e){}var heroVideo=root.querySelector('.zpKBHero__video video');if(heroVideo){try{heroVideo.muted=true;heroVideo.defaultMuted=true;heroVideo.loop=true;heroVideo.playsInline=true;heroVideo.setAttribute('muted','');heroVideo.setAttribute('loop','');heroVideo.setAttribute('playsinline','');heroVideo.setAttribute('webkit-playsinline','');heroVideo.setAttribute('preload','none');heroVideo.removeAttribute('src');}catch(e){}}function icons(){if(window.lucide&&window.lucide.createIcons){try{window.lucide.createIcons({attrs:{'stroke-width':1.8,'stroke-linecap':'round','stroke-linejoin':'round'}})}catch(e){}}}icons();var vids=root.querySelectorAll('video');vids.forEach(function(v){try{v.muted=true;v.playsInline=true;v.setAttribute('preload','none')}catch(e){}});['touchstart','click'].forEach(function(ev){root.addEventListener(ev,function(){vids.forEach(function(v){try{if(!v.currentSrc&&!v.getAttribute('src')&&!v.querySelector('source[src]'))return;var playback=v.play();if(playback&&playback.catch)playback.catch(function(){/* Browser policy or an unavailable optional video: keep its poster. */});}catch(e){}})},{once:true,passive:true})});var ajax=root.getAttribute('data-ajax'),nonce=root.getAttribute('data-nonce'),results=root.querySelector('[data-zp-kb-results]'),input=root.querySelector('[data-zp-kb-search]'),sort=root.querySelector('[data-zp-kb-sort]'),count=root.querySelector('[data-zp-kb-count]'),cats=[].slice.call(root.querySelectorAll('[data-zp-cat]')),views=[].slice.call(root.querySelectorAll('[data-zp-view]'));var activeCat='all',activeView='grid',timer=null,controller=null;function setView(v){activeView=v;views.forEach(function(b){b.classList.toggle('is-active',b.getAttribute('data-zp-view')===v)});if(!results)return;results.classList.toggle('is-list',v==='list');results.classList.toggle('is-compact',v==='compact')}views.forEach(function(btn){btn.addEventListener('click',function(){setView(btn.getAttribute('data-zp-view')||'grid')})});function run(){if(!ajax||!results)return;root.classList.add('is-loading');root.classList.remove('is-empty');if(controller)controller.abort();controller=window.AbortController?new AbortController():null;var fd=new FormData();fd.append('action','zp_wiedza_search');fd.append('nonce',nonce||'');fd.append('search',input&&input.value?input.value:'');fd.append('cat',activeCat);fd.append('sort',sort&&sort.value?sort.value:'newest');fetch(ajax,{method:'POST',credentials:'same-origin',body:fd,signal:controller?controller.signal:null}).then(function(r){return r.json()}).then(function(res){if(!res||!res.success)return;results.innerHTML=res.data.html||'';if(count)count.textContent=res.data.count||0;root.classList.toggle('is-empty',!(res.data.count>0));setView(activeView);icons()}).catch(function(e){if(e.name!=='AbortError')console.warn('ZP wiedza AJAX',e)}).finally(function(){root.classList.remove('is-loading')})}function debounce(){clearTimeout(timer);timer=setTimeout(run,220)}if(input)input.addEventListener('input',debounce);if(sort)sort.addEventListener('change',run);cats.forEach(function(btn){btn.addEventListener('click',function(e){if(e&&e.preventDefault)e.preventDefault();cats.forEach(function(b){b.classList.remove('is-active')});btn.classList.add('is-active');activeCat=btn.getAttribute('data-zp-cat')||'all';run()})});[].slice.call(root.querySelectorAll('[data-zp-path-cat]')).forEach(function(btn){btn.addEventListener('click',function(e){if(e&&e.preventDefault)e.preventDefault();var slug=btn.getAttribute('data-zp-path-cat')||'all';var target=cats.filter(function(b){return(b.getAttribute('data-zp-cat')||'')===slug})[0];if(target)target.click();var index=root.querySelector('#zpKBIndex');if(index)index.scrollIntoView({behavior:'smooth',block:'start'})})});setView('grid');

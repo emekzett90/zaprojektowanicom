@@ -5,10 +5,24 @@
  */
 if (!defined('ABSPATH')) { exit; }
 
-/** Results of the cache step (3.0.1, again in 3.1.0 and 3.2.0) that are settled; any other result is retried from wp-admin or cron. */
+/** Results of the cache step (3.0.1, 3.1.0, 3.2.0 and 3.2.31) that are settled; other results retry from wp-admin or cron. */
 const ZP_SUITE3_CACHE_301_SETTLED = ['on', 'not-installed', 'dropin-updated', 'dropin-foreign', 'dropin-missing'];
 
 function zp_suite3_upgrade(string $previous): void {
+  if ($previous === '' || version_compare($previous, '3.2.35', '<')) {
+    // Reuse the existing, retryable Suite cache invalidation path.
+    update_option('zp_suite_mobile_shell_3234', 'pending', true);
+  }
+  if ($previous === '' || version_compare($previous, '3.2.34', '<')) {
+    update_option('zp_suite_mobile_shell_3234', 'pending', true);
+  }
+  if ($previous === '' || version_compare($previous, '3.2.33', '<')) {
+    update_option('zp_suite_first_paint_3233', 'pending', true);
+  }
+  if ($previous === '' || version_compare($previous, '3.2.32', '<')) {
+    // Persist before the version marker changes. A request ending early can retry on the next load.
+    update_option('zp_suite_growth_cache_20261017', 'pending', true);
+  }
   if ($previous !== '' && version_compare($previous, '3.2.3', '<')) {
     // Replacement runs with the old PHP constants in memory. Refresh our own HTML cache on the first new
     // request so the new menu, portfolio and language assets are visible immediately in both languages.
@@ -20,15 +34,19 @@ function zp_suite3_upgrade(string $previous): void {
       wp_clear_scheduled_hook($hook);
     }
   }
-  if ($previous !== '' && version_compare($previous, '3.2.0', '<')) {
+  if ($previous !== '' && version_compare($previous, '3.2.31', '<')) {
     // Codex's HTML cache keyed pages by address only, while phones get different HTML (no hero video, lazy images).
     // 3.0.1 installs a drop-in that keeps one copy per device class; 3.0.0 had switched the cache off for that reason,
     // so it comes back on. 3.1.0's drop-in also answers robots and visitors with only consent or statistics cookies;
-    // 3.2.0's sends no-cache headers on a MISS too and keys versioned (EN) pages by their version. The live file is
-    // replaced here because nothing purges after an update. Runs once WordPress has finished loading (permalinks are
-    // needed for the list of pages). The marker is written as pending first: a first request that ends before wp_loaded
+    // 3.2.0's sends no-cache headers on a MISS too and keys versioned (EN) pages by their version.
+    // 3.2.31 also serves explicit PL choices. Refresh the owned drop-in and cache generation on the first new
+    // request, including a manual ZIP replacement; an update request can still execute the old plugin code.
+    // Runs once WordPress has finished loading (permalinks are needed for the list of pages).
+    // The marker is written as pending first: a first request that ends before wp_loaded
     // (llms.txt, an EN sitemap, a Geo redirect) would otherwise lose the step, and the retry below picks it up.
-    update_option('zp_suite3_cache_301', ['at' => '', 'result' => 'pending', 'tries' => 0], true);
+    // Only the historical pre-3.2.0 upgrade may resume a cache which 3.0.0 switched off. This release never resumes
+    // an existing manually disabled cache, even when an old recovery marker remains in the database.
+    update_option('zp_suite3_cache_301', ['at' => '', 'result' => 'pending', 'tries' => 0, 'resume_legacy' => version_compare($previous, '3.2.0', '<')], true);
     add_action('wp_loaded', 'zp_suite3_cache_301', 99);
   }
   if ($previous !== '' && version_compare($previous, '3.2.0', '<')) {
@@ -50,11 +68,12 @@ function zp_suite3_cache_301(): void {
   $before = get_option('zp_suite3_cache_301', []);
   $tries = (is_array($before) ? (int) ($before['tries'] ?? 0) : 0) + 1;
   $off = (string) get_option('zp_suite3_cache_switched_off', '');
+  $resume_legacy = is_array($before) && !empty($before['resume_legacy']);
   // Only a cache that 3.0.0 itself switched off comes back on; one switched off by hand only gets the new drop-in.
-  $resume = $off !== '' && strpos($off, 'error') !== 0;
+  $resume = $resume_legacy && $off !== '' && strpos($off, 'error') !== 0;
   try { $result = ZP_HTML_Cache_20261009::upgrade_dropin($resume); }
   catch (Throwable $e) { $result = 'error: ' . $e->getMessage(); }
-  update_option('zp_suite3_cache_301', ['at' => gmdate('c'), 'result' => $result, 'tries' => $tries], true);
+  update_option('zp_suite3_cache_301', ['at' => gmdate('c'), 'result' => $result, 'tries' => $tries, 'resume_legacy' => $resume_legacy], true);
   if ($result === 'on') { delete_option('zp_suite3_cache_switched_off'); }
 }
 

@@ -1,0 +1,7 @@
+Zaprojektowani Suite 3.2.28 — 2026-10-16
+
+- Fixed final production integration: the original client-logo controller is now a normal deferred script, outside the global homepage idle queue.
+- The scroll reveal starts without waiting for window.load or an unrelated asset/controller.
+- Nearby logo warming uses the same policy for visitors and audits and still respects Save-Data.
+- Preserves the original widget layout and all review/FAQ changes from 3.2.24–3.2.27.
+- Replaced the mobile system-style arrow with an original outline hand and a right-swipe animation, respecting reduced-motion preferences.

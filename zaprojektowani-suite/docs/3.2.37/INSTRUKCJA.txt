@@ -1,0 +1,83 @@
+ZAPROJEKTOWANI SUITE 3.2.37 — AUTOMATYCZNA PUBLIKACJA ALTIORA LINEA
+
+Ta paczka zastępuje pełną wtyczkę Zaprojektowani Suite. Bazą jest ostatnia
+wersja 3.2.36-altiora-seo-mobile. Treść artykułu oraz istniejące CSS/JS
+strony pozostają niezmienione. Zmiana dotyczy importu i publikacji artykułu.
+
+INSTALACJA
+1. Zachowaj kopię obecnej wtyczki oraz bazy danych.
+2. WordPress → Wtyczki → Dodaj nową → Wyślij wtyczkę na serwer.
+3. Wgraj ZIP 3.2.37 i wybierz zastąpienie obecnej wersji.
+4. Wróć do panelu WordPress (np. do listy wtyczek). Jeśli wtyczka jest nieaktywna,
+   aktywuj ją. Nie trzeba wklejać artykułu, importować JSON ani klikać Opublikuj.
+5. W panelu pojawi się komunikat „Artykuł Altiora Linea jest opublikowany
+   w Wiedzy” i odnośnik „Zobacz artykuł” oraz „Edytuj wpis”.
+
+KIEDY NASTĘPUJE PUBLIKACJA
+Przy aktywacji — w obsłudze aktywacji tej wtyczki.
+Przy zastąpieniu aktywnej wtyczki — przy pierwszym zwykłym wejściu uprawnionego
+administratora do panelu, gdy WordPress załaduje już nową wersję kodu.
+Nie jest wymagane ponowne wyłączanie i włączanie aktywnej wtyczki.
+Publikacja nie jest wykonywana podczas ładowania strony przez odwiedzających.
+Nie są wykonywane migracje ani żądania HTTP w renderze mobilnego hero.
+Wymagane uprawnienia: manage_options, edit_posts, publish_posts, unfiltered_html.
+Na multisite nie są automatycznie publikowane kopie na wszystkich witrynach.
+
+CO JEST DODAWANE
+Artykuł „Strona internetowa Altiora Linea — premium design w trzech językach”
+z treścią z poprzedniej paczki, spisem treści, FAQ, CTA i podaną grafiką.
+Kategorie: Strony internetowe oraz Case study; ustawiona główna kategoria.
+Zajawka, tagi, SEO title, description, frazy, dane BlogPosting w Rank Math,
+ustawienia obrazu dla Facebooka/Twittera. Canonical pozostaje natywny.
+Nowy wpis jest przygotowany w bazie jako szkic tylko na czas uzupełnienia
+wszystkich pól, a następnie publikowany automatycznie w tym samym przebiegu.
+Nie trzeba szukać go w Szkicach ani samodzielnie zatwierdzać publikacji.
+
+ISTNIEJĄCY SZKIC / BRAK DUPLIKATÓW
+Importer rozpoznaje oba wcześniejsze warianty szkicu Altiora z 3.2.36.
+Wykorzystuje ten sam ID, zachowuje treść, tytuł, autora, slug i istniejące pola SEO.
+Uzupełnia wyłącznie brakujące metadane i dodaje kategorie/tagi.
+Wykrywa stary stan błędu lub niedokończony import i podejmuje pracę na tym samym ID.
+Istniejący opublikowany artykuł nie jest nadpisywany ani publikowany ponownie.
+Wpisu prywatnego, zaplanowanego lub w koszu nie upublicznia i nie przywraca.
+Zajęty adres nie powoduje stworzenia nowej kopii z dopiskiem -2.
+Po zakończeniu migracji późniejsze ręczne wycofanie lub usunięcie wpisu jest respektowane.
+Zgodne obrazy starszego wariantu zostały zachowane dla jego zapisanych odnośników.
+
+GRAFIKA
+W pierwszej kolejności wykorzystywany jest istniejący obraz wyróżniający
+lub podana grafika realizacji z Mediów. Jeśli plik istnieje w uploads,
+ale nie ma rekordu w Mediach, wtyczka rejestruje go wraz z metadanymi.
+Dopiero jako dalsza opcja pobiera konkretny obraz podany w artykule (limit 12 sekund).
+Jeśli hosting zablokuje import, artykuł i karta Wiedzy zachowują podany URL
+obrazu, a w panelu pojawia się ostrzeżenie. Nie zastępuje go obcym zdjęciem.
+Nie udało się pobrać tej grafiki z sieci w środowisku przygotowania paczki;
+import w bibliotece został sprawdzony na kontrolowanych lokalnych danych.
+
+SZABLON I CACHE
+Nowy wpis korzysta z istniejącego szablonu artykułu (bez kopiowania zawartości
+innego projektu, jego schematów lub skryptów). Gdy szablonu Elementor nie ma,
+używa pełnego HTML artykułu i dołączonych oryginalnych stylów.
+Zapisany layout istniejącego szkicu nie jest nadpisywany.
+Po publikacji są czyszczone cache wpisu, indeksu Wiedzy, CSS wpisu Elementor
+oraz cache HTML Suite. Zewnętrzny cache/CDN może wymagać osobnego odświeżenia.
+
+KONTROLA I BŁĘDY
+Niepowodzenie zapisu treści, kategorii, SEO lub publikacji zostawia informację
+w panelu; nie jest przedstawiane jako udana publikacja.
+Błędy są ponawiane do 3 razy, z co najmniej minutą przerwy pomiędzy próbami,
+na kolejnych wejściach administratora. Nie ma nieskończonej pętli importu.
+
+TESTY W TEJ PACZCE
+35 scenariuszy testów logiki PHP w kontrolowanym środowisku z atrapami API
+WordPressa: nowy wpis, istniejące szkice obu wersji, aktualizacja bez aktywacji,
+publikacja, metadane, ponowne uruchomienia, blokada równoległych wywołań,
+konflikty adresów, niedokończony import, błędy zapisu i warianty obrazów.
+Rzeczywista funkcja klonowania szablonu z Suite była użyta w teście layoutu.
+To nie jest test na publicznym WordPressie użytkownika ani nowy Lighthouse.
+Plik TESTY_IMPORTU.json podaje dokładny wykaz scenariuszy.
+
+COFNIĘCIE
+Zastąp wtyczkę poprzednią kopią ZIP. Publikacja jest zapisem w bazie, więc
+samo cofnięcie kodu nie usuwa wpisu; można zmienić jego status w edycji wpisu.
+Nie jest wykonywane automatyczne kasowanie artykułów ani mediów.

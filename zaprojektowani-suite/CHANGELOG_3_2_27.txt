@@ -1,0 +1,8 @@
+Zaprojektowani Suite 3.2.27 — 2026-10-16
+
+- Corrected browser scroll-snap restoration after randomizing review cards.
+- Each new review-carousel initialization starts at the first randomized mixed-source cards.
+- Kept manual navigation, reading pauses, ten-second rotation and all 80 verified reviews.
+- Play now advances immediately before continuing automatic rotation; visible-edge detection has been improved.
+- Removed the team photo on mobile; selected a different three-person cut-out for desktop, increased its height by 7% and removed its background card.
+- Added an authentic featured Facebook review by Tomasz Kociołek about the Świat Grilli project above the review carousel.

@@ -1,0 +1,4 @@
+3.2.17 — 15.10.2026
+
+Przyciski case studies mają navy gradient Zaprojektowani, większy rozmiar i większą czcionkę, także w szczegółach portfolio.
+Przywrócono pełny rozmiar zdjęcia zespołu w środkowych sekcjach usługowych; używany jest pełny istniejący obraz w pakiecie. Zachowano odsłonięcie głów oraz kontrolowane wygaszenie dolnej krawędzi.

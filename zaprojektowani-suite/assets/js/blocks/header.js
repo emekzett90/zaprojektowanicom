@@ -40,6 +40,8 @@
     }catch(e){}
 
     var shell=qs('.zpNewNav__shell',nav);
+    var caseHeader=nav.getAttribute('data-zp-case-header')==='1';
+    var caseHero=caseHeader ? qs('.zpCS18 > .zpCS18__hero') : null;
     /* v2.2.420: do not visually gate the mobile header on Lucide.
        CSS reserves icon boxes, so controls are stable from first paint. */
     nav.classList.add('zp-icons-ready');
@@ -261,6 +263,13 @@
     }
 
     function updateSpacer(){
+      /* 3.2.34: mobile home has its final CSS clearance from first paint.
+         Do not inject a new in-flow element when the deferred controller starts. */
+      if(!isDesktop() && d.body && d.body.classList.contains('zp-mobile-shell-3234')){
+        syncHeroOverlay();
+        if(spacer && spacer.parentNode) spacer.style.height='0px';
+        return;
+      }
       var s=ensureSpacer();
       syncHeroOverlay();
 
@@ -279,10 +288,10 @@
       s.style.height=h+'px';
     }
 
-    function applyMobileGlass(y){
+    function applyMobileGlass(scrolled){
       if(!shell) return;
       var mobile = w.matchMedia('(max-width:1100px)').matches;
-      var sticky = y > 18 && mobile && !nav.classList.contains('is-mega-open');
+      var sticky = scrolled && mobile && !nav.classList.contains('is-mega-open');
 
       if(sticky){
         /* v1.8.82: hard runtime glass. CSS had many historical !important layers,
@@ -328,10 +337,17 @@
 
     function setScrolledState(initialY){
       var y=typeof initialY==='number' ? initialY : (w.scrollY || d.documentElement.scrollTop || 0);
+      // Only the verified Case Studies shell waits for its first light section.
+      // Read both boundaries before the existing state/style writes below.
+      var scrolled=y>18;
+      if(caseHeader){
+        caseHero=caseHero || qs('.zpCS18 > .zpCS18__hero');
+        if(caseHero){scrolled=caseHero.getBoundingClientRect().bottom <= (shell || nav).getBoundingClientRect().bottom;}
+      }
       syncHeroOverlay();
-      setCls(nav,'is-scrolled', y>18);
-      setCls(d.body,'zp-nav-scrolled', y>18);
-      applyMobileGlass(y);
+      setCls(nav,'is-scrolled', scrolled);
+      setCls(d.body,'zp-nav-scrolled', scrolled);
+      applyMobileGlass(scrolled);
       updateSpacer();
     }
 
@@ -574,6 +590,7 @@
       if(resizeRaf) return;
       resizeRaf=w.requestAnimationFrame(function(){
         resizeRaf=null;
+        if(caseHeader) setScrolledState();
         updateSpacer();
         updateMegaTop();
         if(!isDesktop()) closeAll();
@@ -613,8 +630,12 @@
     setActive();
     syncHeroOverlay();
     syncAdminOffset();
-    ensureSpacer();
+    if(isDesktop() || !d.body || !d.body.classList.contains('zp-mobile-shell-3234')) ensureSpacer();
     setScrolledState(initialScrollY);
+    if(caseHeader){
+      w.addEventListener('load',function(){setScrolledState();},{once:true,passive:true});
+      w.addEventListener('pageshow',function(){setScrolledState();},{passive:true});
+    }
     updateSpacer();
     updateMegaTop();
     renderIcons();

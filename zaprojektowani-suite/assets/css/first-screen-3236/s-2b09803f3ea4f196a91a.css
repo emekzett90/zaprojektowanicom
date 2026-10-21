@@ -1,0 +1,29 @@
+
+@media (max-width:1100px){
+  /* Existing visual state, ready as soon as the HTML is parsed. */
+  html.zp-mobile-hero-ready body.home #zhHero,
+  html.zp-mobile-hero-ready body.front-page #zhHero{
+    opacity:1!important;
+    visibility:visible!important;
+    pointer-events:auto!important;
+    transform:translate3d(0,0,0)!important;
+    transition:opacity .48s cubic-bezier(.16,1,.3,1),transform .62s cubic-bezier(.16,1,.3,1)!important;
+  }
+
+  /* Keep the header above the hero. */
+  html body #zpNewNav{
+    z-index:2147483000!important;
+  }
+
+  /* Team image only: another 30 px up; layout/kicker stays where it was. */
+  html body.home #zhHero .zh__crew,
+  html body.front-page #zhHero .zh__crew{
+    transform:translate3d(0,-30px,0)!important;
+    will-change:transform!important;
+  }
+}
+
+@media (prefers-reduced-motion:reduce) and (max-width:1100px){
+  html.zp-mobile-hero-ready body.home #zhHero,
+  html.zp-mobile-hero-ready body.front-page #zhHero{transition:none!important}
+}

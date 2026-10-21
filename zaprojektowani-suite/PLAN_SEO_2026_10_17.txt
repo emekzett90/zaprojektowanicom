@@ -1,0 +1,179 @@
+PLAN ROZWOJU WIDOCZNOŚCI ZAPROJEKTOWANI.COM
+Przygotowany 17.10.2026 do aktualizacji Suite 3.2.32
+
+CEL
+Zwiększyć widoczność poradników, które już zaczęły zdobywać pozycje,
+i ułatwić przejście od czytania do zapytania o usługę. Strona firmowa ma
+wysoki priorytet biznesowy. Największy potencjał z dostarczonego zestawienia
+wolumenów mają identyfikacja wizualna i rebranding.
+
+BAZA PORÓWNANIA
+Poniższe liczby odczytano z trzech dostarczonych zrzutów Senuto z 17.10.2026.
+Wolumen jest wartością pokazaną przy frazie, nie liczbą odwiedzin strony.
+Pozycja dotyczy frazy widocznej w zestawieniu, nie średniej dla całego URL-a.
+To zapis ze zrzutów; w tym zadaniu nie pobierano nowych danych z konta GSC,
+GA4 ani aktualnego API Senuto.
+
+PRIORYTETY I INTENCJE
+P1 — Strona internetowa dla firmy: wolumen 480, pozycja 14 (wcześniej 21).
+URL: https://zaprojektowani.com/strony-internetowe/jak-stworzyc-strone-internetowa/
+Zadanie: pomóc wybrać sposób wykonania strony, określić zakres i sprawdzić
+wdrożenie. Nowe przykłady z portfolio i próby odbioru wzmacniają praktyczność.
+
+P1 — Identyfikacja wizualna firmy: 1600, pozycja 19 (wcześniej 17).
+URL: https://zaprojektowani.com/logo-branding/identyfikacja-wizualna-firmy/
+Zadanie: wyjaśnić, co tworzy system marki i jak korzysta z niego firma.
+Nowe plansze oraz tabela odbioru pokazują konkretne zastosowania.
+
+P1 — Rebranding firmy: 880, pozycja 20 (wcześniej 21).
+URL: https://zaprojektowani.com/logo-branding/rebranding-firmy/
+Zadanie: decyzja o zakresie zmiany, przygotowanie premiery, odpowiedzialności.
+Przykłady objaśniają wdrożenie; nie są udawanymi historiami „przed i po”.
+
+P1 — Logo wektorowe / pliki logo: 480, pozycja 23.
+URL: https://zaprojektowani.com/logo-branding/logo-wektorowe-pliki-logo/
+Zadanie: pomóc rozpoznać właściwe warianty i przekazać wykonawcy dobry plik.
+Nowe plansze, nazwy plików i testy stanowią materiał użytkowy.
+
+P1 — Landing page — przykłady: 320, pozycja 19.
+URL: https://zaprojektowani.com/seo-i-konwersja/landing-page-przyklady/
+Zadanie: pokazać działanie struktury i CTA oraz sposób sprawdzenia hipotezy.
+Ilustracje stron firmowych są wyraźnie opisane jako inspiracje do rozwiązania
+konkretnego zadania na landingu, a nie dane o skuteczności kampanii.
+
+P2 — Strona internetowa dla małej firmy: 90, pozycja 17 (wcześniej 50+).
+URL: https://zaprojektowani.com/strony-www/strona-internetowa-dla-malej-firmy/
+Zadanie: ograniczyć pierwszy zakres i wskazać moment, w którym warto rozwijać
+stronę. Zachować odrębność od ogólnego poradnika o sposobie tworzenia.
+
+P2 — Rodzaje stron internetowych: 140, pozycja 22.
+URL: https://zaprojektowani.com/strony-internetowe/rodzaje-stron-internetowych/
+Zadanie: rozróżnić cel strony, jej strukturę oraz technologię. Kierować do
+właściwego poradnika lub usługi po rozpoznaniu potrzeb.
+
+P2 — Proces tworzenia strony: 70, pozycja 22.
+URL: https://zaprojektowani.com/strony-internetowe/tworzenie-stron-internetowych-profesjonalny-proces-od-strategii-do-wdrozenia/
+Zadanie: wyjaśnić przebieg współpracy, wkład klienta i kryteria zatwierdzania.
+
+P1 biznesowo / P2 według wolumenu — Zawartość strony firmowej: 70, pozycja 25.
+URL: https://zaprojektowani.com/strony-internetowe/strona-internetowa-dla-firmy-co-powinna-zawierac/
+Zadanie: pomóc rozpisać ofertę, strukturę i materiały. Nowy link z usługi
+ogólnopolskiej i linki ze wszystkich ośmiu branż wzmacniają powiązanie tematu
+z rzeczywistą ofertą agencji.
+
+ETAP 1 — PRZYGOTOWANE W TEJ PACZCE
+1. Dodatkowe sekcje w dziewięciu poradnikach: 15 łącznie.
+2. Jedenaście dodatkowych ilustracji z istniejących realizacji. Obrazy
+   WebP mają opisy kontekstowe, alty i wymiary; są ładowane leniwie.
+3. Rozbudowane spisy treści oraz linki między artykułami o pokrewnych,
+   ale odrębnych zadaniach.
+4. Linki do odpowiednich usług i prawdziwych case studies.
+5. Sześć nowych odnośników z ofert, bez powielania istniejących linków
+   kontekstowych. Ważne połączenia: logo → identyfikacja / rebranding
+   oraz tworzenie stron → zawartość strony firmowej.
+6. Wszystkie osiem branż: przykładowa struktura, droga odbiorcy do kontaktu,
+   materiały na start, odnośnik do właściwego portfolio oraz branżowa wycena.
+7. Mobilna góra strony bez animacji wejścia i zależności od kopii gradientu.
+8. Jednorazowa obsługa cache i sygnału merytorycznej aktualizacji w mapach
+   witryny przy włączonych odpowiednich mechanizmach Suite.
+
+ETAP 2 — DZIEŃ WDROŻENIA
+- Wgrać paczkę jako aktualizację istniejącej wtyczki i otworzyć panel ponownie.
+- Sprawdzić pięć URL-i P1 oraz stronę firmową: kod 200, jeden właściwy H1,
+  dotychczasowy canonical, widoczne nowe sekcje i działające spisy treści.
+- Otworzyć po jednej karcie portfolio i odnośniku wyceny na telefonie.
+- W Search Console użyć Inspekcji URL dla pięciu głównych poradników
+  i strony firmowej; sprawdzić dostępność oraz wyrenderowaną treść.
+  Po poprawnym teście można skorzystać z prośby o indeksację tych adresów.
+- Zapisać datę wdrożenia i wyeksportować ostatnie pełne 28 dni GSC dla tych
+  dziewięciu URL-i: kliknięcia, wyświetlenia, CTR, pozycja, zapytania i urządzenia.
+- Zanotować zapytania o usługi z formularza/telefonu, jeśli można przypisać
+  je do wejścia z artykułu lub strony branżowej. Korzystać z obecnego pomiaru,
+  zamiast dokładać drugi system lub dodatkowe skrypty na hero.
+
+ETAP 3 — PO 7–14 DNIACH
+Cel tego sprawdzenia: upewnić się, że Google widzi aktualizację.
+- Zweryfikować ponowne pobranie najważniejszych adresów i obecność nowych
+  materiałów w wyrenderowanej stronie.
+- Uzupełniać tylko konkretne braki: niedziałający link, błędny obraz,
+  niejasną instrukcję albo temat powtarzający się w nowych zapytaniach.
+- Zachować zapis pierwszych zmian pozycji, lecz nie oceniać całej pracy
+  na podstawie pojedynczego dnia.
+
+ETAP 4 — PIERWSZE PORÓWNANIE PO 3–4 TYGODNIACH
+Porównać dostępny pełny okres po wdrożeniu z równym okresem przed nim,
+docelowo 28 dni do 28 dni. Stosować te same filtry kraju, urządzenia,
+strony i zapytań. Uwzględnić równoległe kampanie oraz zmianę sezonu.
+
+Dla każdego URL-a zapisać:
+- liczbę kliknięć i wyświetleń;
+- CTR przy podobnej pozycji i dla tego samego zestawu zapytań;
+- pozycje głównych fraz w Senuto;
+- nowe zapytania blisko TOP10;
+- przejścia do usług / wyceny i liczbę jakościowych zapytań, jeżeli obecny
+  pomiar na to pozwala.
+
+Decyzje wynikające z danych:
+A. Przybywa wyświetleń i kliknięć → zachować kierunek; kolejna poprawka ma
+   wynikać z konkretnego pytania odbiorcy, a nie z potrzeby dopisania tekstu.
+B. Pozycja jest podobna, wyświetlenia rosną, CTR słaby → sprawdzić tytuł,
+   opis i zgodność z faktycznym zapytaniem. Zmienić jeden element, zapisać datę.
+C. Wiele wyświetleń na pozycjach około 8–20 dla pytania bez dobrej odpowiedzi
+   → dodać krótki, konkretny fragment w odpowiednim istniejącym poradniku.
+D. Kliknięcia rosną, ale brak przejść do usług → doprecyzować ofertę,
+   przykład i następny krok w miejscu, w którym czytelnik podejmuje decyzję.
+E. Wyniki spadają → najpierw sprawdzić indeksację, canonical, dostępność,
+   urządzenia i zmianę zapytań; dopiero potem oceniać samą treść.
+
+ETAP 5 — KOLEJNA ITERACJA PO 6–8 TYGODNIACH
+Kolejność prac wyznaczyć według widocznych szans: większy wolumen,
+bliskość pierwszej strony wyników i wartość zapytań dla agencji.
+
+Dla identyfikacji / rebrandingu:
+- rozwinąć jeden prawdziwy projekt o brief, decyzje projektowe i zakres
+  przekazanych materiałów, jeśli dostępne są udokumentowane dane;
+- połączyć takie case study z właściwym poradnikiem i ofertą;
+- wykorzystać oryginalne kadry lub autentyczne zdjęcia materiałów z realizacji.
+
+Dla strony firmowej:
+- użyć rzeczywistych zapytań GSC, aby rozbudować właściwy poradnik:
+  tworzenie / zawartość / mała firma;
+- uzupełnić odpowiednie branże o dodatkowe rzeczywiste realizacje, gdy są
+  dostępne, oraz konkretne odpowiedzi na pytania otrzymywane przy wycenach;
+- w kolejnej iteracji zweryfikować, czy podstrony usług i artykuły wspierają
+  różne intencje, czy faktycznie konkurują o identyczne zapytania.
+
+LOKALNE SKLEPY A LOKALNE STRONY WWW
+Na dostarczonym zrzucie niektóre frazy sklepowe pokazują URL usługi stron WWW.
+Pojedynczy raport nie rozstrzyga, czy występuje kanibalizacja. W tej paczce
+lokalna oferta WWW dostaje jasny kontekst produktów/koszyka/płatności
+z linkiem do /sklepy-internetowe-katowice/.
+Kolejny krok po zebraniu danych: w GSC porównać oba adresy dla identycznych
+zapytań sklepowych. Obserwować, czy Google częściej wybiera właściwą ofertę.
+Nie zmieniać adresów ani przekierowań wyłącznie na podstawie jednego zrzutu.
+
+JAK OCENIAĆ EFEKT
+Roboczy cel pierwszej iteracji: zwiększenie udziału fraz w TOP10 i liczby
+wartościowych wejść na priorytetowe poradniki, a następnie zapytań o usługi.
+Nie ma uczciwej gwarancji określonej pozycji ani terminu. Sam wzrost liczby
+zdjęć lub długości tekstu nie przesądza o wzroście widoczności.
+
+Uzasadnienie strategii: Google zaleca materiały przydatne dla odbiorcy,
+obrazy związane z otaczającą treścią i odnośniki, które można przeszukiwać
+oraz których opis wyjaśnia cel. Dlatego obecna aktualizacja używa własnych
+projektów, praktycznych materiałów i kontekstowych połączeń między treściami.
+
+ŹRÓDŁA
+Dostarczone zrzuty Senuto:
+Screenshot 2026-10-17 at 11.09.08.png
+Screenshot 2026-10-17 at 11.10.04.png
+Screenshot 2026-10-17 at 11.10.20.png
+
+Dokumentacja Google:
+https://developers.google.com/search/docs/fundamentals/creating-helpful-content
+https://developers.google.com/search/docs/appearance/google-images
+https://developers.google.com/search/docs/crawling-indexing/links-crawlable
+https://support.google.com/webmasters/answer/9012289
+
+Plan jest instrukcją dalszych działań. Nie tworzy automatycznych zadań,
+nie uruchamia kampanii i nie publikuje nowych artykułów bez osobnego zlecenia.

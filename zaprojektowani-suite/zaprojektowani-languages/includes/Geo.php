@@ -394,7 +394,7 @@ final class Geo {
             if ($src === '') { return $tag; }
             $srcL = strtolower(html_entity_decode($src, ENT_QUOTES | ENT_HTML5, 'UTF-8'));
 
-            $marketing = preg_match('~(?:youtube(?:-nocookie)?\.com/(?:embed|watch)|youtu\.be/|player\.vimeo\.com|facebook\.com/(?:plugins|tr)|doubleclick\.net|googleadservices\.com|google\.com/maps/embed)~i', $srcL);
+            $marketing = preg_match('~(?:youtube(?:-nocookie)?\.com/(?:embed|watch)|youtu\.be/|player\.vimeo\.com|facebook\.com/(?:plugins|tr)|doubleclick\.net|googleadservices\.com|google\.com/maps(?:/embed|\?(?:[^#\s]*&)?output=embed(?:[&#]|$)))~i', $srcL);
             if (!$marketing) { return $tag; }
 
             $tag = preg_replace('~\s+src\s*=\s*(["\'])[^"\']*\1~i', '', $tag, 1) ?? $tag;

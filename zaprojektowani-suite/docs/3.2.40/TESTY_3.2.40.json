@@ -1,0 +1,258 @@
+{
+  "release": "3.2.40",
+  "baseline": "3.2.38.2",
+  "test_environment": "Local Chromium, component renderer with WordPress stubs; not production Lighthouse or iOS",
+  "caseViewportChecks": 80,
+  "caseViewportFailures": 0,
+  "portfolioChecks": [
+    {
+      "width": 320,
+      "card": 0,
+      "ok": true,
+      "tone": "light",
+      "sample": "image",
+      "left": 16,
+      "color": "rgb(7, 20, 38)",
+      "bg": "rgba(255, 255, 255, 0.94)",
+      "img": 900,
+      "type": "Strona firmowa / design i wnętrza"
+    },
+    {
+      "width": 320,
+      "card": 1,
+      "ok": true,
+      "tone": "dark",
+      "sample": "image",
+      "left": 16,
+      "color": "rgb(255, 255, 255)",
+      "bg": "rgba(7, 20, 38, 0.9)",
+      "img": 900,
+      "type": "Strona firmowa / technika zabezpieczeń"
+    },
+    {
+      "width": 390,
+      "card": 0,
+      "ok": true,
+      "tone": "light",
+      "sample": "image",
+      "left": 16,
+      "color": "rgb(7, 20, 38)",
+      "bg": "rgba(255, 255, 255, 0.94)",
+      "img": 900,
+      "type": "Strona firmowa / design i wnętrza"
+    },
+    {
+      "width": 390,
+      "card": 1,
+      "ok": true,
+      "tone": "dark",
+      "sample": "image",
+      "left": 16,
+      "color": "rgb(255, 255, 255)",
+      "bg": "rgba(7, 20, 38, 0.9)",
+      "img": 900,
+      "type": "Strona firmowa / technika zabezpieczeń"
+    },
+    {
+      "width": 430,
+      "card": 0,
+      "ok": true,
+      "tone": "light",
+      "sample": "image",
+      "left": 16,
+      "color": "rgb(7, 20, 38)",
+      "bg": "rgba(255, 255, 255, 0.94)",
+      "img": 900,
+      "type": "Strona firmowa / design i wnętrza"
+    },
+    {
+      "width": 430,
+      "card": 1,
+      "ok": true,
+      "tone": "dark",
+      "sample": "image",
+      "left": 16,
+      "color": "rgb(255, 255, 255)",
+      "bg": "rgba(7, 20, 38, 0.9)",
+      "img": 900,
+      "type": "Strona firmowa / technika zabezpieczeń"
+    },
+    {
+      "width": 768,
+      "card": 0,
+      "ok": true,
+      "tone": "light",
+      "sample": "image",
+      "left": 24,
+      "color": "rgb(7, 20, 38)",
+      "bg": "rgba(255, 255, 255, 0.94)",
+      "img": 900,
+      "type": "Strona firmowa / design i wnętrza"
+    },
+    {
+      "width": 768,
+      "card": 1,
+      "ok": true,
+      "tone": "dark",
+      "sample": "image",
+      "left": 24,
+      "color": "rgb(255, 255, 255)",
+      "bg": "rgba(7, 20, 38, 0.9)",
+      "img": 900,
+      "type": "Strona firmowa / technika zabezpieczeń"
+    },
+    {
+      "width": 1440,
+      "card": 0,
+      "ok": true,
+      "tone": "light",
+      "sample": "image",
+      "left": 24,
+      "color": "rgb(7, 20, 38)",
+      "bg": "rgba(255, 255, 255, 0.94)",
+      "img": 900,
+      "type": "Strona firmowa / design i wnętrza"
+    },
+    {
+      "width": 1440,
+      "card": 1,
+      "ok": true,
+      "tone": "dark",
+      "sample": "image",
+      "left": 24,
+      "color": "rgb(255, 255, 255)",
+      "bg": "rgba(7, 20, 38, 0.9)",
+      "img": 900,
+      "type": "Strona firmowa / technika zabezpieczeń"
+    },
+    {
+      "width": 1920,
+      "card": 0,
+      "ok": true,
+      "tone": "light",
+      "sample": "image",
+      "left": 24,
+      "color": "rgb(7, 20, 38)",
+      "bg": "rgba(255, 255, 255, 0.94)",
+      "img": 900,
+      "type": "Strona firmowa / design i wnętrza"
+    },
+    {
+      "width": 1920,
+      "card": 1,
+      "ok": true,
+      "tone": "dark",
+      "sample": "image",
+      "left": 24,
+      "color": "rgb(255, 255, 255)",
+      "bg": "rgba(7, 20, 38, 0.9)",
+      "img": 900,
+      "type": "Strona firmowa / technika zabezpieczeń"
+    }
+  ],
+  "map": [
+    {
+      "width": 320,
+      "ok": true,
+      "name": "Warszawa",
+      "points": 3,
+      "nav": 4,
+      "maps": 1,
+      "docWidth": 320
+    },
+    {
+      "width": 390,
+      "ok": true,
+      "name": "Warszawa",
+      "points": 3,
+      "nav": 4,
+      "maps": 1,
+      "docWidth": 390
+    },
+    {
+      "width": 768,
+      "ok": true,
+      "name": "Warszawa",
+      "points": 3,
+      "nav": 4,
+      "maps": 1,
+      "docWidth": 768
+    },
+    {
+      "width": 1440,
+      "ok": true,
+      "name": "Warszawa",
+      "points": 3,
+      "nav": 4,
+      "maps": 1,
+      "docWidth": 1440
+    },
+    {
+      "width": 1920,
+      "ok": true,
+      "name": "Warszawa",
+      "points": 3,
+      "nav": 4,
+      "maps": 1,
+      "docWidth": 1920
+    }
+  ],
+  "languageWidget": [
+    {
+      "active": 1,
+      "lang": "pl",
+      "height": 527.6875,
+      "text": "Marki dobrane do charakteru wnętrza.",
+      "url": "about:blank"
+    },
+    {
+      "active": 1,
+      "lang": "en",
+      "height": 527.6875,
+      "text": "Brands selected for the character of your interior.",
+      "url": "about:blank"
+    },
+    {
+      "active": 1,
+      "lang": "it",
+      "height": 527.6875,
+      "text": "Marchi selezionati per il carattere dei tuoi interni.",
+      "url": "about:blank"
+    },
+    {
+      "active": 1,
+      "lang": "pl",
+      "height": 527.6875,
+      "text": "Marki dobrane do charakteru wnętrza.",
+      "url": "about:blank"
+    }
+  ],
+  "withoutJavaScript": true,
+  "phpSyntaxCount": 704,
+  "jsSyntax": [
+    {
+      "name": "portfolio-contrast-3240.js",
+      "code": 0,
+      "message": ""
+    },
+    {
+      "name": "case-language-demo-3240.js",
+      "code": 0,
+      "message": ""
+    }
+  ],
+  "changedSourceFiles": [
+    "zaprojektowani-suite/assets/css/case-studies-20261018.css",
+    "zaprojektowani-suite/includes/case-studies-render-20261018.php",
+    "zaprojektowani-suite/templates/home-seo-intro.php",
+    "zaprojektowani-suite/templates/legacy/legacy-portfolio.php",
+    "zaprojektowani-suite/zaprojektowani-suite.php"
+  ],
+  "addedSourceFiles": [
+    "includes/visual-refinements-3240.php",
+    "assets/css/home-refine-3240.css",
+    "assets/js/portfolio-contrast-3240.js",
+    "assets/js/case-language-demo-3240.js"
+  ],
+  "missingBaselineFiles": []
+}

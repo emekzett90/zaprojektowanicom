@@ -98,6 +98,8 @@ function zp_seo_plan_service_node(): ?array {
  * the knowledge base (blog-knowledge.php), because an alias category redirects (301) to the topic's first category.
  */
 function zp_seo_plan_breadcrumb_category(int $id, string $url): ?array {
+  $reviewed = apply_filters('zp_seo_plan_breadcrumb_category', null, $id, $url);
+  if (is_array($reviewed)) { return $reviewed; }
   $segments = explode('/', trim(zp_seo_plan_path($url), '/'));
   $term = count($segments) > 1 ? get_term_by('slug', $segments[count($segments) - 2], 'category') : null;
   if (!$term instanceof WP_Term) {

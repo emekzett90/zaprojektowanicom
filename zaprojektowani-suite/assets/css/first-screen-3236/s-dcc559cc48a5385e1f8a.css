@@ -1,0 +1,116 @@
+
+/* ZP live home hero — stały odstęp od headera + smooth first paint */
+.zh{--zpHeaderH:clamp(78px,6.2vw,104px);--zhHeaderGap:clamp(50px,5.2vw,86px);content-visibility:visible;contain:none;}
+.zh__inner{padding-top:calc(var(--zpHeaderH) + var(--zhHeaderGap))!important;}
+.zh__stage{transform:translateZ(0);backface-visibility:hidden;}
+.zh__spline{opacity:0;transition:opacity .45s ease;}
+.zh.is-spline-loaded .zh__spline{opacity:1;}
+.zh.is-spline-loaded .zh__poster{opacity:0;}
+@media(min-width:1101px){
+  .zh{min-height:calc(100svh + 18px)!important;}
+  .zh__inner{min-height:calc(100svh + 18px)!important;}
+}
+@media(max-width:1100px){
+  .zh{--zpHeaderH:clamp(72px,12vw,96px);--zhHeaderGap:42px;content-visibility:visible;}
+  .zh__inner{padding-top:calc(var(--zpHeaderH) + var(--zhHeaderGap))!important;}
+  .zh__stage{pointer-events:none!important;}
+}
+@media(max-width:600px){
+  .zh{--zpHeaderH:74px;--zhHeaderGap:38px;}
+  .zh__inner{padding-top:calc(var(--zpHeaderH) + var(--zhHeaderGap))!important;}
+}
+
+/* PATCH v2.2.494 — mobile: sam poster, robot wyżej, krótszy kicker w jednej linii */
+@media(max-width:1100px){
+  .zh .zh__spline{display:none!important;visibility:hidden!important;opacity:0!important;pointer-events:none!important;}
+  .zh .zh__stage{transform:none!important;pointer-events:none!important;}
+  .zh .zh__poster,
+  .zh.is-spline-loaded .zh__poster{
+    display:block!important;
+    opacity:1!important;
+    background-position:center calc(50% - 22px)!important;
+  }
+  .zh .zh__eb{white-space:nowrap!important;font-size:9.5px!important;letter-spacing:.145em!important;gap:10px!important;}
+  .zh .zh__eb .dot{flex-basis:32px!important;width:32px!important;}
+}
+@media(max-width:600px){
+  .zh .zh__poster,
+  .zh.is-spline-loaded .zh__poster{
+    background-position:center calc(50% - 26px)!important;
+  }
+  .zh .zh__eb{font-size:8.6px!important;letter-spacing:.105em!important;gap:8px!important;}
+  .zh .zh__eb .dot{flex-basis:24px!important;width:24px!important;}
+}
+@media(max-width:370px){
+  .zh .zh__eb{font-size:8px!important;letter-spacing:.075em!important;}
+  .zh .zh__eb .dot{flex-basis:18px!important;width:18px!important;}
+}
+
+
+/* PATCH v2.2.697 — Home hero: bez clipowania liter + jaśniejszy, animowany gradient */
+.zh .zh__title{
+  overflow:visible!important;
+}
+.zh .zh__title .zh__grad{
+  display:inline-block!important;
+  overflow:visible!important;
+  line-height:1.12!important;
+  padding-top:.015em!important;
+  padding-right:.13em!important;
+  padding-bottom:.18em!important;
+  padding-left:.025em!important;
+  margin-top:-.015em!important;
+  margin-right:-.065em!important;
+  margin-bottom:-.115em!important;
+  margin-left:-.025em!important;
+  vertical-align:baseline!important;
+  background-image:linear-gradient(105deg,
+    #79baf0 0%,
+    #bfe5ff 20%,
+    #ffffff 42%,
+    #dff3ff 58%,
+    #9fd3fb 78%,
+    #ffffff 100%)!important;
+  background-size:260% 100%!important;
+  background-position:0% 50%!important;
+  -webkit-background-clip:text!important;
+  background-clip:text!important;
+  -webkit-text-fill-color:transparent!important;
+  color:transparent!important;
+  animation:zhHeroGradientFlow 4.8s ease-in-out 1s infinite alternate!important;
+  will-change:background-position!important;
+}
+@keyframes zhHeroGradientFlow{
+  0%{background-position:0% 50%}
+  100%{background-position:100% 50%}
+}
+@media(max-width:1100px){
+  .zh .zh__title .zh__grad{
+    line-height:1.14!important;
+    padding-bottom:.21em!important;
+    margin-bottom:-.13em!important;
+    background-image:linear-gradient(105deg,
+      #a9d9fb 0%,
+      #e7f7ff 22%,
+      #ffffff 44%,
+      #eefaff 60%,
+      #bce5ff 80%,
+      #ffffff 100%)!important;
+    background-size:280% 100%!important;
+    animation-duration:5.2s!important;
+  }
+}
+@media(max-width:600px){
+  .zh .zh__title .zh__grad{
+    line-height:1.16!important;
+    padding-bottom:.23em!important;
+    margin-bottom:-.14em!important;
+  }
+}
+@media(prefers-reduced-motion:reduce){
+  .zh .zh__title .zh__grad{
+    animation:none!important;
+    background-position:52% 50%!important;
+  }
+}
+

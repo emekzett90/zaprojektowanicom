@@ -73,13 +73,21 @@ function zp_speed_lazy_ratio_ops(string $html, array $scan): array {
       . 'if(!u||u.indexOf("data:")==0||!i.naturalWidth||i.zpArSrc==u)return;i.zpArSrc=u;'
       . 'var t=new Image;t.onload=function(){var x=t.naturalWidth,y=t.naturalHeight,b=r(i);'
       . 'if(x>0&&y>0&&b>0&&Math.abs(x/y-b)>b*1e-6&&(i.currentSrc||i.src)==u)i.style.setProperty("--zp-ar",x+"/"+y)};t.src=u}'
-      . 'var pending=[],scheduled=false;'
-      . 'function run(){scheduled=false;var n=pending;pending=[];n.forEach(function(i){i.zpArQ=0});n.map(p).forEach(a)}'
+      // 3.2.47: the server ratio already reserves image space. Only inspect computed
+      // boxes near the viewport; offscreen image loads must not force full-page layout.
+      // Keep the read-all/write-all pass, source swaps, late CSS and dynamic insertions.
+      . 'var pending=[],scheduled=false,visible=new Set,seen=new WeakSet,io=null;'
+      . 'function run(){scheduled=false;var n=pending;pending=[];n.forEach(function(i){i.zpArQ=0});n.filter(function(i){return i.isConnected&&(!io||visible.has(i))}).map(p).forEach(a)}'
       . 'function add(i){if(i&&!i.zpArQ&&i.style&&i.style.getPropertyValue("--zp-ar")){i.zpArQ=1;pending.push(i)}}'
-      . 'function later(){if(scheduled)return;scheduled=true;if(typeof w.requestAnimationFrame=="function"){try{w.requestAnimationFrame(run);return}catch(e){}}run()}'
-      . 'function all(){[].forEach.call(d.querySelectorAll("img[style*=\'--zp-ar\']"),add);later()}'
-      . 'd.addEventListener("load",function(e){if(e.target&&e.target.tagName=="IMG"){add(e.target);later()}},true);'
-      . 'd.addEventListener("DOMContentLoaded",all);w.addEventListener("load",all)})(window,document)</script>'];
+      . 'function later(){if(scheduled||!pending.length)return;scheduled=true;if(typeof w.requestAnimationFrame=="function"){try{w.requestAnimationFrame(run);return}catch(e){}}run()}'
+      . 'function watch(i){if(!i||!i.style||!i.style.getPropertyValue("--zp-ar"))return;if(!seen.has(i)){seen.add(i);if(io)io.observe(i);else visible.add(i)}if(!io||visible.has(i)){add(i);later()}}'
+      . 'if("IntersectionObserver" in w){io=new IntersectionObserver(function(entries){entries.forEach(function(e){if(e.isIntersecting){visible.add(e.target);add(e.target)}else visible.delete(e.target)});later()},{rootMargin:"400px 0px"})}'
+      . 'function scan(node){if(!node||node.nodeType!==1&&node.nodeType!==9)return;if(node.tagName==="IMG")watch(node);if(node.querySelectorAll)[].forEach.call(node.querySelectorAll("img[style*=\'--zp-ar\']"),watch)}'
+      . 'function refresh(){visible.forEach(function(i){if(!i.isConnected){visible.delete(i);if(io)io.unobserve(i);return}add(i)});later()}'
+      . 'function start(){scan(d);if("MutationObserver" in w){new MutationObserver(function(ms){ms.forEach(function(m){if(m.type==="attributes")watch(m.target);else[].forEach.call(m.addedNodes,scan)})}).observe(d.body,{subtree:true,childList:true,attributes:true,attributeFilter:["src","srcset","sizes"]})}}'
+      . 'd.addEventListener("load",function(e){if(e.target&&e.target.tagName==="IMG")watch(e.target)},true);'
+      . 'if(d.readyState==="loading")d.addEventListener("DOMContentLoaded",start,{once:true});else start();'
+      . 'w.addEventListener("load",refresh,{once:true});w.addEventListener("resize",refresh,{passive:true});w.addEventListener("pageshow",refresh)})(window,document)</script>'];
   }
   return $ops;
 }

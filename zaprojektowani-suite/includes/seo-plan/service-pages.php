@@ -154,6 +154,7 @@ function zp_seo_service_faq_candidate($uri): bool {
   $paths = array_fill_keys(array_merge(array_keys(zp_seo_plan_data('pages')), [
     '/tworzenie-stron-internetowych/', '/tworzenie-sklepow-internetowych/', '/projektowanie-logo/',
     '/identyfikacja-wizualna/', '/strony-internetowe-katowice/', '/sklepy-internetowe-katowice/', '/logo-branding-katowice/',
+    '/kampanie-reklamowe/', '/',
   ]), true);
   if (isset($paths[$path])) { return true; }
   if (strpos($path, '/en/') !== 0) { return false; }
@@ -176,7 +177,7 @@ function zp_seo_service_faq_context(): bool {
   $id = (int) get_queried_object_id();
   if (!$id || get_post_status($id) !== 'publish' || (string) get_post_field('post_password', $id) !== '') { return false; }
   $path = zp_seo_plan_path((string) get_permalink($id));
-  return isset(zp_seo_service_registry()[$path]);
+  return $path === '/' || $path === '/kampanie-reklamowe/' || isset(zp_seo_service_registry()[$path]);
 }
 
 /** Read text only; the source DOM/markup is never saved back to the document. */
@@ -298,7 +299,12 @@ function zp_seo_service_faq_document_buffer(string $chunk, int $phase): string {
     if ((stripos($header, 'Content-Type:') === 0 && stripos($header, 'text/html') === false)
       || stripos($header, 'Content-Encoding:') === 0) { return $html; }
   }
-  try { return zp_seo_service_faq_sync_document($html); } catch (Throwable $error) { return $html; }
+  try {
+    $updated = apply_filters('zp_service_widgets_document', $html);
+    // Home already owns FAQ microdata; retain it without introducing another FAQPage.
+    $path = zp_seo_plan_path((string) get_permalink(get_queried_object_id()));
+    return $path === '/' ? $updated : zp_seo_service_faq_sync_document($updated);
+  } catch (Throwable $error) { return $html; }
 }
 
 // Included before plugins_loaded: outer to Runtime::boot (PHP_INT_MIN), so EN is already translated.

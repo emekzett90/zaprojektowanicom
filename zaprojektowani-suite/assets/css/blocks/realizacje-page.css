@@ -2221,3 +2221,25 @@ body.zp-realizacje-shortcode #zpRealizacjePage{
     background:#fff!important;
   }
 }
+
+
+/* 3.2.18 — Realizacje: retain title descenders and remove the mobile photo's inherited empty height. */
+#zpRealizacjePage .heroCopy #zpRealizacjeTitle{
+  padding-bottom:.18em;
+  overflow:visible;
+  clip-path:none!important;
+  will-change:transform,opacity;
+}
+@media (max-width:700px){
+  #zpRealizacjePage .heroTop{row-gap:18px!important}
+  #zpRealizacjePage .heroTeam{
+    height:auto!important;
+    min-height:0!important;
+    margin:0 auto!important;
+  }
+  #zpRealizacjePage .heroTeam__media{
+    height:auto!important;
+    min-height:0!important;
+  }
+  #zpRealizacjePage .heroTeam img{transform:none!important}
+}

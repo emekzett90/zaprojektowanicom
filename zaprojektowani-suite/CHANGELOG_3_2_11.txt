@@ -1,0 +1,10 @@
+Zaprojektowani Suite 3.2.11 — 2026-10-15
+
+- Dwa pełne case studies PL/EN: Siemianowski i Apartament Piękna, z własnymi okładkami, metadanymi SEO i linkami z portfolio.
+- Wiedza: wyszukiwanie, filtry oraz artykuły przed rozbudowanym blokiem wprowadzającym; zachowane treści i linkowanie HTML.
+- Wspólna mapa współpracy na białym tle nad FAQ: 10 miast, rysowanie konturu, delikatny ruch i obsługa ograniczenia animacji.
+- FAQ z właściwym zdjęciem Mateusza, dodatkowymi pytaniami związanymi z usługą i synchronizacją widocznej treści z FAQ schema.
+- Sekcje zespołu: widoczne głowy nad tłem, dolna krawędź fotografii mieści się w sekcji.
+- Strony branżowe: pełny kadr fotografii bez górnej maski; wybrane rzeczywiste realizacje i stabilne linki portfolio PL/EN.
+
+Zachowuje bazę 3.2.10, w tym automatyczny start animacji na desktopie i poprzednie poprawki Studia wyceny.

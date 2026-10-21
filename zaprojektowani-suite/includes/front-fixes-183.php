@@ -283,6 +283,7 @@ add_action('wp_footer', function(){
       },true);
       document.addEventListener('keydown',function(e){ if(e.key==='Escape'){closeLayer(qs('#zpNewNavDrawer'));closeLayer(qs('#zpNewNavSearch'));} });
       function normalizeContact(){
+        if(!qs('#zpContactSystemLight')) return;
         qsa('#zpContactSystemLight .zpContactSystemLight__service').forEach(function(card){
           var check=card.querySelector(':scope > .zpContactSystemLight__serviceCheck');
           if(check){ card.appendChild(check); }

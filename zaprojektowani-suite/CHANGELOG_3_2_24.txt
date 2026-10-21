@@ -1,0 +1,6 @@
+Zaprojektowani Suite 3.2.24 — 16.10.2026
+- Home: six real, attributed reviews, three Google and three Facebook, with source logos, dates, full-text expansion, Trustindex wordmark and team image.
+- Verified figures: Trustindex4.9/146; Facebook100%recommend/62, checked16October2026. Snapshot provenance retained. Legacy aggregate badges normalized after translation; individual review ratings and project counts preserved.
+- Home FAQ:13 detailed PL/EN answers, service-style1750px layout, Mateusz portrait, native accessible disclosures and visible-source FAQ microdata.
+- Trusted brands: server-rendered logo grid with original CMS brands, no scroll-reveal visibility gate, no timer/carousel runtime.
+- Existing legal, Studio NIP, service pages, case studies and content preserved. No newsletter/admin redesign in this release.

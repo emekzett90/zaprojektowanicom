@@ -596,7 +596,6 @@ add_filter('script_loader_tag', function ($tag, $handle, $src) {
 
   $delay_handles = [
     'zp-suite-motion-lite',
-    'zp-suite-trust-logos',
     'zp-suite-laptop-showcase',
     'zp-suite-showcase-services',
     'zp-suite-footer',

@@ -1,0 +1,136 @@
+/* Scope: one desktop photograph/mockup in each service hero and in Knowledge.
+   Individual scale/translate preserve each template's transform and float animation.
+   Home/Spline, client logos, badges, background video and mobile duplicates are excluded.
+   The mobile About guard below only reserves clearance for its fixed header. */
+@media (min-width:1101px) {
+  html body #zp-strony-internetowe-katowice #start.hero .hero-build > img.hero-shot[src],
+  html body #zp-logo-branding-katowice #start.hero .hero-stage > img.hero-team[src],
+  html body .zpCampaignPage #start.hero .hero-stage > img.hero-team[src],
+  html body section#zhHero.zpShopHeroUnified .zh__stage--brand .zh__brandMockWrap > img.zh__brandMock[src],
+  html body section#zhHero.zh--knowledge.zpUnifiedServiceHero .zh__stage--knowledge .zkPerson > img.zkPerson__img[src],
+  html body section#zhHero.zh--contact.zpUnifiedServiceHero .zh__stage--contact .zkPerson > img.zkPerson__img[src],
+  html body #zpRealizacjePage .heroTeam > .heroTeam__media > img[src],
+  html body #zpAboutX .zpAboutX__hero .zpAboutX__heroVisual > img.zpAboutX__heroPerson[src] {
+    scale:.95 !important;
+    translate:0 var(--zp-hero-image-fit-y,24px) !important;
+    transform-origin:center bottom !important;
+  }
+  /* The website laptop already has scale:1.38. Retain its large composition,
+     reducing that current scale by5%, rather than resetting it to.95. */
+  html body #zp-strony-internetowe-katowice #start.hero:not([data-zp-industry]) .hero-build > img.hero-shot[src] {
+    scale:1.311 !important;
+  }
+  html body #zp-strony-internetowe-katowice #start.hero .hero-build > img.hero-shot[src] {
+    transform-origin:100% 100% !important;
+  }
+}
+
+/* A wide but short display needs more clearance than a tall one: at2560x900
+   the Knowledge image started above y0 while the header ended at y120.
+   Interpolate24px at1200px height to128px at900px, then220px at768px.
+   The small extra margin covers the existing gentle float animation. */
+@media (min-width:1920px) {
+  html body #zp-strony-internetowe-katowice #start.hero,
+  html body #zp-logo-branding-katowice #start.hero,
+  html body .zpCampaignPage #start.hero,
+  html body section#zhHero.zpShopHeroUnified,
+  html body section#zhHero.zh--knowledge.zpUnifiedServiceHero,
+  html body section#zhHero.zh--contact.zpUnifiedServiceHero {
+    --zp-hero-image-fit-y:clamp(24px,calc(440px - 34.6667svh),128px);
+  }
+}
+@media (min-width:1920px) and (max-height:900px) {
+  html body #zp-strony-internetowe-katowice #start.hero,
+  html body #zp-logo-branding-katowice #start.hero,
+  html body .zpCampaignPage #start.hero,
+  html body section#zhHero.zpShopHeroUnified,
+  html body section#zhHero.zh--knowledge.zpUnifiedServiceHero,
+  html body section#zhHero.zh--contact.zpUnifiedServiceHero {
+    --zp-hero-image-fit-y:clamp(128px,calc(755.273px - 69.697svh),220px);
+  }
+}
+
+/* 3.2.16: only the eight PL/EN industry heroes. Their current photograph scale
+   is .95 (the non-industry laptop's1.311 rule does not apply), so .95*1.07=1.0165.
+   Position the photo from its top edge; this removes the old height-dependent
+   translateY(-50%) and the wide/short viewport's extra128px downward offset. */
+@media (min-width:1101px) {
+  html body.zp-industry-hero-fit #zp-strony-internetowe-katowice #start.hero[data-zp-industry] .hero-build {
+    top:132px !important;
+    bottom:auto !important;
+    height:auto !important;
+    transform:none !important;
+  }
+  html body.zp-industry-hero-fit #zp-strony-internetowe-katowice #start.hero[data-zp-industry] .hero-build > img.zpIndHero.hero-shot[src] {
+    scale:1.0165 !important;
+    translate:0 0 !important;
+    transform-origin:100% 0 !important;
+  }
+  /* Track the actual kicker instead of estimating it from viewport height.
+     The132px floor keeps the image below the desktop header. Older browsers
+     retain the stable132px top fallback, with no JS or layout measurement loop. */
+  @supports (top:anchor(--zp-industry-hero-kicker top,132px)) {
+    html body.zp-industry-hero-fit #zp-strony-internetowe-katowice #start.hero[data-zp-industry] .hero-copy > .hero-eyebrow {
+      anchor-name:--zp-industry-hero-kicker;
+    }
+    html body.zp-industry-hero-fit #zp-strony-internetowe-katowice #start.hero[data-zp-industry] .hero-build {
+      top:max(132px,anchor(--zp-industry-hero-kicker top,132px)) !important;
+    }
+  }
+}
+
+/* About's legacy external stylesheet still applies its old 58px mobile inset. */
+@media (max-width:980px) {
+  html body #zpAboutX .zpAboutX__hero {
+    padding-top:98px !important;
+  }
+}
+
+
+/* 3.2.19 — Shared service/Knowledge H1 typography, matching the approved Logo hero.
+   Exact existing hero roots keep home, cards, H2s, About and footer outside this rule.
+   Responsive H1 sizes, line-height, spacing and image composition stay template-owned. */
+html body :is(#zp-strony-internetowe-katowice,#zp-logo-branding-katowice,#zpCampaignPage) section#start.hero .hero-inner .hero-copy > h1,
+html body #zp-sklepy-internetowe-katowice section#zhHero.zh.zpShopHeroUnified .zh__copy > h1.zh__title,
+html body section#zhHero.zh.zh--knowledge.zpUnifiedServiceHero[data-zp-unified-service-hero] .zh__copy > h1.zh__title {
+  font-family:"Plus Jakarta Sans Local",system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif!important;
+  font-weight:480!important;
+  letter-spacing:-.058em!important;
+  font-variation-settings:"wght" 480!important;
+  overflow:visible!important;
+  clip-path:none!important;
+}
+html body :is(#zp-strony-internetowe-katowice,#zp-logo-branding-katowice,#zpCampaignPage) section#start.hero .hero-inner .hero-copy > h1 > .gradient-text,
+html body #zp-sklepy-internetowe-katowice section#zhHero.zh.zpShopHeroUnified .zh__copy > h1.zh__title > .zh__grad,
+html body section#zhHero.zh.zh--knowledge.zpUnifiedServiceHero[data-zp-unified-service-hero] .zh__copy > h1.zh__title > .zh__grad {
+  display:inline!important;
+  overflow:visible!important;
+  clip-path:none!important;
+  white-space:normal!important;
+  font-family:inherit!important;
+  font-size:inherit!important;
+  font-weight:720!important;
+  font-variation-settings:"wght" 720!important;
+  letter-spacing:inherit!important;
+  color:transparent!important;
+  background-image:linear-gradient(105deg,#79baf0 0%,#bfe5ff 20%,#fff 42%,#dff3ff 58%,#9fd3fb 78%,#fff 100%)!important;
+  background-size:260% 100%!important;
+  -webkit-background-clip:text!important;
+  background-clip:text!important;
+  -webkit-text-fill-color:transparent!important;
+  -webkit-box-decoration-break:clone!important;
+  box-decoration-break:clone!important;
+}
+@media(max-width:1100px) {
+html body :is(#zp-strony-internetowe-katowice,#zp-logo-branding-katowice,#zpCampaignPage) section#start.hero .hero-inner .hero-copy > h1 > .gradient-text,
+html body #zp-sklepy-internetowe-katowice section#zhHero.zh.zpShopHeroUnified .zh__copy > h1.zh__title > .zh__grad,
+html body section#zhHero.zh.zh--knowledge.zpUnifiedServiceHero[data-zp-unified-service-hero] .zh__copy > h1.zh__title > .zh__grad {
+  background-image:linear-gradient(105deg,#a8d8ff 0%,#e2f4ff 19%,#fff 40%,#eef9ff 60%,#b9e2ff 79%,#fff 100%)!important;
+  background-size:280% 100%!important;
+}
+}
+@media(max-width:680px) {
+html body #zp-sklepy-internetowe-katowice section#zhHero.zh.zpShopHeroUnified .zh__copy > h1.zh__title {
+  max-width:none!important;
+}
+}

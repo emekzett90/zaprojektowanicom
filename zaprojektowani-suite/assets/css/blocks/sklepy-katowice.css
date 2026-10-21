@@ -154,3 +154,69 @@
 #oferta-sklepow.zpShopPackages--premium .zpShopPackageV2__featureIcon svg{width:14px;height:14px}
 @media(max-width:1360px){#oferta-sklepow.zpShopPackages--premium .zpShopPackageV2__features li{font-size:16px!important}}
 @media(max-width:760px){#oferta-sklepow.zpShopPackages--premium .zpShopPackageV2__features::before{font-size:14px}#oferta-sklepow.zpShopPackages--premium .zpShopPackageV2__features li{font-size:15.7px!important}}
+
+/* 3.2.18 — mobile package portraits keep clear of the preceding action. */
+@media(max-width:1180px){
+ html body #oferta-sklepow.zpShopPackages--premium .zpShopPackages__grid{row-gap:340px!important;}
+}
+@media(max-width:760px){
+ html body #oferta-sklepow.zpShopPackages--premium .zpShopPackages__grid{row-gap:194px!important;}
+}
+/* Keep the portfolio CTA background at the viewport edges inside a padded page. */
+html body #portfolio-sklepy .zpShopPortfolio__cta--fullBleed{
+ position:relative;isolation:isolate;overflow:visible!important;
+}
+html body #portfolio-sklepy .zpShopPortfolio__cta--fullBleed::after{
+ content:"";position:absolute;z-index:-1;inset:0 calc((100% - 100vw)/2);height:auto;opacity:1;
+ background:radial-gradient(circle at 78% 22%,rgba(28,71,122,.34),transparent 34%),radial-gradient(circle at 44% 92%,rgba(59,110,168,.16),transparent 38%),linear-gradient(135deg,#020306 0%,#05070b 36%,#07111f 68%,#081a32 100%);
+ pointer-events:none;
+}
+@media(max-width:860px){
+ html body #portfolio-sklepy,html body #portfolio-sklepy .zpShopPortfolio__inner{overflow:visible!important;}
+}
+
+/* 3.2.18 — shop process: center the rocket and keep the start label unobstructed. */
+html body #zpShopProcessFlow.zpShopProcessFlow .zpShopProcessFlow__rocketProgress{row-gap:44px}
+html body #zpShopProcessFlow.zpShopProcessFlow .zpShopProcessFlow__rocketIcon{
+  top:50%!important;
+  transform:translate3d(0,-50%,0) rotate(var(--rocketRotateDesktop,42deg))!important;
+  transform-origin:50% 50%;
+}
+html body #zpShopProcessFlow.zpShopProcessFlow .zpShopProcessFlow__rocketIcon,
+html body #zpShopProcessFlow.zpShopProcessFlow .zpShopProcessFlow__rocketGlow{
+  left:calc(16px + var(--processProgress) * (100% - var(--rocketSizeDesktop) - 32px))!important;
+}
+@media(max-width:880px){
+  html body #zpShopProcessFlow.zpShopProcessFlow .zpShopProcessFlow__rocketProgress{row-gap:32px}
+  html body #zpShopProcessFlow.zpShopProcessFlow .zpShopProcessFlow__rocketIcon{
+    transform:translate3d(0,-50%,0) rotate(var(--rocketRotateMobile,42deg))!important;
+  }
+  html body #zpShopProcessFlow.zpShopProcessFlow .zpShopProcessFlow__rocketIcon,
+  html body #zpShopProcessFlow.zpShopProcessFlow .zpShopProcessFlow__rocketGlow{
+    left:calc(16px + var(--processProgress) * (100% - var(--rocketSizeMobile) - 32px))!important;
+  }
+}
+
+/* 3.2.18 — Shop service heading: use the existing Logo gradient and let the accent wrap inline. */
+html body #zp-sklepy-internetowe-katowice #zhHero.zpShopHeroUnified[data-zp-service-visual="shops"] h1.zh__title .zh__grad{
+  display:inline!important;
+  white-space:normal!important;
+  font-weight:720!important;
+  font-variation-settings:"wght" 720!important;
+  background-image:linear-gradient(105deg,#79baf0 0%,#bfe5ff 20%,#fff 42%,#dff3ff 58%,#9fd3fb 78%,#fff 100%)!important;
+  background-size:260% 100%!important;
+  -webkit-background-clip:text!important;
+  background-clip:text!important;
+  -webkit-text-fill-color:transparent!important;
+  -webkit-box-decoration-break:clone!important;
+  box-decoration-break:clone!important;
+}
+@media(max-width:1100px){
+  html body #zp-sklepy-internetowe-katowice #zhHero.zpShopHeroUnified[data-zp-service-visual="shops"] h1.zh__title{
+    max-width:none!important;
+  }
+  html body #zp-sklepy-internetowe-katowice #zhHero.zpShopHeroUnified[data-zp-service-visual="shops"] h1.zh__title .zh__grad{
+    background-image:linear-gradient(105deg,#a8d8ff 0%,#e2f4ff 19%,#fff 40%,#eef9ff 60%,#b9e2ff 79%,#fff 100%)!important;
+    background-size:280% 100%!important;
+  }
+}

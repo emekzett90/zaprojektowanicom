@@ -101,6 +101,7 @@ function zp_home_faq_294_plugin_items(): array {
 }
 
 function zp_home_faq_294_new(): array {
+  if (function_exists('zp_home_faq_20261016')) { return zp_home_faq_20261016(zp_home_refresh_english()); }
   $L = static function (string $path, string $text, string $attrs = ''): string {
     return function_exists('zp_seo_plan_live_link') ? zp_seo_plan_live_link($path, $text, '', $attrs) : $text;
   };

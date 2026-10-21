@@ -1,0 +1,92 @@
+
+    #zpShopWhyLight{
+      --mockX: 0px !important;
+      --mockY: -100px !important;
+      --mockScale: 1 !important;
+      --mockRotate: -3.2deg !important;
+      --mockMobileX: 0px !important;
+      --mockMobileY: 0px !important;
+      --mockMobileScale: 1 !important;
+      --chipsX: 0px !important;
+      --chipsY: 0px !important;
+      --chipsScale: 1 !important;
+      --checkoutCardX: 0px !important;
+      --checkoutCardY: 0px !important;
+      --checkoutFinalY: -360px !important;
+      --checkoutCardScale: 1 !important;
+      --salesCardX: 0px !important;
+      --salesCardY: 0px !important;
+      --salesCardScale: 1 !important;
+      --chipsXMobile: 0px !important;
+      --chipsYMobile: 0px !important;
+      --chipsScaleMobile: 1 !important;
+      --checkoutCardXMobile: 0px !important;
+      --checkoutCardYMobile: 0px !important;
+      --checkoutCardScaleMobile: 1 !important;
+      --salesCardXMobile: 0px !important;
+      --salesCardYMobile: 0px !important;
+      --salesCardScaleMobile: 1 !important;
+            --floatCardsX:0px!important;
+      --floatCardsY:0px!important;
+      --visualMoveX:0px!important;
+      --visualMoveY:0px!important;
+      --visualScale:1!important;
+    }
+    #zpShopWhyLight .zpShopWhyLight__mockWrap{
+      transform:translate(calc(-50% + var(--mockX)),calc(-50% + var(--mockY))) rotate(var(--mockRotate)) scale(var(--mockScale))!important;
+    }
+    #zpShopWhyLight .zpShopWhyLight__floatCard--a{
+      left:calc(0px + var(--checkoutCardX))!important;
+      top:calc(14% + var(--checkoutCardY))!important;
+      animation:zpShopWhyFloatACtrl 6.8s ease-in-out infinite!important;
+      transform-origin:center center!important;
+    }
+    #zpShopWhyLight .zpShopWhyLight__floatCard--b{
+      right:calc(4% - var(--salesCardX))!important;
+      bottom:calc(14% - var(--salesCardY))!important;
+      animation:zpShopWhyFloatBCtrl 7.2s ease-in-out infinite!important;
+      transform-origin:center center!important;
+    }
+    #zpShopWhyLight .zpShopWhyLight__chips{
+      left:calc(6% + var(--chipsX))!important;
+      bottom:calc(6% - var(--chipsY))!important;
+      transform:scale(var(--chipsScale))!important;
+      transform-origin:left bottom!important;
+    }
+    @keyframes zpShopWhyFloatACtrl{
+      0%,100%{transform:rotate(-2deg) scale(var(--checkoutCardScale));}
+      50%{transform:translate3d(8px,-14px,0) rotate(1deg) scale(var(--checkoutCardScale));}
+    }
+    @keyframes zpShopWhyFloatBCtrl{
+      0%,100%{transform:rotate(2deg) scale(var(--salesCardScale));}
+      50%{transform:translate3d(-10px,-12px,0) rotate(-1deg) scale(var(--salesCardScale));}
+    }
+    @media(max-width:760px){
+      #zpShopWhyLight{
+        --mockX:var(--mockMobileX)!important;
+        --mockY:var(--mockMobileY)!important;
+        --mockScale:var(--mockMobileScale)!important;
+        --chipsX:var(--chipsXMobile)!important;
+        --chipsY:var(--chipsYMobile)!important;
+        --chipsScale:var(--chipsScaleMobile)!important;
+        --checkoutCardX:var(--checkoutCardXMobile)!important;
+        --checkoutCardY:var(--checkoutCardYMobile)!important;
+        --checkoutCardScale:var(--checkoutCardScaleMobile)!important;
+        --salesCardX:var(--salesCardXMobile)!important;
+        --salesCardY:var(--salesCardYMobile)!important;
+        --salesCardScale:var(--salesCardScaleMobile)!important;
+      }
+      #zpShopWhyLight .zpShopWhyLight__chips{
+        left:calc(0px + var(--chipsX))!important;
+        bottom:calc(28px - var(--chipsY))!important;
+      }
+      #zpShopWhyLight .zpShopWhyLight__floatCard--a{
+        left:calc(2px + var(--checkoutCardX))!important;
+        top:calc(3% + var(--checkoutCardY))!important;
+      }
+      #zpShopWhyLight .zpShopWhyLight__floatCard--b{
+        right:calc(0px - var(--salesCardX))!important;
+        bottom:calc(18% - var(--salesCardY))!important;
+      }
+    }
+  

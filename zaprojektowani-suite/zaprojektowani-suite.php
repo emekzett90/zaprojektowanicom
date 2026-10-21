@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Zaprojektowani Suite
  * Description: Zaprojektowani Suite z wersją angielską strony (PL/EN, adresy /en/, przełącznik języka), automatycznymi naprawami SEO, nagłówków, zasobów i paginacji na podstawie audytu z 13.09.2026.
- * Version: 3.2.3
+ * Version: 3.2.50
  * Requires at least: 6.5
  * Requires PHP: 8.0
  * Author: Zaprojektowani.com
@@ -16,7 +16,7 @@ if (defined('ZP_SUITE_VERSION')) {
   return;
 }
 
-define('ZP_SUITE_VERSION', '3.2.3');
+define('ZP_SUITE_VERSION', '3.2.50');
 define('ZP_SUITE_PATH', plugin_dir_path(__FILE__));
 define('ZP_SUITE_URL', plugin_dir_url(__FILE__));
 
@@ -37,6 +37,9 @@ require_once ZP_SUITE_PATH . 'includes/elementor-compat.php';
 // SEO audit 13.10.2026: image descriptions (PL/EN) and the other fixes from that audit.
 require_once ZP_SUITE_PATH . 'includes/seo-audit-20261013.php';
 
+// 3.2.35: one server-first header; outer response adapter must load before speed/translation.
+require_once ZP_SUITE_PATH . 'includes/mobile-header-ssr-3235.php';
+
 // v2.9.3 — speed: style blocks printed in <body> are gathered (same order) and body:has() rules become a <body> attribute check (no visual change). Loads first.
 require_once ZP_SUITE_PATH . 'includes/speed-293.php';
 // Speed, server side: per-page settings read in one query and published-page checks kept between page views (same HTML). Right after speed-293.php.
@@ -45,6 +48,17 @@ require_once ZP_SUITE_PATH . 'includes/speed-server.php';
 require_once ZP_SUITE_PATH . 'includes/speed-images.php';
 // SEO audit 13.10.2026: a lighter HTML document; inline CSS and the mobile portfolio cards move to static files (same look).
 require_once ZP_SUITE_PATH . 'includes/speed-html-weight.php';
+// Exact reviewed CSS snapshots and conservative per-route pruning; keep first-screen CSS inline.
+require_once ZP_SUITE_PATH . 'includes/css-route-prune-20261015.php';
+require_once ZP_SUITE_PATH . 'includes/css-delivery-20261015.php';
+require_once ZP_SUITE_PATH . 'includes/services-faq-20261015.php';
+require_once ZP_SUITE_PATH . 'includes/home-refresh-20261016.php';
+require_once ZP_SUITE_PATH . 'includes/service-coverage-20261015.php';
+require_once ZP_SUITE_PATH . 'includes/case-studies-20261015.php';
+require_once ZP_SUITE_PATH . 'includes/knowledge-translations-20261015.php';
+require_once ZP_SUITE_PATH . 'includes/service-industry-20261015.php';
+require_once ZP_SUITE_PATH . 'includes/industry-portfolio-20261015.php';
+require_once ZP_SUITE_PATH . 'includes/service-hero-image-fit-20261015.php';
 
 // v2.3.0 — nationwide service pages reuse the Katowice templates; gating helpers load first.
 require_once ZP_SUITE_PATH . 'includes/seo-plan/service-kind.php';
@@ -134,9 +148,11 @@ require_once ZP_SUITE_PATH . 'includes/front-fixes-234.php';
 require_once ZP_SUITE_PATH . 'includes/front-fixes-235.php';
 require_once ZP_SUITE_PATH . 'includes/front-fixes-236.php';
 require_once ZP_SUITE_PATH . 'includes/studio-wyceny.php';
+require_once ZP_SUITE_PATH . 'includes/studio-company-lookup-20261016.php';
 require_once ZP_SUITE_PATH . 'includes/thank-you-pages.php';
 require_once ZP_SUITE_PATH . 'includes/meta-events.php';
 require_once ZP_SUITE_PATH . 'includes/legal-pages.php';
+require_once ZP_SUITE_PATH . 'includes/legal-translations-20261016.php';
 require_once ZP_SUITE_PATH . 'includes/blog-knowledge.php';
 require_once ZP_SUITE_PATH . 'includes/shop-katowice-page.php';
 require_once ZP_SUITE_PATH . 'includes/logo-branding-katowice-page.php';
@@ -1639,6 +1655,14 @@ ZP_Single_Translator_20261010::register();
 // Editor analysis only: native content and SEO fields are never rewritten.
 require_once ZP_SUITE_PATH . 'includes/rankmath-content-bridge-20261011.php';
 ZP_RankMath_Content_Bridge_20261011::register();
+// Reviewed article taxonomy and social images; URL pins also run on public requests.
+require_once ZP_SUITE_PATH . 'includes/article-seo-manifest-20261015.php';
+require_once ZP_SUITE_PATH . 'includes/article-seo-maintenance-20261015.php';
+require_once ZP_SUITE_PATH . 'includes/article-seo-sitemap-20261015.php';
+require_once ZP_SUITE_PATH . 'includes/article-rankmath-tools-20261015.php';
+require_once ZP_SUITE_PATH . 'includes/article-taxonomy-routes-20261015.php';
+require_once ZP_SUITE_PATH . 'includes/article-seo-translations-20261015.php';
+require_once ZP_SUITE_PATH . 'includes/article-title-compatibility-20261015.php';
 // Rounded USD is a public presentation layer after verified full EN translation.
 require_once ZP_SUITE_PATH . 'includes/en-public-currency-20261011.php';
 ZP_EN_Public_Currency_20261011::register();
@@ -1695,3 +1719,37 @@ require_once ZP_SUITE_PATH . 'includes/contact-quick.php';
 /* Duży formularz: zdjęcie zespołu zamiast podglądu „Nowa wiadomość”, na każdej stronie inne niż reszta zdjęć zespołu na niej. */
 require_once ZP_SUITE_PATH . 'includes/contact-team-photo.php';
 
+// 3.2.32: useful industry plans, portfolio-backed article examples and contextual service links.
+require_once ZP_SUITE_PATH . 'includes/contact-industry-polish-20261017.php';
+require_once ZP_SUITE_PATH . 'includes/article-growth-20261017.php';
+require_once ZP_SUITE_PATH . 'includes/service-editorial-links-20261017.php';
+require_once ZP_SUITE_PATH . 'includes/growth-release-20261017.php';
+// Keep this final head hook after legacy hero entrance layers; its CSS is mobile-only.
+require_once ZP_SUITE_PATH . 'includes/mobile-hero-instant-20261017.php';
+
+
+require_once ZP_SUITE_PATH . 'includes/home-first-paint-3233.php';
+
+// 3.2.34: declarative mobile header + stable builder host; desktop unchanged.
+require_once ZP_SUITE_PATH . 'includes/mobile-header-shell-3234.php';
+
+// 3.2.36: reviewed case study, portfolio and contextual editorial examples.
+require_once ZP_SUITE_PATH . 'includes/altiora-article-3236.php';
+require_once ZP_SUITE_PATH . 'includes/portfolio-altiora-3236.php';
+require_once ZP_SUITE_PATH . 'includes/editorial-3236.php';
+
+require_once ZP_SUITE_PATH . 'includes/first-screen-delivery-3236.php';
+
+// 3.2.37: owner-requested, automatic Altiora publication; resumes a 3.2.36 draft.
+require_once ZP_SUITE_PATH . 'includes/altiora-autopublish-3237.php';
+
+// 3.2.38: reviewed case-study hub and native project pages; existing language maps remain intact.
+require_once ZP_SUITE_PATH . 'includes/case-studies-render-20261018.php';
+require_once ZP_SUITE_PATH . 'includes/case-pages-20261018.php';
+// Exact output-only repairs from the October audit; preserve later editorial changes.
+
+// 3.2.40: scoped portfolio, shared coverage and case-study presentation refinements.
+require_once ZP_SUITE_PATH . 'includes/visual-refinements-3240.php';
+
+// 3.2.41: editorial case-study layout, native portfolio bridge, approved owner testimonials.
+require_once ZP_SUITE_PATH . 'includes/case-studies-polish-3241.php';

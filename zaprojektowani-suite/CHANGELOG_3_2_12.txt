@@ -1,0 +1,5 @@
+Zaprojektowani Suite 3.2.12 — 2026-10-15
+
+Naprawa renderowania mapy w rzeczywistym buforze dokumentu: bez zagnieżdżonego ob_start.
+Zachowuje kompletny zakres 3.2.11 oraz istniejące publikacje case studies.
+Uzupełnia słownik gotowej treści EN nowych realizacji dla zachowania prawidłowej kontroli kompletności tłumaczenia.

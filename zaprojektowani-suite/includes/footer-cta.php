@@ -62,10 +62,10 @@ function zp_footer_cta_team_img(string $url): string {
 /** Trust figures under the buttons (values from the plugin settings). */
 function zp_footer_cta_proof(): array {
   $projects = function_exists('zp_seo_plan_projects_count') ? zp_seo_plan_projects_count() : (int) zp_suite_opt('stats.projects_count', 114);
-  $rating = trim((string) zp_suite_opt('stats.google_rating', '5.0'));
+  $rating = (string) (zp_reviews_snapshot()['aggregate']['rating'] ?? '');
   $items = [];
   if ($projects > 0) { $items[] = ['value' => $projects . '+', 'label' => 'projektów']; }
-  if ($rating !== '') { $items[] = ['value' => $rating, 'star' => true, 'label' => 'ocena w Google', 'href' => ZP_FOOTER_CTA_REVIEWS]; }
+  if ($rating !== '') { $items[] = ['value' => $rating, 'star' => true, 'label' => 'ocena w Trustindex', 'href' => 'https://www.trustindex.io/reviews/zaprojektowani.com']; }
   $items[] = ['value' => '10+', 'label' => 'lat doświadczenia zespołu'];
   return $items;
 }
@@ -78,6 +78,7 @@ function zp_footer_cta_en_strings(): array {
     'Zaprojektowani w liczbach' => 'Zaprojektowani in numbers',
     'projektów' => 'projects',
     'ocena w Google' => 'Google rating',
+    'ocena w Trustindex' => 'Trustindex rating',
     'lat doświadczenia zespołu' => 'years of team experience',
   ];
 }

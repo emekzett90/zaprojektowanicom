@@ -1,4 +1,21 @@
-Zaprojektowani Suite v2.2.636 — optymalizacja strony głównej, menu mobilnego i Studio Wyceny.
+# Zaprojektowani Suite 3.2.37
+
+Automatycznie dodaje i publikuje artykuł Altiora Linea w Wiedzy po aktywacji
+lub pierwszym wejściu administratora do panelu po zastąpieniu wtyczki.
+Rozpoznaje wcześniejszy szkic i nie tworzy dodatkowej kopii. Nie trzeba
+wklejać HTML ani ręcznie klikać „Opublikuj”. Instrukcja: `INSTRUKCJA_3_2_37.txt`.
+
+Bazą jest ostatnia paczka `3.2.36-altiora-seo-mobile`; frontend i treści
+pozostałych stron nie zostały zmienione w tej aktualizacji.
+
+---
+## Historyczne informacje o wcześniejszych wydaniach
+
+Zaprojektowani Suite v3.2.32 — kontakt, osiem branż, artykuły SEO i natychmiastowy hero mobile.
+
+Aktualizacja z 17.10.2026: instrukcja i zakres zmian w `CHANGELOG_3_2_32.txt`,
+priorytety artykułów i kolejne kroki w `PLAN_SEO_2026_10_17.txt`.
+Poniżej pozostawiono historyczne informacje o wcześniejszych wydaniach.
 
 # Zaprojektowani Suite v2.2.110 — Strony Internetowe Katowice SEO
 

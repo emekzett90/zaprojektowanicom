@@ -18,6 +18,7 @@ Zaprojektowani Suite template / v0.2 assets moved to /assets/css/blocks and /ass
  * the raw logo/menu while external CSS is still loading or being optimized by cache plugins.
  */
 $zp_header_css_file = defined('ZP_SUITE_PATH') ? ZP_SUITE_PATH . 'assets/css/blocks/header.css' : '';
+$zp_header_is_case_20261018 = class_exists('ZP_Case_Pages_20261018') && ZP_Case_Pages_20261018::current_key() !== '';
 
 /*
  * v2.2.552: service desktop header no-FOUC hard fix.
@@ -95,7 +96,8 @@ if ($zp_logo_light === $zp_logo_light_default && $zp_logo_dark === $zp_logo_dark
   $zp_mlogo_h = 235;
 }
 $zp_header_overlay_class = (
-  is_front_page()
+  $zp_header_is_case_20261018
+  || is_front_page()
   || is_home()
   || is_singular('post')
   || zp_suite_service_kind() !== ''
@@ -123,6 +125,7 @@ $zp_header_service_class = !empty($zp_header_is_service_page_552) ? ' zpNewNav--
  * Apply also to /kontakt and the Wiedza index, matching the final service divider behavior.
  * Do not apply to single posts, because article reading pages have their own content background. */
 $zp_header_is_clean_hero_558 = !empty($zp_header_is_service_page_552)
+  || $zp_header_is_case_20261018
   || is_front_page()
   || is_home()
   || is_page('kontakt')
@@ -276,7 +279,19 @@ html body #zpNewNav.zpNewNav--knowledgeArchive:not(.is-mega-open) .zpNewNav__she
 html body #zpNewNav.zpNewNav--knowledgeArchive:not(.is-mega-open){border-bottom:1px solid rgba(7,17,31,.075)!important;}
 </style>
 <?php endif; ?>
-<header class="zpNewNav<?php echo esc_attr($zp_header_overlay_class . $zp_header_service_class . $zp_header_clean_hero_class . $zp_header_archive_class); ?>" id="zpNewNav">
+<?php if ($zp_header_is_case_20261018) : ?>
+<style id="zp-case-header-20261018">
+/* The native overlay state follows the Case Studies hero; menu/drawer states retain their own styling. */
+html body header#zpNewNav[data-zp-case-header="1"].zpNewNav--heroOverlay:not(.is-scrolled):not(.is-mega-open),
+html body header#zpNewNav[data-zp-case-header="1"].zpNewNav--heroOverlay:not(.is-scrolled):not(.is-mega-open) .zpNewNav__shell{background:transparent!important;background-color:transparent!important;background-image:none!important;box-shadow:none!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;}
+html body header#zpNewNav[data-zp-case-header="1"].zpNewNav--heroOverlay:not(.is-scrolled):not(.is-mega-open) .zpNewNav__link,
+html body header#zpNewNav[data-zp-case-header="1"].zpNewNav--heroOverlay:not(.is-scrolled):not(.is-mega-open) .zpNewNav__contactIcon,
+html body header#zpNewNav[data-zp-case-header="1"].zpNewNav--heroOverlay:not(.is-scrolled):not(.is-mega-open) .zpNewNav__caret,
+html body header#zpNewNav[data-zp-case-header="1"].zpNewNav--heroOverlay:not(.is-scrolled):not(.is-mega-open) .zpNewNav__mobileCall,
+html body header#zpNewNav[data-zp-case-header="1"].zpNewNav--heroOverlay:not(.is-scrolled):not(.is-mega-open) .zpNewNav__burger{color:#fff!important;}
+</style>
+<?php endif; ?>
+<header class="zpNewNav<?php echo esc_attr($zp_header_overlay_class . $zp_header_service_class . $zp_header_clean_hero_class . $zp_header_archive_class); ?>" id="zpNewNav"<?php echo $zp_header_is_case_20261018 ? ' data-zp-case-header="1"' : ''; ?>>
   <div class="zpNewNav__shell">
     <div class="zpNewNav__inner">
       <a class="zpNewNav__brand" href="/" aria-label="Zaprojektowani.com">
@@ -385,6 +400,9 @@ $zp_menu_260_promo = static function (string $key, string $href, string $img, st
             </div>
           </li>
           <li class="zpNewNav__item"><a class="zpNewNav__link" href="/realizacje/">Realizacje</a></li>
+          <?php if (class_exists('ZP_Case_Pages_20261018') && ZP_Case_Pages_20261018::index_id() > 0) : ?>
+          <li class="zpNewNav__item"><a class="zpNewNav__link<?php echo ZP_Case_Pages_20261018::current_key() !== '' ? ' is-active' : ''; ?>" data-zp-nav="navCaseStudies" href="<?php echo esc_url(ZP_Case_Pages_20261018::index_url()); ?>"<?php echo ZP_Case_Pages_20261018::current_key() === 'index' ? ' aria-current="page"' : ''; ?>>Case studies</a></li>
+          <?php endif; ?>
           <li class="zpNewNav__item"><a class="zpNewNav__link" href="/wiedza/">Wiedza</a></li>
           <li class="zpNewNav__item"><a class="zpNewNav__link" href="/najczesciej-zadawane-pytania/">FAQ</a></li>
           <li class="zpNewNav__item"><a class="zpNewNav__link" href="/o-nas/">O nas</a></li>
@@ -399,8 +417,8 @@ $zp_menu_260_promo = static function (string $key, string $href, string $img, st
     <?php echo function_exists('zp_suite_header_first_icon') ? zp_suite_header_first_icon('phone') : '<i data-lucide="phone"></i>'; ?><span>Konsultacja</span>
   </a>
   <a class="zpNewNav__mobileBrand" href="/" aria-label="Zaprojektowani.com">
-    <img class="zpNewNav__mobileLogo zpNewNav__mobileLogo--light" src="<?php echo esc_url($zp_mlogo_light); ?>" alt="Zaprojektowani.com" loading="eager" decoding="async" width="<?php echo (int) $zp_mlogo_w; ?>" height="<?php echo (int) $zp_mlogo_h; ?>">
-    <img class="zpNewNav__mobileLogo zpNewNav__mobileLogo--dark" src="<?php echo esc_url($zp_mlogo_dark); ?>" alt="Zaprojektowani.com" loading="eager" decoding="async" width="<?php echo (int) $zp_mlogo_w; ?>" height="<?php echo (int) $zp_mlogo_h; ?>">
+    <img class="zpNewNav__mobileLogo zpNewNav__mobileLogo--light" src="<?php echo function_exists('zp_mobile_shell_logo_attr_3234') ? zp_mobile_shell_logo_attr_3234($zp_mlogo_light) : esc_url($zp_mlogo_light); ?>" alt="Zaprojektowani.com" loading="eager" decoding="async" width="<?php echo (int) $zp_mlogo_w; ?>" height="<?php echo (int) $zp_mlogo_h; ?>">
+    <img class="zpNewNav__mobileLogo zpNewNav__mobileLogo--dark" src="<?php echo function_exists('zp_mobile_shell_logo_attr_3234') ? zp_mobile_shell_logo_attr_3234($zp_mlogo_dark) : esc_url($zp_mlogo_dark); ?>" alt="Zaprojektowani.com" loading="eager" decoding="async" width="<?php echo (int) $zp_mlogo_w; ?>" height="<?php echo (int) $zp_mlogo_h; ?>">
   </a>
   <div class="zpNewNav__mobileActions">
     <button class="zpNewNav__burger" type="button" aria-label="Otwórz menu" aria-expanded="false" aria-controls="zpNewNavDrawer"><?php echo function_exists('zp_suite_header_first_icon') ? zp_suite_header_first_icon('menu') : '<i data-lucide="menu"></i>'; ?></button>
@@ -465,6 +483,9 @@ $zp_menu_260_promo = static function (string $key, string $href, string $img, st
           <?php endif; ?>
 
           <a class="zpNewNav__mLink" href="/realizacje/"><span class="zpNewNav__mIcon"><i data-lucide="gallery-horizontal-end"></i></span><span class="zpNewNav__mMain">Realizacje</span><span class="zpNewNav__mArrow"><i data-lucide="arrow-up-right"></i></span></a>
+          <?php if (class_exists('ZP_Case_Pages_20261018') && ZP_Case_Pages_20261018::index_id() > 0) : ?>
+          <a class="zpNewNav__mLink<?php echo ZP_Case_Pages_20261018::current_key() !== '' ? ' is-active' : ''; ?>" data-zp-nav="navCaseStudies" href="<?php echo esc_url(ZP_Case_Pages_20261018::index_url()); ?>"<?php echo ZP_Case_Pages_20261018::current_key() === 'index' ? ' aria-current="page"' : ''; ?>><span class="zpNewNav__mIcon"><i data-lucide="gallery-horizontal-end"></i></span><span class="zpNewNav__mMain">Case studies</span><span class="zpNewNav__mArrow"><i data-lucide="arrow-up-right"></i></span></a>
+          <?php endif; ?>
           <a class="zpNewNav__mLink" href="/wiedza/"><span class="zpNewNav__mIcon"><i data-lucide="book-open-text"></i></span><span class="zpNewNav__mMain">Wiedza</span><span class="zpNewNav__mArrow"><i data-lucide="arrow-up-right"></i></span></a>
           <a class="zpNewNav__mLink" href="/najczesciej-zadawane-pytania/"><span class="zpNewNav__mIcon"><i data-lucide="circle-help"></i></span><span class="zpNewNav__mMain">FAQ</span><span class="zpNewNav__mArrow"><i data-lucide="arrow-up-right"></i></span></a>
           <a class="zpNewNav__mLink" href="/o-nas/"><span class="zpNewNav__mIcon"><i data-lucide="sparkles"></i></span><span class="zpNewNav__mMain">O nas</span><span class="zpNewNav__mArrow"><i data-lucide="arrow-up-right"></i></span></a>

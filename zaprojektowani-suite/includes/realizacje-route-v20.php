@@ -47,20 +47,64 @@ function zp_suite_is_realizacje_front_v220(){
   return !is_admin() && function_exists('is_page') && is_page('realizacje');
 }
 
+/** Rank Math's saved fields win; these route values are defaults for empty fields. */
+function zp_suite_realizacje_rank_math_owns_v220(string $key): bool {
+  if (!in_array($key, ['rank_math_title', 'rank_math_description', 'rank_math_canonical_url'], true)) { return false; }
+  $id = (int) get_queried_object_id();
+  $saved = $id > 0 ? get_post_meta($id, $key, true) : '';
+  return is_string($saved) && trim($saved) !== '';
+}
+
 add_filter('rank_math/frontend/title', function($title){
   if (!zp_suite_is_realizacje_front_v220()) { return $title; }
+  if (zp_suite_realizacje_rank_math_owns_v220('rank_math_title')) { return $title; }
   return 'Realizacje stron, sklepów i brandingu | Zaprojektowani';
 }, 30);
 
 add_filter('rank_math/frontend/description', function($description){
   if (!zp_suite_is_realizacje_front_v220()) { return $description; }
+  if (zp_suite_realizacje_rank_math_owns_v220('rank_math_description')) { return $description; }
   return 'Zobacz realizacje Zaprojektowani: strony internetowe, sklepy WooCommerce, logo i branding. Poznaj zakres, proces i efekty konkretnych projektów.';
 }, 30);
 
 add_filter('rank_math/frontend/canonical', function($canonical){
   if (!zp_suite_is_realizacje_front_v220()) { return $canonical; }
+  if (zp_suite_realizacje_rank_math_owns_v220('rank_math_canonical_url')) { return $canonical; }
   return home_url('/realizacje/');
 }, 30);
+
+/** English for the two reviewed native fields; later PL edits remain the owner's source. */
+function zp_suite_realizacje_seo_dictionary_v220($layers, $lang, $source): array {
+  $layers = is_array($layers) ? $layers : [];
+  if ($lang !== 'en' || $source !== '/realizacje/' || !zp_suite_is_realizacje_front_v220()
+      || (int)get_queried_object_id() !== 1919 || !class_exists('ZPL\\Html') || !class_exists('ZPL\\Page')) { return $layers; }
+  $post = get_post(1919);
+  if (!$post instanceof WP_Post || $post->post_type !== 'page' || $post->post_status !== 'publish'
+      || $post->post_password !== '' || get_permalink(1919) !== home_url('/realizacje/')) { return $layers; }
+  $reviewed = [
+    'rank_math_title' => [
+      'Realizacje stron internetowych, sklepów i brandingu — Zaprojektowani',
+      'Website, online store and branding projects — Zaprojektowani',
+    ],
+    'rank_math_description' => [
+      'Realizacje stron internetowych, sklepów WooCommerce, logo i brandingu. Zobacz projekty Zaprojektowani.com dla firm z różnych branż.',
+      'Website, WooCommerce, logo and branding projects. Explore Zaprojektowani.com’s work for businesses across a range of industries.',
+    ],
+  ];
+  $map = [];
+  foreach ($reviewed as $key => [$pl, $en]) {
+    if (get_post_meta(1919, $key, true) !== $pl) { continue; }
+    $normalized = \ZPL\Html::norm($pl);
+    $map[$normalized] = $en;
+    foreach ($key === 'rank_math_title' ? ['title', 'meta'] : ['meta'] as $kind) {
+      $map[\ZPL\Page::variant($kind, $normalized)] = $en;
+    }
+  }
+  // Dict puts the owner's manual overrides before all filtered priority layers.
+  if ($map) { array_unshift($layers, $map); }
+  return $layers;
+}
+add_filter('zpl_priority_dictionary', 'zp_suite_realizacje_seo_dictionary_v220', PHP_INT_MAX, 3);
 
 add_filter('rank_math/json_ld', function($data, $jsonld){
   if (!zp_suite_is_realizacje_front_v220() || !function_exists('zp_suite_realizacje_projects')) { return $data; }
