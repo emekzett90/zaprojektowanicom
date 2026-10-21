@@ -10,6 +10,8 @@
 // whatever the browser's language, and so does Lighthouse 10+, which no longer says "Lighthouse" in its user agent.
 // 3.2.31: a verified explicit Polish preference may read the same Polish copy. A session's English choice,
 // unknown/auth cookies and ambiguous raw cookie headers still run WordPress; only cookie-free visits write copies.
+// 3.2.51: WordPress's leftovers after the login page or a logout (wp-settings-*, wordpress_test_cookie, wp_lang) no longer
+// skip the cache either; a logged-in cookie still does, and copies are still written only by cookie-free visits.
 if (!defined('ABSPATH') || !defined('WP_CONTENT_DIR')) { exit; }
 
 final class ZP_Cache_Early_20261009 {
@@ -25,7 +27,12 @@ final class ZP_Cache_Early_20261009 {
      */
     /** Language cookies are harmless on EN, and on PL only after an unambiguous effective Polish choice is verified. */
     public const EN_COOKIES = '~^zpl_lang_(?:pref|session)$~D';
-    public const HARMLESS_COOKIES = '~^(?:CookieConsent(?:BulkSetting-[A-Za-z0-9-]+|BulkTicket)?|_ga(?:_[A-Za-z0-9]+)?|_gid|_gat(?:_[A-Za-z0-9_-]+)?|_gcl_[a-z]+|_gac_[A-Za-z0-9_.-]+|_dc_gtm_[A-Za-z0-9_-]+|FP(?:ID|LC|AU|GCL[A-Z]+)|_fbp|_fbc|_clck|_clsk|_uet[a-z]+|_hj[A-Za-z0-9_]+|_ttp|_tt_enable_cookie|__cf_bm|__cfruid|__cflb|_cfuvid|cf_clearance|zpl_geo_country)$~D';
+    /**
+     * 3.2.51: also what WordPress leaves in a browser after the login page or a logout: the panel's own settings
+     * (wp-settings-N, wp-settings-time-N, kept for a year), the login page's cookie test and its language. The front end
+     * reads none of them for a visitor who is not logged in; wordpress_logged_in_* still skips the cache.
+     */
+    public const HARMLESS_COOKIES = '~^(?:CookieConsent(?:BulkSetting-[A-Za-z0-9-]+|BulkTicket)?|_ga(?:_[A-Za-z0-9]+)?|_gid|_gat(?:_[A-Za-z0-9_-]+)?|_gcl_[a-z]+|_gac_[A-Za-z0-9_.-]+|_dc_gtm_[A-Za-z0-9_-]+|FP(?:ID|LC|AU|GCL[A-Z]+)|_fbp|_fbc|_clck|_clsk|_uet[a-z]+|_hj[A-Za-z0-9_]+|_ttp|_tt_enable_cookie|__cf_bm|__cfruid|__cflb|_cfuvid|cf_clearance|zpl_geo_country|wp-settings-(?:time-)?\d+|wordpress_test_cookie|wp_lang)$~D';
 
     public static function policy(string $dir): ?array {
         $file = $dir . '/policy.php';

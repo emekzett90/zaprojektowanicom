@@ -1,0 +1,24 @@
+Zaprojektowani Suite 3.2.51 — 21.10.2026
+
+Podstawa: wtyczka 3.2.50 przesłana przez Mata 21.10.2026 (stan po pracach Codexa; gałąź codex-3.2.50 @ 69192e1).
+Wygląd strony, teksty, skrypty i zachowanie przełącznika języka bez zmian. Aktualizacja nie kasuje żadnych danych
+i nie cofa żadnej zmiany Codexa: zmienione są wyłącznie cztery pliki wymienione na końcu.
+
+Szybka kopia strony (cache HTML) także po logowaniu do panelu
+- Strona otwierana z gotowej kopii odpowiada w ok. 0,15 s, składana od nowa w ok. 1,1 s (pomiar z 17.10, telefon).
+  Każde ciasteczko spoza listy zgody i statystyk wyłącza kopię, także takie, które nie zmienia strony.
+- Od 3.2.31 (Codex, 17.10) kopię dostaje gość, który wybrał polski przełącznikiem PL/EN (zpl_lang_session=pl albo
+  zpl_lang_pref=pl); wybór angielskiego nadal omija kopię na polskich stronach, bo Języki PL/EN przekierowują na /en/.
+- Teraz kopię dostaje też przeglądarka z ciasteczkami, które WordPress zostawia po wizycie na stronie logowania
+  albo po wylogowaniu: ustawienia panelu (wp-settings-N, wp-settings-time-N, trzymane rok), test ciasteczek strony
+  logowania (wordpress_test_cookie) i jej język (wp_lang). Front strony ich nie czyta. Dotyczy to każdego, kto
+  logował się do panelu w tej przeglądarce, także na telefonie.
+- Bez zmian: zalogowani (wordpress_logged_in_*), autorzy komentarzy, strony z hasłem i inne nieznane ciasteczka
+  zawsze dostają stronę składaną na żywo. Kopie nadal powstają wyłącznie z wizyt bez żadnych ciasteczek.
+- Nowy plik advanced-cache.php instaluje się sam przy pierwszym otwarciu strony po aktualizacji (tylko w miejsce
+  własnego pliku Suite, rozpoznanego po sumie SHA-256; wp-config.php bez zmian).
+
+Zmienione pliki: zaprojektowani-suite.php (numer wersji), includes/cache-dropin-20261009.php (szablon advanced-cache.php),
+includes/suite3/upgrade.php (jednorazowe odświeżenie cache po aktualizacji), includes/suite3/admin-ui.php (karta „Nowe w wersji”).
+
+Wersje: Suite 3.2.51, Języki PL/EN 1.1.3, Tłumacz EN 2.0.3.
