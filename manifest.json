@@ -1,6 +1,6 @@
 {
  "format": 1,
- "zaktualizowano": "2026-10-21T13:23:55+02:00",
+ "zaktualizowano": "2026-10-21T13:24:01+02:00",
  "wpisy": [
   {
    "slug": "papier-firmowy",
@@ -84,72 +84,6 @@
   }
  ],
  "linki": [
-  {
-   "we_wpisie": "/strony-internetowe/jak-stworzyc-strone-internetowa/",
-   "fragment": "Sprawdź szybkość strony i jej wygląd na telefonie.",
-   "slowa": "szybkość strony",
-   "do": "/seo-i-konwersja/core-web-vitals/"
-  },
-  {
-   "we_wpisie": "/strony-internetowe/kreatory-stron-internetowych/",
-   "fragment": "przy przenoszeniu strony, SEO, szybkości, nietypowych funkcjach i wyglądzie",
-   "slowa": "szybkości",
-   "do": "/seo-i-konwersja/core-web-vitals/"
-  },
-  {
-   "we_wpisie": "/strony-internetowe/ile-kosztuje-domena-i-hosting/",
-   "fragment": "Hosting wpływa na szybkość strony, ale jej nie gwarantuje.",
-   "slowa": "szybkość strony",
-   "do": "/seo-i-konwersja/core-web-vitals/"
-  },
-  {
-   "we_wpisie": "/sklepy-internetowe/seo-sklepu-internetowego/",
-   "fragment": "Sprawdzisz je w PageSpeed Insights i w Search Console.",
-   "slowa": "PageSpeed Insights",
-   "do": "/seo-i-konwersja/core-web-vitals/"
-  },
-  {
-   "we_wpisie": "/seo-i-konwersja/ile-kosztuje-utrzymanie-strony-internetowej/",
-   "fragment": "Firma patrzy na koszt startowy domeny",
-   "slowa": "koszt startowy domeny",
-   "do": "/strony-internetowe/ile-kosztuje-domena-i-hosting/"
-  },
-  {
-   "we_wpisie": "/strony-internetowe/jak-stworzyc-strone-internetowa/",
-   "fragment": "porównuj ceny odnowienia",
-   "slowa": "porównuj ceny odnowienia",
-   "do": "/strony-internetowe/ile-kosztuje-domena-i-hosting/"
-  },
-  {
-   "we_wpisie": "/sklepy-internetowe/bramka-platnicza/",
-   "fragment": "Każdy z nich ma integrację z WooCommerce",
-   "slowa": "integrację z WooCommerce",
-   "do": "/sklepy-internetowe/inpost-woocommerce-integracje-sklepu/"
-  },
-  {
-   "we_wpisie": "/sklepy-internetowe/sklep-b2b/",
-   "fragment": "Faktury wystawia zwykle program księgowy lub ERP, który wysyła je do KSeF",
-   "slowa": "wysyła je do KSeF",
-   "do": "/sklepy-internetowe/inpost-woocommerce-integracje-sklepu/"
-  },
-  {
-   "we_wpisie": "/logo-branding/logo-firmy-budowlanej/",
-   "fragment": "niż logo kawiarni czy gabinetu",
-   "slowa": "logo kawiarni",
-   "do": "/logo-branding/logo-restauracji-i-kawiarni/"
-  },
-  {
-   "we_wpisie": "/logo-branding/mockup-co-to-jest/",
-   "fragment": "kawiarnia potrzebuje kubków i szyldu",
-   "slowa": "kawiarnia potrzebuje kubków i szyldu",
-   "do": "/logo-branding/logo-restauracji-i-kawiarni/"
-  },
-  {
-   "we_wpisie": "/strony-internetowe/makieta-strony-internetowej/",
-   "fragment": "zacznij od wersji mobilnej",
-   "slowa": "wersji mobilnej",
-   "do": "/strony-internetowe/nowoczesne-strony-internetowe/"
-  },
   {
    "we_wpisie": "/strony-internetowe/rodzaje-stron-internetowych/",
    "fragment": "strona w kreatorze miała być na chwilę",
@@ -251,6 +185,156 @@
    "fragment": "Automatyczne dopisywanie treści SEO",
    "slowa": "treści SEO",
    "do": "/sklepy-internetowe/seo-sklepu-internetowego/"
+  },
+  {
+   "we_wpisie": "/strony-www/kiedy-warto-przebudowac-strone-internetowa-firmy/",
+   "fragment": "słabe metryki Core Web Vitals",
+   "slowa": "Core Web Vitals",
+   "do": "/seo-i-konwersja/core-web-vitals/"
+  },
+  {
+   "we_wpisie": "/strony-www/jak-sprawdzic-czy-strona-internetowa-dziala-skutecznie/",
+   "fragment": "ukryty telefon, wolne ładowanie",
+   "slowa": "wolne ładowanie",
+   "do": "/seo-i-konwersja/core-web-vitals/"
+  },
+  {
+   "we_wpisie": "/seo-i-konwersja/dlaczego-strona-ma-ruch-ale-nie-generuje-zapytan/",
+   "fragment": "formularzu, mobile, szybkości, treściach",
+   "slowa": "szybkości",
+   "do": "/seo-i-konwersja/core-web-vitals/"
+  },
+  {
+   "we_wpisie": "/strony-www/ile-kosztuje-stworzenie-strony-internetowej-dla-firmy/",
+   "fragment": "SEO, analityka, szybkość, testy mobile",
+   "slowa": "szybkość",
+   "do": "/seo-i-konwersja/core-web-vitals/"
+  },
+  {
+   "we_wpisie": "/strony-internetowe/jak-stworzyc-strone-internetowa/",
+   "fragment": "Sprawdź szybkość strony i jej wygląd na telefonie.",
+   "slowa": "szybkość strony",
+   "do": "/seo-i-konwersja/core-web-vitals/"
+  },
+  {
+   "we_wpisie": "/strony-internetowe/kreatory-stron-internetowych/",
+   "fragment": "przy przenoszeniu strony, SEO, szybkości, nietypowych funkcjach i wyglądzie",
+   "slowa": "szybkości",
+   "do": "/seo-i-konwersja/core-web-vitals/"
+  },
+  {
+   "we_wpisie": "/strony-internetowe/ile-kosztuje-domena-i-hosting/",
+   "fragment": "Hosting wpływa na szybkość strony, ale jej nie gwarantuje.",
+   "slowa": "szybkość strony",
+   "do": "/seo-i-konwersja/core-web-vitals/"
+  },
+  {
+   "we_wpisie": "/sklepy-internetowe/seo-sklepu-internetowego/",
+   "fragment": "Sprawdzisz je w PageSpeed Insights i w Search Console.",
+   "slowa": "PageSpeed Insights",
+   "do": "/seo-i-konwersja/core-web-vitals/"
+  },
+  {
+   "we_wpisie": "/strony-www/ile-kosztuje-stworzenie-strony-internetowej-dla-firmy/",
+   "fragment": "Trzeba zaplanować domenę, hosting, SSL, aktualizacje",
+   "slowa": "domenę, hosting",
+   "do": "/strony-internetowe/ile-kosztuje-domena-i-hosting/"
+  },
+  {
+   "we_wpisie": "/seo-i-konwersja/jak-zalozyc-sklep-internetowy/",
+   "fragment": "To samo dotyczy hostingu, kont płatności",
+   "slowa": "hostingu",
+   "do": "/strony-internetowe/ile-kosztuje-domena-i-hosting/"
+  },
+  {
+   "we_wpisie": "/strony-internetowe/strona-na-abonament-czy-na-wlasnosc/",
+   "fragment": "braku dalszych wydatków: hosting, aktualizacje",
+   "slowa": "hosting",
+   "do": "/strony-internetowe/ile-kosztuje-domena-i-hosting/"
+  },
+  {
+   "we_wpisie": "/strony-internetowe/rodzaje-stron-internetowych/",
+   "fragment": "płacisz co miesiąc za stronę, hosting i opiekę",
+   "slowa": "hosting",
+   "do": "/strony-internetowe/ile-kosztuje-domena-i-hosting/"
+  },
+  {
+   "we_wpisie": "/logo-branding/jak-wymyslic-nazwe-firmy/",
+   "fragment": "Zarejestruj domenę i profile, rozważ zgłoszenie znaku towarowego",
+   "slowa": "Zarejestruj domenę",
+   "do": "/strony-internetowe/ile-kosztuje-domena-i-hosting/"
+  },
+  {
+   "we_wpisie": "/seo-i-konwersja/ile-kosztuje-utrzymanie-strony-internetowej/",
+   "fragment": "Firma patrzy na koszt startowy domeny",
+   "slowa": "koszt startowy domeny",
+   "do": "/strony-internetowe/ile-kosztuje-domena-i-hosting/"
+  },
+  {
+   "we_wpisie": "/strony-internetowe/jak-stworzyc-strone-internetowa/",
+   "fragment": "porównuj ceny odnowienia",
+   "slowa": "porównuj ceny odnowienia",
+   "do": "/strony-internetowe/ile-kosztuje-domena-i-hosting/"
+  },
+  {
+   "we_wpisie": "/seo-i-konwersja/jak-zalozyc-sklep-internetowy/",
+   "fragment": "Pierwszym etapem nie jest konfiguracja WooCommerce ani wybór firmy kurierskiej.",
+   "slowa": "wybór firmy kurierskiej",
+   "do": "/sklepy-internetowe/inpost-woocommerce-integracje-sklepu/"
+  },
+  {
+   "we_wpisie": "/strony-internetowe/woocommerce-czy-shopify/",
+   "fragment": "krytyczne integracje należy potwierdzić przed wyborem platformy",
+   "slowa": "krytyczne integracje",
+   "do": "/sklepy-internetowe/inpost-woocommerce-integracje-sklepu/"
+  },
+  {
+   "we_wpisie": "/strony-internetowe/migracja-sklepu-na-woocommerce/",
+   "fragment": "Przetestuj każdą używaną integrację płatniczą, dostawczą, magazynową lub sprzedażową.",
+   "slowa": "integrację płatniczą, dostawczą, magazynową lub sprzedażową",
+   "do": "/sklepy-internetowe/inpost-woocommerce-integracje-sklepu/"
+  },
+  {
+   "we_wpisie": "/sklepy-internetowe/bramka-platnicza/",
+   "fragment": "Każdy z nich ma integrację z WooCommerce",
+   "slowa": "integrację z WooCommerce",
+   "do": "/sklepy-internetowe/inpost-woocommerce-integracje-sklepu/"
+  },
+  {
+   "we_wpisie": "/sklepy-internetowe/sklep-b2b/",
+   "fragment": "Faktury wystawia zwykle program księgowy lub ERP, który wysyła je do KSeF",
+   "slowa": "wysyła je do KSeF",
+   "do": "/sklepy-internetowe/inpost-woocommerce-integracje-sklepu/"
+  },
+  {
+   "we_wpisie": "/logo-branding/key-visual-co-to-jest/",
+   "fragment": "Dobrze widać to na przykładzie sieci kawiarni.",
+   "slowa": "sieci kawiarni",
+   "do": "/logo-branding/logo-restauracji-i-kawiarni/"
+  },
+  {
+   "we_wpisie": "/logo-branding/logo-firmy-budowlanej/",
+   "fragment": "niż logo kawiarni czy gabinetu",
+   "slowa": "logo kawiarni",
+   "do": "/logo-branding/logo-restauracji-i-kawiarni/"
+  },
+  {
+   "we_wpisie": "/logo-branding/mockup-co-to-jest/",
+   "fragment": "kawiarnia potrzebuje kubków i szyldu",
+   "slowa": "kawiarnia potrzebuje kubków i szyldu",
+   "do": "/logo-branding/logo-restauracji-i-kawiarni/"
+  },
+  {
+   "we_wpisie": "/strony-www/kiedy-warto-przebudowac-strone-internetowa-firmy/",
+   "fragment": "UX odbiegają od standardów branży",
+   "slowa": "UX odbiegają od standardów branży",
+   "do": "/strony-internetowe/nowoczesne-strony-internetowe/"
+  },
+  {
+   "we_wpisie": "/strony-internetowe/makieta-strony-internetowej/",
+   "fragment": "zacznij od wersji mobilnej",
+   "slowa": "wersji mobilnej",
+   "do": "/strony-internetowe/nowoczesne-strony-internetowe/"
   },
   {
    "we_wpisie": "/logo-branding/ksiega-znaku-co-to-jest-co-zawiera-i-kiedy-firma-jej-potrzebuje/",
