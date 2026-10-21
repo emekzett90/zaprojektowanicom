@@ -1,6 +1,6 @@
 {
  "format": 1,
- "zaktualizowano": "2026-10-14T23:34:46+02:00",
+ "zaktualizowano": "2026-10-21T13:23:55+02:00",
  "wpisy": [
   {
    "slug": "papier-firmowy",
@@ -151,6 +151,12 @@
    "do": "/strony-internetowe/nowoczesne-strony-internetowe/"
   },
   {
+   "we_wpisie": "/strony-internetowe/rodzaje-stron-internetowych/",
+   "fragment": "strona w kreatorze miała być na chwilę",
+   "slowa": "strona w kreatorze",
+   "do": "/strony-internetowe/kreatory-stron-internetowych/"
+  },
+  {
    "we_wpisie": "/strony-internetowe/jak-stworzyc-strone-internetowa/",
    "fragment": "Kreator to platforma, na której wybierasz szablon",
    "slowa": "Kreator",
@@ -163,10 +169,28 @@
    "do": "/strony-internetowe/kreatory-stron-internetowych/"
   },
   {
+   "we_wpisie": "/sklepy-internetowe/strona-internetowa-dla-firmy-budowlanej-jak-pokazac-realizacje-i-zdobywac-wyceny/",
+   "fragment": "Albo powstaje nowa identyfikacja wizualna, ale nie zostaje przełożona na stronę",
+   "slowa": "nowa identyfikacja wizualna",
+   "do": "/logo-branding/logo-firmy-budowlanej/"
+  },
+  {
    "we_wpisie": "/logo-branding/logo-logotyp-sygnet-roznice/",
    "fragment": "firma remontowa o nazwie",
    "slowa": "firma remontowa",
    "do": "/logo-branding/logo-firmy-budowlanej/"
+  },
+  {
+   "we_wpisie": "/strony-internetowe/makieta-strony-internetowej/",
+   "fragment": "czym różnią się wireframe, mockup i prototyp",
+   "slowa": "mockup",
+   "do": "/logo-branding/mockup-co-to-jest/"
+  },
+  {
+   "we_wpisie": "/logo-branding/papier-firmowy/",
+   "fragment": "projektujemy papier firmowy razem z brandbookiem, mockupami premium",
+   "slowa": "mockupami premium",
+   "do": "/logo-branding/mockup-co-to-jest/"
   },
   {
    "we_wpisie": "/logo-branding/logo-salonu-kosmetycznego/",
@@ -181,6 +205,18 @@
    "do": "/logo-branding/mockup-co-to-jest/"
   },
   {
+   "we_wpisie": "/logo-branding/logo-salonu-kosmetycznego/",
+   "fragment": "pełna księga znaku z wytycznymi, papier firmowy, ulotka i szablon oferty",
+   "slowa": "papier firmowy",
+   "do": "/logo-branding/papier-firmowy/"
+  },
+  {
+   "we_wpisie": "/logo-branding/jak-wymyslic-nazwe-firmy/",
+   "fragment": "zamów logo, szyld i materiały firmowe",
+   "slowa": "materiały firmowe",
+   "do": "/logo-branding/papier-firmowy/"
+  },
+  {
    "we_wpisie": "/logo-branding/projekt-wizytowki/",
    "fragment": "Dlatego wizytówka powinna korzystać z tych samych elementów co papier firmowy",
    "slowa": "papier firmowy",
@@ -191,6 +227,18 @@
    "fragment": "ikonografię, szablony dokumentów",
    "slowa": "szablony dokumentów",
    "do": "/logo-branding/papier-firmowy/"
+  },
+  {
+   "we_wpisie": "/seo-i-konwersja/jak-zalozyc-sklep-internetowy/",
+   "fragment": "Dobrze zaplanowana struktura kategorii pomaga także SEO.",
+   "slowa": "pomaga także SEO",
+   "do": "/sklepy-internetowe/seo-sklepu-internetowego/"
+  },
+  {
+   "we_wpisie": "/strony-internetowe/woocommerce-czy-shopify/",
+   "fragment": "SEO również nie powinno być rozstrzygane prostym wskazaniem zwycięzcy.",
+   "slowa": "SEO",
+   "do": "/sklepy-internetowe/seo-sklepu-internetowego/"
   },
   {
    "we_wpisie": "/sklepy-internetowe/sklep-b2b/",
