@@ -89,8 +89,10 @@ add_action('wp_footer', function(){
   if (is_admin()) return;
   $d=zp_suite_cc_get(); $s=$d['settings'] ?? [];
   $ajax=admin_url('admin-ajax.php'); $nonce=wp_create_nonce('zp_suite_contact');
+  // Audit 21.10.2026: the popup ships inside <template id="zpExitConsultTemplate">, so the page HTML carries no hidden
+  // heading or form for search engines; build() below puts it in the template's place the first time it opens.
   ?>
-  <div class="zpExitConsult" id="zpExitConsult" aria-hidden="true">
+  <template id="zpExitConsultTemplate"><div class="zpExitConsult" id="zpExitConsult" aria-hidden="true">
     <div class="zpExitConsult__backdrop" data-zp-exit-close></div>
     <section class="zpExitConsult__box" role="dialog" aria-modal="true" aria-labelledby="zpExitConsultTitle">
       <button class="zpExitConsult__close" type="button" data-zp-exit-close aria-label="Zamknij">×</button>
@@ -104,22 +106,23 @@ add_action('wp_footer', function(){
       </form>
       <small>Bez spamu. Jeden krótki kontakt w sprawie Twojego projektu.</small>
     </section>
-  </div>
+  </div></template>
   <style id="zp-exit-consult-css">.zpExitConsult,.zpExitConsult *{box-sizing:border-box}.zpExitConsult{position:fixed;inset:0;z-index:999999;display:none;font-family:var(--zp-font,"Plus Jakarta Sans Local",system-ui,sans-serif)}.zpExitConsult.is-open{display:block}.zpExitConsult__backdrop{position:absolute;inset:0;background:rgba(3,5,9,.42);backdrop-filter: none;-webkit-backdrop-filter:none}.zpExitConsult__box{position:absolute;left:50%;top:50%;width:min(520px,calc(100% - 28px));transform:translate(-50%,-50%);border-radius:28px;background:linear-gradient(180deg,#fff,#f7f9fc);border:1px solid rgba(7,20,38,.10);box-shadow:0 32px 90px rgba(7,20,38,.28);padding:28px;color:#071426;overflow:hidden}.zpExitConsult__box:before{content:"";position:absolute;inset:0 0 auto 0;height:5px;background:linear-gradient(90deg,#05070b,#102a4f,#1c477a)}.zpExitConsult__close{position:absolute;right:16px;top:14px;width:34px;height:34px;border:0;border-radius:999px;background:#edf2f7;color:#071426;font-size:22px;line-height:1;cursor:pointer}.zpExitConsult__eyebrow{display:inline-flex;margin-bottom:14px;text-transform:uppercase;letter-spacing:.14em;font-size:10px;font-weight:850;color:#1c477a}.zpExitConsult h2{margin:0;font-size:clamp(28px,5vw,42px);line-height:.98;letter-spacing:-.055em;color:#071426}.zpExitConsult p{margin:14px 0 20px;color:#5b6675;font-size:14px;line-height:1.58}.zpExitConsult__form{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:end}.zpExitConsult__form label span{display:block;margin:0 0 8px;font-size:10px;text-transform:uppercase;letter-spacing:.12em;font-weight:850;color:#647084}.zpExitConsult__form input{width:100%;min-height:54px;border-radius:999px;border:1px solid #dfe5ee;background:#fff;padding:0 18px;font-weight:750;color:#071426}.zpExitConsult__form button{min-height:54px;border:0;border-radius:999px;background:linear-gradient(90deg,#05070b,#0b1830 42%,#102a4f 72%,#1c477a);color:#fff;padding:0 22px;font-weight:850;cursor:pointer;white-space:nowrap}.zpExitConsult small{display:block;margin-top:13px;color:#7a8494;font-size:11px}.zpExitConsult__msg{margin-top:12px;padding:12px 14px;border-radius:16px;background:#edf7ff;color:#102a4f;font-weight:800}@media(max-width:560px){.zpExitConsult__box{padding:24px 20px}.zpExitConsult__form{grid-template-columns:1fr}.zpExitConsult__form button{width:100%}}</style>
   <script id="zp-command-center-front-js">
   (function(){
     var ajax='<?php echo esc_js($ajax); ?>';
     var enabled='<?php echo esc_js($s['exit_popup_enabled'] ?? '1'); ?>'==='1'; if(enabled){
-      var shown=sessionStorage.getItem('zpExitConsultShown')==='1'; var box=document.getElementById('zpExitConsult'); var form=box&&box.querySelector('[data-zp-exit-form]');
+      var shown=sessionStorage.getItem('zpExitConsultShown')==='1'; var box=document.getElementById('zpExitConsult'); var form=null;
+      function build(){ if(!box){ var tpl=document.getElementById('zpExitConsultTemplate'); if(tpl&&tpl.content&&tpl.parentNode){ tpl.parentNode.replaceChild(document.importNode(tpl.content,true),tpl); box=document.getElementById('zpExitConsult'); } } if(box&&!form){ form=box.querySelector('[data-zp-exit-form]'); if(form){ form.addEventListener('submit',sendForm); } } return !!box; }
       /* 2.8.0: bez popupu po wysłanym zgłoszeniu i w trakcie wpisywania danych w formularzu na stronie. */
       function leadSent(){ try{ return sessionStorage.getItem('zpLeadSent')==='1'; }catch(e){ return false; } }
       function typing(){ var a=document.activeElement; return !!(a && a!==document.body && /^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName) && !(box && box.contains(a))); }
-      function openPopup(reason){ if(shown||!box||leadSent()) return; if(typing()){ if(reason==='time-delay'){ setTimeout(function(){ openPopup(reason); },15000); } return; } shown=true; sessionStorage.setItem('zpExitConsultShown','1'); box.classList.add('is-open'); box.setAttribute('aria-hidden','false'); setTimeout(function(){var i=box.querySelector('input[name="phone"]'); if(i) i.focus();},120); }
+      function openPopup(reason){ if(shown||leadSent()) return; if(typing()){ if(reason==='time-delay'){ setTimeout(function(){ openPopup(reason); },15000); } return; } if(!build()) return; shown=true; sessionStorage.setItem('zpExitConsultShown','1'); box.classList.add('is-open'); box.setAttribute('aria-hidden','false'); setTimeout(function(){var i=box.querySelector('input[name="phone"]'); if(i) i.focus();},120); }
       function closePopup(){ if(!box) return; box.classList.remove('is-open'); box.setAttribute('aria-hidden','true'); }
       document.addEventListener('mouseleave',function(e){ if(e.clientY<=4) openPopup('exit-intent'); });
       setTimeout(function(){ if(!shown && (window.scrollY>500 || document.visibilityState==='visible')) openPopup('time-delay'); }, parseInt('<?php echo esc_js($s['exit_popup_delay'] ?? '8500'); ?>',10)||8500);
       document.addEventListener('click',function(e){ if(e.target.matches('[data-zp-exit-close]')) closePopup(); });
-      if(form){ form.addEventListener('submit',function(e){ e.preventDefault(); var btn=form.querySelector('button'); if(btn) btn.disabled=true; (window.zpSuiteSecureFormData?window.zpSuiteSecureFormData(new FormData(form)):Promise.resolve(new FormData(form))).then(function(secureFd){return fetch(ajax,{method:'POST',body:secureFd,credentials:'same-origin'});}).then(function(r){return r.json()}).then(function(j){ var m=document.createElement('div'); m.className='zpExitConsult__msg'; m.textContent=(j&&j.success)?'Dziękujemy — przyjęliśmy prośbę o telefon.':'Sprawdź numer telefonu i spróbuj ponownie.'; form.appendChild(m); if(j&&j.success){setTimeout(closePopup,1800);} }).catch(function(){alert('Nie udało się wysłać. Spróbuj ponownie.');}).finally(function(){if(btn) btn.disabled=false;}); }); }
+      function sendForm(e){ e.preventDefault(); var btn=form.querySelector('button'); if(btn) btn.disabled=true; (window.zpSuiteSecureFormData?window.zpSuiteSecureFormData(new FormData(form)):Promise.resolve(new FormData(form))).then(function(secureFd){return fetch(ajax,{method:'POST',body:secureFd,credentials:'same-origin'});}).then(function(r){return r.json()}).then(function(j){ var m=document.createElement('div'); m.className='zpExitConsult__msg'; m.textContent=(j&&j.success)?'Dziękujemy — przyjęliśmy prośbę o telefon.':'Sprawdź numer telefonu i spróbuj ponownie.'; form.appendChild(m); if(j&&j.success){setTimeout(closePopup,1800);} }).catch(function(){alert('Nie udało się wysłać. Spróbuj ponownie.');}).finally(function(){if(btn) btn.disabled=false;}); }
     }
   })();
   </script>

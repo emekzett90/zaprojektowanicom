@@ -284,7 +284,7 @@ function zp_suite3_dashboard(): void {
   }
   echo '</div></section>';
 
-  echo '<section class="navy-card"><div class="eyebrow">Nowe w wersji ' . esc_html(ZP_SUITE_VERSION) . '</div><h2>Szybka kopia strony także po logowaniu do panelu.</h2><p>Przeglądarka, w której ktoś był zalogowany do WordPressa (po wylogowaniu) albo otwierał stronę logowania, dostaje teraz gotową kopię strony z cache zamiast składanej od nowa, tak jak od 3.2.31 gość, który wybrał polski przełącznikiem PL/EN. Zalogowani nadal widzą stronę na żywo. Wydanie zawiera wszystkie zmiany 3.2.50. Szczegóły są w „Stanie strony”.</p><a class="button" href="' . esc_url(zp_suite3_url('zp-suite-health')) . '">Stan strony</a></section>';
+  echo '<section class="navy-card"><div class="eyebrow">Nowe w wersji ' . esc_html(ZP_SUITE_VERSION) . '</div><h2>Poprawki z audytu SEO z 21.10.</h2><p>Angielska strona główna może trafić do Google: opinie klientów są na stronach angielskich po angielsku, a sekcje opinii i FAQ nie liczą się już jako nieprzetłumaczone. Popup „Zanim zamkniesz stronę” i okno projektu w szablonie stron internetowych powstają dopiero przy pierwszym otwarciu, więc ich ukryte nagłówki i formularz nie siedzą w HTML strony. Polska strona, której tekst się zmienił, dostaje datę tej zmiany w mapie witryny. /logo-branding-/page/2/ prowadzi od razu do /identyfikacja-wizualna/. Wygląd stron bez zmian. Wydanie zawiera wszystkie zmiany 3.2.51.</p><a class="button" href="' . esc_url(zp_suite3_url('zp-suite-health')) . '">Stan strony</a></section>';
   echo '</aside></div>';
 
   echo '<div class="quick-grid">';
