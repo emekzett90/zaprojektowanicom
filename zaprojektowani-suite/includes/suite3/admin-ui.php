@@ -284,7 +284,7 @@ function zp_suite3_dashboard(): void {
   }
   echo '</div></section>';
 
-  echo '<section class="navy-card"><div class="eyebrow">Nowe w wersji ' . esc_html(ZP_SUITE_VERSION) . '</div><h2>Ochrona stron na czas wgrywania wtyczki.</h2><p>Gdy wtyczka podmienia własne pliki, strony z cache działają dalej, a pozostałe na kilka sekund odpowiadają kodem 503 z prośbą o powrót za 30 s, zamiast błędu 404 albo strony bez wtyczki. Działa od następnego wgrania. Wygląd i szybkość stron bez zmian.</p><a class="button" href="' . esc_url(zp_suite3_url('zp-suite-health')) . '">Stan strony</a></section>';
+  echo '<section class="navy-card"><div class="eyebrow">Nowe w wersji ' . esc_html(ZP_SUITE_VERSION) . '</div><h2>Opisy angielskich stron w limitach Ahrefs.</h2><p>Tytuły i opisy angielskich stron z listy poprawek mieszczą się w limitach także po przeliczeniu cen na dolary (Studio wyceny: 153 znaki zamiast 161), a wpis o strategii marki ma własny opis w miejsce ręcznego tłumaczenia z 191 znakami. Samo tłumaczenie zostaje. Ochrona z 3.2.60 działa dalej. Wygląd stron bez zmian.</p><a class="button" href="' . esc_url(zp_suite3_url('zp-suite-health')) . '">Stan strony</a></section>';
   echo '</aside></div>';
 
   echo '<div class="quick-grid">';
