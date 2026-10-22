@@ -18,6 +18,9 @@
  * Links to redirects (Search Console and Senuto audit of 13.10, list C: 99 internal links led to a 301): a Polish
  * internal link to an address the keyword plan redirects, or to an old category that redirects to its topic's main
  * category (blog-knowledge.php), points straight at the final address. The redirects themselves stay.
+ * Ahrefs 21.10.2026: 117 more links (98 of them in older posts and their English pages) went to the knowledge base's
+ * old addresses (/wiedza/…, /wiedza-logo-branding/…) and to merged posts' slugs, which reach the post only through
+ * the 404 rules of seo-plan/redirects.php; those now point at the same final address too (zp_suite_audit_moved_post).
  */
 if (!defined('ABSPATH')) { exit; }
 
@@ -323,10 +326,45 @@ function zp_suite_audit_link_target(string $href, string $host, string $text): ?
       }
     }
     $final = $categories[$c[1]];
+  } elseif (($moved = zp_suite_audit_moved_post($path)) !== null) {
+    $final = $moved;
+    // An English page links to the English address of the post when it has one (the Polish one otherwise).
+    if (function_exists('zp_seo_plan_is_en') && zp_seo_plan_is_en() && function_exists('zpl_url')) {
+      $en = (string) wp_parse_url(zpl_url(home_url($final), 'en'), PHP_URL_PATH);
+      if ($en !== '' && strpos($en, '/en/') === 0) { $final = $en; }
+    }
   }
   if ($final === null || $final === $path) { return null; }
   $fragment = isset($url['fragment']) ? '#' . $url['fragment'] : '';
   return ($to !== '' ? home_url($final) : $final) . $fragment;
+}
+
+/**
+ * Ahrefs 21.10.2026: the final address of a link to an old knowledge-base address (/wiedza/<post>/,
+ * /wiedza-<topic>/<post>/, /poradniki/…, /kampanie-meta-ads/…) or to the slug of a merged post (the redirects data's
+ * 'slugs'), or null. It is the address the request itself is sent to: WordPress's own redirect when the old address
+ * still finds the post, else the 404 rules of seo-plan/redirects.php (the slug map, then the published post with the
+ * same slug). An address that is a published page or post of its own is never changed. Once per address and request.
+ */
+function zp_suite_audit_moved_post(string $path): ?string {
+  static $seen = [], $slugs = null;
+  if (array_key_exists($path, $seen)) { return $seen[$path]; }
+  $seen[$path] = null;
+  if (!function_exists('zp_seo_plan_redirect_target') || !function_exists('zp_seo_plan_active') || !zp_seo_plan_active()) { return null; }
+  if ($slugs === null) { $slugs = (array) (zp_seo_plan_data('redirects')['slugs'] ?? []); }
+  if (!preg_match('~^/(?:[a-z0-9-]+/)+$~', $path)) { return null; }
+  $legacy = (bool) preg_match('~^/(?:wiedza(?:-[a-z0-9-]+)?|poradniki|kampanie-meta-ads)/[a-z0-9-]+/$~', $path);
+  $slug = basename($path);
+  if (!$legacy && !isset($slugs[$slug])) { return null; }
+  $id = url_to_postid(home_url($path));
+  if ($id > 0 && get_post_status($id) === 'publish') {
+    $live = zp_seo_plan_path((string) get_permalink($id));
+    // The old address finds the post and WordPress redirects it to the post's own address.
+    return $seen[$path] = ($live !== $path && $live !== '/') ? $live : null;
+  }
+  $to = zp_seo_plan_redirect_target($path, true);
+  if (!is_string($to) || $to === '' || $to === '@410' || $to === $path || $to[0] !== '/' || strpos($to, '/wp-') === 0) { return null; }
+  return $seen[$path] = $to;
 }
 
 /**

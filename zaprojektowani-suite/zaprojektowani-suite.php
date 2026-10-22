@@ -36,6 +36,8 @@ require_once ZP_SUITE_PATH . 'includes/frontend-quality.php';
 require_once ZP_SUITE_PATH . 'includes/elementor-compat.php';
 // SEO audit 13.10.2026: image descriptions (PL/EN) and the other fixes from that audit.
 require_once ZP_SUITE_PATH . 'includes/seo-audit-20261013.php';
+// Ahrefs Site Audit 21.10.2026: descriptions and titles of the right length, a smaller src for two large photos.
+require_once ZP_SUITE_PATH . 'includes/ahrefs-20261022.php';
 
 // 3.2.35: one server-first header; outer response adapter must load before speed/translation.
 require_once ZP_SUITE_PATH . 'includes/mobile-header-ssr-3235.php';
