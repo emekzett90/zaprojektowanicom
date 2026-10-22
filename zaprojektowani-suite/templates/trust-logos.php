@@ -12,7 +12,7 @@ v5.0:
 - Lucide przez data-lucide, bez zewnętrznych bibliotek
 ========================================================= -->
 
-<?php $zp_projects_count = function_exists('zp_seo_plan_projects_count') ? zp_seo_plan_projects_count() : (int) zp_suite_opt('stats.projects_count', zp_suite_opt('hero.projects_count', 114)); $zp_trust_en = function_exists('zp_home_refresh_english') && zp_home_refresh_english(); $zp_trust_aggregate = zp_reviews_aggregate(); $zp_google_rating = number_format($zp_trust_aggregate['rating'], 1, $zp_trust_en ? '.' : ',', ''); $zp_recommendations = $zp_trust_aggregate['count']; $zp_trust_url = 'https://www.trustindex.io/reviews/zaprojektowani.com'; ?>
+<?php $zp_projects_count = function_exists('zp_seo_plan_projects_count') ? zp_seo_plan_projects_count() : (int) zp_suite_opt('stats.projects_count', zp_suite_opt('hero.projects_count', 114)); $zp_trust_en = function_exists('zp_home_refresh_english') && zp_home_refresh_english(); $zp_trust_aggregate = zp_reviews_aggregate(); $zp_google_rating = number_format($zp_trust_aggregate['rating'], 1, $zp_trust_en ? '.' : ',', ''); $zp_recommendations = $zp_trust_aggregate['count']; $zp_trust_url = 'https://www.trustindex.io/reviews/zaprojektowani.com'; $zp_fb_reviews = zp_reviews_snapshot()['facebookVerified'] ?? []; $zp_fb_percent = (int) ($zp_fb_reviews['recommendPercent'] ?? 100); $zp_fb_url = 'https://www.facebook.com/zaprojektowanicom/reviews'; ?>
 <section class="zpTrustPinned" id="zpTrustPinned" data-zp-trust-pinned aria-labelledby="zpTrustPinnedTitle">
   <div class="zpTrustPinned__spacer" data-zp-trust-spacer>
     <div class="zpTrustPinned__sticky" data-zp-trust-sticky>
@@ -37,21 +37,21 @@ v5.0:
           </div>
         </header>
 
-        <?php /* Mat 21.10.2026, point 8: the figures under the hero as cards, the Trustindex card with its logo and stars. Every text sits in its own element, so the EN dictionary keys stay plain. */ ?>
+        <?php /* Mat 21.10.2026, point 8: the figures under the hero as cards, the Trustindex card with its logo and stars. Every text sits in its own element, so the EN dictionary keys stay plain. 22.10: 114 realizacji links to Realizacje, the review count sits under the rating, the third card is Facebook's share of recommendations (facebookVerified in the reviews JSON). */ ?>
         <div class="zpTrustPinned__stats zpTrustProof" role="group" aria-label="Dowody zaufania">
-          <div class="zpTrustProof__item zpTrustProof__item--projects">
-            <span class="zpTrustProof__top"><span class="zpTrustProof__icon" aria-hidden="true"><i data-lucide="briefcase-business"></i></span></span>
+          <a class="zpTrustProof__item zpTrustProof__item--projects" href="/realizacje/">
+            <span class="zpTrustProof__top"><span class="zpTrustProof__icon" aria-hidden="true"><i data-lucide="briefcase-business"></i></span><span class="zpTrustProof__open" aria-hidden="true">↗</span></span>
             <span class="zpTrustProof__body"><strong class="zpTrustProof__num"><?php echo esc_html($zp_projects_count); ?></strong><span class="zpTrustProof__label">realizacji</span></span>
-          </div>
+          </a>
 
           <a class="zpTrustProof__item zpTrustProof__item--rating" href="<?php echo esc_url($zp_trust_url); ?>" target="_blank" rel="noopener nofollow">
             <span class="zpTrustProof__top"><img class="zpTrustProof__logo" src="<?php echo esc_url(ZP_SUITE_URL . 'assets/img/trustindex-wordmark-white.webp'); ?>" alt="Trustindex" width="446" height="78" loading="lazy" decoding="async"><span class="zpTrustProof__open" aria-hidden="true">↗</span></span>
-            <span class="zpTrustProof__body"><span class="zpTrustProof__value"><strong class="zpTrustProof__num"><?php echo esc_html($zp_google_rating); ?><small>/5</small></strong><span class="zpTrustProof__stars" aria-hidden="true">★★★★★</span></span><span class="zpTrustProof__label">średnia ocena</span></span>
+            <span class="zpTrustProof__body"><span class="zpTrustProof__value"><strong class="zpTrustProof__num"><?php echo esc_html($zp_google_rating); ?><small>/5</small></strong><span class="zpTrustProof__stars" aria-hidden="true">★★★★★</span></span><span class="zpTrustProof__label">średnia z <?php echo esc_html($zp_recommendations); ?> opinii</span></span>
           </a>
 
-          <a class="zpTrustProof__item zpTrustProof__item--reviews" href="<?php echo esc_url($zp_trust_url); ?>" target="_blank" rel="noopener nofollow">
-            <span class="zpTrustProof__top"><span class="zpTrustProof__icon" aria-hidden="true"><i data-lucide="message-square-quote"></i></span><span class="zpTrustProof__open" aria-hidden="true">↗</span></span>
-            <span class="zpTrustProof__body"><strong class="zpTrustProof__num"><?php echo esc_html($zp_recommendations); ?></strong><span class="zpTrustProof__label">opinii w Trustindex</span></span>
+          <a class="zpTrustProof__item zpTrustProof__item--reviews" href="<?php echo esc_url($zp_fb_url); ?>" target="_blank" rel="noopener nofollow">
+            <span class="zpTrustProof__top"><span class="zpTrustProof__icon zpTrustProof__icon--facebook"><svg viewBox="0 0 24 24" width="32" height="32" role="img" aria-label="Facebook" focusable="false"><path fill="#0866FF" d="M9.101 23.691v-7.98H6.627v-3.667h2.474v-1.58c0-4.085 1.848-5.978 5.858-5.978.401 0 .955.042 1.468.103a8.68 8.68 0 0 1 1.141.195v3.325a8.623 8.623 0 0 0-.653-.036 26.805 26.805 0 0 0-.733-.009c-.707 0-1.259.096-1.675.309a1.686 1.686 0 0 0-.679.622c-.258.42-.374.995-.374 1.752v1.297h3.919l-.386 2.103-.287 1.564h-3.246v8.245C19.396 23.238 24 18.179 24 12.044c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.628 3.874 10.35 9.101 11.647Z"/></svg></span><span class="zpTrustProof__open" aria-hidden="true">↗</span></span>
+            <span class="zpTrustProof__body"><strong class="zpTrustProof__num"><?php echo esc_html($zp_fb_percent); ?>%</strong><span class="zpTrustProof__label">pozytywnych opinii</span></span>
           </a>
         </div>
 
