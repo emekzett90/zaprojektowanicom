@@ -552,6 +552,8 @@ function zp_seo_service_spec(string $variant): ?array {
           ['Duże projekty. <strong>Jeszcze większy kontekst.</strong>', 'Projektowanie stron w Katowicach. <strong>Zobacz zakres naszych realizacji.</strong>'],
           ['Jedenaście wybranych realizacji — z pełniejszym opisem, zakresem, efektem i bezpośrednim podglądem strony. Każdy projekt ma <strong>własny cel, język, kolor i ścieżkę do kontaktu.</strong>', 'Studio w Katowicach, projekty dla różnych branż: <strong>Apartament Piękna</strong> łączy stronę z rezerwacjami, <strong>Siemianowski</strong> prezentuje specjalizacje kancelarii, a <strong>Gravia</strong> pokazuje realizacje infrastrukturalne i moduł kariery. Wybierz przykład zbliżony do zakresu Twojej firmy i sprawdź opis prac oraz stronę live.'],
         ],
+        // Audit 21.10.2026, item 02: the local section about the studio follows the portfolio (katowice-local.php).
+        'after' => ['id="portfolio"' => static function () { return zp_seo_katowice_local_html('strony'); }],
       ];
 
     case 'sklepy-national':
@@ -614,7 +616,12 @@ function zp_seo_service_spec(string $variant): ?array {
         'replace' => [
           ['Projektujemy sklepy dla firm z Katowic, Śląska i całej Polski: od', 'Studio z Katowic, ul. Modelarska 18/2. Projektujemy sklepy WooCommerce dla firm ze Śląska: od'],
           ['<a class="zh__chip" href="/sklepy-internetowe-katowice/"><b>01</b><span>sklepy internetowe Katowice</span></a>', '<a class="zh__chip" href="/tworzenie-sklepow-internetowych/"><b>01</b><span>pełna oferta sklepów</span></a>'],
+          // Audit 21.10.2026, item 02: headings the page shared word for word with /tworzenie-sklepow-internetowych/.
+          ['Wybierz sklep, który nie tylko wygląda dobrze, ale <em>sprzedaje, mierzy i rośnie razem z Twoją marką</em>.', 'Pakiety sklepów WooCommerce. Wybierz sklep, który <em>sprzedaje, mierzy i rośnie razem z Twoją marką</em>.'],
+          ['Portfolio sklepów internetowych — realizacje WooCommerce, UX i prezentacja produktów.', 'Projektowanie sklepów internetowych — realizacje WooCommerce, UX i prezentacja produktów.'],
+          ['Jak tworzymy sklepy WooCommerce — od strategii i UX po SEO oraz sprzedaż.', 'Tworzenie sklepu internetowego krok po kroku — od strategii i UX po SEO oraz sprzedaż.'],
         ],
+        'after' => ['id="portfolio-sklepy"' => static function () { return zp_seo_katowice_local_html('sklepy'); }],
       ];
 
     case 'logo-national':
