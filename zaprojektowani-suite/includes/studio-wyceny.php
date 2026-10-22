@@ -171,6 +171,11 @@ function zp_studio_render_shortcode($atts=[]){
   $html = str_replace('{{ZP_STUDIO_V19_WEB_IMG}}', esc_url(ZP_SUITE_URL . 'assets/studio-wyceny-v19/web.png'), $html);
   $html = str_replace('{{ZP_STUDIO_V19_SHOP_IMG}}', esc_url(ZP_SUITE_URL . 'assets/studio-wyceny-v19/shop.png'), $html);
   $html = str_replace('{{ZP_STUDIO_V19_FRAME_URL}}', esc_url(add_query_arg('v', ZP_SUITE_VERSION, ZP_SUITE_URL . 'assets/studio-wyceny-v19/chooser-v19.html')), $html);
+  // 22.10.2026: ocena przy logo Trustindex w ramce wyboru usługi pochodzi z tego samego źródła co reszta strony
+  // (4,9, po angielsku 4.9). Ramka jest statycznym plikiem bez PHP, więc czyta liczbę z atrybutu swojego iframe'a.
+  if (function_exists('zp_reviews_rating_text')) {
+    $html = str_replace('<iframe id="zpStudioV19Frame"', '<iframe id="zpStudioV19Frame" data-zp-rating="' . esc_attr(zp_reviews_rating_text(true)) . '"', $html);
+  }
   /* v2.2.595: "Zaufali nam" jako kompaktowy statyczny blok (styl WIDGET-2).
      Widget [zp_trust_logos] ze strony głównej to komponent scroll-pinowany
      (spacer 330vh + sticky 100svh z twardym białym tłem) — wstrzyknięty w studio
