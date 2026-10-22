@@ -13,6 +13,8 @@ final class ZP_HTML_Cache_20261009 {
     private static $refresh_queued = false;
     /** 22.10.2026: what asked for this request's purge, for the log on the panel page. */
     private static $purge_cause = '';
+    /** 22.10.2026: attachments that got their first file in this request, that is new uploads (meta_changed()). */
+    private static $new_uploads = [];
 
     public static function allowed(): bool { return current_user_can('manage_options') && current_user_can('activate_plugins'); }
     public static function dir(): string { return WP_CONTENT_DIR . '/cache/zp-suite-html'; }
@@ -397,11 +399,26 @@ final class ZP_HTML_Cache_20261009 {
     }
     public static function meta_changed($meta_id, $post_id, $key): void {
         if (in_array($key, ['_elementor_css', '_elementor_element_cache', '_elementor_page_assets', '_edit_lock', '_edit_last', '_zp_post_reads', '_zp_post_views'], true)) { return; }
+        // 22.10.2026: Elementor's widget usage count (read only by its Element Manager) and Rank Math's note of the pictures in a
+        // post's content (written while the page is being shown, from that same content) are on no page either.
+        if (in_array($key, ['_elementor_controls_usage', 'rank_math_og_content_image'], true)) { return; }
+        if ($key === 'rank_math_seo_score' && !self::seo_score_on_pages()) { return; }
+        // 22.10.2026: an attachment that gets its first file is a new upload and on no page yet, so nothing of it written in the
+        // same request (sizes, alt text) shows anywhere; the page that shows it purges when it is saved. A new file for an
+        // existing attachment (a picture edited or replaced) is an update and still purges.
+        $post_id = (int) $post_id;
+        if ($key === '_wp_attached_file' && current_action() === 'added_post_meta' && get_post_type($post_id) === 'attachment') { self::$new_uploads[$post_id] = true; }
+        if (isset(self::$new_uploads[$post_id])) { return; }
         // 3.0.1: other modules (the EN translator, for one) can name their own keys that never change Polish pages.
-        if (apply_filters('zp_html_cache_ignore_meta', false, (string) $key, (int) $post_id)) { return; }
+        if (apply_filters('zp_html_cache_ignore_meta', false, (string) $key, $post_id)) { return; }
         // 22.10.2026: data of a revision (every autosave) or of a draft is on no public page (post_is_public()).
-        if (!self::post_is_public(get_post((int) $post_id))) { return; }
-        self::queue_purge('meta ' . $key . ' #' . (int) $post_id);
+        if (!self::post_is_public(get_post($post_id))) { return; }
+        self::queue_purge('meta ' . $key . ' #' . $post_id);
+    }
+    /** 22.10.2026: Rank Math shows its SEO score on pages only with "Frontend SEO Score" switched on (off by default). */
+    private static function seo_score_on_pages(): bool {
+        $general = get_option('rank-math-options-general', []);
+        return is_array($general) && in_array($general['frontend_seo_score'] ?? 'off', ['on', true, 1, '1'], true);
     }
     public static function handle(): void {
         if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST' || !self::allowed() || !wp_verify_nonce(is_string($_POST['_wpnonce'] ?? null) ? wp_unslash($_POST['_wpnonce']) : '', 'zp_html_cache_20261009')) { wp_die('Brak uprawnień lub błędny nonce.', '', ['response' => 403]); }
