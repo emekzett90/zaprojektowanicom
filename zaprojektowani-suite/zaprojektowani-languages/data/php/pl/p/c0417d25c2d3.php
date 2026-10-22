@@ -184,7 +184,7 @@ return [
 'How to come up with a business name? Methods, examples and what to check before choosing'=>'Jak wymyślić nazwę firmy? Metody, przykłady i co sprawdzić przed wyborem',
 'How to create a business website? We compare website builders, DIY WordPress and an agency: costs, time, domain, hosting and where to start.'=>'Jak stworzyć stronę internetową dla firmy? Porównujemy kreator, samodzielny WordPress i agencję: koszty, czas, domenę, hosting i to, od czego zacząć.',
 'How to create a business website? Website builder, WordPress or an agency'=>'Jak stworzyć stronę internetową dla firmy? Kreator, WordPress czy agencja',
-'How to plan a website that informs in line with bar rules, answers clients\' questions and attracts Google traffic without aggressive advertising.'=>'Jak zaplanować stronę, która informuje zgodnie z zasadami samorządu, odpowiada na pytania klientów i przyciąga ruch z Google bez agresywnej reklamy.',
+'How to plan a website that informs in line with bar rules, answers clients\' questions and attracts Google traffic without aggressive advertising.'=>'Jak zaplanować stronę internetową dla prawnika lub kancelarii, która informuje zgodnie z zasadami samorządu, odpowiada na pytania klientów i przyciąga ruch z Google bez agresywnej reklamy.',
 'How we work'=>'Jak pracujemy',
 'How would you like to contact us?'=>'Jak chcesz się z nami skontaktować?',
 'I agree to be contacted about my inquiry. The data controller is Zaprojektowani.com.'=>'Wyrażam zgodę na kontakt w sprawie przesłanego zapytania. Administratorem danych jest Zaprojektowani.com.',

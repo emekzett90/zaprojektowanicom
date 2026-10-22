@@ -433,3 +433,26 @@ html body #zp-strony-internetowe-katowice .hero[data-zp-industry] ~ .zpSeoPlanGu
   html body #zp-strony-internetowe-katowice .hero[data-zp-industry] ~ .zpSeoPlanGuide .zpGuide__band { margin-top: 80px; }
   html body #zp-strony-internetowe-katowice .hero[data-zp-industry] ~ .zpSeoPlanGuide .zpGuide__card:not(.zpGuide__card--accent):not(.zpGuide__card--intro) h2 { font-size: clamp(25px, 7vw, 30px); }
 }
+
+/* 8. 3.2.5x (Mat 22.10): the hero of "Tworzenie stron internetowych" (PL and EN), desktop only.
+   The heading ran to five narrow lines and the laptop lay under the heading, lead and buttons.
+   The Polish heading gets three lines ("Tworzenie i projektowanie / stron internetowych / dla firm";
+   service-pages.php keeps "dla firm" together; the English one keeps its three lines) and the copy
+   column room for the lead's full width.
+   The laptop with its badges is 14% smaller (16% from 1441 to 1919 px, where it is largest)
+   and shrinks towards the lower right, so the text keeps at least 50 px from it at 1101-2560 px.
+   The badges keep their size. The template still centres the copy in the hero. */
+@media (min-width: 1101px) {
+  html body #zp-strony-internetowe-katowice #start.hero[data-zp-service-visual="websites"] .hero-inner { grid-template-columns: minmax(0, 1.25fr) minmax(0, .75fr); }
+  html:lang(pl) body #zp-strony-internetowe-katowice #start.hero[data-zp-service-visual="websites"] .hero-inner .hero-copy > h1 {
+    width: 11.5em;
+    max-width: 11.5em;
+    text-wrap: wrap;
+  }
+  html body #zp-strony-internetowe-katowice #start.hero[data-zp-service-visual="websites"] .hero-build { scale: .86; transform-origin: 130% 110%; }
+  html body #zp-strony-internetowe-katowice #start.hero[data-zp-service-visual="websites"] .hero-build > :not(.hero-shot) { scale: 1.163; }
+}
+@media (min-width: 1441px) and (max-width: 1919px) {
+  html body #zp-strony-internetowe-katowice #start.hero[data-zp-service-visual="websites"] .hero-build { scale: .84; transform-origin: 140% 130%; }
+  html body #zp-strony-internetowe-katowice #start.hero[data-zp-service-visual="websites"] .hero-build > :not(.hero-shot) { scale: 1.19; }
+}
