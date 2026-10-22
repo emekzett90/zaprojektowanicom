@@ -6479,4 +6479,6 @@ return [
 'Marka otrzymała elegancki, elastyczny system logo gotowy do ofert nieruchomości, social mediów, materiałów drukowanych i przyszłej komunikacji online.'=>'The brand received an elegant, flexible logo system ready for property offers, social media, printed materials and future online communication.',
 'realizacji'=>'projects delivered',
 'opinii w Trustindex'=>'reviews on Trustindex',
+'średnia z {1} opinii'=>'average of {1} reviews',
+'pozytywnych opinii'=>'positive reviews',
 ];
