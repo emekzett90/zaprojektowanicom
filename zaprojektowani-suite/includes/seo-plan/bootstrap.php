@@ -80,6 +80,7 @@ function zp_seo_plan_is_en(): bool {
 require_once __DIR__ . '/guide.php';
 require_once __DIR__ . '/content-pages.php';
 require_once __DIR__ . '/service-pages.php';
+require_once __DIR__ . '/katowice-local.php';
 require_once __DIR__ . '/service-heroes.php';
 require_once __DIR__ . '/industries.php';
 require_once __DIR__ . '/campaigns.php';
