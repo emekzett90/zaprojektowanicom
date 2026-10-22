@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Zaprojektowani Suite
  * Description: Zaprojektowani Suite z wersją angielską strony (PL/EN, adresy /en/, przełącznik języka), automatycznymi naprawami SEO, nagłówków, zasobów i paginacji na podstawie audytu z 13.09.2026.
- * Version: 3.2.52
+ * Version: 3.2.53
  * Requires at least: 6.5
  * Requires PHP: 8.0
  * Author: Zaprojektowani.com
@@ -16,7 +16,7 @@ if (defined('ZP_SUITE_VERSION')) {
   return;
 }
 
-define('ZP_SUITE_VERSION', '3.2.52');
+define('ZP_SUITE_VERSION', '3.2.53');
 define('ZP_SUITE_PATH', plugin_dir_path(__FILE__));
 define('ZP_SUITE_URL', plugin_dir_url(__FILE__));
 
@@ -1691,6 +1691,9 @@ ZP_Admin_Queue_Health_20261010::register();
 require_once ZP_SUITE_PATH . 'includes/admin-senuto-positions-20261010.php';
 require_once ZP_SUITE_PATH . 'includes/admin-seo-plan-20261011.php';
 ZP_Admin_SEO_Plan_20261011::register();
+// Reviewed photo packages from the content channel: three photos in the article and a separate cover (Mat 21.10.2026).
+require_once ZP_SUITE_PATH . 'includes/article-photo-package-20261022.php';
+ZP_Article_Photo_Package_20261022::register();
 }
 // One meta description: Hello Elementor's own tag is off while Rank Math prints one.
 add_filter('hello_elementor_description_meta_tag', static function ($show) { return defined('RANK_MATH_VERSION') ? false : $show; });

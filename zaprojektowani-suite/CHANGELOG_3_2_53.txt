@@ -1,0 +1,28 @@
+Zaprojektowani Suite 3.2.53 — 22.10.2026
+
+Podstawa: 3.2.52 (gałąź suite-3.2.52 @ a1958f5) i moduł „Nowe zdjęcia wpisów” z wątku nowych artykułów (gałąź
+zdjecia-wpisow-3.2.50 @ 885b74b, PR #43), który Mat zatwierdził 22.10 („Tak, do najbliższej wersji”). Strona dla
+gości wygląda i działa tak samo: moduł ładuje się tylko w panelu, przy cronie i REST, nigdy przy wyświetlaniu stron.
+Aktualizacja nie kasuje żadnych danych i nie cofa żadnej zmiany Codexa.
+
+Nowe zdjęcia wpisów (ZP Suite → Treści → Nowe zdjęcia wpisów)
+- „Pobierz pakiet” ściąga z kanału treści (tresci-wpisy) sprawdzony pakiet: zdjecia-wpisow.json (najwyżej 100
+  wpisów) i zdjęcia WebP, każde sprawdzane sumą sha256, tak jak zdjęcia wpisów z kanału.
+- „Zastosuj” (jeden wpis albo następne 5) zmienia w wpisie tylko zdjęcia: dotychczasowe zdjęcia w treści znikają,
+  trzy nowe stają na końcu wskazanych sekcji, tam i w takim stylu, jak dziś stoją zdjęcia w tym wpisie, a czwarte
+  zdjęcie (1600×1000) zostaje okładką. Obraz dla Facebooka i X idzie za okładką tylko tam, gdzie pokazywał starą.
+- Przed zapisem treść bez zdjęć musi być identyczna; po zapisie status, data, adres, tytuł, kategorie, autor,
+  szablon, termin publikacji i pola Rank Matha muszą się zgadzać, inaczej wpis wraca do stanu sprzed zmiany.
+- Każdy wpis ma kopię; „Cofnij” przywraca poprzednie zdjęcia, dopóki nikt nie edytował wpisu. Wpisy z pakietu
+  Codexa zachowują dane strukturalne (BlogPosting, FAQPage).
+- Bez pobranego pakietu moduł nic nie robi. Nic nie działa samo: ani przy wyświetlaniu stron, ani z crona.
+
+Po aktualizacji
+- Bez nowych kroków aktualizacji: wydanie nie zmienia HTML stron (cache Suite odświeża się tylko tak, jak przy
+  każdym wgraniu wtyczki).
+
+Zmienione pliki względem 3.2.52:
+- moduł: nowy includes/article-photo-package-20261022.php; zaprojektowani-suite.php (trzy linie ładujące moduł)
+- wydanie: zaprojektowani-suite.php (numer wersji), includes/suite3/admin-ui.php (karta „Nowe w wersji”), ten plik
+
+Wersje: Suite 3.2.53, Języki PL/EN 1.1.3, Tłumacz EN 2.0.3.
