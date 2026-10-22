@@ -51,7 +51,7 @@ return [
     '/de/uber-uns/' => '/o-nas/',
     '/wissen/' => '/wiedza/',
     '/wiedza/category/kampanie-meta-ads/' => '/wiedza/',
-    '/logo-branding-/page/2/' => '/logo-branding/',
+    '/logo-branding-/page/2/' => '/identyfikacja-wizualna/', // audit 21.10.2026: straight to the final page (it went through /logo-branding/, which itself redirects)
     '/wiedza-logo-branding/' => '/wiedza/', // also /en/wiedza-logo-branding/ → /en/insights/
     '/bransoletka24/' => '/realizacje/',
     '/danke-fuer-ihre-logo-bestellung/' => '@410',

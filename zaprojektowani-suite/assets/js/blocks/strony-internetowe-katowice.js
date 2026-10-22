@@ -375,25 +375,38 @@ var ZP_SI_ASSETS = (function () {
 
       const projectDialog = document.getElementById('projectDialog');
       if (projectDialog) {
-        const dialogHero = document.getElementById('projectDialogHero');
-        const dialogTitle = document.getElementById('projectDialogTitle');
-        const dialogEyebrow = document.getElementById('projectDialogEyebrow');
-        const dialogMeta = document.getElementById('projectDialogMeta');
-        const dialogClient = document.getElementById('projectDialogClient');
-        const dialogYear = document.getElementById('projectDialogYear');
-        const dialogType = document.getElementById('projectDialogType');
-        const dialogImage = document.getElementById('projectDialogImage');
-        const dialogCaption = document.getElementById('projectDialogCaption');
-        const dialogLead = document.getElementById('projectDialogLead');
-        const dialogTechnologies = document.getElementById('projectDialogTechnologies');
-        const dialogChallenge = document.getElementById('projectDialogChallenge');
-        const dialogSolution = document.getElementById('projectDialogSolution');
-        const dialogEffect = document.getElementById('projectDialogEffect');
-        const dialogScope = document.getElementById('projectDialogScope');
-        const dialogCapabilities = document.getElementById('projectDialogCapabilities');
-        const dialogServices = document.getElementById('projectDialogServices');
-        const dialogResults = document.getElementById('projectDialogResults');
-        const dialogLive = document.getElementById('projectDialogLive');
+        // Audit 21.10.2026: the window's markup ships inside <template id="projectDialogContent"> (body.html), so the
+        // page HTML no longer carries its heading and empty fields; it is added on the first click, then reused.
+        let dialogHero, dialogTitle, dialogEyebrow, dialogMeta, dialogClient, dialogYear, dialogType, dialogImage, dialogCaption,
+          dialogLead, dialogTechnologies, dialogChallenge, dialogSolution, dialogEffect, dialogScope, dialogCapabilities,
+          dialogServices, dialogResults, dialogLive;
+        let projectDialogReady = false;
+        const ensureProjectDialog = () => {
+          if (projectDialogReady) return;
+          const template = projectDialog.querySelector('template#projectDialogContent');
+          if (template) { projectDialog.append(template.content); template.remove(); }
+          projectDialogReady = true;
+          dialogHero = document.getElementById('projectDialogHero');
+          dialogTitle = document.getElementById('projectDialogTitle');
+          dialogEyebrow = document.getElementById('projectDialogEyebrow');
+          dialogMeta = document.getElementById('projectDialogMeta');
+          dialogClient = document.getElementById('projectDialogClient');
+          dialogYear = document.getElementById('projectDialogYear');
+          dialogType = document.getElementById('projectDialogType');
+          dialogImage = document.getElementById('projectDialogImage');
+          dialogCaption = document.getElementById('projectDialogCaption');
+          dialogLead = document.getElementById('projectDialogLead');
+          dialogTechnologies = document.getElementById('projectDialogTechnologies');
+          dialogChallenge = document.getElementById('projectDialogChallenge');
+          dialogSolution = document.getElementById('projectDialogSolution');
+          dialogEffect = document.getElementById('projectDialogEffect');
+          dialogScope = document.getElementById('projectDialogScope');
+          dialogCapabilities = document.getElementById('projectDialogCapabilities');
+          dialogServices = document.getElementById('projectDialogServices');
+          dialogResults = document.getElementById('projectDialogResults');
+          dialogLive = document.getElementById('projectDialogLive');
+          projectDialog.querySelector('[data-project-close]').addEventListener('click', () => projectDialog.close());
+        };
         let lastProjectTrigger = null;
 
         const fillProjectDialog = project => {
@@ -427,13 +440,13 @@ var ZP_SI_ASSETS = (function () {
         document.querySelectorAll('[data-project-details]').forEach(button => button.addEventListener('click', () => {
           const project = projectDetails[button.dataset.projectDetails];
           if (!project) return;
+          ensureProjectDialog();
           lastProjectTrigger = button;
           fillProjectDialog(project);
           projectDialog.showModal();
           document.body.classList.add('project-open');
           projectDialog.querySelector('[data-project-close]').focus();
         }));
-        projectDialog.querySelector('[data-project-close]').addEventListener('click', () => projectDialog.close());
         projectDialog.addEventListener('click', event => { if (event.target === projectDialog) projectDialog.close(); });
         projectDialog.addEventListener('close', () => {
           document.body.classList.remove('project-open');
