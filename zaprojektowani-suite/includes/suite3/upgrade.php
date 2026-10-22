@@ -47,6 +47,12 @@ function zp_suite3_upgrade(string $previous): void {
     // this module's own HTML cache (never LiteSpeed or the CDN); a purge queued by a step above is not repeated.
     add_action('wp_loaded', static function (): void { do_action('zp_html_cache_purge'); }, 100);
   }
+  if ($previous !== '' && version_compare($previous, '3.2.55', '<')) {
+    // 3.2.55: the industry pages, the Tworzenie stron hero and four FAQ texts have new HTML (PR #38).
+    // Copies made by the old version would be served until they expire (1800 s), so the first new request empties
+    // this module's own HTML cache (never LiteSpeed or the CDN); a purge queued by a step above is not repeated.
+    add_action('wp_loaded', static function (): void { do_action('zp_html_cache_purge'); }, 100);
+  }
   if ($previous === '' || version_compare($previous, '3.0.0', '<')) {
     // Cron events of the one-off module that 3.0.0 removed (photo refresh of one published post, 10.10).
     foreach (['zp_published_prepared_photos_worker_20261010', 'zp_published_prepared_photos_watchdog_20261010'] as $hook) {
