@@ -6477,4 +6477,6 @@ return [
 'Połączyć osobisty charakter marki pośrednika z estetyką premium i zachować czytelność znaku także w małej skali.'=>'Combine the personal character of a real-estate advisor brand with a premium aesthetic while keeping the mark readable at small sizes.',
 'Na bazie 10 kierunków wybraliśmy i dopracowaliśmy znak, korygując proporcje, grubość formy, odcień złota i typografię. Następnie przygotowaliśmy zestaw wariantów oraz mockupy pokazujące markę w praktycznych zastosowaniach.'=>'From 10 initial directions we selected and refined the final mark, adjusting its proportions, weight, gold tone and typography. We then prepared a flexible set of variants and realistic application mockups.',
 'Marka otrzymała elegancki, elastyczny system logo gotowy do ofert nieruchomości, social mediów, materiałów drukowanych i przyszłej komunikacji online.'=>'The brand received an elegant, flexible logo system ready for property offers, social media, printed materials and future online communication.',
+'realizacji'=>'projects delivered',
+'opinii w Trustindex'=>'reviews on Trustindex',
 ];

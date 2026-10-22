@@ -9,20 +9,22 @@
   "freshnessNote": "Current GET returned a provider CDN snapshot last modified 2026-10-15 14:47:20 UTC; not claimed to be real-time Google data. Web tool cached result had obsolete136count.",
   "aggregate": {
     "rating": 4.9,
-    "reviewCount": 146,
+    "reviewCount": 150,
     "sources": {
-      "Google": 84,
+      "Google": 88,
       "Facebook": 62,
       "Trustindex": 0
     },
     "ratingDistribution": {
-      "5": 141,
+      "5": 145,
       "4": 2,
       "3": 0,
       "2": 0,
       "1": 3
     }
   },
+  "aggregateCheckedAtUTC": "2026-10-21T21:25:00+00:00",
+  "aggregateNote": "Rating, review count, sources and star distribution read from the public Trustindex page on 2026-10-21 (4.9 from 150 reviews: Google 88, Facebook 62; newest review 2026-10-17). The Trustindex panel read on the morning of 2026-10-21 already listed 154 (Google 92, Facebook 62, average 4.91); the site shows what a visitor sees on the public page, so switch reviewCount to the panel figure once the public page shows it. The 80 individual reviews below are the 2026-10-16 snapshot.",
   "firstPageCount": 20,
   "firstPageSources": {
     "Google": 19,
