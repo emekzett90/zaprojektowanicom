@@ -1691,6 +1691,9 @@ ZP_Admin_Queue_Health_20261010::register();
 require_once ZP_SUITE_PATH . 'includes/admin-senuto-positions-20261010.php';
 require_once ZP_SUITE_PATH . 'includes/admin-seo-plan-20261011.php';
 ZP_Admin_SEO_Plan_20261011::register();
+// Reviewed photo packages from the content channel: three photos in the article and a separate cover (Mat 21.10.2026).
+require_once ZP_SUITE_PATH . 'includes/article-photo-package-20261022.php';
+ZP_Article_Photo_Package_20261022::register();
 }
 // One meta description: Hello Elementor's own tag is off while Rank Math prints one.
 add_filter('hello_elementor_description_meta_tag', static function ($show) { return defined('RANK_MATH_VERSION') ? false : $show; });
