@@ -1,0 +1,1222 @@
+{
+ "format": 1,
+ "pakiet": "zdjecia-wpisow-2026-10-22",
+ "wpisy": [
+  {
+   "id": 5704,
+   "slug": "pozycjonowanie-w-ai",
+   "okladka": {
+    "plik": "obrazy/pozycjonowanie-w-ai-okladka.webp",
+    "sha256": "191ac668e489cc0e13d443218125f7d02a27287f520388f19fcefee34f1bdaf2",
+    "alt": "Laptop ze stroną usługi firmy i karta odpowiedzi asystenta AI z odnośnikiem do tej strony jako źródła."
+   },
+   "obrazy": [
+    {
+     "plik": "obrazy/pozycjonowanie-w-ai-pytania-klientow.webp",
+     "sha256": "556af4a284ec6f3a48829a4a5225bf882a061626a4500badb1169499e554df03",
+     "alt": "Infografika „Pytania klientów i brakujące odpowiedzi”: Pytanie klienta, Gdzie jest odpowiedź, Co uzupełnić, Co obejmuje usługa?, Oferta, Zakres i etapy, Co muszę przygotować?, Brak, Lista materiałów, Kiedy to ma sens?, Poradnik.",
+     "podpis": "Arkusz tematów: pytania, które klienci zadają przed decyzją, miejsce odpowiedzi na stronie i to, czego jeszcze brakuje.",
+     "sekcja": "tematy"
+    },
+    {
+     "plik": "obrazy/pozycjonowanie-w-ai-dostep-robotow.webp",
+     "sha256": "62539a6aba5bd2418ed4a71b1becb5c848b179f4d3a7bbb915736d764d76f913",
+     "alt": "Infografika „Czy roboty widzą treść?”: Odpowiedź serwera 200, Prawidłowy canonical, Bez przypadkowego noindex, robots.txt, Zapora i CDN, Odpowiedź w treści HTML.",
+     "podpis": "Kontrola dostępu: odpowiedź serwera, canonical, noindex, robots.txt, zapora hostingu i odpowiedź zapisana w treści strony.",
+     "sekcja": "dostep"
+    },
+    {
+     "plik": "obrazy/pozycjonowanie-w-ai-plan-wdrozenia.webp",
+     "sha256": "68b037a95ca49bbd10b495126549c40d1197cb1bb9917b6542fb2b2c2f7de7c6",
+     "alt": "Infografika „Plan wdrożenia krok po kroku”: Ważne adresy i pytania, Dostęp i indeksowanie, Definicje i przykłady, Autor i dane firmy, Poradnik i usługa, Punkt wyjścia i kontrola.",
+     "podpis": "Kolejność prac: najpierw dostęp i spójne dane firmy, potem odpowiedzi na pytania, powiązania z usługą i data kolejnej kontroli.",
+     "sekcja": "plan"
+    }
+   ]
+  },
+  {
+   "id": 5792,
+   "slug": "teczki-z-logo-firmy-projekt-dokumenty-kieszenie-wykrojnik-drukarni",
+   "okladka": {
+    "plik": "obrazy/teczki-firmowe-okladka.webp",
+    "sha256": "aefdd48f1bb4f520bd39dbb3fe58002b4a8bc2bc0cbeb133966e5e5c651dcd3f",
+    "alt": "Granatowa teczka firmowa z kieszenią na dokumenty i wizytówkę, obok rozłożony wykrojnik."
+   },
+   "obrazy": [
+    {
+     "plik": "obrazy/teczki-firmowe-wykrojnik.webp",
+     "sha256": "45c19724e142fd23fc5232106d16bf8492a8c39787a1c5f276ac8b65a27e2752",
+     "alt": "Infografika „Jak czytać wykrojnik”: Linia cięcia, Linia bigowania, Spad, Pole bezpieczne, Kieszeń, Nacięcie na wizytówkę.",
+     "podpis": "Wykrojnik teczki: linie cięcia i bigowania, spad, pole bezpieczne, kieszeń i nacięcie na wizytówkę.",
+     "sekcja": "sekcja-3"
+    },
+    {
+     "plik": "obrazy/teczki-firmowe-hierarchia.webp",
+     "sha256": "39ef7bdac354e8ab3f1e34a258a3b0b2d051afa22d796fabb8b690685a2bce62",
+     "alt": "Infografika „Logo i kolejność informacji”: 1. Logo, 2. Nazwa i hasło, 3. Dane kontaktowe, Logo w wersji wektorowej, Zasady identyfikacji.",
+     "podpis": "Hierarchia na teczce: najpierw logo, potem nazwa i hasło, na końcu dane kontaktowe; logo zawsze w wersji wektorowej.",
+     "sekcja": "sekcja-5"
+    },
+    {
+     "plik": "obrazy/teczki-firmowe-akceptacja.webp",
+     "sha256": "61d79be6902c20b2cb3c7186c135561e783ae74e5555f47c39a93d3810553293",
+     "alt": "Infografika „Akceptacja w dwóch krokach”: Krok 1: treść i wygląd, Dane i pisownia, Wersja logo, Kolory, Krok 2: konstrukcja i druk, Model złożonej teczki, Kieszeń i dokumenty, Plik dla drukarni, Wersja 3 zatwierdzona.",
+     "podpis": "Akceptacja w dwóch krokach: osobno treść i wygląd, osobno konstrukcja teczki i przygotowanie pliku do druku.",
+     "sekcja": "sekcja-7"
+    }
+   ]
+  },
+  {
+   "id": 5837,
+   "slug": "kalendarze-z-logo-firmy-notatki-daty-kontrola-przed-drukiem",
+   "okladka": {
+    "plik": "obrazy/kalendarze-firmowe-okladka.webp",
+    "sha256": "c5efaef64575dbe844cfeecad6712db3d3b6793a872e87bb6156d6e3161e4baa",
+    "alt": "Firmowy kalendarz biurkowy i ścienny z wyraźną nazwą miesiąca i polem na notatki."
+   },
+   "obrazy": [
+    {
+     "plik": "obrazy/kalendarze-firmowe-kolejnosc-dat.webp",
+     "sha256": "2131e91fdab1d56adf88ea4d6972bf0f338d899f0633f464a93cdcdd3493364d",
+     "alt": "Strona kalendarza na luty 2027 z oznaczoną kolejnością odczytu: miesiąc i rok, dni tygodnia, numery dni, oznaczenia dodatkowe.",
+     "podpis": "Kolejność odczytu: miesiąc i rok, dni tygodnia, numery dni, a dopiero potem dodatkowe oznaczenia.",
+     "sekcja": "sekcja-3"
+    },
+    {
+     "plik": "obrazy/kalendarze-firmowe-kazdy-miesiac.webp",
+     "sha256": "8932b3ee3e7a7972b6e7a7b3bc1ee07e07915c8e8fa2208c445db4492d0b9348",
+     "alt": "Infografika „Sprawdź każdy miesiąc”: Styczeń, Luty, Marzec, Kwiecień, Maj, Czerwiec, Lipiec, Sierpień, Wrzesień, Październik, Listopad, Grudzień, Luty 2027: 28 dni.",
+     "podpis": "Kontrola kalendarium: każdy miesiąc według jednej referencji, z uwagą na liczbę dni i przejścia między miesiącami.",
+     "sekcja": "sekcja-5"
+    },
+    {
+     "plik": "obrazy/kalendarze-firmowe-trzy-etapy.webp",
+     "sha256": "0839fbc9a05b4452034d48a15cc34a04c790c3e8b4c234b01f966cc9f2adebd2",
+     "alt": "Infografika „Trzy etapy przed drukiem”: 1. Układ użytkowy, Format, Miejsce na notatki, Czytelność, 2. Poprawność treści, Daty, Święta, Podpisy, 3. Plik do druku, Spady, Kolory, Otwory i spirala.",
+     "podpis": "Trzy osobne etapy: układ użytkowy, pełna korekta dat i podpisów, a na końcu plik produkcyjny zgodny z wymaganiami drukarni.",
+     "sekcja": "sekcja-7"
+    }
+   ]
+  },
+  {
+   "id": 5788,
+   "slug": "logo-na-koszulce-kiedy-uproscic-do-haftu-lub-nadruku",
+   "okladka": {
+    "plik": "obrazy/koszulki-firmowe-haft-okladka.webp",
+    "sha256": "4d33eda25ee07f2fa4c30d4cc32df0db609e32d62f252921a56bb2ea9791f000",
+    "alt": "Dwie koszulki z tym samym znakiem: wersja haftowana i nadrukowana, obok tamborek i szpulki nici."
+   },
+   "obrazy": [
+    {
+     "plik": "obrazy/koszulki-firmowe-haft-co-zostaje.webp",
+     "sha256": "e9a624e0ae364876a939f24e6733efe19a0e87ec84454e9286beda07ec64486a",
+     "alt": "Infografika „Co zostaje, co można uprościć”: Twoja Marka, Logo podstawowe, Wariant do haftu, Pozostaje bez zmian, Nazwa, Kształt symbolu, Układ elementów, Można uprościć, Cienkie linie, Drobne detale, Cieniowanie.",
+     "podpis": "Adaptacja, nie nowe logo: nazwa i charakterystyczny kształt zostają, upraszczasz detale, które giną w hafcie lub nadruku.",
+     "sekcja": "sekcja-3"
+    },
+    {
+     "plik": "obrazy/koszulki-firmowe-haft-pytania-do-wykonawcy.webp",
+     "sha256": "b72bf2fea3d98362159a9ea938ffc2bd2560f1c61cc39eeca4aa59e04aca1b8e",
+     "alt": "Infografika „Zapytaj wykonawcę przed zamówieniem”: Najcieńsza linia, Odstępy między elementami, Najmniejszy napis, Liczba kolorów, Rodzaj materiału, Format pliku.",
+     "podpis": "Ograniczenia linii, odstępów i najmniejszych napisów ustala konkretny wykonawca dla wybranej odzieży i techniki.",
+     "sekcja": "sekcja-5"
+    },
+    {
+     "plik": "obrazy/koszulki-firmowe-haft-karta-zastosowania.webp",
+     "sha256": "fb71ed6d8c037bb636b56eaca1aa2a44887c01bb835c214ad2f148c5595d2358",
+     "alt": "Infografika „Karta zastosowania logo”: Przykład, Wariant: haft, Szerokość znaku: 8 cm, Miejsce: lewa pierś, Kolor koszulki: granatowy, Kolor nici: biały, Wersja: 2.",
+     "podpis": "Przykładowa karta zastosowania: wariant, szerokość znaku, miejsce, kolory i numer wersji w jednym dokumencie dla wykonawcy.",
+     "sekcja": "sekcja-7"
+    }
+   ]
+  },
+  {
+   "id": 5831,
+   "slug": "strona-firmowa-na-facebooku-czy-wlasna-witryna-podzial-zadan",
+   "okladka": {
+    "plik": "obrazy/facebook-czy-strona-firmowa-okladka.webp",
+    "sha256": "2bcf3f2ed0a6e55b233fc4e8921c327304c98d993c57cc2d743fb243766840d8",
+    "alt": "Telefon z postem pracowni ceramicznej i laptop z jej stroną z ofertą i formularzem zapytania."
+   },
+   "obrazy": [
+    {
+     "plik": "obrazy/facebook-czy-strona-firmowa-sygnaly.webp",
+     "sha256": "4d03ddba3f9afb43658c620fd9e0ee9b255e49e40adb5ed18ae318725fa7d319",
+     "alt": "Infografika „Sygnały, że czas na własną stronę”: Wysyłasz te same wyjaśnienia, Szukasz starych postów, Opisujesz różnice usług, Oferta jest rozproszona.",
+     "podpis": "Sygnały z rozmów z klientami, że oferta potrzebuje jednego, uporządkowanego miejsca na własnej stronie.",
+     "sekcja": "sekcja-3"
+    },
+    {
+     "plik": "obrazy/facebook-czy-strona-firmowa-jedna-sciezka.webp",
+     "sha256": "11cc390db1a616f872fc12953390d57a50ec5cf08296ec7eea90dd6f9dc95f07",
+     "alt": "Infografika „Jedna ścieżka: post, oferta, kontakt”: 1. Post, Warsztaty z ceramiki, 2. Oferta, Zakres i terminy, 3. Kontakt, Wyślij zapytanie.",
+     "podpis": "Droga odbiorcy: temat publikacji prowadzi do konkretnej oferty na stronie, a oferta do formularza zapytania.",
+     "sekcja": "sekcja-5"
+    },
+    {
+     "plik": "obrazy/facebook-czy-strona-firmowa-jakosc-zapytan.webp",
+     "sha256": "afd8d2802f89416ea12062d7ee097f5294d824d1c9589229e60510f4a7e855fe",
+     "alt": "Infografika „Oceniaj zapytania, nie reakcje”: 124 reakcje, Usługa, Czego brakowało, Pierwszy kontakt, Warsztaty, Cennik dla grup, Facebook, Zamówienie, Terminy, Strona.",
+     "podpis": "Zapisuj, czego dotyczą zapytania i czego klientom brakuje; liczba reakcji nie mówi o gotowości do zakupu.",
+     "sekcja": "sekcja-7"
+    }
+   ]
+  },
+  {
+   "id": 5833,
+   "slug": "logo-firmy-odziezowej-marka-i-kolekcje-na-metkach-oraz-w-sklepie",
+   "okladka": {
+    "plik": "obrazy/marka-odziezowa-metki-okladka.webp",
+    "sha256": "a2f79d7079622f523656646e9c4aba703342c5e236ac21944ee6af0f5cc4b4de",
+    "alt": "Ubrania na wieszaku z metkami i zawieszkami: neutralny znak marki i mniejsze oznaczenie kolekcji."
+   },
+   "obrazy": [
+    {
+     "plik": "obrazy/marka-odziezowa-metki-metka-uklady.webp",
+     "sha256": "f6267ad0e69e12eced7d4afdb56f1d450881c5fb93abdf7cf2eb9f9154824c91",
+     "alt": "Infografika „Na metce najpierw marka”: Układ A, Równorzędne znaki, Układ B, Pierwszeństwo marki, Znak marki, Oznaczenie kolekcji.",
+     "podpis": "Dwa układy metki: przy równorzędnych znakach marka ginie, w drugim od razu wiadomo, czyj to produkt.",
+     "sekcja": "sekcja-3"
+    },
+    {
+     "plik": "obrazy/marka-odziezowa-metki-sklep-kolekcje.webp",
+     "sha256": "787aa2f45fcd6366c7ad7aadc04323c19cd05475439a69ba7c9e690b0b5531e1",
+     "alt": "Makieta sklepu z ubraniami: znak marki w nagłówku, filtry kolekcji Jesień, Lato i Podstawy oraz pole kolekcji na kartach produktów.",
+     "podpis": "W sklepie marka zostaje w nagłówku, a kolekcja działa jak nawigacja i osobne pole w opisie produktu.",
+     "sekcja": "sekcja-5"
+    },
+    {
+     "plik": "obrazy/marka-odziezowa-metki-zasady-dla-wykonawcow.webp",
+     "sha256": "d9e584af418671494cc3487be6b21650221e573c7334f6032470106d6a83d497",
+     "alt": "Infografika „Zasady dla wykonawców”: Zasady oznaczeń, Znak marki, Oznaczenia kolekcji, Dozwolone zestawienia, Producent metek, Projektant zawieszek, Administrator sklepu.",
+     "podpis": "Jeden zestaw zasad dla producenta metek, projektanta zawieszek i administratora sklepu, zamiast samego folderu z plikami.",
+     "sekcja": "sekcja-7"
+    }
+   ]
+  },
+  {
+   "id": 5835,
+   "slug": "gadzety-z-logo-firmy-rozne-kolory-porownanie-probek",
+   "okladka": {
+    "plik": "obrazy/gadzety-firmowe-kolory-okladka.webp",
+    "sha256": "807d96192394682f498af3a7b9fdaa494f5bdd7e8479457bcb1b4bd7af6167f8",
+    "alt": "Notes, kubek i torba z tym samym znakiem w różnych odcieniach niebieskiego obok wzornika kolorów."
+   },
+   "obrazy": [
+    {
+     "plik": "obrazy/gadzety-firmowe-kolory-te-same-warunki.webp",
+     "sha256": "5fd8bcad9f4ba0c57fc5feb52d8fd06a6aee851a1e461cf055d35a4d09ecb3a3",
+     "alt": "Infografika „Porównuj w tych samych warunkach”: Neutralne tło, Jedno oświetlenie, Ta sama orientacja, Ta sama odległość, Podobne przedmioty.",
+     "podpis": "Próbki porównuj obok siebie: neutralne tło, jedno oświetlenie, ta sama orientacja i odległość oglądania.",
+     "sekcja": "sekcja-3"
+    },
+    {
+     "plik": "obrazy/gadzety-firmowe-kolory-kolor-czy-detal.webp",
+     "sha256": "0000f11344cfe2fa14d13ae19c990e3ad7729d623e6845b4f5e58664ead4ec48",
+     "alt": "Infografika „Kolor czy detal?”: Próbka A, Przerwa niewidoczna, Próbka B, Przerwa czytelna, Odcień, Kontrast, Detal.",
+     "podpis": "Najpierw sprawdź budowę znaku: zanikający detal to inny problem niż różnica odcienia nici czy farby.",
+     "sekcja": "sekcja-5"
+    },
+    {
+     "plik": "obrazy/gadzety-firmowe-kolory-plik-czy-wykonanie.webp",
+     "sha256": "76e8f09da018bdffa340196f384ee1d6528d88d49d55af481aec33de60e103ae",
+     "alt": "Infografika „Poprawić plik czy wykonanie?”: Czy plik zgadza się z zatwierdzonym projektem?, Nie, Popraw plik i nadaj nową wersję, Tak, Poproś wykonawcę o wyjaśnienie różnic.",
+     "podpis": "Decyzja na podstawie dowodów: niezgodny plik poprawiasz z nowym numerem wersji, a zgodny plik oznacza rozmowę z wykonawcą.",
+     "sekcja": "sekcja-7"
+    }
+   ]
+  },
+  {
+   "id": 5965,
+   "slug": "pierwsza-kampania-google-ads-dane-do-briefu-przed-uruchomieniem",
+   "okladka": {
+    "plik": "obrazy/google-ads-pierwsza-kampania-okladka.webp",
+    "sha256": "d0029b5863feec3d0047438df8c9e269285cf65b56b6d71f6e4c799af4273dc1",
+    "alt": "Laptop z ustawieniami kampanii Google Ads: cel, budżet dzienny i obszar działania, obok wydrukowany brief kampanii."
+   },
+   "obrazy": [
+    {
+     "plik": "obrazy/google-ads-pierwsza-kampania-budzet.webp",
+     "sha256": "5aa0a17de3ba56570d0ac3f199588da6f90e5f2afdb75dca3133775c020d6d2b",
+     "alt": "Infografika „Budżet i kontrola wydatków”: Przykład, Średnio dziennie: 50 zł, Jednego dnia do 100 zł, Limit w miesiącu: 1 520 zł, × 30,4.",
+     "podpis": "Budżet dzienny to średnia: jednego dnia wydatki mogą sięgnąć jego dwukrotności, a limit miesięczny to budżet dzienny razy 30,4.",
+     "sekcja": "sekcja-3"
+    },
+    {
+     "plik": "obrazy/google-ads-pierwsza-kampania-obsluga-zapytan.webp",
+     "sha256": "17592252b3c0444ebdde8d707ecbaeb5cd8656bcd1b119cd2272b16b917b40c5",
+     "alt": "Infografika „Kto odbiera zapytania”: Formularz, Telefon, Skrzynka zapytań, Osoba odpowiedzialna, Pierwsza odpowiedź, Zastępstwo, Godziny obsługi.",
+     "podpis": "Droga zgłoszenia od formularza lub telefonu do pierwszej odpowiedzi, z osobą odpowiedzialną, zastępstwem i godzinami obsługi.",
+     "sekcja": "sekcja-5"
+    },
+    {
+     "plik": "obrazy/google-ads-pierwsza-kampania-kolejnosc-startu.webp",
+     "sha256": "0f92f426c0bd8223fc68839cc9cbaea93df852e4ed53e650b14ac9cd58011b29",
+     "alt": "Infografika „Kolejność przed startem”: Cel i oferta, Obszar i budżet, Ustawienia kampanii, Strona docelowa, Próbne zgłoszenie, Start emisji.",
+     "podpis": "Najpierw cel, oferta, obszar i budżet; emisja rusza po sprawdzeniu strony docelowej i próbnym zgłoszeniu.",
+     "sekcja": "sekcja-7"
+    }
+   ]
+  },
+  {
+   "id": 5597,
+   "slug": "papier-firmowy",
+   "okladka": {
+    "plik": "obrazy/papier-firmowy-okladka-nowa.webp",
+    "sha256": "57aace694faee69946e2ef45e93f3603f6415a604982b1a5e4d4f2e541ec98a5",
+    "alt": "Arkusz papieru firmowego A4 z logo i danymi firmy w nagłówku, obok pióro, koperta i wizytówka."
+   },
+   "obrazy": [
+    {
+     "plik": "obrazy/papier-firmowy-uklad-a4.webp",
+     "sha256": "d16b74bf9f4b80fb09939424fae8299bbc994c94c287dd66e70b6a685ce7cc82",
+     "alt": "Infografika „Układ strony A4”: 210 × 297 mm, Nagłówek, Pole na treść, Stopka, Margines 20–25 mm.",
+     "podpis": "Strona A4 dzieli się na nagłówek, pole na treść i stopkę; marginesy boczne zwykle 20–25 mm.",
+     "sekcja": "wymiary"
+    },
+    {
+     "plik": "obrazy/papier-firmowy-trzy-wersje.webp",
+     "sha256": "1655eae3fe2fbf846e84940e1609a6fb4f0e5cb69ba886b11fb1e7eef3fb4114",
+     "alt": "Infografika „Trzy wersje z jednego projektu”: Szablon do edycji, Codzienne pisma, PDF, Wysyłka e-mailem, Nakład z drukarni, Kolor do krawędzi.",
+     "podpis": "Jeden projekt, trzy wersje: szablon do edycji, PDF do wysyłki i papier drukowany w nakładzie.",
+     "sekcja": "wersje"
+    },
+    {
+     "plik": "obrazy/papier-firmowy-najczestsze-bledy.webp",
+     "sha256": "905e005eae457a051224e283ed2ef098eee91f2b966e0ff40107e0328474563d",
+     "alt": "Infografika „Najczęstsze błędy”: Rozmyte logo, Nieczytelna stopka, Brak KRS i sądu, Tło ucięte przy druku, Brak kroju w biurze, Nieaktualne dane.",
+     "podpis": "Błędy, które wychodzą dopiero na wydruku: rozmyte logo, zbyt mała stopka, brak danych spółki i tło ucinane przez drukarkę.",
+     "sekcja": "bledy"
+    }
+   ]
+  },
+  {
+   "id": 5967,
+   "slug": "audyt-google-ads-po-zmianie-oferty",
+   "okladka": {
+    "plik": "obrazy/audyt-google-ads-okladka.webp",
+    "sha256": "2832ed8f12e510c682ebd7ade12d05a703c8543d114ebb1fd7d39bec6aeac4c8",
+    "alt": "Laptop z listą kampanii reklamowych oznaczonych do poprawy, lupa i wydrukowana lista kontrolna audytu."
+   },
+   "obrazy": [
+    {
+     "plik": "obrazy/audyt-google-ads-nieaktualne-reklamy.webp",
+     "sha256": "0f1eab447b374c9ebf48f7682a2ca2f599d8ecb0275c7d203c23e4a6d5870608",
+     "alt": "Podgląd reklamy z oznaczonymi problemami: wycofany pakiet w nagłówku, nieaktualny termin promocji i wezwanie niezgodne z ofertą.",
+     "podpis": "Reklamę czytaj jak obietnicę: wycofane pakiety, stare terminy promocji i wezwania, które nie pasują już do procesu sprzedaży.",
+     "sekcja": "sekcja-3"
+    },
+    {
+     "plik": "obrazy/audyt-google-ads-reklama-a-strona.webp",
+     "sha256": "8c94529227a959e8220da38d53bea5f537bcc4e2a1eda60e0414607b0ce9c8ab",
+     "alt": "Infografika „Reklama i strona mówią to samo?”: Reklama, Strona docelowa, Nagłówek, Zakres usługi, Warunki, Wezwanie do działania, Formularz po wysłaniu.",
+     "podpis": "Porównanie reklamy ze stroną docelową: nagłówek, zakres, warunki i cała droga do kontaktu na telefonie i komputerze.",
+     "sekcja": "sekcja-5"
+    },
+    {
+     "plik": "obrazy/audyt-google-ads-raport-korekt.webp",
+     "sha256": "42080cdd73d073032a57cbb751433ec5c28a57be68ad39cfa9dd06d82e4bb9c4",
+     "alt": "Infografika „Raport korekt z priorytetami”: Element, Dowód rozbieżności, Priorytet, Aktywna reklama pakietu, Pakiet wycofany, Wysoki, Strona docelowa, Inny zakres usługi, Średni, Link w rozszerzeniu, Strona usunięta, Wysoki.",
+     "podpis": "Raport korekt: konkretny element, dowód rozbieżności i priorytet, zaczynając od aktywnych reklam wycofanej oferty.",
+     "sekcja": "sekcja-7"
+    }
+   ]
+  },
+  {
+   "id": 5601,
+   "slug": "kreatory-stron-internetowych",
+   "okladka": {
+    "plik": "obrazy/kreator-czy-projekt-strony-okladka.webp",
+    "sha256": "483c5bdf0ca407b21ec5e7d68439807b0aff07c722cd9e2f8ac1888b1876f933",
+    "alt": "Tablet z edytorem stron typu przeciągnij i upuść oraz monitor z indywidualnie zaprojektowaną stroną firmy."
+   },
+   "obrazy": [
+    {
+     "plik": "obrazy/kreator-czy-projekt-strony-kiedy-wystarczy.webp",
+     "sha256": "51439824b167de403cc069fdaeb0d988bf2e05bd9e681fd93444e24ca06f4fef",
+     "alt": "Infografika „Kiedy kreator wystarczy”: Testujesz pomysł, Strona na krótko, Prosta wizytówka, Klienci z polecenia, Sam edytujesz treści, Bez rezerwacji i integracji.",
+     "podpis": "Kreator wystarczy, gdy testujesz pomysł, potrzebujesz prostej wizytówki na krótko i nie potrzebujesz rezerwacji ani integracji.",
+     "sekcja": "kiedy-wystarczy"
+    },
+    {
+     "plik": "obrazy/kreator-czy-projekt-strony-ai-pomaga.webp",
+     "sha256": "452a99ad073ecff486a7b4040c50980a0ca50c7588231a02b3fe35e9463b14d9",
+     "alt": "Infografika „AI pomaga, ale nie zastąpi”: AI pomaga, Szkic opisu usługi, Wersje nagłówków, Pomysły na FAQ, Skracanie tekstu, Nie zastąpi, Strategii, Oferty i cen, Struktury pod zapytania, Sprawdzania faktów.",
+     "podpis": "AI przyspiesza szkice i warianty tekstów, ale strategia, oferta, struktura strony i sprawdzanie faktów zostają po Twojej stronie.",
+     "sekcja": "ai-w-pracy"
+    },
+    {
+     "plik": "obrazy/kreator-czy-projekt-strony-piec-pytan.webp",
+     "sha256": "bc534ee22bb799fa26a467bf177e79c044d983aacdfb2c981594f5667448cd22",
+     "alt": "Infografika „Pięć pytań przed wyborem”: Jaki jest cel strony?, Czego firma będzie potrzebować za 2–3 lata?, Jakich funkcji potrzebujesz?, Kto będzie edytował stronę?, Czy strona ma przynosić zapytania?.",
+     "podpis": "Pięć pytań, które rozstrzygają wybór: cel, plany na 2–3 lata, funkcje, osoba edytująca i zapytania z Google oraz kampanii.",
+     "sekcja": "jak-zdecydowac"
+    }
+   ]
+  },
+  {
+   "id": 5605,
+   "slug": "mockup-co-to-jest",
+   "okladka": {
+    "plik": "obrazy/mockup-znaku-okladka.webp",
+    "sha256": "021065c5bf0b8a4aaac941a8d7ef7cd897e28cbfbb00a4c545b9d5afcd2a3cba",
+    "alt": "Ten sam znak na wizytówce, torbie, szyldzie i ekranie telefonu pokazany jako realistyczne wizualizacje."
+   },
+   "obrazy": [
+    {
+     "plik": "obrazy/mockup-znaku-do-czego-sluzy.webp",
+     "sha256": "78aec709befbed0e6767c9ea3c715fe9701a50fcee45696f94fd626df1714384",
+     "alt": "Infografika „Do czego służy mockup”: Prezentacja dla zespołu, Test czytelności, Portfolio i oferta.",
+     "podpis": "Mockup pomaga pokazać znak zespołowi, sprawdzić czytelność w różnych warunkach i przygotować materiały do portfolio.",
+     "sekcja": "zastosowanie"
+    },
+    {
+     "plik": "obrazy/mockup-znaku-szesc-krokow.webp",
+     "sha256": "37b66781ab95ef8f236556690fe81ba01176273acd221bb971f4207cb5d9063c",
+     "alt": "Infografika „Mockup w sześciu krokach”: Logo w wektorze, Wybór scen, Perspektywa i faktura, Kolory, Sprawdzenie, Eksport do prezentacji.",
+     "podpis": "Mockup w sześciu krokach: wektorowy plik znaku, wybór scen, perspektywa i faktura, kolory, kontrola i eksport do prezentacji.",
+     "sekcja": "jak-powstaje"
+    },
+    {
+     "plik": "obrazy/mockup-znaku-ocena-na-mockupach.webp",
+     "sha256": "3c80c4910c04993e4f9aab2f3021645b1c32d35380abe9d7afb62d66d17101b2",
+     "alt": "Infografika „Jak ocenić logo na mockupach”: Czytelne z kilku metrów, Czytelne w małym rozmiarze, Mono i negatyw, Haft bez utraty detali, Kolory do powtórzenia w druku, Sam znak kojarzy się z marką.",
+     "podpis": "Na mockupie oceniaj znak, nie scenę: odczyt z daleka i w małym rozmiarze, wersje mono i negatyw, detale w hafcie i kolory w druku.",
+     "sekcja": "ocena"
+    }
+   ]
+  },
+  {
+   "id": 5609,
+   "slug": "seo-sklepu-internetowego",
+   "okladka": {
+    "plik": "obrazy/seo-sklepu-okladka-nowa.webp",
+    "sha256": "67134df887865a1b029d8d9e42dd7b0eaf3093fcd2c10380da0a6d5af1bf8a1c",
+    "alt": "Laptop z kategorią sklepu internetowego z grillami gazowymi i telefon z kartą produktu."
+   },
+   "obrazy": [
+    {
+     "plik": "obrazy/seo-sklepu-frazy-poziomy.webp",
+     "sha256": "3915df15acc793032399517e14e3108680ae394e0a272f761f07f61152ea779e",
+     "alt": "Infografika „Gdzie trafia która fraza”: Frazy ogólne, Kategoria, grille gazowe, Marka, model, cecha, Produkt, grill gazowy 4-palnikowy, Pytania, Blog, jaki grill gazowy do ogrodu.",
+     "podpis": "Frazy ogólne trafiają do kategorii, frazy z modelem lub cechą do produktów, a pytania przed zakupem do poradników na blogu.",
+     "sekcja": "frazy"
+    },
+    {
+     "plik": "obrazy/seo-sklepu-karta-produktu.webp",
+     "sha256": "3b7de03a9f60bf5f8c579465b6fdb80b1c0c43a5ae60b6ebfc072643932bdbc3",
+     "alt": "Infografika „Karta produktu dla klienta i Google”: Nazwa z modelem i cechą, Własny opis, Atrybuty: materiał, kolor, rozmiar, bransoletka-srebrna.webp, Tekst alternatywny, Opinie klientów.",
+     "podpis": "Karta produktu: nazwa z modelem i cechą, własny opis, atrybuty w polach, opisowa nazwa pliku zdjęcia, alt i prawdziwe opinie.",
+     "sekcja": "opisy"
+    },
+    {
+     "plik": "obrazy/seo-sklepu-technika-sklepu.webp",
+     "sha256": "c8f9b5ba8001002da9dce1e5ec4f1a641e4f612a967a5c04241b42117c61bede",
+     "alt": "Infografika „Technika sklepu w sześciu punktach”: Lekki motyw, Kompresja zdjęć, Cache, Test na telefonie, Dane strukturalne, Mapa witryny i Merchant Center.",
+     "podpis": "Technika sklepu: lekki motyw, kompresja zdjęć, cache, test na telefonie, dane strukturalne oraz mapa witryny i Merchant Center.",
+     "sekcja": "technika"
+    }
+   ]
+  },
+  {
+   "id": 5613,
+   "slug": "logo-firmy-budowlanej",
+   "okladka": {
+    "plik": "obrazy/firma-budowlana-znak-okladka.webp",
+    "sha256": "049b5ded92f1c6547004f0f0774f8535c4aa0147d1a11b4d34c414948b1adfcd",
+    "alt": "Drzwi busa, kask i baner na ogrodzeniu budowy z tym samym wyrazistym znakiem firmy budowlanej."
+   },
+   "obrazy": [
+    {
+     "plik": "obrazy/firma-budowlana-znak-wlasny-symbol.webp",
+     "sha256": "9c62795bb84f600ead6585f341e9845c6d03a7f634196b81db1688dc5b24ae07",
+     "alt": "Infografika „Dom, kask, dźwig czy własny znak?”: Oczywiste motywy, Własny znak, Monogram, Geometria, Litera jak belka, Motyw z technologii.",
+     "podpis": "Dom, kask i dźwig są zrozumiałe, ale powtarzalne; monogram, geometria czy litera zbudowana jak belka łatwiej odróżnią firmę.",
+     "sekcja": "symbole"
+    },
+    {
+     "plik": "obrazy/firma-budowlana-znak-kolor-na-budowie.webp",
+     "sha256": "7b4e0d4d811ae420929f6f2bcfc926eb5cba0f7a36408a41b60ce6da8561c013",
+     "alt": "Infografika „Kolor widoczny na budowie”: Granat, Grafit, Pomarańcz, Żółć, Zieleń, Czerwień, Ekran, Druk, Pantone, Folia i nici.",
+     "podpis": "Kolor marki ma odróżnić się od kamizelek i maszyn; dla każdego zapisz wartości do ekranu, druku, Pantone oraz folii i nici.",
+     "sekcja": "kolory"
+    },
+    {
+     "plik": "obrazy/firma-budowlana-znak-test-mockupy.webp",
+     "sha256": "f798b4dc9746069ae4546874e753bf15ddcaca55f21d612cd3c22c04afbddc1c",
+     "alt": "Infografika „Test przed decyzją”: Drzwi auta, Kask, Baner z daleka, Favicona, Jeden kolor, Telefon, Obok konkurencji, Kosztorys.",
+     "podpis": "Propozycje oceniaj na mockupach: auto, kask, baner z drugiej strony ulicy, favicona, wersja jednokolorowa i nagłówek kosztorysu.",
+     "sekcja": "test"
+    }
+   ]
+  },
+  {
+   "id": 5657,
+   "slug": "ile-kosztuje-domena-i-hosting",
+   "okladka": {
+    "plik": "obrazy/domena-i-hosting-okladka.webp",
+    "sha256": "a813fb8abcc72e3003d4627081c0beb838a1a838e997700ddfb46d27d1872006",
+    "alt": "Pasek adresu z domeną twojafirma.pl nad serwerem hostingu i karta kalendarza z datą odnowienia."
+   },
+   "obrazy": [
+    {
+     "plik": "obrazy/domena-i-hosting-cena-domeny.webp",
+     "sha256": "b12a63553ea922336cfc7a8a717ddbaff439b909e770e280ee1c3db170de44b6",
+     "alt": "Infografika „Od czego zależy cena domeny”: .pl, .com.pl, .eu, .com, Rozszerzenie, Pierwszy rok, Odnowienie, Okres, Transfer, Domena zajęta.",
+     "podpis": "Cena domeny zależy od rozszerzenia, rejestratora i okresu; porównuj koszt odnowienia i transferu, nie tylko pierwszy rok w promocji.",
+     "sekcja": "koszt-domeny"
+    },
+    {
+     "plik": "obrazy/domena-i-hosting-pakiet-hostingu.webp",
+     "sha256": "9de3947c1a6142f31a8993b50a43f5c08a795adc87af9a8c9711c11da737b735",
+     "alt": "Infografika „Co jest w pakiecie hostingu”: Procesor i pamięć, Miejsce na dysku, Bazy danych, Skrzynki pocztowe, Kopie zapasowe, Wsparcie, Ważniejsze niż dysk: limity wydajności.",
+     "podpis": "W ofercie hostingu więcej niż pojemność dysku znaczą limity wydajności, kopie zapasowe, poczta i wsparcie.",
+     "sekcja": "koszt-hostingu"
+    },
+    {
+     "plik": "obrazy/domena-i-hosting-wygasniecie-domeny.webp",
+     "sha256": "e5029dc63a9a733e1d2ca0358d0426a6232ec103a3419b2bee1250666aea2a68",
+     "alt": "Infografika „Gdy domena wygaśnie”: Domena aktywna, Strona i poczta nie działają, Czas na odnowienie, Domena wolna dla innych, Automatyczne odnowienie, Firmowy e-mail abonenta, Daty w kalendarzu, Dostępy w firmie.",
+     "podpis": "Po wygaśnięciu domeny znikają naraz strona i poczta; automatyczne odnowienie, czytany e-mail abonenta i daty w kalendarzu chronią przed przerwą.",
+     "sekcja": "odnowienie"
+    }
+   ]
+  },
+  {
+   "id": 5659,
+   "slug": "inpost-woocommerce-integracje-sklepu",
+   "okladka": {
+    "plik": "obrazy/integracje-sklepu-wysylki-okladka.webp",
+    "sha256": "a080e35cceb9b59c00705c0fc149918cb8c6bb14e1ce3756f926570d8dc82c9a",
+    "alt": "Laptop z koszykiem sklepu i mapą wyboru paczkomatu, obok paczki z etykietami i drukarka etykiet."
+   },
+   "obrazy": [
+    {
+     "plik": "obrazy/integracje-sklepu-wysylki-szesc-krokow.webp",
+     "sha256": "fc16ec9efa4f14ffcfc497c31170a6b1c19e36ca5718b49d2012834a9d43660b",
+     "alt": "Infografika „InPost w sześciu krokach”: Konto w Managerze Paczek, Dane dostępowe, Instalacja wtyczki, Metody dostawy, Etykiety i zwroty, Test zamówienia.",
+     "podpis": "Połączenie InPost z WooCommerce: konto, dane dostępowe, wtyczka, metody dostawy, etykiety i zwroty oraz testowe zamówienie.",
+     "sekcja": "inpost"
+    },
+    {
+     "plik": "obrazy/integracje-sklepu-wysylki-jeden-panel.webp",
+     "sha256": "3764bfe393f3b33babd77f656105904a60c2ecb7ba55b670c8355bea1715d569",
+     "alt": "Infografika „Sklep i Allegro w jednym panelu”: Base.com, Sklep WooCommerce, Allegro, Zamówienia z obu kanałów, Stany i ceny w obie strony, Etykiety kurierów, Faktury i paragony.",
+     "podpis": "Base.com (dawny BaseLinker) łączy sklep i Allegro: stany i ceny w obie strony, zamówienia w jednym panelu, etykiety i faktury.",
+     "sekcja": "allegro-baselinker"
+    },
+    {
+     "plik": "obrazy/integracje-sklepu-wysylki-trzy-integracje.webp",
+     "sha256": "c4db30ed4d60df38f3636cea2641086ff2ade2e475d8323c0c672d59c7a0ecb4",
+     "alt": "Infografika „Trzy integracje na start”: Płatności online, Paczkomaty i kurier, Faktury dla firm, Później: Allegro, Base.com, ERP, magazyn.",
+     "podpis": "Na start zwykle wystarczą płatności, jedna usługa przesyłek i faktury; Allegro, Base.com i ERP dochodzą wraz z liczbą zamówień.",
+     "sekcja": "ile-na-start"
+    }
+   ]
+  },
+  {
+   "id": 5661,
+   "slug": "nowoczesne-strony-internetowe",
+   "okladka": {
+    "plik": "obrazy/nowoczesna-strona-okladka.webp",
+    "sha256": "d3046afc91a253b6c589e5a5a2e0f3236840e3c04c52ac4fff9aed962821dce7",
+    "alt": "Laptop i telefon z tą samą nowoczesną stroną firmy z dużym nagłówkiem, zdjęciem biura i przyciskiem kontaktu."
+   },
+   "obrazy": [
+    {
+     "plik": "obrazy/nowoczesna-strona-wygodna-na-telefonie.webp",
+     "sha256": "777957e6facf46f8ff31de26bd70c3317f50a53f4392ddc6e7ac4a15608b0b77",
+     "alt": "Infografika „Strona wygodna na telefonie”: Numer dzwoni po dotknięciu, Główny przycisk na pierwszym ekranie, Menu jednym dotknięciem, Tekst bez powiększania, Krótki formularz, Nic nie wychodzi poza ekran.",
+     "podpis": "Responsywna strona na telefonie: klikalny numer, główny przycisk na pierwszym ekranie, wygodne menu, czytelny tekst i krótki formularz.",
+     "sekcja": "responsywnosc"
+    },
+    {
+     "plik": "obrazy/nowoczesna-strona-wyglad-2026.webp",
+     "sha256": "58c24eb662f2aa45f49509bd6127bc657955de0ea0599eba7b4c68d8fc530f71",
+     "alt": "Infografika „Nowoczesna strona w 2026”: Jedna myśl na sekcję, Prawdziwe zdjęcia, Spójne kolory i kroje, Przyciski jak przyciski, Animacje, które coś pokazują, Motyw dobrany do branży.",
+     "podpis": "Nowoczesny wygląd to porządek i konkret: jedna myśl na sekcję, prawdziwe zdjęcia, spójna identyfikacja i oszczędne animacje.",
+     "sekcja": "wyglad"
+    },
+    {
+     "plik": "obrazy/nowoczesna-strona-sygnaly-starzenia.webp",
+     "sha256": "c212f94aff596ec1b5a3581211eb78dd23b9679077c78b8d5a83e9157b4c5ec8",
+     "alt": "Infografika „Kiedy strona przestaje być nowoczesna”: Trzeba powiększać tekst, Wolne adresy w Search Console, Zmiana ceny wymaga programisty, Brak HTTPS i aktualizacji, Nieaktualna oferta i zdjęcia, Wygląd niezgodny z logo, Formularz nie działa.",
+     "podpis": "Sygnały, że strona się zestarzała: niewygodna na telefonie, wolna, trudna w edycji, bez aktualizacji albo niezgodna z ofertą.",
+     "sekcja": "kiedy-nowa"
+    }
+   ]
+  },
+  {
+   "id": 5663,
+   "slug": "logo-restauracji-i-kawiarni",
+   "okladka": {
+    "plik": "obrazy/restauracja-kawiarnia-znak-okladka.webp",
+    "sha256": "1f4319d02234f0c5245154607a90251df0fd2d6da3bbeeb4dfdd277ef66aefa9",
+    "alt": "Karta menu, papierowy kubek na wynos z rękawem i torba z pieczątką z tym samym znakiem lokalu."
+   },
+   "obrazy": [
+    {
+     "plik": "obrazy/restauracja-kawiarnia-znak-gdzie-pracuje.webp",
+     "sha256": "ef9aca49f6a4f15e119feb84b30790c5cfaf48c7ad5ec3c50dea9cf6af70574c",
+     "alt": "Infografika „Gdzie pracuje logo lokalu”: Restauracja, Szyld, menu, rachunek, Bistro, Szyld i menu, Kawiarnia, Kubek, rękaw, pieczątka, Street food, Opakowania, Cukiernia, Pudełka i naklejki, Dostawy, Ikona w aplikacji.",
+     "podpis": "Logo restauracji pracuje głównie na szyldzie i w menu, a logo kawiarni na kubkach, rękawach i pieczątkach, czyli w małym rozmiarze.",
+     "sekcja": "typy-lokali"
+    },
+    {
+     "plik": "obrazy/restauracja-kawiarnia-znak-palety-gastronomii.webp",
+     "sha256": "99d84c886afe64cfe7f16abd14794d204094a516a3f122ba1b7efb164f224e5d",
+     "alt": "Infografika „Kolor i krój do charakteru lokalu”: Szybkie jedzenie, Kuchnia roślinna, Kawiarnia i piekarnia, Restauracja premium, Cukiernia, Krój ręczny: sprawdź odczyt z kilku metrów.",
+     "podpis": "Typowe palety gastronomii i jedna zasada dla krojów ręcznych: nazwa musi być czytelna z kilku metrów i w rozmiarze avatara.",
+     "sekcja": "kolory-kroje"
+    },
+    {
+     "plik": "obrazy/restauracja-kawiarnia-znak-piec-wersji.webp",
+     "sha256": "7b137c1e334f74ad56f6b6362521e165cecf3ecbe01d1bd20f714b0763aa81cc",
+     "alt": "Infografika „Pięć wersji logo lokalu”: Pozioma: szyld i menu, Kwadratowa: avatar, Sygnet: kubek i pieczątka, Jednobarwna: nadruki, Negatyw: ciemne tło.",
+     "podpis": "Co najmniej pięć wersji: pozioma, kwadratowa, sam sygnet, jednobarwna i negatyw; do neonu zwykle osobna, uproszczona wersja.",
+     "sekcja": "wersje"
+    }
+   ]
+  },
+  {
+   "id": 5955,
+   "slug": "facebook-lead-ads-nietrafione-kontakty-pytania-kwalifikujace",
+   "okladka": {
+    "plik": "obrazy/lead-ads-formularz-okladka.webp",
+    "sha256": "19564dfc0a8e5ecba0ddf5668257b5b9939a07e0b6652a1a3e8f5d12d4d8d434",
+    "alt": "Telefon z formularzem reklamy z pytaniami o temat szkolenia, liczbę uczestników i termin oraz laptop z listą zgłoszeń."
+   },
+   "obrazy": [
+    {
+     "plik": "obrazy/lead-ads-formularz-pytanie-decyzja.webp",
+     "sha256": "0180887c678857ef7150a8957950ec0cf0b45f644ed1b42eb6f9ab73225fe714",
+     "alt": "Infografika „Pytanie, decyzja, następny krok”: Pytanie, Decyzja, Następny krok, Temat szkolenia, Czy to nasza oferta?, Dobór trenera, Liczba uczestników, Czy jest minimum grupy?, Wycena, Planowany termin, Czy mamy wolny termin?.",
+     "podpis": "Każde pytanie w formularzu ma uzasadnienie: odpowiedź zmienia decyzję i następny krok obsługi zgłoszenia.",
+     "sekcja": "sekcja-3"
+    },
+    {
+     "plik": "obrazy/lead-ads-formularz-statusy.webp",
+     "sha256": "b4a0d11a4e7becd8c16937d578c6596d90936bd60b8d7d4b5d7efb2f3e977ff0",
+     "alt": "Infografika „Statusy zamiast dobry lead”: Nowe, W kontakcie, Dopasowane, Poza ofertą, Brak danych, Warunek, Spełniony, Niespełniony, Nieustalony.",
+     "podpis": "Osobne statusy obsługi i ocena warunków: brak informacji to warunek nieustalony, a nie automatycznie odpowiedź negatywna.",
+     "sekcja": "sekcja-5"
+    },
+    {
+     "plik": "obrazy/lead-ads-formularz-test-formularza.webp",
+     "sha256": "3df594f0b20cdeda2bac9bf1196ecf5a62d604e91120d9751826841b4f21549d",
+     "alt": "Wykres przykładowego testu formularza: wersja A 40 zgłoszeń, 32 ocenione, 12 dopasowanych; wersja B 31 zgłoszeń, 28 ocenionych, 16 dopasowanych.",
+     "podpis": "Przykładowy test: mniej zgłoszeń, ale więcej dopasowanych kontaktów; koszt liczysz na kontakt dopasowany, nie na każde zgłoszenie.",
+     "sekcja": "sekcja-7"
+    }
+   ]
+  },
+  {
+   "id": 5665,
+   "slug": "core-web-vitals",
+   "okladka": {
+    "plik": "obrazy/core-web-vitals-okladka-nowa.webp",
+    "sha256": "1e6625b9ec028ead599d7abc823cc1bf8c350d7634e90e49f699ecb53b9f9fef",
+    "alt": "Telefon i laptop z raportem szybkości strony i trzema wskaźnikami LCP, INP i CLS."
+   },
+   "obrazy": [
+    {
+     "plik": "obrazy/core-web-vitals-progi.webp",
+     "sha256": "f62124fa771c50b4925255218736d0e26c27e8de8cb2d742d66b4bcd54341587",
+     "alt": "Infografika „Progi dobrego wyniku”: LCP, do 2,5 s, Wczytanie największego elementu, INP, do 200 ms, Reakcja na kliknięcie, CLS, do 0,1, Stabilność układu, 75. percentyl wizyt z 28 dni.",
+     "podpis": "Dobry wynik: LCP do 2,5 s, INP do 200 ms i CLS do 0,1 dla co najmniej trzech na cztery wizyty z ostatnich 28 dni.",
+     "sekcja": "progi-core-web-vitals"
+    },
+    {
+     "plik": "obrazy/core-web-vitals-przyczyny.webp",
+     "sha256": "b61586f9ddc2bd6f367baf90946d5d83369d31cb372e0c31837e38e8e2c235e6",
+     "alt": "Infografika „Co spowalnia stronę firmy”: Duże zdjęcie na pierwszym ekranie, LCP, Wolna odpowiedź serwera, LCP, Skrypty z zewnątrz, INP, Dużo wtyczek i stylów, INP, Obrazki i czcionki bez wymiarów, CLS.",
+     "podpis": "Najczęstsze przyczyny: duże zdjęcia i wolny serwer psują LCP, skrypty z zewnątrz INP, a obrazki i czcionki bez wymiarów CLS.",
+     "sekcja": "co-spowalnia-strone"
+    },
+    {
+     "plik": "obrazy/core-web-vitals-przed-i-po.webp",
+     "sha256": "c53c45d7573b1908167c13d6a10c76930da96d672bf0f4684ceb00c7c03ab52d",
+     "alt": "Wykres przed i po dla podstrony Tworzenie stron internetowych: blokowanie z 417 do 84 ms, wynik Lighthouse z 57 do 65 pkt, zapytania do bazy z 384 do 214.",
+     "podpis": "Pierwszy etap przyspieszenia podstrony Tworzenie stron internetowych (Lighthouse, 8.10.2026): blokowanie z 417 do 84 ms, wynik z 57 do 65 pkt.",
+     "sekcja": "jak-przyspieszylismy"
+    }
+   ]
+  },
+  {
+   "id": 5957,
+   "slug": "meta-pixel-wiecej-zakupow-niz-sklep-duplikaty-conversions-api",
+   "okladka": {
+    "plik": "obrazy/piksel-meta-okladka.webp",
+    "sha256": "2d53325666bec8b5e3e26e1cdce75d1b084f17880c58d29f6b0e55402ebea591",
+    "alt": "Laptop ze stroną potwierdzenia zamówienia i linie danych prowadzące do panelu zdarzeń z zakupem."
+   },
+   "obrazy": [
+    {
+     "plik": "obrazy/piksel-meta-drogi-danych.webp",
+     "sha256": "2379e36dd5f4e922e2a791453948fcd347f6027aae4e582259373174f16a1f06",
+     "alt": "Infografika „Skąd idą dane o zakupie”: Integracja sklepu, Dodatkowa wtyczka, Kod na stronie, Conversions API, Menedżer zdarzeń, Lista do sprawdzenia.",
+     "podpis": "Spisz wszystkie drogi, którymi informacja o zakupie trafia do Meta: integracja sklepu, wtyczka, kod na stronie i Conversions API.",
+     "sekcja": "sekcja-3"
+    },
+    {
+     "plik": "obrazy/piksel-meta-deduplikacja.webp",
+     "sha256": "46d3e6a84d684fa8a5ae04d88b7449ecd7cee28c3fc9766d53a3a6566f0db47f",
+     "alt": "Infografika „Jeden zakup, jedno zdarzenie”: Piksel w przeglądarce, Conversions API z serwera, Zakup, ID zdarzenia: zam-1024, Deduplikacja, Zakup policzony raz.",
+     "podpis": "Deduplikacja: piksel i Conversions API wysyłają ten sam zakup z tym samym identyfikatorem zdarzenia, więc liczy się on raz.",
+     "sekcja": "sekcja-5"
+    },
+    {
+     "plik": "obrazy/piksel-meta-zakres-danych.webp",
+     "sha256": "b450aa91ba0aed17641dae7a6ef2e3b7157ab689e4cc69f3768889bd4805cca3",
+     "alt": "Infografika „Jakie dane przekazuje piksel”: Nazwy produktów, Dostępność, Informacje o stronach, Sprawdź w Menedżerze zdarzeń.",
+     "podpis": "Sprawdź w Menedżerze zdarzeń, jakie dodatkowe informacje o stronach i produktach przekazuje piksel i czy zgadza się to z ustaleniami.",
+     "sekcja": "sekcja-7"
+    }
+   ]
+  },
+  {
+   "id": 5959,
+   "slug": "remarketing-google-ads-brak-reklam-zbieranie-odbiorcow-gotowosc-listy",
+   "okladka": {
+    "plik": "obrazy/remarketing-google-ads-okladka.webp",
+    "sha256": "415b4a68217219626366c59ce4230231abca4f4310974534cdee9d24936e7051",
+    "alt": "Laptop z panelem listy odbiorców i telefon ze stroną sklepu połączone strzałką powrotu."
+   },
+   "obrazy": [
+    {
+     "plik": "obrazy/remarketing-google-ads-test-zbierania.webp",
+     "sha256": "0e59193b507c354d495b20e2d2967b74042bda8e23eb64ee9e415ebbbca121ab",
+     "alt": "Infografika „Test zbierania na właściwej ścieżce”: Strona główna, Kategoria, Wybrana podstrona, Kontrolowana wizyta, Strona, Kroki, Godzina, Wynik.",
+     "podpis": "Kontrolowana wizyta na tej ścieżce, którą ma zbierać lista; zapisujesz stronę, wykonane kroki, godzinę i wynik kontroli.",
+     "sekcja": "sekcja-3"
+    },
+    {
+     "plik": "obrazy/remarketing-google-ads-zbieranie-a-gotowosc.webp",
+     "sha256": "88df8adf6e8eded2cc83543e608011b507b96d5e404bdc1592ff106ddb24e629",
+     "alt": "Infografika „Zbieranie to nie gotowość”: Zbieranie potwierdzone, Lista gotowa do użycia?, Ta sama lista co w kampanii, Informacje przy zastosowaniu, Czego dotyczy liczebność.",
+     "podpis": "Potwierdzone zbieranie odbiorców to dopiero pierwszy etap; gotowość tej samej listy do planowanego użycia sprawdzasz osobno.",
+     "sekcja": "sekcja-5"
+    },
+    {
+     "plik": "obrazy/remarketing-google-ads-co-dalej.webp",
+     "sha256": "f41a6359fa4b3266cbf510cf335ef169f2a7df1fd9a56b68bf2eda8674a14ae7",
+     "alt": "Infografika „Działanie według wyniku”: Czy test potwierdza zbieranie?, Nie, Popraw test lub pomiar na tej ścieżce, Tak, Czy lista jest gotowa do użycia?, Zajmij się warunkiem użycia listy, Sprawdź ustawienia kampanii.",
+     "podpis": "Działanie wybierasz według wyniku: brak dowodu zbierania, lista niegotowa do użycia albo ustawienia samej kampanii.",
+     "sekcja": "sekcja-7"
+    }
+   ]
+  },
+  {
+   "id": 6135,
+   "slug": "wordpress-multisite-czy-osobne-instalacje-odpowiedzialnosc-za-utrzymanie",
+   "okladka": {
+    "plik": "obrazy/multisite-czy-osobne-okladka.webp",
+    "sha256": "2030c5ef9a8d09cbd329f6114ec828bcdfabbd1a533a5ee3d0f71c4fd360ba1b",
+    "alt": "Jedna sieć z trzema witrynami obok trzech osobnych instalacji, każda na własnym serwerze."
+   },
+   "obrazy": [
+    {
+     "plik": "obrazy/multisite-czy-osobne-uprawnienia.webp",
+     "sha256": "6a7933a2a663f8a7e3413a347c55e5f659b485dff7aa16d62d67b3c9213cba53",
+     "alt": "Infografika „Kto co może w sieci”: Administrator sieci, Administrator witryny, Redaktor, Instalacja wtyczek, Aktywacja wtyczek, Publikacja treści.",
+     "podpis": "Matryca uprawnień: wtyczki instaluje administrator sieci, witryna może je tylko aktywować, a publikacja treści to osobne uprawnienie.",
+     "sekcja": "sekcja-3"
+    },
+    {
+     "plik": "obrazy/multisite-czy-osobne-aktualizacja-sieci.webp",
+     "sha256": "2db35815286957c04f2ba4090cfe30ff2efa5fee6e727d623ee06067d9dd3991",
+     "alt": "Infografika „Aktualizacja całej sieci”: Które witryny korzystają, Środowisko testowe, Kopia i próba odtworzenia, Aktualizacja, Akceptacja.",
+     "podpis": "Aktualizacja wspólnych plików dotyczy wszystkich witryn: lista zależności, test na kopii, kopia z próbą odtworzenia i akceptacja.",
+     "sekcja": "sekcja-5"
+    },
+    {
+     "plik": "obrazy/multisite-czy-osobne-zakres-awarii.webp",
+     "sha256": "37ead2ddc18189b9a8775372131375a863e9eac7ffda2b94e0536100c1943f61",
+     "alt": "Infografika „Najpierw zakres awarii”: Pojedyncza witryna, Wspólne oprogramowanie, Infrastruktura, Najpierw zakres, potem działanie.",
+     "podpis": "Przy awarii opiekun najpierw ustala zakres: jedna witryna, wspólne oprogramowanie czy infrastruktura, i dopiero wtedy działa.",
+     "sekcja": "sekcja-7"
+    }
+   ]
+  },
+  {
+   "id": 6137,
+   "slug": "ssl-wordpress-po-migracji-certyfikat-mieszana-zawartosc",
+   "okladka": {
+    "plik": "obrazy/ssl-po-migracji-okladka.webp",
+    "sha256": "b00794e7a2520770dcd0310db624c2b00ba5af14b4e04024c083bd672eff3482",
+    "alt": "Okno przeglądarki z kłódką i ostrzeżeniem o mieszanej zawartości obok serwera z certyfikatem."
+   },
+   "obrazy": [
+    {
+     "plik": "obrazy/ssl-po-migracji-kto-naprawia.webp",
+     "sha256": "ea7639850d6c42ed5ccda2c706269ebc7c349cabe727857d4737ad4dc298609f",
+     "alt": "Infografika „Kto co naprawia”: Hosting, Certyfikat na serwerze, Reverse proxy, Wymuszanie HTTPS, WordPress, Adres witryny, Odwołania do zasobów, Wtyczki i motyw.",
+     "podpis": "Certyfikat i reverse proxy naprawia administrator hostingu; adresy zasobów i ustawienia witryny poprawia opiekun WordPressa.",
+     "sekcja": "sekcja-3"
+    },
+    {
+     "plik": "obrazy/ssl-po-migracji-mieszana-zawartosc.webp",
+     "sha256": "c196cfc2bd24ae40b3dcbc24e55235aee0bc088259814c0ea0896e276e0c184b",
+     "alt": "Infografika „Mieszana zawartość”: Konsola, Obraz wczytany przez http, Zablokowano skrypt przez http, Podstrona, Typ zasobu, Miejsce odwołania.",
+     "podpis": "Dla każdego ostrzeżenia z konsoli zapisujesz podstronę, typ zasobu i miejsce, w którym zapisano odwołanie przez http.",
+     "sekcja": "sekcja-5"
+    },
+    {
+     "plik": "obrazy/ssl-po-migracji-odbior-naprawy.webp",
+     "sha256": "89f24f395eec01bf022fdbcc7408f06785fc8ad05da1c0d383e3feb5efdbfc4e",
+     "alt": "Infografika „Odbiór naprawy”: Strona główna, Ważne podstrony, Obrazy i układ, Osadzone elementy, Pobieranie dokumentów, Logowanie do panelu, Konsola bez ostrzeżeń.",
+     "podpis": "Naprawę odbierasz na podstronach i funkcjach, a po każdej grupie zmian sprawdzasz konsolę; sama kłódka nie wystarcza.",
+     "sekcja": "sekcja-7"
+    }
+   ]
+  },
+  {
+   "id": 6139,
+   "slug": "sitemap-xml-po-zmianach-strony-sprawdzanie-adresow-zgloszenie-mapy",
+   "okladka": {
+    "plik": "obrazy/mapa-witryny-xml-okladka.webp",
+    "sha256": "a5f688497787a7e58dbb8ea06489304990c3962e310e2c18d9b76969c750e8f0",
+    "alt": "Laptop z plikiem mapy witryny sitemap.xml i drzewem podstron strony."
+   },
+   "obrazy": [
+    {
+     "plik": "obrazy/mapa-witryny-xml-mapa-a-struktura.webp",
+     "sha256": "9cf17c501af9fa32a46f207413af85d6908181a0a473aaa061bb40deff5a6806",
+     "alt": "Infografika „Mapa a nowa struktura”: Lista zmian, Mapa witryny, Nowa usługa, Jest w mapie, Zmieniony adres, Nowy w mapie, stary usunięty, Usunięta podstrona, Brak w mapie, https://twojafirma.pl/uslugi/.",
+     "podpis": "Wpisy w mapie porównujesz z listą zmian: nowe strony, zmienione i usunięte adresy, zawsze w pełnej postaci z domeną i protokołem.",
+     "sekcja": "sekcja-3"
+    },
+    {
+     "plik": "obrazy/mapa-witryny-xml-skad-adresy.webp",
+     "sha256": "29fd7af989ee479062ad8f49676d8269ae97a946edaf762a0e0afd22c5e7843c",
+     "alt": "Infografika „Skąd generator bierze adresy”: Dane CMS, Ręczna lista, Inne zestawienie, Generator mapy, sitemap.xml, Wpisy, Strony, Indeks map.",
+     "podpis": "Zanim poprawisz mapę ręcznie, ustal, skąd generator bierze adresy; przy większej liczbie adresów lepsze jest generowanie z CMS.",
+     "sekcja": "sekcja-5"
+    },
+    {
+     "plik": "obrazy/mapa-witryny-xml-odczyt-a-indeksowanie.webp",
+     "sha256": "95683b336822ac96eaea9b6aeac5e03ce1aa95ee243b5cf9c981c4337d315d25",
+     "alt": "Infografika „Odczyt mapy to nie indeksowanie”: Mapa odczytana, Strony zindeksowane, Zgłoszenie to wskazówka, nie gwarancja.",
+     "podpis": "Prawidłowo odczytana mapa nie oznacza zindeksowania wszystkich adresów; zgłoszenie jest wskazówką, nie gwarancją.",
+     "sekcja": "sekcja-7"
+    }
+   ]
+  },
+  {
+   "id": 6141,
+   "slug": "robots-txt-a-noindex-dostep-do-strony-bez-sprzecznych-ustawien",
+   "okladka": {
+    "plik": "obrazy/robots-txt-noindex-okladka.webp",
+    "sha256": "c9f62bab7d1abe4ebcfac2ecb503335cac7c7f7429bb6e64519667f828a2d17b",
+    "alt": "Zamknięta brama z tabliczkami robots.txt i noindex na słupkach, za nią strona ze znakiem zakazu, a przed bramą mały robot."
+   },
+   "obrazy": [
+    {
+     "plik": "obrazy/robots-txt-noindex-konflikt.webp",
+     "sha256": "b7bf3fd8c5bfd045656c3502c2f6141a7b6cdc5a3d994c2454d7501a39888dd0",
+     "alt": "Infografika „Blokada ukrywa noindex”: Robot, robots.txt: blokada, Strona z noindex, Robot nie odczyta noindex.",
+     "podpis": "Sprzeczność: noindex na stronie zablokowanej w robots.txt jest niewidoczny dla robota, więc nie zadziała.",
+     "sekcja": "sekcja-3"
+    },
+    {
+     "plik": "obrazy/robots-txt-noindex-trzy-pytania.webp",
+     "sha256": "80f666b6d209e3d5a86dcb45cdaeff5b65a807670c0f191194b91fffceee8db1",
+     "alt": "Infografika „Trzy pytania kontrolne”: Czy robot ma dostęp?, Czy odpowiedź zawiera noindex?, Czy Google odczytał zmianę?, Inspekcja adresu URL.",
+     "podpis": "Trzy osobne pytania: dostęp robota, obecność noindex w odpowiedzi i to, czy Google odczytał zmianę (Inspekcja adresu URL).",
+     "sekcja": "sekcja-5"
+    },
+    {
+     "plik": "obrazy/robots-txt-noindex-zlecenie-korekty.webp",
+     "sha256": "6fd57e95ce4746a6ee5bdefa8120e59b86d4f0e12347e9c35980dd280b7b47ad",
+     "alt": "Infografika „Zlecenie korekty”: Adresy, Obecny stan, Stan docelowy, Gdzie zauważono problem, Ustawienia w WordPressie.",
+     "podpis": "Dobre zlecenie zaczyna się od problemu: adresy, obecny i docelowy stan, miejsce zauważenia i wcześniejsze ustawienia widoczności.",
+     "sekcja": "sekcja-7"
+    }
+   ]
+  },
+  {
+   "id": 6153,
+   "slug": "dane-strukturalne-firmy-porownanie-znacznikow-z-oferta",
+   "okladka": {
+    "plik": "obrazy/dane-strukturalne-okladka.webp",
+    "sha256": "cb0785e55198634dd29c77b04650019bd5138a3fedcef1ca6057882069e11557",
+    "alt": "Laptop ze stroną usługi firmy i nałożonym panelem danych strukturalnych porównywanych z treścią strony."
+   },
+   "obrazy": [
+    {
+     "plik": "obrazy/dane-strukturalne-karta-porownania.webp",
+     "sha256": "0f4336c1446c1ad743ebaf893d7be6e3980e39367d9295fe549aa3d13cd7ec0b",
+     "alt": "Infografika „Karta porównania”: Informacja na stronie, Oznaczenie, Źródło, Decyzja, Nazwa firmy, Opis oferty, Lokalizacja, Obraz, Zgodne, Popraw.",
+     "podpis": "Karta porównania: informacja widoczna na stronie, odpowiadające jej oznaczenie, źródło wartości i decyzja.",
+     "sekcja": "sekcja-3"
+    },
+    {
+     "plik": "obrazy/dane-strukturalne-siedziba-obszar.webp",
+     "sha256": "9235a89ebd7f518464785f0ecb4290a0f2fb7022810d90a68eb5c9d833ed5abb",
+     "alt": "Infografika „Siedziba a obszar usług”: Biuro, Obszar usług, Obszar usług to nie dodatkowe biura.",
+     "podpis": "Oferta dla wielu miejscowości nie oznacza biura w każdej z nich; siedzibę i obszar usług oznaczasz osobno.",
+     "sekcja": "sekcja-5"
+    },
+    {
+     "plik": "obrazy/dane-strukturalne-odbior-po-publikacji.webp",
+     "sha256": "e76a989430e55a729b5bf315e005de2016cf85d4b3a28ce36f26cf5e48518bb8",
+     "alt": "Infografika „Odbiór po publikacji”: Test wersji publicznej, Strona dostępna dla Google, Obrazy dostępne, Zgodność z kartą, Zrzuty i daty jako dowód.",
+     "podpis": "Odbiór po publikacji: test publicznej wersji, dostęp Google do strony i obrazów, zgodność z kartą i zapisane dowody.",
+     "sekcja": "sekcja-7"
+    }
+   ]
+  },
+  {
+   "id": 6150,
+   "slug": "woocommerce-api-dane-uprawnienia-wlasciciel-dostepu",
+   "okladka": {
+    "plik": "obrazy/woocommerce-api-dostep-okladka.webp",
+    "sha256": "a4256e13f336648b5042dddb0287c16b3e903c65ceccd88f0360416fdb263eee",
+    "alt": "Laptop z panelem kluczy API sklepu z wyborem uprawnień oraz klucz z zawieszką obok kłódki."
+   },
+   "obrazy": [
+    {
+     "plik": "obrazy/woocommerce-api-dostep-minimalne-uprawnienia.webp",
+     "sha256": "1a2f582df12b0f95e30ef903d1345533e96ada537a3ad5d28fd720957b00f5af",
+     "alt": "Infografika „Minimalne uprawnienia”: Odczyt, Pobieranie zamówień, Zapis, Aktualizacja stanów, Odczyt i zapis, Obie operacje, Liczy się też rola użytkownika WordPress.",
+     "podpis": "Poziom dostępu klucza wynika z listy operacji integracji; liczy się też rola przypisanego użytkownika WordPress.",
+     "sekcja": "sekcja-3"
+    },
+    {
+     "plik": "obrazy/woocommerce-api-dostep-utworzenie-klucza.webp",
+     "sha256": "b7b3d73d5ada18a08a6ef5e92c90815f4acbd0b61024b33628971f498f3b8e07",
+     "alt": "Infografika „Utworzenie i przekazanie klucza”: WooCommerce, Ustawienia, Zaawansowane, REST API, Opis, Użytkownik, Poziom dostępu, Chroniony kanał do sekretów.",
+     "podpis": "Klucz tworzysz w WooCommerce, Ustawienia, Zaawansowane, REST API, a przekazujesz chronionym kanałem do sekretów.",
+     "sekcja": "sekcja-5"
+    },
+    {
+     "plik": "obrazy/woocommerce-api-dostep-wymiana-klucza.webp",
+     "sha256": "056486f2e8049c45cc8c87d5cb5dbfbc47f50384e50caa2b3b94c5ee63fb6261",
+     "alt": "Infografika „Wymiana klucza bez przerwy”: Nowy klucz, Bezpieczne przekazanie, Aktualizacja konfiguracji, Test, Odwołanie starego klucza.",
+     "podpis": "Wymiana bez przerwy: nowy dostęp, przekazanie uzgodnionym kanałem, aktualizacja, test i dopiero wtedy odwołanie starego klucza.",
+     "sekcja": "sekcja-7"
+    }
+   ]
+  },
+  {
+   "id": 6157,
+   "slug": "favicon-ico-ikona-witryny-pliki-wdrozenie",
+   "okladka": {
+    "plik": "obrazy/ikona-witryny-okladka.webp",
+    "sha256": "ffb9fdb080715dd5566c47f779da161625cb61ddad2bf7d125566331731bb233",
+    "alt": "Karty przeglądarki z małą ikoną witryny i ta sama ikona w dużym rozmiarze jako szklany kafelek."
+   },
+   "obrazy": [
+    {
+     "plik": "obrazy/ikona-witryny-po-zmniejszeniu.webp",
+     "sha256": "39b749eb441269236b548a2a5e8531504ac049beddc37dffb9345eba263d5332",
+     "alt": "Infografika „Czytelność po zmniejszeniu”: 512 px, 64 px, 32 px, 16 px, Z cienkimi obwódkami, Uproszczony.",
+     "podpis": "Znak oglądasz w dużym i małym podglądzie: w ikonie liczy się wyraźny obrys, odstępy i kontrast, a nie drobne ozdobniki.",
+     "sekcja": "sekcja-3"
+    },
+    {
+     "plik": "obrazy/ikona-witryny-kwadrat-512.webp",
+     "sha256": "a96cdf2a814513b51a6264f90ecb6137e14320fc6c8ab934745cea299e5d0f6e",
+     "alt": "Infografika „Kwadrat 512 × 512”: 512 × 512 px, Margines, Szerokość równa wysokości, Nic ważnego nie jest ucięte.",
+     "podpis": "Plik do ikony witryny: kwadrat co najmniej 512 × 512 pikseli, z marginesem i bez przycięcia ważnych części znaku.",
+     "sekcja": "sekcja-5"
+    },
+    {
+     "plik": "obrazy/ikona-witryny-wymagania-google.webp",
+     "sha256": "99a1fe60ea8356059fb9247a48804c3a3615e00014ce56d5f71faf3486ebec9e",
+     "alt": "Infografika „Wymagania Google”: Proporcje 1:1, Minimum 8 × 8 px, Zalecane ponad 48 × 48 px, Stały adres pliku, Jedna ikona na nazwę hosta.",
+     "podpis": "Google wymaga kwadratu 1:1 i co najmniej 8 × 8 px, zaleca więcej niż 48 × 48 px; adres pliku powinien być stały.",
+     "sekcja": "sekcja-7"
+    }
+   ]
+  },
+  {
+   "id": 6164,
+   "slug": "open-graph-na-stronie-firmy-miniatura-linku-i-metadane",
+   "okladka": {
+    "plik": "obrazy/open-graph-miniatura-okladka.webp",
+    "sha256": "3783f533c923a227d7c23ce5424e20fc38ba274759a0cd67f4d42f4eea29376b",
+    "alt": "Telefon z podglądem udostępnionego linku ze zdjęciem mosiężnego elementu oraz laptop z polami metadanych strony."
+   },
+   "obrazy": [
+    {
+     "plik": "obrazy/open-graph-miniatura-kadr-miniatury.webp",
+     "sha256": "7307d05b66cdefd2631d5ee2ca2e0b776bde902b79e357d313dd191c72fd4053",
+     "alt": "Infografika „Miniatura po przycięciu”: Szeroki kadr, Zbliżenie, Za ciasno.",
+     "podpis": "Miniaturę projektuj od małego podglądu: jeden dominujący obiekt, który pozostaje rozpoznawalny po przycięciu i zmniejszeniu.",
+     "sekcja": "sekcja-3"
+    },
+    {
+     "plik": "obrazy/open-graph-miniatura-wlasciwosci-obrazu.webp",
+     "sha256": "e2bc2f292f8e36506a6ea28a77f7fc0c0d40b2f6090e69cd3384f8feeaa0e212",
+     "alt": "Właściwości og:image, og:image:type, og:image:width i og:image:height z wartościami image/jpeg, 1200 i 630 porównane z plikiem 1200 × 630 px.",
+     "podpis": "Obraz z og:image porównujesz z zatwierdzoną miniaturą; typ i wymiary, jeśli są podane, muszą odpowiadać rzeczywistemu plikowi.",
+     "sekcja": "sekcja-5"
+    },
+    {
+     "plik": "obrazy/open-graph-miniatura-diagnoza.webp",
+     "sha256": "0a546c63f8b2cc30453ba8147f8a36c4c9e76213b510edd1cbae234f359ec67a",
+     "alt": "Infografika „Diagnoza konkretnego elementu”: Objaw, Co sprawdzić, Brak obrazu, og:image, Zły tytuł, og:title, Nieoczekiwany adres, og:url.",
+     "podpis": "Diagnozuj konkretny element: brak obrazu prowadzi do og:image, zły tytuł do og:title, a nieoczekiwany adres do og:url.",
+     "sekcja": "sekcja-7"
+    }
+   ]
+  },
+  {
+   "id": 6168,
+   "slug": "cross-sell-up-sell-woocommerce-uzupelnienie-alternatywa",
+   "okladka": {
+    "plik": "obrazy/cross-sell-up-sell-okladka.webp",
+    "sha256": "d19ababf7c9290b8825d6402752aa1911794318b51b2d436d808457046367567",
+    "alt": "Laptop ze sklepem z akcesoriami kawowymi: karta młynka z propozycją innego modelu i koszyk z pasującymi filtrami."
+   },
+   "obrazy": [
+    {
+     "plik": "obrazy/cross-sell-up-sell-up-sell.webp",
+     "sha256": "3714c0a585acdc87a7cb1d4cab1eeca457a3c198db513a77e731ab6510b6d468",
+     "alt": "Infografika „Up-sell na karcie produktu”: Młynek ręczny, Rozważ też, Młynek z precyzyjną regulacją, Różnica: regulacja mielenia, Wybierz jeden model.",
+     "podpis": "Up-sell to alternatywa przy ocenie produktu: inny model młynka z jasno opisaną różnicą, a nie zachęta do kupienia obu.",
+     "sekcja": "sekcja-3"
+    },
+    {
+     "plik": "obrazy/cross-sell-up-sell-cross-sell.webp",
+     "sha256": "6aba4e02fc8a7364bee545a23f4ce69b53990d42c215dc1a9d49826b9c79734b",
+     "alt": "Infografika „Cross-sell z potwierdzoną zgodnością”: Zaparzacz, Filtry papierowe, Rozmiar i kształt zgodne, Potrzebne do użycia, Opcjonalne, Waga kuchenna.",
+     "podpis": "Cross-sell wynika z potwierdzonej zgodności, np. filtrów z zaparzaczem; osobno oznaczasz dodatki potrzebne i opcjonalne.",
+     "sekcja": "sekcja-5"
+    },
+    {
+     "plik": "obrazy/cross-sell-up-sell-test-par.webp",
+     "sha256": "d7f95be070ec9be03e0f4bfab60c0b2135cd0ff453c1b6c94eaf91f33e2edcf0",
+     "alt": "Infografika „Test par produktów”: Para, Miejsce, Wynik, Młynek i model z regulacją, Karta produktu, Zgodne, Zaparzacz i filtry, Koszyk, Zgodne, Koszyk bez produktu głównego, Koszyk, Do sprawdzenia.",
+     "podpis": "Rekomendacje testujesz na przygotowanych parach: karta produktu dla alternatyw, koszyk dla uzupełnień, także po zmianie zawartości koszyka.",
+     "sekcja": "sekcja-7"
+    }
+   ]
+  },
+  {
+   "id": 6173,
+   "slug": "potwierdzenie-zamowienia-woocommerce-strona-po-zakupie-wiadomosc-klienta",
+   "okladka": {
+    "plik": "obrazy/potwierdzenie-zamowienia-okladka.webp",
+    "sha256": "216d6674299f0f70621d43f9d9feff1e2295e62f87828e6cbc7a7d14558a0667",
+    "alt": "Laptop ze stroną po zakupie z podsumowaniem zamówienia i telefon z e-mailem potwierdzającym."
+   },
+   "obrazy": [
+    {
+     "plik": "obrazy/potwierdzenie-zamowienia-strona-po-zakupie.webp",
+     "sha256": "1af7408116467b1c0f0e38a7020dd31092df6ebed7773de8d8a439d7f8786065",
+     "alt": "Infografika „Strona po zakupie”: Zamówienie przyjęte, Płatność: oczekuje na potwierdzenie, Produkty, Dostawa, Metoda płatności, Razem, Co dalej.",
+     "podpis": "Strona po zakupie potwierdza to, co wiadomo: przyjęcie zamówienia, osobno stan płatności, podsumowanie i następny krok.",
+     "sekcja": "sekcja-3"
+    },
+    {
+     "plik": "obrazy/potwierdzenie-zamowienia-uklad-wiadomosci.webp",
+     "sha256": "aa4b49f57c336be590cbf40b87ec44b9d1e7055728127727263f27060e14f7b3",
+     "alt": "Infografika „E-mail: zdarzenie, podsumowanie, działanie”: 1. Zdarzenie, Zamówienie nr 1024 przyjęte, 2. Podsumowanie, Produkty, kwoty, dostawa, 3. Twoje działanie, Dane do przelewu.",
+     "podpis": "Wiadomość zaczyna się od zdarzenia, dalej podsumowanie zamówienia, a instrukcja dla klienta tylko wtedy, gdy jest potrzebna.",
+     "sekcja": "sekcja-5"
+    },
+    {
+     "plik": "obrazy/potwierdzenie-zamowienia-brief-zmian.webp",
+     "sha256": "6123d9b1ec33eac40bf71c1a17f47ac7b8faa20e3fa5ab47ab40b03b3a52e275",
+     "alt": "Infografika „Brief zmian”: Metody płatności, Rodzaje produktów, Statusy zamówień, Obecne wiadomości, Sytuacje do poprawy, Dane z zamówienia i stały tekst.",
+     "podpis": "Brief rozdziela treść od działania sklepu: metody płatności, statusy, obecne wiadomości i sytuacje, które wymagają poprawy.",
+     "sekcja": "sekcja-7"
+    }
+   ]
+  },
+  {
+   "id": 6196,
+   "slug": "testy-automatyczne-woocommerce-checkout-platnosci",
+   "okladka": {
+    "plik": "obrazy/testy-automatyczne-sklepu-okladka.webp",
+    "sha256": "28fbf7d1e7a4679fc6e547aafca4a7ccd2206d39d8aef9eedc0f35a3a3c06783",
+    "alt": "Laptop z panelem testów automatycznych z wynikami i telefon z formularzem zamówienia."
+   },
+   "obrazy": [
+    {
+     "plik": "obrazy/testy-automatyczne-sklepu-kwoty-do-platnosci.webp",
+     "sha256": "27840d24572c88ec90e6ec1c6ef8930d14fdcbd00aae57e84ca436e1240fa0e4",
+     "alt": "Infografika „Koszyk i kwoty do płatności”: Oczekiwane podsumowanie, Produkty: 240 zł, Rabat: −24 zł, Dostawa: 15 zł, Do zapłaty: 231 zł, Przed złożeniem, W bramce płatności.",
+     "podpis": "Scenariusz zapisuje oczekiwane podsumowanie: wartość produktów, rabat, dostawę i kwotę przekazaną do płatności.",
+     "sekcja": "sekcja-3"
+    },
+    {
+     "plik": "obrazy/testy-automatyczne-sklepu-wynik-platnosci.webp",
+     "sha256": "06de9a022036cbd2a36c8d370c1c08771b6f62e88c71004c46eb5905d2165a5b",
+     "alt": "Infografika „Wynik płatności w sklepie”: Bramka testowa, Płatność udana, Odrzucona, Przerwana, Dowód w sklepie, Numer zamówienia, Kwota, Status po zakończeniu.",
+     "podpis": "Test płatności kończy się dowodem w sklepie: do którego zamówienia przypisano wynik, jaka kwota przeszła i jaki status zapisano.",
+     "sekcja": "sekcja-5"
+    },
+    {
+     "plik": "obrazy/testy-automatyczne-sklepu-raport-testow.webp",
+     "sha256": "bedc8884333394e0d0e2a2a5178144c35d79d5da277d0f2176c076d35ff2f555",
+     "alt": "Infografika „Raport z testów”: Scenariusz, Wynik, Koszyk z rabatem, Zaliczony, Płatność kartą, Błąd potwierdzony, Szybki przelew, Niejednoznaczny.",
+     "podpis": "Raport rozróżnia zaliczenie, potwierdzony błąd i wynik niejednoznaczny; przerwanego testu nie zamienia się w sukces.",
+     "sekcja": "sekcja-7"
+    }
+   ]
+  },
+  {
+   "id": 6191,
+   "slug": "pim-a-sklep-internetowy-odpowiedzialnosc-za-dane-przed-integracja",
+   "okladka": {
+    "plik": "obrazy/pim-dane-produktow-okladka.webp",
+    "sha256": "e9add6da0abbc219e79ec86a8db23e24359bb171f842868c72dc5eb1d3930aa3",
+    "alt": "Centralna karta danych produktu połączona liniami z laptopem ze sklepem internetowym i tabletem z katalogiem."
+   },
+   "obrazy": [
+    {
+     "plik": "obrazy/pim-dane-produktow-model-i-warianty.webp",
+     "sha256": "12eb7a7df567f4d363196f8baecf771b6bd4958d9313470bfa84dc306801b722",
+     "alt": "Infografika „Model i warianty”: Model koszulki, Wspólne: opis fasonu i materiał, Biała, M, Biała, L, Granatowa, M, Wariant: SKU, zdjęcie, stan.",
+     "podpis": "Ustal, co należy do wspólnego modelu, a co do wariantu: opis fasonu bywa wspólny, a zdjęcie, SKU i stan zależą od wersji.",
+     "sekcja": "sekcja-3"
+    },
+    {
+     "plik": "obrazy/pim-dane-produktow-jednostki.webp",
+     "sha256": "ee4edd87e379b8f998edc9b3a71454d66a3ceb9287c5f6343966f643e879e460",
+     "alt": "Infografika „Jednostka razem z wartością”: Średnica: 12, 12 mm, 12 cm, Typ wartości, Jednostka, Precyzja, Prezentacja w sklepie.",
+     "podpis": "Sama liczba nie wystarczy: przy każdym atrybucie zapisz typ wartości, jednostkę, precyzję i sposób prezentacji w sklepie.",
+     "sekcja": "sekcja-5"
+    },
+    {
+     "plik": "obrazy/pim-dane-produktow-odbior-procesu.webp",
+     "sha256": "781fde91cbb3b41f2e69d0bb96ff8c905bc8eb03f16c3b9db302d9da79e0dfb6",
+     "alt": "Infografika „Odbiór całego procesu”: Produkt prosty, Z wariantami, Wiele zdjęć, Brak tłumaczenia, Zmiana parametru, kategorii, opisu i zdjęcia, Wynik w sklepie.",
+     "podpis": "Próba integracji na reprezentatywnych produktach, a potem kontrola zmian: parametr, kategoria, opis i nowe zdjęcie w sklepie.",
+     "sekcja": "sekcja-7"
+    }
+   ]
+  },
+  {
+   "id": 6198,
+   "slug": "kpi-e-commerce-ga4-plan-pomiaru-przed-wdrozeniem",
+   "okladka": {
+    "plik": "obrazy/kpi-ga4-plan-pomiaru-okladka.webp",
+    "sha256": "47793e9d87d829e64df1b0ffff92a93970c68c463302864e4ed5e04cb9920551",
+    "alt": "Laptop z lejkiem zakupowym od wyświetlenia produktu do zakupu i wydrukowany plan pomiaru."
+   },
+   "obrazy": [
+    {
+     "plik": "obrazy/kpi-ga4-plan-pomiaru-zdarzenia-i-sztuki.webp",
+     "sha256": "194a9e1953f74b2212830b86dbafab15567f8cd2feab1c42fe7b5d459893756a",
+     "alt": "Tabela dla jednego użytkownika: 2 wyświetlenia produktu, 1 dodanie do koszyka z 3 sztukami, 1 rozpoczęcie zamówienia i 1 zakup 3 sztuk.",
+     "podpis": "Przykład jednego klienta: dwa wyświetlenia, jedno dodanie trzech sztuk, jedno zamówienie; liczba zdarzeń to nie liczba osób.",
+     "sekcja": "sekcja-3"
+    },
+    {
+     "plik": "obrazy/kpi-ga4-plan-pomiaru-dane-produktu.webp",
+     "sha256": "cd308b6d110c4ffec4b11434cc0491e24fbcff5eedf258e5a0cde22fdefaf0ff",
+     "alt": "Infografika „Dane produktu w zdarzeniu”: ID produktu, Nazwa, Wariant, Cena, Ilość, Kolor: granatowy, Rozmiar: M, ID produktu czy wariantu?.",
+     "podpis": "Każde zdarzenie niesie te same dane produktu: identyfikator, nazwę, wariant, cenę i ilość; ustal, czy ID dotyczy produktu, czy wariantu.",
+     "sekcja": "sekcja-5"
+    },
+    {
+     "plik": "obrazy/kpi-ga4-plan-pomiaru-scenariusze-odbioru.webp",
+     "sha256": "bfd08f4e728e7f65414756d71ed29b4fe62dcc53b9ee5c76db42ef9200134a05",
+     "alt": "Infografika „Scenariusze odbioru”: 1. Jeden produkt, jedna sztuka, 2. Kilka sztuk i wariant, 3. Zmiana koszyka, Sklep, Zdarzenia, Zamówienie.",
+     "podpis": "Scenariusze odbioru z oczekiwanym wynikiem porównują trzy poziomy: działanie sklepu, wysłane zdarzenia i treść zamówienia.",
+     "sekcja": "sekcja-7"
+    }
+   ]
+  },
+  {
+   "id": 6200,
+   "slug": "omnichannel-obsluga-zamowien-odbioru-i-zwrotow-miedzy-kanalami",
+   "okladka": {
+    "plik": "obrazy/omnichannel-odbior-zwroty-okladka.webp",
+    "sha256": "720ba59fdbf329467f04333e7154f8881a8959d800540d88dafd39ac7e10d465",
+    "alt": "Lada odbioru w sklepie z półką paczek, tabletem z listą zamówień i telefonem z powiadomieniem o gotowości do odbioru."
+   },
+   "obrazy": [
+    {
+     "plik": "obrazy/omnichannel-odbior-zwroty-status-a-paczka.webp",
+     "sha256": "18238636b0ef1f0276706174f34054b5f193279fe3d3882eb5464852054a4581",
+     "alt": "Infografika „Status a przekazanie paczki”: Status w sklepie, Oczekuje na płatność, W realizacji, Zrealizowane, Proces w punkcie, Przygotowanie, Przekazanie do punktu, Wydanie klientowi.",
+     "podpis": "Status zamówienia pomaga podjąć czynność, ale nie zastępuje procesu: przygotowanie, przekazanie do punktu i wydanie to osobne kroki.",
+     "sekcja": "sekcja-3"
+    },
+    {
+     "plik": "obrazy/omnichannel-odbior-zwroty-gotowe-do-odbioru.webp",
+     "sha256": "8c7380524d2ee54f99bbfe448ed2d47a5371aca88e5d55e562e1c0c3ae702095",
+     "alt": "Infografika „Gotowe do odbioru”: Zamówienie 1024, Produkt w punkcie, Miejsce przechowywania, Paczka powiązana z zamówieniem, Dopiero wtedy wiadomość do klienta.",
+     "podpis": "Komunikat o odbiorze wysyłasz dopiero, gdy paczka jest w punkcie, ma miejsce przechowywania i jest powiązana z zamówieniem.",
+     "sekcja": "sekcja-5"
+    },
+    {
+     "plik": "obrazy/omnichannel-odbior-zwroty-test-procesu.webp",
+     "sha256": "33baaca321e66486789ffb4dbd0186e8022c2144a3925790cf9255da60f06727",
+     "alt": "Infografika „Test całego procesu”: Zamówienie z odbiorem, Płatność, Przygotowanie, Przekazanie, Wydanie, Właściciel sprawy, Zapis zdarzenia, Komunikat dla klienta.",
+     "podpis": "Próba obejmuje ludzi i przekazania: po każdym etapie sprawdzasz właściciela sprawy, zapis zdarzenia i komunikat dla klienta.",
+     "sekcja": "sekcja-7"
+    }
+   ]
+  },
+  {
+   "id": 6202,
+   "slug": "powiadomienia-push-na-stronie-zgoda-przypadki-uzycia-plan-testu",
+   "okladka": {
+    "plik": "obrazy/powiadomienia-push-okladka.webp",
+    "sha256": "c0cc532646db1ab929d8ca5c23f128aebfb02db5246bd5cdf2482edbd103c120",
+    "alt": "Telefon z powiadomieniem o nowym poradniku i laptop ze stroną z przyciskiem zapisu na powiadomienia."
+   },
+   "obrazy": [
+    {
+     "plik": "obrazy/powiadomienia-push-zgoda-po-kliknieciu.webp",
+     "sha256": "9075d138bdd85d9bbdae83d249e8b6fe4dcb161a28d1495783cec67e1b49f752",
+     "alt": "Infografika „Zgoda po kliknięciu”: 1. Świadome kliknięcie, Powiadamiaj o nowych wpisach, 2. Pytanie przeglądarki, Zezwolić na powiadomienia?, Zezwól, Blokuj.",
+     "podpis": "Prośba przeglądarki o zgodę pojawia się dopiero po świadomym kliknięciu w przycisk zapisu na wybrany temat.",
+     "sekcja": "sekcja-3"
+    },
+    {
+     "plik": "obrazy/powiadomienia-push-przeplyw-danych.webp",
+     "sha256": "97a1fa74160d79e65978560d974663322888feaa9883ae2642092ab6c6f7d3c6",
+     "alt": "Infografika „Przepływ danych subskrypcji”: Przeglądarka, Subskrypcja, Twój serwer, System wysyłki, Urządzenie, Endpoint tylko dla uprawnionych.",
+     "podpis": "Rozpisz drogę danych od przeglądarki do systemu wysyłki; endpoint subskrypcji jest tajny i nie trafia do raportów ani zrzutów.",
+     "sekcja": "sekcja-5"
+    },
+    {
+     "plik": "obrazy/powiadomienia-push-macierz-testu.webp",
+     "sha256": "a724f59c7739d0f867c36e353333bef306db6f3993dbdb659943dbabe6396ce5",
+     "alt": "Infografika „Plan testu na urządzeniach”: Android, Chrome, iPhone, Safari, Windows, Edge, macOS, Firefox, Zgoda, Wysyłka, Przejście do treści.",
+     "podpis": "Plan testu wskazuje konkretne urządzenia, systemy i przeglądarki oraz całą drogę wiadomości: zgodę, wysyłkę i przejście do treści.",
+     "sekcja": "sekcja-7"
+    }
+   ]
+  },
+  {
+   "id": 6213,
+   "slug": "headless-commerce-woocommerce-oddzielny-frontend-utrzymanie",
+   "okladka": {
+    "plik": "obrazy/headless-commerce-okladka.webp",
+    "sha256": "849e1823543b61a6d05005efb75700b21901c5c0807bf6bdc39188c47916d5bf",
+    "alt": "Warstwowa wizualizacja sklepu: osobny interfejs z przodu i silnik WooCommerce z tyłu połączone przez API."
+   },
+   "obrazy": [
+    {
+     "plik": "obrazy/headless-commerce-koszyk-i-sesja.webp",
+     "sha256": "3876036ee2ea1472f9b48ac5cebeec25cc77e46a6e143d8d0b4cb3d3e1807596",
+     "alt": "Infografika „Koszyk i sesja”: Własny koszyk, Dodanie i usunięcie, Ilość, Kupon, Dostawa, Store API, Sesja klienta, Cart Token.",
+     "podpis": "Własny koszyk musi obsłużyć sesję: dodanie, ilość, kupon i dostawa wracają jako stan zwrócony przez WooCommerce.",
+     "sekcja": "sekcja-3"
+    },
+    {
+     "plik": "obrazy/headless-commerce-platnosci.webp",
+     "sha256": "5f4eadd4bbca6674c6b3a91677456a8fa731004396e3bd3aa540e42e83023c3b",
+     "alt": "Infografika „Płatności przed architekturą”: Płatność kartą, Szybki przelew, BLIK, Start transakcji, Powrót do sklepu, Odpowiedź API.",
+     "podpis": "Zgodność płatności potwierdzasz dla każdej metody osobno: start transakcji, przekierowanie, powrót do sklepu i odpowiedź API.",
+     "sekcja": "sekcja-5"
+    },
+    {
+     "plik": "obrazy/headless-commerce-obowiazki.webp",
+     "sha256": "a974b17cf163c72dc34da737af8efa9d0f60ca569e585532763e45927372ae14",
+     "alt": "Infografika „Obowiązki utrzymania”: Aktualizacje frontendu, Zgodność z API, Rozszerzenia WooCommerce, Płatności, Testy regresji, Procedura wdrożeń.",
+     "podpis": "Utrzymanie oceniasz po obowiązkach: aktualizacje frontendu, zgodność z API, rozszerzenia, płatności, testy regresji i procedura wdrożeń.",
+     "sekcja": "sekcja-7"
+    }
+   ]
+  }
+ ]
+}

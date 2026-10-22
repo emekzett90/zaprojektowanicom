@@ -1,6 +1,6 @@
 {
  "format": 1,
- "zaktualizowano": "2026-10-22T04:15:47+02:00",
+ "zaktualizowano": "2026-10-22T15:03:06+02:00",
  "wpisy": [
   {
    "slug": "papier-firmowy",
@@ -81,6 +81,86 @@
    "sha256": "59924f807c8c83643c482c176819780ed042a9644c0d919fe0cf50dda23e64fd",
    "publikacja": "2026-11-13T08:00:00+01:00",
    "paczka": 6
+  },
+  {
+   "slug": "wizytowka-google",
+   "sciezka": "/seo-i-konwersja/wizytowka-google/",
+   "plik": "wpisy/wizytowka-google.json",
+   "sha256": "28bcce4c20c3b0e904cf3a7bd57c17414e33038790082436d9b679ef41dabb9c",
+   "publikacja": "2026-11-17T08:00:00+01:00",
+   "paczka": 7
+  },
+  {
+   "slug": "woocommerce-co-to-jest",
+   "sciezka": "/sklepy-internetowe/woocommerce-co-to-jest/",
+   "plik": "wpisy/woocommerce-co-to-jest.json",
+   "sha256": "3fd95b97dc6cf8df4a6749e10a4d7ba2c6a3409fe6cb773e95c29c92880090b2",
+   "publikacja": "2026-11-20T08:00:00+01:00",
+   "paczka": 7
+  },
+  {
+   "slug": "wcag-dostepnosc-cyfrowa",
+   "sciezka": "/strony-internetowe/wcag-dostepnosc-cyfrowa/",
+   "plik": "wpisy/wcag-dostepnosc-cyfrowa.json",
+   "sha256": "65a02a4b00e760327d15216161730bf69f935b8c88e0e13c49c58938c3cd4785",
+   "publikacja": "2026-11-24T08:00:00+01:00",
+   "paczka": 7
+  },
+  {
+   "slug": "reklama-restauracji",
+   "sciezka": "/kampanie-reklamowe/reklama-restauracji/",
+   "plik": "wpisy/reklama-restauracji.json",
+   "sha256": "561580c57837b4f038dce4d3e79c44a41fc21930d7d472b7ea61f5a8f04844b2",
+   "publikacja": "2026-11-27T08:00:00+01:00",
+   "paczka": 7
+  },
+  {
+   "slug": "certyfikat-ssl",
+   "sciezka": "/strony-internetowe/certyfikat-ssl/",
+   "plik": "wpisy/certyfikat-ssl.json",
+   "sha256": "c6d3f05cc5dcbb15a9190de6b9e614ff4f50649aed4669b5a3efc107815e93c0",
+   "publikacja": "2026-12-04T08:00:00+01:00",
+   "paczka": 8
+  },
+  {
+   "slug": "regulamin-sklepu-internetowego",
+   "sciezka": "/sklepy-internetowe/regulamin-sklepu-internetowego/",
+   "plik": "wpisy/regulamin-sklepu-internetowego.json",
+   "sha256": "82ca1a79b338fc923c82bef8088722f9e76da694edc467fba70eaee0240d4306",
+   "publikacja": "2026-12-11T08:00:00+01:00",
+   "paczka": 8
+  },
+  {
+   "slug": "reklama-firmy-w-internecie",
+   "sciezka": "/kampanie-reklamowe/reklama-firmy-w-internecie/",
+   "plik": "wpisy/reklama-firmy-w-internecie.json",
+   "sha256": "d579dd248bca0a25f8410dd7f56aecfec24fb95d6a535d059c2e6ab484330658",
+   "publikacja": "2026-12-15T08:00:00+01:00",
+   "paczka": 8
+  },
+  {
+   "slug": "psychologia-kolorow",
+   "sciezka": "/logo-branding/psychologia-kolorow/",
+   "plik": "wpisy/psychologia-kolorow.json",
+   "sha256": "3d0fd9c0232e69619ed710ebcb45f55cac520a0d7b67a1db7609bb778c7359e2",
+   "publikacja": "2026-12-22T08:00:00+01:00",
+   "paczka": 9
+  },
+  {
+   "slug": "reklama-salonu-kosmetycznego",
+   "sciezka": "/kampanie-reklamowe/reklama-salonu-kosmetycznego/",
+   "plik": "wpisy/reklama-salonu-kosmetycznego.json",
+   "sha256": "89c0ef8be88bf4e2e977b4457b3a642ec65e1ae6ae6a04518705f02835114adb",
+   "publikacja": "2026-12-29T08:00:00+01:00",
+   "paczka": 9
+  },
+  {
+   "slug": "shoper-czy-woocommerce",
+   "sciezka": "/sklepy-internetowe/shoper-czy-woocommerce/",
+   "plik": "wpisy/shoper-czy-woocommerce.json",
+   "sha256": "c7a3b4a13a27e4c21326db082cdd23b2a9cddaf8bd22e4b0dcfcc72403a7d824",
+   "publikacja": "2027-01-05T08:00:00+01:00",
+   "paczka": 9
   }
  ],
  "linki": [
@@ -335,6 +415,132 @@
    "fragment": "zacznij od wersji mobilnej",
    "slowa": "wersji mobilnej",
    "do": "/strony-internetowe/nowoczesne-strony-internetowe/"
+  },
+  {
+   "we_wpisie": "/logo-branding/logo-restauracji-i-kawiarni/",
+   "fragment": "Jak potem docierać do gości",
+   "slowa": "docierać do gości",
+   "do": "/kampanie-reklamowe/reklama-restauracji/"
+  },
+  {
+   "we_wpisie": "/sklepy-internetowe/seo-sklepu-internetowego/",
+   "fragment": "opisowymi nazwami plików oraz tekstem alternatywnym",
+   "slowa": "tekstem alternatywnym",
+   "do": "/strony-internetowe/wcag-dostepnosc-cyfrowa/"
+  },
+  {
+   "we_wpisie": "/logo-branding/logo-salonu-kosmetycznego/",
+   "fragment": "za słaby kontrast",
+   "slowa": "za słaby kontrast",
+   "do": "/strony-internetowe/wcag-dostepnosc-cyfrowa/"
+  },
+  {
+   "we_wpisie": "/strony-internetowe/nowoczesne-strony-internetowe/",
+   "fragment": "Do tego dochodzi dostępność",
+   "slowa": "dostępność",
+   "do": "/strony-internetowe/wcag-dostepnosc-cyfrowa/"
+  },
+  {
+   "we_wpisie": "/logo-branding/logo-firmy-budowlanej/",
+   "fragment": "Profilu Firmy",
+   "slowa": "Profilu Firmy",
+   "do": "/seo-i-konwersja/wizytowka-google/"
+  },
+  {
+   "we_wpisie": "/logo-branding/logo-salonu-kosmetycznego/",
+   "fragment": "Profilu Firmy",
+   "slowa": "Profilu Firmy",
+   "do": "/seo-i-konwersja/wizytowka-google/"
+  },
+  {
+   "we_wpisie": "/strony-internetowe/jak-stworzyc-strone-internetowa/",
+   "fragment": "teksty alternatywne zdjęć, profil firmy",
+   "slowa": "profil firmy",
+   "do": "/seo-i-konwersja/wizytowka-google/"
+  },
+  {
+   "we_wpisie": "/sklepy-internetowe/sklep-b2b/",
+   "fragment": "Jeden sklep WooCommerce dla obu grup.",
+   "slowa": "WooCommerce",
+   "do": "/sklepy-internetowe/woocommerce-co-to-jest/"
+  },
+  {
+   "we_wpisie": "/strony-internetowe/rodzaje-stron-internetowych/",
+   "fragment": "Sklep internetowy na WooCommerce zbudowany od podstaw razem",
+   "slowa": "WooCommerce",
+   "do": "/sklepy-internetowe/woocommerce-co-to-jest/"
+  },
+  {
+   "we_wpisie": "/sklepy-internetowe/karta-produktu-w-sklepie-internetowym/",
+   "fragment": "naszych sklepach na WooCommerce karta produktu powstaje razem",
+   "slowa": "sklepach na WooCommerce",
+   "do": "/sklepy-internetowe/woocommerce-co-to-jest/"
+  },
+  {
+   "we_wpisie": "/sklepy-internetowe/inpost-woocommerce-integracje-sklepu/",
+   "fragment": "Większość sklepów na WooCommerce potrzebuje czterech rodzajów integracji",
+   "slowa": "sklepów na WooCommerce",
+   "do": "/sklepy-internetowe/woocommerce-co-to-jest/"
+  },
+  {
+   "we_wpisie": "/sklepy-internetowe/bramka-platnicza/",
+   "fragment": "Po stronie sklepu potrzebny jest certyfikat SSL, dzięki któremu połączenie jest szyfrowane",
+   "slowa": "certyfikat SSL",
+   "do": "/strony-internetowe/certyfikat-ssl/"
+  },
+  {
+   "we_wpisie": "/strony-internetowe/jak-stworzyc-strone-internetowa/",
+   "fragment": "Certyfikat SSL, czyli kłódka",
+   "slowa": "Certyfikat SSL",
+   "do": "/strony-internetowe/certyfikat-ssl/"
+  },
+  {
+   "we_wpisie": "/strony-internetowe/ile-kosztuje-domena-i-hosting/",
+   "fragment": "także jako darmowy certyfikat",
+   "slowa": "darmowy certyfikat",
+   "do": "/strony-internetowe/certyfikat-ssl/"
+  },
+  {
+   "we_wpisie": "/sklepy-internetowe/bramka-platnicza/",
+   "fragment": "weryfikacja firmy, regulamin sklepu",
+   "slowa": "regulamin sklepu",
+   "do": "/sklepy-internetowe/regulamin-sklepu-internetowego/"
+  },
+  {
+   "we_wpisie": "/sklepy-internetowe/karta-produktu-w-sklepie-internetowym/",
+   "fragment": "regulaminem",
+   "slowa": "regulaminem",
+   "do": "/sklepy-internetowe/regulamin-sklepu-internetowego/"
+  },
+  {
+   "we_wpisie": "/strony-internetowe/kreatory-stron-internetowych/",
+   "fragment": "polityki: politykę prywatności",
+   "slowa": "politykę prywatności",
+   "do": "/sklepy-internetowe/regulamin-sklepu-internetowego/"
+  },
+  {
+   "we_wpisie": "/logo-branding/archetypy-marki/",
+   "fragment": "Ciepłe kolory, ilustracje, proste słowa",
+   "slowa": "Ciepłe kolory",
+   "do": "/logo-branding/psychologia-kolorow/"
+  },
+  {
+   "we_wpisie": "/logo-branding/strategia-marki/",
+   "fragment": "kolory mają budzić zaufanie",
+   "slowa": "kolory mają budzić zaufanie",
+   "do": "/logo-branding/psychologia-kolorow/"
+  },
+  {
+   "we_wpisie": "/logo-branding/logo-salonu-kosmetycznego/",
+   "fragment": "reklamie albo na mapie",
+   "slowa": "reklamie",
+   "do": "/kampanie-reklamowe/reklama-salonu-kosmetycznego/"
+  },
+  {
+   "we_wpisie": "/sklepy-internetowe/karta-produktu-w-sklepie-internetowym/",
+   "fragment": "otwartej platformie bez abonamentu za samo oprogramowanie sklepu",
+   "slowa": "platformie bez abonamentu",
+   "do": "/sklepy-internetowe/shoper-czy-woocommerce/"
   },
   {
    "we_wpisie": "/logo-branding/ksiega-znaku-co-to-jest-co-zawiera-i-kiedy-firma-jej-potrzebuje/",
