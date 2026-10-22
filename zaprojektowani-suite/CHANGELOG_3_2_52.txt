@@ -1,0 +1,46 @@
+Zaprojektowani Suite 3.2.52 — 22.10.2026
+
+Podstawa: 3.2.51 (gałąź suite-3.2.51 @ 1d82db6: wtyczka 3.2.50 od Mata z poprawką cache po logowaniu) i poprawki
+z audytu technicznego z 21.10.2026 (gałąź audyt-3.2.50 @ d00c635, PR #37), punkty 01, 03, 05 i 07 zatwierdzone
+przez Mata 21.10. Polskie strony wyglądają tak samo. Aktualizacja nie kasuje żadnych danych i nie cofa żadnej
+zmiany Codexa.
+
+Angielska strona główna może trafić do Google (punkt 01)
+- /en/ miała w meta robots „noindex”: moduł Języki PL/EN liczył ok. 180 angielskich etykiet sekcji opinii i 36
+  etykiet zapasowego FAQ jako brakujące tłumaczenia (pokrycie poniżej 0,9).
+- Na stronach angielskich opinie klientów są po angielsku (assets/data/reviews-english-20261021.json, 80 tłumaczeń
+  według numeru opinii; opinia bez tłumaczenia zostaje po polsku), a obie sekcje są oznaczone jako już przetłumaczone.
+  Polski HTML sekcji opinii i FAQ jest bajt w bajt taki sam jak w 3.2.51.
+
+Ukryte okienka poza HTML strony (punkt 03)
+- Popup wtyczki „Zanim zamkniesz stronę — chcesz, żebyśmy oddzwonili?” (każda strona) i okno projektu w szablonie
+  stron internetowych (Katowice, strony branżowe, /tworzenie-stron-internetowych/) są w <template> i powstają przy
+  pierwszym otwarciu, z tym samym wyglądem i działaniem. HTML strony nie niesie już ich ukrytych nagłówków ani
+  formularza (szablon stron internetowych: 16 zamiast 17 H2 i 31 zamiast 36 H3).
+- Popup „Zostaw numer. Oddzwonimy nawet w ciągu 1h.” nie pochodzi z wtyczki i zostaje bez zmian.
+
+Daty w mapie witryny idą za tekstem strony (punkt 05)
+- Strony z szablonów wtyczki miały w mapie witryny datę ostatniego zapisu w WordPressie (np. 03.10 dla stron
+  przepisanych 15.10). Teraz polska strona, której widoczny tekst się zmienił (ten sam nowy tekst w dwóch
+  wyświetleniach), dostaje datę tej zmiany w polskiej i angielskiej mapie witryny, bez zgłoszenia do IndexNow.
+- Pierwsze wyświetlenie każdej strony po aktualizacji ustawia jej datę raz (jednorazowa korekta dat).
+- Odcisk tekstu jest w polu _zp_text_fingerprint strony; jego zapis nie czyści cache. Koszt: kilka ms tylko przy
+  składaniu strony od nowa, nic przy kopii z cache.
+
+Jedno przekierowanie zamiast dwóch (punkt 07)
+- /logo-branding-/page/2/ prowadzi od razu do /identyfikacja-wizualna/.
+
+Po aktualizacji
+- Cache HTML Suite odświeża się raz przy pierwszym otwarciu strony (tylko własne kopie Suite, nigdy LiteSpeed ani
+  CDN), żeby nowy HTML było widać od razu.
+
+Zmienione pliki względem 3.2.51:
+- punkt 01: templates/legacy/legacy-reviews.php, templates/seo-faq.php, nowy assets/data/reviews-english-20261021.json
+- punkt 03: includes/command-center.php, templates/strony-internetowe-katowice/body.html,
+  assets/js/blocks/strony-internetowe-katowice.js
+- punkt 05: nowy includes/seo-plan/lastmod.php, includes/seo-plan/bootstrap.php
+- punkt 07: includes/seo-plan/data/redirects.php
+- wydanie: zaprojektowani-suite.php (numer wersji), includes/suite3/upgrade.php (jednorazowe odświeżenie cache),
+  includes/suite3/admin-ui.php (karta „Nowe w wersji”), ten plik
+
+Wersje: Suite 3.2.52, Języki PL/EN 1.1.3, Tłumacz EN 2.0.3.
