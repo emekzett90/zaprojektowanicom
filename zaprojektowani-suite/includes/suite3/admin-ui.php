@@ -284,7 +284,7 @@ function zp_suite3_dashboard(): void {
   }
   echo '</div></section>';
 
-  echo '<section class="navy-card"><div class="eyebrow">Nowe w wersji ' . esc_html(ZP_SUITE_VERSION) . '</div><h2>Realizacje, sklepy, Studio wyceny i strona główna.</h2><p>Karty realizacji w jednej proporcji z technologiami, zwijany poradnik i nowe FAQ sklepów, szybki kontakt w Studio wyceny, pasek opinii pod hero na głównej, sekcja studia na stronach Katowice i etykiety szablonu wpisów bez H2.</p><a class="button" href="' . esc_url(zp_suite3_url('zp-suite-health')) . '">Stan strony</a></section>';
+  echo '<section class="navy-card"><div class="eyebrow">Nowe w wersji ' . esc_html(ZP_SUITE_VERSION) . '</div><h2>Strony branżowe i hero Tworzenia stron.</h2><p>Na stronach branżowych sekcja „Co projektujemy” jako lista, poradnik jak artykuł i karty case study w stylu Realizacji; w hero /tworzenie-stron-internetowych/ mniejszy laptop i nagłówek w trzech liniach; cztery zdania pod frazy z Google.</p><a class="button" href="' . esc_url(zp_suite3_url('zp-suite-health')) . '">Stan strony</a></section>';
   echo '</aside></div>';
 
   echo '<div class="quick-grid">';

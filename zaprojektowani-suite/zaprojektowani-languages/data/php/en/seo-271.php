@@ -2197,4 +2197,9 @@ return [
 
 'Tak. Wysłanie zapytania o stronę, sklep, logo lub kampanię jest bezpłatne i nie zawiera umowy o realizację projektu. Przy logo od razu widzisz cenę wybranego pakietu; zakres, termin i warunki współpracy potwierdzamy osobno.'=>'Yes. Sending an inquiry about a website, store, logo or campaign is free and does not create a project contract. For a logo, you see the selected package price straight away; we confirm the scope, schedule and cooperation terms separately.',
 'Studio Wyceny działa trochę jak kalkulator strony internetowej, ale kwotę liczy człowiek, który zna Twój zakres. Pakiety logo i brandingu mają stałe ceny, więc od razu widzisz sumę i wysyłasz bezpłatne zapytanie. Umowę o realizację projektu zawieramy osobno.'=>'The Quote Studio works a bit like a website cost calculator, but the amount is worked out by a person who knows your scope. Logo and branding packages have fixed prices, so you see the total straight away and send a free inquiry. We enter into the project contract separately.',
+// 3.2.5x: four industry-page texts reworded for Google (data/pages.php); the English stays as it was.
+'Czy robicie stronę internetową dla psychologa lub psychoterapeuty?'=>'Do you build websites for psychologists and psychotherapists?',
+'FAQ / strony dla lekarzy'=>'FAQ / medical websites',
+'Co musi zawierać strona dla dewelopera po zmianie przepisów?'=>'What must a property developer’s website include after the regulatory changes?',
+'Jak zaplanować stronę internetową dla prawnika lub kancelarii, która informuje zgodnie z zasadami samorządu, odpowiada na pytania klientów i przyciąga ruch z Google bez agresywnej reklamy.'=>'How to plan a website that informs in line with bar rules, answers clients\' questions and attracts Google traffic without aggressive advertising.',
 ];

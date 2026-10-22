@@ -2,3 +2,24 @@
 
 /* The WWW boot paint makes this main dark; logo and portfolio pages keep the light defaults. */
 body.zp-strony-katowice-page.zp-home-bg-boot #zp-strony-internetowe-katowice>.zpCaseLinks{--case-heading-ink:#fff;--case-heading-kicker:#b7dcff;--case-heading-lead:#bdc9d8;--case-heading-line:linear-gradient(90deg,#fff,#8ec8f7);--case-heading-gradient:linear-gradient(100deg,#fff 0%,#b7dcff 48%,#8ec8f7 100%)}
+
+/* 3.2.5x (Mat 17.10): the "Od identyfikacji do własnego systemu" cards follow the /realizacje/ cards:
+   type pill on the photo, kicker, brand, a bold one-line subtitle, the scope as a checked list and an
+   outlined "Poznaj realizację" button. Dialog buttons (.zpFullCaseLink) keep their look. */
+.zpCaseLinks__card{border-color:#dfe4ea;box-shadow:none}
+.zpCaseLinks__card:hover{border-color:#9fb0c4;box-shadow:none}
+.zpCaseLinks__visual{border-bottom:0}
+.zpCaseLinks__projectType{left:auto;right:18px;top:18px;padding:9px 14px;border:0;color:#071426;font-size:12px;font-weight:700;letter-spacing:0;text-transform:none}
+.zpCaseLinks__body{padding:clamp(24px,2.3vw,34px) clamp(24px,2.3vw,34px) clamp(26px,2.4vw,34px)}
+.zpCaseLinks .zpCaseLinks__tag{margin:0 0 14px;padding:0;border:0;border-radius:0;background:none;color:#5f6b7c;font-size:11px;font-weight:800;line-height:1.5;letter-spacing:.14em;text-transform:uppercase}
+.zpCaseLinks .zpCaseLinks__body h3{font-size:clamp(30px,2.7vw,46px);font-weight:700;line-height:1.08;letter-spacing:-.05em}
+.zpCaseLinks .zpCaseLinks__summary{max-width:none;margin:10px 0 0;color:#102a4f;font-size:clamp(14px,1.05vw,16px);font-weight:700;line-height:1.5}
+.zpCaseLinks .zpCaseLinks__features{gap:0;margin:22px 0 26px;padding:0;border:0;border-top:1px solid #e3e8ee;border-radius:0;background:none;color:#4e5b6d;font-size:14.5px;line-height:1.6}
+.zpCaseLinks__features li{padding:12px 0 12px 28px;border-bottom:1px solid #e3e8ee}
+.zpCaseLinks__features li::before{left:5px;top:calc(12px + .28em);width:6px;height:11px;border:solid #1c477a;border-width:0 2px 2px 0;border-radius:0;background:none;transform:rotate(45deg)}
+.zpCaseLinks__foot{flex-direction:row-reverse;justify-content:flex-end;padding-top:0;border-top:0}
+.zpCaseLinks__foot>span{margin-left:auto;text-align:right}
+.zpCaseLinks__foot strong{min-height:48px;padding:12px 20px;border:1px solid #cfd8e3;background:#fff;color:#071426;-webkit-text-fill-color:#071426;font-size:15px}
+.zpCaseLinks__card:hover .zpCaseLinks__foot strong{border-color:#071426}
+@media(max-width:1200px){.zpCaseLinks__foot{flex-direction:row-reverse;align-items:center}}
+@media(max-width:640px){.zpCaseLinks__projectType{top:14px;right:14px}.zpCaseLinks__foot{flex-direction:column-reverse;align-items:stretch}.zpCaseLinks__foot>span{margin:0;text-align:left}.zpCaseLinks__foot strong{width:100%}}
