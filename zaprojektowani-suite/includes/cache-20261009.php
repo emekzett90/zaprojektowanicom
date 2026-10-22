@@ -379,6 +379,29 @@ final class ZP_HTML_Cache_20261009 {
         }
         return $deleted;
     }
+    /**
+     * 3.2.60: Suite's own package is about to replace its folder (upgrader_source_selection runs before WordPress deletes
+     * the old files). swap.php tells the drop-in to answer pages no copy covers with 503 and Retry-After until the install
+     * ends, instead of pages built without Suite (404 on English addresses). The filter never changes or stops the install.
+     */
+    public static function swap_begin($source, $remote_source = null, $upgrader = null, $hook_extra = null) {
+        try {
+            $dir = self::dir(); $folder = is_string($source) ? rtrim($source, '/\\') : '';
+            if ($folder !== '' && basename($folder) === 'zaprojektowani-suite' && is_file($folder . '/zaprojektowani-suite.php') && !is_link($dir) && is_dir($dir) && !is_link($dir . '/swap.php')) {
+                $now = time(); $data = self::PREFIX . wp_json_encode(['since' => $now, 'until' => $now + 180]);
+                // A temporary name the sweep already knows, so a leftover goes after 10 minutes.
+                $temp = $dir . '/.zpc-' . bin2hex(random_bytes(12)) . '.php';
+                if (@file_put_contents($temp, $data) !== strlen($data) || !@rename($temp, $dir . '/swap.php')) { @unlink($temp); }
+            }
+        } catch (Throwable $error) {}
+        return $source;
+    }
+    /** 3.2.60: the install has ended, installed or not (upgrader_install_package_result); pages are built normally again. */
+    public static function swap_end($result, $hook_extra = null) {
+        $file = self::dir() . '/swap.php';
+        if (!is_link($file) && is_file($file)) { @unlink($file); }
+        return $result;
+    }
     public static function option_changed(string $option): void {
         // Counters, admin progress/logs and lookup memoization do not change rendered content.
         if (in_array($option, ['zp_ai_stats', 'zpte_log', 'zpte_usage', 'zpte_progress', 'zpte_last_plan', 'zp_speed_img_sizes', 'zp_speed_live_paths'], true)) { return; }
@@ -460,3 +483,6 @@ if (function_exists('register_deactivation_hook')) {
     register_deactivation_hook(dirname(__DIR__) . '/zaprojektowani-suite.php', [ZP_HTML_Cache_20261009::class, 'deactivate']);
     register_deactivation_hook(dirname(__DIR__) . '/zaprojektowani-suite.php', static function (): void { wp_clear_scheduled_hook(ZP_HTML_Cache_20261009::SWEEP); });
 }
+// 3.2.60: while Suite's own folder is being replaced, the drop-in answers 503 instead of pages built without Suite.
+add_filter('upgrader_source_selection', [ZP_HTML_Cache_20261009::class, 'swap_begin'], PHP_INT_MAX, 4);
+add_filter('upgrader_install_package_result', [ZP_HTML_Cache_20261009::class, 'swap_end'], PHP_INT_MAX, 2);
