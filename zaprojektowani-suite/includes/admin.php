@@ -329,7 +329,7 @@ function zp_suite_render_admin_page(){
             <?php endforeach; ?>
           </div>
         </div>
-        <div class="zpCard"><h2>Na podstronach usług</h2><?php zp_checkbox('visibility','quick_contact_pages','Krótki formularz kontaktowy na stronach usług i kampanii','Na przykład na /tworzenie-stron-internetowych/ i stronach Katowice.'); ?>
+        <div class="zpCard"><h2>Na podstronach usług</h2><?php zp_checkbox('visibility','quick_contact_pages','Krótki formularz kontaktowy na stronach usług, kampanii i w Studio wyceny','Na przykład na /tworzenie-stron-internetowych/, stronach Katowice i pod wyborem usługi w /studio-wyceny/.'); ?>
           <p>Kolejność sekcji jest ustawiona w kodzie strony, tak jak treść pierwszego ekranu, tekstu nad stopką i stron dla branż.</p>
         </div>
       </div></section>
