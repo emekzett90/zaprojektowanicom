@@ -75,6 +75,13 @@ function zp_suite3_upgrade(string $previous): void {
     // this module's own HTML cache (never LiteSpeed or the CDN); a purge queued by a step above is not repeated.
     add_action('wp_loaded', static function (): void { do_action('zp_html_cache_purge'); }, 100);
   }
+  if ($previous !== '' && version_compare($previous, '3.2.60', '<')) {
+    // 3.2.60: a new advanced-cache.php that answers 503 with Retry-After while Suite's own folder is being replaced
+    // (PR #60). A purge puts it in place (ZP_HTML_Cache_20261009::purge → upgrade_dropin), only over this module's own
+    // drop-in; the install's own upgrader_process_complete purge usually did it already, and a second purge queued by
+    // a step above in the same request is not repeated. Page HTML does not change.
+    add_action('wp_loaded', static function (): void { do_action('zp_html_cache_purge'); }, 100);
+  }
   if ($previous === '' || version_compare($previous, '3.0.0', '<')) {
     // Cron events of the one-off module that 3.0.0 removed (photo refresh of one published post, 10.10).
     foreach (['zp_published_prepared_photos_worker_20261010', 'zp_published_prepared_photos_watchdog_20261010'] as $hook) {

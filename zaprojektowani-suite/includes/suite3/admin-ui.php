@@ -284,7 +284,7 @@ function zp_suite3_dashboard(): void {
   }
   echo '</div></section>';
 
-  echo '<section class="navy-card"><div class="eyebrow">Nowe w wersji ' . esc_html(ZP_SUITE_VERSION) . '</div><h2>Ocena 4,9 przy logo Trustindex w Studiu wyceny.</h2><p>Pasek pod kartami wyboru usługi w Studiu wyceny pokazywał 5.0 przy logo Trustindex. Teraz pokazuje tę samą ocenę co reszta strony: 4,9, a na stronie angielskiej 4.9. Wygląd paska się nie zmienia.</p><a class="button" href="' . esc_url(zp_suite3_url('zp-suite-health')) . '">Stan strony</a></section>';
+  echo '<section class="navy-card"><div class="eyebrow">Nowe w wersji ' . esc_html(ZP_SUITE_VERSION) . '</div><h2>Ochrona stron na czas wgrywania wtyczki.</h2><p>Gdy wtyczka podmienia własne pliki, strony z cache działają dalej, a pozostałe na kilka sekund odpowiadają kodem 503 z prośbą o powrót za 30 s, zamiast błędu 404 albo strony bez wtyczki. Działa od następnego wgrania. Wygląd i szybkość stron bez zmian.</p><a class="button" href="' . esc_url(zp_suite3_url('zp-suite-health')) . '">Stan strony</a></section>';
   echo '</aside></div>';
 
   echo '<div class="quick-grid">';
