@@ -13,9 +13,10 @@ if (!defined('ABSPATH')) { exit; }
  *
  * Gdzie: strona główna (sekcja „Krótki formularz kontaktowy” w kolejności sekcji, po „Polecanych
  * pakietach”), podstrony zbudowane na szablonach stron, sklepów i logo (ogólnopolskie, katowickie,
- * branżowe; bez pakietów: po drugiej sekcji pod hero) oraz /kampanie-reklamowe/. Włączniki:
+ * branżowe; bez pakietów: po drugiej sekcji pod hero), /kampanie-reklamowe/ oraz od 21.10.2026 Studio
+ * wyceny (pod wyborem usługi z pakietami, w miejscu cennika, który zszedł pod formularz). Włączniki:
  * Zaprojektowani Suite → Widoczność sekcji → „Krótki formularz kontaktowy — strona główna”
- * i „— podstrony usług i kampanie”.
+ * i „— podstrony usług i kampanie” (ten drugi obejmuje też Studio wyceny).
  */
 
 /** Strona główna ma własny włącznik, podstrony usług i kampanie wspólny drugi. */
@@ -51,7 +52,7 @@ function zp_suite_quick_contact_section(string $context = 'home'): string {
   $min_ms = zp_suite_opt('security.min_seconds_enabled', '1') === '0' ? 0 : (int) round(max(0, (float) zp_suite_opt('security.min_seconds', '6')) * 1000);
   $img = ZP_SUITE_URL . 'assets/img/quick-contact/';
   $people = ['marta' => 'Marta', 'mateusz' => 'Mateusz', 'stanislaw' => 'Stanisław'];
-  $full_form = in_array($context, ['home', 'strony', 'sklepy', 'logo', 'kampanie', 'kontakt'], true) ? '#formularz-kontaktowy' : home_url('/kontakt/');
+  $full_form = in_array($context, ['home', 'strony', 'sklepy', 'logo', 'kampanie', 'kontakt', 'studio'], true) ? '#formularz-kontaktowy' : home_url('/kontakt/');
 
   ob_start();
   ?>
@@ -415,6 +416,39 @@ add_filter('do_shortcode_tag', function ($output, $tag) {
   if (!isset($kinds[$tag]) || !is_string($output) || $output === '' || !zp_suite_quick_contact_enabled($kinds[$tag])) { return $output; }
   $shop = $kinds[$tag] === 'sklepy';
   return zp_suite_quick_contact_insert($output, $shop ? 'id="oferta-sklepow"' : 'id="pakiety"', $shop ? 'id="zhHero"' : 'id="start"', $kinds[$tag]);
+}, 60, 2);
+
+/**
+ * Studio wyceny (Mat, 21.10.2026): krótki formularz stoi tuż pod wyborem usługi z pakietami, tam gdzie
+ * dotąd był cennik (seo-plan/studio.php drukuje go teraz pod formularzem kontaktowym, na samym dole).
+ * Wybór usługi to iframe rozciągnięty na całą szerokość okna, więc formularz dostaje taką samą pełną
+ * szerokość jak cennik; otwarty brief (wybrana usługa) chowa go tak samo jak wybór usługi i formularz.
+ * Wersja EN bierze teksty ze słownika niżej, jak na podstronach usług.
+ */
+function zp_suite_quick_contact_studio_insert(string $output): string {
+  if (strpos($output, 'data-zp-quick') !== false) { return $output; }
+  $shell = strpos($output, 'id="zpStudioV19FrameShell"');
+  $at = $shell === false ? false : strpos($output, '</div>', $shell);
+  if ($at !== false) {
+    $at += strlen('</div>');
+  } else {
+    // Bez ramki wyboru usługi (starszy szablon): nad formularzem kontaktowym.
+    $at = strpos($output, '<div class="zpStudioChooserContact"');
+    if ($at === false) { return $output; }
+  }
+  $section = zp_suite_quick_contact_section('studio');
+  if ($section === '') { return $output; }
+  $css = '<style id="zp-quick-contact-studio">'
+    . '#zpStudioQuick{width:100vw;max-width:100vw;margin-left:calc(50% - 50vw);margin-right:calc(50% - 50vw);background:#fff}'
+    . '@media(max-width:760px){#zpStudioQuick{width:100%;max-width:100%;margin-left:0;margin-right:0}}'
+    . 'body.zpbs-studio-page.zpbs-studio-brief #zpStudioQuick{display:none!important}'
+    . '</style>';
+  return substr($output, 0, $at) . "\n" . '<div class="zpStudioQuick" id="zpStudioQuick" data-zp-studio-quick>' . $section . '</div>' . $css . "\n" . substr($output, $at);
+}
+
+add_filter('do_shortcode_tag', function ($output, $tag) {
+  if (!in_array($tag, ['zp_studio_wyceny', 'zp_studio_wyceny_cms'], true) || !is_string($output) || $output === '' || !zp_suite_quick_contact_enabled('studio')) { return $output; }
+  return zp_suite_quick_contact_studio_insert($output);
 }, 60, 2);
 
 /* ------------------------------------------------- tryb "short" i tłumaczenie EN */
