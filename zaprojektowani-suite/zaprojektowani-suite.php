@@ -1756,3 +1756,6 @@ require_once ZP_SUITE_PATH . 'includes/visual-refinements-3240.php';
 
 // 3.2.41: editorial case-study layout, native portfolio bridge, approved owner testimonials.
 require_once ZP_SUITE_PATH . 'includes/case-studies-polish-3241.php';
+
+// 21.10.2026 (Mat, realizacje points 4 and 5): one card ratio and technology marks on /realizacje/.
+require_once ZP_SUITE_PATH . 'includes/realizacje-tech-3250.php';

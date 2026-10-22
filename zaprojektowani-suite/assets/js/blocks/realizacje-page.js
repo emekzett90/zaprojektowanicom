@@ -24,6 +24,28 @@ const hasLive=p=>!!(p.live||p.liveGone);
 const liveAttrs=p=>p.live?`href="${esc(p.live)}" target="_blank" rel="noopener"`:'tabindex="-1"';
 const slugify=s=>String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'').slice(0,90);
 const stableSlug=p=>/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(String(p.project_slug||''))?String(p.project_slug):slugify((p.brand||'projekt')+'-'+(p.type||'case-study'));
+/* 21.10.2026 (Mat, point 5): technology marks on the cards and in the sheet. Keys per project come with the
+   project data (p.tech), the registry and labels with window.zpRealizacjeTech; the PHP twin of the card row is
+   zp_rt50_row_html() in includes/realizacje-tech-3250.php. */
+const TECH=window.zpRealizacjeTech&&typeof window.zpRealizacjeTech==='object'?window.zpRealizacjeTech:{};
+const TECH_ITEMS=TECH.items&&typeof TECH.items==='object'?TECH.items:{};
+const techLabel=(k,d)=>String((TECH.labels&&TECH.labels[k])||d);
+const TECH_LIMIT=Math.max(1,parseInt(TECH.labels&&TECH.labels.limit,10)||6);
+const techOf=p=>(Array.isArray(p.tech)?p.tech:[]).filter((k,i,a)=>TECH_ITEMS[k]&&a.indexOf(k)===i).map(k=>Object.assign({key:k},TECH_ITEMS[k]));
+const techMark=t=>{
+  if(!t.l)return `<span class="techMark techMark--text" title="${esc(t.n)}">${esc(t.s||t.n)}</span>`;
+  const h=t.k==='mark'?15:18, w=t.k==='mark'&&t.h>0?Math.round(h*t.w/t.h):(t.k==='crop'?36:18);
+  return `<span class="techMark techMark--${esc(t.k)} techMark--${esc(t.key)}" role="img" title="${esc(t.n)}" aria-label="${esc(t.n)}"><img src="${esc(t.l)}" alt="" width="${w}" height="${h}" loading="lazy" decoding="async"></span>`;
+};
+const techRow=p=>{
+  const list=techOf(p).sort((a,b)=>(a.p||0)-(b.p||0));
+  if(!list.length)return '';
+  const rest=list.slice(TECH_LIMIT), names=rest.map(t=>t.n).join(', ');
+  return `<div class="techRow" role="group" aria-label="${esc(techLabel('row','Technologie projektu'))}">${list.slice(0,TECH_LIMIT).map(techMark).join('')}${rest.length?`<span class="techMore" role="img" title="${esc(names)}" aria-label="${esc(techLabel('more','Więcej technologii')+': '+names)}">+${rest.length}</span>`:''}</div>`;
+};
+const techTile=t=>`<div class="techTile"><span class="techTileLogo techTileLogo--${esc(t.k)} techTileLogo--${esc(t.key)}" aria-hidden="true">${t.l?`<img src="${esc(t.l)}" alt="" loading="lazy" decoding="async">`:`<i data-lucide="${esc(t.i||'wrench')}"></i>`}</span><div class="techText"><b>${esc(t.n)}</b><small>${esc(t.r)}</small></div></div>`;
+const techSection=p=>{const list=techOf(p);return list.length?`<div class="secTitle">${esc(techLabel('title','Technologie projektu'))} <em>${esc(techLabel('titleSub','narzędzia i systemy'))}</em></div>
+    <div class="techGrid">${list.map(techTile).join('')}</div>`:''};
 
 /* On mobile the search/categories belong below the portfolio heading.
    Move the existing toolbar instead of duplicating controls, so filtering state
@@ -159,6 +181,7 @@ function renderGrid(){
       <div class="cardSub">${esc(p.sub)}</div>
       <p class="cardDesc">${esc(p.desc)}</p>
       <div class="chips">${p.services.slice(0,3).map(s=>`<span>${esc(s)}</span>`).join('')}</div>
+      ${techRow(p)}
       <div class="cardActions">
         <a class="more" href="#case-${slug}" data-open="${i}"><span>Zobacz case study</span><i data-lucide="arrow-up-right"></i></a>
         ${hasLive(p)?`<a class="livePill" ${liveAttrs(p)}${p.live?' aria-label="Zobacz stronę live"':''}><span>live</span> <i data-lucide="external-link"></i></a>`:''}
@@ -202,7 +225,7 @@ const applyFilter=()=>{
   grid.querySelectorAll('.card').forEach(c=>{
     const p=PROJECTS[+c.dataset.i];
     const okF=activeF==='all'||c.dataset.cat.includes(activeF);
-    const okQ=!q||[p.brand,p.sub,p.type,p.tag,p.desc,p.services.join(' ')].join(' ').toLowerCase().includes(q);
+    const okQ=!q||[p.brand,p.sub,p.type,p.tag,p.desc,p.services.join(' '),techOf(p).map(t=>t.n).join(' ')].join(' ').toLowerCase().includes(q);
     c.style.display=(okF&&okQ)?'':'none'; if(okF&&okQ)n++;
   });
   root.querySelector('[data-count]').textContent=n;
@@ -286,8 +309,10 @@ function openModal(i){
     <ul class="scopeGrid">${p.scope.map(s=>`<li><i data-lucide="check"></i>${esc(s)}</li>`).join('')}</ul>
     <div class="secTitle">Najważniejsze efekty <em>wartość projektu</em></div>
     <div class="nums">${p.results.map(r=>`<div class="num"><b>${esc(r[0])}</b><span>${esc(r[1])}</span></div>`).join('')}</div>
-    <div class="secTitle">Technologie i usługi <em>wykorzystany zakres</em></div>
+    ${techSection(p)}
+    <div class="secTitle">${techOf(p).length?esc(techLabel('services','Usługi w projekcie')):'Technologie i usługi'} <em>wykorzystany zakres</em></div>
     <div class="stack">${p.services.map(s=>`<span>${esc(s)}</span>`).join('')}</div>
+    ${(p.case_url||p.caseStudyUrl)?`<div class="caseMore"><a class="btn btn--ghost" href="${esc(p.case_url||p.caseStudyUrl)}"><span>${esc(techLabel('caseLink','Pełny opis realizacji'))}</span><i data-lucide="arrow-up-right"></i></a></div>`:''}
     <div class="secTitle">Jak pracowaliśmy <em>proces realizacji</em></div>
     <div class="proc">${processSteps(p).map(step=>`<div class="step"><span class="stepIco"><i data-lucide="${step[0]}"></i></span><b>${esc(step[1])}</b><span>${esc(step[2])}</span></div>`).join('')}</div>
     <div class="sheetFoot">
