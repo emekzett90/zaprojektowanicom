@@ -131,6 +131,8 @@ function zp_suite_quality_html(string $html): string {
   if (function_exists('zp_suite_audit_alt_html')) { $html = zp_suite_audit_alt_html($html); }
   // Links with tracking parameters and chat or map shortcuts get rel="nofollow" (same file).
   if (function_exists('zp_suite_audit_links_html')) { $html = zp_suite_audit_links_html($html); }
+  // Ahrefs 21.10.2026: two large photos get their smaller copy in src (includes/ahrefs-20261022.php).
+  if (function_exists('zp_ahrefs_20261022_image_src_html')) { $html = zp_ahrefs_20261022_image_src_html($html); }
   // SearchFit 14.10.2026: theme links whose aria-label leaves out their visible words (see above).
   $html = zp_suite_label_in_name_html($html);
   $tags = new WP_HTML_Tag_Processor($html);

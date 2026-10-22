@@ -124,6 +124,26 @@ function zp_seo_posts_moved_links(string $html): string {
 add_filter('the_content', 'zp_seo_posts_moved_links', 21);
 add_filter('elementor/frontend/the_content', 'zp_seo_posts_moved_links', 21);
 
+/**
+ * Ahrefs 21.10.2026: the first $text outside <script> and <style> (its offset, or false). The transform runs twice on an
+ * Elementor post (elementor/frontend/the_content, then the_content), and a fragment that was linked on the first run no
+ * longer matches, so the second run took the next copy: the one in the post's own FAQ JSON-LD
+ * (/logo-branding/identyfikacja-wizualna-firmy/), whose quotes then broke the JSON. Links go into visible text only.
+ */
+function zp_seo_posts_text_at(string $html, string $text) {
+  $skip = [];
+  if (stripos($html, '<script') !== false || stripos($html, '<style') !== false) {
+    preg_match_all('~<(script|style)\b[^>]*>.*?</\1\s*>~is', $html, $m, PREG_OFFSET_CAPTURE);
+    foreach ($m[0] as $block) { $skip[] = [$block[1], $block[1] + strlen($block[0])]; }
+  }
+  for ($from = 0; ($at = strpos($html, $text, $from)) !== false; $from = $at + 1) {
+    $inside = false;
+    foreach ($skip as [$a, $b]) { if ($at >= $a && $at < $b) { $inside = true; break; } }
+    if (!$inside) { return $at; }
+  }
+  return false;
+}
+
 function zp_seo_posts_transform(string $html): string {
   static $busy = false;
   if ($busy || $html === '' || !zp_seo_plan_active() || zp_seo_plan_is_en() || is_admin() || !is_singular('post')) { return $html; }
@@ -168,7 +188,7 @@ function zp_seo_posts_transform(string $html): string {
   // Links to newer articles.
   foreach ((array) (zp_seo_posts_inline_links()[$path] ?? []) as $link) {
     [$text, $words, $to] = $link;
-    if (!zp_seo_plan_link_is_live($to) || ($at = strpos($html, $text)) === false) { continue; }
+    if (!zp_seo_plan_link_is_live($to) || ($at = zp_seo_posts_text_at($html, $text)) === false) { continue; }
     $linked = (string) preg_replace('~' . preg_quote($words, '~') . '~u', '<a href="' . esc_url(home_url($to)) . '">' . $words . '</a>', $text, 1);
     $html = substr_replace($html, $linked, $at, strlen($text));
   }
@@ -176,7 +196,7 @@ function zp_seo_posts_transform(string $html): string {
   // Links to articles from the feed: only where the exact fragment is still in the post.
   foreach (zp_feed_links_for($path) as $link) {
     [$text, $words, $to] = $link;
-    if ($to === $path || !zp_seo_plan_link_is_live($to) || ($at = strpos($html, $text)) === false) { continue; }
+    if ($to === $path || !zp_seo_plan_link_is_live($to) || ($at = zp_seo_posts_text_at($html, $text)) === false) { continue; }
     $linked = zp_feed_link_fragment($text, $words, $to);
     if ($linked !== null) { $html = substr_replace($html, $linked, $at, strlen($text)); }
   }
