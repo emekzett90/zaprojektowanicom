@@ -284,7 +284,7 @@ function zp_suite3_dashboard(): void {
   }
   echo '</div></section>';
 
-  echo '<section class="navy-card"><div class="eyebrow">Nowe w wersji ' . esc_html(ZP_SUITE_VERSION) . '</div><h2>Poprawki z audytu Ahrefs i widget usług pod wpisami.</h2><p>Pod wpisami nowy, jasny widget usług (na telefonie karty przesuwane w prawo z podpowiedzią „Przesuń w prawo”). Z audytu Ahrefs: dane strukturalne firmy bez błędu, poprawny blok FAQ we wpisie o identyfikacji wizualnej, linki prosto do aktualnych adresów, lżejszy plik w src zrzutów case study i dwóch zdjęć oraz 40 opisów i 5 tytułów o właściwej długości.</p><a class="button" href="' . esc_url(zp_suite3_url('zp-suite-health')) . '">Stan strony</a></section>';
+  echo '<section class="navy-card"><div class="eyebrow">Nowe w wersji ' . esc_html(ZP_SUITE_VERSION) . '</div><h2>Cache HTML czyści się tylko przy zmianach widocznych na stronie.</h2><p>Autozapisy edytora i Elementora, szkice i otwarcie „Dodaj nowy wpis” nie kasują już kopii wszystkich stron, więc odwiedzający i Google częściej dostają stronę z gotowej kopii. Publikacja, aktualizacja opublikowanego wpisu, menu i ustawienia odświeżają cache jak dotąd. Na stronie „Cache HTML” widać ostatnie odświeżenia z przyczyną.</p><a class="button" href="' . esc_url(zp_suite3_url('zp-suite-health')) . '">Stan strony</a></section>';
   echo '</aside></div>';
 
   echo '<div class="quick-grid">';
