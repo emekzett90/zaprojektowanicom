@@ -62,7 +62,7 @@ function zp_footer_cta_team_img(string $url): string {
 /** Trust figures under the buttons (values from the plugin settings). */
 function zp_footer_cta_proof(): array {
   $projects = function_exists('zp_seo_plan_projects_count') ? zp_seo_plan_projects_count() : (int) zp_suite_opt('stats.projects_count', 114);
-  $rating = (string) (zp_reviews_snapshot()['aggregate']['rating'] ?? '');
+  $rating = function_exists('zp_reviews_rating_text') ? zp_reviews_rating_text(function_exists('zp_home_refresh_english') && zp_home_refresh_english()) : (string) (zp_reviews_snapshot()['aggregate']['rating'] ?? '');
   $items = [];
   if ($projects > 0) { $items[] = ['value' => $projects . '+', 'label' => 'projektów']; }
   if ($rating !== '') { $items[] = ['value' => $rating, 'star' => true, 'label' => 'ocena w Trustindex', 'href' => 'https://www.trustindex.io/reviews/zaprojektowani.com']; }

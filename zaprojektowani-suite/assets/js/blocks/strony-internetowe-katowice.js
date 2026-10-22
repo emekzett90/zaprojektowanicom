@@ -441,7 +441,9 @@ var ZP_SI_ASSETS = (function () {
         });
       }
 
-      const nf = (v, d) => v.toLocaleString('pl-PL', { minimumFractionDigits: d, maximumFractionDigits: d });
+      // Mat 21.10.2026, point 6: the English version of the page (/en/web-design-katowice/) writes 4.9, not 4,9.
+      const nfLocale = (() => { if ((document.documentElement.getAttribute('lang') || '').toLowerCase() === 'en') return 'en-US'; try { const c = document.getElementById('zpl-config'); return c && JSON.parse(c.textContent).lang === 'en' ? 'en-US' : 'pl-PL'; } catch (e) { return 'pl-PL'; } })();
+      const nf = (v, d) => v.toLocaleString(nfLocale, { minimumFractionDigits: d, maximumFractionDigits: d });
       const runCount = el => {
         const to = parseFloat(el.dataset.count);
         const d = parseInt(el.dataset.decimals || '0', 10);

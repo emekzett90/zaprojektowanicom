@@ -15,16 +15,29 @@ function zp_reviews_snapshot(): array {
     return $snapshot;
 }
 
+/** Mat 21.10.2026, point 6: the verified aggregate every badge and counter shows (rating as a number, review count). */
+function zp_reviews_aggregate(): array {
+    $a = zp_reviews_snapshot()['aggregate'] ?? [];
+    $rating = isset($a['rating']) ? (float) $a['rating'] : 0.0;
+    $count = isset($a['reviewCount']) ? (int) $a['reviewCount'] : 0;
+    return ['rating' => $rating > 0 ? $rating : 4.9, 'count' => $count > 0 ? $count : 150];
+}
+
+/** "4,9" on Polish pages, "4.9" on English ones. */
+function zp_reviews_rating_text(bool $english = false): string {
+    return number_format(zp_reviews_aggregate()['rating'], 1, $english ? '.' : ',', '');
+}
+
 /** Change aggregate badges only. Individual five-star reviews retain their own rating. */
 function zp_reviews_truth_fragment(string $html, bool $facebook, bool $english): string {
     $s = zp_reviews_snapshot();
-    $count = (string)($facebook ? ($s['facebookVerified']['reviewCount'] ?? 62) : ($s['aggregate']['reviewCount'] ?? 146));
-    $numericRating = (string)($s['aggregate']['rating'] ?? '4.9');
+    $count = (string)($facebook ? ($s['facebookVerified']['reviewCount'] ?? 62) : zp_reviews_aggregate()['count']);
+    $numericRating = zp_reviews_rating_text(true);
     $percentage = (string)($s['facebookVerified']['recommendPercent'] ?? 100);
     $rating = $facebook ? $percentage.'%' : ($english ? $numericRating : str_replace('.',',',$numericRating));
     $html = preg_replace('~(?<=>)\s*(?:5[.,]0(?:\s*/\s*5)?|5\s*/\s*5)\s*(?:★)?\s*(?=<)~u', $rating, $html) ?? $html;
     $html = preg_replace('~\b(data-(?:count|score))=(["\'])5[.,]0\2~', '$1="' . ($facebook ? $percentage : $numericRating) . '"', $html) ?? $html;
-    $html = preg_replace('~(data-count="4.9"[^>]*>)0(?=<)~', '${1}' . ($english ? '4.9' : '4,9'), $html) ?? $html;
+    $html = preg_replace('~(data-count="' . preg_quote($numericRating, '~') . '"[^>]*>)0(?=<)~', '${1}' . ($english ? $numericRating : str_replace('.', ',', $numericRating)), $html) ?? $html;
     $html = preg_replace('~(aria-label=["\'][^"\']*(?:ocena|rating)[^"\']*)5[.,]0~iu', '${1}' . $rating, $html) ?? $html;
     $html = preg_replace('~\b(?:120|60|61|50|22)\s+(?=(?:zweryfikowanych\s+)?(?:opini[ie]|reviews|customer reviews|client reviews))~u', $count . ' ', $html) ?? $html;
     if ($facebook) {
@@ -46,7 +59,7 @@ function zp_reviews_truth_document(string $html, $language = 'pl', $source = '')
             $href = $attrs['href'] ?? ''; $class = $attrs['class'] ?? '';
             $fb = strpos($href, 'facebook.com/zaprojektowanicom') !== false;
             $trust = strpos($href, 'trustindex.io') !== false;
-            $known = preg_match('~(?:^|\s)(?:reviews-score|zpAboutX__trustindexScore|zpAboutX__award|zp-proof__ratingText|zh__stat|zhMobileBrandStat)(?:\s|$)~', $class);
+            $known = preg_match('~(?:^|\s)(?:reviews-score|zpAboutX__trustindexScore|zpAboutX__award|zp-proof__ratingText|zh__stat|zhMobileBrandStat|rail-stat)(?:\s|$)~', $class);
             if (!$fb && !$trust && !$known) { continue; }
             $end = zp_speed_nested_end($html, $tag, $at + strlen($m[0])); if ($end < 0) { continue; }
             $fragment = substr($html, $at, $end-$at);
@@ -55,7 +68,7 @@ function zp_reviews_truth_document(string $html, $language = 'pl', $source = '')
             $new = zp_reviews_truth_fragment($fragment, $fb, $en);
             if ($fb && $new !== $fragment) { $new = preg_replace('~href=(["\'])https://www.facebook.com/zaprojektowanicom/?\1~', 'href="https://www.facebook.com/zaprojektowanicom/reviews"', $new) ?? $new; }
             if ($trust) { $new = str_replace(['href="https://www.trustindex.io/"','href="https://trustindex.io/"'], 'href="https://www.trustindex.io/reviews/zaprojektowani.com"', $new); }
-            if ($known) { $new = str_replace(['Google i Facebook','Google and Facebook'], $en ? '146 reviews on Trustindex' : '146 opinii w Trustindex', $new); }
+            if ($known) { $new = str_replace(['Google i Facebook','Google and Facebook'], zp_reviews_aggregate()['count'] . ($en ? ' reviews on Trustindex' : ' opinii w Trustindex'), $new); }
             if ($new !== $fragment) { $edits[] = [$at,$end,$new]; }
         }
     }
@@ -67,15 +80,14 @@ function zp_reviews_truth_document(string $html, $language = 'pl', $source = '')
     $scan = zp_speed_scan($html);
     if ($scan && preg_match_all('~(?<=>)120 (zweryfikowanych opinii klientów|opinii klientów|verified client reviews|verified customer reviews|verified reviews|client reviews|customer reviews)(?=<| ·| •)~u', $html, $captions, PREG_OFFSET_CAPTURE)) {
         foreach (array_reverse($captions[0]) as [$text,$at]) {
-            if (!zp_speed_in_skip($scan['skip'],$at)) { $html=substr_replace($html,'146'.substr($text,3),$at,strlen($text)); }
+            if (!zp_speed_in_skip($scan['skip'],$at)) { $html=substr_replace($html,zp_reviews_aggregate()['count'].substr($text,3),$at,strlen($text)); }
         }
     }
     // The advertising-agency landing also states the old aggregate in a prose paragraph.
-    $data = zp_reviews_snapshot();
-    $rating = (string)($data['aggregate']['rating'] ?? '4.9');
-    $count = (int)($data['aggregate']['reviewCount'] ?? 146);
+    $rating = zp_reviews_rating_text(true);
+    $count = zp_reviews_aggregate()['count'];
     $prose = [
-        'Średnia 5,0 ze 120 opinii.' => 'Średnia '.str_replace('.',',',$rating).'/5 w Trustindex na podstawie '.$count.' opinii.',
+        'Średnia 5,0 ze 120 opinii.' => 'Średnia '.zp_reviews_rating_text(false).'/5 w Trustindex na podstawie '.$count.' opinii.',
         'An average of 5.0 from 120 reviews.' => 'A '.$rating.'/5 rating on Trustindex, based on '.$count.' reviews.',
     ];
     $scan = zp_speed_scan($html);
