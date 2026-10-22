@@ -258,18 +258,55 @@ final class ZP_Cache_Early_20261009 {
         return true;
     }
 
+    /**
+     * 3.2.60: true while Suite's own folder is being replaced (Wtyczki → Dodaj nową → Wyślij → Zastąp bieżącą). WordPress
+     * then deletes the old files one by one and moves the new folder in, outside maintenance mode, so a page it builds in
+     * those seconds runs without Suite: English addresses answer 404 (Ahrefs saw one on 22.10) and Polish pages lose
+     * Suite's parts. The plugin writes swap.php here just before the old files go and deletes it when the install ends
+     * (ZP_HTML_Cache_20261009::swap_begin/swap_end); a file older than 180 s is ignored, so an interrupted install never
+     * keeps the site on 503. Copies are still served; the panel, the login page, REST, cron and POST are never stopped.
+     */
+    public static function swap(string $dir, array $server, ?int $now = null): bool {
+        $method = $server['REQUEST_METHOD'] ?? '';
+        if ($method !== 'GET' && $method !== 'HEAD') { return false; }
+        $uri = (string) ($server['REQUEST_URI'] ?? '');
+        if (preg_match('~^/(?:wp-admin|wp-login\.php|wp-json|wp-cron\.php|xmlrpc\.php|wp-content|wp-includes)(?:[/?#]|$)~i', $uri) || preg_match('~[?&]rest_route=~', $uri)) { return false; }
+        $file = $dir . '/swap.php';
+        if (is_link($file) || !is_file($file) || filesize($file) > 1024) { return false; }
+        $raw = @file_get_contents($file);
+        if (!is_string($raw) || strpos($raw, self::PREFIX) !== 0) { return false; }
+        $s = json_decode(substr($raw, strlen(self::PREFIX)), true); $now = $now ?? time();
+        return is_array($s) && is_int($s['since'] ?? null) && is_int($s['until'] ?? null) && $s['since'] <= $now + 60 && $now < $s['until'] && $s['until'] - $s['since'] <= 180;
+    }
+
+    /** 3.2.60: the short page sent with that 503; it reloads itself, and robots read Retry-After. */
+    public static function swap_page(string $uri): string {
+        $en = (bool) preg_match('~^/en(?:[/?#]|$)~', $uri);
+        return '<!doctype html><html lang="' . ($en ? 'en' : 'pl') . '"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex"><meta http-equiv="refresh" content="15"><title>Zaprojektowani</title></head><body><p>'
+            . ($en ? 'We are updating the site. This page will reload in a moment.' : 'Aktualizujemy stronę. Za chwilę odświeży się sama.') . '</p></body></html>';
+    }
+
+    /** 3.2.60: answers 503 and stops here while swap() is true; otherwise does nothing. */
+    public static function swap_guard(string $dir): void {
+        if (!self::swap($dir, $_SERVER)) { return; }
+        http_response_code(503); header('Retry-After: 30'); header('Cache-Control: no-store, max-age=0'); header('X-LiteSpeed-Cache-Control: no-cache'); header('X-Robots-Tag: noindex'); header('Content-Type: text/html; charset=UTF-8'); header('X-ZP-Cache: SWAP');
+        if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'HEAD') { echo self::swap_page((string) ($_SERVER['REQUEST_URI'] ?? '')); }
+        exit;
+    }
+
     public static function boot(): void {
         if (headers_sent()) { return; }
         $dir = WP_CONTENT_DIR . '/cache/zp-suite-html'; $p = self::policy($dir);
-        if (!$p) { if (!headers_sent()) { header('X-ZP-Cache: BYPASS; policy'); } return; }
+        if (!$p) { self::swap_guard($dir); if (!headers_sent()) { header('X-ZP-Cache: BYPASS; policy'); } return; }
         $reason = self::eligible($p, $_SERVER, $_COOKIE);
-        if ($reason !== '') { if (!headers_sent()) { header('X-ZP-Cache: BYPASS; ' . $reason); } return; }
+        if ($reason !== '') { self::swap_guard($dir); if (!headers_sent()) { header('X-ZP-Cache: BYPASS; ' . $reason); } return; }
         $hit = self::hit($dir, $p, $_SERVER);
         if ($hit) {
             header('Content-Type: text/html; charset=UTF-8'); self::headers(); header('X-ZP-Cache: HIT'); header('X-ZP-Cache-Device: ' . self::device($_SERVER)); header('X-ZP-Cache-Age: ' . $hit['age']);
             if (self::is_bot((string) ($_SERVER['HTTP_USER_AGENT'] ?? ''))) { self::note_bot($dir, $_SERVER); }
             echo $hit['html']; exit;
         }
+        self::swap_guard($dir);
         self::headers(); header('X-ZP-Cache: MISS'); header('X-ZP-Cache-Device: ' . self::device($_SERVER)); $server = $_SERVER; $flushed = false;
         // Start before plugins: this outermost buffer sees Suite's final transformed HTML.
         ob_start(static function ($html, $phase) use ($dir, $p, $server, &$flushed) {
