@@ -4,8 +4,8 @@ if (!defined('ABSPATH')) { exit; }
 /**
  * Services related to the article, separate from the related-articles block.
  * Widget redesign (Mat, 21.10.2026, point 2): a light panel in the article's own style with one card per service in a grid
- * (two columns, three for three services, stacked on phones), nothing scrolls sideways
- * and every service has its own real project photo from the plugin library.
+ * (two columns, three for three services); on phones a sideways rail with the site's "Przesuń w prawo"
+ * hint (Mat, 22.10.2026); every service has its own real project photo from the plugin library.
  *
  * Posts from the keyword plan link to the service page they support; other posts link
  * to the service page of their category. Targets that are not
@@ -233,18 +233,24 @@ function zp_seo_related_render(array $links, string $self = ''): string {
       . '<span class="zpu-related__go">Poznaj usługę <span aria-hidden="true">↗</span></span></div></a>';
   }
   if ($cards === '') { return ''; }
+  // Mat 22.10.2026: on phones the cards scroll sideways again, with the site's own animated "Przesuń w prawo" hint
+  // (as on the Katowice portfolio and the blog categories; "Swipe right" in the EN common dictionary). The arrow is
+  // the same lucide arrow-right, inlined so posts do not depend on the icon script.
+  $swipe = '<div class="zpu-related__swipe" aria-hidden="true"><span>Przesuń w prawo</span>'
+    . '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.15" stroke-linecap="round" stroke-linejoin="round" focusable="false"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></div>';
   // Audit of thread 31 (21.10.2026): the box is navigation, not article content, so its title and the card names are
   // paragraphs styled as headings and no longer add an H2 and H3s to every post's outline. The section is still
   // named by its visible title (aria-labelledby), so the English page needs no extra attribute text.
   return '<section class="zpu-related zpu-related--v2 zpu-related--cards-' . count($seen) . '" aria-labelledby="zpu-related-title">'
     . '<header class="zpu-related__head"><div><p class="zpu-related__eyebrow">Od wiedzy do działania</p><p class="zpu-related__title" id="zpu-related-title">Usługi, które mogą Cię zainteresować</p></div>'
     . '<p class="zpu-related__lead">Chcesz wykorzystać te pomysły w swojej firmie? Zobacz, w czym możemy Ci pomóc.</p></header>'
+    . (count($seen) > 1 ? $swipe : '')
     . '<div class="zpu-related__grid">' . $cards . '</div></section>';
 }
 
 /**
  * Widget redesign 21.10.2026: light panel (#f5f6f8, 36 px radius, 1 px line) like the article's editorial boxes, white cards with a
- * dark navy pill button; full width of the article container, a full-bleed band on phones. Every declaration
+ * dark navy pill button; full width of the article container, a full-bleed band with a sideways card rail on phones. Every declaration
  * carries !important because the theme and Elementor rules for links, headings and images otherwise win.
  * The first three rules (no sideways scrolling on posts) are unchanged from 2.7.7.
  */
@@ -264,6 +270,7 @@ add_action('wp_head', function () {
   .zpu-related__eyebrow:before{content:""!important;display:block!important;width:28px!important;height:1px!important;border-radius:0!important;background:#071426!important;box-shadow:none!important}
   .zpu-related__title{display:block!important;max-width:none!important;margin:0!important;padding:0!important;color:var(--zpu-ink)!important;font-size:clamp(28px,3.1vw,44px)!important;line-height:1.06!important;letter-spacing:-.045em!important;font-weight:650!important;text-wrap:balance!important;overflow-wrap:break-word!important}
   .zpu-related__lead{display:block!important;max-width:420px!important;margin:0 0 4px!important;padding:0!important;color:var(--zpu-muted)!important;font-size:15px!important;line-height:1.7!important;letter-spacing:-.01em!important}
+  .zpu-related__swipe{display:none!important}
   .zpu-related__grid{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:clamp(14px,1.8vw,22px)!important;margin:0!important;padding:0!important;overflow:visible!important}
   .zpu-related--cards-1 .zpu-related__grid{grid-template-columns:minmax(0,1fr)!important}
   .zpu-related--cards-3 .zpu-related__grid{grid-template-columns:repeat(3,minmax(0,1fr))!important}
@@ -285,8 +292,9 @@ add_action('wp_head', function () {
   @media(min-width:761px){.zpu-related--cards-1 .zpu-related__card{display:grid!important;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr)!important;align-items:stretch!important}.zpu-related--cards-1 .zpu-related__media{height:100%!important;min-height:320px!important;aspect-ratio:auto!important}.zpu-related--cards-1 .zpu-related__body{justify-content:center!important;padding:clamp(28px,3vw,44px)!important}}
   @media(min-width:761px) and (max-width:1000px){.zpu-related--cards-3 .zpu-related__grid{grid-template-columns:minmax(0,1fr)!important}.zpu-related--cards-3 .zpu-related__card{display:grid!important;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr)!important;align-items:stretch!important}.zpu-related--cards-3 .zpu-related__media{height:100%!important;min-height:240px!important;aspect-ratio:auto!important}.zpu-related--cards-3 .zpu-related__body{justify-content:center!important}}
   @media(max-width:1000px){.zpu-related__head{grid-template-columns:minmax(0,1fr)!important;gap:14px!important}.zpu-related__lead{max-width:560px!important}}
-  @media(max-width:760px){.zpu-related{width:100%!important;max-width:100%!important;margin:0 0 40px!important;padding:30px 16px 28px!important;border-left:0!important;border-right:0!important;border-radius:0!important}.zpu-related__head{margin-bottom:20px!important}.zpu-related__eyebrow{font-size:10px!important;margin-bottom:12px!important}.zpu-related__title{font-size:clamp(27px,7.8vw,34px)!important;letter-spacing:-.04em!important}.zpu-related__lead{font-size:14.5px!important}.zpu-related__grid,.zpu-related--cards-3 .zpu-related__grid{grid-template-columns:minmax(0,1fr)!important;gap:14px!important}.zpu-related__card{border-radius:22px!important}.zpu-related__body{padding:18px 18px 20px!important}.zpu-related__name{font-size:22px!important}.zpu-related__snippet{font-size:14.5px!important;margin-bottom:18px!important}.zpu-related__tag{left:14px!important;top:14px!important}}
-  @media(prefers-reduced-motion:reduce){.zpu-related__card,.zpu-related__media img,.zpu-related__go,.zpu-related__go>span{transition:none!important}.zpu-related__card:hover{transform:none!important}.zpu-related__card:hover .zpu-related__media img,.zpu-related__card:hover .zpu-related__go>span{transform:none!important}}
+  @media(max-width:760px){.zpu-related{width:100%!important;max-width:100%!important;margin:0 0 40px!important;padding:30px 16px 28px!important;border-left:0!important;border-right:0!important;border-radius:0!important}.zpu-related__head{margin-bottom:20px!important}.zpu-related__eyebrow{font-size:10px!important;margin-bottom:12px!important}.zpu-related__title{font-size:clamp(27px,7.8vw,34px)!important;letter-spacing:-.04em!important}.zpu-related__lead{font-size:14.5px!important}.zpu-related__grid,.zpu-related--cards-2 .zpu-related__grid,.zpu-related--cards-3 .zpu-related__grid,.zpu-related--cards-4 .zpu-related__grid{display:flex!important;flex-wrap:nowrap!important;gap:14px!important;margin:0 -16px!important;padding:2px 16px 6px!important;overflow-x:auto!important;overflow-y:hidden!important;overscroll-behavior-x:contain!important;scroll-snap-type:x proximity!important;scroll-padding-left:16px!important;-webkit-overflow-scrolling:touch!important;scrollbar-width:none!important}.zpu-related__grid::-webkit-scrollbar{display:none!important}.zpu-related__card{flex:0 0 min(86vw,390px)!important;width:min(86vw,390px)!important;scroll-snap-align:start!important}.zpu-related__card:hover{transform:none!important}.zpu-related__card:focus-visible{outline-offset:-3px!important}.zpu-related--cards-1 .zpu-related__grid{display:grid!important;grid-template-columns:minmax(0,1fr)!important;margin:0!important;padding:0!important;overflow:visible!important}.zpu-related--cards-1 .zpu-related__card{width:auto!important}.zpu-related__swipe{display:inline-flex!important;align-items:center!important;gap:9px!important;margin:0 0 13px!important;padding:0!important;color:rgba(7,20,38,.66)!important;font-size:10px!important;line-height:1!important;font-weight:800!important;letter-spacing:.1em!important;text-transform:uppercase!important;pointer-events:none!important;user-select:none!important;opacity:.82!important}.zpu-related__swipe svg{display:block!important;flex:none!important;width:15px!important;height:15px!important;color:#102a4f!important;animation:zpuSwipeArrow 1.65s cubic-bezier(.16,.84,.2,1) infinite!important}.zpu-related__card{border-radius:22px!important}.zpu-related__body{padding:18px 18px 20px!important}.zpu-related__name{font-size:22px!important}.zpu-related__snippet{font-size:14.5px!important;margin-bottom:18px!important}.zpu-related__tag{left:14px!important;top:14px!important}}
+  @keyframes zpuSwipeArrow{0%,100%{transform:translateX(0);opacity:.42}45%{transform:translateX(8px);opacity:1}}
+  @media(prefers-reduced-motion:reduce){.zpu-related__swipe svg{animation:none!important}.zpu-related__card,.zpu-related__media img,.zpu-related__go,.zpu-related__go>span{transition:none!important}.zpu-related__card:hover{transform:none!important}.zpu-related__card:hover .zpu-related__media img,.zpu-related__card:hover .zpu-related__go>span{transform:none!important}}
   </style>
   <?php
 }, 90);
