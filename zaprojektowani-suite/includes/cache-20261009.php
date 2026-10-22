@@ -8,8 +8,11 @@ final class ZP_HTML_Cache_20261009 {
     public const STATE = 'zp_html_cache_20261009_state';
     public const PREFIX = "<?php exit; ?>\n";
     public const SWEEP = 'zp_html_cache_sweep_20261009';
+    public const LOG = 'zp_html_cache_20261009_log';
     private static $purge_queued = false;
     private static $refresh_queued = false;
+    /** 22.10.2026: what asked for this request's purge, for the log on the panel page. */
+    private static $purge_cause = '';
 
     public static function allowed(): bool { return current_user_can('manage_options') && current_user_can('activate_plugins'); }
     public static function dir(): string { return WP_CONTENT_DIR . '/cache/zp-suite-html'; }
@@ -252,6 +255,7 @@ final class ZP_HTML_Cache_20261009 {
             // save up to 1000 file deletions); the sweep deletes them. A write by older code mid-update can fail the hash check once.
             try { $written = self::write_policy($policy, null, true); } catch (RuntimeException $race) { usleep(50000); clearstatcache(); $written = self::write_policy($policy, null, true); }
             if (!$written) { return; }
+            self::log_purge();
             self::schedule_sweep();
             // 3.0.1: a later successful refresh clears an old failure note (it used to stay on the page for good).
             if (get_option('zp_html_cache_20261009_error', '') !== '') { delete_option('zp_html_cache_20261009_error'); }
@@ -260,9 +264,64 @@ final class ZP_HTML_Cache_20261009 {
             update_option('zp_html_cache_20261009_error', 'Nie odświeżono polityki cache; sprawdź uprawnienia katalogu.', false);
         }
     }
-    public static function queue_purge(): void {
+    public static function queue_purge($cause = ''): void {
         if (self::$purge_queued || empty(get_option(self::STATE, [])['enabled'])) { return; }
+        $cause = is_string($cause) ? $cause : ''; // a hook callback: never trust what a hook passes
         self::$purge_queued = true; add_action('shutdown', [self::class, 'purge'], PHP_INT_MAX);
+        if ($cause === '') {
+            // 22.10.2026: the hook, and the first file outside WordPress that asked (directly or with do_action).
+            $cause = (string) current_action();
+            foreach (debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 8) as $frame) {
+                $file = (string) ($frame['file'] ?? '');
+                if ($file !== '' && $file !== __FILE__ && strpos($file, 'wp-includes') === false) { $cause .= ' (' . basename($file) . ')'; break; }
+            }
+        }
+        self::$purge_cause = $cause;
+    }
+    /**
+     * 22.10.2026: whether a change to this post can show on a public page. Not for a revision (every autosave of the block
+     * editor and of Elementor is one), the internal kinds (oEmbed cache, Customizer drafts, privacy requests) or a post that
+     * is neither published nor scheduled (auto-draft, draft, pending, private). Attachments and unknown posts count.
+     */
+    private static function post_is_public($post, string $status = ''): bool {
+        if (!$post instanceof WP_Post) { return true; }
+        if (in_array($post->post_type, ['revision', 'oembed_cache', 'customize_changeset', 'user_request'], true)) { return false; }
+        if ($post->post_type === 'attachment') { return true; }
+        return in_array($status !== '' ? $status : $post->post_status, ['publish', 'future'], true);
+    }
+    /**
+     * 22.10.2026: save_post, transition_post_status and deleted_post empty the cache only for a post that is or was public,
+     * so publishing, unpublishing, scheduling and every save of a published post still do. Before, each autosave and each
+     * draft save did as well, and an editor left open with changes emptied the whole cache about once a minute.
+     */
+    public static function post_changed(...$args): void {
+        $hook = (string) current_action();
+        if ($hook === 'transition_post_status') {
+            $post = $args[2] ?? null;
+            if (!self::post_is_public($post, (string) ($args[0] ?? '')) && !self::post_is_public($post, (string) ($args[1] ?? ''))) { return; }
+            $what = $post instanceof WP_Post ? ' #' . $post->ID . ' ' . $post->post_type . ' ' . $args[1] . '→' . $args[0] : '';
+        } else {
+            $post = ($args[1] ?? null) instanceof WP_Post ? $args[1] : get_post((int) ($args[0] ?? 0));
+            if (!self::post_is_public($post)) { return; }
+            $what = $post instanceof WP_Post ? ' #' . $post->ID . ' ' . $post->post_type . ' ' . $post->post_status : '';
+        }
+        self::queue_purge($hook . $what);
+    }
+    /** 22.10.2026: the last 60 purges with their cause and where they ran (its option never purges: zp_html_cache_ prefix). */
+    private static function log_purge(): void {
+        $log = get_option(self::LOG, []); $log = is_array($log) ? $log : [];
+        $where = (function_exists('wp_doing_cron') && wp_doing_cron()) ? 'cron' : ((defined('REST_REQUEST') && REST_REQUEST) ? 'REST' : ((function_exists('wp_doing_ajax') && wp_doing_ajax()) ? 'AJAX' : (is_admin() ? 'panel' : 'strona')));
+        array_unshift($log, ['t' => time(), 'c' => substr(self::$purge_cause !== '' ? self::$purge_cause : (string) current_action(), 0, 160), 'w' => $where]);
+        update_option(self::LOG, array_slice($log, 0, 60), false);
+    }
+    /** 22.10.2026: how often and why the copies were emptied, newest first, in the site's time. */
+    private static function purge_log_table(): void {
+        $log = get_option(self::LOG, []); $log = is_array($log) ? array_values(array_filter($log, 'is_array')) : [];
+        if (!$log) { echo '<p>Odświeżenia cache: jeszcze żadnego od tej aktualizacji.</p>'; return; }
+        $day = count(array_filter($log, static fn($row) => (int) ($row['t'] ?? 0) > time() - DAY_IN_SECONDS));
+        echo '<h2>Ostatnie odświeżenia cache</h2><p>W ostatnich 24 godzinach: ' . (int) $day . ($day >= 60 ? ' albo więcej' : '') . '. Każde unieważnia kopie wszystkich stron.</p><table class="widefat"><tr><th>Czas</th><th>Przyczyna</th><th>Skąd</th></tr>';
+        foreach (array_slice($log, 0, 30) as $row) { echo '<tr><td>' . esc_html(wp_date('d.m H:i:s', (int) ($row['t'] ?? 0))) . '</td><td><code>' . esc_html((string) ($row['c'] ?? '')) . '</code></td><td>' . esc_html((string) ($row['w'] ?? '')) . '</td></tr>'; }
+        echo '</table>';
     }
     /**
      * 3.1.1: for a change to some pages only (an EN translation's new version): the policy is composed again with the same
@@ -330,17 +389,19 @@ final class ZP_HTML_Cache_20261009 {
         // 3.1.1: added and deleted options count too, so the locks that cron jobs add and delete on every run are left out.
         if (preg_match('/_lock$/D', $option) || $option === 'zp_studio_wyceny_unread_orders') { return; }
         if (apply_filters('zp_html_cache_ignore_option', false, $option)) { return; }
-        if (preg_match('/^(?:zp_(?!html_cache_)|zpl_|zpte_|rank-math-|theme_mods_|widget_|sidebars_widgets|page_on_front|show_on_front|blogname|blogdescription|permalink_structure)/', $option)) { self::queue_purge(); }
+        if (preg_match('/^(?:zp_(?!html_cache_)|zpl_|zpte_|rank-math-|theme_mods_|widget_|sidebars_widgets|page_on_front|show_on_front|blogname|blogdescription|permalink_structure)/', $option)) { self::queue_purge('opcja ' . $option); }
     }
     /** Copies made while the style files were served link to them, and copies made before carry the styles inline. */
     public static function speed_files_changed($old, $new): void {
-        if (empty($old['ok']) !== empty($new['ok'])) { self::queue_purge(); }
+        if (empty($old['ok']) !== empty($new['ok'])) { self::queue_purge('opcja zp_speed_files_ok'); }
     }
     public static function meta_changed($meta_id, $post_id, $key): void {
         if (in_array($key, ['_elementor_css', '_elementor_element_cache', '_elementor_page_assets', '_edit_lock', '_edit_last', '_zp_post_reads', '_zp_post_views'], true)) { return; }
         // 3.0.1: other modules (the EN translator, for one) can name their own keys that never change Polish pages.
         if (apply_filters('zp_html_cache_ignore_meta', false, (string) $key, (int) $post_id)) { return; }
-        self::queue_purge();
+        // 22.10.2026: data of a revision (every autosave) or of a draft is on no public page (post_is_public()).
+        if (!self::post_is_public(get_post((int) $post_id))) { return; }
+        self::queue_purge('meta ' . $key . ' #' . (int) $post_id);
     }
     public static function handle(): void {
         if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST' || !self::allowed() || !wp_verify_nonce(is_string($_POST['_wpnonce'] ?? null) ? wp_unslash($_POST['_wpnonce']) : '', 'zp_html_cache_20261009')) { wp_die('Brak uprawnień lub błędny nonce.', '', ['response' => 403]); }
@@ -348,7 +409,7 @@ final class ZP_HTML_Cache_20261009 {
             $command = $_POST['command'] ?? '';
             if ($command === 'enable') { self::enable(is_string($_POST['review_hash'] ?? null) ? wp_unslash($_POST['review_hash']) : ''); }
             elseif ($command === 'restore') { self::restore(); }
-            elseif ($command === 'purge') { self::purge(); }
+            elseif ($command === 'purge') { self::$purge_cause = 'przycisk „Odśwież własny cache”'; self::purge(); }
             elseif ($command === 'disable') { self::disable(); }
             elseif ($command === 'resume') { $result = self::upgrade_dropin(true); if ($result !== 'on') { throw new RuntimeException('Nie włączono ponownie: ' . $result . '.'); } }
             else { throw new RuntimeException('Niedozwolone działanie.'); }
@@ -371,7 +432,7 @@ final class ZP_HTML_Cache_20261009 {
             } elseif (empty($state['enabled'])) {
                 $review = self::preflight(); echo '<p>Gotowe: ' . count($review['policy']['paths']) . ' ścieżek. Zmiana wp-config.php obejmuje wyłącznie WP_CACHE=false → true albo dodanie jednej deklaracji. Treści wp-config.php nie wyświetlamy. Oba oryginalne pliki trafiają przed zapisem do prywatnej opcji bazy (autoload=false). Konfiguracja SHA <code>' . esc_html($review['config_sha']) . '</code>.</p>';
                 self::form('enable', 'Włącz własny cache HTML z prywatną kopią i kontrolą hashów', $review['review_hash']);
-            } else { echo '<p><strong>Cache włączony.</strong> Ścieżki: ' . (int) ($state['paths'] ?? 0) . '; TTL 1800 s. Dowód odpowiedzi: X-ZP-Cache HIT/MISS/BYPASS.</p>'; self::form('purge', 'Odśwież własny cache'); }
+            } else { echo '<p><strong>Cache włączony.</strong> Ścieżki: ' . (int) ($state['paths'] ?? 0) . '; TTL 1800 s. Dowód odpowiedzi: X-ZP-Cache HIT/MISS/BYPASS.</p>'; self::form('purge', 'Odśwież własny cache'); self::purge_log_table(); }
         } catch (Throwable $problem) { echo '<div class="notice notice-error"><p>' . esc_html($problem->getMessage()) . '</p></div>'; }
         if (get_option(self::BACKUP, null) !== null) { self::form('restore', 'Przywróć oryginalne pliki tylko przy zgodności naszych hashów'); }
         self::form('disable', 'Awaryjnie wyłącz podawanie HTML z cache — bez zmiany wp-config i drop-in');
@@ -383,7 +444,9 @@ final class ZP_HTML_Cache_20261009 {
 }
 add_action('admin_menu', static function () { add_submenu_page('zp-suite', 'Cache HTML', 'Cache HTML', 'manage_options', ZP_HTML_Cache_20261009::PAGE, [ZP_HTML_Cache_20261009::class, 'page']); }, 10003);
 add_action('admin_post_zp_html_cache_20261009', [ZP_HTML_Cache_20261009::class, 'handle']);
-foreach (['save_post', 'deleted_post', 'trashed_post', 'untrashed_post', 'transition_post_status', 'wp_update_nav_menu', 'switch_theme', 'upgrader_process_complete', 'created_term', 'edited_term', 'delete_term'] as $hook) { add_action($hook, [ZP_HTML_Cache_20261009::class, 'queue_purge'], PHP_INT_MAX, 0); }
+// 22.10.2026: post changes go through post_changed(), which leaves out revisions, drafts and the internal kinds.
+foreach (['save_post' => 3, 'transition_post_status' => 3, 'deleted_post' => 2] as $hook => $count) { add_action($hook, [ZP_HTML_Cache_20261009::class, 'post_changed'], PHP_INT_MAX, $count); }
+foreach (['trashed_post', 'untrashed_post', 'wp_update_nav_menu', 'switch_theme', 'upgrader_process_complete', 'created_term', 'edited_term', 'delete_term'] as $hook) { add_action($hook, [ZP_HTML_Cache_20261009::class, 'queue_purge'], PHP_INT_MAX, 0); }
 foreach (['updated_post_meta', 'added_post_meta', 'deleted_post_meta'] as $hook) { add_action($hook, [ZP_HTML_Cache_20261009::class, 'meta_changed'], PHP_INT_MAX, 3); }
 // 3.1.1: an option that is added or deleted changes pages as much as one that is updated.
 foreach (['updated_option', 'added_option', 'deleted_option'] as $hook) { add_action($hook, [ZP_HTML_Cache_20261009::class, 'option_changed'], PHP_INT_MAX, 1); }
