@@ -783,6 +783,62 @@
     }
   })();
 
+/* ===== faq 3.2.50-sklepy: FAQ w stylu stron i logo (section#faq.zpShopFaq) ===== */
+(function(){
+  'use strict';
+  // Jak na stronach: otwarcie pytania zamyka poprzednio otwarte.
+  function initZpShopFaq(){
+    var root=document.querySelector('#faq.zpShopFaq');
+    if(!root || root.getAttribute('data-zp-shop-faq-ready')==='1') return;
+    root.setAttribute('data-zp-shop-faq-ready','1');
+    var items=Array.prototype.slice.call(root.querySelectorAll('details.faq-item'));
+    items.forEach(function(item){
+      item.addEventListener('toggle',function(){
+        if(!item.open) return;
+        items.forEach(function(other){ if(other!==item && other.open) other.removeAttribute('open'); });
+      });
+    });
+  }
+  if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',initZpShopFaq,{once:true});}else{initZpShopFaq();}
+})();
+
+/* ===== poradnik 3.2.50-sklepy: zwijane karty (guide.php, $fold) ===== */
+(function(){
+  'use strict';
+  // Na komputerze pierwsza karta jest otwarta, na telefonie wszystkie zamknięte (HTML przychodzi zamknięty).
+  // Link do nagłówka karty (spis treści, adres z #) otwiera tę kartę.
+  function initZpGuideFold(){
+    var root=document.querySelector('.zpGuide--fold');
+    if(!root || root.getAttribute('data-zp-fold-ready')==='1') return;
+    root.setAttribute('data-zp-fold-ready','1');
+    var cards=root.querySelectorAll('details.zpGuide__card--fold');
+    if(!cards.length) return;
+    function openFor(hash){
+      if(!hash || hash.charAt(0)!=='#' || hash.length<2) return;
+      var id=hash.slice(1), target=null;
+      try{ id=decodeURIComponent(id); }catch(e){}
+      target=document.getElementById(id);
+      var card=target && target.closest ? target.closest('details.zpGuide__card--fold') : null;
+      if(card && !card.open) card.open=true;
+    }
+    var wide=false;
+    try{ wide=window.matchMedia('(min-width: 761px)').matches; }catch(e){}
+    if(wide) cards[0].open=true;
+    openFor(window.location.hash);
+    document.addEventListener('click',function(ev){
+      var a=ev.target && ev.target.closest ? ev.target.closest('a[href*="#"]') : null;
+      if(!a) return;
+      var href=a.getAttribute('href')||'';
+      var at=href.indexOf('#');
+      var path=href.slice(0,at);
+      if(path!=='' && a.pathname!==window.location.pathname) return;
+      openFor(href.slice(at));
+    });
+    window.addEventListener('hashchange',function(){ openFor(window.location.hash); });
+  }
+  if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',initZpGuideFold,{once:true});}else{initZpGuideFold();}
+})();
+
 /* ===== ZP Shop Katowice deep links / CTA cleanup ===== */
 (function(){
   'use strict';
