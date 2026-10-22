@@ -499,7 +499,7 @@ return [
 'Websites for property developers | Zaprojektowani'=>'Strony internetowe dla deweloperów | Zaprojektowani',
 'Websites for property developers • residential developments'=>'Strony dla deweloperów • inwestycje mieszkaniowe',
 'Websites for property developers: unit search and unit cards, transparent prices with history, location, finish standard and mobile-friendly inquiry forms.'=>'Strony internetowe dla deweloperów: wyszukiwarka i karty lokali, jawne ceny z historią, lokalizacja, standard i formularze zapytań wygodne na telefonie.',
-'What must a property developer’s website include after the regulatory changes?'=>'Co musi zawierać strona dewelopera po zmianie przepisów?',
+'What must a property developer’s website include after the regulatory changes?'=>'Co musi zawierać strona dla dewelopera po zmianie przepisów?',
 'What the website includes'=>'Co zawiera strona',
 'What to fix before you launch ads and SEO.'=>'Co poprawić, zanim ruszą reklamy i SEO.',
 'What we design'=>'Co projektujemy',

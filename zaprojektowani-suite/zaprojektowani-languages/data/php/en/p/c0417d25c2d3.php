@@ -110,6 +110,7 @@ return [
 'Jak wymyślić nazwę firmy? Metody, przykłady i co sprawdzić przed wyborem'=>'How to come up with a business name? Methods, examples and what to check before choosing',
 'Jak zadbać o poufność w formularzu kontaktowym?'=>'How do you ensure confidentiality in the contact form?',
 'Jak zaplanować stronę, która informuje zgodnie z zasadami samorządu, odpowiada na pytania klientów i przyciąga ruch z Google bez agresywnej reklamy.'=>'How to plan a website that informs in line with bar rules, answers clients\' questions and attracts Google traffic without aggressive advertising.',
+'Jak zaplanować stronę internetową dla prawnika lub kancelarii, która informuje zgodnie z zasadami samorządu, odpowiada na pytania klientów i przyciąga ruch z Google bez agresywnej reklamy.'=>'How to plan a website that informs in line with bar rules, answers clients\' questions and attracts Google traffic without aggressive advertising.',
 'Jak zbudować strategię marki? Elementy, przykład i plan krok po kroku'=>'How to build a brand strategy? Elements, an example and a step-by-step plan',
 'Jedna spójna ścieżka'=>'One consistent path',
 'Jesteśmy online'=>'We\'re online',

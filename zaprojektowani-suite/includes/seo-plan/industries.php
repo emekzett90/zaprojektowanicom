@@ -334,7 +334,9 @@ add_action('wp_enqueue_scripts', static function () {
   if (!zp_seo_plan_active()) { return; }
   $path = zp_seo_industry_page_path();
   if (zp_seo_industry_key($path) === '' && !in_array($path, zp_seo_industry_block_pages(), true)) { return; }
-  wp_enqueue_style('zp-industries-297', ZP_SUITE_URL . 'assets/css/blocks/industries.css', [], ZP_SEO_PLAN_VERSION);
+  // 3.2.5x: the file's own date in the address, so browsers fetch it again after each change (the plan's version stays 2.9.13).
+  $file = ZP_SUITE_PATH . 'assets/css/blocks/industries.css';
+  wp_enqueue_style('zp-industries-297', ZP_SUITE_URL . 'assets/css/blocks/industries.css', [], is_file($file) ? (string) filemtime($file) : ZP_SEO_PLAN_VERSION);
 }, 1001);
 
 /**

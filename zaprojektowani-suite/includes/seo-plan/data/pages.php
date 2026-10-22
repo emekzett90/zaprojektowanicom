@@ -501,7 +501,7 @@ return [
       'lead' => 'O przepisach, cenach, aktualizacji lokali, integracjach i kampaniach.',
       'items' => [
         [
-          'Co musi zawierać strona dewelopera po zmianie przepisów?',
+          'Co musi zawierać strona dla dewelopera po zmianie przepisów?',
           'Od 11 lipca 2025 roku na stronie dewelopera muszą być ceny za metr i ceny całkowite lokali, ceny pomieszczeń przynależnych i praw niezbędnych do korzystania z lokalu, inne obowiązkowe opłaty oraz historia zmian cen. Szczegóły dla konkretnej inwestycji warto potwierdzić z prawnikiem.',
         ],
         [
@@ -652,7 +652,7 @@ return [
     'guide' => [
       'kicker' => 'Poradnik',
       'title' => 'Strona internetowa dla kancelarii. <strong>Zaufanie, etyka i widoczność.</strong>',
-      'lead' => 'Jak zaplanować stronę, która informuje zgodnie z zasadami samorządu, odpowiada na pytania klientów i przyciąga ruch z Google bez agresywnej reklamy.',
+      'lead' => 'Jak zaplanować stronę internetową dla prawnika lub kancelarii, która informuje zgodnie z zasadami samorządu, odpowiada na pytania klientów i przyciąga ruch z Google bez agresywnej reklamy.',
       'id' => 'poradnik-strony-dla-kancelarii',
       'body' => '<h2 id="czego-klient-szuka-na-stronie-kancelarii">Czego klient szuka na stronie kancelarii</h2>
 <p>Większość osób trafia na stronę kancelarii z konkretnym problemem: wypowiedzeniem umowy, podziałem majątku, długami firmy, sprawą spadkową. Szuka trzech odpowiedzi: czy kancelaria prowadzi takie sprawy, kto się nią zajmie i jak wygląda pierwszy krok. Dlatego strona internetowa dla prawnika powinna być zbudowana wokół sytuacji klienta, a nie wokół listy przepisów i dziedzin prawa.</p>
@@ -844,7 +844,7 @@ return [
 <p>Strony internetowe realizujemy od 3 999 zł, a domena i hosting są w cenie strony. Strona jednoosobowego gabinetu z kilkoma usługami mieści się zwykle w mniejszych pakietach, a serwis kliniki z wieloma specjalistami, rejestracją online i blogiem to projekt z pakietu Premium albo indywidualny. Zakres pakietów znajdziesz na stronie <a class="zpSeoLink" href="/tworzenie-stron-internetowych/">tworzenie stron internetowych</a>, a kwotę dla Twojej placówki podamy po wypełnieniu <a class="zpSeoLink" href="/studio-wyceny/">Studia Wyceny</a>.</p>',
     ],
     'faq' => [
-      'kicker' => 'FAQ / strony medyczne',
+      'kicker' => 'FAQ / strony dla lekarzy',
       'title' => 'Pytania lekarzy <strong>i gabinetów.</strong>',
       'lead' => 'O przepisach, cenach, rejestracji online, danych pacjentów i widoczności w okolicy.',
       'items' => [
@@ -865,7 +865,7 @@ return [
           'Strony internetowe dla lekarzy realizujemy od 3 999 zł z domeną i hostingiem w cenie. Na cenę wpływają liczba usług i specjalistów, rejestracja online, wersje językowe i zakres tekstów. Dokładną kwotę podajemy po wypełnieniu Studia Wyceny.',
         ],
         [
-          'Czy robicie strony dla psychologów i psychoterapeutów?',
+          'Czy robicie stronę internetową dla psychologa lub psychoterapeuty?',
           'Tak. Projektujemy je spokojniej niż typowe strony usługowe: z dyskretnym zapisem na sesję, informacją o pracy online i stacjonarnie, cenie spotkania i nurcie, bez konieczności opisywania problemu w formularzu.',
         ],
         [
