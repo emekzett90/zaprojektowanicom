@@ -492,7 +492,8 @@ function zp_seo_service_spec(string $variant): ?array {
     case 'strony-national':
       return [
         'kind' => 'strony',
-        'h1' => 'Tworzenie i projektowanie <strong class="gradient-text">stron internetowych dla firm</strong>',
+        // 3.2.5x: "dla firm" stays together, so the hero heading ends with it on its own line (industries.css, 8).
+        'h1' => 'Tworzenie i projektowanie <strong class="gradient-text">stron internetowych dla&nbsp;firm</strong>',
         'faq' => [
           ['new', 'Czy tworzycie strony internetowe dla firm z całej Polski?', 'Tak. Projektujemy i tworzymy strony internetowe dla firm z całej Polski — <strong>strony firmowe, ' . $L('/strona-wizytowka/', 'strony wizytówki') . ', landing page’e i rozbudowane serwisy</strong>. Brief, prezentacje i odbiory prowadzimy online, a z firmami ze Śląska spotykamy się też w naszym biurze w Katowicach.' . $AS('/strony-internetowe/rodzaje-stron-internetowych/', ' Czym różnią się ', 'rodzaje stron internetowych', ' i który wybrać, wyjaśniamy w osobnym poradniku.')],
           ['keep', 2], ['keep', 3], ['keep', 4],

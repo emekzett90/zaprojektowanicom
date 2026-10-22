@@ -76,6 +76,7 @@ return [
 'Chcesz podobny projekt? Opisz cel, funkcje i materiały — przygotujemy zakres dopasowany do Twojej firmy.'=>'Want a similar project? Describe the goal, features and materials — we\'ll prepare a scope tailored to your business.',
 'Chcesz, żebyśmy oddzwonili?'=>'Would you like us to call you back?',
 'Co musi zawierać strona dewelopera po zmianie przepisów?'=>'What must a property developer’s website include after the regulatory changes?',
+'Co musi zawierać strona dla dewelopera po zmianie przepisów?'=>'What must a property developer’s website include after the regulatory changes?',
 'Co poprawić, zanim ruszą reklamy i SEO.'=>'What to fix before you launch ads and SEO.',
 'Co projektujemy'=>'What we design',
 'Co zawiera strona'=>'What the website includes',
