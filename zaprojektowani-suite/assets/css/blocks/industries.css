@@ -307,3 +307,129 @@
   #zp-strony-internetowe-katowice .zpIndCard__go,
   #zp-strony-internetowe-katowice .zpIndCard__go svg { transition: none; }
 }
+
+/* 7. 3.2.5x (Mat 17.10 and 21.10, point 1): the eight industry pages read less like the general
+   website template. Only the sections after an industry hero change ("~" keeps every other page as it was).
+   7a. "Co projektujemy": the first card (text and the full industry photo, 3.2.16) stands on the left and
+   the other five points become an editorial list with hairlines instead of five grey boxes. */
+@media (min-width: 1101px) {
+  html body #zp-strony-internetowe-katowice .hero[data-zp-industry] ~ #zakres .scope-grid {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    grid-auto-rows: auto;
+    column-gap: clamp(44px, 5.2vw, 104px);
+    row-gap: 0;
+    align-items: start;
+  }
+  html body #zp-strony-internetowe-katowice .hero[data-zp-industry] ~ #zakres .scope-card:first-child {
+    grid-column: 1;
+    grid-row: 1 / span 5;
+    position: sticky;
+    top: 112px;
+  }
+  html body #zp-strony-internetowe-katowice .hero[data-zp-industry] ~ #zakres .scope-card:not(:first-child) {
+    grid-column: 2;
+    grid-row: auto;
+    display: grid;
+    grid-template-columns: clamp(118px, 9vw, 150px) minmax(0, 1fr);
+    column-gap: 24px;
+    padding: 30px 0 32px;
+  }
+  html body #zp-strony-internetowe-katowice .hero[data-zp-industry] ~ #zakres .scope-card:not(:first-child) .scope-num {
+    grid-column: 1;
+    grid-row: 1 / span 2;
+    padding-top: .75em;
+  }
+  html body #zp-strony-internetowe-katowice .hero[data-zp-industry] ~ #zakres .scope-card:not(:first-child) :is(h3, p) { grid-column: 2; }
+}
+html body #zp-strony-internetowe-katowice .hero[data-zp-industry] ~ #zakres .scope-card:not(:first-child) {
+  min-height: 0;
+  margin: 0;
+  overflow: visible;
+  border: 0;
+  border-top: 1px solid rgba(5, 7, 11, .12);
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+  transform: none;
+}
+html body #zp-strony-internetowe-katowice .hero[data-zp-industry] ~ #zakres .scope-card:last-child { border-bottom: 1px solid rgba(5, 7, 11, .12); }
+html body #zp-strony-internetowe-katowice .hero[data-zp-industry] ~ #zakres .scope-card:not(:first-child):hover { transform: none; box-shadow: none; }
+html body #zp-strony-internetowe-katowice .hero[data-zp-industry] ~ #zakres .scope-card:not(:first-child) :is(.scope-icon, .card-spot) { display: none; }
+html body #zp-strony-internetowe-katowice .hero[data-zp-industry] ~ #zakres .scope-card:not(:first-child) .scope-num {
+  display: block;
+  color: #1c477a;
+  font-size: 11px;
+  font-weight: 800;
+  line-height: 1.5;
+  letter-spacing: .12em;
+}
+html body #zp-strony-internetowe-katowice .hero[data-zp-industry] ~ #zakres .scope-card:not(:first-child) h3 {
+  max-width: 24ch;
+  margin: 0;
+  font-size: clamp(24px, 1.95vw, 32px);
+  line-height: 1.12;
+  letter-spacing: -.045em;
+}
+html body #zp-strony-internetowe-katowice .hero[data-zp-industry] ~ #zakres .scope-card:not(:first-child) p {
+  max-width: 58ch;
+  margin: 12px 0 0;
+  color: #566275;
+  font-size: 15px;
+  line-height: 1.72;
+}
+@media (max-width: 1100px) {
+  html body #zp-strony-internetowe-katowice .hero[data-zp-industry] ~ #zakres .scope-grid { display: block; }
+  html body #zp-strony-internetowe-katowice .hero[data-zp-industry] ~ #zakres .scope-card:first-child { margin-bottom: 28px; }
+  html body #zp-strony-internetowe-katowice .hero[data-zp-industry] ~ #zakres .scope-card:not(:first-child) { padding: 24px 0 26px; }
+  html body #zp-strony-internetowe-katowice .hero[data-zp-industry] ~ #zakres .scope-card:not(:first-child) h3 { margin-top: 10px; font-size: clamp(22px, 5.6vw, 27px); }
+  html body #zp-strony-internetowe-katowice .hero[data-zp-industry] ~ #zakres .scope-card:not(:first-child) p { font-size: 14.5px; }
+}
+
+/* 7b. "Poradnik": the opening chapter keeps its dark card; the other chapters read as an article,
+   with the chapter number in the margin, larger type and a hairline between chapters. */
+html body #zp-strony-internetowe-katowice .hero[data-zp-industry] ~ .zpSeoPlanGuide .zpGuide__main { gap: 0; }
+html body #zp-strony-internetowe-katowice .hero[data-zp-industry] ~ .zpSeoPlanGuide .zpGuide__card--accent { margin-bottom: clamp(18px, 2vw, 30px); }
+/* The band's cut-out photo reaches 70-90 px above it. The white card of the chapter before it used to
+   take that overlap, so without the card the band keeps the room itself and the photo never covers text. */
+html body #zp-strony-internetowe-katowice .hero[data-zp-industry] ~ .zpSeoPlanGuide .zpGuide__band { margin-block: clamp(64px, 5.5vw, 84px) clamp(26px, 3vw, 44px); }
+html body #zp-strony-internetowe-katowice .hero[data-zp-industry] ~ .zpSeoPlanGuide .zpGuide__card:not(.zpGuide__card--accent):not(.zpGuide__card--intro) {
+  padding: clamp(30px, 3vw, 46px) 0;
+  overflow: visible;
+  border: 0;
+  border-top: 1px solid rgba(5, 7, 11, .12);
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+  transform: none;
+}
+html body #zp-strony-internetowe-katowice .hero[data-zp-industry] ~ .zpSeoPlanGuide .zpGuide__card:not(.zpGuide__card--accent):not(.zpGuide__card--intro)::after { content: none; }
+html body #zp-strony-internetowe-katowice .hero[data-zp-industry] ~ .zpSeoPlanGuide .zpGuide__card:not(.zpGuide__card--accent):not(.zpGuide__card--intro) .zpGuide__icon { display: none; }
+html body #zp-strony-internetowe-katowice .hero[data-zp-industry] ~ .zpSeoPlanGuide .zpGuide__card:not(.zpGuide__card--accent):not(.zpGuide__card--intro) .zpGuide__num { color: #1c477a; font-size: 11px; line-height: 1.5; }
+html body #zp-strony-internetowe-katowice .hero[data-zp-industry] ~ .zpSeoPlanGuide .zpGuide__card:not(.zpGuide__card--accent):not(.zpGuide__card--intro) h2 {
+  max-width: 26ch;
+  margin-top: 14px;
+  font-size: clamp(27px, 2.35vw, 40px);
+  line-height: 1.1;
+  letter-spacing: -.048em;
+}
+html body #zp-strony-internetowe-katowice .hero[data-zp-industry] ~ .zpSeoPlanGuide .zpGuide__card:not(.zpGuide__card--accent):not(.zpGuide__card--intro) .zpGuide__text {
+  max-width: 70ch;
+  margin-top: 18px;
+  color: #4b5668;
+  font-size: clamp(15.5px, 1.08vw, 17px);
+  line-height: 1.8;
+}
+@media (min-width: 1101px) {
+  html body #zp-strony-internetowe-katowice .hero[data-zp-industry] ~ .zpSeoPlanGuide .zpGuide__card:not(.zpGuide__card--accent):not(.zpGuide__card--intro) {
+    display: grid;
+    grid-template-columns: clamp(84px, 7vw, 120px) minmax(0, 1fr);
+    column-gap: 20px;
+  }
+  html body #zp-strony-internetowe-katowice .hero[data-zp-industry] ~ .zpSeoPlanGuide .zpGuide__card:not(.zpGuide__card--accent):not(.zpGuide__card--intro) .zpGuide__cardHead { align-items: flex-start; padding-top: .55em; }
+  html body #zp-strony-internetowe-katowice .hero[data-zp-industry] ~ .zpSeoPlanGuide .zpGuide__card:not(.zpGuide__card--accent):not(.zpGuide__card--intro) h2 { margin-top: 0; }
+}
+@media (max-width: 760px) {
+  html body #zp-strony-internetowe-katowice .hero[data-zp-industry] ~ .zpSeoPlanGuide .zpGuide__card:not(.zpGuide__card--accent):not(.zpGuide__card--intro) { padding: 28px 0; }
+  html body #zp-strony-internetowe-katowice .hero[data-zp-industry] ~ .zpSeoPlanGuide .zpGuide__band { margin-top: 80px; }
+  html body #zp-strony-internetowe-katowice .hero[data-zp-industry] ~ .zpSeoPlanGuide .zpGuide__card:not(.zpGuide__card--accent):not(.zpGuide__card--intro) h2 { font-size: clamp(25px, 7vw, 30px); }
+}
