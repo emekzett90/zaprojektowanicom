@@ -9,9 +9,13 @@
  * English comes out shorter or longer; two Polish case study descriptions were 161 and 162 characters. A page keeps
  * its own text unless it is still out of that range; then it gets the one below (descriptions of 120 to 155
  * characters, titles of at most 60), on the same subject and in the same tone. English prices are written in PLN:
- * the English pages show them in dollars, as everywhere else (en-public-currency-20261011.php runs after this). A
- * Facebook or X copy that repeats the old text follows it, and a text from the language module's manual overrides
- * (zpl_overrides) stays as it is. Keys are the addresses Ahrefs listed; nothing is saved in WordPress.
+ * the English pages show them in dollars, as everywhere else (en-public-currency-20261011.php runs after this), and
+ * an English text has to fit in dollars too. A Facebook or X copy that repeats the old text follows it, and a text
+ * from the language module's manual overrides (zpl_overrides) stays as it is, unless its row says 'replace_manual'.
+ * Keys are the addresses Ahrefs listed; nothing is saved in WordPress.
+ *
+ * Crawl of 22.10 (after 3.2.56): two descriptions were still too long. /en/quote-studio/ had 159 characters in PLN
+ * and 161 in dollars, and /en/logo-branding/build-brand-strategy-step-by-step/ has a manual override of 191.
  */
 if (!defined('ABSPATH')) { exit; }
 
@@ -31,7 +35,9 @@ function zp_ahrefs_20261022_meta_rows(): array {
     '/en/advertising-campaigns/google-ads-cost/' => ['description' => 'How much does Google Ads cost? You pay per click and set the budget yourself: how Google charges, a test budget, and management from PLN 1,200/mo.'],
     '/en/meta-ads-campaigns/when-to-launch-facebook-ads-and-prepare-your-website/' => ['description' => 'Facebook Ads campaigns need a clear offer, measurement and a landing page. See what your business should prepare before spending its first ad budget.'],
     '/en/logo-branding/logo-vs-wordmark-symbol-differences-choice/' => ['description' => 'Logo, wordmark and symbol: the differences explained with examples from well-known brands, and when a business needs only a wordmark or also a symbol.'],
-    '/en/logo-branding/build-brand-strategy-step-by-step/' => ['description' => 'A brand strategy defines who your company is for, what sets it apart and how it speaks: the 9 elements, a 7-step plan and an example for a small business.'],
+    // Its 191 characters come from a manual override (Języki PL/EN → Poprawki tłumaczeń). Only the meta tags of this
+    // page change; the override stays and still translates the same Polish text everywhere else.
+    '/en/logo-branding/build-brand-strategy-step-by-step/' => ['description' => 'A brand strategy defines who your company is for, what sets it apart and how it speaks: the 9 elements, a 7-step plan and an example for a small business.', 'replace_manual' => true],
     '/en/websites/business-website-audit-before-ads-and-seo/' => ['description' => 'Audit your business website before ads or SEO: find the issues that hurt conversions and stop spending budget on traffic that brings no inquiries.'],
     '/en/logo-branding/rebranding-without-losing-brand-recognition/' => ['description' => 'Rebranding without losing recognition means keeping key elements and planning the rollout. Review changes to your logo, messaging and business materials.'],
     '/en/ux-cro-analytics/mistakes-that-hurt-business-website-performance/' => ['description' => 'What makes a business website less effective: an unclear offer, UX issues, slow pages and forms. How to identify the problems and prioritise improvements.'],
@@ -70,6 +76,22 @@ function zp_ahrefs_20261022_meta_fits(string $kind, string $text): bool {
   return $kind === 'title' ? $length <= 60 : $length >= 100 && $length <= 160;
 }
 
+/**
+ * The text with its prices in dollars, as English pages show it (en-public-currency-20261011.php, priority 10).
+ * "PLN 3,999" becomes "$1,050 USD", so the length moves by a character or two per price: /en/quote-studio/ had
+ * 159 characters in PLN and 161 in dollars in the Ahrefs crawl of 22.10.
+ */
+function zp_ahrefs_20261022_in_dollars(string $text): string {
+  if (!class_exists('ZP_EN_Public_Currency_20261011') || !preg_match('~PLN|zł~iu', $text)) { return $text; }
+  $rate = ZP_EN_Public_Currency_20261011::rate();
+  if (!$rate) { return $text; }
+  try {
+    return ZP_EN_Public_Currency_20261011::money_text($text, (int) $rate['mid_scaled']);
+  } catch (\Throwable $e) {
+    return $text;
+  }
+}
+
 /** Filter zp_en_public_price_html (languages module, both languages), before the dollar prices. */
 function zp_ahrefs_20261022_meta_html(string $html, string $lang, string $source): string {
   if (!class_exists('ZPL\\Router') || !class_exists('ZPL\\Html') || !class_exists('ZPL\\Dict')) { return $html; }
@@ -78,12 +100,17 @@ function zp_ahrefs_20261022_meta_html(string $html, string $lang, string $source
   if ($row === null || ($lang === 'en') !== (strpos($path, '/en/') === 0)) { return $html; }
   if (!preg_match('~<head\b[^>]*>.*?</head>~is', $html, $head, PREG_OFFSET_CAPTURE)) { return $html; }
   $part = $head[0][0];
-  $kept = $lang === 'en' ? array_map('strval', array_values(\ZPL\Dict::overrides('en'))) : [];
+  $kept = $lang === 'en' && empty($row['replace_manual']) ? array_map('strval', array_values(\ZPL\Dict::overrides('en'))) : [];
   $old = ['title' => null, 'description' => null];
+  // An English text has to fit both now and once its prices are in dollars (the conversion runs after this filter
+  // and only when its own conditions hold).
+  $fits = static function (string $kind, string $text) use ($lang): bool {
+    return zp_ahrefs_20261022_meta_fits($kind, $text) && ($lang !== 'en' || zp_ahrefs_20261022_meta_fits($kind, zp_ahrefs_20261022_in_dollars($text)));
+  };
 
   if (isset($row['title']) && preg_match('~(<title\b[^>]*>)(.*?)</title>~is', $part, $t, PREG_OFFSET_CAPTURE)) {
     $now = trim(\ZPL\Html::decode($t[2][0]));
-    if (!zp_ahrefs_20261022_meta_fits('title', $now) && !in_array($now, $kept, true)) {
+    if (!$fits('title', $now) && !in_array($now, $kept, true)) {
       $old['title'] = $now;
       $part = substr_replace($part, esc_html($row['title']), $t[2][1], strlen($t[2][0]));
     }
@@ -93,7 +120,7 @@ function zp_ahrefs_20261022_meta_html(string $html, string $lang, string $source
       $a = \ZPL\Html::attrs($tag);
       if (strtolower($a['name'] ?? '') !== 'description' || !isset($a['content'])) { continue; }
       $now = trim($a['content']);
-      if (!zp_ahrefs_20261022_meta_fits('description', $now) && !in_array($now, $kept, true)) { $old['description'] = $now; }
+      if (!$fits('description', $now) && !in_array($now, $kept, true)) { $old['description'] = $now; }
       break;
     }
   }
