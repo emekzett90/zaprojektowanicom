@@ -35,11 +35,16 @@ function zp_cs18_image(array $asset, string $alt, string $class = '', bool $eage
     }
     if (($asset['kind'] ?? '') === 'website_screenshot' && !empty($asset['srcset']) && is_array($asset['srcset'])) {
         $candidates = [];
+        $narrow = null;
         foreach ($asset['srcset'] as $candidate) {
             if (!is_array($candidate) || empty($candidate['local']) || empty($candidate['width'])) { continue; }
             $candidates[] = zp_cs18_asset($candidate) . ' ' . (int) $candidate['width'] . 'w';
+            if ($narrow === null || (int) $candidate['width'] < (int) $narrow['width']) { $narrow = $candidate; }
         }
         if ($candidates) { $extra = ' srcset="' . esc_attr(implode(', ', $candidates)) . '"'; }
+        // Ahrefs 21.10.2026: src was the 3500px original (2.5 and 2.9 MB), flagged as an image too large. Browsers pick
+        // a file from srcset and never load src next to it, so src is the narrowest copy (960px); the page is unchanged.
+        if ($narrow !== null && ($small = zp_cs18_asset($narrow))) { $src = $small; }
         // Screenshots occupy one column of the site's standard 1750px content width.
         $sizes = '(max-width: 860px) calc(100vw - 40px), (max-width: 1846px) calc((100vw - 176px) / 2), 835px';
     }

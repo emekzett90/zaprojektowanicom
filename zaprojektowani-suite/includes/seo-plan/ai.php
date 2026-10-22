@@ -666,7 +666,13 @@ add_filter('zp_seo_plan_business_node', function ($node) {
   $node['knowsAbout'] = array_values(array_unique(array_merge((array) ($node['knowsAbout'] ?? []), array_keys(zp_ai_topics()))));
   $node['sameAs'] = array_values(array_unique(array_merge((array) ($node['sameAs'] ?? []), zp_ai_profiles())));
   $node['areaServed'] = [['@type' => 'Country', 'name' => 'Polska'], ['@type' => 'City', 'name' => 'Katowice']];
-  $node['availableLanguage'] = ['pl', 'en'];
+  // Ahrefs 21.10.2026: schema.org has no availableLanguage on a ProfessionalService (only on a ContactPoint and a
+  // few other types), which failed validation on every page; the languages now sit on the business's contact point.
+  unset($node['availableLanguage']);
+  $contact = ['@type' => 'ContactPoint', 'contactType' => 'customer service'];
+  foreach (['telephone', 'email'] as $key) { if (!empty($node[$key])) { $contact[$key] = $node[$key]; } }
+  $contact['availableLanguage'] = ['pl', 'en'];
+  $node['contactPoint'] = [$contact];
   if (function_exists('zp_seo_plan_team') && function_exists('zp_seo_plan_person_node')) {
     $node['employee'] = [];
     foreach (zp_seo_plan_team() as $person) { $node['employee'][] = ['@id' => zp_seo_plan_person_node($person)['@id']]; }
