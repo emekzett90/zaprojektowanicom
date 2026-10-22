@@ -1,0 +1,47 @@
+/* Realizacje 21.10.2026 (Mat, points 4 and 5). Inlined after blocks/realizacje-page(.min).css by
+   includes/realizacje-tech-3250.php, so it follows the 2.2.783 card rules of that file. */
+
+/* 4. Desktop and tablet: every card gets the 4:3 thumbnail of the logo cards, so a website card in the same row
+   (Altiora Linea next to Natalia Arciszewska and Zgórecki) is no longer shorter. Website and shop mockups are
+   cover-cropped at the sides, centred. Phones (one card per row) keep the 2.2.783 ratios. */
+@media (min-width:701px){
+  #zpRealizacjePage .grid .card .cardMedia{aspect-ratio:4/3!important}
+  #zpRealizacjePage .grid .card .cardMedia>img{width:100%;height:100%;object-fit:cover;object-position:center center}
+}
+
+/* 5a. Card: one row of small marks under the service chips. One monochrome treatment (grey silhouettes;
+   AIPKIT, a mark on a dark square, in greyscale), original colours on card hover. */
+#zpRealizacjePage .techRow{display:flex;flex-wrap:wrap;align-items:center;gap:8px 11px;margin:13px 0 0;min-height:20px}
+#zpRealizacjePage .techMark{display:inline-flex;align-items:center;flex:0 0 auto;height:20px}
+#zpRealizacjePage .techMark img{display:block;width:18px;height:18px;object-fit:contain;filter:brightness(0);opacity:.48;transition:filter .22s ease,opacity .22s ease}
+#zpRealizacjePage .techMark--mark img{width:auto;height:15px;max-width:72px}
+#zpRealizacjePage .techMark--crop img{width:36px;height:18px;object-fit:cover}
+#zpRealizacjePage .techMark--text{color:#7a8594;font-size:10px;font-weight:800;letter-spacing:.01em;white-space:nowrap}
+#zpRealizacjePage .techMore{display:inline-flex;align-items:center;height:20px;padding:0 7px;border-radius:999px;border:1px solid var(--hair);color:#6f7b8e;font-size:9.5px;font-weight:800;letter-spacing:.02em}
+#zpRealizacjePage .techMark.techMark--aipkit img{filter:grayscale(1)}
+@media (hover:hover) and (pointer:fine){#zpRealizacjePage .card:hover .techMark img{filter:none;opacity:1}}
+
+/* 5b. Sheet: "Technologie projektu", each technology with its mark, name and role in the project. */
+#zpRealizacjePage .techGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+#zpRealizacjePage .techTile{display:grid;grid-template-columns:68px minmax(0,1fr);gap:14px;align-items:center;min-width:0;border:1px solid var(--hair);border-radius:16px;padding:12px 14px;background:#fff}
+#zpRealizacjePage .techTileLogo{display:grid;place-items:center;width:68px;height:46px;border-radius:12px;border:1px solid var(--hair);background:var(--paper2);color:#6f7b8e;overflow:hidden}
+#zpRealizacjePage .techTileLogo img{display:block;width:24px;height:24px;object-fit:contain;filter:brightness(0);opacity:.55;transition:filter .22s ease,opacity .22s ease}
+#zpRealizacjePage .techTileLogo--mark img{width:54px;height:22px}
+#zpRealizacjePage .techTileLogo--crop img{width:56px;height:28px;object-fit:cover}
+#zpRealizacjePage .techTileLogo svg{width:18px;height:18px}
+#zpRealizacjePage .techTileLogo.techTileLogo--aipkit img{filter:grayscale(1)}
+@media (hover:hover) and (pointer:fine){#zpRealizacjePage .techTile:hover .techTileLogo img{filter:none;opacity:1}}
+#zpRealizacjePage .techText{min-width:0}
+#zpRealizacjePage .techTile b{display:block;color:var(--ink);font-size:12.5px;font-weight:800;letter-spacing:-.01em;line-height:1.3}
+#zpRealizacjePage .techTile small{display:block;margin-top:3px;color:var(--mut);font-size:11px;line-height:1.4;font-weight:600}
+/* The sheet links to the published case study (Altiora Linea, Siemianowski, Apartament Piękna) under the services. */
+#zpRealizacjePage .caseMore{display:flex;margin-top:18px}
+@media (max-width:1240px){#zpRealizacjePage .techGrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:700px){
+  #zpRealizacjePage .techGrid{grid-template-columns:1fr;gap:8px}
+  #zpRealizacjePage .techTile{grid-template-columns:54px minmax(0,1fr);gap:12px;padding:9px 12px}
+  #zpRealizacjePage .techTileLogo{width:54px;height:38px}
+  #zpRealizacjePage .techTileLogo--mark img{width:44px;height:18px}
+  #zpRealizacjePage .techTileLogo--crop img{width:44px;height:22px}
+  #zpRealizacjePage .caseMore .btn{width:100%}
+}

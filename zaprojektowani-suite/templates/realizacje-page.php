@@ -52,6 +52,7 @@ $zp_featured = array_slice($zp_featured,0,3);
 <script id="zp-realizacje-cms-data">
 window.zpRealizacjeProjects = <?php echo wp_json_encode($zp_real_projects, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES); ?>;
 </script>
+<?php if (function_exists('zp_rt50_data_script')) { echo zp_rt50_data_script(); } ?>
 <section id="zpRealizacjePage" aria-labelledby="zpRealizacjeTitle">
 
 <?php /* A div, not a header, so the heading check in ultimate-seo/ultimate.php always counts this H1 (before 3.1.0 it skipped headers outside main and made the featured h2 a second H1). Looks the same. */ ?>
@@ -82,8 +83,8 @@ window.zpRealizacjeProjects = <?php echo wp_json_encode($zp_real_projects, JSON_
               <img src="https://zaprojektowani.com/wp-content/uploads/2026/05/trustindex_logo_wieksze.webp" alt="Trustindex" loading="lazy" decoding="async">
             </span>
             <span class="heroTrust__meta">
-              <strong>5.0 / 5</strong>
-              <small>120 opinii klientów · zweryfikowane w Trustindex</small>
+              <strong><?php echo esc_html(zp_reviews_rating_text(function_exists('zp_home_refresh_english') && zp_home_refresh_english())); ?> / 5</strong>
+              <small><?php echo (int) zp_reviews_aggregate()['count']; ?> opinii klientów · zweryfikowane w Trustindex</small>
             </span>
             <span class="heroTrust__score">★★★★★</span>
           </a>
@@ -174,6 +175,7 @@ window.zpRealizacjeProjects = <?php echo wp_json_encode($zp_real_projects, JSON_
           <div class="cardSub"><?php echo esc_html($p['sub'] ?? ''); ?></div>
           <p class="cardDesc"><?php echo esc_html($p['desc'] ?? ''); ?></p>
           <?php if ($services): ?><div class="chips"><?php foreach ($services as $service): ?><span><?php echo esc_html($service); ?></span><?php endforeach; ?></div><?php endif; ?>
+          <?php if (function_exists('zp_rt50_row_html')) { echo zp_rt50_row_html($p); } ?>
           <div class="cardActions">
             <a class="more" href="#case-<?php echo esc_attr($slug); ?>" data-open="<?php echo (int)$i; ?>"><span>Zobacz case study</span><i data-lucide="arrow-up-right"></i></a>
             <?php if (!empty($p['case_url'])): ?><a class="more zpCaseStudyLink" href="<?php echo esc_url($p['case_url']); ?>"><span>Pełny opis realizacji</span><i data-lucide="arrow-up-right"></i></a><?php endif; ?>

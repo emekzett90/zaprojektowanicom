@@ -23,11 +23,13 @@ function zp_seo_plan_projects_count(): int {
 function zp_seo_plan_apply_projects_count(string $html): string {
   $n = (string) zp_seo_plan_projects_count();
   $html = preg_replace_callback('~<b data-count="120" data-suffix="\+">(0|120\+)</b><span>projektów</span>~', static function ($m) use ($n) {
-    return '<b data-count="' . $n . '" data-suffix="+">' . ($m[1] === '0' ? '0' : $n . '+') . '</b><span>projektów</span>';
+    return '<b data-count="' . $n . '" data-suffix="+">' . $n . '+</b><span>projektów</span>';
   }, $html);
   $html = str_replace(['ponad <em>114 marek</em>', '<strong>114+</strong>'], ['ponad <em>' . $n . ' marek</em>', '<strong>' . $n . '+</strong>'], $html);
   $html = str_replace('<strong data-count="60" data-suffix="+">60+</strong><span>projektów online</span>', '<strong data-count="' . $n . '" data-suffix="+">' . $n . '+</strong><span>projektów</span>', $html);
   $html = str_replace('Mamy za sobą 114+ projektów', 'Mamy za sobą ' . $n . '+ projektów', $html);
+  // Mat 21.10.2026, point 6: the shop hero printed "0" until its counter script ran, so crawlers and no-JS readers saw "0 lat doświadczenia".
+  $html = str_replace('<b data-count="10" data-suffix="+">0</b><span>lat doświadczenia zespołu</span>', '<b data-count="10" data-suffix="+">10+</b><span>lat doświadczenia zespołu</span>', $html);
   return $html;
 }
 

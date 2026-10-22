@@ -97,8 +97,10 @@ function zp_seo_guide_topics(int $n): string {
 /**
  * The guide body: $body is the guide's HTML (H2 sections), $path the page it sits on.
  * Returns the cards, the sticky column and the contact band; the section heading stays with the caller.
+ * $fold (3.2.50-sklepy, the shop page): every H2 card is a <details> that opens on a click, with its
+ * number, icon and H2 in the <summary>; the whole text stays in the HTML (guide-fold.css, sklepy-katowice.js).
  */
-function zp_seo_guide_body(string $body, string $path): string {
+function zp_seo_guide_body(string $body, string $path, bool $fold = false): string {
   [$intro, $chunks] = zp_seo_guide_split($body);
   // Each piece goes into its own card, so a tag left open or closed across an H2 must not leak out of it (2.6.2).
   $intro = force_balance_tags($intro);
@@ -119,6 +121,14 @@ function zp_seo_guide_body(string $body, string $path): string {
     $cards[] = '<article class="zpGuide__card zpGuide__card--intro"><div class="zpGuide__text">' . zp_seo_guide_lists($intro) . '</div></article>';
   }
   foreach ($chunks as $i => $c) {
+    if ($fold) {
+      $cards[] = '<details class="zpGuide__card zpGuide__card--fold' . ($i === 0 ? ' zpGuide__card--accent' : '') . '" data-step="' . $two($i + 1) . '">'
+        . '<summary class="zpGuide__summary"><span class="zpGuide__cardHead"><span class="zpGuide__num">' . $two($i + 1) . ' / ' . $two($total) . '</span>'
+        . '<span class="zpGuide__icon">' . zp_seo_guide_icon($i) . '</span></span>'
+        . '<h2 id="' . esc_attr($c['id']) . '">' . $c['title'] . '</h2><span class="zpGuide__toggle" aria-hidden="true"></span></summary>'
+        . '<div class="zpGuide__cardBody"><div class="zpGuide__text">' . zp_seo_guide_lists($c['html']) . '</div></div></details>';
+      continue;
+    }
     $cards[] = '<article class="zpGuide__card' . ($i === 0 ? ' zpGuide__card--accent' : '') . '" data-step="' . $two($i + 1) . '">'
       . '<div class="zpGuide__cardHead"><span class="zpGuide__num">' . $two($i + 1) . ' / ' . $two($total) . '</span>'
       . '<span class="zpGuide__icon">' . zp_seo_guide_icon($i) . '</span></div>'
@@ -152,7 +162,7 @@ function zp_seo_guide_body(string $body, string $path): string {
     . '<nav class="zpGuide__toc" aria-label="Spis treści poradnika"><div class="zpGuide__tocHead"><strong>Spis treści</strong>'
     . '<span class="zpGuide__meta">~' . zp_seo_guide_minutes($body) . ' min czytania • ' . zp_seo_guide_topics($total) . '</span></div><ol>' . $toc . '</ol></nav></aside>';
 
-  return '<div class="zpGuide">' . $aside . '<div class="zpGuide__main">' . implode('', $cards) . '</div></div>';
+  return '<div class="zpGuide' . ($fold ? ' zpGuide--fold' : '') . '">' . $aside . '<div class="zpGuide__main">' . implode('', $cards) . '</div></div>';
 }
 
 /** Stylesheet of the guide, printed inline on the pages that have one. */
@@ -160,6 +170,17 @@ function zp_seo_guide_css(): string {
   static $css = null;
   if ($css === null) {
     $raw = (string) @file_get_contents(__DIR__ . '/guide.css');
+    $raw = (string) preg_replace('~/\*.*?\*/~s', '', $raw);
+    $css = trim((string) preg_replace(['~\s+~', '~\s*([{};,>])\s*~'], [' ', '$1'], $raw));
+  }
+  return $css;
+}
+
+/** 3.2.50-sklepy: styles of the folding cards ($fold above), printed only where a guide folds (the shop page). */
+function zp_seo_guide_fold_css(): string {
+  static $css = null;
+  if ($css === null) {
+    $raw = (string) @file_get_contents(__DIR__ . '/guide-fold.css');
     $raw = (string) preg_replace('~/\*.*?\*/~s', '', $raw);
     $css = trim((string) preg_replace(['~\s+~', '~\s*([{};,>])\s*~'], [' ', '$1'], $raw));
   }

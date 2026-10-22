@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Zaprojektowani Suite
  * Description: Zaprojektowani Suite z wersją angielską strony (PL/EN, adresy /en/, przełącznik języka), automatycznymi naprawami SEO, nagłówków, zasobów i paginacji na podstawie audytu z 13.09.2026.
- * Version: 3.2.53
+ * Version: 3.2.54
  * Requires at least: 6.5
  * Requires PHP: 8.0
  * Author: Zaprojektowani.com
@@ -16,7 +16,7 @@ if (defined('ZP_SUITE_VERSION')) {
   return;
 }
 
-define('ZP_SUITE_VERSION', '3.2.53');
+define('ZP_SUITE_VERSION', '3.2.54');
 define('ZP_SUITE_PATH', plugin_dir_path(__FILE__));
 define('ZP_SUITE_URL', plugin_dir_url(__FILE__));
 
@@ -1756,3 +1756,6 @@ require_once ZP_SUITE_PATH . 'includes/visual-refinements-3240.php';
 
 // 3.2.41: editorial case-study layout, native portfolio bridge, approved owner testimonials.
 require_once ZP_SUITE_PATH . 'includes/case-studies-polish-3241.php';
+
+// 21.10.2026 (Mat, realizacje points 4 and 5): one card ratio and technology marks on /realizacje/.
+require_once ZP_SUITE_PATH . 'includes/realizacje-tech-3250.php';

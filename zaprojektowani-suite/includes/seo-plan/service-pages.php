@@ -92,6 +92,8 @@ add_action('wp_head', function () {
     // Guide sections on the content pages: the template's wrapper is dark, light sections set their own background.
     . 'section.section.zpSeoPlanGuide{background:#fff}#proces~section.section.zpSeoPlanGuide{background:#f7f8fa}'
     . (zp_seo_guide_page() ? zp_seo_guide_css() : '')
+    // 3.2.50-sklepy: only the shop page's guide folds (zp_seo_shop_guide_html).
+    . (zp_seo_service_variant() === 'sklepy-national' ? zp_seo_guide_fold_css() : '')
     // Website pages: on phones the hero H1 was 120% wide and its first line ran past the screen edge.
     . (zp_suite_service_kind() === 'strony' ? '@media(max-width:680px){html body .hero h1{width:auto}}' : '')
     // 2.6.4: shop heroes, also from a hero saved in the Katowice page's CMS: the gradient phrase takes the
@@ -104,7 +106,13 @@ add_action('wp_head', function () {
 
 function zp_seo_service_transform(string $html, array $spec, string $variant): string {
   foreach ($spec['drop'] ?? [] as $marker) { $html = zp_seo_html_drop_section($html, $marker); }
-  if (!empty($spec['faq'])) { $html = zp_seo_faq_rebuild($html, $spec['faq'], $spec['faq_style'] ?? 'details'); }
+  if (!empty($spec['faq'])) {
+    // 3.2.50-sklepy: the shop FAQ template has the website/logo <details> markup now. A Katowice FAQ
+    // still saved in the CMS with the old <article> markup keeps the shop style: the style follows the markup.
+    $faq_style = $spec['faq_style'] ?? 'details';
+    if ($faq_style === 'shop' && strpos($html, 'class="zpFaqShopKatNavy__item') === false) { $faq_style = 'details'; }
+    $html = zp_seo_faq_rebuild($html, $spec['faq'], $faq_style);
+  }
   if (!empty($spec['h1'])) {
     $h1 = $spec['h1'];
     $html = preg_replace_callback('~(<h1\b[^>]*>)(.*?)(</h1>)~is', static function ($m) use ($h1) { return $m[1] . $h1 . $m[3]; }, $html, 1);
@@ -458,7 +466,7 @@ function zp_seo_shop_guide_html(): string {
     . '<span class="zpShopSeoBoost__kicker">Poradnik / tworzenie sklepu internetowego krok po kroku</span>'
     . '<div class="zpShopSeoBoost__headline"><h2 class="zpShopSeoBoost__title" id="zpSeoPlanGuideTitle">Od pomysłu na ofertę do gotowego sklepu online.</h2>'
     . '<p class="zpShopSeoBoost__lead">' . $lead . '</p></div></header>'
-    . zp_seo_guide_body((string) $content, '/tworzenie-sklepow-internetowych/') . '</div></section>';
+    . zp_seo_guide_body((string) $content, '/tworzenie-sklepow-internetowych/', true) . '</div></section>';
 }
 
 /* ------------------------------------------------------------------- specs */
@@ -544,6 +552,8 @@ function zp_seo_service_spec(string $variant): ?array {
           ['Duże projekty. <strong>Jeszcze większy kontekst.</strong>', 'Projektowanie stron w Katowicach. <strong>Zobacz zakres naszych realizacji.</strong>'],
           ['Jedenaście wybranych realizacji — z pełniejszym opisem, zakresem, efektem i bezpośrednim podglądem strony. Każdy projekt ma <strong>własny cel, język, kolor i ścieżkę do kontaktu.</strong>', 'Studio w Katowicach, projekty dla różnych branż: <strong>Apartament Piękna</strong> łączy stronę z rezerwacjami, <strong>Siemianowski</strong> prezentuje specjalizacje kancelarii, a <strong>Gravia</strong> pokazuje realizacje infrastrukturalne i moduł kariery. Wybierz przykład zbliżony do zakresu Twojej firmy i sprawdź opis prac oraz stronę live.'],
         ],
+        // Audit 21.10.2026, item 02: the local section about the studio follows the portfolio (katowice-local.php).
+        'after' => ['id="portfolio"' => static function () { return zp_seo_katowice_local_html('strony'); }],
       ];
 
     case 'sklepy-national':
@@ -578,14 +588,16 @@ function zp_seo_service_spec(string $variant): ?array {
           ['<span class="zpShopSeoBoost__cardKicker">Projektowanie sklepów internetowych Katowice</span>', '<span class="zpShopSeoBoost__cardKicker">Projektowanie sklepów internetowych</span>'],
           ['<span>Sklepy internetowe Katowice / WooCommerce</span>', '<span>Tworzenie sklepów internetowych / WooCommerce</span>'],
           ['<span class="zpFaqShopKatNavy__kicker">FAQ / Sklepy internetowe Katowice</span>', '<span class="zpFaqShopKatNavy__kicker">FAQ / Tworzenie sklepów internetowych</span>'],
+          // 3.2.50-sklepy: kicker of the FAQ in the website/logo markup (templates/shop-katowice/sections/faq.html).
+          ['FAQ / Sklepy internetowe Katowice</p>', 'FAQ / Tworzenie sklepów internetowych</p>'],
           ['FAQ — sklepy internetowe Katowice i WooCommerce.', 'FAQ — tworzenie sklepów internetowych i WooCommerce.'],
           ['albo sklep lokalnej firmy z Katowic.', 'albo sklep lokalnej firmy.'],
         ], $demand_pl ? [
           ['Poniżej znajdziesz krótką selekcję projektów e-commerce: od sklepów B2B i hurtowych, przez marki z personalizacją produktów, po rozbudowany multi-brandowy sklep dla branży grillowej.', '<strong>Świat Grilli</strong> — wiele marek i uporządkowane kategorie. <strong>ProScarves</strong> — detal oraz osobna ścieżka zapytań hurtowych. <strong>Papeterio</strong> — warianty i personalizacja papeterii. Porównaj zakres tych realizacji z własną ofertą; niżej znajdziesz opisy prac i linki do działających sklepów.'],
           ['Nie zaczynamy od przypadkowego szablonu. Najpierw układamy ofertę, kategorie, produkty i ścieżkę zakupu, a dopiero potem projektujemy wygląd, wdrażamy WooCommerce i przygotowujemy sklep do realnej sprzedaży online.', 'Projektowanie sklepu zaczynamy od produktów i sposobu zamawiania. Ustalamy strukturę kategorii, warianty, płatności i dostawy, następnie projektujemy widoki i wdrażamy WooCommerce. Przed publikacją sprawdzamy zakup i wiadomości transakcyjne. Zobacz ' . $L('/tworzenie-sklepow-internetowych/#portfolio-sklepy', 'przykłady sklepów o różnych modelach sprzedaży') . ' i opisz swój zakres w ' . $L('/studio-wyceny/', 'Studio Wyceny') . '.'],
         ] : []),
-        // The guide goes last, right above the FAQ (Mat, 2.5.0).
-        'before' => [['id="zpFaqShopKatNavy"', 'zp_seo_shop_guide_html', 'id="sklepy-woocommerce-katowice"']],
+        // The guide goes last, right above the FAQ (Mat, 2.5.0); the FAQ section is section#faq since 3.2.50-sklepy.
+        'before' => [['id="faq"', 'zp_seo_shop_guide_html', 'id="sklepy-woocommerce-katowice"']],
       ];
 
     case 'sklepy-local':
@@ -604,7 +616,12 @@ function zp_seo_service_spec(string $variant): ?array {
         'replace' => [
           ['Projektujemy sklepy dla firm z Katowic, Śląska i całej Polski: od', 'Studio z Katowic, ul. Modelarska 18/2. Projektujemy sklepy WooCommerce dla firm ze Śląska: od'],
           ['<a class="zh__chip" href="/sklepy-internetowe-katowice/"><b>01</b><span>sklepy internetowe Katowice</span></a>', '<a class="zh__chip" href="/tworzenie-sklepow-internetowych/"><b>01</b><span>pełna oferta sklepów</span></a>'],
+          // Audit 21.10.2026, item 02: headings the page shared word for word with /tworzenie-sklepow-internetowych/.
+          ['Wybierz sklep, który nie tylko wygląda dobrze, ale <em>sprzedaje, mierzy i rośnie razem z Twoją marką</em>.', 'Pakiety sklepów WooCommerce. Wybierz sklep, który <em>sprzedaje, mierzy i rośnie razem z Twoją marką</em>.'],
+          ['Portfolio sklepów internetowych — realizacje WooCommerce, UX i prezentacja produktów.', 'Projektowanie sklepów internetowych — realizacje WooCommerce, UX i prezentacja produktów.'],
+          ['Jak tworzymy sklepy WooCommerce — od strategii i UX po SEO oraz sprzedaż.', 'Tworzenie sklepu internetowego krok po kroku — od strategii i UX po SEO oraz sprzedaż.'],
         ],
+        'after' => ['id="portfolio-sklepy"' => static function () { return zp_seo_katowice_local_html('sklepy'); }],
       ];
 
     case 'logo-national':

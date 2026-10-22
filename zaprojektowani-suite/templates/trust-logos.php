@@ -12,7 +12,7 @@ v5.0:
 - Lucide przez data-lucide, bez zewnętrznych bibliotek
 ========================================================= -->
 
-<?php $zp_projects_count = (int) zp_suite_opt('stats.projects_count', zp_suite_opt('hero.projects_count', 114)); $zp_google_rating = (string)(zp_reviews_snapshot()['aggregate']['rating'] ?? '4.9'); $zp_recommendations = (int)(zp_reviews_snapshot()['aggregate']['reviewCount'] ?? 146); ?>
+<?php $zp_projects_count = function_exists('zp_seo_plan_projects_count') ? zp_seo_plan_projects_count() : (int) zp_suite_opt('stats.projects_count', zp_suite_opt('hero.projects_count', 114)); $zp_trust_en = function_exists('zp_home_refresh_english') && zp_home_refresh_english(); $zp_trust_aggregate = zp_reviews_aggregate(); $zp_google_rating = number_format($zp_trust_aggregate['rating'], 1, $zp_trust_en ? '.' : ',', ''); $zp_recommendations = $zp_trust_aggregate['count']; $zp_trust_url = 'https://www.trustindex.io/reviews/zaprojektowani.com'; ?>
 <section class="zpTrustPinned" id="zpTrustPinned" data-zp-trust-pinned aria-labelledby="zpTrustPinnedTitle">
   <div class="zpTrustPinned__spacer" data-zp-trust-spacer>
     <div class="zpTrustPinned__sticky" data-zp-trust-sticky>
@@ -37,24 +37,22 @@ v5.0:
           </div>
         </header>
 
-        <div class="zpTrustPinned__stats" role="group" aria-label="Dowody zaufania">
-          <div class="zpTrustPinned__stat">
-            <i class="zpTrustPinned__statIcon" data-lucide="briefcase-business" aria-hidden="true"></i>
-            <div class="zpTrustPinned__num"><?php echo esc_html($zp_projects_count); ?></div>
-            <span>realizacji</span>
+        <?php /* Mat 21.10.2026, point 8: the figures under the hero as cards, the Trustindex card with its logo and stars. Every text sits in its own element, so the EN dictionary keys stay plain. */ ?>
+        <div class="zpTrustPinned__stats zpTrustProof" role="group" aria-label="Dowody zaufania">
+          <div class="zpTrustProof__item zpTrustProof__item--projects">
+            <span class="zpTrustProof__top"><span class="zpTrustProof__icon" aria-hidden="true"><i data-lucide="briefcase-business"></i></span></span>
+            <span class="zpTrustProof__body"><strong class="zpTrustProof__num"><?php echo esc_html($zp_projects_count); ?></strong><span class="zpTrustProof__label">realizacji</span></span>
           </div>
 
-          <div class="zpTrustPinned__stat">
-            <i class="zpTrustPinned__statIcon" data-lucide="star" aria-hidden="true"></i>
-            <div class="zpTrustPinned__num"><?php echo esc_html($zp_google_rating); ?></div>
-            <span>Trustindex</span>
-          </div>
+          <a class="zpTrustProof__item zpTrustProof__item--rating" href="<?php echo esc_url($zp_trust_url); ?>" target="_blank" rel="noopener nofollow">
+            <span class="zpTrustProof__top"><img class="zpTrustProof__logo" src="<?php echo esc_url(ZP_SUITE_URL . 'assets/img/trustindex-wordmark-white.webp'); ?>" alt="Trustindex" width="446" height="78" loading="lazy" decoding="async"><span class="zpTrustProof__open" aria-hidden="true">↗</span></span>
+            <span class="zpTrustProof__body"><span class="zpTrustProof__value"><strong class="zpTrustProof__num"><?php echo esc_html($zp_google_rating); ?><small>/5</small></strong><span class="zpTrustProof__stars" aria-hidden="true">★★★★★</span></span><span class="zpTrustProof__label">średnia ocena</span></span>
+          </a>
 
-          <div class="zpTrustPinned__stat">
-            <i class="zpTrustPinned__statIcon" data-lucide="thumbs-up" aria-hidden="true"></i>
-            <div class="zpTrustPinned__num"><?php echo esc_html($zp_recommendations); ?></div>
-            <span>opinii w Trustindex</span>
-          </div>
+          <a class="zpTrustProof__item zpTrustProof__item--reviews" href="<?php echo esc_url($zp_trust_url); ?>" target="_blank" rel="noopener nofollow">
+            <span class="zpTrustProof__top"><span class="zpTrustProof__icon" aria-hidden="true"><i data-lucide="message-square-quote"></i></span><span class="zpTrustProof__open" aria-hidden="true">↗</span></span>
+            <span class="zpTrustProof__body"><strong class="zpTrustProof__num"><?php echo esc_html($zp_recommendations); ?></strong><span class="zpTrustProof__label">opinii w Trustindex</span></span>
+          </a>
         </div>
 
         <div class="zpTrustPinned__progress" aria-hidden="true">

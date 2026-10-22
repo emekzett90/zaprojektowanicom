@@ -220,3 +220,78 @@ html body #zp-sklepy-internetowe-katowice #zhHero.zpShopHeroUnified[data-zp-serv
     background-size:280% 100%!important;
   }
 }
+
+/* 3.2.50-sklepy (Mat, 21.10.2026, pkt 10): FAQ sklepów w stylu FAQ stron i logo
+   (templates/shop-katowice/sections/faq.html). Wartości z strony-internetowe-katowice.css,
+   szerokość jak pozostałe sekcje sklepu (front-fixes-266). Mateusz: services-faq-20261015.php. */
+.zpShopFaq{--ink:#05070b;--navy:#102a4f;--blue:#1c477a;--ice:#8ec8f7;--muted:#697383;--line:rgba(5,7,11,.11);--font:"Plus Jakarta Sans Local","Plus Jakarta Sans",system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;--ease:cubic-bezier(.16,1,.3,1);position:relative;isolation:isolate;overflow:hidden;width:100%;max-width:100%;margin:0;padding:clamp(96px,10vw,170px) 0;background:#fff;color:var(--ink);font-family:var(--font);-webkit-font-smoothing:antialiased;text-rendering:geometricPrecision}
+.zpShopFaq,.zpShopFaq *,.zpShopFaq *::before,.zpShopFaq *::after{box-sizing:border-box}
+.zpShopFaq>.wrap{position:relative;z-index:2;width:min(1750px,calc(100% - clamp(28px,6vw,112px)));max-width:1750px;margin-inline:auto}
+.zpShopFaq .faq-layout{display:grid;grid-template-columns:.72fr 1.28fr;grid-template-rows:auto 1fr;grid-template-areas:"intro list" "side list";column-gap:clamp(60px,9vw,150px);row-gap:0;align-items:start}
+.zpShopFaq .faq-intro{grid-area:intro;min-width:0}
+.zpShopFaq .faq-list{grid-area:list;min-width:0;margin:0;border-top:1px solid var(--line)}
+.zpShopFaq .section-kicker{display:inline-flex;align-items:center;gap:12px;margin:0 0 22px;color:var(--blue);font-size:10px;font-weight:800;line-height:1;letter-spacing:.16em;text-transform:uppercase}
+.zpShopFaq .section-kicker::before{content:"";width:32px;height:1px;background:linear-gradient(90deg,var(--navy),var(--ice))}
+.zpShopFaq .section-kicker svg{flex:0 0 14px;width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round;opacity:.9}
+/* Jak „Pytania o <strong>tworzenie stron.</strong>”: pierwsza linia lekka, reszta pogrubiona, bez zmiany tekstu (tłumaczenie EN).
+   Nagłówek sklepów jest dłuższy niż na stronach: na komputerze mniejszy stopień, żeby „WooCommerce.” mieścił się w kolumnie. */
+.zpShopFaq .section-title{margin:0;color:var(--ink);font-family:var(--font);font-size:clamp(42px,3.9vw,66px);font-weight:750;line-height:1.045;letter-spacing:-.055em;text-wrap:balance;overflow:visible}
+.zpShopFaq .section-title::first-line{font-weight:500}
+.zpShopFaq .section-lead{max-width:760px;margin:28px 0 0;color:var(--muted);font-size:clamp(16px,1.35vw,20px);line-height:1.72;letter-spacing:-.015em}
+.zpShopFaq .faq-item{margin:0;padding:0;border:0;border-bottom:1px solid var(--line);background:none}
+.zpShopFaq .faq-item summary{position:relative;display:grid;grid-template-columns:58px 1fr 38px;align-items:center;gap:18px;min-height:116px;margin:0;padding:22px 0;cursor:pointer;list-style:none;color:var(--ink);font-family:var(--font);font-size:clamp(17px,1.45vw,22px);font-weight:700;line-height:1.28;letter-spacing:-.035em}
+.zpShopFaq .faq-item summary::-webkit-details-marker{display:none}
+.zpShopFaq .faq-item summary::marker{content:""}
+.zpShopFaq .faq-no{color:#8793a3;font-size:10px;font-weight:800;letter-spacing:.12em}
+/* font-style:normal: znacznik <i> bez tego pobiera osobny plik czcionki 700 italic. */
+.zpShopFaq .faq-plus{position:relative;font-style:normal;width:36px;height:36px;border:1px solid var(--line);border-radius:50%;transition:background .25s ease,transform .3s var(--ease)}
+.zpShopFaq .faq-plus::before,.zpShopFaq .faq-plus::after{content:"";position:absolute;left:50%;top:50%;width:13px;height:1.5px;background:var(--ink);transform:translate(-50%,-50%);transition:transform .25s ease}
+.zpShopFaq .faq-plus::after{transform:translate(-50%,-50%) rotate(90deg)}
+.zpShopFaq .faq-item[open] .faq-plus{background:var(--ink);transform:rotate(180deg)}
+.zpShopFaq .faq-item[open] .faq-plus::before,.zpShopFaq .faq-item[open] .faq-plus::after{background:#fff}
+.zpShopFaq .faq-item[open] .faq-plus::after{transform:translate(-50%,-50%) rotate(0)}
+.zpShopFaq .faq-answer{padding:0 58px 30px 76px;color:var(--muted);font-size:15px;line-height:1.76}
+.zpShopFaq .faq-answer p{margin:0;color:inherit;font-size:inherit;line-height:inherit}
+.zpShopFaq .faq-answer strong{color:var(--ink)}
+.zpShopFaq__watermark{position:absolute;z-index:0;left:-.045em;right:auto;top:auto;bottom:-.18em;max-width:none;margin:0;color:rgba(7,17,31,.024);font-family:var(--font);font-size:clamp(124px,19vw,340px);font-weight:800;line-height:.72;letter-spacing:-.09em;white-space:nowrap;text-transform:lowercase;pointer-events:none;user-select:none;-webkit-mask-image:linear-gradient(180deg,transparent 0%,rgba(0,0,0,.18) 30%,#000 72%);mask-image:linear-gradient(180deg,transparent 0%,rgba(0,0,0,.18) 30%,#000 72%)}
+/* Karta zakresu sklepu z dawnego FAQ (te same wartości), pod nagłówkiem; na telefonie pod pytaniami. */
+.zpShopFaq__side{grid-area:side;min-width:0;max-width:520px;margin-top:clamp(40px,4vw,56px)}
+.zpShopFaq__sideCard{position:relative;overflow:hidden;padding:clamp(24px,2.2vw,34px);border:1px solid rgba(7,17,31,.11);border-radius:34px;background:#fff}
+.zpShopFaq__sideLabel{position:relative;display:inline-flex;align-items:center;min-height:28px;padding:0 11px;border-radius:999px;background:#f5f5f5;color:#344256;font-size:9px;line-height:1;letter-spacing:.12em;font-weight:900;text-transform:uppercase}
+.zpShopFaq__sideCard h3{position:relative;margin:26px 0 0;color:#05070b;font-family:var(--font);font-size:clamp(28px,2.15vw,40px);line-height:1;letter-spacing:-.055em;font-weight:620;text-wrap:balance}
+.zpShopFaq__sideCard p{position:relative;margin:20px 0 0;color:#5c6675;font-size:14px;line-height:1.62;letter-spacing:-.006em}
+.zpShopFaq__chips{position:relative;display:flex;flex-wrap:wrap;gap:8px;margin-top:26px}
+.zpShopFaq__chips span{display:inline-flex;align-items:center;gap:7px;min-height:34px;padding:0 11px;border:1px solid rgba(7,17,31,.08);border-radius:999px;background:#f5f5f5;color:#344256;font-size:10px;line-height:1;letter-spacing:.04em;font-weight:800}
+.zpShopFaq__chips svg{width:14px;height:14px;color:#071426;stroke-width:2.2}
+.zpShopFaq__sideCta{position:relative;z-index:1;display:inline-flex;align-items:center;justify-content:center;gap:10px;width:100%;min-height:52px;margin-top:28px;padding:0 22px;overflow:hidden;border:1px solid rgba(7,17,31,.16);border-radius:999px;background:#fff;color:#07111f!important;font-size:11px;line-height:1;letter-spacing:.07em;font-weight:850;text-transform:uppercase;text-decoration:none!important;white-space:nowrap;transition:border-color .34s var(--ease),color .34s var(--ease),background .34s var(--ease)}
+.zpShopFaq__sideCta::before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(90deg,#05070b,#0b1830,#102a4f,#1c477a);transform:scaleX(0);transform-origin:left;transition:transform .44s var(--ease)}
+.zpShopFaq__sideCta:hover{color:#fff!important;background:#071426;border-color:rgba(16,42,79,.65)}
+.zpShopFaq__sideCta:hover::before{transform:scaleX(1)}
+.zpShopFaq__sideCta svg{width:15px;height:15px;stroke-width:2;transition:transform .34s var(--ease)}
+.zpShopFaq__sideCta:hover svg{transform:translate(2px,-2px)}
+/* Krótka lista (strona Katowice ma 7 pytań): na komputerze karta zakresu idzie pod pytania, żeby kolumny się równoważyły. */
+@media (min-width:1101px){
+  .zpShopFaq .faq-layout:not(:has(.faq-item:nth-child(10))){grid-template-areas:"intro list" "intro side"}
+  .zpShopFaq .faq-layout:not(:has(.faq-item:nth-child(10))) .zpShopFaq__side{max-width:none}
+  .zpShopFaq .faq-layout:not(:has(.faq-item:nth-child(10))) .zpShopFaq__sideCta{width:auto}
+}
+@media (max-width:1100px){
+  .zpShopFaq .faq-layout{grid-template-columns:minmax(0,1fr);grid-template-rows:none;grid-template-areas:"intro" "list" "side";gap:60px}
+  .zpShopFaq .faq-intro{max-width:760px}
+  .zpShopFaq .section-title{font-size:clamp(44px,5.2vw,78px)}
+  .zpShopFaq__side{max-width:760px;margin-top:0}
+  .zpShopFaq__watermark{bottom:-.13em;font-size:clamp(108px,23vw,225px)}
+}
+@media (max-width:760px){
+  .zpShopFaq__sideCard{padding:22px;border-radius:24px}
+  .zpShopFaq__sideCard h3{font-size:clamp(28px,8vw,36px);line-height:1}
+  .zpShopFaq__sideCard p{font-size:13px;line-height:1.56}
+  .zpShopFaq__chips{gap:7px}
+  .zpShopFaq__chips span{min-height:32px;font-size:9.5px}
+}
+@media (max-width:680px){
+  .zpShopFaq{padding:88px 0}
+  .zpShopFaq .faq-item summary{grid-template-columns:38px 1fr 36px;gap:10px;min-height:96px;font-size:16px}
+  .zpShopFaq .faq-answer{padding:0 12px 26px 48px;font-size:14px}
+  .zpShopFaq__watermark{bottom:-.09em;font-size:clamp(86px,28vw,132px);letter-spacing:-.075em;opacity:.78;-webkit-mask-image:linear-gradient(180deg,transparent 0%,#000 62%);mask-image:linear-gradient(180deg,transparent 0%,#000 62%)}
+}

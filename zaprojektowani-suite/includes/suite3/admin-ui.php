@@ -284,7 +284,7 @@ function zp_suite3_dashboard(): void {
   }
   echo '</div></section>';
 
-  echo '<section class="navy-card"><div class="eyebrow">Nowe w wersji ' . esc_html(ZP_SUITE_VERSION) . '</div><h2>Nowe zdjęcia wpisów.</h2><p>Strona ZP Suite → Treści → Nowe zdjęcia wpisów pobiera sprawdzony pakiet zdjęć z kanału treści i na Twoje kliknięcie wymienia w wybranym wpisie tylko zdjęcia: trzy w treści, w tym samym miejscu i stylu co dziś, oraz osobną okładkę. Tekst, adres, data, harmonogram i pola SEO zostają, a przycisk „Cofnij” przywraca poprzedni stan. Bez pakietu zdjęć nic się nie zmienia, a strona dla gości działa jak dotąd. Wydanie zawiera wszystkie zmiany 3.2.52.</p><a class="button" href="' . esc_url(zp_suite3_url('zp-suite-health')) . '">Stan strony</a></section>';
+  echo '<section class="navy-card"><div class="eyebrow">Nowe w wersji ' . esc_html(ZP_SUITE_VERSION) . '</div><h2>Realizacje, sklepy, Studio wyceny i strona główna.</h2><p>Karty realizacji w jednej proporcji z technologiami, zwijany poradnik i nowe FAQ sklepów, szybki kontakt w Studio wyceny, pasek opinii pod hero na głównej, sekcja studia na stronach Katowice i etykiety szablonu wpisów bez H2.</p><a class="button" href="' . esc_url(zp_suite3_url('zp-suite-health')) . '">Stan strony</a></section>';
   echo '</aside></div>';
 
   echo '<div class="quick-grid">';

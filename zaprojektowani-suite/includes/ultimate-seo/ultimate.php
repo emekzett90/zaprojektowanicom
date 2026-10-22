@@ -163,11 +163,32 @@ final class ZPSSEO_Editorial {
         foreach($changes as $change){$html=substr_replace($html,$change['text'],$change['start'],$change['length']);}
         return $html;
     }
+    /**
+     * 22.10.2026: on blog posts the post template's labels (Code Snippets HERO BLOG, SIDEBAR BLOG and PODOBNE ARTYKULY:
+     * „Najważniejsze zagadnienia”, the sidebar box titles, „Rozwiń ten temat”) leave H1-H6 to the article's own headings.
+     * Each becomes a <div> with the same attributes plus role="heading" aria-level="2": the snippets style these labels by
+     * class only, so they look the same, and screen readers still announce a level-2 heading. Runs after normalize(),
+     * so the levels of the content's headings stay as they were.
+     */
+    public static function template_headings($html) {
+        // Comments, raw-text elements and other tags are matched whole and returned untouched, so nothing inside JS, CSS or attribute values changes.
+        $pattern='~<!--[\s\S]*?-->|<(script|style|textarea|title|noscript)\b(?:"[^"]*"|\x27[^\x27]*\x27|[^\x27">])*?>[\s\S]*?</\1\s*>|<h2(\s(?:"[^"]*"|\x27[^\x27]*\x27|[^\x27">])*)?>([\s\S]*?)</h2\s*>|<(?:"[^"]*"|\x27[^\x27]*\x27|[^\x27">])+>~i';
+        $out=preg_replace_callback($pattern,function($m){
+            if(!isset($m[3])){return $m[0];}
+            preg_match_all('~([^\s"\x27>/=]+)(?:\s*=\s*(?:"([^"]*)"|\x27([^\x27]*)\x27|([^\s"\x27=<>`]+)))?~',$m[2],$attrs,PREG_SET_ORDER);
+            $class='';
+            foreach($attrs as $a){$name=strtolower($a[1]);if($name==='role'||$name==='aria-level'){return $m[0];}if($name==='class'){$class=($a[2]??'').($a[3]??'').($a[4]??'');}}
+            if(!preg_match('~(?:^|\s)(?:zpSinglePostHero__guideTitle|zpPostSide__title|zpRelPosts__title)(?:\s|$)~',$class)){return $m[0];}
+            return '<div'.rtrim($m[2]).' role="heading" aria-level="2">'.$m[3].'</div>';
+        },$html);
+        return is_string($out) ? $out : $html;
+    }
     public static function output($html) {
         if(!self::enabled() || is_admin() || is_404() || !is_singular() || is_preview() || post_password_required() || stripos($html,'<html')===false){return $html;}
         $path=ZPSSEO_Repair::path(wp_unslash($_SERVER['REQUEST_URI']??''));
         if(preg_match('~^/(oferty|briefy|prace|dziekujemy|rodo|cookies|regulamin|polityka-prywatnosci)(/|-)~',$path)){return $html;}
-        return self::normalize($html,self::rule());
+        $html=self::normalize($html,self::rule());
+        return is_singular('post') ? self::template_headings($html) : $html;
     }
     public static function verify($path) {
         $response=wp_safe_remote_get(home_url($path),['timeout'=>12,'redirection'=>2,'limit_response_size'=>2*1024*1024]);
