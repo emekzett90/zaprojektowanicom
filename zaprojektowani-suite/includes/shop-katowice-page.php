@@ -444,3 +444,33 @@ add_action('wp_head', function(){
   </style>
   <?php
 }, 9999);
+
+/**
+ * 3.2.50-sklepy (Mat, 21.10.2026, pkt 10): sections/faq.html has the FAQ markup of the website and logo
+ * pages now. The Katowice page shows the copy of each section saved in this option (the FAQ was last
+ * refreshed in 2.2.172), so while that saved FAQ still has the old markup and exactly the bundled text
+ * (nobody edited it in the CMS), the page shows the bundled file. Nothing is written to the database
+ * (a rollback finds the saved copy as it was) and a FAQ edited in the CMS is shown as saved.
+ */
+function zp_suite_shop_faq_text_fingerprint($html){
+  // Every tag counts as a space: the old markup had whitespace between the number and the question, the new one does not.
+  $text = (string) preg_replace(['~<!--.*?-->~s', '~<(script|style)\b[^>]*>.*?</\1>~is', '~<[^>]*>~'], ' ', (string) $html);
+  $text = html_entity_decode($text, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+  return hash('sha256', trim((string) preg_replace('~[\s\x{00a0}]+~u', ' ', $text)));
+}
+
+add_filter('option_zp_suite_shop_katowice_sections', function($sections){
+  // Front-end render only: the init migrations above save the whole array back.
+  if (is_admin() || !did_action('template_redirect') || !is_array($sections) || empty($sections['faq'])) { return $sections; }
+  $saved = (string) $sections['faq'];
+  if (strpos($saved, 'zpFaqShopKatNavy__item') === false) { return $sections; }
+  static $checked = [];
+  $key = md5($saved);
+  if (!isset($checked[$key])) {
+    $bundled = zp_suite_shop_katowice_default_section('faq');
+    $checked[$key] = ($bundled !== '' && strpos($bundled, 'class="faq-item"') !== false
+      && hash_equals(zp_suite_shop_faq_text_fingerprint($bundled), zp_suite_shop_faq_text_fingerprint($saved))) ? $bundled : '';
+  }
+  if ($checked[$key] !== '') { $sections['faq'] = $checked[$key]; }
+  return $sections;
+});
