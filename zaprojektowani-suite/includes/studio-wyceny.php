@@ -294,6 +294,16 @@ function zp_studio_render_shortcode($atts=[]){
 })();
 </script>
 HTML;
+  // 22.10.2026 (Mat): header Studia jest biały w każdym stanie (wybór usługi, brief, po przewinięciu), ale ma klasę
+  // zpNewNav--heroOverlay, więc przełącznik PL/EN brał wygląd na ciemne tło: białe EN i biały suwak na białym,
+  // widać było samo PL. Tu dostaje swój zwykły jasny wygląd, jak w jasnym headerze innych podstron. Pozycje menu
+  // dostają podkreślenie po najechaniu jak gdzie indziej (w briefie ukrywał je styl zp-studio-v603-final-polish).
+  $zpbs_header_light_css = '<style id="zp-studio-header-light-20261022">'
+    . 'html body.zpbs-studio-page header#zpNewNav .zpl-switch:not(.zpl-switch--drawer){--zpl-ink:#0a1220;--zpl-muted:#667085;--zpl-line:rgba(10,18,32,.12);--zpl-bg:#fff;--zpl-thumb:linear-gradient(100deg,#020407 0%,#071426 34%,#102a4f 70%,#1c477a 100%);--zpl-on:#fff}'
+    . 'html body.zpbs-studio-page header#zpNewNav .zpl-switch:not(.zpl-switch--drawer) .zpl-switch__track{-webkit-backdrop-filter:none;backdrop-filter:none;box-shadow:0 1px 2px rgba(10,18,32,.05),inset 0 1px 0 rgba(255,255,255,.6)}'
+    . 'html body.zpbs-studio-page header#zpNewNav:not(.is-mega-open) .zpNewNav__link::after{display:block!important;visibility:visible!important;background:var(--zpH-line-ice)!important}'
+    . 'html body.zpbs-studio-page header#zpNewNav:not(.is-mega-open) .zpNewNav__link:hover::after,html body.zpbs-studio-page header#zpNewNav:not(.is-mega-open) .zpNewNav__link.is-active::after,html body.zpbs-studio-page header#zpNewNav:not(.is-mega-open) .zpNewNav__item.is-open>.zpNewNav__link::after{opacity:1!important;transform:scaleX(1)!important}'
+    . '</style>';
 $zp_chooser_contact = '';
   if (shortcode_exists('zp_home_contact_form')) {
     $zp_chooser_contact = '<div class="zpStudioChooserContact" data-zp-studio-chooser-contact>'
@@ -363,7 +373,7 @@ $zp_chooser_contact = '';
 })();
 </script>
 HTML;
-  return $html . $zpbs_typo_css . $ajax_js . $zpbs_final_css . $zpbs_header_fix_css . $zp_chooser_contact . $zp_chooser_contact_css . $zp_boot_js . zp_studio_ux_310();
+  return $html . $zpbs_typo_css . $ajax_js . $zpbs_final_css . $zpbs_header_fix_css . $zpbs_header_light_css . $zp_chooser_contact . $zp_chooser_contact_css . $zp_boot_js . zp_studio_ux_310();
 }
 
 /* 3.0 (14.10.2026) — Studio wyceny: wygodniejsza obsługa, głównie na telefonie.
