@@ -1,0 +1,6 @@
+Zaprojektowani Suite 2.2.767
+
+- Studio Wyceny: sekcja kontaktowa pod wyborem usługi ma pełnoszerokie czarno-navy tło.
+- Zmiana jest ograniczona tylko do strony Studio Wyceny (body.zpbs-studio-page).
+- Nagłówek i opis kontaktu są jasne; formularz, podgląd wiadomości i kafelki pozostają czytelne na białych powierzchniach.
+- Dodano subtelne niebieskie radialne światło i ciemne obramowanie strefy mapy.

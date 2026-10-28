@@ -1,0 +1,99 @@
+
+/* v2.2.731 — HOME: zachowany mniejszy H1, ale poprawione descenders,
+   żeby nie ucinało liter typu g / y / p w ostatniej linii.
+   Tylko główny hero (#zhHero); podstrony usług pozostają bez zmian. */
+@media (min-width:1101px){
+  html body #zhHero .zh__title{
+    font-size:clamp(46px,5.2vw,96px)!important;
+    line-height:.93!important;
+    letter-spacing:-.046em!important;
+    overflow:visible!important;
+    padding-bottom:.06em!important;
+    margin-bottom:0!important;
+  }
+  html body #zhHero .zh__title .zh__grad{
+    display:inline!important;
+    line-height:inherit!important;
+    overflow:visible!important;
+    padding-top:0!important;
+    padding-bottom:.14em!important;
+    margin-top:0!important;
+    margin-bottom:-.02em!important;
+    -webkit-box-decoration-break:clone!important;
+    box-decoration-break:clone!important;
+  }
+}
+@media (min-width:601px) and (max-width:1100px){
+  html body #zhHero .zh__title{
+    font-size:clamp(38px,7.8vw,64px)!important;
+    line-height:.96!important;
+    overflow:visible!important;
+    padding-bottom:.04em!important;
+  }
+  html body #zhHero .zh__title .zh__grad{
+    display:inline!important;
+    line-height:inherit!important;
+    overflow:visible!important;
+    padding-bottom:.10em!important;
+    margin-bottom:-.01em!important;
+  }
+}
+@media (max-width:600px){
+  html body #zhHero .zh__title{
+    font-size:calc(clamp(34px,9.8vw,44px) - 2px)!important;
+    line-height:.99!important;
+    overflow:visible!important;
+    padding-bottom:.03em!important;
+  }
+  html body #zhHero .zh__title .zh__grad{
+    display:inline!important;
+    line-height:inherit!important;
+    overflow:visible!important;
+    padding-bottom:.08em!important;
+    margin-bottom:0!important;
+  }
+}
+
+
+/* v2.7.19 — HOME H1: równiej wypełnione wiersze na mobile + luźniejszy desktop. */
+@media (min-width:1101px){
+  html body #zhHero .zh__title{
+    line-height:.98!important;
+  }
+}
+@media (max-width:600px){
+  html body #zhHero .zh__title{
+    width:calc(100% + 22px)!important;
+    max-width:calc(100% + 22px)!important;
+    margin-left:-4px!important;
+    margin-right:-18px!important;
+    letter-spacing:-.052em!important;
+    text-wrap:pretty!important;
+  }
+}
+
+
+/* v2.7.20 — HOME mobile H1: stabilne łamanie w Safari + 1 px mniejszy font. */
+@media (max-width:600px){
+  html body #zhHero .zh__title{
+    font-size:calc(clamp(34px,9.8vw,44px) - 3px)!important;
+    text-wrap:wrap!important;
+  }
+  html body #zhHero .zh__title .zh__grad{
+    animation:none!important;
+    background-position:14% 0!important;
+    background-size:100% 100%!important;
+    -webkit-box-decoration-break:clone!important;
+    box-decoration-break:clone!important;
+    will-change:auto!important;
+    transform:none!important;
+    filter:none!important;
+  }
+}
+
+@media(max-width:760px){html body #zpShowcaseWhite .zpShowcaseWhite__stage{contain:layout paint!important;content-visibility:visible!important;overscroll-behavior-x:contain!important}html body #zpShowcaseWhite .zpShowcaseWhite__card,html body #zpShowcaseWhite .zpShowcaseWhite__media,html body #zpShowcaseWhite .zpShowcaseWhite__media img{will-change:auto!important;transition:none!important;animation:none!important}html body .zpShowcaseDarkCta__mark{color:rgba(255,255,255,.026)!important;-webkit-text-fill-color:rgba(255,255,255,.026)!important;opacity:.10!important;filter:none!important;text-shadow:none!important;mix-blend-mode:normal!important}}
+@media(max-width:760px){html body #zpShowcaseWhite .zpShowcaseWhite__stage{width:100vw!important;max-width:100vw!important;overflow-x:auto!important;padding-left:0!important;padding-right:0!important;scroll-padding-left:max(18px,6vw)!important;scroll-padding-right:max(18px,6vw)!important}html body #zpShowcaseWhite .zpShowcaseWhite__rail{padding-left:max(18px,6vw)!important;padding-right:max(18px,6vw)!important;gap:14px!important}html body #zpShowcaseWhite .zpShowcaseWhite__card{width:84vw!important;flex-basis:84vw!important}html body #zpShowcaseWhite[data-mode=logo] .zpShowcaseWhite__card{width:84vw!important;flex-basis:84vw!important}}
+
+@media(max-width:760px){html body #zpShowcaseWhite .zpShowcaseWhite__stage{padding-left:0!important;padding-right:0!important;scroll-padding-left:18px!important;scroll-padding-right:18px!important}html body #zpShowcaseWhite .zpShowcaseWhite__rail{padding-left:18px!important;padding-right:18px!important}html body #zpShowcaseWhite .zpShowcaseWhite__card{width:calc(100vw - 36px)!important;flex-basis:calc(100vw - 36px)!important}html body #zpShowcaseWhite[data-mode=logo] .zpShowcaseWhite__card{width:calc(100vw - 36px)!important;flex-basis:calc(100vw - 36px)!important}html body #zpShowcaseWhite .zpShowcaseWhite__card--cta{margin-right:0!important}html body #zpShowcaseWhite .zpShowcaseWhite__ctaFrame{inset:22px!important;padding:24px 18px!important}html body #zpShowcaseWhite .zpShowcaseWhite__ctaContent{max-width:100%!important;margin-inline:auto!important;text-align:center!important}}
+
+@media(max-width:760px){html body #zpShowcaseWhite{contain:layout paint!important;overflow:hidden!important;content-visibility:auto!important;contain-intrinsic-size:1200px!important}html body #zpShowcaseWhite .zpShowcaseWhite__inner,html body #zpShowcaseWhite .zpShowcaseWhite__head,html body #zpShowcaseWhite .zpShowcaseWhite__stage,html body #zpShowcaseWhite .zpShowcaseWhite__rail{transform:none!important;filter:none!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;box-shadow:none!important;animation:none!important;transition:none!important}html body #zpShowcaseWhite .zpShowcaseWhite__stage{contain:strict!important;height:min(132vw,680px)!important;min-height:0!important;isolation:isolate!important}html body #zpShowcaseWhite .zpShowcaseWhite__rail{height:min(132vw,680px)!important;min-height:0!important;align-items:stretch!important}html body #zpShowcaseWhite .zpShowcaseWhite__card{height:min(132vw,680px)!important;max-height:min(132vw,680px)!important;contain:strict!important;clip-path:none!important;border-radius:22px!important;overflow:hidden!important;transform:none!important;filter:none!important;box-shadow:none!important;transition:none!important;animation:none!important;will-change:auto!important}html body #zpShowcaseWhite[data-mode=logo] .zpShowcaseWhite__card{height:calc(100vw - 36px)!important;max-height:calc(100vw - 36px)!important}html body #zpShowcaseWhite .zpShowcaseWhite__media{contain:strict!important;transform:none!important;filter:none!important;background:#05070b!important}html body #zpShowcaseWhite .zpShowcaseWhite__media img{width:100%!important;height:100%!important;object-fit:cover!important;object-position:center center!important;transform:none!important;filter:none!important;transition:none!important;animation:none!important;will-change:auto!important;backface-visibility:hidden!important;-webkit-backface-visibility:hidden!important}html body #zpShowcaseWhite .zpShowcaseWhite__tapHint,html body #zpShowcaseWhite .zpShowcaseWhite__floatingProgress,html body #zpShowcaseWhite .zpShowcaseWhite__meta,html body #zpShowcaseWhite .zpShowcaseWhite__veil::before{display:none!important}html body #zpShowcaseWhite .zpShowcaseWhite__top,html body #zpShowcaseWhite .zpShowcaseWhite__content,html body #zpShowcaseWhite .zpShowcaseWhite__actions,html body #zpShowcaseWhite .zpShowcaseWhite__btn{transform:none!important;filter:none!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;transition:none!important;animation:none!important;will-change:auto!important}}

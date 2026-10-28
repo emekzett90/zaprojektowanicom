@@ -1,0 +1,10 @@
+ZAPROJEKTOWANI SUITE 2.2.706
+
+1. /strony-internetowe-katowice/: naprawiono wykres „Kliknięcia z Google
+   tydzień po tygodniu” na mobile, tabletach i desktopie.
+2. Globalny Motion Lite nie skraca już ścieżek wykresu do 42% szerokości.
+   Obie linie kończą się teraz dokładnie w odpowiadających im punktach —
+   niebieskim i fioletowym — zachowując własną animację rysowania SVG.
+3. Dodano celowany bezpiecznik CSS chroniący wykres również przy starszej
+   wersji plików ruchu pozostającej chwilowo w cache przeglądarki.
+4. Wersję wtyczki podbito do 2.2.706.

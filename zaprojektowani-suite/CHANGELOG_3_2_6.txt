@@ -1,0 +1,7 @@
+Zaprojektowani Suite 3.2.6 — 2026-10-15
+
+- Rank Math sitemap provider now uses verified, applied article URL pins before canonical comparison and English sitemap lookup. Category maintenance no longer creates a different sitemap address from the public canonical URL.
+- One scoped upgrade invalidation refreshes the native post sitemap and English sitemap caches. Normal requests do not repeatedly invalidate caches.
+- Saved Rank Math title, description and canonical fields take precedence over the Realizacje route defaults. Empty fields retain the existing defaults.
+- Verified English metadata variants stay consistent for the Realizacje page and the T-shirt logo article. Later owner overrides retain priority.
+- No article body, Elementor content, publication date, post status or scheduled publication event is changed by this release. No Studio redesign is included.

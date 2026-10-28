@@ -1,0 +1,21 @@
+Zaprojektowani Suite 2.9.13 (9.10.2026)
+
+Poprawki z planu SEO: błędy 404 z Search Console i widoczny znacznik w jednym wpisie. Wygląd stron bez zmian.
+
+- Wpis „Ile trwa stworzenie strony internetowej” (PL i EN): zniknął tekst ZP_IMAGE_SLOT_1, który był
+  widoczny zamiast obrazka. Ten sam obrazek jest już okładką wpisu. Taka notatka nie trafi też na żadną
+  inną stronę.
+- 404 z raportu Search Console, które jeszcze zostały:
+  - 14 starych adresów (niemieckie, angielskie, stare kategorie i strony listy) przekierowuje na stronę
+    o tym samym temacie, np. /datenschutz/ na politykę prywatności, /de/uber-uns/ na O nas, a
+    /angebotsstudio/ na Studio wyceny;
+  - strony listy za ostatnią stroną (np. /page/4/) prowadzą na pierwszą stronę tej listy;
+  - 8 adresów bez odpowiednika (stare strony z podziękowaniem i usunięte podglądy dla klientów) odpowiada
+    „usunięte na stałe” (410), więc Google szybciej je wyrzuci.
+- Naprawione: adresy, które wtyczka oznaczała jako usunięte (410, m.in. stare /de/), odpowiadały 404,
+  bo strona błędu nadpisywała ten kod.
+
+Z raportu zostały tylko wpisy zbiorcze /wp-content/…, które nie są stronami (katalogi plików). To normalne.
+
+Po wgraniu:
+1. Wejdź raz na dowolną stronę.

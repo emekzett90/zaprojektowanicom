@@ -1,0 +1,9 @@
+
+html body .zpShowcasePop__pill svg.lucide,
+html body .zpShowcasePop__label svg.lucide,
+html body .zpShowcasePop__scopeTitle svg.lucide,
+html body .zpShowcasePop__tool svg.lucide,
+html body .zpShowcasePop__scope li svg.lucide{display:block!important;width:14px!important;height:14px!important;min-width:14px!important;flex:0 0 14px!important;stroke:currentColor!important;stroke-width:2.1!important;overflow:visible!important}
+html body .zpShowcasePop__scope li svg.lucide{margin-top:.15em!important;color:#102a4f!important}
+html body .zpShowcasePop__storyIcon svg.lucide{display:block!important;width:17px!important;height:17px!important;stroke:currentColor!important;overflow:visible!important}
+html body .zpShowcasePop__resultsTitle svg.lucide{display:block!important;width:15px!important;height:15px!important;flex:0 0 15px!important;color:#102a4f!important;stroke:currentColor!important;overflow:visible!important}

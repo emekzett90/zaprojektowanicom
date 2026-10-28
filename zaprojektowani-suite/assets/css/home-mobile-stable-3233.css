@@ -1,0 +1,39 @@
+/* 3.2.33: reserve final geometry, never animate/reposition the first-screen content on mobile. */
+#zhHero .zh__crewMobilePicture{display:none}
+#zhHero .zh__crewDesktop{display:contents}
+@media (max-width:1100px){
+  /* Same bundled font faces, inline PL/EN subsets. No late font download/reflow in the hero. */
+  html body #zhHero:not(#zpx) .zh__copy:not(#zpx),
+  html body #zhHero:not(#zpx) .zh__copy:not(#zpx) *,
+  html body #zhHero:not(#zpx) .zh__side:not(#zpx),
+  html body #zhHero:not(#zpx) .zh__side:not(#zpx) *{
+    font-family:"ZP Hero First Paint",Arial,sans-serif!important;
+  }
+  html body #zhHero:not(#zpx) .zh__crewDesktop,
+  html body #zhHero:not(#zpx) .zh__crewDesktop img{display:none!important}
+  html body #zhHero:not(#zpx) .zh__crewMobilePicture{display:contents!important}
+  html body #zhHero:not(#zpx) .zh__crewMobile{
+    display:block!important;position:relative!important;flex:0 0 auto!important;
+    width:225.333333px!important;height:122px!important;min-width:225.333333px!important;max-width:none!important;
+    aspect-ratio:676/366;object-fit:contain;margin:0!important;padding:0!important;border:0!important;
+    background:none!important;opacity:1!important;visibility:visible!important;
+    transform:none!important;translate:none!important;scale:none!important;
+    animation:none!important;transition:none!important;filter:none!important;
+  }
+  html body #zhHero:not(#zpx) .zh__crew{height:122px!important;min-height:122px!important;flex-shrink:0!important;animation:none!important;transition:none!important}
+  html body #zpNewNav:not(#zpx),
+  html body #zpNewNav:not(#zpx) .zpNewNav__shell,
+  html body #zpNewNav:not(#zpx) .zpNewNav__mobileBar{
+    animation:none!important;transition:none!important;opacity:1!important;visibility:visible!important;
+  }
+  /* No transform reset on positioning containers: translate(-50%) centres the brand. */
+  html body #zpNewNav:not(#zpx) .zpNewNav__mobileBrand,
+  html body #zpNewNav:not(#zpx) .zpNewNav__mobileBrand img,
+  html body #zpNewNav:not(#zpx) .zpNewNav__burger{
+    animation:none!important;transition:none!important;
+  }
+  html body #zhHero:not(#zpx){content-visibility:visible!important;contain:none!important;opacity:1!important;visibility:visible!important}
+  html body #zhHero:not(#zpx) .zh__title,
+  html body #zhHero:not(#zpx) .zh__lead,
+  html body #zhHero:not(#zpx) .zh__actions{animation:none!important;transition:none!important;opacity:1!important;visibility:visible!important;filter:none!important}
+}

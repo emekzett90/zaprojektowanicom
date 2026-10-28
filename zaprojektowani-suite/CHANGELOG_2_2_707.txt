@@ -1,0 +1,8 @@
+ZAPROJEKTOWANI SUITE 2.2.707
+
+1. Skrócono heading w hero podstrony Kontakt, zachowując wyróżnienie gradientem.
+2. Na stronie głównej usunięto poprzedni sticky widget z długim opisem i modalem.
+3. Dodano większy desktopowy dock w stylu iPhone’a: Start, Zamów, WhatsApp i Telefon.
+4. Wyróżniono akcję „Zamów”, dodano opisy pomocnicze, dostępny focus i obsługę reduced motion.
+5. Mobilny sticky dock pozostał bez zmian.
+6. Zaktualizowano opis ustawienia w panelu oraz wersję wtyczki do 2.2.707.

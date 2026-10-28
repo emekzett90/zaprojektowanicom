@@ -1,0 +1,12 @@
+ZAPROJEKTOWANI SUITE 2.2.690
+
+Strony internetowe Katowice — first paint i Lighthouse:
+- nowy CSS/JS podstrony jest wykrywany i ładowany w <head> przed renderem shortcode,
+- usunięto przyczynę chwilowego wyświetlania dużego sygnetu i nieostylowanej treści,
+- dodano mały first-paint lock jako zabezpieczenie przy cache/optymalizatorach,
+- usunięto z kolejki stary, nieużywany komplet strony-katowice.css/js,
+- główny obraz hero przeniesiono z zewnętrznego uploadu do lokalnego, zoptymalizowanego WebP (ok. 211 KB),
+- dodano preload obrazu LCP z fetchpriority=high,
+- dekoracyjny sygnet hero otrzymał niski priorytet i lazy loading,
+- wybrane bezpieczne sekcje poniżej pierwszych ekranów używają content-visibility:auto,
+- podbito wersję assetów i odświeżanie cache do 2.2.690.

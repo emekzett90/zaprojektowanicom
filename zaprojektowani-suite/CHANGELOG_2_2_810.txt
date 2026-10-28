@@ -1,0 +1,13 @@
+ZAPROJEKTOWANI SUITE 2.2.810
+
+Logo & Branding / pakiety:
+- rozbudowany widoczny zakres Logo Startowe, Mini Branding i Branding Premium,
+- Mini Branding: 6 koncepcji i 10 rund poprawek,
+- Branding Premium: nielimitowana liczba koncepcji i poprawek,
+- dodane znaki wodne oraz instrukcja PDF użytkowania logo i formatów do każdego pakietu,
+- Premium: pełna księga znaku i rozszerzone materiały firmowe,
+- usunięte z Premium szablony postów/Stories, przykładowe zastosowania digital/druk, hierarchia typograficzna i moodboard,
+- usunięty social pack / cover z Mini Brandingu,
+- dodany efektowny panel „Zobacz pełny zakres” otwierany hoverem na desktopie i tapnięciem/kliknięciem na mobile,
+- panel pełnego zakresu ma osobne CTA do Studio Wyceny i obsługę klawiatury/Escape,
+- poprawione responsywne zachowanie kart i panelu zakresu.

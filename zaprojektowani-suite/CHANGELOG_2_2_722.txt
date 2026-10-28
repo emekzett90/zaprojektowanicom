@@ -1,0 +1,11 @@
+ZAPROJEKTOWANI SUITE 2.2.722
+
+REALIZACJE — uproszczony hero i poprawiony header clearance
+- usunięto kolaż 3 featured projects z prawej strony hero
+- dodano team_kontakt.webp jako główną fotografię obok H1
+- usunięto 4 boxy statystyk portfolio z hero
+- naprawiono stare margin-top:-50px na całej podstronie
+- naprawiono stare top:-60px na heroCopy
+- breadcrumbs są ponownie widoczne na desktopie
+- zwiększono bezpieczny odstęp hero od fixed headera
+- zachowano pełne portfolio, filtry, spotlight, case studies, SEO i CMS

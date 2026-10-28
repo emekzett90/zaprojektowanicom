@@ -1,0 +1,15 @@
+Zaprojektowani Suite 2.2.715
+
+Wiedza — realne statystyki + UI/UX kategorii
+
+- Hero /wiedza/ nie używa już sztucznych liczb 40+, 5.0 ani statycznego "SEO".
+- Liczba poradników jest liczona z realnych opublikowanych wpisów WordPress.
+- Liczba tematów jest liczona z aktywnych klastrów Wiedzy.
+- Średni czas czytania liczony jest z faktycznych treści wpisów / zapisanych czasów czytania.
+- Łączne czytania sumowane są z _zp_post_reads, z fallbackiem do starszego _zp_post_views.
+- Karta hero pokazuje datę ostatniej aktualizacji bazy wiedzy.
+- Dolny pasek hero pokazuje realne: poradniki, czytania, tematy.
+- Poprawiono nierówne pill buttons kategorii: stała wysokość, centrowanie, osobny badge licznika.
+- Wskazówka "Przesuń w prawo" jest ukryta na desktopie i pojawia się tylko na mobile.
+- Toolbar indeksu jest równiej wyrównany i ma spójne wysokości kontrolek.
+- Dodatkowy polishing knowledge hub bez zmiany URL-i i semantyki linków.

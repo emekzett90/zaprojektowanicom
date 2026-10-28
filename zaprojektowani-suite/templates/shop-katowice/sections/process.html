@@ -1,0 +1,207 @@
+<!-- =========================================================
+ZAPROJEKTOWANI — E-COMMERCE PROCESS / ROCKET HORIZONTAL SCROLL v1.0
+Elementor HTML Widget
+
+Cel:
+- sekcja procesu dla podstrony „Sklepy internetowe Katowice”
+- podobny mechanizm do PROCESS / HOW WE WORK, ale treść i klimat pod sklepy internetowe
+- DESKTOP: sticky horizontal scroll kart
+- MOBILE/TABLET <= 880px: swipe palcem w prawo/lewo, bez pin/sticky
+- progress bar z dużą ikoną rakiety lecącą razem z postępem
+- CTA główne do /studio-wyceny/
+- kontakt telefoniczny: 501 054 253
+- Plus Jakarta Sans Local + lokalny Lucide
+
+SZYBKIE STEROWANIE:
+1) ROCKET: szukaj "CONTROL / ROCKET PROGRESS"
+2) PERSON: szukaj "CONTROL / PERSON"
+3) CARDS: szukaj "CONTROL / CARDS"
+4) CTA: szukaj "CONTROL / CTA"
+========================================================= -->
+
+<section class="zpShopProcessFlow" id="zpShopProcessFlow" aria-labelledby="zpShopProcessFlowTitle">
+  
+
+  <div class="zpShopProcessFlow__bleed" aria-hidden="true"></div>
+
+  <div class="zpShopProcessFlow__inner zpShopProcessFlow__inner--head">
+    <header class="zpShopProcessFlow__head">
+      <div class="zpShopProcessFlow__copy">
+        <span class="zpShopProcessFlow__kicker">Jak budujemy sklep</span>
+        <h2 id="zpShopProcessFlowTitle">
+          Jak tworzymy sklepy WooCommerce — od strategii i UX po SEO oraz sprzedaż.
+        </h2>
+        <p class="zpShopProcessFlow__lead">
+          Nie zaczynamy od przypadkowego szablonu. Najpierw układamy ofertę, kategorie, produkty i ścieżkę zakupu,
+          a dopiero potem projektujemy wygląd, wdrażamy WooCommerce i przygotowujemy sklep do realnej sprzedaży online.
+        </p>
+      </div>
+
+      <figure class="zpShopProcessFlow__person" aria-hidden="true">
+        <img src="https://zaprojektowani.com/wp-content/uploads/2026/05/mateusz_sitting.webp" alt="Proces tworzenia sklepu internetowego WooCommerce — Zaprojektowani.com" loading="lazy" decoding="async">
+      </figure>
+    </header>
+  </div>
+
+  <div class="zpShopProcessFlow__pin" data-zp-shop-process-pin>
+    <div class="zpShopProcessFlow__pinInner">
+
+      <div class="zpShopProcessFlow__topBar">
+        <div class="zpShopProcessFlow__topCopy">
+          <span>Sklepy internetowe Katowice / WooCommerce</span>
+          <strong>Każdy etap przybliża sklep do sprzedaży — od strategii po start kampanii</strong>
+        </div>
+
+        <div class="zpShopProcessFlow__rocketProgress" aria-hidden="true">
+          <div class="zpShopProcessFlow__rocketTrack">
+            <span class="zpShopProcessFlow__rocketLine"></span>
+            <span class="zpShopProcessFlow__rocketGlow"></span>
+            <span class="zpShopProcessFlow__rocketIcon">
+              <i data-lucide="rocket"></i>
+            </span>
+          </div>
+          <div class="zpShopProcessFlow__rocketMeta">
+            <span>start sklepu</span>
+            <strong><em data-zp-shop-progress-label>0%</em> gotowe</strong>
+          </div>
+        </div>
+      </div>
+
+      <div class="zpShopProcessFlow__mobileHint" aria-hidden="true">
+        <span>Przesuń w prawo</span>
+        <i data-lucide="arrow-right"></i>
+      </div>
+
+      <div class="zpShopProcessFlow__viewport">
+        <div class="zpShopProcessFlow__track" data-zp-shop-process-track>
+
+          <article class="zpShopProcessFlow__card zpShopProcessFlow__card--a" data-zp-shop-process-card>
+            <span class="zpShopProcessFlow__num">01</span>
+            <div class="zpShopProcessFlow__icon" aria-hidden="true"><i data-lucide="clipboard-list"></i></div>
+            <div class="zpShopProcessFlow__cardCopy">
+              <span>Brief i cel sprzedaży</span>
+              <h3>Ustalamy, co sklep internetowy ma sprzedawać i jak ma zarabiać</h3>
+              <p>Rozmawiamy o produktach, marży, grupach klientów, modelu sprzedaży, dostawie, płatnościach i tym, czy sklep ma działać jako B2C, B2B, hurt, katalog zapytań czy klasyczny e-commerce.</p>
+            </div>
+            <div class="zpShopProcessFlow__chips" aria-hidden="true">
+              <em>B2C</em><em>B2B</em><em>hurt</em><em>zapytania</em>
+            </div>
+          </article>
+
+          <article class="zpShopProcessFlow__card zpShopProcessFlow__card--b" data-zp-shop-process-card>
+            <span class="zpShopProcessFlow__num">02</span>
+            <div class="zpShopProcessFlow__icon" aria-hidden="true"><i data-lucide="folder-tree"></i></div>
+            <div class="zpShopProcessFlow__cardCopy">
+              <span>Architektura sklepu</span>
+              <h3>Porządkujemy kategorie, produkty, warianty, filtry i adresy URL</h3>
+              <p>Budujemy strukturę sklepu tak, żeby klient szybko znalazł produkt. Ustalamy kategorie, atrybuty, warianty, kolekcje, filtry, linkowanie i sposób prowadzenia użytkownika od wejścia do koszyka.</p>
+            </div>
+            <div class="zpShopProcessFlow__miniList">
+              <div><i data-lucide="tags"></i><span>kategorie</span></div>
+              <div><i data-lucide="sliders-horizontal"></i><span>filtry</span></div>
+              <div><i data-lucide="boxes"></i><span>warianty</span></div>
+            </div>
+          </article>
+
+          <article class="zpShopProcessFlow__card zpShopProcessFlow__card--c" data-zp-shop-process-card>
+            <span class="zpShopProcessFlow__num">03</span>
+            <div class="zpShopProcessFlow__icon" aria-hidden="true"><i data-lucide="layout-template"></i></div>
+            <div class="zpShopProcessFlow__cardCopy">
+              <span>UX/UI e-commerce</span>
+              <h3>Projektujemy widoki, które prowadzą klienta do zakupu</h3>
+              <p>Tworzymy projekt strony głównej, kategorii, karty produktu, koszyka i checkoutu. Dbamy o czytelne CTA, komunikaty zaufania, zdjęcia, cenę, dostawę i argumenty zakupowe.</p>
+            </div>
+            <div class="zpShopProcessFlow__fileMock" aria-hidden="true">
+              <span><i data-lucide="image"></i> karta-produktu.fig</span>
+              <span><i data-lucide="shopping-cart"></i> checkout-ux.fig</span>
+            </div>
+          </article>
+
+          <article class="zpShopProcessFlow__card zpShopProcessFlow__card--d" data-zp-shop-process-card>
+            <span class="zpShopProcessFlow__num">04</span>
+            <div class="zpShopProcessFlow__icon" aria-hidden="true"><i data-lucide="shopping-bag"></i></div>
+            <div class="zpShopProcessFlow__cardCopy">
+              <span>WooCommerce</span>
+              <h3>Wdrażamy sklep, produkty, koszyk, płatności i dostawy</h3>
+              <p>Konfigurujemy WooCommerce, produkty, warianty, stany magazynowe, płatności online, metody wysyłki, kupony, maile transakcyjne i podstawową logikę zamówień.</p>
+            </div>
+            <div class="zpShopProcessFlow__status" aria-hidden="true">
+              <span></span><strong>wdrożenie sklepu</strong>
+            </div>
+          </article>
+
+          <article class="zpShopProcessFlow__card zpShopProcessFlow__card--e is-dark" data-zp-shop-process-card>
+            <span class="zpShopProcessFlow__num">05</span>
+            <div class="zpShopProcessFlow__icon" aria-hidden="true"><i data-lucide="shield-check"></i></div>
+            <div class="zpShopProcessFlow__cardCopy">
+              <span>Testy zakupowe</span>
+              <h3>Sprawdzamy cały zakup od wejścia na sklep do maila po zamówieniu</h3>
+              <p>Testujemy koszyk, checkout, płatności, dostawy, formularze, responsywność, szybkość działania, komunikaty błędów, maile i najważniejsze scenariusze użytkownika.</p>
+            </div>
+            <div class="zpShopProcessFlow__darkPills" aria-hidden="true">
+              <em>koszyk</em><em>checkout</em><em>mobile</em><em>płatności</em>
+            </div>
+          </article>
+
+          <article class="zpShopProcessFlow__card zpShopProcessFlow__card--f" data-zp-shop-process-card>
+            <span class="zpShopProcessFlow__num">06</span>
+            <div class="zpShopProcessFlow__icon" aria-hidden="true"><i data-lucide="search-check"></i></div>
+            <div class="zpShopProcessFlow__cardCopy">
+              <span>SEO i technika</span>
+              <h3>Przygotowujemy sklep WooCommerce pod widoczność w Google</h3>
+              <p>Ustawiamy podstawy SEO technicznego, strukturę nagłówków, adresy URL, meta dane, indeksowanie, szybkość, wersję mobile oraz fundament pod dalszą rozbudowę opisów kategorii i produktów.</p>
+            </div>
+            <div class="zpShopProcessFlow__techMini" aria-hidden="true">
+              <div><i data-lucide="smartphone"></i><span>mobile</span></div>
+              <div><i data-lucide="search"></i><span>SEO</span></div>
+              <div><i data-lucide="gauge"></i><span>speed</span></div>
+            </div>
+          </article>
+
+          <article class="zpShopProcessFlow__card zpShopProcessFlow__card--g is-final" data-zp-shop-process-card>
+            <span class="zpShopProcessFlow__num">07</span>
+            <div class="zpShopProcessFlow__icon" aria-hidden="true"><i data-lucide="bar-chart-3"></i></div>
+            <div class="zpShopProcessFlow__cardCopy">
+              <span>Analityka i kampanie</span>
+              <h3>Sklep jest gotowy pod pomiar, remarketing, Google Ads i Meta Ads</h3>
+              <p>Możemy przygotować sklep pod Google Analytics, piksele, zdarzenia konwersji, remarketing, Meta Ads i Google Ads, żeby po starcie nie zgadywać, tylko mierzyć realne wyniki.</p>
+            </div>
+            <div class="zpShopProcessFlow__satisfaction" aria-hidden="true">
+              <strong>GO</strong><span>sprzedaż online</span>
+            </div>
+          </article>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="zpShopProcessFlow__inner zpShopProcessFlow__inner--bottom">
+    <footer class="zpShopProcessFlow__bottom">
+      <div class="zpShopProcessFlow__bottomText">
+        <span>Gotowy ruszyć z projektem?</span>
+        <strong>Opisz sklep w Studio Wyceny — przygotujemy zakres, kierunek wizualny, funkcje i konkretną propozycję wdrożenia.</strong>
+      </div>
+
+      <div class="zpShopProcessFlow__bottomActions">
+        <a class="zpShopProcessFlow__cta" href="/studio-wyceny/">
+          <span>Otrzymaj wycenę</span>
+          <i data-lucide="arrow-up-right"></i>
+        </a>
+        <a class="zpShopProcessFlow__cta zpShopProcessFlow__cta--ghost" href="tel:501054253">
+          <span>501 054 253</span>
+          <i data-lucide="phone"></i>
+        </a>
+      </div>
+    </footer>
+  </div>
+</section>
+
+
+
+
+
+
+<!-- =========================================================
+/ ZAPROJEKTOWANI — E-COMMERCE PROCESS / ROCKET HORIZONTAL SCROLL v1.0
+========================================================= -->

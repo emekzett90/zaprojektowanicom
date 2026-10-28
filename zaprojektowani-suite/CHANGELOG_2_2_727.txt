@@ -1,0 +1,7 @@
+Zaprojektowani Suite 2.2.727
+
+Realizacje hero:
+- Trustindex przebudowany z białej tabelki na bardziej premium social-proof badge;
+- logo Trustindex znacząco powiększone i osadzone na ciemnym tle;
+- poprawiono czytelność oceny 5.0/5 i liczby 51 opinii;
+- duże słowo tła „realizacje” przesunięto dużo niżej.

@@ -1,0 +1,121 @@
+/* Keep the existing mobile composition, but never make first-screen content wait for motion. */
+@media (max-width:1100px){
+  html body.home #zhHero:not(#zpx),
+  html body.front-page #zhHero:not(#zpx){
+    content-visibility:visible!important;
+    contain:none!important;
+    opacity:1!important;
+    visibility:visible!important;
+    pointer-events:auto!important;
+    transform:none!important;
+    filter:none!important;
+  }
+  html body #zhHero:not(#zpx),
+  html body #zhHero:not(#zpx) *,
+  html body #zhHero:not(#zpx) *::before,
+  html body #zhHero:not(#zpx) *::after{
+    animation:none!important;
+    transition:none!important;
+    will-change:auto!important;
+  }
+  html body.home #zhHero:not(#zpx) .zh__copy,
+  html body.front-page #zhHero:not(#zpx) .zh__copy,
+  html body #zhHero:not(#zpx) .zh__eb,
+  html body #zhHero:not(#zpx) .zh__title,
+  html body #zhHero:not(#zpx) .zh__svcRot,
+  html body #zhHero:not(#zpx) .zh__lead,
+  html body #zhHero:not(#zpx) .zh__actions,
+  html body #zhHero:not(#zpx) .zh__chips,
+  html body #zhHero:not(#zpx) .zh__side,
+  html body #zhHero:not(#zpx) .zh__actions>*,
+  html body #zhHero:not(#zpx) .zh__chips>*,
+  html body #zhHero:not(#zpx) .zh__side>*{
+    animation:none!important;
+    transition:none!important;
+    will-change:auto!important;
+    opacity:1!important;
+    visibility:visible!important;
+    transform:none!important;
+    translate:none!important;
+    scale:none!important;
+    filter:none!important;
+  }
+  html body.home #zhHero:not(#zpx) .zh__title:not(.zh__title--ghost),
+  html body.front-page #zhHero:not(#zpx) .zh__title:not(.zh__title--ghost),
+  html body #zhHero:not(#zpx) .zh__title .zh__grad{
+    opacity:1!important;
+    visibility:visible!important;
+    animation:none!important;
+    transition:none!important;
+    filter:none!important;
+    transform:none!important;
+  }
+  html body.home #zhHero:not(#zpx) .zh__crewImg,
+  html body.front-page #zhHero:not(#zpx) .zh__crewImg{
+    opacity:1!important;
+    visibility:visible!important;
+    animation:none!important;
+    transform:none!important;
+    translate:none!important;
+    scale:none!important;
+    filter:none!important;
+  }
+  /* Preserve the centre portrait's existing scale without moving the crew container. */
+  html body.home #zhHero:not(#zpx) .zh__crewImg--2,
+  html body.front-page #zhHero:not(#zpx) .zh__crewImg--2{transform:scale(.94)!important}
+  html body #zhHero:not(#zpx) .zh__gflip{display:none!important}
+  html body #zhHero #zhSvcRot>span{transform:none!important}
+  html body #zhHero:not(#zpx) .zh__stage{
+    animation:none!important;
+    transition:none!important;
+    will-change:auto!important;
+    opacity:.66!important;
+    visibility:visible!important;
+    filter:none!important;
+  }
+  /* Mobile already uses this static poster; avoid a fade or perpetual float underneath the title. */
+  html body.home #zhHero:not(#zpx) .zh__poster,
+  html body.front-page #zhHero:not(#zpx) .zh__poster{
+    opacity:1!important;
+    visibility:visible!important;
+    animation:none!important;
+  }
+  html body #zhHero:not(#zpx) .zh__stage::before{opacity:.5!important}
+  html body #zhHero:not(#zpx) .zh__stage::after{opacity:1!important}
+  /* Preserve translucent cards without recomputing a 28px live blur over the hero artwork. */
+  html body.home #zhHero:not(#zpx) .zh__rev,
+  html body.front-page #zhHero:not(#zpx) .zh__rev,
+  html body #zhHero:not(#zpx) .zh__btn--g{
+    -webkit-backdrop-filter:none!important;
+    backdrop-filter:none!important;
+  }
+}
+
+/* Website service hero: show the LCP image as soon as it is decoded, without
+   the transparent entrance. Its settled geometry, shadow and gentle float stay
+   unchanged. Text keeps its original entrance while the local webfonts settle. */
+@media (max-width:1100px){
+  html body #zp-strony-internetowe-katowice #start.hero:not([data-zp-industry]) .hero-build > img.hero-shot{
+    opacity:1!important;
+    transform:none!important;
+    animation:float-team 9s ease-in-out 1.7s infinite!important;
+  }
+  @media (prefers-reduced-motion:reduce){
+    html body #zp-strony-internetowe-katowice #start.hero:not([data-zp-industry]) .hero-build > img.hero-shot{
+      animation:none!important;
+    }
+  }
+}
+/* 3.2.73: the first-paint animation reset must not freeze the technology strip.
+   Only this two-copy track moves; its viewport controller pauses it when hidden. */
+@media (max-width:1100px) and (prefers-reduced-motion:no-preference){
+  html body #zhHero:not(#zpx) .zh__mobileStrip > .zh__marqTrack{
+    animation:zpHomeTechMarquee3273 var(--zp-tech-marquee-duration,24s) linear infinite!important;
+    animation-play-state:var(--zp-tech-marquee-play,paused)!important;
+    will-change:var(--zp-tech-marquee-layer,auto)!important;
+  }
+}
+@keyframes zpHomeTechMarquee3273{
+  from{transform:translate3d(0,0,0)}
+  to{transform:translate3d(-50%,0,0)}
+}

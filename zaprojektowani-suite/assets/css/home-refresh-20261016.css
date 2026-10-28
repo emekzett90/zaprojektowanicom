@@ -1,0 +1,153 @@
+@font-face{font-family:'ZP Review Signature';font-style:normal;font-weight:400;font-display:swap;src:url('../fonts/allison-regular.woff2') format('woff2')}
+/* Scoped home sections. Content is rendered and visible without JavaScript. */
+.zpReviews24,.zpHF24,.zpClient24{--zp24-ink:#05070b;--zp24-muted:#667386;--zp24-line:#dce3ec;--zp24-grad:linear-gradient(105deg,#102a4f 0%,#1c477a 50%,#4a8fdf 100%);--zp24-button:linear-gradient(110deg,#05070b 0%,#0b1830 40%,#102a4f 72%,#1c477a 100%);box-sizing:border-box;width:100%;padding:clamp(64px,6vw,116px) 0;background:#fff;color:var(--zp24-ink);font-family:"Plus Jakarta Sans Local","Plus Jakarta Sans",system-ui,sans-serif;isolation:isolate}
+.zpReviews24 *,.zpHF24 *,.zpClient24 *{box-sizing:border-box}
+html body :is(.zpReviews24,.zpHF24,.zpClient24) .zpHR24__inner{width:min(1750px,calc(100% - 48px));max-width:1750px;margin:0 auto}
+html body :is(.zpReviews24,.zpHF24,.zpClient24) h2{font-family:inherit!important;font-size:clamp(38px,4.2vw,76px)!important;font-weight:480!important;font-variation-settings:"wght" 480!important;letter-spacing:-.055em!important;line-height:1.04!important;color:#05070b!important;margin:0!important;overflow:visible!important;padding:0 0 .09em!important;text-wrap:balance}
+html body :is(.zpReviews24,.zpHF24,.zpClient24) h2 span{font:inherit!important;line-height:inherit!important;letter-spacing:inherit!important;font-weight:720!important;font-variation-settings:"wght" 720!important;background:var(--zp24-grad)!important;background-clip:text!important;-webkit-background-clip:text!important;-webkit-text-fill-color:transparent!important;color:#1c477a!important;padding-bottom:.07em;box-decoration-break:clone;-webkit-box-decoration-break:clone}
+html body :is(.zpReviews24,.zpHF24,.zpClient24) p{font-size:clamp(15px,1.1vw,18px);line-height:1.75;color:var(--zp24-muted);margin:22px 0 0}
+.zpHR24__kicker{display:flex;align-items:center;gap:12px;margin:0 0 24px;font-size:10px;line-height:1.5;letter-spacing:.14em;font-weight:800;text-transform:uppercase;color:#536782}
+.zpHR24__kicker:before{content:"";flex:0 0 28px;height:1px;background:#1c477a}
+html body :is(.zpReviews24,.zpHF24,.zpClient24) .zpHR24__button{min-height:58px;display:inline-flex;align-items:center;justify-content:center;gap:20px;border:1px solid transparent;border-radius:999px;padding:17px 28px;background:var(--zp24-button)!important;color:#fff!important;text-decoration:none!important;font-size:15px;font-weight:750;line-height:1.35;transition:box-shadow .2s,transform .2s}
+.zpHR24__button:hover{box-shadow:0 10px 30px #102a4f22;transform:translateY(-2px)}
+html body :is(.zpReviews24,.zpHF24,.zpClient24) .zpHR24__textLink{display:inline-flex;gap:14px;align-items:center;min-height:44px;font-weight:750;font-size:14px;color:#1c477a!important;text-decoration:none!important}
+:is(.zpReviews24,.zpHF24,.zpClient24) :is(a,summary):focus-visible{outline:3px solid #4a8fdf;outline-offset:5px}
+.zpReviews24{background:#f6f8fb;border-top:1px solid #e8edf3;border-bottom:1px solid #e8edf3}
+.zpReviews24__heading{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,.65fr);align-items:end;gap:clamp(30px,6vw,110px);margin-bottom:46px}
+.zpReviews24__heading p{max-width:500px;padding-bottom:9px}
+.zpReviews24__proof{display:grid;grid-template-columns:1fr .9fr 1.1fr;gap:20px;margin-bottom:26px;align-items:stretch}
+html body .zpReviews24 .zpReviews24__rating{display:flex;position:relative;gap:26px;align-items:center;padding:30px;min-height:220px;border:1px solid var(--zp24-line);border-radius:28px;background:#fff;text-decoration:none!important;color:#102a4f!important}
+.zpReviews24__rating>div{display:flex;flex-direction:column;gap:8px}
+.zpReviews24__rating img{width:46px;height:46px;object-fit:contain;flex-shrink:0}
+.zpReviews24__rating img.zpReviews24__trustLogo{width:138px;height:44px;object-fit:contain}
+html body .zpReviews24 .zpReviews24__rating strong{font-size:58px!important;font-weight:750;line-height:1.05;letter-spacing:-.06em;color:#102a4f!important}
+.zpReviews24__rating small{font-size:24px;letter-spacing:-.03em;margin-left:5px}
+.zpReviews24__rating span:not(.zpReviews24__stars):not(.zpReviews24__open){font-size:13px;line-height:1.5;color:#596b82}
+.zpReviews24__stars{font-size:18px;color:#b97a0a;letter-spacing:3px;line-height:1.4}
+.zpReviews24__open{position:absolute;top:22px;right:24px;font-size:22px;color:#1c477a}
+.zpReviews24__team{margin:0;position:relative;min-height:220px;border-radius:28px;overflow:hidden;background:linear-gradient(120deg,#071426,#102a4f)}
+.zpReviews24__team img{display:block;width:100%;height:220px;object-fit:contain;object-position:50% 10%;opacity:1}
+.zpReviews24__team:after{content:"";position:absolute;inset:45% 0 0;background:linear-gradient(transparent,#071426)}
+.zpReviews24__team figcaption{position:absolute;bottom:20px;left:24px;right:24px;z-index:1;color:#fff;font-size:13px;font-weight:650;line-height:1.5}
+.zpReviews24__grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px;align-items:start}
+html body .zpReviews24 .zpReviews24__card{display:flex;flex-direction:column;min-width:0;padding:30px;border:1px solid var(--zp24-line);border-radius:26px;background:#fff;box-shadow:0 8px 36px #102a4f03}
+.zpReviews24__card header{display:flex;align-items:center;gap:12px}
+.zpReviews24__card header>div{min-width:0;flex:1}
+html body .zpReviews24 .zpReviews24__card h3{font-size:16px!important;font-family:inherit!important;font-weight:750!important;line-height:1.4!important;letter-spacing:-.02em!important;color:#071426!important;margin:0!important;overflow-wrap:anywhere}
+.zpReviews24__card time{display:block;font-size:12px;color:#6b778a;margin-top:4px}
+.zpReviews24__card header>img{width:28px;height:28px;object-fit:contain}
+.zpReviews24__avatar{display:grid;place-items:center;flex:0 0 46px;height:46px;background:#edf2f8;border-radius:50%;font-size:16px;font-weight:750;color:#1c477a}
+.zpReviews24__assessment{min-height:44px;display:flex;align-items:center;margin-top:12px;gap:8px;color:#1c477a;font-size:12px;font-weight:700}
+.zpReviews24__recommend{display:grid;place-items:center;width:20px;height:20px;border-radius:50%;color:#fff;background:#1877f2}
+html body .zpReviews24 :is(blockquote,.zpReviews24__excerpt){font:inherit;font-size:15px;line-height:1.8;letter-spacing:-.01em;color:#334359;margin:10px 0 22px;padding:0;border:0;white-space:normal}
+.zpReviews24__readMore summary{display:block;list-style:none;cursor:pointer}
+.zpReviews24__readMore summary::-webkit-details-marker{display:none}
+.zpReviews24__readMore .zpReviews24__excerpt{display:block}
+.zpReviews24__expand{display:flex;align-items:center;justify-content:space-between;min-height:42px;color:#1c477a;font-size:12px;font-weight:750}
+.zpReviews24__readMore[open] .zpReviews24__excerpt{display:none}
+.zpReviews24__readMore[open] .zpReviews24__expand{padding-bottom:10px}
+html body .zpReviews24 .zpReviews24__source{display:flex;align-items:center;justify-content:space-between;min-height:44px;padding-top:18px;border-top:1px solid #edf0f5;color:#1c477a!important;text-decoration:none!important;font-size:12px;font-weight:750;margin-top:auto}
+.zpReviews24__footer{display:flex;justify-content:space-between;align-items:center;gap:24px;margin-top:32px;padding-top:26px;border-top:1px solid var(--zp24-line)}
+.zpReviews24__footer p{margin:0!important}
+.zpHF24__layout{display:grid;grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr);align-items:start;gap:clamp(32px,6vw,110px)}
+.zpHF24__intro{position:sticky;top:112px;min-width:0}
+.zpHF24__intro>p{max-width:540px}
+.zpHF24__intro>.zpHR24__button{margin-top:26px}
+.zpHF24__intro>.zpHR24__textLink{display:flex!important;width:max-content;max-width:100%;margin-top:12px}
+.zpHF24__items{display:grid;gap:12px;min-width:0}
+.zpHF24__item{border:1px solid var(--zp24-line);border-radius:22px;overflow:hidden;background:#fff}
+html body #zpHomeFaqKatNavy .zpHF24__item summary{display:grid;grid-template-columns:38px minmax(0,1fr) 30px;align-items:center;gap:16px;padding:22px;list-style:none;cursor:pointer;color:#071426;font-size:17px;line-height:1.45;font-weight:650;letter-spacing:-.025em;text-align:left}
+.zpHF24__item summary::-webkit-details-marker{display:none}
+.zpHF24__number{display:grid;place-items:center;width:38px;height:38px;background:#f0f3f7;border-radius:12px;font-size:11px;letter-spacing:0;font-weight:750}
+.zpHF24__plus{position:relative;display:block;width:30px;height:30px;border:1px solid #dce3ec;border-radius:50%}
+.zpHF24__plus:before,.zpHF24__plus:after{content:"";position:absolute;top:50%;left:50%;width:11px;height:1.5px;background:currentColor;transform:translate(-50%,-50%)}
+.zpHF24__plus:after{transform:translate(-50%,-50%) rotate(90deg)}
+.zpHF24__item[open] .zpHF24__plus:after{display:none}
+html body #zpHomeFaqKatNavy .zpHF24__item[open]>summary{background:var(--zp24-button);color:#fff}
+.zpHF24__item[open] .zpHF24__number{background:#ffffff15;color:#fff}
+.zpHF24__item[open] .zpHF24__plus{border-color:#ffffff55}
+.zpHF24__answer{padding:0 26px 22px 76px}
+html body #zpHomeFaqKatNavy .zpHF24__answer p{margin:20px 0 0;font-size:15px;line-height:1.8;color:#5b697c}
+.zpHF24__answer .zpHR24__textLink{margin-top:12px}
+.zpClient24__layout{display:grid;grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr);gap:clamp(32px,6vw,110px);align-items:start}
+.zpClient24__intro p{max-width:540px}
+.zpClient24__intro>.zpHR24__textLink{margin-top:16px}
+.zpClient24__intro figure{width:min(320px,70%);aspect-ratio:1/.85;overflow:hidden;margin:24px 0 0 auto;mask-image:linear-gradient(#000 76%,transparent 100%);-webkit-mask-image:linear-gradient(#000 76%,transparent 100%)}
+.zpClient24__intro figure img{display:block;width:100%;height:auto}
+.zpClient24__brands ul{list-style:none;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));margin:0;padding:0;border-top:1px solid #e7ecf2;border-left:1px solid #e7ecf2}
+.zpClient24__brands li{min-width:0;border-bottom:1px solid #e7ecf2;border-right:1px solid #e7ecf2;min-height:145px;display:flex;align-items:center;justify-content:center;padding:26px;position:relative}
+.zpClient24__brands li>a{display:flex;align-items:center;justify-content:center;width:100%;min-height:92px}
+.zpClient24__brands img{display:block;width:100%;height:82px;object-fit:contain;filter:grayscale(1);opacity:.86;transition:filter .2s,opacity .2s}
+.zpClient24__brands li:hover img{filter:none;opacity:1}
+.zpClient24__brands summary{display:flex;align-items:center;justify-content:space-between;list-style:none;cursor:pointer;min-height:58px;padding:16px 0;color:#1c477a;font-size:14px;font-weight:750}
+.zpClient24__brands summary::-webkit-details-marker{display:none}
+.zpClient24__caption{font-size:12px!important;line-height:1.6!important;margin-top:18px!important}
+@media(max-width:1180px){.zpReviews24__proof{grid-template-columns:1fr 1fr}.zpReviews24__team{display:none}.zpReviews24__grid{grid-template-columns:repeat(2,minmax(0,1fr))}.zpHF24__layout,.zpClient24__layout{gap:32px}.zpHF24__intro{position:static}.zpClient24__brands li{padding:18px;min-height:120px}.zpClient24__brands img{height:70px}.zpReviews24__rating img.zpReviews24__trustLogo{width:112px}}
+@media(max-width:760px){html body :is(.zpReviews24,.zpHF24,.zpClient24) .zpHR24__inner{width:calc(100% - 32px)}html body :is(.zpReviews24,.zpHF24,.zpClient24) h2{font-size:clamp(34px,9vw,48px)!important;line-height:1.05!important;letter-spacing:-.05em!important}.zpHR24__kicker{font-size:9px;margin-bottom:18px;gap:10px}.zpReviews24__heading,.zpHF24__layout,.zpClient24__layout{grid-template-columns:1fr;gap:24px}.zpReviews24__heading{margin-bottom:26px}.zpReviews24__heading p{margin-top:0!important}.zpReviews24__proof{grid-template-columns:1fr;gap:12px}.zpReviews24__rating{min-height:165px!important;padding:24px!important;justify-content:flex-start;gap:30px!important}.zpReviews24__rating strong{font-size:48px!important}.zpReviews24__team{display:block;min-height:190px}.zpReviews24__team img{height:190px;object-position:center top}.zpReviews24__grid{grid-template-columns:1fr;gap:14px}.zpReviews24__card{padding:24px!important;border-radius:22px!important}.zpReviews24__footer{align-items:flex-start;flex-direction:column}.zpHR24__button{width:100%}.zpHF24__intro .zpServiceFaqPerson{max-width:75%!important;margin-left:auto!important;margin-right:auto!important}.zpHF24__intro{display:flex;flex-direction:column}.zpHF24__intro .zpServiceFaqPerson{order:2;max-height:310px;margin-top:20px!important;margin-bottom:0!important}.zpHF24__intro .zpHR24__kicker{order:0}.zpHF24__intro>h2{order:1}.zpHF24__intro>p{order:3;margin-top:14px!important}.zpHF24__intro>a{order:4}.zpHF24__layout{gap:26px}.zpHF24__item summary{font-size:16px!important;grid-template-columns:28px minmax(0,1fr) 26px!important;gap:10px!important;padding:16px!important}.zpHF24__number{width:28px;height:28px;border-radius:9px;font-size:10px}.zpHF24__plus{width:26px;height:26px}.zpHF24__answer{padding:0 18px 20px}.zpHF24__answer p{font-size:14px!important}.zpClient24__intro figure{display:none}.zpClient24__brands ul{grid-template-columns:repeat(2,minmax(0,1fr))}.zpClient24__brands li{min-height:114px;padding:20px}.zpClient24__brands img{height:66px}}
+@media(prefers-reduced-motion:reduce){:is(.zpReviews24,.zpHF24,.zpClient24) *{transition:none!important;animation:none!important;scroll-behavior:auto!important}.zpHR24__button:hover{transform:none}}
+html body .zpReviews24 .zpReviews24__rating:not(.zpReviews24__rating--fb){background:var(--zp24-button)!important;border-color:#102a4f;color:#fff!important}
+html body .zpReviews24 .zpReviews24__rating:not(.zpReviews24__rating--fb) strong{color:#fff!important}
+html body .zpReviews24 .zpReviews24__rating:not(.zpReviews24__rating--fb) span:not(.zpReviews24__stars){color:#fff!important}
+html body .zpReviews24 .zpReviews24__rating:not(.zpReviews24__rating--fb) .zpReviews24__stars{color:#f7ca6b}
+html body .zpReviews24 .zpReviews24__rating img.zpReviews24__trustLogo{width:154px;height:auto;max-height:48px}
+.zpReviews24__grid{align-items:stretch}
+.zpReviews24__readMore[open] .zpReviews24__expand>span:last-child{transform:rotate(45deg)}
+.zpReviews24__expandOpen{display:none}.zpReviews24__readMore[open] .zpReviews24__expandOpen{display:inline}.zpReviews24__readMore[open] .zpReviews24__expandClosed{display:none}
+.zpHF24 .zpServiceFaqPerson{display:block;width:481.39px;max-width:100%;aspect-ratio:14/15;overflow:hidden;margin:0 0 24px;mask-image:linear-gradient(#000 84%,transparent);-webkit-mask-image:linear-gradient(#000 84%,transparent)}
+.zpHF24 .zpServiceFaqPerson img{display:block;width:100%;height:100%;object-fit:cover;object-position:center top}
+.zpReviews24__rating,.zpReviews24__rating>div{min-width:0}
+@media(max-width:760px){.zpReviews24__proof{grid-template-columns:minmax(0,1fr)}.zpReviews24__grid{grid-template-columns:minmax(0,1fr)}}
+@media(max-width:420px){html body .zpReviews24 .zpReviews24__rating{gap:16px!important;padding:22px!important}html body .zpReviews24 .zpReviews24__rating img.zpReviews24__trustLogo{width:112px}html body .zpReviews24 .zpReviews24__rating strong{font-size:46px!important}.zpReviews24__rating small{font-size:20px}}
+/* 3.2.26: horizontal review rail and the large, uncropped team cut-out. */
+.zpReviews24__heading{position:relative;z-index:2}
+.zpReviews24__proof{position:relative;z-index:1}
+.zpReviews24__rating{z-index:3}
+.zpReviews24__rail{display:flex;align-items:stretch;gap:20px;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x proximity;overflow-anchor:none;scrollbar-width:none;overscroll-behavior-x:contain;scroll-padding-inline:0;padding:8px 0 14px;min-width:0;max-width:100%;-webkit-overflow-scrolling:touch;touch-action:pan-x pan-y}
+.zpReviews24__rail::-webkit-scrollbar{display:none}
+html body .zpReviews24 .zpReviews24__rail .zpReviews24__card{flex:0 0 calc((100% - 40px)/3);scroll-snap-align:start;margin:0}
+.zpReviews24__navigation{display:flex;align-items:center;justify-content:flex-end;gap:22px;min-height:64px;margin:22px 0 8px;position:relative;z-index:4}
+.zpReviews24__arrows{display:flex;gap:10px}.zpReviews24__arrows[hidden]{display:none}
+html body .zpReviews24 button.zpReviews24__arrow{appearance:none;display:grid;place-items:center;width:56px;height:56px;min-width:56px;min-height:56px;padding:0;border:1px solid #16345b;border-radius:50%;background:var(--zp24-button)!important;color:#fff!important;cursor:pointer;box-shadow:0 6px 20px #102a4f12;transition:transform .2s,opacity .2s}
+.zpReviews24__arrow svg{display:block;width:23px;height:23px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+html body .zpReviews24 button.zpReviews24__arrow:hover:not(:disabled){transform:translateY(-2px)}
+html body .zpReviews24 button.zpReviews24__arrow:disabled{opacity:.32;cursor:default;box-shadow:none}
+.zpReviews24__position{font-size:12px;font-weight:700;font-variant-numeric:tabular-nums;color:#64748b}
+.zpReviews24__hint{display:none;align-items:center;gap:10px;color:#536782;font-size:11px;line-height:1.5;font-weight:750;letter-spacing:.02em;transition:opacity .2s}
+.zpReviews24__hint>span{font-size:24px;animation:zpReviewSwipe26 2s ease-in-out infinite}
+.zpReviews24--explored .zpReviews24__hint{opacity:.55}
+@keyframes zpReviewSwipe26{0%,100%{transform:translateX(0)}50%{transform:translateX(9px)}}
+@media(min-width:1181px){.zpReviews24__team{overflow:visible;isolation:isolate;z-index:1}.zpReviews24__team img{position:absolute;right:-3.5%;bottom:0;width:107%;height:642px;max-width:none;object-fit:contain;object-position:center bottom;z-index:1;mask-image:linear-gradient(#000 0%,#000 91%,transparent 100%)}.zpReviews24__team:after{z-index:2;border-radius:0 0 28px 28px;pointer-events:none}.zpReviews24__team figcaption{z-index:3}.zpReviews24__heading>div{grid-column:1;min-width:0}}
+@media(min-width:761px) and (max-width:1180px){html body .zpReviews24 .zpReviews24__rail .zpReviews24__card{flex-basis:calc((100% - 20px)/2)}}
+@media(max-width:760px){html body .zpReviews24 .zpReviews24__rail .zpReviews24__card{flex-basis:calc(100% - 24px)}.zpReviews24__rail{gap:14px}.zpReviews24__navigation{justify-content:space-between;gap:12px;margin-top:16px;flex-wrap:wrap}.zpReviews24__hint{display:flex;flex:1 1 180px}.zpReviews24__position{display:none}html body .zpReviews24 button.zpReviews24__arrow{width:44px;height:44px;min-width:44px;min-height:44px}.zpReviews24__arrows{gap:6px}.zpReviews24__team{overflow:hidden}}
+@media(prefers-reduced-motion:reduce){.zpReviews24__hint>span{animation:none}.zpReviews24__rail{scroll-behavior:auto!important}}
+html body .zpReviews24 button.zpReviews24__autoplay{background:#fff!important;border-color:#dce3ec;color:#102a4f!important;font-size:25px}
+.zpReviews24__autoplay [hidden]{display:none}
+@media(max-width:760px){.zpReviews24__hint{flex-basis:130px;font-size:10px}}
+
+/* 3.2.27: open team cut-out, a featured authentic quote and no mobile photo. */
+.zpReviews24__team{background:transparent;border:0;border-radius:0}
+.zpReviews24__team:after{display:none}
+.zpReviews24__team figcaption{display:none}
+@media(max-width:1180px){.zpReviews24 .zpReviews24__team{display:none!important}}
+/* Featured review: a quotation bubble with its author below the tail. */
+.zpReviews24__featured{display:block;position:relative;z-index:2;margin-top:34px;padding:0;background:transparent;border:0;box-shadow:none;overflow:visible}
+.zpReviews24__featuredBubble{position:relative;background:#fff;border:1px solid #d6e0ec;border-radius:36px 36px 36px 12px;padding:40px 96px 48px;box-shadow:0 18px 54px #102a4f08;isolation:isolate}
+.zpReviews24__featuredBubble:after{content:"";position:absolute;left:62px;bottom:-14px;width:28px;height:28px;background:#fff;border-right:1px solid #d6e0ec;border-bottom:1px solid #d6e0ec;border-radius:0 0 7px 0;transform:rotate(45deg);z-index:-1}
+.zpReviews24__featuredBubble>.zpHR24__kicker{font-size:10px;margin:0 0 24px;color:#1c477a}
+html body .zpReviews24 .zpReviews24__featured blockquote{position:relative;margin:0;padding:0;font-family:inherit;font-size:clamp(22px,1.65vw,29px);font-weight:500;line-height:1.55;letter-spacing:-.025em;color:#102a4f;text-wrap:pretty}
+.zpReviews24__quoteMark{position:absolute;display:block;color:#1c477a;font-family:Georgia,"Times New Roman",serif;font-weight:700;font-size:100px;line-height:1;pointer-events:none;user-select:none}
+.zpReviews24__quoteMark--open{left:28px;top:15px}
+.zpReviews24__quoteMark--close{right:29px;bottom:3px}
+.zpReviews24__featuredMeta{display:flex;align-items:center;justify-content:space-between;gap:24px;padding:28px 28px 0 48px;min-width:0}
+.zpReviews24__featuredAuthor{display:flex;align-items:center;gap:15px;min-width:0}
+.zpReviews24__featuredAuthor img{width:42px;height:42px;object-fit:contain;flex:0 0 42px}
+.zpReviews24__featuredAuthor strong{display:block;font-family:"ZP Review Signature",cursive;font-size:50px;font-weight:400;font-style:normal;font-variation-settings:normal;letter-spacing:0;line-height:1.15;text-transform:none;color:#102a4f;padding:0 8px 3px 0;overflow:visible}
+.zpReviews24__featuredAuthor div>span{display:block;font-size:12px;line-height:1.65;color:#64748b;margin-top:4px}
+.zpReviews24__featuredMeta time{font:inherit;color:inherit;white-space:nowrap}
+.zpReviews24__featuredMeta a{font-size:12px!important;flex-shrink:0}
+@media(max-width:760px){.zpReviews24__featured{margin-top:24px}.zpReviews24__featuredBubble{border-radius:28px 28px 28px 10px;padding:28px 24px 80px}.zpReviews24__featuredBubble:after{left:33px;width:23px;height:23px;bottom:-12px}.zpReviews24__featuredBubble>.zpHR24__kicker{font-size:8px;letter-spacing:.11em;margin-bottom:55px;gap:9px}.zpReviews24__featuredBubble>.zpHR24__kicker:before{flex-basis:20px}html body .zpReviews24 .zpReviews24__featured blockquote{font-size:20px;line-height:1.55;letter-spacing:-.025em}.zpReviews24__quoteMark{font-size:76px}.zpReviews24__quoteMark--open{left:23px;top:14px}.zpReviews24__quoteMark--close{right:22px;bottom:-2px}.zpReviews24__featuredMeta{padding:27px 8px 0 14px;gap:10px;align-items:flex-start;flex-direction:column}.zpReviews24__featuredAuthor{gap:12px}.zpReviews24__featuredAuthor img{width:36px;height:36px;flex-basis:36px}.zpReviews24__featuredAuthor strong{font-size:44px}.zpReviews24__featuredAuthor div>span{font-size:11px}.zpReviews24__featuredMeta a{margin-left:48px;min-height:38px!important;font-size:11px!important}}
+
+.zpReviews24__hint>span.zpReviews24__swipeHand{display:grid;place-items:center;flex:0 0 36px;width:36px;height:42px;animation:zpReviewSwipeHand28 2.8s ease-in-out infinite}
+.zpReviews24__swipeHand svg{display:block;width:29px;height:32px;stroke:#1c477a;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+@keyframes zpReviewSwipeHand28{0%,14%{transform:translateX(-4px) rotate(-9deg);opacity:.55}28%{transform:translateX(-4px) rotate(0);opacity:1}68%{transform:translateX(9px) rotate(7deg);opacity:1}83%,100%{transform:translateX(9px) rotate(7deg);opacity:0}}
+@media(prefers-reduced-motion:reduce){.zpReviews24__hint>span.zpReviews24__swipeHand{animation:none;opacity:1;transform:none}}

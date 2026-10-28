@@ -1,0 +1,6 @@
+Zaprojektowani Suite 2.7.2 — 04.10.2026
+
+- Wpisy / Wiedza: blok „Powiązane usługi i poradniki” przebudowany z surowej listy linków na wizualne karty ze zdjęciami, tagiem i CTA, stylistycznie spójne z „Czytaj dalej / Rozwiń ten temat”.
+- Wpisy / Wiedza: zabezpieczenie przed poziomym przewijaniem całej strony na desktopie (overflow X ograniczony wyłącznie na pojedynczych wpisach).
+- Studio Wyceny: zmieniona kolejność sekcji — „Cennik i wycena / Cennik stron internetowych, sklepów, logo i kampanii” jest teraz przed formularzem Kontakt.
+- Legacy Ultimate SEO: korzysta z nowego renderer-a kart, zamiast wracać do starej listy punktowanej.

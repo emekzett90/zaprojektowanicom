@@ -1,0 +1,16 @@
+/* Only the added article sections. Typography and layout come from the site. */
+.zpArticleNew .zpArticleGrowth{min-width:0;scroll-margin-top:110px}
+.zpArticleNew .zpArticleGrowth .zpArticleNew__label{letter-spacing:.015em;text-transform:none}
+.zpArticleNew .zpArticleGrowth__figure{margin:26px 0 30px;overflow:hidden;border-radius:18px;border:1px solid rgba(77,87,136,.13);background:#f6f7fa}
+.zpArticleNew .zpArticleGrowth__figure .zpArticleGrowth__image{display:block;width:100%;max-width:100%;min-height:0;height:auto;aspect-ratio:16/9;object-fit:contain;margin:0;border-radius:0}
+.zpArticleNew .zpArticleGrowth__figure figcaption{padding:13px 17px 16px;margin:0;color:#4d5569;font-size:.87em;line-height:1.65}
+.zpArticleNew .zpArticleGrowth .zpArticleNew__tableWrap{max-width:100%;overflow-x:auto;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch}
+.zpArticleNew .zpArticleGrowth .zpArticleNew__tableWrap:focus-visible{outline:2px solid #4d5788;outline-offset:4px}
+.zpArticleNew .zpArticleGrowth table{width:100%;min-width:570px;border-collapse:collapse;table-layout:auto}
+.zpArticleNew .zpArticleGrowth th,.zpArticleNew .zpArticleGrowth td{vertical-align:top;overflow-wrap:anywhere}
+.zpArticleNew .zpArticleGrowth tbody th{font-weight:700;text-align:left}
+.zpArticleNew .zpArticleGrowth code{font-size:.86em;white-space:normal;overflow-wrap:anywhere}
+.zpArticleNew .zpArticleGrowth__example{border-left:3px solid #4d5788;background:#f6f7fa;padding:18px 22px;border-radius:0 14px 14px 0;margin:22px 0}
+.zpArticleNew .zpArticleGrowth__example p{margin:0 0 12px}
+.zpArticleNew .zpArticleGrowth__example p:last-child{margin-bottom:0}
+@media(max-width:767px){.zpArticleNew .zpArticleGrowth__figure{margin:22px 0 26px;border-radius:13px}.zpArticleNew .zpArticleGrowth__figure figcaption{padding:12px 14px 14px;font-size:.85em}.zpArticleNew .zpArticleGrowth__example{padding:16px 17px}.zpArticleNew .zpArticleGrowth table{min-width:520px}}

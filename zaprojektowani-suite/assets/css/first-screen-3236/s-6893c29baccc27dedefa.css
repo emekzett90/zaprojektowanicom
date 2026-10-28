@@ -1,0 +1,1 @@
+html body .zpTrustPinned:not([data-zp-trust-pinned-ready="1"]) .zpTrustPinned__head,html body .zpTrustPinned:not([data-zp-trust-pinned-ready="1"]) .zpTrustPinned__stats{opacity:1!important;transform:none!important;filter:none!important}

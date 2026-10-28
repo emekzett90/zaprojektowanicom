@@ -1,0 +1,30 @@
+{
+  "base": "zaprojektowani-suite-3.2.36-altiora-seo-mobile.zip",
+  "modified": [
+    "README.md",
+    "includes/altiora-article-3236.php",
+    "zaprojektowani-suite.php"
+  ],
+  "added": [
+    "CHANGELOG_3_2_37.txt",
+    "INSTRUKCJA_3_2_37.txt",
+    "assets/img/altiora-case-3236/altiora-linea-identyfikacja-1200.webp",
+    "assets/img/altiora-case-3236/altiora-linea-identyfikacja-1536.webp",
+    "assets/img/altiora-case-3236/altiora-linea-identyfikacja-768.webp",
+    "assets/img/altiora-case-3236/altiora-linea-logo-black.webp",
+    "assets/img/altiora-case-3236/altiora-linea-logo-gold.webp",
+    "assets/img/altiora-case-3236/altiora-linea-logo-white.webp",
+    "docs/3.2.37/INSTRUKCJA.txt",
+    "docs/3.2.37/RANK_MATH_ALTIORA_LINEA.txt",
+    "docs/3.2.37/TESTY_IMPORTU.json",
+    "includes/altiora-autopublish-3237.php"
+  ],
+  "removed": [],
+  "unchanged_files": 1926,
+  "existing_css_js_untouched": true,
+  "php_lint": {
+    "files": 700,
+    "failures": []
+  },
+  "import_test_scenarios": 35
+}

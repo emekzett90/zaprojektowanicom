@@ -1,0 +1,44 @@
+
+  html,body,#page,.site{background:#05070b!important;}
+  body:not(.home):not(.front-page){background:#fff!important;}
+  body.home,body.front-page,body.home #page,body.front-page #page,body.home .site,body.front-page .site{background:#05070b!important;}
+  #zpNewNav{--zp1875-logo-desk:36px;--zp1875-logo-mob:32px;--zp1875-logo-mx:-8px;--zp1875-nav-desk:88px;--zp1875-nav-mob:74px;--zp1875-mobile-glass:0.86;}
+  #zpNewNav,
+  #zpNewNav .zpNewNav__shell,
+  #zpNewNav .zpNewNav__inner{--zpNavH:var(--zp1875-nav-desk)!important;--zp-header-h:var(--zp1875-nav-desk)!important;--zp-header-logo-h:var(--zp1875-logo-desk)!important;}
+  #zpNewNav .zpNewNav__shell,
+  #zpNewNav.is-scrolled .zpNewNav__shell,
+  #zpNewNav.is-mega-open .zpNewNav__shell{min-height:var(--zp1875-nav-desk)!important;height:var(--zp1875-nav-desk)!important;padding-top:0!important;padding-bottom:0!important;}
+  #zpNewNav .zpNewNav__inner,
+  #zpNewNav.is-scrolled .zpNewNav__inner,
+  #zpNewNav.is-mega-open .zpNewNav__inner{min-height:var(--zp1875-nav-desk)!important;height:var(--zp1875-nav-desk)!important;align-items:center!important;}
+  #zpNewNav .zpNewNav__brand,
+  #zpNewNav.is-scrolled .zpNewNav__brand,
+  #zpNewNav.is-mega-open .zpNewNav__brand{height:var(--zp1875-nav-desk)!important;min-height:var(--zp1875-nav-desk)!important;display:flex!important;align-items:center!important;line-height:0!important;}
+  #zpNewNav .zpNewNav__logo,
+  #zpNewNav.is-scrolled .zpNewNav__logo,
+  #zpNewNav.is-mega-open .zpNewNav__logo,
+  #zpNewNav.zpNewNav--heroOverlay .zpNewNav__logo{height:var(--zp1875-logo-desk)!important;min-height:var(--zp1875-logo-desk)!important;max-height:var(--zp1875-logo-desk)!important;width:auto!important;max-width:260px!important;object-fit:contain!important;margin:0!important;padding:0!important;transform:none!important;scale:1!important;transition:opacity .22s ease,filter .22s ease!important;}
+  #zpNewNav .zpNewNav__brand:hover .zpNewNav__logo{transform:none!important;scale:1!important;}
+  @media(max-width:1080px){
+    #zpNewNav,#zpNewNav .zpNewNav__shell,#zpNewNav .zpNewNav__mobileBar{--zpNavH:var(--zp1875-nav-mob)!important;}
+    #zpNewNav .zpNewNav__shell,
+    #zpNewNav.is-scrolled .zpNewNav__shell,
+    #zpNewNav.is-mega-open .zpNewNav__shell{min-height:var(--zp1875-nav-mob)!important;height:var(--zp1875-nav-mob)!important;padding:0!important;display:flex!important;align-items:center!important;}
+    #zpNewNav.is-scrolled:not(.is-mega-open) .zpNewNav__shell{background:rgba(255,255,255,var(--zp1875-mobile-glass))!important;border-bottom:0!important;box-shadow:none!important;backdrop-filter: none;-webkit-backdrop-filter: none;}
+    #zpNewNav.zpNewNav--heroOverlay:not(.is-scrolled):not(.is-mega-open) .zpNewNav__shell{background:linear-gradient(180deg,rgba(2,4,7,.36),rgba(2,4,7,.08) 72%,rgba(2,4,7,0))!important;box-shadow:none!important;backdrop-filter: none;-webkit-backdrop-filter: none;}
+    #zpNewNav .zpNewNav__mobileBar,
+    #zpNewNav.is-scrolled .zpNewNav__mobileBar{height:var(--zp1875-nav-mob)!important;min-height:var(--zp1875-nav-mob)!important;display:flex!important;align-items:center!important;padding-top:0!important;padding-bottom:0!important;}
+    #zpNewNav .zpNewNav__mobileBrand,
+    #zpNewNav.is-scrolled .zpNewNav__mobileBrand,
+    #zpNewNav.is-mega-open .zpNewNav__mobileBrand{position:relative!important;width:220px!important;max-width:58vw!important;height:var(--zp1875-nav-mob)!important;min-height:var(--zp1875-nav-mob)!important;display:flex!important;align-items:center!important;line-height:0!important;overflow:visible!important;transform:none!important;padding:0!important;margin:0!important;}
+    #zpNewNav .zpNewNav__mobileLogo,
+    #zpNewNav.is-scrolled .zpNewNav__mobileLogo,
+    #zpNewNav.is-mega-open .zpNewNav__mobileLogo,
+    #zpNewNav.zpNewNav--heroOverlay .zpNewNav__mobileLogo{position:absolute!important;left:0!important;top:50%!important;bottom:auto!important;width:auto!important;height:var(--zp1875-logo-mob)!important;min-height:var(--zp1875-logo-mob)!important;max-height:var(--zp1875-logo-mob)!important;max-width:min(58vw,210px)!important;object-fit:contain!important;margin:0!important;padding:0!important;transform:translate3d(var(--zp1875-logo-mx),-50%,0)!important;transform-origin:left center!important;scale:1!important;transition:opacity .22s ease,filter .22s ease!important;}
+    #zpNewNav .zpNewNav__mobileBrand:hover .zpNewNav__mobileLogo{transform:translate3d(var(--zp1875-logo-mx),-50%,0)!important;scale:1!important;}
+    #zpNewNav.zpNewNav--heroOverlay:not(.is-scrolled):not(.is-mega-open) .zpNewNav__mobileLogo--light,#zpNewNav.is-mega-open .zpNewNav__mobileLogo--light{opacity:1!important;visibility:visible!important;}
+    #zpNewNav.zpNewNav--heroOverlay:not(.is-scrolled):not(.is-mega-open) .zpNewNav__mobileLogo--dark,#zpNewNav.is-mega-open .zpNewNav__mobileLogo--dark{opacity:0!important;visibility:hidden!important;}
+    #zpNewNav.is-scrolled:not(.is-mega-open) .zpNewNav__mobileLogo--light,#zpNewNav:not(.zpNewNav--heroOverlay):not(.is-mega-open) .zpNewNav__mobileLogo--light{opacity:0!important;visibility:hidden!important;}
+    #zpNewNav.is-scrolled:not(.is-mega-open) .zpNewNav__mobileLogo--dark,#zpNewNav:not(.zpNewNav--heroOverlay):not(.is-mega-open) .zpNewNav__mobileLogo--dark{opacity:1!important;visibility:visible!important;}
+  }

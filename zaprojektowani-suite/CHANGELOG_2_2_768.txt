@@ -1,0 +1,5 @@
+Zaprojektowani Suite 2.2.768
+
+- Studio Wyceny: powiększona typografia w podglądzie „Nowa wiadomość”.
+- Wymuszone zaokrąglenie górnych rogów okna podglądu wiadomości, spójne z dołem.
+- Zmiana ograniczona do sekcji kontaktowej na stronie Studio Wyceny.

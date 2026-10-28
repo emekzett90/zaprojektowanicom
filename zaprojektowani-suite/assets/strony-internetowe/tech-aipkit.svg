@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" role="img" aria-labelledby="title">
+  <title id="title">AIPKIT</title>
+  <defs>
+    <linearGradient id="g" x1="6" y1="4" x2="42" y2="44" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#ff8a42"/>
+      <stop offset="1" stop-color="#8ec8f7"/>
+    </linearGradient>
+  </defs>
+  <rect x="3" y="3" width="42" height="42" rx="13" fill="#101827"/>
+  <path d="M24 8.5l2.45 8.62L35 19.6l-8.55 2.48L24 30.7l-2.45-8.62L13 19.6l8.55-2.48L24 8.5Z" fill="url(#g)"/>
+  <path d="M13.5 34.5h21" stroke="url(#g)" stroke-width="3" stroke-linecap="round"/>
+</svg>

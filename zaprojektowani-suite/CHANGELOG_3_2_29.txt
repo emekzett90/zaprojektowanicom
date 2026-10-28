@@ -1,0 +1,6 @@
+Zaprojektowani Suite 3.2.29 — 2026-10-16
+
+- Redesigned the featured homepage review as a quotation bubble with a short tail pointing toward the author.
+- Added visible decorative Polish quotation marks, native navy accents and comfortable responsive padding.
+- Moved the author, Facebook identity, date and source link below the bubble.
+- Preserved the complete authentic review, 80-review carousel, mobile hand cue and existing behavior.

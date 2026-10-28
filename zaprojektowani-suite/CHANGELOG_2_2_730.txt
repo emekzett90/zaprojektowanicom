@@ -1,0 +1,7 @@
+Zaprojektowani Suite 2.2.730
+
+- Strona główna: zmniejszony rozmiar H1 w hero.
+- Strona główna: wyraźnie zmniejszona interlinia H1.
+- Zmiana jest ograniczona do #zhHero, więc nagłówki H1 na podstronach usług nie są zmieniane.
+- Desktop: H1 clamp(46px, 5.2vw, 96px), line-height 0.89.
+- Tablet/mobile: zachowana responsywność z delikatnie ciaśniejszą interlinią.

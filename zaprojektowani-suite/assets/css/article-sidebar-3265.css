@@ -1,0 +1,59 @@
+/* 3.2.65: Code Snippets SIDEBAR BLOG, isolated from article and hub typography. */
+.zpPostSide .zpPostSide__stack{gap:20px}
+.zpPostSide .zpPostSide__box{padding:24px;border-color:#e0e6ee;border-radius:26px}
+.zpPostSide .zpPostSide__kicker{gap:9px;margin-bottom:14px;font-size:11px;line-height:1.4;letter-spacing:.10em;color:#697a90}
+.zpPostSide .zpPostSide__kicker svg{width:16px;height:16px}
+.zpPostSide .zpPostSide__title{font-family:var(--zp-font,"Plus Jakarta Sans Local","Plus Jakarta Sans",system-ui,sans-serif);font-size:25px;font-weight:700;line-height:1.13;letter-spacing:-.045em;overflow:visible;text-wrap:pretty}
+.zpPostSide .zpPostSide__text{margin-top:12px;font-size:15px;line-height:1.65;color:#586779}
+.zpPostSide .zpPostSide__articleHead{flex-wrap:wrap;gap:14px}
+.zpPostSide .zpPostSide__category{font-size:12px;line-height:1.35;min-height:36px;padding:8px 12px}
+.zpPostSide .zpPostSide__meta{gap:8px}
+.zpPostSide .zpPostSide__meta span{font-size:11px;line-height:1.35;min-height:32px;padding:7px 10px}
+.zpPostSide .zpPostSide__tocLabel{font-size:10px;line-height:1.4}
+.zpPostSide .zpPostSide__tocLink{font-size:14px;line-height:1.5;padding:9px 10px 9px 20px}
+.zpPostSide .zpPostSide__tocLink::before{top:18px}
+.zpPostSide .zpPostSide__cta{background:linear-gradient(115deg,#05070b 0%,#0b1830 48%,#173b67 100%);border-color:#173251}
+.zpPostSide .zpPostSide__cta .zpPostSide__kicker{color:#b9cee5}
+.zpPostSide .zpPostSide__cta .zpPostSide__title{font-size:28px;color:#fff}
+.zpPostSide .zpPostSide__cta .zpPostSide__text{color:#d0dce9}
+.zpPostSide .zpPostSide__ctaActions{gap:10px;margin-top:22px}
+.zpPostSide .zpPostSide__btn{min-height:49px;padding:13px 18px;font-size:14px;line-height:1.35;font-weight:700;letter-spacing:-.015em}
+.zpPostSide .zpPostSide__btn svg{width:18px;height:18px;flex-shrink:0}
+.zpPostSide .zpPostSide__sectionHead{gap:12px;align-items:center;margin-bottom:18px}
+.zpPostSide .zpPostSide__sectionLink{font-size:12px;line-height:1.35;min-height:36px;gap:5px}
+.zpPostSide .zpPostSide__sectionLink svg{width:15px;height:15px}
+.zpPostSide .zpPostSide__posts{gap:12px}
+.zpPostSide .zpPostSide__post{grid-template-columns:minmax(0,.72fr) minmax(0,1fr);align-items:center;gap:14px;min-height:0;padding:12px;border-color:#e0e6ee;border-radius:20px}
+.zpPostSide .zpPostSide__post>span{min-width:0}
+.zpPostSide .zpPostSide__thumb{display:block;align-self:center;width:100%;height:auto;min-height:0;aspect-ratio:auto;border-radius:12px;background:transparent;overflow:hidden}
+/* The original snippet hard-codes 144x144 attributes. The existing speed layer
+ * supplies the real --zp-ar for each media item: reserve and show that full image. */
+.zpPostSide .zpPostSide__thumb img{display:block;width:100%!important;max-width:100%;height:auto!important;min-height:0;max-height:none;aspect-ratio:var(--zp-ar,auto);object-fit:contain;object-position:center;transform:none!important}
+.zpPostSide .zpPostSide__postMeta{align-items:flex-start;gap:5px;margin-bottom:7px;color:#65768c;font-size:11px;line-height:1.4;font-weight:600}
+.zpPostSide .zpPostSide__postMeta svg{width:12px;height:12px;margin-top:2px;flex-shrink:0}
+.zpPostSide .zpPostSide__postTitle{font-family:var(--zp-font,"Plus Jakarta Sans Local","Plus Jakarta Sans",system-ui,sans-serif);font-size:17px;line-height:1.32;letter-spacing:-.028em;font-weight:700;text-wrap:pretty;overflow-wrap:break-word}
+.zpPostSide .zpPostSide__post:hover{transform:none;border-color:#a7bad0;background:#f8fafd}
+.zpPostSide .zpPostSide__chip{min-height:39px;padding:9px 12px;font-size:12px;line-height:1.35}
+.zpPostSide .zpPostSide__hubLinks{grid-template-columns:1fr;gap:9px;margin-top:18px}
+.zpPostSide .zpPostSide__hubLink{min-height:47px;padding:12px 15px;font-size:13px;line-height:1.4}
+.zpPostSide .zpPostSide__trust{grid-template-columns:42px minmax(0,1fr)}
+.zpPostSide .zpPostSide__logo{width:42px;height:42px}
+.zpPostSide .zpPostSide__trustText strong{font-size:13px;line-height:1.4}
+.zpPostSide .zpPostSide__trustText span{font-size:11px;line-height:1.5}
+.zpPostSide .zpPostSide__share a{width:40px;height:40px}
+.zpPostSide .zpPostSide__allKnowledge{font-size:12px;padding:0 14px}
+.zpPostSide a:focus-visible{outline:3px solid #315d91;outline-offset:4px}
+@media(max-width:640px){
+ .zpPostSide .zpPostSide__box{padding:20px;border-radius:22px}
+ .zpPostSide .zpPostSide__title{font-size:24px}
+ .zpPostSide .zpPostSide__cta .zpPostSide__title{font-size:27px}
+ .zpPostSide .zpPostSide__post{gap:12px;padding:11px}
+ .zpPostSide .zpPostSide__postTitle{font-size:16px;line-height:1.35}
+ .zpPostSide .zpPostSide__postMeta{font-size:10.5px}
+}
+@media(max-width:360px){
+ .zpPostSide .zpPostSide__box{padding:16px}
+ .zpPostSide .zpPostSide__sectionHead{flex-wrap:wrap;gap:4px}
+ .zpPostSide .zpPostSide__post{grid-template-columns:minmax(0,.65fr) minmax(0,1fr);gap:10px;padding:10px}
+ .zpPostSide .zpPostSide__postTitle{font-size:15px}
+}

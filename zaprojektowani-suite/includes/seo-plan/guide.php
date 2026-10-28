@@ -1,0 +1,347 @@
+<?php
+if (!defined('ABSPATH')) { exit; }
+
+/**
+ * ZP Suite 2.5.0 — the look of the "Poradnik" sections on the service pages.
+ *
+ * The guide text stays the same HTML (headings, paragraphs, lists, links), only its layout
+ * changes, built from the service pages' own components: every H2 becomes a scope card
+ * (number, icon, the first one dark), lists get the package-list check marks, a list whose
+ * items open with a bold phrase becomes a row of numbered cards, a sticky column shows the team
+ * (a cut-out photo with no panel behind it, coming out from behind the table of contents and a little
+ * over the cards) and the table of contents, and halfway down a dark band with a team member who
+ * reaches above the band links to contact.
+ */
+
+/** Team photo and the person in the contact band, per page. */
+function zp_seo_guide_setup(string $path): array {
+  $map = [
+    '/strony-wordpress/'                    => ['team-tablet', 'mateusz'],
+    '/opieka-wordpress/'                    => ['team-laptop', 'stanislaw'],
+    '/strona-wizytowka/'                    => ['team-pencil', 'marta'],
+    '/tworzenie-landing-page/'              => ['team-trio', 'stanislaw'],
+    '/strony-internetowe-dla-kancelarii/'   => ['team-duo', 'mateusz'],
+    '/strony-internetowe-dla-lekarzy/'      => ['team-laptop', 'marta'],
+    '/strony-internetowe-dla-deweloperow/'  => ['team-trio', 'mateusz'],
+    '/strony-internetowe-dla-salonow-beauty/' => ['team-pencil', 'marta'],
+    '/strony-internetowe-dla-trenerow-personalnych/' => ['team-tablet', 'stanislaw'],
+    '/strony-internetowe-dla-fotografow/'   => ['team-duo', 'marta'],
+    '/strony-internetowe-dla-restauracji/'  => ['team-trio', 'stanislaw'],
+    '/strony-internetowe-dla-hoteli/'       => ['team-laptop', 'mateusz'],
+    '/agencja-reklamowa-katowice/'         => ['team-trio', 'mateusz'],
+    '/tworzenie-sklepow-internetowych/'     => ['team-tablet', 'mateusz'],
+  ];
+  $s = $map[$path] ?? ['team-tablet', 'mateusz'];
+  return (array) apply_filters('zp_seo_guide_setup', ['photo' => $s[0], 'person' => $s[1]], $path);
+}
+
+function zp_seo_guide_icon(int $i): string {
+  $paths = [
+    '<circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2"/>',
+    '<path d="M4 4h16v16H4zM8 15l3-3 2 2 3-4 3 5"/><circle cx="9" cy="9" r="1"/>',
+    '<path d="M12 2v4m0 12v4M4.9 4.9l2.8 2.8m8.6 8.6 2.8 2.8M2 12h4m12 0h4M4.9 19.1l2.8-2.8m8.6-8.6 2.8-2.8"/><circle cx="12" cy="12" r="4"/>',
+    '<path d="M13 2 3 14h7l-1 8 10-12h-7z"/>',
+    '<path d="M4 19V9m5 10V5m5 14v-7m5 7V3"/>',
+    '<path d="m4 16 4-4 4 3 7-8M19 7v5m0-5h-5"/>',
+    '<path d="M4 5h16v14H4zM8 9h8M8 13h5"/>',
+  ];
+  return '<svg viewBox="0 0 24 24" aria-hidden="true">' . $paths[$i % count($paths)] . '</svg>';
+}
+
+/** [intro html, [['id','title','html'], …]] — the body split at its H2 headings. */
+function zp_seo_guide_split(string $body): array {
+  $parts = preg_split('~(<h2\b[^>]*>.*?</h2>)~is', $body, -1, PREG_SPLIT_DELIM_CAPTURE);
+  if (!is_array($parts)) { return [$body, []]; }
+  $intro = trim((string) array_shift($parts));
+  $chunks = [];
+  $used = [];
+  for ($i = 0; $i < count($parts); $i += 2) {
+    if (!preg_match('~<h2\b([^>]*)>(.*?)</h2>~is', $parts[$i], $m)) { continue; }
+    $title = trim($m[2]);
+    $id = preg_match('~\sid=(["\'])([^"\']+)\1~', $m[1], $im) ? $im[2] : sanitize_title(wp_strip_all_tags($title));
+    if ($id === '') { $id = 'temat'; }
+    $base = $id;
+    for ($n = 2; isset($used[$id]); $n++) { $id = $base . '-' . $n; }
+    $used[$id] = true;
+    $chunks[] = ['id' => $id, 'title' => $title, 'html' => trim((string) ($parts[$i + 1] ?? ''))];
+  }
+  return [$intro, $chunks];
+}
+
+/** Lists: items that all open with a bold phrase become numbered cards, other lists get check marks or step numbers. */
+function zp_seo_guide_lists(string $html): string {
+  $out = preg_replace_callback('~<(ul|ol)\b[^>]*>(.*?)</\1>~is', static function ($m) {
+    $tag = strtolower($m[1]);
+    if (!preg_match_all('~<li\b[^>]*>(.*?)</li>~is', $m[2], $li)) { return $m[0]; }
+    $bold = 0;
+    foreach ($li[1] as $item) { if (preg_match('~^\s*<(strong|b)>~i', $item)) { $bold++; } }
+    if ($bold === count($li[1]) && $bold >= 2) { $class = 'zpGuide__features'; }
+    else { $class = $tag === 'ol' ? 'zpGuide__steps' : 'zpGuide__checks'; }
+    return '<' . $tag . ' class="' . $class . '">' . $m[2] . '</' . $tag . '>';
+  }, $html);
+  return is_string($out) ? $out : $html;
+}
+
+function zp_seo_guide_minutes(string $html): int {
+  $words = str_word_count(wp_strip_all_tags($html), 0, 'ąćęłńóśźżĄĆĘŁŃÓŚŹŻ0123456789');
+  return max(2, (int) round($words / 200));
+}
+
+function zp_seo_guide_topics(int $n): string {
+  if ($n === 1) { return '1 temat'; }
+  $last = $n % 10;
+  $teens = $n % 100 >= 12 && $n % 100 <= 14;
+  return $n . (($last >= 2 && $last <= 4 && !$teens) ? ' tematy' : ' tematów');
+}
+
+/** Compact native accordions for the website decision guides (3.2.63). */
+function zp_seo_guide_compact_path(string $path): bool {
+  $path = (string) preg_replace('~^/en/~', '/', $path);
+  return in_array($path, ['/tworzenie-stron-internetowych/', '/strony-wordpress/', '/tworzenie-landing-page/', '/strona-wizytowka/'], true);
+}
+
+/**
+ * The guide body: $body is the guide's HTML (H2 sections), $path the page it sits on.
+ * Returns the cards, the sticky column and the contact band; the section heading stays with the caller.
+ * $fold (3.2.50-sklepy, the shop page): every H2 card is a <details> that opens on a click, with its
+ * number, icon and H2 in the <summary>; the whole text stays in the HTML (guide-fold.css, sklepy-katowice.js).
+ */
+function zp_seo_guide_body(string $body, string $path, bool $fold = false): string {
+  $compact = zp_seo_guide_compact_path($path);
+  $fold = $fold || $compact;
+  // Keep comparison tables readable on a phone without widening the whole page.
+  if ($compact) {
+    $body = (string) preg_replace('~(<table\b.*?</table>)~is', '<div class="zpGuide__table">$1</div>', $body);
+  }
+  [$intro, $chunks] = zp_seo_guide_split($body);
+  // Each piece goes into its own card, so a tag left open or closed across an H2 must not leak out of it (2.6.2).
+  $intro = force_balance_tags($intro);
+  foreach ($chunks as $k => $c) { $chunks[$k]['html'] = force_balance_tags($c['html']); }
+  if (!$chunks) {
+    return '<div class="zpGuide"><div class="zpGuide__main"><article class="zpGuide__card zpGuide__card--intro"><div class="zpGuide__text">'
+      . zp_seo_guide_lists($body) . '</div></article></div></div>';
+  }
+  $setup = zp_seo_guide_setup($path);
+  $team = function_exists('zp_seo_plan_team') ? zp_seo_plan_team() : [];
+  $person = $team[$setup['person']] ?? ['name' => 'Mateusz', 'job' => 'Web / UX / strategia'];
+  $img = ZP_SUITE_URL . 'assets/img/';
+  $total = count($chunks);
+  $two = static function (int $n): string { return str_pad((string) $n, 2, '0', STR_PAD_LEFT); };
+
+  $cards = [];
+  if (trim(wp_strip_all_tags($intro)) !== '') {
+    $cards[] = '<article class="zpGuide__card zpGuide__card--intro"><div class="zpGuide__text">' . zp_seo_guide_lists($intro) . '</div></article>';
+  }
+  foreach ($chunks as $i => $c) {
+    if ($fold) {
+      $cards[] = '<details class="zpGuide__card zpGuide__card--fold' . ($i === 0 ? ' zpGuide__card--accent' : '') . '" data-step="' . $two($i + 1) . '">'
+        . '<summary class="zpGuide__summary"><span class="zpGuide__cardHead"><span class="zpGuide__num">' . $two($i + 1) . ' / ' . $two($total) . '</span>'
+        . '<span class="zpGuide__icon">' . zp_seo_guide_icon($i) . '</span></span>'
+        . '<h2 id="' . esc_attr($c['id']) . '">' . $c['title'] . '</h2><span class="zpGuide__toggle" aria-hidden="true"></span></summary>'
+        . '<div class="zpGuide__cardBody"><div class="zpGuide__text">' . zp_seo_guide_lists($c['html']) . '</div></div></details>';
+      continue;
+    }
+    $cards[] = '<article class="zpGuide__card' . ($i === 0 ? ' zpGuide__card--accent' : '') . '" data-step="' . $two($i + 1) . '">'
+      . '<div class="zpGuide__cardHead"><span class="zpGuide__num">' . $two($i + 1) . ' / ' . $two($total) . '</span>'
+      . '<span class="zpGuide__icon">' . zp_seo_guide_icon($i) . '</span></div>'
+      . '<div class="zpGuide__cardBody"><h2 id="' . esc_attr($c['id']) . '">' . $c['title'] . '</h2>'
+      . '<div class="zpGuide__text">' . zp_seo_guide_lists($c['html']) . '</div></div></article>';
+  }
+
+  // The signet sits in its own clipping layer, so the person can reach above the band.
+  $band = '<aside class="zpGuide__band" aria-label="Kontakt z zespołem">'
+    . '<span class="zpGuide__bandBg" aria-hidden="true"><img class="zpGuide__bandSignet" src="' . esc_url(ZP_SUITE_URL . 'assets/logo-branding/zp-sygnet-ciemny.webp') . '" alt="" loading="lazy" decoding="async"></span>'
+    . '<span class="zpGuide__bandFig"><img class="zpGuide__bandPerson" src="' . esc_url($img . 'hero-team/crew-' . $setup['person'] . '.webp') . '" alt="' . esc_attr($person['name'] . ' z zespołu Zaprojektowani') . '" width="322" height="440" loading="lazy" decoding="async"></span>'
+    . '<div class="zpGuide__bandCopy"><span class="zpGuide__bandKicker">Masz pytanie do tego tematu?</span>'
+    . '<strong class="zpGuide__bandTitle">Opisz swoją sytuację, a <b>' . esc_html($person['name']) . ' podpowie, od czego zacząć.</b></strong>'
+    . '<span class="zpGuide__bandRole">' . esc_html($person['name'] . ' • ' . $person['job']) . '</span></div>'
+    . '<div class="zpGuide__bandActions"><a class="zpGuide__btn zpGuide__btn--light" href="' . esc_url(home_url('/kontakt/')) . '">Poznajmy Twój cel <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10"/></svg></a>'
+    . '<a class="zpGuide__btn zpGuide__btn--ghost" href="' . esc_url(home_url('/studio-wyceny/')) . '">Studio Wyceny</a></div></aside>';
+  // The band sits after the middle card (not before the first two, not after the last one).
+  $after = $total >= 4 ? (int) floor($total / 2) : $total;
+  $offset = count($cards) - $total;
+  array_splice($cards, $offset + $after, 0, [$band]);
+
+  $toc = '';
+  foreach ($chunks as $i => $c) {
+    $toc .= '<li><a href="#' . esc_attr($c['id']) . '"><span>' . $two($i + 1) . '</span>' . esc_html(wp_strip_all_tags($c['title'])) . '</a></li>';
+  }
+  $size = @getimagesize(ZP_SUITE_PATH . 'assets/img/guide/' . $setup['photo'] . '.webp');
+  $dims = $size ? ' width="' . (int) $size[0] . '" height="' . (int) $size[1] . '"' : '';
+  $aside = '<aside class="zpGuide__aside" aria-label="Poradnik w skrócie">'
+    . '<figure class="zpGuide__photo"><span class="zpGuide__teamWrap"><img class="zpGuide__team" src="' . esc_url($img . 'guide/' . $setup['photo'] . '.webp') . '" alt="Zespół Zaprojektowani"' . $dims . ' loading="lazy" decoding="async"></span>'
+    . '<figcaption class="zpGuide__note"><span>Z praktyki studia</span><strong>Tak odpowiadamy klientom przed startem projektu.</strong></figcaption></figure>'
+    . '<nav class="zpGuide__toc" aria-label="Spis treści poradnika"><div class="zpGuide__tocHead"><strong>Spis treści</strong>'
+    . '<span class="zpGuide__meta">~' . zp_seo_guide_minutes($body) . ' min czytania • ' . zp_seo_guide_topics($total) . '</span></div><ol>' . $toc . '</ol></nav></aside>';
+
+  return '<div class="zpGuide' . ($fold ? ' zpGuide--fold' : '') . ($compact ? ' zpGuide--compact' : '') . '">' . $aside . '<div class="zpGuide__main">' . implode('', $cards) . '</div></div>';
+}
+
+/** Stylesheet of the guide, printed inline on the pages that have one. */
+function zp_seo_guide_css(): string {
+  static $css = null;
+  if ($css === null) {
+    $raw = (string) @file_get_contents(__DIR__ . '/guide.css');
+    $raw = (string) preg_replace('~/\*.*?\*/~s', '', $raw);
+    $css = trim((string) preg_replace(['~\s+~', '~\s*([{};,>])\s*~'], [' ', '$1'], $raw));
+  }
+  // Content-page guides use the same native details pattern as the shop guide.
+  // Resolve the canonical page path so the existing English routes receive the same layout.
+  $page = function_exists('zp_seo_content_page_by_variant') && function_exists('zp_seo_service_variant')
+    ? zp_seo_content_page_by_variant(zp_seo_service_variant()) : null;
+  return $css . ($page && zp_seo_guide_compact_path((string) ($page['path'] ?? '')) ? zp_seo_guide_fold_css() : '');
+}
+
+/** 3.2.50-sklepy: styles of the folding cards ($fold above), printed only where a guide folds (the shop page). */
+function zp_seo_guide_fold_css(): string {
+  static $css = null;
+  if ($css === null) {
+    $raw = (string) @file_get_contents(__DIR__ . '/guide-fold.css');
+    $raw = (string) preg_replace('~/\*.*?\*/~s', '', $raw);
+    $css = trim((string) preg_replace(['~\s+~', '~\s*([{};,>])\s*~'], [' ', '$1'], $raw));
+  }
+  return $css;
+}
+
+/**
+ * Text of a post shown as a guide. The live posts use the article layout (article.zpArticleNew):
+ * its hero, table of contents, CTA blocks, FAQ and small labels make no sense inside another page,
+ * so they go; its cards, steps, boxes, quotes, tables and images get the guide classes; every other
+ * class, id, style and data attribute is dropped.
+ */
+function zp_seo_guide_clean_post_html(string $html): string {
+  $html = zp_seo_guide_strip_notes($html);
+  if (!class_exists('DOMDocument') || trim($html) === '') { return $html; }
+  $prev = libxml_use_internal_errors(true);
+  $doc = new DOMDocument('1.0', 'UTF-8');
+  $ok = $doc->loadHTML('<?xml encoding="UTF-8"><div id="zp-guide-root">' . $html . '</div>', LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+  libxml_clear_errors();
+  libxml_use_internal_errors($prev);
+  if (!$ok) { return $html; }
+  $xp = new DOMXPath($doc);
+  $cls = static function (DOMElement $n): string { return ' ' . strtolower(trim((string) $n->getAttribute('class'))) . ' '; };
+  $remove = static function ($n) { if ($n && $n->parentNode) { $n->parentNode->removeChild($n); } };
+  $unwrap = static function (DOMElement $n) {
+    $parent = $n->parentNode;
+    if (!$parent) { return; }
+    while ($n->firstChild) { $parent->insertBefore($n->firstChild, $n); }
+    $parent->removeChild($n);
+  };
+
+  foreach (iterator_to_array($xp->query('//script|//style|//noscript|//template|//form|//iframe|//h1|//nav')) as $n) { $remove($n); }
+  // Elementor keeps a copy of the post in post_content without divs, spans and classes, so the
+  // article's hero (header + aside) and its FAQ, related links and contact block are also found
+  // by their tags and headings (2.6.2).
+  foreach (iterator_to_array($xp->query('//header | //aside')) as $n) { $remove($n); }
+  foreach (iterator_to_array($xp->query('//*[h2]')) as $n) {
+    if (!$n instanceof DOMElement || !$n->parentNode || $n->getAttribute('id') === 'zp-guide-root') { continue; }
+    $h2 = $xp->query('h2', $n)->item(0);
+    $title = trim((string) preg_replace('~\s+~u', ' ', $h2 ? $h2->textContent : ''));
+    $words = str_word_count((string) $n->textContent);
+    $contact = $xp->query('.//a[contains(@href,"/kontakt") or contains(@href,"/studio-wyceny") or contains(@href,"wa.me") or starts-with(@href,"tel:") or starts-with(@href,"mailto:")]', $n)->length > 0;
+    if (preg_match('~^(?:FAQ|Najczęściej zadawane pytania|Najczęstsze pytania|Pytania i odpowiedzi|Więcej o\b|Przeczytaj (?:też|również)|Powiązane)~iu', $title)
+      || ($contact && $words < 90)) {
+      $remove($n);
+    }
+  }
+  // FAQ items (the page has its own FAQ section) and the article's own blocks.
+  foreach (iterator_to_array($xp->query('//details | //*[@id="faq"]')) as $n) { $remove($n); }
+  foreach (iterator_to_array($xp->query('//*[@class]')) as $n) {
+    if (!$n->parentNode) { continue; }
+    if (preg_match('~(__hero\b|herocard|__eyebrow|__label\b|toc\b|__toc|cta\b|cta__|__faq|faq\b|__share|__related|__author|__meta\b|breadcrumb|__answerlead)~', $cls($n))) { $remove($n); }
+  }
+  // An article section left with nothing but its heading (it held only FAQ items) goes too.
+  foreach (iterator_to_array($xp->query('//section')) as $n) {
+    if (!$n->parentNode) { continue; }
+    $text = '';
+    foreach ($n->childNodes as $child) {
+      if (!($child instanceof DOMElement && preg_match('~^h[2-6]$~', $child->nodeName))) { $text .= $child->textContent; }
+    }
+    if (trim($text) === '' && $xp->query('.//img', $n)->length === 0) { $remove($n); }
+  }
+  $map = [
+    '__compare ' => 'zpGuide__compare', '__steps ' => 'zpGuide__stepsGrid', '__simplelist ' => 'zpGuide__box', '__softbox ' => 'zpGuide__box',
+    '__note ' => 'zpGuide__noteBox', '__tablewrap ' => 'zpGuide__table', '__imageblock' => 'zpGuide__figure',
+  ];
+  foreach (iterator_to_array($xp->query('//*')) as $n) {
+    if (!$n instanceof DOMElement || $n->getAttribute('id') === 'zp-guide-root') { continue; }
+    $c = $cls($n);
+    $keep = '';
+    foreach ($map as $needle => $class) { if (strpos($c, $needle) !== false) { $keep = $class; break; } }
+    if ($keep === '' && preg_match('~ zparticlenew(?:__layout|__main|__section)? ~', $c) && in_array($n->nodeName, ['article', 'div', 'main', 'section'], true)) {
+      $unwrap($n);
+      continue;
+    }
+    if ($keep === '' && $n->nodeName === 'main') { $unwrap($n); continue; }
+    foreach (iterator_to_array($n->attributes) as $a) {
+      if (in_array($a->nodeName, ['href', 'src', 'srcset', 'sizes', 'alt', 'width', 'height', 'target', 'rel', 'loading', 'decoding', 'colspan', 'rowspan', 'scope'], true)) { continue; }
+      $n->removeAttribute($a->nodeName);
+    }
+    if ($keep !== '') { $n->setAttribute('class', $keep); }
+  }
+  // Every wrapper around an H2 is unwrapped: the guide splits the text at its H2s, and a wrapper
+  // (a <section id="…"> with no class, as Elementor stores it) would leave open and closing tags in
+  // different cards and pull the rest of the guide out of its layout (2.6.2).
+  for ($guard = 0; $guard < 20; $guard++) {
+    $wrappers = [];
+    foreach ($xp->query('//*[.//h2]') as $n) {
+      if ($n instanceof DOMElement && $n->getAttribute('id') !== 'zp-guide-root' && $n->parentNode) { $wrappers[] = $n; }
+    }
+    if (!$wrappers) { break; }
+    foreach ($wrappers as $n) { if ($n->parentNode) { $unwrap($n); } }
+  }
+  $root = $doc->getElementById('zp-guide-root');
+  if (!$root) { return $html; }
+  // Section labels left as bare text in front of a heading (their spans are gone in Elementor's copy).
+  foreach (iterator_to_array($root->childNodes) as $child) {
+    if (!($child instanceof DOMElement && $child->nodeName === 'h2')) { continue; }
+    $prev = $child->previousSibling;
+    while ($prev instanceof DOMText && trim($prev->textContent) === '') { $prev = $prev->previousSibling; }
+    if ($prev instanceof DOMText && str_word_count(trim($prev->textContent)) <= 6) { $remove($prev); }
+  }
+  $out = '';
+  foreach ($root->childNodes as $child) { $out .= $doc->saveHTML($child); }
+  return $out;
+}
+
+/**
+ * Editorial notes never reach the page: HTML comments (e.g. "ARTYKUŁ 01 — USTAWIENIA RANK MATH",
+ * "GRAFIKA 1"), also when they were saved as escaped text (2.6.2).
+ */
+function zp_seo_guide_strip_notes(string $html): string {
+  $out = preg_replace(['~<!--.*?-->~s', '~&lt;!--.*?(?:--&gt;|-->)~s', '~&amp;lt;!--.*?--&amp;gt;~s', '~<!--.*$~s', '~&lt;!--.*$~s'], '', $html);
+  return is_string($out) ? $out : $html;
+}
+
+/**
+ * Text of a post for a guide: the HTML of its Elementor article widget when the post is built with
+ * Elementor (post_content then only holds Elementor's stripped copy, without divs, spans and classes),
+ * otherwise post_content (2.6.2).
+ */
+function zp_seo_guide_post_source(WP_Post $post): string {
+  if (get_post_meta($post->ID, '_elementor_edit_mode', true) === 'builder') {
+    $raw = get_post_meta($post->ID, '_elementor_data', true);
+    $data = is_string($raw) ? json_decode($raw, true) : (is_array($raw) ? $raw : null);
+    $found = '';
+    $walk = static function ($elements) use (&$walk, &$found): void {
+      if (!is_array($elements)) { return; }
+      foreach ($elements as $el) {
+        if ($found !== '' || !is_array($el)) { continue; }
+        $html = (string) ($el['settings']['html'] ?? '');
+        if (($el['widgetType'] ?? '') === 'html' && stripos($html, '<article') !== false) { $found = $html; return; }
+        $walk($el['elements'] ?? []);
+      }
+    };
+    $walk($data);
+    if ($found !== '') { return $found; }
+  }
+  return (string) $post->post_content;
+}
+
+/** True on a page that shows a guide section (content pages and the nationwide shop page). */
+function zp_seo_guide_page(): bool {
+  $variant = zp_seo_service_variant();
+  if ($variant === 'sklepy-national') { return true; }
+  $page = $variant !== '' ? zp_seo_content_page_by_variant($variant) : null;
+  return !empty($page['guide']);
+}

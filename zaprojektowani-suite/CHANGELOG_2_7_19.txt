@@ -1,0 +1,5 @@
+Changelog 2.7.19
+
+- Home mobile: poszerzono obszar H1 i lekko skompresowano tracking, aby krótkie samotne linie (np. "sklepy") nie zostawały puste po prawej.
+- Home mobile: użyto text-wrap: pretty dla równiejszego łamania nagłówka.
+- Home desktop: zwiększono odstęp między liniami H1 (line-height do 0.98).

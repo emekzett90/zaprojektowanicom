@@ -1,0 +1,6 @@
+Zaprojektowani Suite 2.2.733
+
+- Strony internetowe Katowice: zwiększono szerokość desktopowego H1 o ok. 20% (11.5ch -> 13.8ch).
+- H1 może wyjść poza szerokość lewej kolumny (width: 120%), dzięki czemu długi nagłówek SEO łamie się naturalniej i może delikatnie wejść w obszar mockupu.
+- Bez zmian rozmiaru fontu, leadu, CTA, mockupu i układu mobile.
+- Podbito wersję wtyczki/cache do 2.2.733.

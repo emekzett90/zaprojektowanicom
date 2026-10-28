@@ -1,0 +1,81 @@
+ALTIORA LINEA — ARTYKUŁ DO WIEDZY / RANK MATH
+Zaprojektowani Suite 3.2.36
+
+1. GOTOWY SZKIC W WORDPRESSIE
+Po zastąpieniu wtyczki i kolejnym wejściu administratora do panelu Suite przygotowuje jeden zwykły szkic wpisu. Otwórz Wpisy → Wszystkie wpisy → Szkice albo komunikat „Altiora Linea”. Sprawdź podgląd, autora, zdjęcie i adres, a następnie kliknij Opublikuj. Aktualizacja nie publikuje artykułu bez Twojej decyzji.
+Szkic otrzymuje treść, kategorie, tagi i pola SEO. Jeśli istnieje opublikowany artykuł-wzorzec „sklep-internetowy-swiat-grilli”, wykorzystuje jego zatwierdzony kontener Elementor. W przeciwnym razie zachowuje tę samą treść jako natywny wpis z dołączonym arkuszem artykułów.
+Nie twórz drugiego wpisu ręcznie, jeżeli szkic już powstał. Istniejący wpis o zajętym adresie nie jest nadpisywany.
+
+2. TYTUŁ I ADRES
+Tytuł H1:
+Strona internetowa Altiora Linea — premium design w trzech językach
+
+Tytuł SEO:
+Strona internetowa Altiora Linea – realizacja WordPress
+
+Opis SEO:
+Strona internetowa Altiora Linea od Zaprojektowani: WordPress, trzy języki, katalogi producentów i formularze. Poznaj realizację dla marki wnętrzarskiej premium.
+
+Slug:
+strona-internetowa-altiora-linea
+
+Docelowy adres przy obecnej strukturze kategorii:
+https://zaprojektowani.com/strony-internetowe/strona-internetowa-altiora-linea/
+To adres proponowany. Po zapisaniu sprawdź permalink nadany przez WordPress; wtyczka nie zmienia globalnej struktury linków. Kategoria „Strony internetowe” jest ustawiona jako główna.
+
+3. FRAZY I KLASYFIKACJA
+Fraza główna:
+strona internetowa Altiora Linea
+
+Frazy pomocnicze:
+strona internetowa dla marki wnętrzarskiej
+wielojęzyczna strona WordPress
+strona premium WordPress
+strona z katalogami producentów
+
+Kategoria główna: Strony internetowe.
+Kategoria dodatkowa: Case study.
+Tagi: WordPress, Strony wielojęzyczne, Branża wnętrzarska, Realizacje.
+To opis konkretnej realizacji. Nie zastępuj tytułu ogólną frazą „tworzenie stron internetowych”, bo od ogólnej oferty jest podstrona usługowa. Linkowanie w artykule prowadzi do usług, portfolio, kontaktu i Studia Wyceny.
+
+4. SCHEMA, INDEKSOWANIE, CANONICAL
+Rank Math → Schema → Article → typ artykułu: Blog Post (BlogPosting).
+Nagłówek i opis: z treści/SEO wpisu.
+Autor i data: rzeczywiste dane przypisane do wpisu w WordPressie.
+Publisher: istniejąca konfiguracja organizacji Zaprojektowani w Rank Math; bez tworzenia drugiej organizacji.
+Język wersji publikowanej przez szkic: pl-PL.
+Robots po publikacji: index; bez noindex na samym opublikowanym artykule.
+Canonical: natywny, własny permalink wpisu. Pole ręczne może pozostać puste. Nie używaj URL-i z parametrami UTM.
+Rank Math pozostaje jedynym generatorem danych Article/BlogPosting. Nie wklejaj obok dodatkowego, identycznego skryptu JSON-LD. FAQ jest widoczne w treści; nie dodawaj ocen klientów, AggregateRating ani niepotwierdzonych wyników. Nie ma gwarancji rozszerzonego wyniku wyszukiwania.
+
+5. OBRAZ WYRÓŻNIAJĄCY I SOCIAL
+Obraz:
+https://zaprojektowani.com/wp-content/uploads/2026/10/altiora_linea_realizacja-scaled.webp
+
+ALT:
+Realizacja strony internetowej Altiora Linea — prezentacja projektu Zaprojektowani dla marki wnętrzarskiej premium
+
+Podpis:
+Altiora Linea — prezentacja naszej realizacji strony internetowej. Projekt i wdrożenie: Zaprojektowani.com.
+
+Suite próbuje odnaleźć ten istniejący plik w bibliotece mediów i ustawić go jako obraz wyróżniający. URL obrazu do Facebook/Open Graph i X/Twitter jest wpisany również niezależnie. Po przygotowaniu szkicu sprawdź pole obrazu wyróżniającego i podgląd social, zwłaszcza jeśli WordPress nadał plikowi inny adres lub korzysta z CDN.
+Twitter Card: summary_large_image.
+
+6. GOTOWY HTML JAKO ALTERNATYWA
+altiora-linea-artykul-PL-elementor.html — jeden fragment ze stylami do widgetu HTML Elementora.
+altiora-linea-artykul-EN-elementor.html — osobno przygotowana wersja angielska, bez automatycznej publikacji drugiego wpisu.
+altiora-linea-artykul-do-przeczytania.txt — tekst do korekty.
+altiora-linea-rankmath.json — czytelny wykaz ustawień, nie jest plikiem importu całej konfiguracji Rank Math.
+
+Wariant ręczny: użyj tego samego szablonu wpisów, jednego widgetu HTML i tylko jednego widocznego H1. Ustaw powyższe pola w Rank Math. Nie wklejaj całej strony drugi raz w zagnieżdżony dokument HTML.
+
+7. KONTROLA PO PUBLIKACJI
+Sprawdź stronę jako wylogowany użytkownik: jeden H1, właściwy permalink, obraz, spis treści, formularze/linki i przyciski wyceny. Potwierdź, że karta Altiora w portfolio prowadzi do opublikowanego case study — link nie jest pokazywany, gdy istnieje tylko szkic.
+Sprawdź jeden canonical i jeden Article/BlogPosting w kodzie oraz widoczność wpisu na stronie Wiedza i w mapie wpisów Rank Math. Nie wymuszaj publikacji szkicu przez ręczne dopisywanie go do sitemap.
+Test danych strukturalnych wykonaj na opublikowanym adresie; następnie sprawdź adres w Search Console. Oceny Rank Math, indeksacji i wzrostów w Senuto nie potwierdzono na produkcji.
+
+Źródła ustawień:
+https://rankmath.com/kb/article-schema/
+https://developers.google.com/search/docs/appearance/structured-data/article
+
+Podstawa opisu realizacji: zakres przekazany przez Mat (WordPress, PL/EN/IT, formularze, katalogi, projekt dla pana Dariusza) oraz zatwierdzone materiały i widgety Altiora Linea. Nie udało się ponownie odczytać pełnej bieżącej witryny live w tym środowisku. Opis nie zawiera zmyślonych wyników sprzedaży, opinii klienta ani porównania „przed i po”.

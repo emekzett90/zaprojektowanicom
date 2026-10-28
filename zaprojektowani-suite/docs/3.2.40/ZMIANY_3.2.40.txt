@@ -1,0 +1,91 @@
+ZAPROJEKTOWANI SUITE 3.2.40 — PORTFOLIO / MAPA / CASE STUDIES
+Data przygotowania: 18.10.2026
+
+PODSTAWA I ZAKRES
+Pełna aktualizacja na bazie przesłanej paczki zaprojektowani-suite-3.2.38.2-case-studies.zip.
+Nie jest to ponowne udostępnienie 3.2.39: archiwum 3.2.39 nie było dostępne do porównania.
+Wszystkie 1993 pliki z katalogu wtyczki w przesłanej bazie zachowano; wybrane pliki zmodyfikowano i dodano nowy moduł prezentacji.
+Ta wersja nie zmienia adresów wpisów, zapisanych pól Rank Math, opinii klientów ani treści wcześniejszych artykułów w bazie.
+Dotychczasowy mechanizm publikacji Altiora Linea pozostaje częścią bazowej wtyczki; nowy moduł nie tworzy kolejnej kopii wpisu.
+
+POTWIERDZONE ZMIANY
+1. Etykieta rodzaju projektu w portfolio strony głównej jest w lewym górnym rogu.
+   Dotyczy np. „Strona firmowa / technika zabezpieczeń”, a nie niezależnego badge’a NEW.
+   NEW i numer realizacji pozostają po prawej. Etykiety mają miejsce na dłuższy tekst i nie nakładają się na siebie.
+
+2. Automatyczny kontrast etykiety.
+   Skrypt bada małą próbkę już pobranego obrazu w obszarze pod etykietą, z uwzględnieniem kadrowania object-fit.
+   Jasny fragment: ciemny napis na jasnej, prawie nieprzezroczystej etykiecie.
+   Ciemny fragment: jasny napis na ciemnej etykiecie.
+   Obsługiwane są karty dodawane przez istniejący skrypt portfolio i późniejsze wczytanie obrazów.
+   Nie są pobierane drugie kopie obrazów. Nie ma ciągłej pętli animacji do analizy kolorów.
+   Gdy odczyt pikseli jest niemożliwy (np. obcy CDN bez odpowiednich uprawnień), zostaje czytelny jasny chip z ciemnym napisem.
+   W razie braku JS również pozostaje kontrastowy wariant domyślny.
+
+3. Mapa Polski połączona z obecnym blokiem SEO na głównej.
+   Zachowano nagłówek „Strony internetowe dla firm z całej Polski”, dotychczasowy akapit, cztery linki usługowe i trzy dolne punkty.
+   Linki usługowe znajdują się pod tekstem. Obok użyto istniejącej mapy SVG i jej przycisków miast.
+   Wybór miasta aktualizuje informację o modelu współpracy, jak na podstronach usługowych.
+   Nie dodano fikcyjnych oddziałów ani nieutworzonych podstron miejskich; studio nadal jest wskazane w Katowicach.
+   Na telefonie mapa i przyciski układają się pod treścią. Nie wymaga mapowego SDK ani zewnętrznych żądań.
+   Nowe arkusze tej dolnej sekcji nie blokują pierwszego renderowania; mają też wariant bez JavaScript.
+
+4. Mobilne H1 i kicker w case studies.
+   Reguły obejmują wspólny renderer indeksu oraz wszystkich czterech case studies, w obu językach.
+   Do szerokości 1100 px tekst hero wykorzystuje jedną kolumnę i 24 px bocznego odstępu.
+   Kicker ma dodatkowe 44 px odstępu po uwzględnieniu wysokości headera; nie jest przesuwany nowym skryptem po załadowaniu.
+   H1 ma responsywny rozmiar, luźniejszą interlinię oraz zawijanie całych słów; ukryte na mobile znaczniki br nie sklejają wyrazów.
+
+5. Białe karty „Oferta projektu” / ścieżka odbiorcy.
+   Nagłówki: #071426. Akapity: #46576e. Numer: biały na granatowym kole.
+   Kolory są zapisane bezpośrednio dla kart; nie dziedziczą jasnego tekstu z ciemnej sekcji.
+   Uwzględniono także -webkit-text-fill-color, żeby sam kolor w Safari nie był nadpisywany.
+
+6. Osobny widget Altiora Linea: „Jedna strona. Trzy języki.”
+   Flagi PL / EN / IT, opis funkcji i link do strony live.
+   Przyciski zmieniają przykładowy nagłówek, opis i CTA wewnątrz karty bez nawigacji, fetch ani przeładowania.
+   To oznaczona demonstracja funkcji, a nie osadzenie serwisu klienta ani globalny przełącznik języka Zaprojektowani.
+   Interfejs ma aria-pressed, obsługę klawiatury i czytelny wariant statyczny przy wyłączonym JS.
+   Nie deklarujemy nowego audytu obecnej produkcyjnej implementacji klienta; opis funkcji wynika z podanego zakresu projektu.
+
+DODATKOWA OPRAWA CASE STUDIES W TEJ PACZCE
+- Główna wizualizacja i dodatkowe screenshoty są prezentowane w węższych układach z tekstem obok.
+- Screenshoty mają ograniczoną szerokość i poprawione sizes zgodne z połową wiersza, a nie dawnym pasem 1750 px.
+- Istniejące warianty źródeł 960/1750/2560/3500 px są zachowane; przeglądarka może dobrać mniejszy wariant.
+- Rozdzielone logotypy w indeksie i biała wersja z niewielkim powiększeniem przy hover/focus.
+- Większy znak marki w tle indywidualnego hero, z wygaszeniem dolnej części.
+- Wspólne pole ikony dla technologii i autorskich funkcji bez dostarczonego logotypu, także rezerwacji i płatności.
+  To ikona funkcji, nie nowy oficjalny logotyp imoje.
+- Nie dopisano ani nie wymyślono wypowiedzi właścicieli. Ta aktualizacja nie jest uzupełnieniem brakujących autentycznych opinii.
+
+WYKONANE SPRAWDZENIA
+- 80 kontroli geometrii: indeks i 4 case studies, PL/EN, szerokości 320/360/390/430/768/1100/1440/1920 px.
+  Kontrola bocznych odstępów H1, przepełnień poziomych, odsunięcia kickera, kolorów kart i szerokości obrazów.
+- 12 kontroli rzeczywistego komponentu portfolio z jego istniejącymi skryptami oraz CSS na 6 szerokościach.
+  Dwa kontrolowane tła testowe (jasne i ciemne): pozycja i kolor etykiety.
+- 5 kontroli mapy: zachowanie nagłówka/układu, 10 przycisków, reakcja na miasto, zachowane 3 punkty i 4 linki usługowe.
+- Przełączenie wszystkich trzech języków widgetu: jeden aktywny przycisk, zmiana lokalnej treści, niezmieniony URL.
+- Domyślny wariant bez JS pozostaje czytelny.
+- 14 testów integracji hooków: zakres tras, brak obcych zmian stylów, idempotencja i jednorazowe odświeżenie cache.
+- Kontrola składni 704 plików PHP (PHP 8.4) i dwóch nowych skryptów JS.
+- Kontrola integralności finalnego archiwum ZIP.
+
+OGRANICZENIA WERYFIKACJI
+Przeglądarkowe testy wykonano lokalnie w Chromium, na faktycznym rendererze i CSS/JS komponentów, z podstawionymi funkcjami WordPressa i nagłówkiem testowym.
+Zewnętrzne obrazy nie były w tych testach pobierane. Testy kontrastu używają kontrolowanych plików jasnych i ciemnych, nie pomiaru opublikowanego obrazu na serwerze.
+To nie jest pełny test produkcyjnego WordPressa, fizycznego iPhone’a ani nowy wynik Lighthouse.
+Nie twierdzimy, że cała wcześniejsza przyczyna białego ekranu na publicznej stronie została usunięta.
+Obecne mechanizmy first-paint, zgód i cache z wersji bazowej nie zostały zastąpione ani wyłączone.
+
+INSTALACJA
+1. Zrób kopię bieżącej wtyczki i bazy danych.
+2. WordPress → Wtyczki → Dodaj nową → Wyślij wtyczkę na serwer.
+3. Wgraj zaprojektowani-suite-3.2.40-portfolio-mapa-case-study.zip i wybierz zastąpienie obecnej wtyczki.
+4. Wróć do panelu i sprawdź numer wersji 3.2.40. Nowy moduł odświeża własny cache Suite jeden raz.
+5. Wyczyść niezależny cache hostingu/CDN, jeżeli działa. Nowe pliki mają zmienioną wersję adresów.
+6. Sprawdź stronę główną, /case-studies/ oraz cztery podstrony case study. Widget flag jest w projekcie Altiora Linea.
+7. Test Lighthouse wykonuj dopiero po upewnieniu się, że serwer podaje wersję 3.2.40.
+
+POWRÓT
+Przywróć kopię poprzedniej wtyczki i wyczyść cache. Nowy moduł nie modyfikuje zapisanej treści wpisów, kategorii ani pól Rank Math.
+Mechanizmy migracyjne istniejące już w paczce bazowej pozostają jej częścią, dlatego kopia bazy jest nadal zalecana.

@@ -1,0 +1,7 @@
+ZAPROJEKTOWANI SUITE 2.2.813
+
+Logo & Branding / strona główna:
+- Mateusz, Marta i Stanisław nad kartami pakietów zostali podniesieni o kolejne 30 px.
+- Na stronie głównej Mini Branding pokazuje dużą, aktualną cenę 1499 zł bez starej przekreślonej ceny 1999 zł.
+- Zakres Mini Brandingu na stronie głównej został zsynchronizowany z aktualną ofertą: 6 koncepcji i 10 rund poprawek, bez starego social packa.
+- Studio Wyceny dostało ten sam aktualny opis Mini Brandingu, żeby zakres nie rozjeżdżał się między podstronami.

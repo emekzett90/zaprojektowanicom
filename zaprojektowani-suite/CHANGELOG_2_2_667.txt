@@ -1,0 +1,60 @@
+ZAPROJEKTOWANI SUITE — v2.2.667
+================================
+Data: 2026-07-12
+Zakres: Realizacje + Studio Wyceny — editorial flat polish (bez cieni).
+Nowy plik: includes/front-fixes-301.php (wpięty w zaprojektowani-suite.php po 300).
+Zero zmian w markupie i JS — wyłącznie CSS-owa warstwa nakładkowa.
+
+KIERUNEK
+--------
+Kontynuacja języka z v2.2.666 (mega menu/drawer): separacja przez hairline'y,
+światło i typografię — NIE przez box-shadow. Zgodnie z feedbackiem:
+"upiększyć, ale nie cieniami".
+
+REALIZACJE (/realizacje/)
+-------------------------
+1. Flat pass: zdjęte wszystkie box-shadow (karty + hover, pigułka kategorii,
+   rok, szukajka, filtry, licznik, panel hero, featured, pasek floating,
+   wszystkie przyciski .zpRealizacjeBtn, CTA strip, modal). Text-shadow
+   w ramce CTA też usunięty.
+2. Edytorska numeracja kart "01…32": czyste CSS counters na gridzie —
+   karty odfiltrowane mają display:none, więc numeracja przelicza się sama.
+   Chip numeru top-left na zdjęciu (kategoria została top-right — para).
+3. Karta: radius 24px, hairline rgba(7,17,31,.12) → hover .34 (krawędź
+   pracuje zamiast cienia), hover -3px (reduced-motion: bez transformu).
+4. Topline: micro-label uppercase tracking .16em (jak nagłówki mega menu),
+   rok = przezroczysta pigułka hairline + cyfry tabelaryczne.
+5. Hairline między opisem a chipami; chipy = biel + hairline (zdjęte
+   niebieskawe tinty #f4f6f9 — preferencja: neutralnie).
+6. Pasek narzędzi: licznik "32 widocznych" transparent + hairline; focus
+   szukajki krawędzią, nie cieniem.
+7. Featured: pasek floating = solidna biel + hairline; media hairline.
+8. Modal: dialog + close + fakty flat, tinty #f6f8fb/#f3f6fa → #f6f7f9/biel.
+
+STUDIO WYCENY (/studio-wyceny/, chooser)
+----------------------------------------
+1. Widmowa numeracja edytorska 01–04 na kartach usług (desktop ≥761px):
+   duży ghost-numer w rogu karty, opacity .05, na ciemnym hoverze/wyborze
+   biały .12. Czysty CSS counter, pointer-events:none.
+2. Chip ceny ("od 3 999 zł" itd.) = wypełniona granatowa pigułka #071426
+   z białym tekstem — cena czytelna jako pierwsza informacja karty.
+   Na ciemnym hoverze karty inwersja: biała pigułka + granatowy tekst.
+3. Sekcja formularza na stronie studia (scoped body.zpbs-studio-chooser):
+   flat pass — box-shadow:none na całym .zpContactFormLight, focus pól
+   krawędzią (granatowy hairline). /kontakt bez zmian.
+
+GOTCHA SPECYFICZNOŚCI (koszt 1 rundy debugowania)
+--------------------------------------------------
+Bazowe "html body #zpbsUltimate .zpbsServiceList .zpbsChip--price" (1,2,2)
+przegrywało z warstwą (1,3,2) mimo późniejszego miejsca w DOM. Podbite
+atrybutem + podwójną klasą:
+  html body #zpbsUltimate[data-mode] .zpbsServiceList .zpbsChip.zpbsChip--price
+(wzorzec jak przy headerze v2.2.666: prowadzić przez dodatkowy hak,
+nie przez kolejność).
+
+WERYFIKACJA
+-----------
+Desktop 1440 + mobile 375, obie strony, na żywym DOM (CSS wstrzyknięty
+na koniec body = pozycja docelowa warstwy wp_footer). Sprawdzone: numeracja
+(desktop+mobile realizacje; studio tylko desktop — na mobile wyłączona),
+inwersja chipa ceny na is-on, modal, CTA strip, brak regresji filtrów.

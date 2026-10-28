@@ -1,0 +1,6 @@
+Zaprojektowani Suite v2.2.659
+
+Studio Wyceny — końcowe dopasowanie pozycji zdjęć wg rozdzielczości:
+- ~933 px: wszystkie zdjęcia 30 px niżej,
+- ~1518 px: pierwsze 2 zdjęcia 100 px wyżej,
+- pełna / bardzo szeroka rozdzielczość: pierwsze 2 zdjęcia 40 px wyżej.

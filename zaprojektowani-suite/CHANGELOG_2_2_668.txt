@@ -1,0 +1,24 @@
+ZAPROJEKTOWANI SUITE — v2.2.668
+================================
+Data: 2026-07-12
+Zakres: poprawki po feedbacku do v2.2.667 (Studio Wyceny, chooser).
+Zmiany w includes/front-fixes-301.php (ta sama warstwa, bez nowych plików).
+
+1. Numeracja 01–04 na kartach usług przeniesiona do GÓRNEGO LEWEGO rogu:
+   - przycięta do karty (overflow:hidden karty, top:-.12em — cap lekko
+     wchodzi pod krawędź jak w watermarkach),
+   - wtopiona od dołu maską (house style .zpbsWater):
+     mask-image: linear-gradient(180deg,#000 0%,#000 32%,rgba(0,0,0,.45) 64%,transparent 96%),
+   - opacity .06, na ciemnym hoverze/wyborze biała .14.
+
+2. Zdjęcia w kartach usług BEZ drop-shadow:
+   - front-fixes-298 kładł filter:drop-shadow(...) na .zpbsServiceShot img
+     (baza + hover/is-on, kilka breakpointów) — zdjęte przez
+     filter:none!important na selektorze podbitym [data-mode]
+     (baza (1,3,3) i hover (1,5,3) — wygrywa z 298),
+   - animacja floatu zdjęcia zostaje (to ruch, nie cień),
+   - uwaga: ewentualny cień WYPALONY w samym assecie (np. render kostki
+     Meta) nie jest usuwalny CSS-em — do podmiany asseta, jeśli przeszkadza.
+
+Weryfikacja: żywy DOM, desktop 1440 (numery wtopione, filter=none
+potwierdzony computed-style), mobile bez zmian (numeracja nadal off <761px).

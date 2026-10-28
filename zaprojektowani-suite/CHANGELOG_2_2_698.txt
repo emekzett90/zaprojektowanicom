@@ -1,0 +1,16 @@
+ZAPROJEKTOWANI SUITE 2.2.698
+
+1. Logo & Branding Katowice
+   - hero: fraza „Znak, za którym stoi marka.” otrzymała jasny biało-błękitny gradient,
+   - usunięto wizualne obcinanie dolnych części liter,
+   - dodano płynną animację gradientu działającą naprzemiennie w obie strony.
+
+2. Strony Internetowe Katowice
+   - ten sam efekt zastosowano na frazie „zdobywają zapytania.”,
+   - na mobile gradient jest dodatkowo rozjaśniony.
+
+3. Kampanie Reklamowe
+   - ten sam efekt zastosowano na frazie „konkretny cel.”,
+   - zachowano poprawne łamanie tekstu na małych ekranach.
+
+4. Podbito wersję wtyczki do 2.2.698 i odświeżono znaczniki cache podstron.

@@ -1,0 +1,5 @@
+Changelog 2.7.18
+
+- Strona główna: delikatnie zwiększono odstęp między liniami H1.
+- Mobile: zmniejszono rozmiar H1 dokładnie o 2 px względem poprzedniej wersji.
+- Pozostałe elementy hero bez zmian.

@@ -1,0 +1,9 @@
+Zaprojektowani Suite 2.2.721
+
+REALIZACJE — polish po wdrożeniu 2.2.720
+- zwiększony clearance hero pod stałym headerem na desktop/tablet/mobile
+- hero i cała pierwsza sekcja zaczynają się niżej, bez wrażenia przyklejenia do nawigacji
+- featured collage: mniejsze promienie narożników (bardziej premium / editorial)
+- spotlight: mniejszy promień narożników
+- naprawiony kontrast CTA „Zobacz case study” (biały button + granatowy tekst; hover granat + biały tekst)
+- poprawione stany :visited / :focus i kolor ikon CTA

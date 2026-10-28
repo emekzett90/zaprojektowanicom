@@ -1,0 +1,9 @@
+ZAPROJEKTOWANI SUITE 2.2.686
+
+Podstrona /logo-branding-katowice/:
+- zablokowano różowe style linków i przycisków po kliknięciu / odwiedzeniu / focusie,
+- poprawiono stany przycisków mapy, modali, CTA, portfolio i pakietów,
+- utrzymano jasne cyfry i tekst w kartach opinii na hover oraz po odwiedzeniu linku,
+- zwiększono grubość nazw etapów procesu z 700 do 800,
+- usunięto przerywane linie pomiędzy miastami na mapie,
+- zwiększono font nazw i opisów narzędzi Adobe.

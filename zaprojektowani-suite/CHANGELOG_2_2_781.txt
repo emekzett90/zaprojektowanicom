@@ -1,0 +1,8 @@
+Zaprojektowani Suite 2.2.781 — 22.09.2026
+
+- Naprawiono popup szczegółów portfolio w zakładce Branding na stronie głównej.
+- Grafika realizacji brandingowej zachowuje proporcje 1:1 i nie jest przycinana do pionu.
+- Poszerzono część tekstową popupu oraz zmieniono układ kart celu/kierunku/efektu, aby tekst nie łamał się w wąskie pionowe kolumny.
+- Dodano do portfolio Branding dwa nowe projekty: Natalia Arciszewska oraz Zgórecki Nieruchomości.
+- Dodano rozbudowane opisy, zakres, efekty i dane projektów.
+- Dodano pełne odpowiedniki EN dla nowych realizacji oraz słownik do przełączania PL/EN bez przeładowania strony.

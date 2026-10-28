@@ -1,0 +1,26 @@
+Zaprojektowani Suite 3.0.1 — 14.10.2026
+
+Podstawa: 3.0.0 (14.10.2026). Wygląd strony bez zmian.
+
+Cache stron znowu działa
+- 3.0.0 wyłączyło własny cache HTML Codexa, bo jedna zapisana kopia strony trafiała i do telefonu, i do komputera, a wtyczka składa dla telefonu trochę inny HTML (bez filmu w nagłówku, inne ładowanie niektórych zdjęć). Przez to każda odsłona znowu trwała około 1 s.
+- 3.0.1 włącza cache z powrotem i trzyma osobną kopię dla telefonu i dla komputera. Telefon rozpoznaje dokładnie tak jak WordPress (wp_is_mobile), więc każde urządzenie dostaje ten sam HTML co bez cache. Lokalnie: strona z cache w 0,01–0,02 s zamiast 0,4–0,9 s.
+- Aktualizacja sama podmienia plik wp-content/advanced-cache.php na nową wersję, tylko jeśli jego hash zgadza się z tym, który zapisała wtyczka. Obcego pliku nie rusza. wp-config.php nie jest zmieniany. Prywatna kopia oryginalnych plików zostaje, więc „Przywróć oryginalne pliki” działa jak dotąd.
+- Kto dostaje stronę z cache, bez zmian: polska przeglądarka, bez cookies, bez parametrów w adresie, publiczne strony PL. Google, odwiedzający po zgodzie na cookies, wersja EN, formularze i Studio wyceny zawsze idą przez WordPressa.
+- Dziennik 404, liczniki przekierowań, zapis pracy crona, statystyki przekierowań na EN i logi publikacji nie czyszczą już całego cache. Wcześniej każdy taki zapis (co kilka minut) kasował wszystkie kopie stron.
+- Komunikat „Nie odświeżono polityki cache” znika po następnym udanym odświeżeniu (wcześniej zostawał na stałe). Gdy dwa odświeżenia trafią na siebie, drugie próbuje jeszcze raz.
+- Strona Cache HTML: gdy cache jest wyłączony, a pliki są nasze, jest przycisk „Włącz ponownie cache HTML” (bez reinstalacji).
+- „Stan strony” pokazuje stan cache: działa (liczba adresów, czas odświeżania), wyłączony albo stara wersja pliku.
+
+Dla innych modułów
+- Filtry zp_html_cache_ignore_option i zp_html_cache_ignore_meta: moduł może wskazać swoje opcje i pola wpisów, które nie zmieniają polskich stron, żeby ich zapis nie czyścił cache.
+
+Jak sprawdzić po instalacji
+- curl -sI -H "Accept-Language: pl-PL" https://zaprojektowani.com/ dwa razy: najpierw X-ZP-Cache: MISS, potem HIT, oba z X-ZP-Cache-Device: d.
+- To samo z nagłówkiem User-Agent iPhone'a: MISS, potem HIT z X-ZP-Cache-Device: m.
+- ZP Suite → Stan strony: „Cache stron działa”.
+
+Cofnięcie
+1. Do 3.0.0 albo do wersji Codexa 2.9.66: Wtyczki → Dodaj nową → Wyślij wtyczkę → plik ZIP → „Zastąp bieżącą wersję przesłaną”.
+2. Nowy plik advanced-cache.php działa też ze starszymi wersjami (zapisany hash jest aktualny), więc cache zostaje włączony i dalej trzyma osobne kopie dla telefonu i komputera.
+3. Wyłączenie cache: ZP Suite → Strona → Cache HTML → „Awaryjnie wyłącz podawanie HTML z cache” albo „Przywróć oryginalne pliki”.

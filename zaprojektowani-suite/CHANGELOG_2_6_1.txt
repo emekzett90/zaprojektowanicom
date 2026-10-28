@@ -1,0 +1,25 @@
+ZAPROJEKTOWANI SUITE 2.6.1
+
+Poprawka: mapy witryny i nagłówek H1 w hero stron o stronach internetowych.
+
+Mapy witryny:
+- page-sitemap.xml znów zwraca XML. Rank Math, budując mapę stron, renderuje przez Elementora treść każdej strony w jednym żądaniu. Szablony formularza kontaktowego (strona główna i /kontakt/) deklarowały tę samą funkcję PHP bez sprawdzenia, czy już istnieje, więc druga strona z formularzem kończyła się błędem „Cannot redeclare”. Zamiast mapy pojawiał się urwany HTML strony Katowice i komunikat o krytycznym błędzie. Obie deklaracje mają teraz function_exists.
+- indeks map (sitemap_index.xml) nie wypisuje pl-sitemap.xml ani en-sitemap.xml, nawet gdyby dopisała je stara wtyczka tłumaczeń. Te dwa adresy celowo zwracają 410 (od 2.3.0), bo to mapy poprzedniej wtyczki językowej.
+- sprawdzone lokalnie z symulacją Elementora: sitemap_index.xml, page-sitemap.xml, post-sitemap.xml, author-sitemap.xml i sitemap-en.xml zwracają 200 i poprawny XML.
+- do Search Console zgłaszamy tylko https://zaprojektowani.com/sitemap_index.xml.
+
+Po wgraniu w WordPressie:
+- LiteSpeed Cache → Wyczyść wszystko (Purge All),
+- Rank Math → Mapa witryny → Zapisz zmiany (czyści pamięć podręczną map),
+- Ustawienia → Bezpośrednie odnośniki → Zapisz zmiany.
+
+H1 w hero (szablon „Strony internetowe Katowice”):
+- telefon (do 680 px): nagłówek 2 px mniejszy (clamp 42–58 px → 40–56 px; na iPhonie 390 px 48 → 46 px),
+- komputer (od 1101 px): trochę większa interlinia (1,035 → 1,15; wyróżniona fraza 1,14 → 1,19), przy 1440 px odstęp między liniami rośnie z ok. 86–91 px do ok. 93–95 px,
+- dotyczy 10 stron na tym szablonie: /strony-internetowe-katowice/, /tworzenie-stron-internetowych/, /strony-wordpress/, /opieka-wordpress/, /strona-wizytowka/, /tworzenie-landing-page/, /strony-internetowe-dla-deweloperow/, /strony-internetowe-dla-kancelarii/, /strony-internetowe-dla-lekarzy/ oraz angielska wersja strony Katowice.
+
+Wspólne hero na stronach ogólnopolskich:
+- arkusz service-hero-global.css (poprawki hero zrobione wcześniej dla stron Katowice) ładował się tylko na adresach z „katowice” w nazwie. Teraz ładuje się też na stronach ogólnopolskich i podstronach zbudowanych na tych samych szablonach: strony www (lista wyżej) oraz /projektowanie-logo/ i /identyfikacja-wizualna/,
+- efekt: hero tych stron wygląda tak samo jak na stronach Katowice (wyższe hero, pasek z logo klientów nie zasłania już przycisków i ołówka/laptopa, jaśniejszy animowany gradient wyróżnionej frazy, odstęp od góry na telefonie).
+
+Bez zmian: strony sklepów i strona główna.

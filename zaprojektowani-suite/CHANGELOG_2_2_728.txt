@@ -1,0 +1,6 @@
+Zaprojektowani Suite 2.2.728
+
+Realizacje hero:
+- na desktopie podniesiono samo zdjęcie zespołu dokładnie o 70 px względem poprzedniej pozycji;
+- nie zmieniono wysokości hero ani kontenera zdjęcia;
+- zmiana nie dotyczy tabletów i mobile.

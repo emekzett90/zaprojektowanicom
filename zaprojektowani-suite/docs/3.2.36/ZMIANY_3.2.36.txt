@@ -1,0 +1,67 @@
+ZAPROJEKTOWANI SUITE 3.2.36
+Altiora Linea / artykuły / mobile
+
+CO INSTALUJESZ
+Pełną aktualizację wtyczki „zaprojektowani-suite”, opartą na dostarczonej wersji 3.2.35. Nie usunięto żadnego pliku wersji bazowej. Wcześniejsze poprawki branż, kontaktu, SEO oraz osadzenia headera pozostają w paczce. Bez Superdesign i bez zmiany głównego szablonu.
+
+1. ALTIORA LINEA W PORTFOLIO
+Pierwsza realizacja w zakładce stron WWW na stronie głównej, na desktopie i telefonie. Badge NEW na zdjęciu, przycisk do https://altioralinea.com/, opis PL/EN, technologie, trzy języki, katalogi i formularze. W szczegółach: zakres, wyzwanie, rozwiązanie i rezultat funkcjonalny, bez niepotwierdzonych statystyk. Dodatkowy odnośnik do pełnego artykułu pojawi się po opublikowaniu natywnego szkicu.
+
+2. ARTYKUŁ ALTIORA LINEA W WIEDZY
+Jeden edytowalny szkic po wejściu administratora do panelu: „Strona internetowa Altiora Linea — premium design w trzech językach”. Dziewięć sekcji, sześć odpowiedzi FAQ, trzy bloki CTA. Szablon zpArticleNew/zpArticlePremium. Zdjęcie realizacji wskazane przez użytkownika i zdjęcie zespołu w końcowym CTA. Dołączona wersja EN w osobnym HTML, niepublikowana automatycznie. Szczegółowe ustawienia w pliku RANK_MATH_ALTIORA_LINEA.txt.
+
+3. DZIEWIĘĆ DOTYCHCZASOWYCH PORADNIKÓW
+Po dwa dodatkowe bloki portfolio ze zdjęciem, objaśnieniem i CTA w treści każdego artykułu — łącznie 18 dodatkowych wystąpień zdjęć i 18 CTA. Pliki WebP pochodzą z istniejących zasobów projektu; mają ALT, wymiary, lazy loading. W drugim bloku są praktyczne kryteria do przełożenia na własny projekt. Dodatki nie zastępują poprzedniej treści, H1, URL-i ani wcześniejszych rozszerzeń z wersji 3.2.32.
+Zakres:
+/strony-internetowe/jak-stworzyc-strone-internetowa/
+/strony-internetowe/strona-internetowa-dla-firmy-co-powinna-zawierac/
+/logo-branding/identyfikacja-wizualna-firmy/
+/logo-branding/rebranding-firmy/
+/logo-branding/logo-wektorowe-pliki-logo/
+/seo-i-konwersja/landing-page-przyklady/
+/strony-www/strona-internetowa-dla-malej-firmy/
+/strony-internetowe/rodzaje-stron-internetowych/
+/strony-internetowe/tworzenie-stron-internetowych-profesjonalny-proces-od-strategii-do-wdrozenia/
+To rozszerzenia renderowane przez Suite. Oryginalne treści tych wpisów w bazie nie są nadpisywane. Nie ma gwarancji wzrostu pozycji; oceniaj ruch i zapytania po ponownym przetworzeniu stron przez Google.
+
+4. ZDJĘCIA USŁUG NA TELEFONIE (DO 760 PX)
+Strony WWW: główna grafika laptopa +10%, punkt skalowania z lewej; prawy crop pozostaje.
+Sklepy: grafika w laptop3d -5%, dotychczasowa animacja jej kontenera pozostaje.
+Branding: -7%, delikatne unoszenie, bez ucinania przez lokalny kontener.
+Meta Ads: widoczny overflow, przesunięcie grafiki na prawo (left 0, right -16%), unoszenie.
+Nowe unoszenie działa, gdy karta jest blisko widoku, i jest wyłączane dla prefers-reduced-motion. Skale desktopowych grafik nie są zmieniane.
+
+5. MNIEJSZY POCZĄTKOWY HTML STRONY GŁÓWNEJ
+Na polskiej stronie głównej / przeniesiono pełne, rozpoznane bloki historycznych stylów do plików, zachowując potrzebne na początku reguły mobilne inline. Zachowana jest kolejność reguł i wcześniejsze osadzenie jednego headera przed hero. Nie ma loadera, czekania na wszystkie zdjęcia ani ukrywania treści.
+Nie dodano nowego bufora całej odpowiedzi. Nie zmieniono Cookiebota, zgód ani polityki cache. Nie zastosowano specjalnego HTML dla Lighthouse. Nieznane/zmienione bloki CSS nie są transformowane; niezgodny lub brakujący plik CSS powoduje zachowanie oryginalnego sposobu wysyłania.
+
+POMIAR ROZMIARU LOKALNEGO WIDOKU — NIE POMIAR PRODUKCJI
+Cały HTML: 1,424,164 → 960,857 bajtów.
+Część przed końcem HEAD: 927,970 → 464,663 bajtów (około 49.9% mniej).
+Cały HTML po lokalnej kompresji gzip: 292,365 → 238,903 bajtów.
+Pełne CSS nadal trzeba pobrać. Mniejszy HTML nie jest równoznaczny z identycznym procentowym skróceniem czasu ładowania. Nie zmierzono aktualnego TTFB hostingu ani pełnego Lighthouse z publicznej witryny. Nowa optymalizacja transportu jest ograniczona do polskiego adresu głównego; nie obejmuje /en/.
+
+6. WERYFIKACJA
+Kontrola składni: 699 plików PHP bez błędów; dwa nowe skrypty JS przechodzą node --check.
+Test renderowania w Chromium na lokalnym HTML: 360, 390, 430, 768, 1100 i 1440 px. Header, hero, zdjęcie zespołu, H1 i CTA zachowały zmierzone pozycje po dołączeniu pełnego CSS; końcowy układ odpowiada wersji bazowej. Jeden header, jedno hero, brak wykrytego poziomego overflow.
+Testy treści: dziewięć adresów, po dwa obrazy, zachowanie tekstu, ponowne przetworzenie bez dublowania; kolejność Altiora i brak duplikatu karty.
+Test szkicu z atrapami funkcji WordPressa: jeden draft, idempotencja, pola Rank Math i odnośnik do case study dopiero po publikacji. Nie jest to test integracyjny na bazie użytkownika.
+Test interfejsu: NEW widoczne na telefonie i desktopie, Szczegóły na telefonie otwierają się, rzeczywiste scale 1.1 / .95 / .93 i right -16% na Meta. Szablon artykułu na 360/390/1440 px bez poziomego overflow i bez brakujących celów spisu treści.
+
+Ograniczenie: testy przeglądarkowe były wykonywane na lokalnym HTML z osadzonymi zasobami, nie jako test sieci 4G ani na fizycznym iPhonie. Brak nowego wyniku Lighthouse. Nie potwierdzono jeszcze usunięcia całego opóźnienia białego ekranu na produkcji. Nowe zdjęcie Altiora wskazuje dostarczony URL; jego bieżącego pobierania z serwera nie dało się zweryfikować w tym środowisku.
+
+7. INSTALACJA I PUBLIKACJA
+Zrób kopię aktualnej wtyczki i bazy. WordPress → Wtyczki → Dodaj nową → Wyślij wtyczkę na serwer → wybierz pełny ZIP 3.2.36 → Zastąp obecną wersję.
+Otwórz ponownie panel jako administrator. Sprawdź 3.2.36. Suite jednorazowo czyści swoje kopie cache i przygotowuje szkic Altiora. Dodatkowy cache hostingu/CDN wyczyść oddzielnie, jeśli jest aktywny.
+Otwórz podgląd szkicu z komunikatu lub Wpisy → Szkice. Sprawdź autora, obraz, linki, wygląd oraz Rank Math. Dopiero po akceptacji opublikuj.
+Sprawdź stronę główną w nowej karcie prywatnej i na telefonie: NEW, Szczegóły, menu, pierwsze wyświetlenie, sekcje WWW/sklep/branding/Meta. Nie porównuj starego HTML z cache do nowego CSS.
+Powtórz Lighthouse w tych samych warunkach trzy razy; porównaj medianę FCP/LCP, CLS oraz zrzuty klatek. Oddziel oczekiwanie na odpowiedź serwera od renderowania.
+
+8. DIAGNOSTYKA I POWRÓT
+Na potrzeby pojedynczego porównania nowy transport CSS można pominąć adresem /?zp_first_screen=0 (o ile CDN/host nie ignoruje parametrów zapytania). Nie jest to globalne przełączanie cache.
+Developer może wyłączyć wyłącznie nowy moduł ustawiając opcję WordPress zp_first_screen_delivery_off na ciąg '1'.
+Pełny rollback: zastąp wtyczkę zachowaną wersją 3.2.35 i odśwież cache. Szkic Altiora jest zwykłym wpisem i pozostaje w bazie — nie jest automatycznie usuwany. Te same natywne dane SEO pozostają przy wpisie.
+
+Źródła zasad technicznych:
+https://web.dev/articles/optimize-lcp
+https://rankmath.com/kb/article-schema/

@@ -1,0 +1,9 @@
+Zaprojektowani Suite 2.9.16 — 2026-10-09
+
+- Końcowa naprawa nadmiarowego inline Article JSON-LD w sześciu dokładnie wskazanych opublikowanych wpisach PL/EN; sprawdzany rzeczywisty canonical, bez zmiany treści/wyglądu.
+- Natywny panel przeglądu pakietu 20 długich artykułów: aktualne wolumeny Senuto, Rank Math, prawdziwe załączniki Media Library i harmonogram WordPress. Brak automatycznego tworzenia wpisów przy aktualizacji. Jeden dotychczasowy blok HTML Elementora z dokładnym CSS użytkownika, źródło5579; brak redesignu.
+- Pakiet treści w chronionym pliku PHP, bez publicznego JSON z przyszłymi publikacjami. Kontrola kolizji, dat/DST, metadanych, cron i idempotencji. Publikacja jednego wcześniej obsługiwana jako natywna zmiana statusu.
+- Prawidłowa semantyczna rola group dla mobilnych pasków technologii i statystyk; CSS/animacje pozostają niezmienione.
+- WebSub: emitowanie atom:link tylko we właściwym feedzie, bez naruszania XML eksportu WordPress WXR.
+
+Uwaga: diagnoza źródła mobilnego CLS jest kontynuowana oddzielnie.

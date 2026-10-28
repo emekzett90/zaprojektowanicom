@@ -1,0 +1,6 @@
+Zaprojektowani Suite 3.2.44
+
+- Dodano link „Case studies” w globalnej stopce, w kolumnie „Firma”, pod „Realizacje”.
+- Link korzysta z istniejącego adresu indeksu case studies, z obsługą wersji PL/EN i widoczności opublikowanej strony.
+- Pozycja jest dostępna w stopce na komputerach i telefonach.
+- Zachowano wszystkie poprawki z wersji 3.2.43.

@@ -1,0 +1,11 @@
+Zaprojektowani Suite 2.2.712 — Wiedza SEO Hub
+
+- /wiedza/: dodano semantyczną sekcję SEO-huba z opisem bazy wiedzy.
+- Dodano crawlable linki do głównych klastrów tematycznych zamiast samych przycisków JS.
+- Zgrupowano stare/zdublowane kategorie w 6 czytelnych obszarów: strony, sklepy, branding, SEO/konwersja, kampanie, case study.
+- Filtry nadal działają AJAX-em, ale href prowadzi do prawdziwego archiwum kategorii przy wyłączonym JS / dla crawlerów.
+- Dodano linkowanie wewnętrzne z huba do usług i realizacji.
+- Rank Math: wymuszony SEO title, description i canonical dla /wiedza/.
+- Schema /wiedza/: CollectionPage + BreadcrumbList + ItemList z maks. 60 opublikowanymi artykułami.
+- Puste kategorie nie są wyświetlane w filtrach.
+- Brak zmian w adresach URL istniejących artykułów.

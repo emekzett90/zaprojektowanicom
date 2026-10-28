@@ -1,0 +1,7 @@
+Zaprojektowani Suite 2.2.724
+
+Realizacje — hero team fine tuning:
+- zdjęcie zespołu zmniejszone o ok. 20% na desktopie,
+- overlap z kartami poniżej zredukowany i wyrównany,
+- dolna krawędź zdjęcia wychodzi teraz tylko subtelnie ponad boxy usług,
+- osobne proporcje dla 901–1180 px.

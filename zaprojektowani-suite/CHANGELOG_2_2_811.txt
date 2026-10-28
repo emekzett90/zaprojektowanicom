@@ -1,0 +1,10 @@
+ZAPROJEKTOWANI SUITE 2.2.811
+
+Logo & Branding — korekty pakietów:
+- Logo Startowe: 4 autorskie koncepcje logo.
+- Lista zakresu widoczna na kartach powiększona o 1 px.
+- Sylwetki osób nad wszystkimi pakietami podniesione o 25 px.
+- Naprawione kolory tekstu CTA w panelu „Zobacz pełny zakres” dla link/visited/hover/focus/active.
+- Naprawiony hover głównego CTA w wyróżnionym pakiecie.
+- Przycisk X zamykania pełnego zakresu widoczny na desktopie i mobile.
+- X skutecznie zamyka panel także przy aktywnym hoverze na desktopie.

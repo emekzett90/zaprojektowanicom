@@ -1,0 +1,39 @@
+/* Uses the existing editorial palette and template; additions are scoped to their blocks. */
+.zpArticleNew .zpEditorialCase{margin:42px 0;padding:clamp(22px,3.2vw,38px);border:1px solid rgba(7,20,38,.1);border-radius:28px;background:#f7f8fa;overflow:hidden}
+.zpArticleNew .zpEditorialCase__kicker{margin:0 0 14px;font-size:12px;font-weight:750;letter-spacing:.06em;color:#4d5788}
+.zpArticleNew .zpEditorialCase h3{margin:0 0 22px;font-size:clamp(24px,2.6vw,34px);line-height:1.2}
+.zpArticleNew .zpEditorialCase figure{margin:0 0 24px}
+.zpArticleNew .zpEditorialCase figure a{display:block}
+.zpArticleNew .zpEditorialCase figure img{display:block;width:100%;height:auto;max-width:100%;min-height:0;border-radius:18px;object-fit:contain;box-shadow:none}
+.zpArticleNew .zpEditorialCase figcaption{margin-top:10px;font-size:13px;line-height:1.6;color:#647084}
+.zpArticleNew .zpEditorialCase>p{font-size:17px;line-height:1.8}
+.zpArticleNew .zpEditorialCase__check{margin:24px 0 0;padding:22px;border-radius:20px;background:#fff}
+.zpArticleNew .zpEditorialCase__check>strong{display:block;font-size:18px}
+.zpArticleNew .zpEditorialCase dl{margin:14px 0 0}
+.zpArticleNew .zpEditorialCase dl>div{display:grid;grid-template-columns:minmax(100px,1fr) minmax(0,2fr);gap:18px;padding:16px 0;border-top:1px solid rgba(7,20,38,.1)}
+.zpArticleNew .zpEditorialCase dt{font-size:15px;font-weight:750;color:#101827}
+.zpArticleNew .zpEditorialCase dd{margin:0;color:#445169;font-size:15px;line-height:1.6}
+.zpArticleNew .zpEditorialCase dd small{display:block;margin-top:5px;font-size:13px;color:#687389}
+.zpArticleNew .zpEditorialOffer{display:flex;align-items:center;justify-content:space-between;gap:24px;margin:28px 0 0;padding:24px;border-radius:22px;background:linear-gradient(110deg,#121424,#283456);color:#fff}
+.zpArticleNew .zpEditorialOffer strong{display:block;color:#fff;font-size:20px;line-height:1.35}
+.zpArticleNew .zpEditorialOffer p{margin:10px 0 0;color:#e0e5ef;font-size:15px;line-height:1.6}
+.zpArticleNew .zpEditorialOffer>a{flex:0 0 auto;display:inline-flex;align-items:center;justify-content:center;gap:18px;min-height:48px;padding:13px 18px;border-radius:99px;background:#fff;color:#101827;font-size:14px;line-height:1.4;font-weight:750;text-decoration:none;text-align:center}
+.zpArticleNew .zpEditorialOffer>a:hover{background:#e8eef8;color:#101827}
+.zpArticleNew .zpEditorialOffer>a:focus-visible{outline:3px solid #789bff;outline-offset:4px}
+.zpArticleNew.zpAltioraCase{max-width:1200px;margin:0 auto}
+.zpAltioraCase .zpArticleNew__heroStats span{display:block}.zpAltioraCase .zpArticleNew__heroStats b{display:block;margin-bottom:5px}
+.zpAltioraCase .zpAltioraCase__live{display:inline-flex;min-height:48px;align-items:center;margin-top:20px;font-weight:750}
+.zpAltioraCase .zpAltioraCase__cover img{aspect-ratio:auto!important;height:auto!important;min-height:0!important;object-fit:contain!important;box-shadow:0 18px 46px rgba(7,20,38,.08)}
+.zpAltioraCase .zpArticleNew__section{scroll-margin-top:100px}
+.zpAltioraCase .zpAltioraCase__cta{display:flex;gap:28px;align-items:center}
+.zpAltioraCase .zpAltioraCase__cta>div{min-width:0;flex:1}
+.zpAltioraCase .zpAltioraCase__team{width:30%;height:auto;align-self:flex-end;object-fit:contain;box-shadow:none}
+body.zp-altiora-case-native .entry-header>.entry-title,body.zp-altiora-case-native .page-header>.entry-title{display:none}
+@media(max-width:760px){
+ .zpArticleNew .zpEditorialCase{margin:28px 16px;width:calc(100% - 32px);padding:20px;border-radius:24px}
+ .zpArticleNew .zpEditorialOffer{display:block;padding:20px}.zpArticleNew .zpEditorialOffer>a{margin-top:20px;width:100%;white-space:normal}
+ .zpArticleNew .zpEditorialCase dl>div{display:block}.zpArticleNew .zpEditorialCase dd{margin-top:8px}
+ .zpArticleNew .zpEditorialCase__check{padding:17px}.zpArticleNew .zpEditorialCase figure img{border-radius:14px}
+ .zpAltioraCase .zpAltioraCase__cta{flex-direction:column-reverse;align-items:stretch}
+ .zpAltioraCase .zpAltioraCase__team{width:80%;max-width:320px;align-self:center;margin:0 auto}
+}

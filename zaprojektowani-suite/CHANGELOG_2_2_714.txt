@@ -1,0 +1,8 @@
+Zaprojektowani Suite 2.2.714
+
+- Kategorie Wiedzy: stabilny biały header bez szarego przeskoku i synchroniczne ładowanie header.css.
+- Naprawa aktywnego pilla kategorii: biały tekst i licznik na ciemnym tle.
+- Kategorie Wiedzy: nowy premium hero, karta statystyk, szybsza nawigacja, wyróżniony najnowszy wpis i odświeżone karty.
+- /wiedza/: mocniejszy hub tematów z ikonami, licznikami, szybkim startem i bardziej czytelnym blokiem SEO pod kategoriami.
+- /wiedza/: lekkie uproszczenie kart i toolbaru dla lepszej czytelności bez ciężkich cieni.
+- Nie zmieniono bazy URL /category/ na /kategoria/ — taka zmiana wymaga osobnej migracji 301.

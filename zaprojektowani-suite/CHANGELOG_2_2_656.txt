@@ -1,0 +1,7 @@
+Zaprojektowani Suite v2.2.656
+
+Studio Wyceny:
+- ~1105 px i podobne: zdjęcia obniżone o 30 px,
+- ~1335 px i podobne: dopasowane ustawienie Logo i branding, aby tekst nie wchodził na obraz,
+- duże rozdzielczości / największe laptopy: Strona internetowa +15%, Sklep internetowy +10%,
+- duże rozdzielczości: Logo i branding wyżej o 30 px.

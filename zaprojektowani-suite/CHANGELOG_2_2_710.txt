@@ -1,0 +1,11 @@
+ZAPROJEKTOWANI SUITE 2.2.710
+
+1. Naprawiono samoczynne szaro-niebieskie wypełnienie przycisku „Wyceń projekt” na iOS/Chrome po szybkim scrollu.
+2. Na urządzeniach dotykowych usunięto awaryjną maskę WebKit z pseudo-elementu obramowania i zastąpiono ją stabilną ramką CSS.
+3. Biały stan spoczynkowy nie reaguje już na syntetyczny/sticky hover ani pozostawiony focus.
+4. Ciemny gradient navy pojawia się wyłącznie podczas rzeczywistego przytrzymania przycisku i jest kasowany po ruchu palca, scrollu, anulowaniu gestu, zmianie viewportu i powrocie z BFCache.
+5. Ustabilizowano wysokość mobilnej strony głównej: pięć sekcji odpowiedzialnych za skok ma teraz własne, responsywne rezerwacje miejsca zamiast jednego zaniżonego placeholdera 980 px.
+6. Reset focusu ograniczono do linków hero/docka, aby globalny touchend nie rozmywał pól formularzy; zachowano widoczny focus klawiatury.
+7. Naprawiono obsługę historii: linki kotwicowe i anulowane kliknięcia nie mogą już pozostawić strony w stanie „leaving” z ukrytym dockiem, a powrót z BFCache zawsze czyści ten stan także po zmianie breakpointu.
+8. Numer wydania odłączono od markera przykładowych wpisów bloga, więc aktualizacja nie uruchamia ponownie seedera ani nie nadpisuje metadanych istniejących artykułów.
+9. Wersję wtyczki podbito do 2.2.710.

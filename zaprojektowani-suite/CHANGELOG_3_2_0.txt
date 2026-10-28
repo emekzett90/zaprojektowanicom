@@ -1,0 +1,90 @@
+Zaprojektowani Suite 3.2.0 — 15.10.2026
+
+Podstawa: 3.1.0.1 (wersja działająca na stronie od 14.10). 3.2.0 zbiera wszystko, co poprawialiśmy od 3.1.0: płynność strony, robota, tłumacza EN, cache stron, poprawki SEO z audytów i pulpit. Wersja 3.1.1 nie wyszła osobno; jej zawartość jest tutaj. Aktualizacja nie kasuje żadnych danych (także danych tłumacza Codexa).
+
+Płynność strony głównej i robot (już w 3.1.0.1, bez zmian)
+- Robot w hero nie wchodzi od nowa po powrocie na górę strony; poza ekranem zatrzymuje się tylko rysowanie.
+- Przewijanie: pasek postępu, przycisk „do góry”, nagłówek i sekcje czytają położenie raz na klatkę; około 50 niekończących się animacji odpoczywa poza ekranem; mniej przeliczeń stylów na starcie.
+- Głowa robota nie wchodzi pod menu (komputery 1101–1920 px, wysokie telefony i tablety).
+- Font Plus Jakarta Sans 800 ładuje się od początku.
+
+Płynność: przełącznik języka i Wiedza (nowe)
+- Przełącznik PL/EN obserwuje tylko zmiany klas nagłówka i nie powtarza aktualizacji po 220 i 600 ms. Wcześniej jedno przewinięcie zmieniało klasę <html> 65–106 razy, teraz 0.
+- Wiedza (/wiedza/, /en/knowledge/): pasek postępu w hero liczony raz na klatkę i tylko, gdy hero jest widoczne. Lokalnie skrypt przy przewijaniu 98 → 47 ms (komputer) i 146 → 46 ms (telefon).
+- Wiedza: indeks wpisów zostaje zapamiętany po każdym czytaniu, a liczby nad nim nie wymagają wczytania wszystkich wpisów. Lokalnie strona po czytaniu 1,24 s → 0,41 s (PL) i 1,48 s → 0,46 s (EN). HTML bez zmian.
+
+Portfolio na stronie głównej (ekrany szersze niż 1500 px)
+- Podpowiedź „Przewiń w dół, aby przejrzeć projekty” (EN: „Scroll down to browse the projects”), znika, gdy ktoś zacznie przewijać projekty.
+- Przewijanie w bok (gładzik, Shift + kółko) przesuwa projekty tak samo jak przewijanie w dół. Laptopy do 1500 px i telefony bez zmian.
+
+Tłumacz EN 2.0.2 i Języki PL/EN 1.1.1
+- „Strony EN: 30” i „Tłumaczenia EN do sprawdzenia: 30” na pulpicie: 19 wpisów cytuje angielskie źródła („Performance report, Google Search Console Help”) i hasła marki, które model słusznie zostawia bez zmian, a stary sprawdzian brał to za nieprzetłumaczony polski tekst. Teraz niezmieniony fragment od 6 słów przechodzi, gdy jest po angielsku albo składa się z nazw; polskie zdania dalej są błędem. Pozostałe strony (kafelki usług, nazwa strony głównej) naprawia poprawka z przeglądu. Po aktualizacji tłumacz sam bierze te strony w pierwszej kolejności i wysyła do OpenAI tylko fragmenty, które wcześniej nie przeszły.
+- Wiedza po angielsku to „Knowledge”: /en/knowledge/ (z /en/insights/ przekierowanie 301).
+- Strony „Do poprawy”: nazwy własne i etykiety kodu nie są już błędem; po aktualizacji najpierw tłumaczone są strony z błędem lub brakami, a panel cytuje brakujący tekst.
+- Zepsute wspólne tłumaczenia (polski tekst w wersji EN, zgubione znaczniki linków) wracają do tłumaczenia, także przez „Przetłumacz od nowa”; strony nie są już błędnie „gotowe”.
+- Krótkie tytuły (do 60 znaków) i opisy (do 155) tylko dla Google, robione lokalnie z tłumaczenia maszynowego, bez dodatkowych zapytań do OpenAI. Poprawka ręczna i nadpisanie z Języków PL/EN zawsze wygrywają. H1 i treść strony zostają pełne.
+- Strony EN są w cache HTML ZP Suite. Nowe tłumaczenie, zmiana adresu EN albo kurs NBP odświeżają tylko strony EN, bez czyszczenia całego cache.
+- /en i inne adresy EN bez ukośnika na końcu dostają 301. Adres angielski wpisany bez /en/ (np. /websites-for-law-firms/) dostaje 301 na stronę angielską zamiast 404; polska strona pod tym adresem zawsze wygrywa.
+- Lighthouse 10+ (PageSpeed) nie jest przekierowywany na /en/.
+- Panel Tłumacza: poprawna odmiana liczebników, kolumny bez łamania słów.
+- Krótkie opisy EN nie urywają się po skrótach (e.g., i.e., vs., Dr. i podobnych).
+- Adres angielski bez /en/ ustępuje przekierowaniu starego adresu wpisu w WordPressie i przekierowaniu zapisanemu w panelu 404.
+- Gdy zniknie polska strona, która po angielsku ma ten sam adres (np. /logo-branding-katowice/), polski adres nie przekierowuje już na jej wersję EN. WordPress odpowiada 404 albo przekierowaniem starego adresu, a Tłumacz EN wycofuje tę stronę, zamiast zgłaszać ją na pulpicie bez końca.
+
+Cache stron (HTML)
+- Odświeżenie cache zapisuje nową generację zamiast kasować pliki; stare kopie usuwa sprzątanie co 15 minut.
+- Strona przy pierwszym wejściu (MISS) wysyła te same nagłówki co kopia z cache.
+- Przeglądarka w innym języku dostaje polską kopię, gdy Geo umieszcza odwiedzającego w Polsce. Strony EN z cache dla każdej przeglądarki.
+- Cache wyłączony ręcznie w panelu zostaje wyłączony (wcześniej długie żądanie tłumacza mogło go włączyć z powrotem).
+- Wgranie wtyczki samo zakłada nową generację cache. Nie czyść LiteSpeed ani CDN.
+
+SEO (audyty z 13.10 i SearchFit z 14.10)
+- /tworzenie-stron-internetowych/, /projektowanie-logo/, /identyfikacja-wizualna/: nowe teksty w sekcjach, które były słowo w słowo jak na stronach Katowic. Ten sam układ i podobna długość. Wspólny tekst ze stronami Katowic spadł z 63–72% do 53–56%.
+- Nagłówki H2 z frazami z planu na stronach usług i /kampanie-reklamowe/ (Google Ads, Meta Ads, Facebook Ads). Ceny tylko z cennika.
+- Cztery wpisy „przeskanowane, nie zindeksowane” dostały sekcję, którą ma tylko ta strona (formularz kontaktowy, strona dla małej firmy, UX, remarketing), i świeżą datę w mapie witryny. We wpisie o remarketingu jest przykładowe wyliczenie budżetu mediowego (CPM 25 zł, ok. 450 zł miesięcznie, opisane jako metoda, nie stawka); to nie jest cena usługi.
+- Kanały RSS i Atom: noindex, follow (czytniki i Google dalej je czytają).
+- 16 tytułów SEO dłuższych niż 60 znaków i 20 opisów dłuższych niż 160: skrócone propozycjami z audytu, z kopią starych wartości i linkiem „Cofnij te zmiany”. Pola skrócone wcześniej ręcznie zostają.
+- Zdjęcie główne 20 wpisów o logo pobiera się w pełnej szerokości (wcześniej było brane za małe logo i rozmyte).
+- Dane strukturalne (SearchFit 3, 4, 8): wpisy mają jeden blok JSON-LD zamiast dwóch, strony mają ścieżkę okruszków (BreadcrumbList), usługi mają wykonawcę i nie mają pustych ofert.
+- Martwe linki (SearchFit 7): ikona LinkedIn zostaje, ale nie prowadzi do nieistniejącego profilu (strona główna, Katowice, logo i branding, sklepy, Kontakt, Wiedza); LinkedIn wypadł z sameAs i z listy dla AI; martwe linki do Clickmade we wpisach są pomijane; karta „Druga Szansa” w portfolio nie prowadzi do nieistniejącej strony (przycisk wygląda tak samo). Na /realizacje/ ten projekt nadal ma znaczek „live” i przycisk „Zobacz live”, które teraz nic nie otwierają, a okno projektu pisze „Online — projekt działa live”; zmiana tego tekstu to zmiana wyglądu Realizacji, więc czeka na Twoją decyzję.
+- Dostępność (SearchFit 12), bez zmian w wyglądzie: zamknięte panele pakietów są niedostępne dla klawiatury i czytników, przyciski i linki mają nazwy zgodne z widocznym tekstem.
+- Stopka (SearchFit 10): nowy chip „Agencja reklamowa Katowice” w istniejącym rzędzie i stylu (po angielsku prowadzi do /en/advertising-agency-katowice/). To jedyny nowy element w wyglądzie. Widoczne są też zmiany w treści opisane wyżej: nowe nagłówki H2 i teksty sekcji na stronach usług i /kampanie-reklamowe/ oraz dopisane sekcje w 4 wpisach (te same komponenty i styl).
+- Udostępnianie (SearchFit 9): każda strona usługi, branży i Katowic pokazuje przy udostępnieniu zdjęcie ze swojego hero (JPEG 1200×630, zwykle 100–200 KB, najwyżej 300 KB, tworzony raz przy pierwszym wejściu do uploads/zp-og/). Strona główna bez zmian; gdy serwer nie umie stworzyć obrazka, zostaje obrazek Rank Math.
+- Błędy 404 z pulpitu: stare obrazki i ikony mają 301 na aktualne (BANNER.jpg, stare logo, /apple-touch-icon.png), /wp-sitemap.xml → /sitemap_index.xml, /tag/logo/ → /category/logo-branding/; dwa obrazki ze starego poradnika Google Ads odpowiadają 410 (żadna strona ich nie pokazuje).
+
+Studio wyceny i Kontakt (zgłoszenie z 14.10)
+- Komputer: podsumowanie po prawej nie ma już własnego paska przewijania, a głowa Marty znów wystaje 59 px nad ramkę. Przyklejone podsumowanie stoi 60 px niżej (156 px od góry), więc menu nie zasłania jej głowy. Na niskich ekranach dół podsumowania widać po przewinięciu do końca briefu, jak w 2.9.66.
+- Kontakt: pasek postępu w hero liczony raz na klatkę i tylko, gdy hero jest widoczne (lokalnie 193–199 → 24 przeliczeń układu przy przewijaniu).
+- Kontakt na telefonie: przy wolnym łączu tło hero (zorza i duży napis w tle) czeka, aż wczyta się cały nagłówek, więc nic już nie skacze (przesunięcie układu 0,11 → 0). Wygląd po wczytaniu bez zmian. PageSpeed i inne audyty dostają tę samą stronę co klienci.
+
+Pulpit i Stan strony
+- „Linki na stronie prowadzą do błędu 404” liczy tylko linki, które naprawdę są na stronie. Roboty pytają o /ads.txt, /sellers.json, /wk/ i podobne adresy, podając naszą stronę jako źródło; teraz ZP Suite otwiera tę stronę (w tle, do 6 stron naraz, ponownie po tygodniu) i liczy adres tylko, gdy znajdzie na niej link, obrazek lub adres w skrypcie. Panel 404 przy każdym adresie pisze, czy to link na stronie, zapytanie robota, czy jeszcze trwa sprawdzanie.
+- „Limit pól formularza: 1000”: aktualizacja dopisuje max_input_vars = 5000 do pliku .user.ini w folderze WordPressa (pozostałe linie zostają, kopia starej treści w bazie). Serwer czyta ten plik ponownie w ciągu 5 minut. Jeśli limit się nie zmieni, Stan strony napisze, że trzeba poprosić nazwa.pl.
+- „Teksty i nowe zdjęcia: Kolejka zatrzymała się” to był fałszywy alarm. Odczyt z 14.10: kolejka nie stoi; 31 artykułów jest zaplanowanych (16.10–10.12, 18:00), 7 opublikowanych, a 4 szkice są celowo wstrzymane, bo ich frazy mają mniej niż 150 wyszukiwań. Stary kod zgłaszał każdy wstrzymany szkic jako problem. Teraz pulpit pokazuje wiersz tylko, gdy kolejka naprawdę nie działa (podaje przyczynę) albo gdy jakieś zadanie czeka na Twoją decyzję. W tej kolejce zadanie, którego wpis jest już opublikowany, nie czeka; kolejka zdjęć wcześniejszych artykułów dalej zgłasza każde zadanie do decyzji.
+- Krótkie opóźnienia WP-Cron nie pokazują wiersza; tylko kolejka bez zmian od 15 minut albo bez wykonawcy.
+- Cron z serwera: plik zp-cron.php do zadania CRON w panelu nazwa.pl; Stan strony pokazuje dokładną linię do wklejenia i czy cron działa.
+- Pulpit: poprawna odmiana („1 treść z błędem”).
+- Panel 404: sprawdzanie linków w tle nie nadpisuje wpisów dopisanych w tym samym czasie; zapytanie bez strony źródłowej nie jest liczone jako link ze strony głównej.
+- Artykuły z modułu „Teksty i nowe zdjęcia”: dane strukturalne (BlogPosting, FAQ) zostają po zapisaniu wpisu w Elementorze, także po zmianie nagłówka w widżecie HTML.
+
+Czego nie ma w 3.2.0 (świadomie)
+- Wynik PageSpeed i LCP strony głównej: to nie jest błąd w kodzie 3.x. Na żywej stronie robot pojawia się 0,17–0,24 s po nadejściu HTML, a zmierzone LCP to 1,1–1,3 s. 8,5 s w PageSpeed (i 5,5 s w Lighthouse na iMacu) to symulacja: zanim robot się narysuje, startuje około 1 MB (245 KB HTML z ok. 470 KB stylów w środku, 7 fontów, ikony Lucide 86 KB, Cookiebot, jQuery, ok. 350 KB obrazków), a wolniejszy procesor PageSpeed dokłada opóźnienie. W tych samych warunkach lokalnie: 2.9.66 4,8 s, 3.1.0 4,5 s, 3.2.0 4,5 s. Wynik Google z prawdziwych wizyt (4,8 s) zawiera jeszcze stary, wolny czas odpowiedzi serwera sprzed włączenia OPcache; OPcache i cache stron to już poprawiają.
+- Następna wersja z szybkością, mierzona w PageSpeed przed i po, każda zmiana bez widocznej różnicy: podział stylów na pliki, ikony Lucide tylko te używane (−80 KB), mniejsze odznaka Meta Verified, loga i zdjęcia zespołu (ok. −150 KB), mniej wymuszonych przeliczeń układu na starcie.
+- SearchFit 14 (wejście nagłówka H1): zmienia to, co widać, więc nie weszło bez Twojej decyzji.
+- Współrzędne geograficzne w danych strukturalnych: nie mamy zweryfikowanego adresu.
+- Trzy strony Katowic (strony, sklepy, logo): ta sama poprawka skoku hero co na Kontakcie przyjdzie w kolejnej wersji, mierzona osobno. Lokalnie konsola pokazuje tam ostrzeżenie o wcześniej wczytanym obrazku laptopa, a na /realizacje/ o wcześniej wczytanym foncie; oba były już w 3.1.0.1.
+- Dalsze przyspieszenie strony głównej i Wiedzy (wątek SEO i szybkości): w kolejnej wersji, mierzone w PageSpeed przed i po. W 3.2.0 żaden skrypt Wiedzy nie pracuje, gdy strona stoi.
+
+Po instalacji (iMac)
+- Wtyczki: ZP Suite w wersji 3.2.0.
+- Panel nazwa.pl → Zadania CRON: dodaj co 5 minut polecenie skopiowane z ZP Suite → Stan strony → Zaplanowane zadania (php /home/server432994/ftp/zaprojektowani2/wp-content/plugins/zaprojektowani-suite/zp-cron.php zaprojektowani.com).
+- Po około 5 minutach Stan strony: „Limit pól formularza” znika (5000).
+- ZP Suite → Tłumacz EN → Dziennik: linia „Nowa wersja wtyczki: w pierwszej kolejności tłumaczę ponownie 29 stron…”, potem linie „Wersja EN gotowa” bez „(bez N fragmentów)”. Filtr „Do poprawy” w zakładce Strony pusty, oba wiersze EN znikają z pulpitu.
+- Źródło strony /tworzenie-stron-internetowych/ ma og:image z uploads/zp-og/; /apple-touch-icon.png odpowiada 301; /wp-content/uploads/2026/01/google_ads_poradnik2.webp odpowiada 410; chip „Agencja reklamowa Katowice” widać w stopce (PL).
+- Studio wyceny na komputerze: cała głowa Marty nad ramką podsumowania, podsumowanie bez paska przewijania.
+- Kontakt na telefonie (najlepiej przy słabym zasięgu): hero wczytuje się bez skoku, wygląda jak wcześniej.
+- Pulpit: nie ma wierszy „Teksty i nowe zdjęcia”, „Linki na stronie prowadzą do błędu 404” (o ile nie ma prawdziwego zepsutego linku) ani „Limit pól formularza” (po ok. 5 minutach).
+- Strona główna, /en/, /kontakt/, /en/contact/, /realizacje/, /o-nas/, /wiedza/, /studio-wyceny/: wygląd bez zmian, konsola bez nowych błędów i ostrzeżeń (PL i EN).
+
+Cofnięcie
+WordPress → Wtyczki → Dodaj wtyczkę → Wyślij wtyczkę na serwer → zaprojektowani-suite-3.1.0.1.zip → zastąp obecną wersję. Dane zostają. Dopisana linia w .user.ini może zostać (nie szkodzi). Starsze kopie: 3.1.0, 3.0.1 i kopia Codexa (2.9.66).

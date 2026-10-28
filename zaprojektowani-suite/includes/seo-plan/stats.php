@@ -1,0 +1,39 @@
+<?php
+if (!defined('ABSPATH')) { exit; }
+
+/**
+ * ZP Suite 2.4.0 — one project count everywhere (audit point 17).
+ *
+ * The hero sections had "120+ projektów" hard-coded while the trust widget and the about
+ * section used "Liczba realizacji" from the plugin settings (114). The service heroes and
+ * the logo section now read the same setting, so the number is changed in one place.
+ * 2.9.6: the strip under the website template's hero ("60+ projektów online", e.g. on
+ * /strony-internetowe-katowice/ and /agencja-reklamowa-katowice/) reads it as well. The page
+ * said 60+, "ponad 110" and 114+ at once, and AI answers repeat whichever number they find.
+ * 2.9.8: the hero lead of /agencja-reklamowa-katowice/ and the first home FAQ answer still said
+ * "ponad 110"; both show the setting now.
+ */
+
+function zp_seo_plan_projects_count(): int {
+  $count = function_exists('zp_suite_opt') ? (int) zp_suite_opt('stats.projects_count', zp_suite_opt('hero.projects_count', 114)) : 114;
+  return $count > 0 ? $count : 114;
+}
+
+/** Replaces the hard-coded counts in service page HTML with the setting. */
+function zp_seo_plan_apply_projects_count(string $html): string {
+  $n = (string) zp_seo_plan_projects_count();
+  $html = preg_replace_callback('~<b data-count="120" data-suffix="\+">(0|120\+)</b><span>projektów</span>~', static function ($m) use ($n) {
+    return '<b data-count="' . $n . '" data-suffix="+">' . $n . '+</b><span>projektów</span>';
+  }, $html);
+  $html = str_replace(['ponad <em>114 marek</em>', '<strong>114+</strong>'], ['ponad <em>' . $n . ' marek</em>', '<strong>' . $n . '+</strong>'], $html);
+  $html = str_replace('<strong data-count="60" data-suffix="+">60+</strong><span>projektów online</span>', '<strong data-count="' . $n . '" data-suffix="+">' . $n . '+</strong><span>projektów</span>', $html);
+  $html = str_replace('Mamy za sobą 114+ projektów', 'Mamy za sobą ' . $n . '+ projektów', $html);
+  // Mat 21.10.2026, point 6: the shop hero printed "0" until its counter script ran, so crawlers and no-JS readers saw "0 lat doświadczenia".
+  $html = str_replace('<b data-count="10" data-suffix="+">0</b><span>lat doświadczenia zespołu</span>', '<b data-count="10" data-suffix="+">10+</b><span>lat doświadczenia zespołu</span>', $html);
+  return $html;
+}
+
+add_filter('do_shortcode_tag', function ($output, $tag) {
+  static $tags = ['zp_strony_internetowe_katowice', 'zp_page_strony_katowice', 'zp_sklepy_internetowe_katowice', 'zp_page_sklepy_katowice', 'zp_logo_branding_katowice', 'zp_page_logo_branding_katowice'];
+  return is_string($output) && in_array($tag, $tags, true) ? zp_seo_plan_apply_projects_count($output) : $output;
+}, 20, 2);

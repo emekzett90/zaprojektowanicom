@@ -1,0 +1,95 @@
+Zaprojektowani Suite 3.2.33 — mobile first paint
+17.10.2026
+
+Pełna aktualizacja wersji 3.2.32. Zachowane wcześniejsze zmiany kontaktu,
+8 stron branżowych, artykułów SEO i linkowania. Ta wersja nie zmienia treści
+ani dat publikacji artykułów.
+
+ZMIANY
+
+1. Pierwszy ekran strony głównej
+   Końcowy etap przetwarzania HTML działa po wcześniejszych mechanizmach
+   wydzielania CSS. Reguły potrzebne dla aktualnego headera i hero są dostępne
+   w HTML. Pełne, lokalne arkusze Suite nie blokują pierwszego renderowania
+   na ekranach do 1100 px. Desktop zachowuje normalną ścieżkę ich ładowania.
+
+   Reguły krytyczne zachowują pozycję w kaskadzie i oryginalne deklaracje.
+   Reguły dynamicznych stanów menu i zgód są zachowywane ostrożnie. Arkusze
+   innych wtyczek/motywu, nieczytelne pliki, @import oraz nierozpoznana
+   składnia pozostają przy dotychczasowym sposobie dostarczania.
+   Nie są wykonywane żadne sieciowe zapytania podczas tworzenia krytycznego CSS.
+
+2. Stabilny układ
+   Style Suite wypisywane dotąd dopiero wewnątrz body są przenoszone do head
+   w ich oryginalnej kolejności. Układ pierwszego ekranu nie musi czekać
+   na kolejne korekty po sparsowaniu headera lub końca hero.
+   Zachowane są wcześniejsze wyłączenia blur i animacji wejścia na mobile.
+   Nie wprowadzono ekranu ładowania ani ukrywania zawartości do window.load.
+
+3. Zespół w hero
+   Na mobile: jeden obraz WebP 676 x 366, wyświetlany w stałym obszarze
+   225,33 x 122 px, złożony z tych samych oryginalnych zdjęć i ich obecnego
+   układu. Waga 45 436 B zamiast 72 756 B trzech osobnych plików.
+   Obraz jest eager/high priority i ma wcześniejszy preload dla mobile.
+   Na desktopie pozostają trzy oryginalne zdjęcia. Elementy picture dobierają
+   źródła przez media queries, bez wariantów HTML zależnych od User-Agent.
+
+4. Typografia pierwszego ekranu
+   Podzbiory PL/EN istniejących, dołączonych do projektu odmian Plus Jakarta
+   Sans są osadzone w CSS mobilnego hero (razem 47 124 B danych fontów).
+   Dzięki temu tekst hero nie oczekuje na osobne zapytania po fonty.
+   Zachowane metryki, wagi i kształty liter z oryginalnych plików.
+   Zbędne preloady zewnętrznych fontów i pełnego CSS są ograniczone
+   do desktopu. Nie zmieniono fontów ani wejść desktopowych.
+
+5. Cache i zgodność
+   Aktualizacja ustawia osobny znacznik jednorazowego odświeżenia własnego
+   cache HTML. Ręcznie wyłączony cache nie jest włączany.
+   Cookiebot, zgody, analityka, adresy URL i formularze nie są przepisywane
+   przez tę poprawkę. Pełny CSS ma wariant noscript.
+
+INSTALACJA
+
+Zachowaj poprzednią paczkę / kopię strony. Wgraj kompletny ZIP jako aktualizację
+istniejącej wtyczki, zastępując wersję 3.2.32. Otwórz ponownie panel WordPress,
+sprawdź wersję 3.2.33 i wyczyść dodatkowy cache hostingu/CDN, jeżeli działa.
+Następnie sprawdź stronę główną w nowej karcie prywatnej i uruchom ponownie
+PageSpeed Insights/Lighthouse. Porównuj te same ustawienia urządzenia i sieci.
+
+Diagnostyka: w źródle HTML głównej powinien być znacznik
+name="zp-home-first-paint" content="3.2.33; nonblocking=...".
+Parametr ?zp_first_paint=0 wyłącza tę poprawkę dla żądania, o ile odpowiedź
+nie jest podawana przez nadrzędny cache. Pełny powrót: poprzednia wersja ZIP
+oraz wyczyszczenie cache. Poprawka respektuje też istniejące wyłączenie
+optymalizacji Suite — przy takim ustawieniu nie działa końcowy etap CSS.
+
+WERYFIKACJA W ŚRODOWISKU LOKALNYM
+
+- 693 pliki PHP: kontrola składni zakończona bez błędów.
+- 27 testów adaptera HTML/CSS: zaliczone, w tym idempotencja, pomijanie
+  skryptów, obsługa rzeczywistych przodków elementów, bezpieczna ścieżka
+  plików, zachowanie obcych stylów i niezmieniony tag Cookiebot.
+- 9 szerokości: 360, 375, 390, 430, 600, 768, 820, 1024, 1100 px;
+  dwa warianty dostarczania CSS (inline oraz aktywne wydzielanie do plików).
+  W kontrolowanym teście wstrzymano pełne arkusze, a następnie zastosowano je
+  po wyrenderowaniu. Położenie i rozmiary headera, H1, opisu, CTA i pola
+  zdjęcia nie zmieniły się; tolerancja porównania 0,25 px.
+- 6 szerokości desktopowych: 1101, 1280, 1366, 1440, 1920, 2560 px.
+  Po ustaleniu zachowanych animacji brak różnic geometrii względem 3.2.32
+  w sprawdzanych elementach headera i hero (tolerancja 0,3 px).
+- Menu otwierało się i zamykało przy 390 i 820 px także przed zastosowaniem
+  pełnego CSS; bez błędów JS w tym teście kontrolera headera.
+- 4 warianty bez JavaScript i bez zewnętrznych fontów: H1, tło i stałe pole
+  zdjęcia widoczne; osadzone fonty hero pozostały dostępne.
+
+OGRANICZENIA POMIARÓW
+
+Powyższe są testami kontrolowanymi w lokalnym Chromium, z rzeczywistymi
+szablonami i zasobami wtyczki oraz atrapą funkcji WordPress, a nie pomiarem
+publicznej strony. Zewnętrzne grafiki, Cookiebot, analityka i hosting nie były
+odtwarzane jako działające usługi. Nie przeprowadzono testu na fizycznym
+iPhonie/Safari ani nowego Lighthouse na produkcji. Nie podano przewidywanego
+wyniku punktowego ani nie zmierzonych czasów FCP/LCP.
+
+Wyeliminowanie blokad w kodzie nie zastępuje czasu odpowiedzi serwera
+ani transferu HTML/obrazów. Efekt produkcyjny należy ocenić po instalacji.

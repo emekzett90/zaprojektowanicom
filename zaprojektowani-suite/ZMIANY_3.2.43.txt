@@ -1,0 +1,63 @@
+ZAPROJEKTOWANI SUITE 3.2.43 — DOPRACOWANIE CASE STUDIES
+
+Aktualizacja kompletnej wtyczki 3.2.42. Obejmuje indeks case studies
+oraz cztery realizacje w wersjach PL i EN.
+
+1. Kontakt wyżej na stronie
+   Nagłówek „Masz podobne wyzwanie? Porozmawiajmy.” i natywny formularz
+   znajdują się przed technologiami. FAQ ma osobną sekcję niżej.
+
+2. Wyrównanie sekcji z portretem
+   Kontenery zachowują maksymalną szerokość 1750 px. Usunięto dodatkowe
+   wyśrodkowanie portretu wewnątrz lewej kolumny na desktopie, przez które
+   sekcja „Strona beauty: oferta, zespół i następny krok” wyglądała na węższą.
+   Proporcje zdjęć pozostają zachowane; na telefonach portret jest centrowany.
+
+3. Oddzielne odstępy hero na desktopie i mobile
+   Desktop ma dodatkowy oddech pod stałym headerem. Na mobile zmniejszono
+   pustą przestrzeń nad kickerem. Wysokość nagłówka jest liczona jeden raz,
+   a dodatkowy odstęp treści jest ustawiany osobno dla mniejszych ekranów.
+
+4. Dekoracyjne logo realizacji
+   Desktop: logo po lewej stronie osoby w kompozycji hero, przygaszone
+   i delikatnie wtopione od dołu. Zdjęcie nie zasłania obszaru logo.
+   Mobile: logo przy dolnej krawędzi, jako subtelny element tła,
+   bez osobnego wiersza nad głową i bez powiększania wysokości hero.
+
+5. Logotypy technologii
+   Większe odstępy i subtelne pionowe separatory w hero.
+   Bazowa widoczność znaków wynosi 70%; po najechaniu znaki rozjaśniają
+   się do pełnej widoczności i delikatnie powiększają. Na ciemnym tle
+   uzyskują pełną biel. Zachowano czytelność znaków na jasnych sekcjach.
+
+6. Wskazówka o kolejnych realizacjach
+   Przerywnik po dwóch widocznych projektach zawiera licznik i link
+   do następnej realizacji, np. „02 / 04” oraz informację o kolejnych
+   dwóch projektach. Licznik i cel linku uwzględniają publiczne projekty.
+   Bez dalszych projektów wskazówka nie jest generowana.
+
+7. Sekcja „Następny krok”
+   Zdjęcie zespołu powiększono o 30%, z głowami wystającymi nad ciemne
+   tło i płynnym wtopieniem od dołu. Kicker otrzymał normalny rozmiar
+   oraz odstępy, zgodne z pozostałymi kickerami case studies.
+
+Poprzednie poprawki 3.2.42 pozostają częścią tej wersji, w tym ciemniejsze
+gradienty navy/czerń, typografia, przezroczyste mockupy i Mateusz w FAQ.
+Nowe reguły są ograniczone do case studies. Wersja zasobów korzysta
+z numeru 3.2.43, aby przeglądarka pobrała aktualny arkusz stylów.
+
+INSTALACJA
+
+Wgraj ten ZIP jako aktualizację istniejącej wtyczki Zaprojektowani Suite.
+Po aktualizacji numer wersji powinien wynosić 3.2.43. W razie używania
+zewnętrznego cache HTML na hostingu lub CDN odśwież jego zawartość.
+
+WERYFIKACJA
+
+Diagnozę oparto na nowym screenie, rzeczywistych wymiarach i stylach
+działającej strony oraz analizie kodu. Lokalna weryfikacja obejmuje
+składnię PHP, generowanie widoków PL/EN, kolejność sekcji i linki
+kontynuacji. Środowisko lokalnego podglądu nie pozwala uruchomić pełnego
+renderowania nowej wersji w przeglądarce z produkcyjnym motywem WordPressa.
+
+Archiwum zawiera całą wtyczkę w katalogu zaprojektowani-suite.

@@ -1,0 +1,6 @@
+Zaprojektowani Suite v2.2.662
+
+Studio Wyceny:
+- mobile i mniejsze rozdzielczości: wszystkie zdjęcia obniżone o 40 px,
+- pełna / bardzo szeroka rozdzielczość: 1. zdjęcie podniesione dodatkowo o 20 px,
+- pełna / bardzo szeroka rozdzielczość: 3. zdjęcie (Logo i branding) powiększone o 10% i podniesione o 20 px.

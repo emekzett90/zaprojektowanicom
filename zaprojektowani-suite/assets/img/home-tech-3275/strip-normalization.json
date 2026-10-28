@@ -1,0 +1,72 @@
+{
+  "google-ads-strip.png": {
+    "source": "assets/campaigns/google-ads-logo.png",
+    "transparent_crop": [
+      67,
+      6,
+      236,
+      70
+    ],
+    "dimensions": [
+      169,
+      64
+    ],
+    "bytes": 5523
+  },
+  "elementor-pro-strip.png": {
+    "source": "assets/strony-internetowe/tool-elementor.png",
+    "transparent_crop": [
+      34,
+      18,
+      266,
+      63
+    ],
+    "dimensions": [
+      232,
+      45
+    ],
+    "bytes": 3712
+  },
+  "meta-strip.png": {
+    "source": "assets/campaigns/meta-ads-logo.png",
+    "transparent_crop": [
+      46,
+      18,
+      254,
+      61
+    ],
+    "dimensions": [
+      208,
+      43
+    ],
+    "bytes": 5940
+  },
+  "search-console-strip.png": {
+    "source": "assets/img/home-tech-3275/google-search-console-wordmark.png",
+    "transparent_crop": [
+      69,
+      5,
+      231,
+      74
+    ],
+    "dimensions": [
+      162,
+      69
+    ],
+    "bytes": 12226
+  },
+  "analytics-strip.png": {
+    "source": "assets/img/home-tech-3275/google-analytics-wordmark.png",
+    "transparent_crop": [
+      61,
+      9,
+      239,
+      71
+    ],
+    "dimensions": [
+      178,
+      62
+    ],
+    "bytes": 4663
+  }
+}

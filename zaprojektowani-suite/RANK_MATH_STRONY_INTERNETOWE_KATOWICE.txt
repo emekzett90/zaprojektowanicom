@@ -1,0 +1,81 @@
+RANK MATH — /strony-internetowe-katowice/
+
+Focus Keyword:
+strony internetowe Katowice
+
+Additional Keywords:
+tworzenie stron internetowych Katowice
+projektowanie stron internetowych Katowice
+strony www Katowice
+strony WordPress Katowice
+
+SEO Title:
+Strony Internetowe Katowice | Projektowanie stron www — Zaprojektowani
+
+Meta Description:
+Strony internetowe Katowice: projektujemy strony firmowe WordPress, landing page, UX/UI, treści SEO, szybkie formularze i witryny gotowe pod pozycjonowanie.
+
+Permalink / slug:
+strony-internetowe-katowice
+
+Canonical URL:
+https://zaprojektowani.com/strony-internetowe-katowice/
+
+Robots:
+Index: TAK
+Noindex: NIE
+Nofollow: NIE
+No Image Index: NIE
+No Archive: NIE
+No Snippet / Brak fragmentu: NIE
+Max Snippet: -1
+Max Video Preview: -1
+Max Image Preview: Duże
+
+Schema w Rank Math:
+Service
+
+Service — Headline:
+Strony internetowe Katowice — projektowanie stron www i WordPress
+
+Service — Description:
+Zaprojektowani.com projektuje strony internetowe dla firm z Katowic, Śląska i całej Polski. Usługa obejmuje strategię, strukturę strony, UX/UI, treści, WordPress, responsywność, SEO techniczne, analitykę, formularze i przygotowanie pod Google Ads oraz Meta Ads.
+
+Service Type:
+Projektowanie stron internetowych, tworzenie stron WordPress, UX/UI, SEO techniczne i strony firmowe
+
+Provider:
+Zaprojektowani.com
+
+Area Served:
+Katowice, Śląsk, Polska
+
+Price:
+Puste
+
+Currency:
+PLN
+
+Obrazek wyróżniający / social image — tekst alternatywny:
+Strony internetowe Katowice — projektowanie stron firmowych WordPress — Zaprojektowani.com
+
+Tytuł obrazka:
+Strony internetowe Katowice — Zaprojektowani.com
+
+Podpis obrazka:
+Puste
+
+Opis obrazka:
+Grafika dla podstrony Strony internetowe Katowice prezentująca projektowanie stron firmowych WordPress, UX/UI, SEO techniczne, formularze i przygotowanie strony pod pozyskiwanie zapytań.
+
+Facebook / Open Graph Title:
+Strony internetowe Katowice | Projektowanie stron www — Zaprojektowani
+
+Facebook / Open Graph Description:
+Projektujemy strony internetowe dla firm z Katowic, Śląska i całej Polski: WordPress, UX/UI, treści SEO, mobile, formularze i przygotowanie pod kampanie.
+
+Twitter/X Title:
+Strony internetowe Katowice | Zaprojektowani.com
+
+Twitter/X Description:
+Strony firmowe WordPress, landing page, UX/UI, SEO techniczne i formularze dla firm z Katowic, Śląska i całej Polski.

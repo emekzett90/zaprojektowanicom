@@ -1,0 +1,10 @@
+Zaprojektowani Suite 2.2.809
+
+- Desktop PageSpeed/Lighthouse pass based on the 2026-09-27 desktop report.
+- Header: removes synchronous desktop geometry reads from mega-menu positioning and skips responsive fit measurements at normal desktop widths.
+- Header: removes duplicate full-document Lucide rescan from the responsive-fit helper.
+- PL/EN switch: theme follows header state classes instead of getComputedStyle(), removing a major forced reflow.
+- Turnstile: Cloudflare script now loads on form submission instead of DOMContentLoaded.
+- Home desktop: conservative content-visibility on known far-below-fold sections.
+- Home desktop: cheaper poster LCP rasterization by removing the temporary drop-shadow filter before Spline takes over.
+- No hero/header positioning changes; Spline handoff behavior from 2.2.808 remains intact.

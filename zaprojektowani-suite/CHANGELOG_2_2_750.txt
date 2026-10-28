@@ -1,0 +1,7 @@
+2.2.750 — O nas / composition polish
+
+- Fixed the Studio Awards team visual so the transparent photo is shown in full instead of being cropped by object-fit: cover.
+- Lowered the three individual team portraits so they no longer overlap the section heading on desktop, tablet or mobile.
+- Raised and re-centered the three-person hero composition on mobile while keeping all people inside the viewport.
+- Standardized large decorative watermarks to lowercase with tighter letter spacing (zaprojektowani, zp, awards).
+- Preserved the existing Trustindex, reviews, portfolio and internal Studio Awards sections.

@@ -1,0 +1,56 @@
+ZAPROJEKTOWANI SUITE 2.9.6
+
+Zawiera całą 2.9.5 (a w niej 2.9.4, 2.9.3 i wcześniejsze, z Twoją 2.7.20). Wgraj tę wersję zamiast 2.9.5.
+
+Artykuły pod odpowiedzi AI (Twoja prośba z 8.10, przegląd wszystkich wpisów z wątku o widoczności w AI):
+- 3 wpisy (księga znaku, landing page co to, ile kosztuje logo) miały notatki redakcji zamiast tekstu;
+  teraz mają zwykły tekst z Twoimi cenami,
+- wpis o cenie logo ma tabelę pakietów jak na stronie „Projektowanie logo”: 4 koncepcje i do 5 rund
+  poprawek za 999 zł, 6 koncepcji i 10 rund za 1 499 zł, bez limitu za 2 999 zł (było 3, 4 i 6 koncepcji);
+  te same liczby we wpisach o wizytówce i logo salonu kosmetycznego,
+- „Agencja brandingowa czy freelancer”: pierwszy akapit i ramka pochodziły z innego wpisu (o utrzymaniu
+  strony); teraz odpowiadają na pytanie z tytułu, z ceną,
+- 2 wpisy (mini brandbook, Facebook Ads) miały sekcję „jak ten artykuł pomaga Google i AI”; zamiast niej
+  jest odpowiedź „Ile kosztuje…?” z linkami,
+- 13 wpisów z września pokazywało „Ostatnia aktualizacja” sprzed daty publikacji; teraz pokazują datę
+  ostatniej zmiany, a gdy wpisu nie zmieniano po publikacji, datę publikacji,
+- angielskie wersje (/en/) mają te same poprawki, także liczby koncepcji we wpisach o wizytówce
+  i logo salonu kosmetycznego.
+
+Dwa wpisy z cudzym tekstem dostają własne artykuły (z wątku treści, pod frazy z mapy):
+- /kampanie-reklamowe/ile-kosztuje-google-ads/ pokazywał tekst „Search czy Performance Max”; teraz
+  „Ile kosztuje Google Ads? Koszt kliknięcia, budżet testu i obsługa kampanii” (ok. 2 200 słów, obsługa
+  od 1 200 zł/mies.),
+- /sklepy-internetowe/karta-produktu-w-sklepie-internetowym/ pokazywał tekst o briefie do logo; teraz
+  „Karta produktu w sklepie internetowym – co musi zawierać, żeby klient kupił” (ok. 2 100 słów, sklep
+  od 6 499 zł),
+- oba w tym samym szablonie artykułu, z okładką 1600×1000, FAQ w danych strukturalnych, tytułem i opisem
+  w Rank Math oraz wersją angielską (/en/advertising-campaigns/google-ads-cost/ i
+  /en/online-stores/ecommerce-product-page/),
+- podmiana dzieje się raz i tylko wtedy, gdy wpis wciąż ma cudzy tekst; poprzednia treść zostaje
+  w kopii (Narzędzia → Plan SEO → przywrócenie ją oddaje).
+
+Wpis /sklepy-internetowe/landing-page-pod-kampanie-meta-ads/ pokazywał artykuł o sklepie premium. Wpis
+zmienia się w szkic, a adres przekierowuje (301) na stronę „Tworzenie landing page”; wersja angielska
+na /en/landing-page-design/. Stary adres /wiedza/landing-page-pod-kampanie-meta-ads/ też kończy się na
+„Tworzenie landing page”, a nie na błędzie 404.
+
+Duży formularz kontaktowy (Twoja prośba z 8.10, wątek „Zdjęcie ekipy w formularzu”, z poprawkami z 12:04):
+zamiast podglądu „Nowa wiadomość” po prawej jest wycięte zdjęcie zespołu nad kaflami kontaktu, bez tła
+i z dołem wtopionym w stronę (także w Studio Wyceny). Na telefonie same kafle, bez zdjęcia i bez
+podsumowania. 5 ujęć z biblioteki mediów; każda strona dostaje ujęcie, którego nie ma nigdzie indziej
+na tej stronie. Pola formularza, wysyłka na kontakt@zaprojektowani.com i zapis w Leadach bez zmian.
+
+Pasek pod hero stron usług i stron branżowych: „60+ projektów online” → „114+ projektów”, ta sama liczba
+co w hero i w stopce (widać tylko na komputerze, na telefonie pasek ma same logotypy).
+
+/llms.txt pomija przekierowane wpisy i wpis o pisaniu tekstów na stronę, który wciąż ma tekst innego
+artykułu (wróci sam, gdy dostanie własny). Wpisy o Google Ads i karcie produktu są w nim z nowym tekstem. Publiczny plik /llms.txt.bak jest usuwany (kopia zostaje w bazie). Po wgraniu wtyczka zgłasza
+wszystkie adresy w IndexNow (Bing, a przez niego ChatGPT i Copilot), żeby szybciej przeczytały nowe teksty.
+
+Poprawka: każdy wpis na blogu zapisywał w logu serwera dwa ostrzeżenia PHP z modułu „Publikacja wpisów”
+(niewidoczne dla odwiedzających). Już ich nie ma.
+
+Po wgraniu:
+1. Wejdź raz na dowolną stronę.
+2. Napisz w wątku „wgrane”.

@@ -1,0 +1,94 @@
+
+
+/* v2.2.584 — hero opinie: JEDYNE źródło stylu 5.0.
+   Root cause poprzednich problemów: seria starszych patchy (wght 950/1000/1200 + text-stroke,
+   selektor .zh:not(.zh--logoBranding)... o specyficzności (0,4,1)) wygrywała w spoczynku,
+   a przegrywała dopiero z moim selektorem :hover (0,4,3) — stąd małe metaliczne 5.0 w spoczynku
+   i wielki "poszarpany" kontur na hoverze. Patche usunięte, a ten blok ma specyficzność
+   (0,4,3)/(0,5,3) i jawnie resetuje każdą właściwość, którą tamte ustawiały.
+   Stan spoczynku i hover są IDENTYCZNE. */
+html body .zh:not(.zh--logoBranding) .zh__rev .zh__sc{
+  position:static!important;
+  margin:14px 0 10px!important;
+  min-height:16px!important;
+}
+html body .zh:not(.zh--logoBranding) .zh__rev .zh__sc em{
+  position:relative!important;
+  z-index:3!important;
+  font-size:14px!important;
+  letter-spacing:2.5px!important;
+}
+html body .zh:not(.zh--logoBranding) .zh__rev .zh__sc strong,
+html body .zh:not(.zh--logoBranding) .zh__rev .zh__sc .zh__scVal,
+html body .zh:not(.zh--logoBranding) .zh__rev:hover .zh__sc strong,
+html body .zh:not(.zh--logoBranding) .zh__rev:hover .zh__sc .zh__scVal,
+html body .zh:not(.zh--logoBranding) .zh__rev:focus-within .zh__sc strong,
+html body .zh:not(.zh--logoBranding) .zh__rev:focus-within .zh__sc .zh__scVal{
+  position:absolute!important;
+  right:24px!important;
+  top:14px!important;
+  transform:none!important;
+  z-index:1!important;
+  margin:0!important;
+  padding:0 .05em .16em 0!important;
+  display:block!important;
+  font-size:clamp(72px,5.6vw,90px)!important;
+  font-weight:800!important;
+  font-variation-settings:"wght" 800!important;
+  line-height:.78!important;
+  letter-spacing:-.085em!important;
+  font-kerning:normal!important;
+  font-variant-numeric:tabular-nums!important;
+  color:transparent!important;
+  -webkit-text-fill-color:transparent!important;
+  -webkit-text-stroke:0 transparent!important;
+  background-image:linear-gradient(118deg,rgba(255,255,255,.204) 0%,rgba(206,232,252,.132) 40%,rgba(142,200,247,.066) 74%,rgba(142,200,247,.034) 100%)!important;
+  background-size:100% 100%!important;
+  background-repeat:no-repeat!important;
+  -webkit-background-clip:text!important;
+  background-clip:text!important;
+  -webkit-mask-image:linear-gradient(to top,rgba(0,0,0,.5) 0%,#000 62%)!important;
+  mask-image:linear-gradient(to top,rgba(0,0,0,.5) 0%,#000 62%)!important;
+  text-shadow:none!important;
+  filter:none!important;
+  pointer-events:none!important;
+  user-select:none!important;
+  -webkit-user-select:none!important;
+  opacity:.92!important;
+  transition:none!important;
+  animation:none!important;
+}
+/* Opis i logo nad watermarkiem */
+html body .zh:not(.zh--logoBranding) .zh__rev .zh__rl,
+html body .zh:not(.zh--logoBranding) .zh__rev .zh__rt,
+html body .zh:not(.zh--logoBranding) .zh__rev .zh__rlogo{
+  position:relative!important;
+  z-index:3!important;
+}
+html body .zh:not(.zh--logoBranding) .zh__rev .zh__rlogo{position:absolute!important;}
+@media(max-width:1100px){
+  html body .zh:not(.zh--logoBranding) .zh__rev .zh__sc strong,
+  html body .zh:not(.zh--logoBranding) .zh__rev .zh__sc .zh__scVal,
+  html body .zh:not(.zh--logoBranding) .zh__rev:hover .zh__sc strong,
+  html body .zh:not(.zh--logoBranding) .zh__rev:hover .zh__sc .zh__scVal,
+  html body .zh:not(.zh--logoBranding) .zh__rev:focus-within .zh__sc strong,
+  html body .zh:not(.zh--logoBranding) .zh__rev:focus-within .zh__sc .zh__scVal{
+    font-size:clamp(53px,8.1vw,71px)!important;
+    right:18px!important;
+    top:13px!important;
+  }
+}
+@media(max-width:600px){
+  html body .zh:not(.zh--logoBranding) .zh__rev .zh__sc strong,
+  html body .zh:not(.zh--logoBranding) .zh__rev .zh__sc .zh__scVal,
+  html body .zh:not(.zh--logoBranding) .zh__rev:hover .zh__sc strong,
+  html body .zh:not(.zh--logoBranding) .zh__rev:hover .zh__sc .zh__scVal,
+  html body .zh:not(.zh--logoBranding) .zh__rev:focus-within .zh__sc strong,
+  html body .zh:not(.zh--logoBranding) .zh__rev:focus-within .zh__sc .zh__scVal{
+    font-size:clamp(46px,13.8vw,58px)!important;
+    right:14px!important;
+    top:13px!important;
+  }
+  html body .zh:not(.zh--logoBranding) .zh__rev .zh__sc em{font-size:12.5px!important;letter-spacing:2px!important;}
+}
+

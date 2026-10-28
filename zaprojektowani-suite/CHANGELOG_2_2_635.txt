@@ -1,0 +1,7 @@
+Zaprojektowani Suite 2.2.635
+
+- Mobile: mockupy usług faktycznie wychodzą ponad obrys kart.
+- Dodano kontrolowane odstępy między kartami, aby grafiki nie nachodziły na kartę powyżej.
+- Wzmocniono efekt głębi 3D i płynne unoszenie grafik.
+- Naprawiono ucinanie dolnych części nagłówka „Twój projekt?” na mobile.
+- Zachowano pełne grafiki bez maskowania i przycinania.

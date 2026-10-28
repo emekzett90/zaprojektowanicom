@@ -1,0 +1,6 @@
+Zaprojektowani Suite 2.2.633
+
+- Studio Wyceny mobile: grafiki usług wychodzą ponad górną krawędź kart.
+- Karty i ich kontenery mają overflow: visible, więc mockupy nie są przycinane.
+- Dodano płynne, lekko zróżnicowane floatowanie grafik również na telefonach.
+- Zachowano object-fit: contain oraz dopasowanie dla bardzo wąskich ekranów.

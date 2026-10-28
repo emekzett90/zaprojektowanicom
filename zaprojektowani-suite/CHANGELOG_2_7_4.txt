@@ -1,0 +1,7 @@
+Zaprojektowani Suite 2.7.4
+
+HOTFIX:
+- naprawiono brak ładowania wpisów blogowych po 2.7.3,
+- usunięto rekurencyjne wywołanie get_the_excerpt() z renderera działającego w filtrze the_content,
+- snippet jest teraz pobierany bezpiecznie bezpośrednio z post_excerpt, a przy jego braku z treści wpisu,
+- zachowano ciemny blok powiązanych materiałów, snippet i czas czytania.

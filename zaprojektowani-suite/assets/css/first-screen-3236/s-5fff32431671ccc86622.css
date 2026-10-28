@@ -1,0 +1,1 @@
+:where(img[data-zp-wh~=w]){width:auto}:where(img[data-zp-wh~=h]){height:auto}

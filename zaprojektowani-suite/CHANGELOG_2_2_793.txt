@@ -1,0 +1,26 @@
+Zaprojektowani Suite 2.2.793 — mobile „od kopa”: pasek ładowania kończy się z treścią, lżejsze wejście, zespół nad H1
+
+Baza: 2.2.792.
+
+Dlaczego pasek ładowania w przeglądarce „wisiał”
+- Zdarzenie load (koniec paska) czekało na skrypt Cookiebota (uc.js + cc.js ≈ 390 KB z consent.cookiebot.com) oraz na ok. 400 KB obrazów spod hero ładowanych od razu (case study brandingu 180 KB przez CSS content:url(), sylwetka ze Studia Wyceny 62 KB, logotypy).
+- Teraz: obrazy poniżej hero i ukryte warianty logo w nagłówku mają loading="lazy"; case study brandingu bierze obraz z własnego srcset (ten sam plik) zamiast wymuszonego CSS; loader Cookiebota startuje po zdarzeniu load (najpóźniej po 3,5 s). Tryb manualny Cookiebota nadal trzyma skrypty śledzące do zgody.
+- Pomiar (silnik Safari, profil iPhone, prawdziwa sieć): load 0,1 s po DOMContentLoaded; wcześniej ~0,2–1,1 s, a na wolnym łączu kilka sekund. Baner zgód pojawia się ok. 1 s po load i znika w 39 ms po kliknięciu.
+
+Hero na mobile — szybciej i lżej
+- Hero odsłania się zaraz po sparsowaniu własnego HTML; czeka już tylko na font tytułu (maks. 0,5 s, font jest preloadowany). Nie czeka na arkusze CSS (w 2.2.792 do 1,6 s).
+- Wejście: tylko opacity + translate (bez scale, bez filtrów na animowanych warstwach), całość ok. 0,9 s: robot, zespół, etykieta, H1, „Projektujemy…”, opis, CTA, opinie.
+- Sygnet ZP: własne małe pliki (720 px ≈ 18 KB na mobile, 1200 px ≈ 31 KB na desktopie) zamiast 2560 px; bez filter:drop-shadow (poświata to statyczny radial-gradient); unoszenie tylko na desktopie.
+- Odblask CTA, drganie strzałek i „skan” chipów działają tylko na desktopie z myszą ((hover:hover) and (pointer:fine)) — na telefonach i tabletach nie ma tych animacji.
+
+Zespół nad kickerem i H1 (desktop + mobile)
+- Trzy wycięte sylwetki (Mateusz, Marta, Stanisław) obok siebie, nałożone na siebie jak w Studiu Wyceny, ręce wskazują na nagłówek; dół wtopiony maską. PNG (0,3 MB każdy) → WebP ≈ 22–26 KB każdy, w paczce (assets/img/hero-team).
+- Wysokość 156 px na desktopie i 100 px na mobile — hero rośnie o ok. 130 px / 80 px, nie więcej.
+- Zastępuje rząd awatarów i kartę zespołu z 2.2.792.
+
+Pozostałe
+- Pliki: includes/front-fixes-311.php, zaprojektowani-suite.php, assets/img/hero-team/*, assets/img/hero-signet/*.
+- Ograniczenie, którego ta wersja nie usuwa: HTML strony głównej ma 1,5 MB (163 bloki <style> i 78 skryptów inline, 256 KB po kompresji). Na wolnym telefonie sam parsing i skrypty przy DOMContentLoaded zajmują ok. 0,2 s. Dalsze przyspieszenie wymaga scalenia inline CSS/JS Suite do plików z cache.
+
+Testy: WebKit (profil iPhone 15) i desktop na HTML strony głównej przepuszczonym przez prawdziwy kod PHP tej wersji; Chrome z 4× wolniejszym CPU i wolną siecią. Brak testu na fizycznym telefonie.
+Po instalacji wyczyścić cache strony / optymalizatora / CDN.

@@ -1,0 +1,10 @@
+Zaprojektowani Suite 3.2.13 — 2026-10-15
+
+Case studies: adresy portfolio, Article schema i sitemap korzystają z rzeczywistej trasy EN przydzielonej przez tłumacza; poprzednie propozycje adresów przekierowują do aktualnych.
+Mapa: poprawa kontrastu głównego przycisku na podstronach ze starszymi regułami linków.
+Zachowuje poprawkę renderowania3.2.12 i cały zakres nowych sekcji3.2.11.
+
+Wiedza: wyróżniony materiał i boczne polecenia przed indeksem; treści SEO oraz przewodnik tematów w prawym panelu.
+Karty realizacji: typografia sekcji zespołu, większe fotografie i trzy potwierdzone zakresy na kartę, PL/EN.
+FAQ: Mateusz większy o30%; mapa: kontener1750px i biały tekst przycisku.
+Hero: fotografie i mockupy pomniejszone oraz obniżone na desktopie, z dodatkowym odstępem na szerokich/niskich ekranach.

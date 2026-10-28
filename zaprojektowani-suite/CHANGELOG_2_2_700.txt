@@ -1,0 +1,6 @@
+ZAPROJEKTOWANI SUITE 2.2.700
+
+1. Naprawiono brak ikon Lucide w modalu „Zobacz szczegóły” portfolio na stronie głównej w wersji desktopowej.
+2. Dynamicznie wstawiane ikony modala są teraz renderowane przez zakresowy mechanizm zpSuiteHydrateIcons, zgodny z optymalizatorem ikon strony głównej.
+3. Dodano bezpieczny fallback oraz drugi, opóźniony przebieg hydratacji po otwarciu modala.
+4. Podbito wersję wtyczki do 2.2.700.

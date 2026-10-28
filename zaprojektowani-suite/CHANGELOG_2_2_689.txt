@@ -1,0 +1,11 @@
+ZAPROJEKTOWANI SUITE 2.2.689
+
+Strony internetowe Katowice — poprawki:
+- naprawiono obcinanie górnych zaokrągleń aktywnej karty portfolio na mobile,
+- tekst „Przesuń w prawo” pozostaje w jednej linii i jest wyrównany do prawej,
+- zablokowano różowe style linków i przycisków po kliknięciu / focusie / visited,
+- przywrócono kompletną mapę Polski 1:1 z Logo & Branding Katowice,
+- obniżono mockup w hero na desktopie o 50 px,
+- odblokowano sylwetki zespołu ponad sekcją portfolio,
+- dodano płynne floatowanie zdjęcia zespołu bez gwałtownego skoku na hover,
+- podbito wersję assetów do 2.2.689.

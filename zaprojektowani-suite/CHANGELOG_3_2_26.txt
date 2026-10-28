@@ -1,0 +1,12 @@
+Zaprojektowani Suite 3.2.26 — 2026-10-16
+
+- Restored the original homepage client-logo scroll reveal layout and assets.
+- Initialized the reveal before window.load, warmed nearby images early, corrected per-frame reveal updates and recalculated after browser-history restoration.
+- Imported a dated, source-attributed pool of 80 authentic high-rated reviews (56 Google, 24 Facebook).
+- Randomized and mixed review sources in an accessible horizontal carousel with native touch scrolling, round navigation buttons and a mobile swipe hint.
+- Added 10-second automatic rotation with manual pause/resume, reading and visibility pauses, and reduced-motion support.
+- Replaced the right-hand introduction with a large team cut-out rising above the third proof card on desktop, with an internal lower fade.
+- Retained the 13-question homepage FAQ and site-wide truthful Trustindex/Facebook aggregates introduced in 3.2.24.
+- Included the 3.2.25 prose correction for the Polish and English advertising-agency page.
+
+Review snapshot: Trustindex 4.9/5, 146 reviews; Facebook 100% recommend, 62 reviews. This release imports a verified snapshot; it does not add a background provider synchronization service.

@@ -1,0 +1,9 @@
+2.2.757 — Studio Wyceny / ekran wyboru usługi v19
+
+- Pierwszy ekran /studio-wyceny/ został zastąpiony zaakceptowanym projektem Premium Animated v19.
+- Zachowano cały istniejący konfigurator briefu, pakiety, dodatki, walidację, wysyłkę AJAX, PDF i panel zamówień.
+- Karty Strona / Sklep / Logo i branding / Kampanie są połączone z istniejącymi usługami web / shop / brand / ads i po kliknięciu otwierają właściwy brief.
+- Zachowano animowaną łapkę hand_pointer.webp na desktop i mobile oraz ostatnie poprawki responsywne.
+- Trustindex prowadzi do https://www.trustindex.io/reviews/zaprojektowani.com.
+- Dwie ciężkie grafiki kart zostały wyjęte z base64 i zapisane jako lokalne assety wtyczki, aby nie pompować HTML strony o kilka MB.
+- Obsłużono powrót z briefu do nowego ekranu oraz deep-linki ?service=web/shop/brand/ads.

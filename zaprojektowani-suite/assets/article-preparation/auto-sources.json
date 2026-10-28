@@ -1,0 +1,112 @@
+{
+  "web_wp_editor": {
+    "title": "WordPress: Site Editor",
+    "url": "https://wordpress.org/documentation/article/site-editor/",
+    "group": "web",
+    "verified_status": 200,
+    "initial_url": "https://wordpress.org/documentation/article/site-editor/",
+    "verified_at": "2026-10-10T11:26:03.507596+00:00",
+    "content_type": "text/html; charset=UTF-8",
+    "sample_bytes": 65536
+  },
+  "web_forms": {
+    "title": "W3C: dostępne formularze",
+    "url": "https://www.w3.org/WAI/tutorials/forms/",
+    "group": "web",
+    "verified_status": 200,
+    "initial_url": "https://www.w3.org/WAI/tutorials/forms/",
+    "verified_at": "2026-10-10T11:26:02.480150+00:00",
+    "content_type": "text/html; charset=utf-8",
+    "sample_bytes": 43236
+  },
+  "web_security": {
+    "title": "WordPress: zabezpieczanie instalacji",
+    "url": "https://developer.wordpress.org/advanced-administration/security/hardening/",
+    "group": "web",
+    "verified_status": 200,
+    "initial_url": "https://developer.wordpress.org/advanced-administration/security/hardening/",
+    "verified_at": "2026-10-10T11:26:03.542984+00:00",
+    "content_type": "text/html; charset=UTF-8",
+    "sample_bytes": 65536
+  },
+  "web_seo": {
+    "title": "Google: poradnik SEO",
+    "url": "https://developers.google.com/search/docs/fundamentals/seo-starter-guide",
+    "group": "web",
+    "verified_status": 200,
+    "initial_url": "https://developers.google.com/search/docs/fundamentals/seo-starter-guide",
+    "verified_at": "2026-10-10T11:26:03.496213+00:00",
+    "content_type": "text/html; charset=utf-8",
+    "sample_bytes": 65536
+  },
+  "web_vitals": {
+    "title": "web.dev: Web Vitals",
+    "url": "https://web.dev/articles/vitals",
+    "group": "web",
+    "verified_status": 200,
+    "initial_url": "https://web.dev/articles/vitals",
+    "verified_at": "2026-10-10T11:26:04.298970+00:00",
+    "content_type": "text/html; charset=utf-8",
+    "sample_bytes": 65536
+  },
+  "shop_products": {
+    "title": "WooCommerce: zarządzanie produktami",
+    "url": "https://woocommerce.com/document/managing-products/",
+    "group": "shop",
+    "verified_status": 200,
+    "initial_url": "https://woocommerce.com/document/managing-products/",
+    "verified_at": "2026-10-10T11:26:04.505961+00:00",
+    "content_type": "text/html; charset=UTF-8",
+    "sample_bytes": 65536
+  },
+  "shop_settings": {
+    "title": "WooCommerce: konfiguracja ustawień",
+    "url": "https://woocommerce.com/document/configuring-woocommerce-settings/",
+    "group": "shop",
+    "verified_status": 200,
+    "initial_url": "https://woocommerce.com/document/configuring-woocommerce-settings/",
+    "verified_at": "2026-10-10T11:26:04.560365+00:00",
+    "content_type": "text/html; charset=UTF-8",
+    "sample_bytes": 65536
+  },
+  "shop_shipping": {
+    "title": "WooCommerce: strefy wysyłki",
+    "url": "https://woocommerce.com/document/setting-up-shipping-zones/",
+    "group": "shop",
+    "verified_status": 200,
+    "initial_url": "https://woocommerce.com/document/setting-up-shipping-zones/",
+    "verified_at": "2026-10-10T11:26:05.231166+00:00",
+    "content_type": "text/html; charset=UTF-8",
+    "sample_bytes": 65536
+  },
+  "shop_payment": {
+    "title": "WooCommerce: płatności",
+    "url": "https://woocommerce.com/document/woopayments/startup-guide/",
+    "group": "shop",
+    "verified_status": 200,
+    "initial_url": "https://woocommerce.com/document/payments/",
+    "verified_at": "2026-10-10T11:26:06.438194+00:00",
+    "content_type": "text/html; charset=UTF-8",
+    "sample_bytes": 65536
+  },
+  "brand_contrast": {
+    "title": "W3C: kontrast tekstu",
+    "url": "https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html",
+    "group": "brand",
+    "verified_status": 200,
+    "initial_url": "https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html",
+    "verified_at": "2026-10-10T11:26:05.060825+00:00",
+    "content_type": "text/html; charset=utf-8",
+    "sample_bytes": 65536
+  },
+  "brand_svg": {
+    "title": "MDN: format SVG",
+    "url": "https://developer.mozilla.org/en-US/docs/Web/SVG",
+    "group": "brand",
+    "verified_status": 200,
+    "initial_url": "https://developer.mozilla.org/en-US/docs/Web/SVG",
+    "verified_at": "2026-10-10T11:26:05.583348+00:00",
+    "content_type": "text/html",
+    "sample_bytes": 65536
+  }
+}

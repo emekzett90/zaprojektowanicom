@@ -1,0 +1,11 @@
+ZP Suite 3.2.64 — 23.10.2026
+
+Wydanie na bazie aktywnej 3.2.63; zachowuje wszystkie poprawki 3.2.51–3.2.63.
+
+- Wiedza: ograniczone pamiętanie identycznych obliczeń w pojedynczym żądaniu i indeks dopasowania słów przy wyborze zajawek. Kolejność, punktacja, treści kart oraz HTML pozostają identyczne.
+- Wewnętrzny cache kart Wiedzy pozostaje ważny podczas edycji szkiców i planowanych artykułów. Publikacja (także przez WP-Cron), wycofanie publikacji, edycja publicznego wpisu, zmiana kategorii lub używanego zdjęcia nadal odświeżają karty. Zachowany czas ważności i klucz wersji.
+- Rozszerzone zachowawcze pomijanie CSS nieobecnych sekcji. Zachowane reguły nie zmieniają kolejności ani wartości. Bez dodatkowych żądań plików CSS, zmian fontów, wymiarów i animacji.
+- Dwa pełnowymiarowe obrazy case studies: siemianowski-offers.webp 3 085 882 → 987 314 B; altiora-brands.webp 2 619 360 → 963 744 B. Zachowane wymiary 3500 px i wszystkie mniejsze warianty. Wysokiej jakości kompresja stratna WebP; nowe hashe wersjonują wyłącznie dwa zmienione oryginały.
+- Jednorazowe odświeżenie wyłącznie własnych kopii HTML Suite po aktualizacji. Bez zmian drop-inu, zasad cache z 3.2.62, LiteSpeed i CDN.
+
+Bez zmian kanału treści, zdjęć 38 wpisów, Google Ads, GTM, Cookiebot, zdarzeń i pomiaru konwersji.

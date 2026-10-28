@@ -1,0 +1,10 @@
+Zaprojektowani Suite 2.2.784 — GEO PL/EN + Cookiebot language
+
+- GEO języka: Polska pozostaje na PL; wykryty kraj inny niż PL na polskim URL otrzymuje 302 do odpowiednika /en/.
+- GEO najpierw używa nagłówków CDN/hostingu (Cloudflare, CloudFront, Vercel, Akamai i popularne X-Country-Code).
+- Jeżeli kraj nie jest dostępny w nagłówkach, pierwszy visit uruchamia mały fallback /wp-json/zpl/v1/geo; kraj jest zapamiętywany w first-party cookie na 7 dni.
+- Fallback geolokacji pyta wyłącznie o 2-literowy kod kraju i cache'uje wynik po skrócie IP.
+- Boty, Lighthouse i PageSpeed nie są geo-przekierowywane, żeby nie psuć SEO ani testów wydajności.
+- Ręczny wybór PL/EN ustawia cookie z preferencją i wyłącza automatyczne GEO dla tego użytkownika.
+- Cookiebot dostaje data-culture="pl" na polskich URL-ach i data-culture="en" na /en/, niezależnie od języka przeglądarki.
+- Gdy potrzebny jest fallback GEO, banner Cookiebot jest ukryty tylko do zakończenia jednorazowego lookupu, aby nie mignął w złym języku.

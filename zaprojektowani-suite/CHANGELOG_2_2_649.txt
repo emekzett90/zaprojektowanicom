@@ -1,0 +1,9 @@
+Zaprojektowani Suite v2.2.649
+
+Zmiany wyłącznie dla desktopu od 1181 px:
+- mobile i tablet pozostawione dokładnie jak w v2.2.645,
+- cienie zdjęć na desktopie jaśniejsze o około 50%,
+- Strona internetowa i Sklep internetowy: +30% względem v2.2.645 i 20% wyżej,
+- Meta: -20% rozmiaru i przesunięcie niżej,
+- Logo i branding: przesunięcie niżej,
+- brak innych zmian.

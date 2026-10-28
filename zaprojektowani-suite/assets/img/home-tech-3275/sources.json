@@ -1,0 +1,39 @@
+{
+  "retrieved": "2026-10-26",
+  "anthropic.svg": {
+    "source": "https://www.anthropic.com/",
+    "details": "Original header wordmark SVG paths, viewBox and fill unchanged; framework CSS class removed."
+  },
+  "codex.svg": {
+    "source": "https://raw.githubusercontent.com/lobehub/lobe-icons/master/packages/static-svg/icons/codex.svg",
+    "details": "Original upstream Codex product mark, unmodified SVG; monochrome currentColor variant."
+  },
+  "wordpress-wordmark.svg": {
+    "source": "https://wordpress.org/about/logos/",
+    "details": "Original official WordPress.org footer horizontal wordmark SVG, paths and proportions unchanged. 329 x 52."
+  },
+  "google-search-console-wordmark.png": {
+    "source": "https://zaprojektowani.com/wp-content/uploads/2026/05/google-search-console-logo.png",
+    "details": "Existing original uploaded full wordmark. 300 x 80."
+  },
+  "google-analytics-wordmark.png": {
+    "source": "https://zaprojektowani.com/wp-content/uploads/2026/05/google-analytics-logo.png",
+    "details": "Existing original uploaded full wordmark. 300 x 80."
+  },
+  "codex-wordmark.svg": {
+    "source": "https://raw.githubusercontent.com/lobehub/lobe-icons/master/packages/static-svg/icons/codex-text.svg",
+    "details": "Original supplied Codex wordmark outlines, not retyped text. viewBox 0 0 91 24."
+  },
+  "claude-wordmark.svg": {
+    "source": "https://raw.githubusercontent.com/lobehub/lobe-icons/master/packages/static-svg/icons/claude-text.svg",
+    "details": "Original supplied Claude wordmark outlines, not retyped text. viewBox 0 0 97 24."
+  },
+  "google-tag-manager-wordmark.png": {
+    "source": "https://www.atmasutrainstitute.com/assets/img/aicdt/tag%20manager.png",
+    "details": "Published real Google Tag Manager full horizontal logo. Transparent margins cropped x55,y135,x563,y248, resized to300 x67px with Lanczos, PNG optimized losslessly at resulting resolution. Public mirror, not Google-hosted."
+  },
+  "wordpress-wordmark.png": {
+    "source": "https://s.w.org/style/images/about/WordPress-logotype-standard-white.png",
+    "details": "Official WordPress horizontal full brand mark without .org. Transparent margins cropped; resized to360px wide with Lanczos; PNG optimized losslessly at resulting resolution. Original geometry preserved."
+  }
+}

@@ -1,0 +1,59 @@
+Zaprojektowani Suite 3.2.34 — stabilny mobilny header i hero
+17.10.2026
+
+Baza: zaprojektowani-suite-3.2.33-mobile-first-paint.zip.
+Poprawka dotyczy strony głównej, szerokości do 1100 px. Nie zmienia
+artykułów, treści branżowych, kontaktu ani układu desktopowego.
+
+Naprawa:
+- Konsultacja, logo i hamburger nie czekają na klasy gotowości JS.
+  Usunięte są trzy historyczne skrypty uruchamiające bramki wejścia
+  headera. Kontroler menu i obsługa zgód pozostają.
+- Ostateczny układ headera oraz odstęp wewnątrz hero istnieją w CSS
+  od początku. Widoczny header jest nakładką; jego kontenery Elementora
+  nie dodają później drugiej wysokości do przepływu strony.
+- Normalizowana jest tylko ścieżka rzeczywistych przodków #zpNewNav,
+  nie wszystkie kontenery strony. Duplikat headera powoduje bezpieczne
+  pominięcie transformacji HTML. Wariant CSS :has działa również bez
+  opcjonalnego optymalizatora odpowiedzi.
+- Odroczony kontroler headera nie tworzy mobilnego pustego elementu
+  pod headerem na stronie głównej. Dotychczasowa obsługa pozostałych
+  stron i desktopu pozostaje.
+- Dwa domyślne warianty mobilnego logo mają małe obrazy WebP osadzone
+  w HTML. Preferowane są rzeczywiste miniatury z uploads; gdy brak ich
+  lokalnie, używane są kopie tego samego sygnetu w paczce. Niestandardowe
+  adresy logo nie są przepisywane. Brak pobierania HTTP po stronie PHP.
+- Statyczny podzbiór istniejącego fontu etykiety headera jest dostępny
+  w CSS bez oczekiwania na inicjalizację FontFace z JavaScriptu.
+- Zachowane dotychczasowe proporcje zdjęcia zespołu, H1, CTA i wysokości
+  paska mobilnego. Nie dodano loadera ani ukrywania hero.
+
+Instalacja:
+Wgraj ZIP jako zastąpienie zainstalowanej Zaprojektowani Suite.
+Otwórz ponownie panel WordPress i sprawdź wersję 3.2.34.
+Aktualizacja kolejkuje odświeżenie własnego cache HTML Suite.
+Wyczyść dodatkowy cache hostingu/CDN, jeśli jest używany.
+Sprawdź widok w nowej prywatnej karcie telefonu.
+
+Weryfikacja lokalna (nie wynik Lighthouse z produkcji):
+- PHP-renderowany header i hero z rzeczywistych szablonów wtyczki,
+  wewnątrz reprezentatywnej struktury kontenerów Elementora.
+- 11 szerokości: 360, 375, 390, 430, 600, 768, 820, 980, 981, 1024, 1100.
+- Porównanie położenia i rozmiarów elementów: bez kontrolera, z klasą
+  pending, po klasie ready, po doładowaniu rzeczywistych arkuszy CSS,
+  po późnych stylach kontenerów oraz po inicjalizacji kontrolera.
+- Otwarcie/zamknięcie menu i przewinięcie z powrotem do góry.
+- Dodatkowo: bez optymalizatora HTML (390 i 1024), z paskiem
+  administracyjnym (390 i 1024), kontrola układu desktopu względem
+  3.2.33 (1280, 1440 i 1920).
+- Pełny końcowy łańcuch transformacji HTML/CSS wtyczki (390, 768, 1100).
+- Odroczone uruchomienie 45 rzeczywistych skryptów inline oraz
+  kontrolera headera (390 i 1024): bez zmiany geometrii pierwszego
+  ekranu i bez błędów JS w tej lokalnej konfiguracji.
+- 19 kontroli adaptera HTML: m.in. idempotencja, prawdziwe i pozorne
+  identyfikatory w skryptach/komentarzach, zachowanie JSON-LD i Cookiebot,
+  duplikaty headera, osadzone obrazy oraz końcowy łańcuch przetwarzania.
+
+Nie wykonano pomiaru na publicznej stronie po instalacji ani testu
+na fizycznym iPhonie. Test lokalny nie gwarantuje wyniku Lighthouse
+ani nie obejmuje dowolnych dodatkowych reguł z hostingu, CDN i wtyczek.
