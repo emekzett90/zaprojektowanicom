@@ -1,0 +1,9 @@
+ZAPROJEKTOWANI SUITE 2.2.692
+
+Strony internetowe Katowice — przywrócenie wyglądu z v2.2.689:
+- przywrócono dokładną typografię, proporcje i stany przycisków portfolio,
+- przywrócono dokładny układ sekcji „Zaufali nam”, rozmiar zdjęcia i separatory logotypów,
+- usunięto awaryjne nadpisania CSS z v2.2.691, które zmieniały wygląd komponentów,
+- zachowano naprawę FOUC i optymalizacje Lighthouse z v2.2.690,
+- arkusz nowej podstrony jest ładowany w <head>, ale po stylach globalnych/motywu, dzięki czemu zachowuje wygląd starszej działającej wersji bez błysku surowej treści,
+- podbito cache assetów do 2.2.692.

@@ -1,0 +1,6 @@
+Zaprojektowani Suite v2.2.658
+
+Studio Wyceny:
+- ok. 933 px: wszystkie zdjęcia obniżone o ok. 30 px,
+- ok. 1518 px: zdjęcia w 1. i 2. karcie podniesione o ok. 100 px,
+- bardzo szerokie / pełna rozdzielczość: zdjęcia w 1. i 2. karcie podniesione o ok. 40 px.

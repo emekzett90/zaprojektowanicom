@@ -1,0 +1,6 @@
+Zaprojektowani Suite 2.2.761
+
+- Studio Wyceny: usunięte czarne tło/pas między headerem a izolowanym ekranem wyboru.
+- Zachowany offset 150 px, ale przeniesiony z margin-top do białego paddingu wewnątrz shell iframe.
+- Rodzice Elementora zawierający Studio Wyceny są wymuszani na białe tło zarówno desktop, jak i mobile.
+- Bez zmian w izolacji iframe, pointerze i logice wyboru usług.

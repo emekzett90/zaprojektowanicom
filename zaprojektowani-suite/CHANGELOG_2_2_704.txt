@@ -1,0 +1,8 @@
+ZAPROJEKTOWANI SUITE 2.2.704
+
+1. Kontakt: zdjęcie zespołu w hero jest o 10% mniejsze na desktopie.
+2. Kontakt: od 1681 px zdjęcie przesunięto o dodatkowe 150 px w lewo.
+3. Strony internetowe Katowice: dodano osobną strefę odstępów nad i pod wskaźnikiem „Przewiń” na desktopie, tablecie i mobile.
+4. Logo i branding Katowice: dodano osobną strefę odstępów wokół wskaźnika, a chip „Kolor gotowy do pracy” przeniesiono poza jego oś.
+5. Kampanie reklamowe: wskaźnik nie nachodzi już na kokpit kampanii; zachowano pozycję zespołu, logo Meta/Google i CTA.
+6. Wersję wtyczki podbito do 2.2.704.

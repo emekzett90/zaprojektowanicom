@@ -1,0 +1,60 @@
+Zaprojektowani Suite 2.9.9 — audyt konsoli i ładowania, 08.10.2026
+
+NAPRAWY
+- Wczesne trasy Suite (kampanie i 404): Elementor dostarcza własną konfigurację,
+  zanim zostanie wydrukowany skrypt frontend. Usuwa ReferenceError bez wyłączania
+  Elementora i bez tworzenia zastępczej, niepełnej konfiguracji.
+- Spline: lokalna kopia tej samej sceny po jednorazowej migracji schematu 114 -> 117
+  oficjalnym kodem używanego odtwarzacza 1.10.57. Obiekty, geometria, materiały,
+  kamera, zdarzenia i animacje nie zostały zmienione. Brak migracji przy każdym
+  wejściu. Brak wyciszania console.warn/error.
+- Spline: wspólne reguły dla zwykłych przeglądarek i audytów; usunięte rozpoznawanie
+  Lighthouse/headless/webdriver. Zachowany statyczny wariant na telefonie,
+  przy oszczędzaniu danych/ruchu oraz bez sprzętowego WebGL. Próba WebGL nie jest
+  wykonywana na telefonie, a kontekst próbny zostaje zwolniony.
+- PL/EN: konfiguracja przeglądarki wskazuje tylko faktycznie dostarczone pliki
+  słowników JSON. Tłumaczenia przechowywane w bazie nadal korzystają z istniejącego
+  REST API. Nie ma prób pobierania nieistniejących statycznych słowników.
+- Languages 1.0.17: zgłaszanie brakujących fraz respektuje przerwy między
+  zgłoszeniami, limit IP i Retry-After. Przeglądarka współdzieli czas następnego
+  zgłoszenia między kartami. Serwer nadal egzekwuje dotychczasowy limit, a odczyt
+  słownika może uprzedzić klienta o wyczerpanym limicie. Mechanizm nie wstrzymuje
+  pracy tłumacza OpenAI ani pobierania gotowych tłumaczeń.
+- Przekierowania naprawiają 25 wykrytych starych adresów PL/EN, wykorzystując
+  istniejący katalog mapowań i osiem dodatkowych odpowiedników. Zachowano język,
+  parametry zapytania i prawidłowe 404 dla nieznanych adresów.
+- Uzupełnione autocomplete w polach kontaktu i name w wyszukiwarce menu.
+- Poprawiony polski link polityki prywatności w niestandardowym banerze Cookiebot
+  przez oficjalne zdarzenia banera; zgody i śledzenie pozostają bez zmian.
+- Brakujące wymiary obrazów odczytywane z istniejących lokalnych plików mediów,
+  bez żądań sieciowych podczas generowania strony. Rozmiary autora zachowane.
+- Wiedza: próba odtwarzania pomija wideo bez źródła i obsługuje odmowę przeglądarki.
+
+ŁADOWANIE
+- Główne obrazy hero-shot podstron usługowych odzyskują eager/high zamiast
+  nadpisanego lazy/low.
+- Usunięte ładowanie trzech ściśle ograniczonych arkuszy komponentów tylko wtedy,
+  gdy dany komponent faktycznie nie występuje w końcowym HTML.
+- Lucide nie przebudowuje ponownie gotowych, niezmienionych ikon przy dodawaniu
+  następnych. Zmieniona nazwa ikony i niestandardowe opcje pozostają obsługiwane.
+
+TŁUMACZENIA API
+- Translator 1.1.2: publiczna polska strona nie jest pomijana wyłącznie dlatego,
+  że jej angielski adres miał wcześniej zastępcze przekierowanie. Dotyczy m.in.
+  agencja-reklamowa-katowice. Weryfikacja źródła nadal odrzuca przekierowane,
+  niepubliczne, techniczne i wykluczone treści.
+- Jednorazowa migracja obejmuje starsze opublikowane strony i wpisy. Zachowuje
+  klucz API, model, budżet, włączenie automatu, tryb publikacji i harmonogram.
+  Późniejsze wybory administratora pozostają respektowane.
+- Po aktualizacji aktywny, skonfigurowany tłumacz planuje jeden dodatkowy skan
+  kompletności. Codzienny skan o 03:00 czasu witryny pozostaje aktywny przez
+  WP-Cron (wykonanie wymaga ruchu lub zewnętrznego wywołania WP-Cron).
+- Skan uzupełni brakującą wersję EN po wykonaniu pracy API. Samo wgranie ZIP
+  nie oznacza zakończenia tłumaczenia ani potwierdzenia kompletności produkcji.
+
+INSTALACJA
+Archiwum zastępuje dotychczasową wtyczkę zaprojektowani-suite. Nie aktywuj osobno
+osadzonych modułów Languages/Translator. Po aktualizacji opróżnij cache strony
+i CDN, aby stare dokumenty HTML przestały wskazywać nieistniejące słowniki.
+Raport obok ZIP opisuje zakres wykonanych testów i ograniczenia zewnętrznych
+skryptów. Lokalna walidacja nie oznacza wdrożenia na produkcji.

@@ -1,0 +1,32 @@
+Zaprojektowani Suite 2.2.795 — mobile: pasek ładowania i hamburger jak przed zmianami hero, H1 bez opóźnienia, robot wyżej; desktop: treść pod nagłówkiem
+
+Baza: 2.2.794.
+
+Główna przyczyna „zacinającego się” paska ładowania i wolnego hamburgera (błąd z 2.2.793)
+- Odroczony loader Cookiebota przejmował surowy tag wtyczki Cookiebot, zanim moduł językowy zdążył go przełączyć w tryb manualny.
+  Na produkcji Cookiebot działał więc w trybie auto-blocking, bez języka z adresu strony (data-culture) i startował dopiero po
+  zdarzeniu load. Jego ramki, a u osób, które zaakceptowały cookies, także GTM i piksele reklamowe, ładowały się po zakończeniu
+  ładowania strony. Pasek ładowania wracał, a główny wątek był zajęty akurat wtedy, gdy ktoś stukał w menu.
+- Teraz: oryginalny tag, jak w 2.2.790 (async w <head>, tryb manualny, język z URL). Sprawdzone na prawdziwym kodzie PHP tej wersji
+  i modułu językowego. W Chrome z 4× wolniejszym CPU ramka Cookiebota ładuje się przed zdarzeniem load (wcześniej po nim).
+
+Mobile
+- Hamburger (i „zamknij” w menu) widoczny od pierwszego wyrysowania strony. Ikony lucide rysuje skrypt dopiero przy
+  DOMContentLoaded, więc do tego czasu przycisk był pusty. Teraz ma zapasową ikonę w CSS, którą skrypt sam podmienia.
+- Skrypt gradientu nie reaguje już na każdą zmianę klasy <html>. Wcześniej otwarcie menu (klasa zpNewNav-lock) wymuszało
+  przeliczenie układu całej strony w trakcie animacji szuflady. Nie reaguje też na chowanie paska adresu przy przewijaniu.
+  Na telefonie kopia gradientu powstaje dopiero po zdarzeniu load.
+- Kicker i H1 bez animacji wejścia: pełna widoczność w pierwszej klatce, bez półprzezroczystego, „rozmytego” stanu.
+  Krótkie wejście (0,45 s, tylko opacity + przesunięcie) mają zespół, „Projektujemy…”, opis, CTA i opinie.
+- Robot (i sygnet ZP za nim) 40 px wyżej.
+- Obrazy poniżej hero nadal mają loading="lazy" (z 2.2.793).
+
+Desktop
+- Lewa kolumna (zespół, kicker, H1, cała treść) tuż pod nagłówkiem: 14 px odstępu przy każdej szerokości ekranu (było 70–130 px).
+  To przesunięcie wizualne, więc robot, karta opinii i wysokość sekcji się nie zmieniły.
+- Naprawiony nadmiarowy nawias w CSS z 2.2.794, który kasował blok opóźnień kaskady wejścia (opis, CTA, chipy, opinie).
+
+Pliki: includes/front-fixes-311.php, zaprojektowani-suite.php.
+Testy: WebKit (profil iPhone 15) i desktop 1440/1920/2560 na HTML strony z tą wersją; Chrome z 4× wolniejszym CPU.
+Brak testu na fizycznym telefonie.
+Po instalacji wyczyścić cache strony / optymalizatora / CDN.

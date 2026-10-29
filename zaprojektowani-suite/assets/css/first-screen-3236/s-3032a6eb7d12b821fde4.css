@@ -1,0 +1,12 @@
+/* v711: do not reserve permanent compositor layers for every revealed icon/card.
+   The browser can promote elements during their actual transition. */
+html.zp-motion-ready [data-zp-motion].is-zp-visible,
+html.zp-motion-ready [data-zp-motion-beam].is-zp-visible,
+html:not(.zp-reduced-motion) [data-zp-depth],
+html:not(.zp-reduced-motion) [data-zp-magnet] { will-change:auto; }
+@media (hover:none), (pointer:coarse) {
+  html [data-zp-motion], html [data-zp-motion-beam],
+  html [data-zp-depth], html [data-zp-magnet], html [data-zp-parallax] {
+    will-change:auto!important;
+  }
+}

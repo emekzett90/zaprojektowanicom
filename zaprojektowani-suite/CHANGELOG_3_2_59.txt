@@ -1,0 +1,28 @@
+Zaprojektowani Suite 3.2.59 — 22.10.2026
+
+Podstawa: 3.2.58 (gałąź suite-3.2.58 @ 3157dcb) i gałąź studio-ocena-3.2.50 @ df9d098 (PR #58) z wątku Studia
+wyceny, scalona bez zmian przez commit scalający. To poprawka punktu 6 z listy Mata z 21.10 („sprawdz ilosc ocen
+w trustindex i zaktualizuj jesli trzeba dla calej strony”), którą kontrola na iMacu znalazła po wgraniu 3.2.58.
+Aktualizacja nie kasuje żadnych danych i nie cofa żadnej zmiany Codexa. Poza jedną liczbą wygląd stron się nie
+zmienia.
+
+Studio wyceny, pasek pod kartami wyboru usługi (/studio-wyceny/ i /en/quote-studio/; PR #58)
+- Przy logo Trustindex stało „5.0” na stronie polskiej i angielskiej. Karty wyboru usługi to osobny plik HTML
+  w ramce (chooser-v19.html), który nie przechodzi przez PHP, więc ocena z 3.2.54 tam nie docierała.
+- Teraz strona dopisuje do ramki ocenę z tych samych danych co reszta strony (atrybut data-zp-rating="4.9"),
+  a mały skrypt w ramce pokazuje 4,9 po polsku i 4.9 po angielsku.
+- W samym pliku zamiast „5.0” jest „4,9”, na wypadek otwarcia ramki osobno albo bez skryptu.
+- Podpis „Google i Facebook”, gwiazdki, logo i układ paska bez zmian.
+
+Po aktualizacji
+- Cache HTML Suite odświeża się raz przy pierwszym otwarciu strony (tylko własne kopie Suite, nigdy LiteSpeed ani
+  CDN), żeby strony Studia wyceny od razu miały ocenę w ramce. Bez tego strona angielska do wygaśnięcia starej kopii
+  (1800 s) pokazywałaby 4,9 z przecinkiem. W logu na stronie „Cache HTML” pojawi się jako zp_html_cache_purge
+  (upgrade.php).
+
+Zmienione pliki względem 3.2.58:
+- PR #58: includes/studio-wyceny.php (atrybut ramki), assets/studio-wyceny-v19/chooser-v19.html (liczba i skrypt)
+- wydanie: zaprojektowani-suite.php (numer wersji), includes/suite3/upgrade.php (jednorazowe odświeżenie cache),
+  includes/suite3/admin-ui.php (karta „Nowe w wersji”), ten plik
+
+Wersje: Suite 3.2.59, Języki PL/EN 1.1.3, Tłumacz EN 2.0.3.

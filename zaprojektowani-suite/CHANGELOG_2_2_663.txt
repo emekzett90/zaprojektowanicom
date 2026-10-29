@@ -1,0 +1,4 @@
+Zaprojektowani Suite v2.2.663
+
+Studio Wyceny:
+- przy szerokości około 1620 px zdjęcia w 1. i 2. karcie podniesione o ok. 90 px wyżej.

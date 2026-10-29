@@ -1,0 +1,26 @@
+Zaprojektowani Suite 2.2.792 — szybsze i płynne hero na mobile, zespół nad H1, sygnet ZP, animacje CTA i chipów, natychmiastowy banner zgód
+
+Baza: 2.2.791 (na bazie zaprojektowani-suite-2.2.790-hero-mobile-polish.zip).
+
+Mobile
+- Hero odsłania się zaraz po wczytaniu samego hero (skrypt na końcu HTML hero), a nie po DOMContentLoaded całej strony (1,4 MB HTML). Na wolnym łączu treść pojawia się o kilka sekund wcześniej.
+- Przed startem wejście czeka na arkusze CSS, także te ładowane asynchronicznie (media="print" + onload), i na font tytułu (limity 0,9 s i 1,6 s). Hero pokazuje się dopiero przy ostatecznym układzie, bez skoku treści spod nagłówka w dół.
+- Kolejne wejście: zespół, etykieta, H1, „Projektujemy…”, opis, CTA, opinie, a robot wynurza się z dołu. Tylko opacity + translate/scale (GPU).
+- Sygnet ZP za robotem jest wyraźnie widoczny (większa przezroczystość, poświata).
+- Uwaga: wersja na serwerze przed tą aktualizacją miała w pliku 310 regułę „zp-mobile-first-paint” z błędnym selektorem (#zhHero:is(...) bez spacji). Ta wersja jej nie zawiera (wejście jest w front-fixes-311).
+
+Desktop
+- Sygnet ZP obniżony, z delikatną poświatą i powolnym unoszeniem (tylko translate, GPU).
+- CTA i chipy przyciągają uwagę: wejście z lekką sprężystością (opis, CTA, chipy, opinie po kolei); przez „Wyceń projekt” co 5,6 s przechodzi odblask, a strzałki CTA delikatnie drgają; przez chipy kolejno przechodzi świetlny „skan” (co 9 s); na hover numer chipa się rozświetla. Animacje stoją, gdy hero jest poza ekranem.
+
+Zespół nad H1 (desktop + mobile)
+- Rząd „Poznaj nasz zespół” z trzema okrągłymi zdjęciami zespołu, link do /o-nas/ (na /en/ „Meet our team”).
+- Desktop: po najechaniu lub fokusie karta z pełnym zdjęciem zespołu, ładowana dopiero przy pierwszym najechaniu.
+- Obrazy w paczce: assets/img/hero-team/ (3 × ok. 2–3 KB + zdjęcie 22 KB zamiast oryginalnego PNG 3,8 MB).
+
+Banner zgód
+- Kliknięcie Akceptuj / Odrzuć / Zapisz wybór chowa banner od razu (ok. 0,04–0,15 s). Cookiebot przetwarza zgodę w następnej klatce, więc uruchamianie skryptów po zgodzie (wcześniej 3–4 s z widocznym bannerem) dzieje się już w tle.
+- Jeśli Cookiebot pokaże banner ponownie (np. „Ustawienia cookies” w stopce), banner wraca normalnie.
+
+Testy: WebKit (silnik Safari, profil iPhone 15) i desktop na żywej stronie z podmienionym kodem; banner: „Odrzuć” w pełnym przebiegu, „Akceptuj” tylko mechanicznie (bez faktycznej zgody). Brak testu na fizycznym telefonie.
+Po instalacji wyczyścić cache strony / optymalizatora / CDN.

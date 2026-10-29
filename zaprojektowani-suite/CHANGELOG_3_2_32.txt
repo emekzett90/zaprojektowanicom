@@ -1,0 +1,122 @@
+Zaprojektowani Suite 3.2.32
+Kontakt, osiem branż, rozwój artykułów i natychmiastowy hero mobile
+Data przygotowania: 17.10.2026
+Baza: dostarczona paczka 3.2.31-mobile-fix(1)
+
+INSTALACJA
+1. WordPress → Wtyczki → Dodaj nową → Wyślij wtyczkę na serwer.
+2. Wybierz zaprojektowani-suite-3.2.32-seo-mobile.zip.
+3. Wybierz zastąpienie zainstalowanej wersji. Po instalacji otwórz ponownie
+   panel wtyczek i sprawdź numer 3.2.32. To aktualizacja tej samej wtyczki.
+4. Aktualizacja kolejkuje odświeżenie istniejącego cache HTML Suite przy
+   pierwszym pełnym uruchomieniu nowej wersji. Jeśli używasz dodatkowego
+   cache hostingu lub CDN, odśwież także jego kopię.
+5. Sprawdź stronę główną na telefonie, /kontakt/, jedną podstronę branżową
+   oraz poradnik /strony-internetowe/jak-stworzyc-strone-internetowa/.
+
+Nowe sekcje branżowe, artykuły i linki korzystają z aktywnego planu SEO Suite.
+Wstrzymanie planu w panelu wstrzymuje tę warstwę treści. Poprawka mobilnego
+hero działa niezależnie. Zachowaj poprzedni ZIP do ewentualnego powrotu.
+Paczka jest gotową aktualizacją; samo jej pobranie nie zmienia publicznej strony.
+
+1. KONTAKT
+- H1 zachowuje tekst: Kontakt z Zaprojektowani — opowiedz o swoim projekcie.
+- Fraza „opowiedz o swoim projekcie” ma większą wagę i statyczny jasny gradient
+  zgodny z ciemnymi hero usługowymi.
+- Obsługiwany jest szablon, shortcode i zachowany HTML treści; PL oraz EN.
+
+2. OSIEM STRON BRANŻOWYCH
+Adresy:
+/strony-internetowe-dla-kancelarii/
+/strony-internetowe-dla-lekarzy/
+/strony-internetowe-dla-deweloperow/
+/strony-internetowe-dla-salonow-beauty/
+/strony-internetowe-dla-trenerow-personalnych/
+/strony-internetowe-dla-fotografow/
+/strony-internetowe-dla-restauracji/
+/strony-internetowe-dla-hoteli/
+
+Na każdej stronie dodano indywidualnie napisany plan: pięć konkretnych
+obszarów strony, trzy kroki przykładowego klienta, materiały do rozpoczęcia
+współpracy, odnośnik do istniejącego portfolio i branżowe wezwanie do wyceny.
+Przykładowe scenariusze są odróżnione od zrealizowanych projektów.
+Dodatkowe linki prowadzą do dwóch poradników o tworzeniu i zawartości strony
+firmowej. Typografia wybranych opisów i linków portfolio jest czytelniejsza.
+Układ bazowy, obecne zdjęcia, hero, formularze i H1 pozostają zachowane.
+Nowe treści są również przygotowane po angielsku.
+
+3. DZIEWIĘĆ ARTYKUŁÓW ZE ZRZUTÓW SENUTO
+Łącznie: 15 nowych sekcji i 11 dodatkowych ilustracji w treści. Wykorzystano
+siedem istniejących plików WebP 1344 × 756 px, około 23–92 KiB każdy.
+Ilustracje mają podpisy, tekst alternatywny, wymiary oraz lazy/async.
+
+- Jak stworzyć stronę internetową: przykłady kancelarii i usługi mobilnej;
+  siedem praktycznych prób odbioru strony; dwie ilustracje.
+- Identyfikacja wizualna firmy: zastosowania projektów kancelarii i pracowni
+  architektonicznej; kryteria odbioru materiałów; dwie ilustracje.
+- Rebranding firmy: zakres zmiany i plan premiery z odpowiedzialnościami;
+  dwie ilustracje. Przykłady nie udają historii „przed i po”.
+- Logo wektorowe: warianty znaku, nazwy plików i test przekazania;
+  dwie ilustracje. WebP jest podglądem, nie plikiem wektorowym.
+- Landing page — przykłady: analiza drogi od oferty do kontaktu i plan testu;
+  dwie ilustracje. Opisy wskazują, które przykłady są stronami firmowymi.
+- Strona dla małej firmy: zakres na start i przesłanki do rozbudowy.
+- Rodzaje stron: rozróżnienie celu, struktury i technologii.
+- Proces tworzenia: materiały oraz kryteria zatwierdzania etapów.
+- Co powinna zawierać strona firmowa: dwa scenariusze usługowe, macierz
+  pytanie klienta → sekcja → potrzebne materiały; jedna ilustracja.
+
+Spisy treści otrzymują właściwe kotwice. Poprawiono też trzy konkretne
+sformułowania: eksport z kreatorów, wymagania plików JPG w druku i wewnętrzne
+zdanie „landing pod frazy” w poradniku firmowym.
+
+Treść jest dodawana podczas renderowania istniejących polskich wpisów.
+Nie zapisuje zmian w Elementorze, tytułach, slugach ani canonical.
+Nie jest wstawiana do EN, szkiców, preview, feedu, REST, AJAX ani wpisów
+chronionych hasłem. Wyłączenie nowego modułu lub powrót do poprzedniej wersji
+przywraca poprzednią warstwę wyświetlania.
+
+4. LINKI Z OFERT
+Sześć brakujących linków kontekstowych:
+- /projektowanie-logo/ → identyfikacja wizualna i rebranding;
+- /logo-branding-katowice/ → identyfikacja wizualna i rebranding;
+- /tworzenie-stron-internetowych/ → zawartość strony firmowej;
+- /strony-internetowe-katowice/ → lokalna oferta sklepów z wyjaśnieniem
+  potrzeby katalogu produktów, koszyka i płatności.
+Istniejące odpowiednie linki w treści oferty nie są powielane.
+
+5. HERO NA TELEFONIE
+- Do szerokości 1100 px główny hero otrzymuje od razu stan końcowy.
+- H1, opis, przyciski, zespół i elementy pierwszego ekranu nie czekają
+  na animację wejścia, fonty ani utworzenie animowanej kopii gradientu.
+- Wyłączono mobilny interwał zmiany nazwy usługi i ciągły ruch elementów
+  hero; pozostaje pierwsza czytelna nazwa usługi.
+- Usunięto kosztowny blur kart nad ilustracją na mobile.
+- Krytyczna reguła pozostaje w head, także przy opcjonalnym przenoszeniu
+  innych stylów do plików. Uwzględniono dotychczasowy minifikator CSS.
+- Desktop powyżej 1100 px zachowuje dotychczasowe reguły i animacje.
+- Logika zapisu zgód i blokowania skryptów nie ulega zmianie.
+
+6. DATY I CACHE
+Nowe merytoryczne sekcje dziewięciu artykułów i ośmiu branż otrzymują
+jednorazowy sygnał zmiany w istniejących mapach witryny przy wejściu
+administratora po instalacji, jeśli aktywne są plan SEO i jego mechanizm
+aktualizacji map. Daty publikacji wpisów nie są przepisywane. Ta operacja
+nie wysyła nowego zgłoszenia IndexNow ani nie uruchamia nowego harmonogramu.
+
+WERYFIKACJA
+- PHP 8.3: poprawna składnia nowych i zmienionych plików PHP.
+- 148 kontroli transformacji artykułów, w tym idempotencja, kotwice,
+  ochrona innych kontekstów i zachowanie H1 oraz zewnętrznego HTML.
+- Wszystkie 8 konfiguracji branżowych w PL/EN i rzeczywisty HTML wybranych
+  usług: zachowanie treści, formularzy oraz poprawność linków.
+- Testy przeglądarkowe na kopiach rzeczywistych stron z lokalnymi zasobami;
+  pierwsza góra strony sprawdzona na szerokościach 360, 390, 430, 768 i
+  1100 px, także bez JavaScriptu i przy niedostępnych fontach.
+- Nowe sekcje i artykuły sprawdzone na 390 i 1440 px.
+
+To kontrola kodu i renderowania paczki, a nie pomiar PageSpeed produkcji
+po wdrożeniu. Wzrost pozycji wymaga ponownego przetworzenia stron przez
+wyszukiwarkę; sam ZIP nie stanowi gwarancji rankingu.
+
+Dalsze działania: PLAN_SEO_2026_10_17.txt.

@@ -1,0 +1,4 @@
+Changelog 2.7.13
+
+- Meta Verified na desktopie przesunięte o około 20 px w prawo.
+- Meta Verified na mobile podniesione o 15 px, bez zmiany pozycji poziomej.

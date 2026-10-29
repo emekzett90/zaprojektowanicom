@@ -1,0 +1,9 @@
+3.2.37 — automatyczna publikacja Altiora Linea
+- Automatyczna publikacja przy aktywacji lub pierwszym wejściu do panelu po aktualizacji.
+- Wznawianie wcześniejszego szkicu zamiast dodawania kolejnej kopii.
+- Zachowanie zmian redakcyjnych, autora, istniejących pól SEO i layoutu.
+- Rejestracja obrazu w Mediach, kategorie, Rank Math oraz odświeżenie indeksu Wiedzy.
+- Blokada równoległych migracji, obsługa niedokończonego importu i komunikaty błędów.
+- Szablon, dotychczasowa treść artykułu oraz wszystkie istniejące CSS/JS bez zmian.
+- Zgodność z obrazami używanymi w alternatywnym szkicu 3.2.36.
+- Szczegóły: INSTRUKCJA_3_2_37.txt.

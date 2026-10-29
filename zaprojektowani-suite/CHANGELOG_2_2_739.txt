@@ -1,0 +1,6 @@
+Zaprojektowani Suite 2.2.739
+
+- /strony-internetowe-katowice/: w sekcji „02 / sklep internetowy” podmieniono wizualizację ProScarves na Świat Grilli.
+- Nowy obraz: https://zaprojektowani.com/wp-content/uploads/2026/09/swiatgrili_vis.webp
+- Zaktualizowano tekst alternatywny obrazu.
+- Zachowano wszystkie poprawki z 2.2.738.

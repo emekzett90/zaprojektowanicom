@@ -1,0 +1,7 @@
+Changelog 2.7.9
+
+- Poprawiono komponent Meta Verified zgodnie z uwagami.
+- Usunięto obramowaną 'tabelkę' wokół badge — zostawiono samo logo i chevron.
+- Na stronie głównej badge przeniesiono wyżej, nad tekst hero.
+- W mega menu poprawiono otwieranie popovera na desktopie i uproszczono wygląd.
+- W menu mobilnym zostawiono sam znak + chevron z rozwijanym okienkiem profili.

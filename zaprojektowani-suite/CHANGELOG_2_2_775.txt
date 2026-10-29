@@ -1,0 +1,8 @@
+Zaprojektowani Suite 2.2.775
+
+- Przywrócono dokładną, sprawdzoną strukturę i JavaScript headera z 2.2.773.
+- Naprawiono brak działania linków menu po zmianie ikon kontaktowych w 2.2.774.
+- Messenger usunięty wizualnie bez modyfikowania struktury menu/linków.
+- WhatsApp zachowuje ten sam, działający link/DOM co wcześniej; ikona jest podmieniana wyłącznie przez CSS na oficjalny glyph WhatsApp.
+- Telefon pozostaje bez zmian.
+- Desktop i mobile drawer korzystają z tej samej bezpiecznej poprawki.

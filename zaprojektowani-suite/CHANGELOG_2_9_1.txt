@@ -1,0 +1,27 @@
+ZAPROJEKTOWANI SUITE 2.9.1
+
+Zawiera całą 2.9.0 (a w niej 2.8.1, 2.8.0 i Twoją 2.7.20). Wgraj tę wersję zamiast 2.9.0.
+
+Poprawka 2.9.0:
+- pozycja „Publikacja wpisów” jest teraz widoczna w menu ZP Suite (w 2.9.0 porządki menu
+  ją chowały, więc panel z przyciskiem wstrzymania był dostępny tylko z linku w e-mailu).
+
+Nowy moduł: ZP Suite → Widoczność AI (Twoja prośba, żeby ChatGPT, Claude i Gemini częściej
+pokazywały naszą stronę). Na stronach nic się wizualnie nie zmienia:
+- robots.txt wpuszcza roboty AI (ChatGPT, Claude, Gemini, Perplexity, Copilot i inne)
+  na tych samych zasadach co wyszukiwarki,
+- /llms.txt: krótki opis studia dla modeli językowych, budowany z danych wtyczki
+  (usługi, Twoje ceny, terminy, kontakt, najważniejsze strony i poradniki, wersja angielska);
+  stary plik llms.txt z katalogu strony (bez cen, tylko strony Katowic) zostaje zapisany
+  w bazie i przemianowany na llms.txt.bak,
+- dane strukturalne dla Google i AI: ceny „od” jako oferty firmy i stron usług, zespół,
+  profile (Instagram, Facebook, Clutch; kolejne dopiszesz w panelu),
+- IndexNow: Bing (z niego korzystają ChatGPT i Copilot) dowiaduje się o nowych
+  i zmienionych stronach w kilka minut; pełna lista adresów idzie raz, 5 minut po wgraniu,
+- w panelu: wizyty robotów AI, wejścia ludzi z ChatGPT, Gemini, Claude, Perplexity
+  i Copilota, stan llms.txt i IndexNow, test dostępu.
+
+Po wgraniu:
+1. Wejdź raz na dowolną stronę.
+2. Rank Math → Mapa witryny → Zapisz zmiany.
+3. Napisz w wątku „wgrane”.

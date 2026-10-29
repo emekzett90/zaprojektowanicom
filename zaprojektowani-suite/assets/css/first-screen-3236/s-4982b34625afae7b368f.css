@@ -1,0 +1,17 @@
+
+/* v2.7.19 — HOME H1: równiej wypełnione wiersze na mobile + luźniejszy desktop. */
+@media (min-width:1101px){
+  html body #zhHero .zh__title{
+    line-height:.98!important;
+  }
+}
+@media (max-width:600px){
+  html body #zhHero .zh__title{
+    width:calc(100% + 22px)!important;
+    max-width:calc(100% + 22px)!important;
+    margin-left:-4px!important;
+    margin-right:-18px!important;
+    letter-spacing:-.052em!important;
+    text-wrap:pretty!important;
+  }
+}

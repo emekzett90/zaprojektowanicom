@@ -1,0 +1,25 @@
+{
+  "version": "3.2.41",
+  "base": "zaprojektowani-suite-3.2.40-portfolio-mapa-case-study.zip",
+  "base_sha256": "50d1b94329de7114dac29110aa1c739b02f77e6f6f56a9bcb02a4ee29aaf79bb",
+  "changed": {
+    "zaprojektowani-suite.php": "8915d7db53e2c6c37796c5352cbd22482ebd7f0c7194608c4e7f8a6a22068798",
+    "content/case-studies-20261018.json": "8237095d82da6c02343bd617ec31bc576eedcb46d9180d28f1859c7045d21f33",
+    "includes/portfolio-altiora-3236.php": "08209345106e984ffacb8cfc0f9a8937b7ff79b70ecaecc46f8f3fdd96924b58",
+    "includes/case-studies-render-20261018.php": "ec2696f420bfab8605b42407f2a6b1ff785c25dd87d8e6777c9209bb66f2d378",
+    "templates/realizacje-page.php": "e8fb1b966b55f0728e9be0fd5e3d948b496742a78b01693f9845e6cce15e17bf"
+  },
+  "added": {
+    "includes/case-studies-polish-3241.php": "191dcc48643b3c262983a2d81be98c3fff9a05daf5d78d7f52ae67859424b780",
+    "assets/css/case-studies-polish-3241.css": "37771532f1452f47a207951e53b80a697e3cfafbc1ae0474d7a9ff6437d1c58d",
+    "assets/css/case-portfolio-bridge-3241.css": "c19de34adbb2601ac3f5d382a101a80da35ea32c53491fab5610f8c46d5bd164"
+  },
+  "removed": [],
+  "tests": {
+    "php": 705,
+    "offline_views": 60,
+    "logic_checks": 36,
+    "production_lighthouse": false,
+    "physical_iphone": false
+  }
+}

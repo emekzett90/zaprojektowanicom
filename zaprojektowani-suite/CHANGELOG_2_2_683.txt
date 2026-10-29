@@ -1,0 +1,9 @@
+Zaprojektowani Suite 2.2.683
+
+- Podstrona /kampanie-reklamowe/ korzysta teraz z oryginalnego headera Zaprojektowani Suite.
+- Przywrócono oryginalną rozbudowaną stopkę Zaprojektowani Suite.
+- Usunięto landingowy header i uproszczoną stopkę z paczki kampanii.
+- Zachowano środkową część projektu kampanii 1:1.
+- Header działa w trybie przezroczystym nad ciemnym hero i przechodzi w wersję sticky po scrollu.
+- CSS i JS kampanii pozostają lokalne.
+- JavaScript zabezpieczono przed brakiem usuniętego landingowego menu.

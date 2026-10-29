@@ -1,0 +1,12 @@
+ZAPROJEKTOWANI SUITE 2.2.719 — FAQ SEO + UX HUB
+
+- Pełna paczka Suite zachowana; zmieniono wyłącznie moduł FAQ i jego SEO.
+- Nowy jasny hero FAQ spójny z nowymi podstronami: breadcrumbs, mocny H1, panel wyszukiwarki i realne liczniki FAQ.
+- Nowe kafle tematów z realną liczbą pytań.
+- Sticky nawigacja FAQ na desktopie i czytelny układ odpowiedzi.
+- Wszystkie pytania/odpowiedzi pozostają w HTML bez JS — wyszukiwarka jest tylko warstwą UX.
+- Linkowanie wewnętrzne do usług, Wiedzy, kategorii poradników, realizacji i Studio Wyceny.
+- Dedykowany Rank Math title, description i canonical dla FAQ.
+- FAQPage dodawane do graphu Rank Math dokładnie raz; fallback JSON-LD tylko bez Rank Math.
+- Usunięty stary hard override FAQ z front-fixes-231, który kolidował z nowym layoutem.
+- CMS FAQ w panelu admina pozostaje bez zmian i nadal zarządza pytaniami/kategoriami.

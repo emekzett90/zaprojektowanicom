@@ -1,0 +1,39 @@
+ZAPROJEKTOWANI SUITE 2.9.4
+
+Zawiera całą 2.9.3 (a w niej 2.9.2, 2.9.1, 2.9.0, 2.8.1, 2.8.0 i Twoją 2.7.20). Wgraj tę wersję zamiast 2.9.3.
+
+Strona główna, sekcja „SEO • usługi • branże”: kafel dla każdej strony branżowej.
+- 8 kafli zamiast 4: kancelarie, deweloperzy, lekarze i salony beauty jako kafle ze zdjęciem (jak dotąd),
+  trenerzy personalni, fotografowie, restauracje i kawiarnie oraz hotele i pensjonaty jako ten sam kafel
+  bez zdjęcia, w niższym rzędzie pod spodem (na telefonie jako lista pod przewijanymi kaflami),
+- kafel lekarzy pokazuje zdjęcie strony dla lekarza (dotąd było tam zdjęcie z branży beauty),
+- kafel „Strony i sklepy dla producentów” zastąpiły salony beauty: prowadził na stronę tworzenia sklepów,
+  a nie na stronę branżową,
+- nowy kafel pojawia się dopiero, gdy jego strona jest opublikowana.
+
+Strona główna, sekcja „Strony internetowe dla firm z całej Polski” (nad stopką): luźniejszy układ.
+- te same teksty: pierwszy akapit obok listy 4 usług, a trzy kolejne jako osobne punkty z krótkimi
+  nagłówkami („Najpierw oferta i ścieżka klienta”, „Gotowe pod SEO i kampanie”, „Spójna marka
+  w każdym kanale”),
+- lista usług ma strzałkę przy każdej pozycji.
+
+Strona główna, FAQ: 12 pytań pod Google i asystentów AI (ChatGPT, Gemini, Claude).
+- pytania, które ludzie wpisują w Google: ile kosztuje strona, sklep, logo i kampanie, ile trwa
+  stworzenie strony, SEO, widoczność w ChatGPT, praca z całą Polską, branże, jak zamówić wycenę,
+- każda odpowiedź zaczyna się od pełnej odpowiedzi z liczbami (Twoje ceny, terminy, studio od 2022 roku
+  i 10+ lat doświadczenia zespołu, ponad 110 projektów); cztery odpowiedzi linkują do stron usług,
+  ostatnia do Studio Wyceny,
+- nagłówek: „Najczęstsze pytania o strony internetowe, sklepy, logo i kampanie.”, a pod nim krótkie
+  podsumowanie cen,
+- zmieniają się tylko pytania, które kiedyś wpisała wtyczka; pytania dodane przez Ciebie w ZP Suite → CMS
+  zostają, za nowymi,
+- angielska strona główna (/en/) ma te same zmiany po angielsku.
+
+„10+ lat doświadczenia zespołu” zamiast „10+ lat doświadczenia” (Twoja decyzja z 8.10, łatka z wątku
+o widoczności w AI): pod liczbą w hero strony głównej i stron sklepów, w pasie liczb w stopce i w /llms.txt;
+po angielsku „years of team experience”. Na telefonie podpis w stopce zajmuje 2 wiersze.
+
+Po wgraniu:
+1. Wejdź raz na dowolną stronę.
+2. Rank Math → Mapa witryny → Zapisz zmiany.
+3. Napisz w wątku „wgrane”.

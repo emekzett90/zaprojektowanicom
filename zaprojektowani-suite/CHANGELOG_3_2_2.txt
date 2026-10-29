@@ -1,0 +1,38 @@
+Zaprojektowani Suite 3.2.2 — 15.10.2026
+
+CO POPRAWIONO
+- Menu EN: osiem opublikowanych stron dla branż w menu mobilnym i mega menu,
+  z angielskimi nazwami, opisami i własnymi adresami. Zachowany obecny wygląd.
+- Portfolio na Logo i branding Katowice oraz Projektowanie logo: brakujące
+  projekty Natalii Arciszewskiej i Zgórecki Nieruchomości z aktualnych danych
+  głównej. Razem 22 realizacje, zachowane stare projekty, galerie i animacje.
+- Elementor / Meta: trzy przestarzałe aliasy nie są przypadkowo odczytywane
+  przez skaner Object.keys Meta. Oryginalne API i ostrzeżenia jawnych wywołań
+  pozostają; bez wyciszania konsoli i bez zmiany pomiaru reklamowego.
+- Hero: obsłużona awaria inicjalizacji i utrata WebGL. Istniejący obraz
+  zastępczy pozostaje do ukończenia sceny; bez pętli ponawiania renderera.
+- Przełącznik języka: obsługa gotowości natywnego przejścia i anulowania
+  przy zmianie rozmiaru okna, bez globalnego przechwytywania błędów.
+- CRON: brak wywołania pustego curl_close w PHP 8+, w tym bez ostrzeżenia
+  deprecated w PHP 8.5. Sukces pozostaje bez wydruku, rzeczywisty błąd ma
+  jedną linię komunikatu i niezerowy kod zakończenia.
+- Monitor 404 sprawdza aktualną odpowiedź także dla prawdziwych linków
+  wewnętrznych i CSS Elementora. Naprawione pliki znikają z czerwonego
+  alarmu, pozostając w historii. Nowsza wizyta 404 nie ginie podczas recheck.
+- Dwa stare obrazy kiedy-warto-zalozyc-sklep-2/3-scaled.webp otrzymują
+  dokładne 301 do odpowiadających im istniejących plików WebP; stopka
+  korzysta bezpośrednio z poprawnego obrazu.
+- Własny cache HTML Suite odświeża się raz po przejściu na 3.2.2.
+
+CO SPRAWDZIĆ PO INSTALACJI
+- Pulpit: Suite 3.2.2, Języki PL/EN 1.1.2, Tłumacz EN 2.0.3.
+- /en/ przy 390 px: menu, Websites by industry, osiem linków i ich cele.
+- Obie strony logo PL/EN: 22 karty, nowe projekty i otwieranie modalów.
+- Konsola PL/EN: brak trzech przypadkowych ostrzeżeń Elementora; normalny
+  robot na działającym GPU i obraz zastępczy przy jego niedostępności.
+- Stan strony: świeży heartbeat serwera co 5 minut i aktualna lista 404.
+- Oba stare obrazy: jeden 301 i następnie 200 image/webp.
+
+JAK COFNĄĆ
+Wgrać poprzedni pełny ZIP 3.2.1 i zastąpić obecną wersję. Dane CMS,
+tłumaczenia, wpisy, konfiguracja i historia 404 nie są usuwane.

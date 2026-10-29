@@ -1,0 +1,37 @@
+ZAPROJEKTOWANI SUITE 2.9.3
+
+Zawiera całą 2.9.2 (a w niej 2.9.1, 2.9.0, 2.8.1, 2.8.0 i Twoją 2.7.20). Wgraj tę wersję zamiast 2.9.2.
+
+Szybsza strona na telefonie i komputerze, bez zmian w wyglądzie i animacjach:
+- telefon nie przelicza już wyglądu całej strony kilkadziesiąt razy w trakcie wczytywania, więc strona
+  szybciej reaguje na przewijanie i kliknięcia. Dwie przyczyny, obie usunięte:
+  * style, które wtyczka wypisuje w środku strony (na stronie głównej 74 bloki i 5 plików CSS), są zebrane
+    w dwóch miejscach, w tej samej kolejności; te z samej góry strony (nad głównym nagłówkiem) zostają
+    na miejscu,
+  * ok. 100 reguł CSS „body:has(...)” (np. „jeśli na stronie jest sekcja sklepu, to...”) sprawdza teraz
+    gotowy znacznik na początku strony zamiast przeszukiwać całą stronę po każdej zmianie,
+- menu na telefonie otwiera się i zamyka szybciej, a przewijanie przy górze strony jest płynniejsze:
+  kilka reguł wyglądu zaznaczonego przycisku i dawnej linii pod nagłówkiem kazało przeglądarce przy każdym
+  otwarciu menu i przy przewinięciu przy górze strony przeliczać wygląd całej strony od nowa
+  (w teście na wolnym telefonie otwarcie menu trwało 0,46–0,56 s, teraz 0,38–0,47 s); teraz przelicza tylko
+  elementy, których te reguły dotyczą,
+- w tym samym teście strona główna jest w trakcie wczytywania zajęta o połowę krócej (3,1 → 1,7 s),
+  a strona „Tworzenie stron internetowych” 8,3 → 4,2 s; pierwszy widok pojawia się tak samo szybko jak dotąd,
+- serwer składa stronę główną (polską i angielską) o ok. 80 ms szybciej (filtr porządkujący kod strony działa
+  w jednym przejściu),
+- wtyczka zapamiętuje, do którego pliku w Mediach należy każdy obrazek (na stronie głównej ok. 45 zapytań
+  do bazy mniej); pamięć czyści się sama po dodaniu, zmianie lub usunięciu pliku i co tydzień,
+- wygląd, układ, kolory, czcionki i animacje bez zmian: sprawdzone na 46 stronach (polskich
+  i angielskich), na telefonie i komputerze.
+
+Strona /agencja-reklamowa-katowice/: w pierwszym akapicie „ponad 110 projektów stron, sklepów, logo
+i identyfikacji” zamiast „ponad 114 projektów” (poprawka z wątku treści).
+
+Wyłącznik: ZP Suite → Przyspieszenie (odznacz „Przyspieszenie włączone” i kliknij Zapisz).
+Jedna strona bez przyspieszenia, do porównania: dopisz do adresu ?zp_speed=0
+(wyłącznik nie dotyczy poprawki menu: to zmiana samych reguł CSS, z tym samym wyglądem).
+
+Po wgraniu:
+1. Wejdź raz na dowolną stronę.
+2. Rank Math → Mapa witryny → Zapisz zmiany.
+3. Napisz w wątku „wgrane”.

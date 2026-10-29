@@ -1,0 +1,103 @@
+/* 3.2.34: home/tablet only. First paint and post-initialization use one geometry. */
+@media(max-width:1360px){
+  body.zp-mobile-shell-3234{--zp-shell-height:88px;--zp-shell-admin-top:0px;--zp-shell-hero-top:120px}
+  body.admin-bar.zp-mobile-shell-3234{--zp-shell-admin-top:32px}
+
+  /* The builder owns these wrappers, not the visible navigation. They must never
+     acquire normal-flow height or form a transformed containing block for fixed nav. */
+  html body.zp-mobile-shell-3234 [data-zp-header-host="3234"]:not(#zpx){
+    display:block!important;position:fixed!important;top:var(--zp-shell-admin-top)!important;left:0!important;right:0!important;
+    width:100%!important;height:0!important;min-height:0!important;max-height:0!important;
+    margin:0!important;padding:0!important;border:0!important;overflow:visible!important;
+    z-index:2147483000!important;pointer-events:none!important;
+    opacity:1!important;visibility:visible!important;transform:none!important;translate:none!important;
+    filter:none!important;perspective:none!important;contain:none!important;content-visibility:visible!important;
+    animation:none!important;transition:none!important;will-change:auto!important;
+  }
+  html body.zp-mobile-shell-3234 [data-zp-header-path="3234"]:not(#zpx){
+    display:block!important;position:static!important;height:0!important;min-height:0!important;
+    margin:0!important;padding:0!important;border:0!important;overflow:visible!important;
+    opacity:1!important;visibility:visible!important;transform:none!important;translate:none!important;
+    filter:none!important;perspective:none!important;contain:none!important;content-visibility:visible!important;
+    animation:none!important;transition:none!important;will-change:auto!important;
+  }
+  html body.zp-mobile-shell-3234 #zpNewNav:not(#zpx){
+    position:fixed!important;top:var(--zp-admin-top,var(--zp-shell-admin-top))!important;
+    left:0!important;right:0!important;bottom:auto!important;width:100%!important;
+    height:var(--zp-shell-height)!important;min-height:var(--zp-shell-height)!important;max-height:var(--zp-shell-height)!important;
+    display:block!important;margin:0!important;padding:0!important;box-sizing:border-box!important;
+    opacity:1!important;visibility:visible!important;pointer-events:auto!important;
+    transform:none!important;translate:none!important;scale:none!important;filter:none!important;
+    contain:none!important;content-visibility:visible!important;overflow:visible!important;
+    animation:none!important;transition:none!important;will-change:auto!important;
+    z-index:2147483000!important;
+  }
+  html body.zp-mobile-shell-3234 #zpNewNav:not(#zpx) .zpNewNav__shell,
+  html body.zp-mobile-shell-3234 #zpNewNav:not(#zpx) .zpNewNav__mobileBar{
+    position:relative!important;width:100%!important;
+    height:var(--zp-shell-height)!important;min-height:var(--zp-shell-height)!important;max-height:var(--zp-shell-height)!important;
+    margin:0!important;padding-top:0!important;padding-bottom:0!important;box-sizing:border-box!important;
+    opacity:1!important;visibility:visible!important;transform:none!important;translate:none!important;
+    animation:none!important;transition:none!important;will-change:auto!important;pointer-events:auto!important;
+  }
+  html body.zp-mobile-shell-3234 #zpNewNav:not(#zpx) .zpNewNav__mobileBar{display:flex!important}
+  html body.zp-mobile-shell-3234 #zpNewNav:not(#zpx) .zpNewNav__inner{display:none!important;height:0!important;min-height:0!important}
+  /* Reset only entrance transforms. Never reset the logo's centring transform,
+     the drawer panel's slide transform, or hidden dark/light logo variants. */
+  html body.zp-mobile-shell-3234 #zpNewNav:not(#zpx) .zpNewNav__mobileCall,
+  html body.zp-mobile-shell-3234 #zpNewNav:not(#zpx) .zpNewNav__mobileActions,
+  html body.zp-mobile-shell-3234 #zpNewNav:not(#zpx) .zpNewNav__burger,
+  html body.zp-mobile-shell-3234 #zpNewNav:not(#zpx) .zpNewNav__mobileBar .zpl-switch--chip{
+    opacity:1!important;visibility:visible!important;transform:none!important;translate:none!important;
+    scale:none!important;filter:none!important;animation:none!important;transition:none!important;
+    will-change:auto!important;pointer-events:auto!important;
+  }
+  html body.zp-mobile-shell-3234 #zpNewNav:not(#zpx) .zpNewNav__mobileBrand{
+    position:absolute!important;left:50%!important;top:50%!important;right:auto!important;bottom:auto!important;
+    opacity:1!important;visibility:visible!important;transform:translate3d(-50%,-50%,0)!important;
+    translate:none!important;scale:none!important;filter:none!important;
+    animation:none!important;transition:none!important;will-change:auto!important;pointer-events:auto!important;
+  }
+  html body.zp-mobile-shell-3234 #zpNewNav:not(#zpx) .zpHeaderStaticDivider{
+    visibility:visible!important;transform:translateX(-50%)!important;left:50%!important;
+    animation:none!important;transition:none!important;will-change:auto!important;
+  }
+  html body.zp-mobile-shell-3234 #zpNewNav:not(#zpx):not(.is-scrolled):not(.is-mega-open) .zpHeaderStaticDivider{opacity:.52!important}
+  html body.zp-mobile-shell-3234 .zpNewNav__fixedSpacer{
+    display:none!important;height:0!important;min-height:0!important;max-height:0!important;
+    margin:0!important;padding:0!important;border:0!important;overflow-anchor:none!important;
+  }
+  /* Existing mobile composition: header is an overlay, its clearance is inside
+     hero from the first frame. Never add another header-sized spacer later. */
+  html body.zp-mobile-shell-3234 #zhHero:not(#zpx){
+    margin-top:0!important;padding-top:0!important;transform:none!important;translate:none!important;
+    opacity:1!important;visibility:visible!important;content-visibility:visible!important;contain:none!important;
+  }
+  html body.zp-mobile-shell-3234 #zhHero:not(#zpx) .zh__inner{padding-top:var(--zp-shell-hero-top)!important}
+}
+@media(max-width:980px){body.zp-mobile-shell-3234{--zp-shell-height:82px}}
+@media(max-width:782px){body.admin-bar.zp-mobile-shell-3234{--zp-shell-admin-top:46px}}
+@media(max-width:600px){body.zp-mobile-shell-3234{--zp-shell-hero-top:112px}}
+/* Optional optimizer-off path: the same host lock without requiring a JS marker. */
+@supports selector(:has(*)){
+  @media(max-width:1360px){
+    html body.zp-mobile-shell-3234 .elementor-location-header:has(#zpNewNav):not(#zpx){
+      display:block!important;position:fixed!important;top:var(--zp-shell-admin-top)!important;left:0!important;right:0!important;
+      width:100%!important;height:0!important;min-height:0!important;max-height:0!important;
+      margin:0!important;padding:0!important;border:0!important;overflow:visible!important;
+      z-index:2147483000!important;pointer-events:none!important;opacity:1!important;visibility:visible!important;
+      transform:none!important;translate:none!important;filter:none!important;perspective:none!important;
+      contain:none!important;content-visibility:visible!important;animation:none!important;transition:none!important;will-change:auto!important;
+    }
+    html body.zp-mobile-shell-3234 .elementor-location-header .elementor-element:has(#zpNewNav):not(#zpx),
+    html body.zp-mobile-shell-3234 .elementor-location-header .elementor-widget-container:has(#zpNewNav):not(#zpx),
+    html body.zp-mobile-shell-3234 .elementor-location-header .elementor-shortcode:has(#zpNewNav):not(#zpx),
+    html body.zp-mobile-shell-3234 .elementor-location-header .e-con-inner:has(#zpNewNav):not(#zpx){
+      display:block!important;position:static!important;height:0!important;min-height:0!important;
+      margin:0!important;padding:0!important;border:0!important;overflow:visible!important;
+      opacity:1!important;visibility:visible!important;transform:none!important;translate:none!important;
+      filter:none!important;perspective:none!important;contain:none!important;content-visibility:visible!important;
+      animation:none!important;transition:none!important;will-change:auto!important;
+    }
+  }
+}

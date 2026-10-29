@@ -1,0 +1,9 @@
+Zaprojektowani Suite 3.2.45 — 18.10.2026
+
+Stopka: osobna sekcja „Strony internetowe dla branż” w białej części nawigacji.
+- Pełen zestaw ośmiu opublikowanych podstron branżowych (zamiast tylko trzech).
+- Cztery kolumny na desktopie; dwie na tabletach; na mobile kompaktowy akordeon.
+- Automatyczne dodawanie kolejnych opublikowanych podstron branżowych WordPress, bez duplikatów i linków do nieopublikowanych stron.
+- Polska i angielska nawigacja: EN wyświetla wyłącznie branże posiadające odrębny adres EN.
+- Dotychczasowe „Strony dla firm” zachowują strony wizytówka / landing page / WordPress, bez duplikowania branż.
+- Zachowane wszystkie wcześniejsze zmiany i zasoby z 3.2.44.

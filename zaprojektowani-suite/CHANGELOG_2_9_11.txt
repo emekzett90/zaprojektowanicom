@@ -1,0 +1,29 @@
+ZAPROJEKTOWANI SUITE 2.9.11
+
+Zawiera całą 2.9.10 (Twoją 2.9.9 od Codexa z sześcioma poprawkami konsoli) i wcześniejsze, z Twoją
+2.7.20. Wgraj tę wersję zamiast 2.9.10. Wygląd strony się nie zmienia.
+
+Szybkość i konsola (wątek „Przyspieszenie strony”):
+- na telefonie nagłówek jest gotowy od pierwszej klatki (przed zdjęciem i tytułem, bez skoku),
+- każdy obrazek ma kształt swojego pliku przed wczytaniem, więc znikają uwagi Chrome „Lazy-loaded
+  images should have explicit dimensions”,
+- wymiary obrazków dodane przez Codexa w 2.9.9 nie zmieniają już ich rozmiarów (np. odznaka
+  Trustindex na stronach logo wygląda jak w 2.9.8),
+- logo w nagłówku wczytuje się z małych plików (ok. 110 KB mniej na każdej stronie na komputerze),
+- preload zwykłej czcionki wraca na wpisy, które jej używają.
+
+Nowe artykuły same docierają do wyszukiwarek (Twoja prośba z 8.10):
+- jak dotąd: każdy opublikowany wpis (ręcznie albo z modułu „Publikacja wpisów”) od razu jest w mapie
+  witryny i w /llms.txt, a po kilku minutach trafia przez IndexNow do Binga (a więc do ChatGPT
+  i Copilota), Yandexa, Seznamu i Navera,
+- nowe: kilka minut po publikacji wtyczka wysyła sygnał do huba WebSub Google, że kanały /feed/
+  i /feed/atom/ mają nowy wpis, a strona /wiedza/ (lista poradników) dostaje świeżą datę w mapie
+  witryny i idzie do IndexNow razem z wpisem. Stan widać w ZP Suite → Widoczność AI → „Google: nowe
+  wpisy”,
+- czego nie da się bezpiecznie zautomatyzować: prośby „Poproś o zindeksowanie” w Search Console
+  (Google nie daje do niej dostępu automatom dla zwykłych artykułów) i dodawania wpisów do katalogów
+  stron (Google traktuje to jako spam linkowy i może obniżyć pozycje).
+
+Po wgraniu:
+1. Wejdź raz na dowolną stronę.
+2. Napisz w wątku „wgrane”.

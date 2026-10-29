@@ -1,0 +1,7 @@
+Zaprojektowani Suite v2.2.642
+
+Studio Wyceny — karty usług:
+- efekt swobodnego wystawania mockupów ponad kartę działa teraz także na tabletach i desktopie,
+- wyłączone przycinanie overflow / contain / clip-path na wszystkich szerokościach,
+- zachowane floatowanie i przestrzenny cień,
+- grafika w karcie „Logo i branding” powiększona o 20%.

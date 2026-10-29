@@ -1,0 +1,6 @@
+Zaprojektowani Suite 2.2.820
+
+- /sklepy-internetowe-katowice/: obniżono cały rząd kart pakietów wraz ze zdjęciami zespołu.
+- Desktop: zwiększony odstęp pod paskiem „Każdy sklep w standardzie”, dzięki czemu pasek nie nachodzi na twarze Marty, Mateusza i Stanisława.
+- Tablet / węższy desktop: analogicznie zwiększony odstęp nad kartami.
+- Bez zmian w rozmiarze zdjęć, kart i pełnym zakresie pakietów.

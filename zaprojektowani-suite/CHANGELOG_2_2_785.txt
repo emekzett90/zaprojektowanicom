@@ -1,0 +1,7 @@
+Zaprojektowani Suite 2.2.785
+
+- Dodano dyskretny link „Ustawienia cookies” w dolnym pasku prawnym stopki.
+- Link otwiera centrum ustawień Cookiebot przez Cookiebot.show(); jeśli metoda show() nie jest dostępna, używany jest fallback Cookiebot.renew().
+- Privacy Trigger / pływający przycisk Cookiebot może pozostać wyłączony w panelu Cookiebot.
+- Link wizualnie dziedziczy istniejący styl linków prawnych w stopce — bez nowego ciężkiego CSS i bez dodatkowych bibliotek.
+- Dodano tłumaczenie PL/EN „Ustawienia cookies” / „Cookie settings”, również dla przełączania języka bez przeładowania.

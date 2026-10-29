@@ -1,0 +1,114 @@
+ZAPROJEKTOWANI SUITE 3.2.41 — CASE STUDIES: FOTOGRAFIE I UKŁAD REDAKCYJNY
+Data: 18.10.2026
+
+BAZA
+Jedyną bazą tej wersji jest ostatni ZIP zaprojektowani-suite-3.2.40-portfolio-mapa-case-study.zip.
+SHA-256 bazy: 50d1b94329de7114dac29110aa1c739b02f77e6f6f56a9bcb02a4ee29aaf79bb.
+To nowe wydanie 3.2.41, nie kolejna różna paczka pod tym samym numerem 3.2.40.
+
+WYKONANE ZMIANY
+1. SAME ZDJĘCIA
+Zaokrąglone rogi są ustawione bezpośrednio na obrazach, nie tylko na zewnętrznych widgetach.
+Portrety klientów pozostają w case study. Mają maksymalnie 400 px szerokości na desktopie,
+360 px na mniejszych ekranach oraz promień rogów 26/24 px. Zachowują proporcje fotografii.
+Przykład: portret w Apartamencie Piękna znajduje się obok opisu oferty, zespołu i kontaktu.
+
+2. TREŚĆ I SCREENSHOTY
+Usunięto osobne, powtarzające się pasy „Interfejs z bliska” / „Detale, które budują całość”.
+Zdjęcia są powiązane z treścią konkretnych rozdziałów; obok znajduje się rzeczywisty opis
+zakresu i decyzji, nie pojedynczy podpis skopiowany pod obrazem.
+Każdy z czterech projektów wykorzystuje jeden wybrany screenshot funkcjonalny zamiast dwóch.
+Pozostałe pliki źródłowe są zachowane w paczce, lecz nie mnożą obrazów w prezentacji.
+Screenshot można otworzyć w nowej karcie w pełnej rozdzielczości.
+
+3. ALTIORA LINEA
+Puste tło ze znakiem nie jest już renderowane jako osobny materiał realizacji.
+Zamiast niego używane są istniejące fotografie wnętrza i materiałów ze strony klienta,
+w zestawieniu z opisem kierunku wizualnego oraz katalogów.
+Okładka projektu pozostaje adresem wskazanym przez użytkownika.
+Widget flag PL/EN/IT zachowano. Demonstracja lokalnie przełącza treść bez przeładowania.
+
+4. SZEROKOŚCI I TŁA
+Wspólny maksymalny kontener sekcji: 1440 px. Zdjęcia nie są rozszerzane do 1750 px:
+kolumna materiałów do 680 px, screenshoty do 640 px, portrety do 400 px.
+Kolejne rozdziały mają rytm dwóch jasnych sekcji i jednej z gradientem navy–czerń.
+Pozostałe sekcje zachowują charakter obecnego projektu.
+
+5. KONTAKT
+Usunięto oddzielne duże zdjęcie zespołu nad widgetem szybkiego kontaktu oraz kolejny
+powtarzający się blok osoby przy końcowym CTA. Natywny widget kontaktu nie jest przepisywany;
+jego małe avatary i obsługa formularza pozostają po stronie istniejącej funkcji Suite.
+Zdjęcia osób w hero nie zostały usunięte.
+
+6. WŁAŚCIWE BIAŁE KARTY
+Naprawiono .zpArticleNew__steps > section, czyli dokładne „Poznaj markę”, „Odkryj ofertę”,
+„Sprawdź materiały” wskazane na screenie, a nie tylko podobny komponent journey.
+Nagłówki #071426, tekst #46576e, numery białe na granatowym kole. Uwzględniono Safari text-fill.
+Jeżeli treść zawiera te karty, drugi zestaw opisujący tę samą ścieżkę nie jest dokładany.
+
+7. INDEKS CASE STUDIES
+Przebudowano renderer indeksu i kart, nie tylko CSS:
+- skróty do czterech typów projektów;
+- osobny blok sposobu pracy na gradientowym tle;
+- wiersze obraz + opis + wybrane elementy zakresu + oznaczenia technologii + jednoznaczne CTA;
+- logotypy klientów z separatorami, powiększeniem i białą wersją na hover w hero;
+- uporządkowane pola technologii, zachowane prawdziwe znaki WordPress/WooCommerce/Elementor;
+- imoje / ING podłączone do znaku opublikowanego przez oficjalną wtyczkę na WordPress.org.
+Logo imoje: https://ps.w.org/imoje/assets/icon-256x256.png?rev=2540032.
+Przy wejściu administratora do panelu wtyczka próbuje zapisać ten PNG lokalnie w uploads/
+zp-suite-assets, po sprawdzeniu typu i wielkości pliku. Nie pobiera go serwerowo podczas
+renderowania strony publicznej. Przy braku połączenia pozostaje oficjalny URL; próba admin
+powtarza się najwcześniej po 24 h. Pobranie tego zasobu w środowisku roboczym nie powiodło się,
+więc nie potwierdzono jego lokalnego cache na docelowym WordPressie.
+
+8. OSOBNA PODSTRONA REALIZACJE
+Filtr obsługuje teraz zarówno web, jak i realizacje. Altiora jest dodawana na pierwszej pozycji
+bez duplikatu, z grafiką, opisem, katalogami, WordPress, PL/EN/IT i kontaktem.
+Istniejący niepusty opis, grafika i zakres zapisane w CMS mają pierwszeństwo.
+Wpis jawnie ukryty w CMS (visible=0) nie jest ponownie dodawany do osobnych Realizacji.
+W natywnym szablonie dodano gradientowy blok prowadzący do publicznego /case-studies/.
+Jeśli indeks nie jest opublikowany, blok się nie pojawia zamiast tworzyć niedziałający link.
+
+9. OPINIE WŁAŚCICIELI
+Jest moduł nad pierwszym rozdziałem i panel Narzędzia → Opinie case studies.
+Podpis wykorzystuje istniejącą czcionkę ZP Review Signature, jak na głównej.
+Nie wpisano wymyślonych opinii. Nie znaleziono kompletu autentycznych, zatwierdzonych wypowiedzi
+właścicieli dla czterech projektów. Sekcja jest widoczna po wpisaniu autora/tekstu i zaznaczeniu
+potwierdzenia publikacji. Można podać źródło i zatwierdzone tłumaczenie EN.
+To gotowa obsługa i oprawa; NIE deklaracja uzupełnienia nieprzekazanych cytatów.
+
+CO ZOSTAŁO ZACHOWANE
+Mapa głównej, automatyczny kontrast chipów, NEW, wcześniejsze artykuły/SEO/Rank Math,
+8 branż, hero kontaktu, import i auto-publikacja Altiora, oraz wcześniejsze mechanizmy
+mobilnego hero/headera i optymalizacji pierwszego ekranu. Ta wersja nie zmienia treści postów
+w bazie ani routingu; istniejące migracje wcześniejszej wersji nadal są jej częścią.
+
+TESTY W TEJ WERSJI
+705 plików PHP: php -l bez błędów.
+2 nowe arkusze CSS: parsowanie bez błędów.
+60 widoków lokalnych: 5 stron × PL/EN × 360,390,768,1100,1440,1920 px.
+Sprawdzono brak poziomego przepełnienia, pojedynczy H1, odstępy mobilne, promienie samych
+zdjęć, ograniczenia portretów, kontrast właściwych kart, brak powtórzonej ścieżki i brak
+dużego zdjęcia nad kontaktem. Wynik: brak wykrytych błędów w tej próbie.
+3 przełączenia języka podglądu Altiora: zmiana tekstu, brak zmiany URL.
+36 kontroli logiki: oba tryby portfolio, idempotencja, zachowanie edycji CMS, ukryte projekty,
+link do publicznego indeksu, gate zatwierdzenia opinii, escaping cytatu, miejsce modułu opinii.
+ZIP: sprawdzona integralność i zachowanie wszystkich plików źródłowych.
+
+OGRANICZENIA — NIE POMIJAĆ
+Testy są lokalnym renderem PHP z adapterami WordPressa i nagłówkiem testowym, nie całą instalacją
+produkcji. Skorzystano z faktycznych lokalnych grafik, arkuszy i skryptu demonstracji języków.
+Zewnętrzne fotografie/logotypy, których pobranie nie było możliwe, nie były potwierdzane
+na serwerze; w teście geometrii użyto oznaczonych pól kontrolnych o ich wymiarach.
+Załączone podglądy portretu i rezerwacji pokazują prawdziwe lokalne obrazy, nie te pola kontrolne.
+Natywne wysyłanie formularza, fizyczny iPhone i produkcyjne Lighthouse nie były testowane.
+Późne malowanie/TTFB pozostaje NIEPOTWIERDZONYM zadaniem: ta paczka nie udaje usunięcia
+całej przyczyny białego ekranu. Nie wyłączono zgód/analityki i nie dodano ukrywającego loadera.
+
+INSTALACJA
+Zachowaj kopię wtyczki i bazy. W WordPressie wgraj ZIP, zastępując obecną wtyczkę.
+Wróć do panelu i sprawdź 3.2.41. Istniejący mechanizm Suite odświeża własny cache po zmianie
+wersji. Wyczyść osobno dodatkowy cache hostingu/CDN, jeżeli działa.
+Sprawdź /case-studies/, cztery realizacje i /realizacje/.
+Opinie: Narzędzia → Opinie case studies; bez gotowych wypowiedzi nie ma pustych bloków publicznych.
+Powrót: przywróć poprzedni ZIP i odśwież cache; zachowaj backup bazy ze względu na stare migracje.

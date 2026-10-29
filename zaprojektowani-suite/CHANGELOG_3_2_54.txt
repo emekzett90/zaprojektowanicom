@@ -1,0 +1,69 @@
+Zaprojektowani Suite 3.2.54 — 22.10.2026
+
+Podstawa: 3.2.53 (gałąź suite-3.2.53 @ 53030db) i siedem zmian, które Mat zatwierdził 22.10 w wątkach projektu.
+Każda gałąź weszła bez zmian, przez commit scalający. Aktualizacja nie kasuje żadnych danych i nie cofa żadnej zmiany
+Codexa.
+
+Realizacje (PR #45, punkty 4 i 5 z 21.10; „Tak, jak na zrzutach”)
+- /realizacje/ na komputerze i tablecie: każda karta projektu ma miniaturę 4:3 jak karty logo, więc karta strony
+  (np. Altiora Linea) nie jest już niższa od sąsiednich. Telefony bez zmian.
+- Pod usługami w karcie małe szare znaki technologii (WordPress, WooCommerce, Elementor, Figma, Google Analytics 4
+  i inne), w kolorze po najechaniu; najwyżej 6, reszta jako „+N”.
+- W oknie projektu sekcja „Technologie projektu” (znak, nazwa, rola w projekcie) i przycisk „Pełny opis realizacji”
+  przy projektach z opisem case study. Projekty bez potwierdzonych technologii nie mają znaków.
+
+Sklepy (PR #46, punkty 9 i 10; „ok”)
+- /tworzenie-sklepow-internetowych/: poradnik „Od pomysłu na ofertę do gotowego sklepu online” to 7 zwijanych kart;
+  na komputerze pierwsza otwarta, na telefonie wszystkie zamknięte. Cały tekst zostaje w HTML strony.
+- FAQ sklepów wygląda jak FAQ stron i logo (Mateusz po lewej, otwarcie pytania zamyka poprzednie): 16 pytań na
+  /tworzenie-sklepow-internetowych/, 7 na /sklepy-internetowe-katowice/ z kartą pod listą. Pytania, odpowiedzi i dane
+  FAQ dla Google bez zmian. FAQ zmienione w CMS innym tekstem zostaje takie, jak zapisano.
+
+Studio wyceny (PR #47, punkt 12; „ok”)
+- /studio-wyceny/: pod wyborem usługi stoi „Szybki kontakt” (ten sam krótki formularz co pod pakietami na stronach
+  usług), dalej formularz kontaktowy, a „Cennik i wycena” na samym dole. /en/quote-studio/: „Quick contact” pod
+  wyborem usługi. Otwarty brief chowa szybki kontakt jak resztę strony.
+- Włącznik: Zaprojektowani Suite → Widoczność sekcji → krótki formularz na stronach usług (obejmuje też Studio).
+
+Strona główna i liczby opinii (PR #48, punkty 6–8; „ok” z warunkiem, że Mateusz i odsłanianie na komputerze zostają)
+- Pod hero trzy karty: liczba realizacji, średnia 4,9/5 z logo Trustindex i liczba opinii w Trustindex (dwie ostatnie
+  prowadzą do profilu Trustindex). Powyżej 1500 px Mateusz wjeżdża i logotypy odsłaniają się jak dotąd, w tym samym
+  miejscu.
+- Pakiety na głównej: zdjęcia ekipy wyżej, przełącznik Strona/Sklep nie jest zasłonięty (na telefonie przełącznik niżej).
+- Ocena i liczba opinii na całej stronie z jednego źródła: 150 opinii i 4,9 (po angielsku 4.9), także w stopce,
+  w Realizacjach i na stronach Katowice; licznik „lat doświadczenia” w hero sklepów pokazuje 10+ także bez skryptu.
+
+Wpisy (PR #41 i #39, wątek artykułów; „Oba”)
+- Każdy wpis: etykiety szablonu („Najważniejsze zagadnienia”, tytuły w panelu bocznym, „Powiązane poradniki”,
+  „Rozwiń ten temat”) wyglądają tak samo, ale nie są już nagłówkami H2; H2 zostają tylko w treści wpisu.
+- Moduł „Teksty i nowe zdjęcia”: nowe zadania dostają nagłówki bloków odpowiedzi, listy kontrolnej, FAQ i zachęty
+  napisane pod temat wpisu zamiast stałych. Zadania już rozpoczęte bez zmian.
+
+Strony Katowice (PR #42, punkt 02 audytu; „ok”)
+- /strony-internetowe-katowice/ i /sklepy-internetowe-katowice/: pod portfolio sekcja o studiu (ul. Modelarska 18/2,
+  godziny, „Wyznacz trasę”, telefon) i cztery karty o tym, co dostaje firma z Katowic. Sekcja z mapą ma nagłówek
+  „Spotkajmy się w Katowicach. Albo online.” i lokalny opis.
+- /sklepy-internetowe-katowice/: nagłówki pakietów, portfolio i procesu mają własne brzmienie zamiast kopii ze strony
+  ogólnopolskiej. Strony ogólnopolskie i angielskie bez zmian.
+
+Po aktualizacji
+- Cache HTML Suite odświeża się raz przy pierwszym otwarciu strony (tylko własne kopie Suite, nigdy LiteSpeed ani
+  CDN), żeby nowy HTML było widać od razu.
+
+Zmienione pliki względem 3.2.53:
+- PR #45: nowe includes/realizacje-tech-3250.php i assets/css/realizacje-tech-3250.css,
+  assets/js/blocks/realizacje-page.js, templates/realizacje-page.php, zaprojektowani-suite.php (jedna linia ładująca)
+- PR #46: templates/shop-katowice/sections/faq.html, assets/css/blocks/sklepy-katowice(.min).css,
+  assets/js/blocks/sklepy-katowice.js, nowy includes/seo-plan/guide-fold.css, includes/seo-plan/guide.php,
+  includes/seo-plan/service-pages.php, includes/shop-katowice-page.php, assets/css-min.json
+- PR #47: includes/contact-quick.php, includes/seo-plan/studio.php, includes/admin.php
+- PR #48: templates/trust-logos.php, assets/css/blocks/trust-logos(.min).css, home-featured-packages(.min).css,
+  includes/home-refresh-20261016.php, includes/footer-cta.php, includes/seo-plan/stats.php,
+  templates/realizacje-page.php, assets/js/blocks/strony-internetowe-katowice.js, assets/data/reviews-20261016.json,
+  assets/css-min.json, zaprojektowani-languages/data/php/{pl,en}/common.php (dwa wpisy słownika)
+- PR #41: includes/ultimate-seo/ultimate.php; PR #39: includes/admin-content-preparation-20261010.php
+- PR #42: nowy includes/seo-plan/katowice-local.php, includes/seo-plan/service-pages.php, includes/seo-plan/bootstrap.php
+- wydanie: zaprojektowani-suite.php (numer wersji), includes/suite3/upgrade.php (jednorazowe odświeżenie cache),
+  includes/suite3/admin-ui.php (karta „Nowe w wersji”), ten plik
+
+Wersje: Suite 3.2.54, Języki PL/EN 1.1.3, Tłumacz EN 2.0.3.

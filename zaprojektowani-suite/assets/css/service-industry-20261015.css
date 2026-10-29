@@ -1,0 +1,88 @@
+/* The first scope card on all eight industry pages. Keep the full 640x512 / 1100x880
+   photograph in normal flow: no cover crop, top mask, overlay or face darkening. */
+html body #zp-strony-internetowe-katowice #zakres .scope-card.scope-card--photo {
+  --zp-ind-card-pad: clamp(24px, 2.2vw, 32px);
+  display: flex;
+  flex-direction: column;
+  padding: var(--zp-ind-card-pad);
+  border-color: rgba(48, 83, 121, .5);
+  box-shadow: 0 12px 38px rgba(7, 17, 31, .055);
+}
+html body #zp-strony-internetowe-katowice #zakres .scope-card--photo > .scope-num {
+  color: rgba(255, 255, 255, .7);
+  line-height: 1.5;
+}
+html body #zp-strony-internetowe-katowice #zakres .scope-card--photo > .scope-icon {
+  flex: 0 0 auto;
+  width: 48px;
+  height: 48px;
+  margin-top: 24px;
+  border-radius: 15px;
+}
+html body #zp-strony-internetowe-katowice #zakres .scope-card--photo > h3 {
+  margin-top: 26px;
+  max-width: 22ch;
+  color: #fff;
+  font-size: clamp(27px, 2.35vw, 38px);
+  line-height: 1.15;
+  letter-spacing: -.04em;
+}
+html body #zp-strony-internetowe-katowice #zakres .scope-card--photo > p {
+  max-width: 52ch;
+  margin-top: 16px;
+  color: rgba(255, 255, 255, .8);
+  font-size: 14px;
+  line-height: 1.75;
+}
+html body #zp-strony-internetowe-katowice #zakres .scope-card--photo > .scope-watermark {
+  display: none;
+}
+html body #zp-strony-internetowe-katowice #zakres .scope-card--photo > .zpIndScope {
+  position: relative !important;
+  display: block;
+  flex: 0 0 auto;
+  min-width: 0;
+  min-height: 0;
+  height: auto;
+  margin: 28px calc(-1 * var(--zp-ind-card-pad)) calc(-1 * var(--zp-ind-card-pad));
+  overflow: hidden;
+  border-top: 1px solid rgba(255, 255, 255, .13);
+  border-radius: 0 0 27px 27px;
+  background: #102a4f;
+  -webkit-mask-image: none !important;
+  mask-image: none !important;
+}
+html body #zp-strony-internetowe-katowice #zakres .zpIndScope::before,
+html body #zp-strony-internetowe-katowice #zakres .zpIndScope::after {
+  content: none !important;
+  display: none !important;
+}
+html body #zp-strony-internetowe-katowice #zakres .zpIndScope > img {
+  position: static !important;
+  inset: auto !important;
+  display: block;
+  width: 100% !important;
+  max-width: 100% !important;
+  height: auto !important;
+  max-height: none !important;
+  aspect-ratio: 5 / 4;
+  object-fit: contain !important;
+  object-position: center !important;
+  opacity: 1 !important;
+  transform: none !important;
+  filter: none !important;
+  mix-blend-mode: normal !important;
+  -webkit-mask-image: none !important;
+  mask-image: none !important;
+}
+@media (max-width: 680px) {
+  html body #zp-strony-internetowe-katowice #zakres .scope-card.scope-card--photo {
+    --zp-ind-card-pad: 24px;
+  }
+  html body #zp-strony-internetowe-katowice #zakres .scope-card--photo > h3 {
+    font-size: clamp(25px, 6.6vw, 30px);
+  }
+  html body #zp-strony-internetowe-katowice #zakres .scope-card--photo > .zpIndScope {
+    margin-top: 24px;
+  }
+}

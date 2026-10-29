@@ -1,0 +1,36 @@
+Zaprojektowani Suite 3.2.62 — 22.10.2026
+
+Podstawa: 3.2.61 (gałąź suite-3.2.61 @ a1e0a09) i drugi commit gałęzi cache-czyszczenie-3.2.50 @ e9a033c (PR #53),
+scalony bez zmian przez commit scalający. To dokończenie poprawki z 3.2.57 („cache czyści się tylko przy zmianach
+widocznych na stronie”) po odczycie logu odświeżeń na iMacu 22.10.
+Aktualizacja nie kasuje żadnych danych i nie cofa żadnej zmiany Codexa. Wygląd stron się nie zmienia.
+
+Rzadsze czyszczenie cache przy pracy w panelu (PR #53)
+- Log na stronie „Cache HTML” pokazał 54 odświeżenia w 24 godzinach. Każde unieważnia kopie wszystkich stron, więc
+  kolejni goście czekają na pełne zbudowanie strony. 12 z 30 ostatnich nie zmieniało żadnej strony:
+  - 8 × wgranie zdjęcia do biblioteki mediów (_wp_attached_file),
+  - 3 × wynik SEO Rank Math (rank_math_seo_score),
+  - 1 × zdjęcia z treści, które Rank Math zapamiętuje przy wyświetleniu strony (rank_math_og_content_image).
+- Teraz te zapisy nie czyszczą cache:
+  - nowego zdjęcia w bibliotece nie ma jeszcze na żadnej stronie; strona, na której się pojawi, odświeża cache przy
+    zapisie. Edycja albo podmiana zdjęcia, które już jest w bibliotece, dalej odświeża.
+  - wynik SEO Rank Math widać tylko w panelu. Gdyby w Rank Math włączyć „Frontend SEO Score”, wynik byłby na stronie
+    i wtedy dalej odświeża.
+  - zdjęcia z treści Rank Math zapisuje z tej samej treści, którą strona właśnie pokazuje.
+  - licznik użycia widżetów Elementora (_elementor_controls_usage, widoczny tylko w Menedżerze elementów) też już nie
+    odświeża. 6 wierszy z nim w logu to były zapisy stron w Elementorze; te dalej odświeżają cache, bo zmieniają stronę,
+    a log pokaże przy nich zapis wpisu zamiast licznika.
+- Bez zmian: publikacja, zapis opublikowanej strony, tryb edycji Elementora, tytuły i opisy Rank Math, zdjęcie
+  wyróżniające i wszystkie inne zapisy odświeżają cache jak dotąd.
+
+Po aktualizacji
+- Bez osobnego kroku odświeżenia cache (HTML stron bez zmian); samo wgranie wtyczki odświeża cache jak zawsze.
+  Drop-in advanced-cache.php bez zmian względem 3.2.60 (sha256 8576d87f…).
+- Wgranie chronione jak przy 3.2.61: przez kilka sekund podmiany plików strony spoza cache odpowiadają kodem 503
+  z prośbą o powrót za 30 s.
+
+Zmienione pliki względem 3.2.61:
+- PR #53: includes/cache-20261009.php
+- wydanie: zaprojektowani-suite.php (numer wersji), includes/suite3/admin-ui.php (karta „Nowe w wersji”), ten plik
+
+Wersje: Suite 3.2.62, Języki PL/EN 1.1.3, Tłumacz EN 2.0.3.

@@ -1,0 +1,9 @@
+Zaprojektowani Suite 2.2.740
+
+- Logo & Branding Katowice: dodano zdjęcia zespołu nad trzema głównymi pakietami.
+- Logo Startowe: Stanisław.
+- Mini Branding: Marta.
+- Branding Premium: Mateusz.
+- Sylwetki wychodzą ponad karty i miękko wtapiają się od dołu.
+- Dodano osobny reveal postaci oraz bezpieczne odstępy desktop/tablet/mobile.
+- Zachowano wszystkie poprawki z 2.2.739.

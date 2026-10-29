@@ -1,0 +1,7 @@
+Zaprojektowani Suite 2.2.726
+
+Realizacje hero:
+- obniżono i bardziej wtopiono słowo tła "realizacje";
+- zdjęcie zespołu zmniejszono o kolejne ok. 7% i osadzono niżej;
+- zwiększono efekt wtopienia od dołu;
+- dodano certyfikat społecznego dowodu słuszności Trustindex 5.0/5 z 51 opiniami i logo Trustindex.

@@ -1,0 +1,22 @@
+Zaprojektowani Suite 2.2.713
+
+WIEDZA / SEO HUB
+- Przeniesiono opis „Baza wiedzy Zaprojektowani” pod kafelki głównych tematów.
+- Kafelki tematów liczą teraz unikalne opublikowane artykuły zamiast sumować term->count z aliasów kategorii.
+- Zachowano crawlable linki HTML do kategorii i usług.
+
+ARCHIWA KATEGORII
+- Dodano nowy premium szablon kategorii zgodny wizualnie z /wiedza/.
+- Jasny layout, breadcrumbs, H1, opis kategorii, liczba poradników, nawigacja między tematami, siatka artykułów, paginacja i CTA.
+- Główna kategoria klastra pokazuje również wpisy ze starych aliasów kategorii.
+- Stare aliasy kategorii przekierowują 301 do głównej kategorii klastra, aby ograniczyć duplikację archiwów.
+- Dodano ItemList JSON-LD dla widocznych wpisów na stronie kategorii.
+- Dodano bezpieczne fallbacki Meta Title i Meta Description dla Rank Math, bez nadpisywania ręcznie ustawionych metadanych termu.
+
+CZYTANIA ARTYKUŁÓW
+- Wdrożono realny licznik kwalifikowanych czytań (_zp_post_reads).
+- Czytanie nalicza się po zaangażowaniu: min. 15 s + 30% przewinięcia albo po 45 s aktywnego pobytu.
+- Boty i typowe crawlery są pomijane.
+- Ten sam użytkownik / artykuł jest deduplikowany przez 12 godzin po stronie przeglądarki i serwera.
+- Jeśli istnieją stare dane _zp_post_views, są używane jako wartość początkowa/fallback.
+- Karty na /wiedza/ oraz kategoriach pokazują teraz „czytania”, nie martwy licznik wyświetleń.

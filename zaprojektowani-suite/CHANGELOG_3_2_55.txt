@@ -1,0 +1,42 @@
+Zaprojektowani Suite 3.2.55 — 22.10.2026
+
+Podstawa: 3.2.54 (gałąź suite-3.2.54 @ bef0689) i zmiany z wątku „Odświeżenie podstron branżowych” (gałąź
+branze-3.2.50 @ 615491e, PR #38), które Mat zatwierdził 22.10 („ok”, z prośbą o mniejsze zdjęcie i więcej miejsca
+dla nagłówka w hero /tworzenie-stron-internetowych/). Gałąź weszła bez zmian, przez commit scalający. Aktualizacja nie
+kasuje żadnych danych i nie cofa żadnej zmiany Codexa.
+
+Strony branżowe (osiem stron, np. /strony-internetowe-dla-kancelarii/)
+- „Co projektujemy”: ciemna karta ze zdjęciem branży zostaje, pozostałe pięć punktów to lista z cienką linią (numer,
+  tytuł, tekst); na telefonie sekcja jest ok. 700 px krótsza.
+- „Poradnik”: pierwszy rozdział zostaje w ciemnej karcie, dalsze czyta się jak artykuł, z numerem rozdziału na
+  marginesie i cienką linią między rozdziałami.
+
+Karty case study „Od identyfikacji do własnego systemu” (strony i logo, np. /tworzenie-stron-internetowych/ nad FAQ)
+- Jak karty na /realizacje/: jasna ramka bez cienia, etykieta „Case study” w prawym rogu (nie zasłania już logo
+  Siemianowski), typ projektu nad nazwą, lista z haczykami i jasny przycisk „Poznaj realizację”.
+
+Hero /tworzenie-stron-internetowych/ (i /en/website-development/), komputer od 1101 px
+- Laptop z plakietkami o 14% mniejszy (16% przy 1441–1919 px), w prawym dolnym rogu. Polski nagłówek w trzech
+  liniach („Tworzenie i projektowanie / stron internetowych / dla firm”), tekst co najmniej 51 px od laptopa
+  (po angielsku 74 px). Telefony bez zmian.
+
+Cztery zdania pod frazy z Google (po polsku, także w danych FAQ dla Google; angielskie strony bez zmian)
+- /strony-internetowe-dla-lekarzy/: pytanie „Czy robicie stronę internetową dla psychologa lub psychoterapeuty?”
+  i nagłówek „FAQ / strony dla lekarzy”.
+- /strony-internetowe-dla-deweloperow/: „Co musi zawierać strona dla dewelopera po zmianie przepisów?”.
+- /strony-internetowe-dla-kancelarii/: wstęp poradnika „Jak zaplanować stronę internetową dla prawnika lub
+  kancelarii, która…”.
+
+Po aktualizacji
+- Cache HTML Suite odświeża się raz przy pierwszym otwarciu strony (tylko własne kopie Suite, nigdy LiteSpeed ani
+  CDN), żeby nowy HTML było widać od razu. Plik industries.css ma w adresie datę pliku, więc przeglądarki pobiorą
+  nowe style same.
+
+Zmienione pliki względem 3.2.54:
+- PR #38: assets/css/blocks/industries.css, assets/css/case-studies-20261015.css, includes/seo-plan/industries.php,
+  includes/seo-plan/service-pages.php (nagłówek), includes/seo-plan/data/pages.php (cztery zdania), słowniki
+  zaprojektowani-languages (data/json/{pl,en}, data/php/{pl,en}/p, data/php/en/seo-271.php)
+- wydanie: zaprojektowani-suite.php (numer wersji), includes/suite3/upgrade.php (jednorazowe odświeżenie cache),
+  includes/suite3/admin-ui.php (karta „Nowe w wersji”), ten plik
+
+Wersje: Suite 3.2.55, Języki PL/EN 1.1.3, Tłumacz EN 2.0.3.

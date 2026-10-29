@@ -1,0 +1,12 @@
+Zaprojektowani Suite 2.2.671
+
+FAQ — kompleksowe dopracowanie wizualne:
+- usunięte niebieskie, cieniowane tło podstrony,
+- usunięty duży watermark „FAQ” oraz dekoracyjny napis w dolnym CTA,
+- zmniejszone ikony kategorii, filtrów i przycisków,
+- usunięte cienie kart, wyszukiwarki, CTA i elementów FAQ,
+- wyeliminowane różowe / obce stany hover przez twarde, lokalne style navy,
+- ujednolicone obramowania, promienie, odstępy i typografia,
+- dopracowane akordeony, wyszukiwarka, filtry, panel kategorii i CTA,
+- poprawiona responsywność na tabletach i telefonach,
+- zachowane działanie wyszukiwarki, filtrów, kategorii, akordeonów i FAQ Schema.

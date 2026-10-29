@@ -1,0 +1,8 @@
+Zaprojektowani Suite 2.2.783
+
+- /realizacje/: poprawione karty projektów logo / branding.
+- Zamiast małego kwadratu na szerokim, jasnym tle grafiki brandingowe są teraz pokazane jako duży, estetyczny kadr 4:3.
+- Natalia Arciszewska i Zgórecki Nieruchomości wypełniają kartę bez szarych pasów i bez efektu „miniatury w miniaturze”.
+- Na telefonach projekty brandingowe przechodzą na pełny format 1:1.
+- Karty w siatce mają równą wysokość i przyciski „Zobacz case study” są wyrównane do dołu, dzięki czemu rząd wygląda spójniej obok realizacji stron.
+- Wygląd zdjęć realizacji WWW / sklepów pozostaje bez zmian.

@@ -1,0 +1,344 @@
+{
+  "/strony-internetowe/jak-stworzyc-strone-internetowa/": {
+    "topic": "strona internetowa dla firmy",
+    "service": "/tworzenie-stron-internetowych/",
+    "button": "Wyceń stronę dla firmy",
+    "cases": [
+      {
+        "title": "Podstrony zamiast jednej długiej listy",
+        "image": "podstrony-strony-firmowej-okladka.webp",
+        "alt": "GRAVIA — prezentacja podstron z portfolio Zaprojektowani",
+        "text": "Wizualizacja GRAVIA pokazuje, jak podzielić ofertę na osobne widoki. W swoim projekcie zacznij od rozpisania usług i pytań, które pojawiają się przed kontaktem. Każda podstrona powinna mieć własny cel, a nie tylko inną fotografię.",
+        "link": "/realizacje/"
+      },
+      {
+        "title": "Kiedy strona potrzebuje sklepu?",
+        "image": "papeterio-laptop-telefon.webp",
+        "alt": "Papeterio — projekt sklepu na komputerze i telefonie",
+        "text": "Papeterio to inny scenariusz niż klasyczna strona usługowa: obok wizerunku trzeba zaplanować prezentację produktów i drogę do zamówienia. Taki zakres warto ustalić przed wyceną, zamiast dokładać sprzedaż dopiero po zaprojektowaniu całej strony.",
+        "link": "/sklepy-internetowe/"
+      }
+    ],
+    "table": [
+      [
+        "Firma zbiera zapytania",
+        "Oferta, realizacje i prosty kontakt.",
+        "Czy klient rozumie, o co może zapytać?"
+      ],
+      [
+        "Firma sprzedaje produkty",
+        "Karty produktów, warunki zakupu i zamówienie.",
+        "Czy zakres obejmuje obsługę sprzedaży?"
+      ],
+      [
+        "Firma pracuje w kilku językach",
+        "Spójne wersje treści i nawigacji.",
+        "Które języki są potrzebne od startu?"
+      ]
+    ]
+  },
+  "/logo-branding/identyfikacja-wizualna-firmy/": {
+    "topic": "identyfikacja wizualna firmy",
+    "service": "/identyfikacja-wizualna/",
+    "button": "Zamów identyfikację marki",
+    "cases": [
+      {
+        "title": "Ta sama marka na papierze i w kontakcie",
+        "image": "wizytowka-i-papier-firmowy-kancelarii.webp",
+        "alt": "Kancelaria Siemianowski — wizytówka i papier firmowy",
+        "text": "Wizytówka i papier firmowy z realizacji Siemianowski pokazują system w codziennym zastosowaniu. Nie wystarczy przenieść logo: trzeba zachować hierarchię danych, czytelność i proporcje także przy innej ilości treści.",
+        "link": "/realizacje/"
+      },
+      {
+        "title": "Spójność nie oznacza identycznego projektu",
+        "image": "wizytowki-jasne-i-ciemne.webp",
+        "alt": "Przykłady jasnych i ciemnych materiałów identyfikacji z portfolio Zaprojektowani",
+        "text": "Jasny projekt i ciemna oprawa mogą korzystać z podobnej dyscypliny: ograniczonej palety, dopracowanego składu i czytelnego znaku. Wybór kierunku powinien wynikać z charakteru konkretnej marki, a nie z kopiowania popularnej estetyki.",
+        "link": "/projektowanie-logo/"
+      }
+    ],
+    "table": [
+      [
+        "Logo",
+        "Wariant główny, uproszczony i na różne tła.",
+        "Mały rozmiar i jednobarwny druk."
+      ],
+      [
+        "Typografia",
+        "Hierarchia tytułów, opisów i danych.",
+        "Długi tekst i cyfry w realnym materiale."
+      ],
+      [
+        "Materiały",
+        "Szablony do faktycznych zastosowań.",
+        "Czy zespół potrafi edytować treść?"
+      ]
+    ]
+  },
+  "/logo-branding/rebranding-firmy/": {
+    "topic": "rebranding firmy",
+    "service": "/identyfikacja-wizualna/",
+    "button": "Omów rebranding firmy",
+    "cases": [
+      {
+        "title": "Najpierw przełóż markę na jej punkty styku",
+        "image": "kancelaria-druk-i-ekran.webp",
+        "alt": "Kancelaria Siemianowski — spójna prezentacja na ekranie i w druku",
+        "text": "Pokazujemy tę realizację jako przykład spójnego wdrożenia, nie jako porównanie przed i po rebrandingu. Przy zmianie wizerunku podobną listę zastosowań trzeba przygotować wcześniej: strona, dokumenty, kontakt z klientem i materiały drukowane.",
+        "link": "/realizacje/"
+      },
+      {
+        "title": "Zaplanuj kolejność wymiany materiałów",
+        "image": "od-strategii-do-identyfikacji.webp",
+        "alt": "System identyfikacji Siemianowski na materiałach i stronie",
+        "text": "Nie każdy nośnik da się wymienić tego samego dnia. Ustal, co jest publiczne od premiery, co zostaje w okresie przejściowym i kto pilnuje prawidłowych plików. Spójny zestaw materiałów jest punktem odniesienia dla dalszej komunikacji.",
+        "link": "/identyfikacja-wizualna/"
+      }
+    ],
+    "table": [
+      [
+        "Przed zmianą",
+        "Spis nośników i zakres aktualizacji.",
+        "Nie zamawiaj druku przed zatwierdzeniem plików."
+      ],
+      [
+        "Premiera",
+        "Nowa strona i główne materiały kontaktowe.",
+        "Sprawdź wszystkie widoczne warianty logo."
+      ],
+      [
+        "Po premierze",
+        "Archiwum poprzednich wersji i instrukcje.",
+        "Usuń stare pliki z bieżącego obiegu."
+      ]
+    ]
+  },
+  "/logo-branding/logo-wektorowe-pliki-logo/": {
+    "topic": "logo wektorowe",
+    "service": "/projektowanie-logo/",
+    "button": "Zamów logo z plikami",
+    "cases": [
+      {
+        "title": "Konstrukcja znaku a wariant pliku",
+        "image": "znak-slowny-i-graficzny.webp",
+        "alt": "Kamiński & Sons — warianty słowne i graficzne znaku",
+        "text": "Plansza przedstawia różne wersje znaku. Sama miniatura jest obrazem rastrowym i nie służy do oceny jakości plików wektorowych. Przy odbiorze logo sprawdź osobno dokument źródłowy, kontury i eksporty do konkretnych zastosowań.",
+        "link": "/projektowanie-logo/"
+      },
+      {
+        "title": "Wektor ma działać na realnym nośniku",
+        "image": "logo-pracowni-urody-w-uzyciu.webp",
+        "alt": "Logo pracowni urody pokazane na wizytówce i materiałach papierowych",
+        "text": "Wizualizacja pozwala ocenić czytelność i proporcje znaku w użyciu. Technikę produkcji trzeba jednak uzgodnić z wykonawcą: innego przygotowania może wymagać zwykły druk, a innego tłoczenie lub folia. Nie każdy efekt z mockupu powstaje z tego samego pliku.",
+        "link": "/realizacje/"
+      }
+    ],
+    "table": [
+      [
+        "Na stronę",
+        "SVG lub odpowiedni eksport rastrowy.",
+        "Brak niepotrzebnego tła i dobra czytelność."
+      ],
+      [
+        "Do druku",
+        "PDF wektorowy zgodny ze specyfikacją wykonawcy.",
+        "Kontury, kolorystyka i docelowy wymiar."
+      ],
+      [
+        "Do edycji",
+        "Uzgodniony plik źródłowy.",
+        "Zasady licencji i komplet elementów."
+      ]
+    ]
+  },
+  "/seo-i-konwersja/landing-page-przyklady/": {
+    "topic": "landing page przykłady",
+    "service": "/tworzenie-stron-internetowych/",
+    "button": "Wyceń landing page",
+    "cases": [
+      {
+        "title": "Przykład ścieżki do konsultacji",
+        "image": "strona-z-rezerwacja-wizyt.webp",
+        "alt": "Apartament Piękna — prezentacja strony i ścieżki kontaktu",
+        "text": "Nie przedstawiamy całej strony jako kampanijnego landing page. Jej widoki pomagają jednak przeanalizować drogę do kontaktu: wyjaśnienie oferty, potwierdzenie jakości i następny krok. W stronie kampanii tę drogę zawężasz do jednej konkretnej usługi.",
+        "link": "/realizacje/"
+      },
+      {
+        "title": "Nie myl strony kampanii z pełnym sklepem",
+        "image": "papeterio-laptop-telefon.webp",
+        "alt": "Papeterio — projekt sklepu, punkt odniesienia dla prezentacji oferty",
+        "text": "Pełny sklep daje wiele dróg i kategorii. Landing page powinien ułatwić wybór tej jednej, która odpowiada reklamie. Inspirację układem wykorzystaj selektywnie: nie kopiuj całej nawigacji i wszystkich sekcji do kampanii z jednym celem.",
+        "link": "/kampanie-meta-ads/"
+      }
+    ],
+    "table": [
+      [
+        "Obietnica reklamy",
+        "Ten sam temat i warunki na stronie.",
+        "Czy pierwsze zdanie odpowiada reklamie?"
+      ],
+      [
+        "Argumenty",
+        "Konkretny zakres i wiarygodne przykłady.",
+        "Czy klient rozumie, co otrzyma?"
+      ],
+      [
+        "Działanie",
+        "Jeden wyraźny kolejny krok.",
+        "Czy da się go wykonać z telefonu?"
+      ]
+    ]
+  },
+  "/strony-www/strona-internetowa-dla-malej-firmy/": {
+    "topic": "strona internetowa dla małej firmy",
+    "service": "/tworzenie-stron-internetowych/",
+    "button": "Wyceń stronę małej firmy",
+    "cases": [
+      {
+        "title": "Mała firma nie potrzebuje przypadkowych dodatków",
+        "image": "podstrony-strony-firmowej-okladka.webp",
+        "alt": "GRAVIA — przykład uporządkowanej prezentacji usług",
+        "text": "Nie przywołujemy tego projektu jako deklaracji wielkości firmy. Pokazuje on zasadę przydatną również w małym biznesie: podziel informacje według potrzeb odbiorcy. Na początek ważniejsze są zrozumiałe usługi i kontakt niż funkcje, których nikt nie będzie obsługiwał.",
+        "link": "/realizacje/"
+      },
+      {
+        "title": "Pokaż efekt usługi i następny krok",
+        "image": "strona-z-rezerwacja-wizyt.webp",
+        "alt": "Apartament Piękna — przykład prezentacji oferty i kontaktu",
+        "text": "Wizualizacja łączy charakter marki z opisem usług. W niewielkiej firmie zacznij od materiałów, które naprawdę masz: oferty, własnych zdjęć, danych kontaktowych i odpowiedzi na częste pytania. Zakres rezerwacji lub innych integracji ustal osobno.",
+        "link": "/tworzenie-stron-internetowych/"
+      }
+    ],
+    "table": [
+      [
+        "Potrzebne od startu",
+        "Oferta, dane, kontakt, wersja mobilna.",
+        "Kto aktualizuje te informacje?"
+      ],
+      [
+        "Przydatne warunkowo",
+        "Rezerwacje, katalog, kolejne języki.",
+        "Czy odbiorcy rzeczywiście tego potrzebują?"
+      ],
+      [
+        "Do rozbudowy",
+        "Baza wiedzy i dodatkowe funkcje.",
+        "Czy firma ma zasoby do ich prowadzenia?"
+      ]
+    ]
+  },
+  "/strony-internetowe/rodzaje-stron-internetowych/": {
+    "topic": "rodzaje stron internetowych",
+    "service": "/tworzenie-stron-internetowych/",
+    "button": "Dobierz zakres strony",
+    "cases": [
+      {
+        "title": "Strona firmowa porządkuje ofertę",
+        "image": "podstrony-strony-firmowej-okladka.webp",
+        "alt": "GRAVIA — przykład strony z odrębnymi widokami usług",
+        "text": "W tym modelu odbiorca poznaje firmę i wybiera właściwy obszar oferty. Główne zadanie to doprowadzenie go do zrozumiałej informacji i kontaktu. O liczbie podstron decyduje różnorodność potrzeb, nie chęć uzyskania jak największego menu.",
+        "link": "/tworzenie-stron-internetowych/"
+      },
+      {
+        "title": "Sklep organizuje także zamówienie",
+        "image": "sklep-hurt-i-detal-bransoletka24.webp",
+        "alt": "Bransoletka24 — wizualizacja prezentacji produktów w sklepie",
+        "text": "W sklepie dochodzi warstwa produktów i obsługi zamówienia. Ta różnica wpływa na treści, strukturę oraz zakres wdrożenia. Rozbudowany projekt wizualny nie zmienia jeszcze strony firmowej w sklep — potrzebny jest rzeczywisty proces zakupu.",
+        "link": "/sklepy-internetowe/"
+      }
+    ],
+    "table": [
+      [
+        "Strona firmowa",
+        "Poznanie oferty i kontakt.",
+        "Różne usługi mogą mieć osobne podstrony."
+      ],
+      [
+        "Landing page",
+        "Jedna oferta i jeden cel kampanii.",
+        "Ważna jest zgodność z reklamą."
+      ],
+      [
+        "Sklep internetowy",
+        "Wybór produktu i zamówienie.",
+        "Trzeba zaplanować obsługę sprzedaży."
+      ]
+    ]
+  },
+  "/strony-internetowe/tworzenie-stron-internetowych-profesjonalny-proces-od-strategii-do-wdrozenia/": {
+    "topic": "etapy tworzenia strony internetowej",
+    "service": "/tworzenie-stron-internetowych/",
+    "button": "Omów stworzenie strony",
+    "cases": [
+      {
+        "title": "Zatwierdzaj cele, zanim zatwierdzisz widoki",
+        "image": "podstrony-strony-firmowej-okladka.webp",
+        "alt": "GRAVIA — układ widoków strony firmowej",
+        "text": "Zestaw widoków pozwala rozmawiać o tym, czy struktura pokrywa uzgodniony zakres. Zanim ocenimy zdjęcia i przyciski, trzeba ustalić, po co istnieje każda podstrona i jakie materiały będą potrzebne do jej publikacji.",
+        "link": "/realizacje/"
+      },
+      {
+        "title": "Odbieraj gotową drogę, nie pojedynczą makietę",
+        "image": "strona-z-rezerwacja-wizyt.webp",
+        "alt": "Apartament Piękna — prezentacja widoków związanych z ofertą i wizytą",
+        "text": "Na końcu procesu sprawdza się cały scenariusz: od wejścia na ofertę po kontakt. Dobre zdjęcie makiety nie potwierdza dostarczenia wiadomości z formularza ani poprawności telefonu. Te elementy wymagają osobnych prób na gotowej stronie.",
+        "link": "/tworzenie-stron-internetowych/"
+      }
+    ],
+    "table": [
+      [
+        "Strategia i zakres",
+        "Lista odbiorców, celów i funkcji.",
+        "Uzgodniona odpowiedzialność za materiały."
+      ],
+      [
+        "Projekt i treści",
+        "Widoki oraz realne teksty i zdjęcia.",
+        "Akceptacja przed wdrożeniem."
+      ],
+      [
+        "Wdrożenie i odbiór",
+        "Działające ścieżki oraz próby na telefonie.",
+        "Potwierdzenie kontaktu i edycji treści."
+      ]
+    ]
+  },
+  "/strony-internetowe/strona-internetowa-dla-firmy-co-powinna-zawierac/": {
+    "topic": "co powinna zawierać strona firmowa",
+    "service": "/tworzenie-stron-internetowych/",
+    "button": "Wyceń stronę firmową",
+    "cases": [
+      {
+        "title": "Oferta musi odpowiadać na pytanie klienta",
+        "image": "podstrony-strony-firmowej-okladka.webp",
+        "alt": "GRAVIA — przykład podziału informacji na stronie firmowej",
+        "text": "Zamiast zaczynać od liczby sekcji, zapisz pytania klienta: co robicie, dla kogo, co obejmuje współpraca i jak ją rozpocząć? Przykład podstron pokazuje, jak oddzielić tematy, nie skazując odbiorcy na czytanie wszystkiego po kolei.",
+        "link": "/realizacje/"
+      },
+      {
+        "title": "Wizerunek i kontakt mają działać razem",
+        "image": "kancelaria-druk-i-ekran.webp",
+        "alt": "Kancelaria Siemianowski — spójność strony i materiałów kontaktowych",
+        "text": "Strona firmowa jest jednym z miejsc spotkania z marką. Jej obietnica i dane powinny pasować do tego, co klient widzi w ofercie czy na wizytówce. Sprawdź nie tylko wygląd, ale także kompletność informacji i spójność kolejnych kroków.",
+        "link": "/tworzenie-stron-internetowych/"
+      }
+    ],
+    "table": [
+      [
+        "Co oferujecie?",
+        "Opis usług i ich zakres.",
+        "Język klienta zamiast ogólnych haseł."
+      ],
+      [
+        "Dlaczego warto porozmawiać?",
+        "Własne realizacje i konkretne kompetencje.",
+        "Nie zastępuj dowodów przypadkowymi ikonami."
+      ],
+      [
+        "Jak rozpocząć?",
+        "Kontakt i wyjaśnienie następnego kroku.",
+        "Czytelny przycisk oraz działający formularz."
+      ]
+    ]
+  }
+}

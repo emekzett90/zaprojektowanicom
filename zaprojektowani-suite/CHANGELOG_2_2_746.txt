@@ -1,0 +1,6 @@
+Zaprojektowani Suite 2.2.746
+
+- Ulepszona sekcja „Ostatnie wpisy na blogu” w mega stopce: nowy rytm, lead, mocniejsze karty, subtelne akcenty i hover.
+- Dolna belka prawna zmieniona z białej na ciemną i połączona wizualnie z sekcją bloga.
+- Poprawione kolory linków prawnych i przycisku „do góry” dla ciemnego tła.
+- Dopracowane RWD sekcji blogowej i dolnej belki.

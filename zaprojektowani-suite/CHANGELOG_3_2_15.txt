@@ -1,0 +1,6 @@
+3.2.15 — 15.10.2026
+
+Jasne karty case studies: białe tło, delikatny obrys, ciemne nagłówki i opisy, jasne etykiety oraz granatowy przycisk z białym napisem. Zachowano duże zdjęcia i zakres realizacji.
+Powiększono portret Mateusza w FAQ globalnie o kolejne15% względem3.2.14, z ograniczeniem szerokości na małych ekranach.
+
+Naprawiono znikanie kart realizacji na stronach branżowych po przewinięciu: oddzielono atrybut liczby projektów od globalnego skryptu animacji liczników.

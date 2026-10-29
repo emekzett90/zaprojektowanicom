@@ -1,0 +1,5 @@
+Zaprojektowani Suite 2.2.674
+
+- Realizacje: na desktopie cały widget przesunięty 50 px bliżej headera.
+- Realizacje: zwiększony odstęp między featured sliderem a nagłówkiem portfolio.
+- Realizacje: mobile otrzymał 72 px górnego oddechu, zgodnie z podstroną FAQ.

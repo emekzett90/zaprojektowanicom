@@ -1,0 +1,7 @@
+Zaprojektowani Suite v2.2.654
+
+Studio Wyceny — stabilizacja mobile:
+- ikona pozostaje po prawej stronie,
+- przywrócona pełna wysokość kart,
+- tekst i opis nie wchodzą na zdjęcie,
+- desktop bez zmian.

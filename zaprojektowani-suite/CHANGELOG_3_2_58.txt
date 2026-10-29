@@ -1,0 +1,46 @@
+Zaprojektowani Suite 3.2.58 — 22.10.2026
+
+Podstawa: 3.2.57 (gałąź suite-3.2.57 @ 5be8c32) i dwie gałęzie, każda scalona bez zmian przez commit scalający:
+- glowna-karty-opinii-3.2.50 @ 817cfdc (PR #55, dwa commity) z wątku „Strona główna: Trustindex i pakiety”, o co Mat
+  poprosił 22.10 („Na hover na karcie zaufali nam Trust index ocena 4,9 robi się ciemnym fontem i jest nie widoczna
+  popraw to…”), z poprawką przecinka w hero znalezioną przez kontrolę po 3.2.57;
+- studio-naglowek-3.2.50 @ cf53ca2 (PR #56) z wątku Studia wyceny, poprawka zgłoszona przez Mata 22.10 („W studio
+  wyceny header jasny działa dziwnie nie pokazuje zmiany języku tylko samo pl…”).
+Aktualizacja nie kasuje żadnych danych i nie cofa żadnej zmiany Codexa. Poza trzema kartami na stronie głównej
+i nagłówkiem Studia wyceny wygląd stron się nie zmienia.
+
+Strona główna, karty pod nagłówkiem w sekcji „Zaufali nam” (PL i EN; PR #55)
+- Karta Trustindex: ocena 4,9 zostaje biała po najechaniu. Motyw Hello Elementor barwił każdy link po najechaniu na
+  #336, więc liczba znikała na granatowej karcie; karty mają teraz własny kolor tekstu w każdym stanie linku.
+- Pod oceną „średnia z 150 opinii” zamiast „średnia ocena” (po angielsku „average of 150 reviews”); liczba opinii
+  pochodzi z tych samych danych co reszta strony.
+- Trzecia karta zamiast powtórzonych „150 opinii w Trustindex”: „100% pozytywnych opinii” z logo Facebooka, link do
+  https://www.facebook.com/zaprojektowanicom/reviews (nowa karta przeglądarki), po angielsku „positive reviews”.
+- „114 realizacji” prowadzi do /realizacje/ (na angielskiej stronie /en/our-work/) i ma tę samą strzałkę co pozostałe
+  karty.
+- Pasek liczb w hero: skrypt hero po wczytaniu nadpisywał „4,9” z serwera wartością „4.9”, więc polska strona główna
+  pokazywała ocenę z kropką. Teraz liczby z miejscami po przecinku mają przecinek wszędzie poza stroną angielską,
+  która zostaje przy „4.9”.
+- Wysokość kart bez zmian przy szerokości 390–1920 px, więc sekcja z Mateuszem powyżej 1500 px stoi tak samo. Bez
+  gradientów i cieni.
+
+Studio wyceny, jasny nagłówek (/studio-wyceny/ i /en/quote-studio/; PR #56)
+- Przełącznik PL/EN ma zwykły jasny wygląd jak w nagłówku innych podstron: aktywny język na granatowym suwaku, drugi
+  szary (na telefonie tak samo w przycisku obok menu). Dotąd brał wygląd na ciemne tło i widać było samo PL.
+- Pozycje menu podkreślają się po najechaniu, także w briefie, jak na innych podstronach.
+- Styl jest drukowany tylko na stronach Studia wyceny; wartości to te same, których przełącznik używa wszędzie indziej.
+
+Po aktualizacji
+- Cache HTML Suite odświeża się raz przy pierwszym otwarciu strony (tylko własne kopie Suite, nigdy LiteSpeed ani
+  CDN), żeby nowe karty i nagłówek Studia było widać od razu. W logu na stronie „Cache HTML” pojawi się jako
+  zp_html_cache_purge (upgrade.php).
+
+Zmienione pliki względem 3.2.57:
+- PR #55: templates/trust-logos.php, templates/home-hero.php (jedna funkcja skryptu hero), assets/css/blocks/
+  trust-logos.css i trust-logos.min.css, assets/css-min.json, zaprojektowani-languages/data/php/en/common.php
+  i pl/common.php (po dwa teksty)
+- PR #56: includes/studio-wyceny.php
+- wydanie: zaprojektowani-suite.php (numer wersji), includes/suite3/upgrade.php (jednorazowe odświeżenie cache),
+  includes/suite3/admin-ui.php (karta „Nowe w wersji”), ten plik
+
+Wersje: Suite 3.2.58, Języki PL/EN 1.1.3, Tłumacz EN 2.0.3.

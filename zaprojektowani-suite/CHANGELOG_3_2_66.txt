@@ -1,0 +1,11 @@
+ZP Suite 3.2.66 — 23.10.2026
+Baza: wdrożona wersja 3.2.65 (wszystkie wcześniejsze zmiany zachowane).
+
+- Wiedza: krótszy prawy panel polecanych poradników na desktopie, pełne fotografie.
+- Case studies: czytelniejsze karty indeksu, zakres i wartość projektu, nawigacja po rozdziałach, podsumowanie efektów przed kontaktem, dopasowane CTA i linki do innych projektów.
+- Realizacje: ogólne portfolio odróżnione od czterech pogłębionych case studies; link w hero i sekcja prowadząca do pełnych opisów.
+- Apartament Piękna: dwupunktowe porównanie szacowanej liczby zgłoszeń tygodniowo przez Umów wizytę — 40–50 na początku 2026, 100–150 w październiku; źródło i zakres podane jawnie.
+- PL/EN, responsywny układ, bez dodatkowego JavaScriptu dla nowych sekcji.
+- Aktualizacja odświeża wyłącznie cache HTML należący do Suite.
+
+Bez zmian w kanale treści, zdjęciach artykułów, Google Ads, pomiarze konwersji i wcześniejszych mechanizmach wydajności.

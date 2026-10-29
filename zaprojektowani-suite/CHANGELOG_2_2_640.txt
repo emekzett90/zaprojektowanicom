@@ -1,0 +1,8 @@
+Zaprojektowani Suite v2.2.640
+
+Poprawki Studio Wyceny (mobile):
+- zdjęcia w kartach usług faktycznie wychodzą ponad górną krawędź karty,
+- mockupy nie są już clipowane do wysokości karty,
+- karta ma osobną warstwę tła, więc obraz może overflow poza jej obrys,
+- zachowany efekt lekkiego floatowania i cienia 3D,
+- poprawione ucinanie nagłówka "Twój projekt?" na mobile.

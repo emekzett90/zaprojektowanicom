@@ -1,0 +1,6 @@
+Zaprojektowani Suite 3.2.18 — 2026-10-15
+
+Realizacje: usunięta dodatkowa sekcja dwóch powiązanych case studies; dotychczasowe portfolio i odnośniki zachowane. Naprawiona obwiednia H1 i mobilny odstęp fotografii od opinii.
+Wiedza: naturalna kolejność mobilna — hero, wyróżniony wpis i rekomendacje, indeks, CTA. Pełna wysokość listy wpisów; ciaśniejszy H1 z gradientowym akcentem i zbalansowanym łamaniem.
+O nas: bezpieczny odstęp etykiety hero od mobilnego menu w PL/EN.
+Sklepy: spójna typografia i gradient hero, wolne miejsce między przyciskiem pakietu i kolejną sylwetką, pełna szerokość tła CTA, środek rakiety na osi postępu i oddzielona etykieta START.

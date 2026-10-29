@@ -1,0 +1,6 @@
+Changelog 2.7.12
+
+- Meta Verified na home jest absolutnie pozycjonowane, więc nie obniża już treści hero.
+- Badge na home został zmniejszony.
+- Mobile/tablet: badge jest przy prawej krawędzi obszaru ekipy, obok Stanisława, zamiast nad zdjęciem.
+- Desktop: scena Spline/robot została podniesiona o 36 px, a karty opinii dopasowane o ten sam kierunek.

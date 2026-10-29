@@ -1,0 +1,335 @@
+/* 3.2.66 — case-study presentation only. Existing assets, forms and motion stay intact. */
+html body .zpCS41 {
+  --cs66-border: #dce4ed;
+  --cs66-muted: #53667f;
+}
+/* The photos remain complete; each project reads as one clear editorial card. */
+html body .zpCS41 .zpCS18__projects > .zpCS18__inner {
+  display: grid;
+  gap: 30px;
+}
+html body .zpCS41 .zpCS41__project {
+  grid-template-columns: minmax(0, 1.07fr) minmax(0, 1fr);
+  gap: clamp(28px, 3vw, 54px);
+  padding: clamp(24px, 2.6vw, 44px);
+  border: 1px solid var(--cs66-border);
+  border-radius: 32px;
+  background: #fff;
+  box-shadow: 0 16px 40px -34px #102a4f38;
+}
+html body .zpCS41 .zpCS41__project .zpCS18__projectImage {
+  width: 100%;
+  max-width: none;
+  border: 1px solid #0714260c;
+  border-radius: 24px;
+}
+html body .zpCS41 .zpCS41__project .zpCS18__projectImage img {
+  width: 100%;
+  height: auto;
+  max-height: none;
+  aspect-ratio: auto;
+  object-fit: contain;
+  border-radius: 23px !important;
+}
+html body .zpCS41 .zpCS41__projectBrand {
+  padding-bottom: 22px;
+  border-bottom: 1px solid var(--cs66-border);
+}
+html body .zpCS41 .zpCS41__project .zpCS18__projectCopy h3 {
+  font-size: clamp(30px, 2.85vw, 49px);
+  line-height: 1.1;
+  overflow: visible;
+  padding-bottom: .08em;
+  margin-bottom: -.08em;
+}
+html body .zpCS41 .zpCS41__project .zpCS18__projectCopy > p {
+  max-width: 66ch;
+  margin: 22px 0;
+  font-size: 16px;
+  line-height: 1.75;
+}
+html body .zpCS41 .zpCS66__projectBenefit {
+  margin-block: 22px;
+  padding: 20px 22px;
+  border-left: 3px solid #2b5481;
+  border-radius: 0 16px 16px 0;
+  background: #f5f7fa;
+}
+html body .zpCS41 .zpCS66__projectBenefit > span {
+  display: block;
+  margin-bottom: 8px;
+  color: #315379;
+  font-size: 11px;
+  font-weight: 800;
+  line-height: 1.4;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+}
+html body .zpCS41 .zpCS66__projectBenefit > p {
+  color: #425770;
+  font-size: 14px;
+  line-height: 1.75;
+}
+html body .zpCS41 .zpCS66__projectActions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px 24px;
+}
+html body .zpCS41 .zpCS66__projectActions .zpCS18__button,
+html body .zpCS41 .zpCS66__invitation .zpCS18__button {
+  min-height: 58px;
+  padding: 17px 26px;
+  background: linear-gradient(100deg, #020407 0%, #071426 36%, #102a4f 68%, #1c477a 100%);
+  color: #fff;
+  -webkit-text-fill-color: #fff;
+  border: 1px solid #17375d;
+  font-size: 15px;
+  font-weight: 750;
+}
+html body .zpCS41 .zpCS66__quietLink {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  min-height: 48px;
+  color: #24476f;
+  font-size: 14px;
+  line-height: 1.5;
+  font-weight: 700;
+}
+html body .zpCS41 .zpCS66__quietLink svg { width: 17px; height: 17px; }
+html body .zpCS41 .zpCS18__portfolioLink {
+  margin-top: 8px;
+  padding: 30px 0 0;
+}
+/* Four useful anchors stay visible without JavaScript or a floating mobile bar. */
+html body .zpCS41 .zpCS66__chapterNav {
+  padding: 28px 0;
+  background: #fff;
+  border-bottom: 1px solid var(--cs66-border);
+}
+html body .zpCS41 .zpCS66__chapterNav > .zpCS18__inner {
+  display: flex;
+  align-items: center;
+  gap: 36px;
+}
+html body .zpCS41 .zpCS66__navLabel {
+  flex: 0 0 auto;
+  font-size: 11px;
+  font-weight: 800;
+  line-height: 1.5;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--cs66-muted);
+}
+html body .zpCS41 .zpCS66__chapterNav ol {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  flex: 1;
+  gap: 10px;
+  padding: 0;
+  list-style: none;
+}
+html body .zpCS41 .zpCS66__chapterNav li { min-width: 0; }
+html body .zpCS41 .zpCS66__chapterNav a {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 56px;
+  padding: 12px 15px;
+  border: 1px solid var(--cs66-border);
+  border-radius: 16px;
+  background: #fff;
+}
+html body .zpCS41 .zpCS66__chapterNav a > span {
+  color: #6b8098;
+  font-size: 10px;
+  font-weight: 700;
+}
+html body .zpCS41 .zpCS66__chapterNav a > b {
+  flex: 1;
+  font-size: 13px;
+  line-height: 1.45;
+  font-weight: 700;
+}
+html body .zpCS41 .zpCS66__chapterNav a > svg {
+  width: 15px;
+  height: 15px;
+  flex-basis: 15px;
+  transform: rotate(90deg);
+}
+/* Outcomes sit before the native enquiry form, so the delivered value is clear first. */
+html body .zpCS41 .zpCS18__outcomeGrid {
+  gap: 20px;
+  padding-top: 0;
+  border-top: 0;
+}
+html body .zpCS41 .zpCS18__outcomeGrid > div {
+  padding: 30px;
+  border: 1px solid var(--cs66-border);
+  border-radius: 24px;
+  background: #fff;
+}
+html body .zpCS41 .zpCS18__outcomeGrid .zpCS18__check {
+  display: inline-grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  color: #fff;
+  background: linear-gradient(120deg,#071426,#1c477a);
+  font-size: 20px;
+}
+html body .zpCS41 .zpCS18__outcomeGrid h3 { font-size: clamp(23px, 1.7vw, 29px); line-height: 1.25; }
+html body .zpCS41 .zpCS18__outcomeGrid p { font-size: 16px; line-height: 1.75; }
+html body .zpCS41 .zpCS66__invitation { padding-top: 0; }
+html body .zpCS41 .zpCS66__invitationCard {
+  display: grid;
+  grid-template-columns: minmax(0, 1.65fr) minmax(280px, .7fr);
+  align-items: center;
+  gap: clamp(30px, 5vw, 88px);
+  padding: clamp(28px, 4vw, 64px);
+  border: 1px solid var(--cs66-border);
+  border-radius: 30px;
+  background: #fff;
+}
+html body .zpCS41 .zpCS66__invitationCard h2 {
+  font-size: clamp(34px, 3.35vw, 56px);
+  line-height: 1.1;
+  max-width: 23ch;
+  text-wrap: balance;
+  overflow: visible;
+}
+html body .zpCS41 .zpCS66__invitationCard > div > p:not(.zpCS18__eyebrow) {
+  margin-top: 24px;
+  max-width: 68ch;
+  color: var(--cs66-muted);
+  font-size: 16px;
+  line-height: 1.8;
+}
+html body .zpCS41 .zpCS66__invitationActions > .zpCS18__button { width: 100%; }
+html body .zpCS41 .zpCS66__invitationActions > span {
+  display: block;
+  margin: 26px 0 10px;
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--cs66-muted);
+}
+html body .zpCS41 .zpCS66__invitationActions ul { list-style: none; padding: 0; }
+html body .zpCS41 .zpCS66__invitationActions li + li { border-top: 1px solid var(--cs66-border); }
+html body .zpCS41 .zpCS66__invitationActions li a {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  min-height: 52px;
+  color: #1c477a;
+  font-size: 14px;
+  line-height: 1.5;
+  font-weight: 700;
+}
+html body .zpCS41 .zpCS66__related { padding-top: 0; }
+html body .zpCS41 .zpCS66__relatedHead h2 {
+  font-size: clamp(35px, 3.6vw, 60px);
+  line-height: 1.1;
+  max-width: 1000px;
+  text-wrap: balance;
+}
+html body .zpCS41 .zpCS66__relatedGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+  margin-top: 34px;
+}
+html body .zpCS41 .zpCS66__relatedCard {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 0;
+  padding: 28px;
+  border: 1px solid var(--cs66-border);
+  border-radius: 24px;
+  background: #fff;
+  transition: border-color .18s ease, background-color .18s ease;
+}
+html body .zpCS41 .zpCS66__relatedCard > span {
+  color: #536b86;
+  font-size: 11px;
+  font-weight: 800;
+  line-height: 1.5;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+}
+html body .zpCS41 .zpCS66__relatedCard > h3 {
+  margin: 18px 0 28px;
+  font-size: clamp(24px, 1.9vw, 32px);
+  line-height: 1.2;
+  text-wrap: balance;
+}
+html body .zpCS41 .zpCS66__relatedCard > b {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  width: 100%;
+  min-height: 34px;
+  margin-top: auto;
+  color: #1c477a;
+  font-size: 13px;
+  font-weight: 700;
+}
+html body .zpCS41 :is(.zpCS66__chapterNav a, .zpCS66__relatedCard):hover {
+  border-color: #93aac5;
+  background: #f7f9fc;
+}
+html body .zpCS41 :is(.zpCS66__quietLink, .zpCS66__invitationActions li a):hover {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+@media (max-width: 1100px) {
+  html body .zpCS41 .zpCS66__chapterNav > .zpCS18__inner { display: block; }
+  html body .zpCS41 .zpCS66__navLabel { display: block; margin-bottom: 15px; }
+  html body .zpCS41 .zpCS66__invitationCard { grid-template-columns: minmax(0, 1fr) minmax(240px, .65fr); }
+  html body .zpCS41 .zpCS66__relatedCard { padding: 22px; }
+}
+@media (max-width: 860px) {
+  html body .zpCS41 .zpCS41__project { padding: 26px; }
+  html body .zpCS41 .zpCS66__invitationCard { grid-template-columns: minmax(0, 1fr); gap: 30px; }
+  html body .zpCS41 .zpCS66__invitationActions { max-width: 500px; width: 100%; }
+  html body .zpCS41 .zpCS66__relatedGrid { grid-template-columns: minmax(0, 1fr); }
+  html body .zpCS41 .zpCS66__relatedCard > h3 { margin-bottom: 20px; }
+  html body .zpCS41 .zpCS66__relatedCard { padding: 24px; }
+}
+@media (max-width: 560px) {
+  html body .zpCS41 .zpCS18__projects > .zpCS18__inner { gap: 22px; }
+  html body .zpCS41 .zpCS41__project,
+  html body .zpCS41 .zpCS18__projects > .zpCS18__inner > .zpCS41__project:first-child {
+    padding: 18px;
+    border-radius: 24px;
+  }
+  html body .zpCS41 .zpCS41__project .zpCS18__projectImage,
+  html body .zpCS41 .zpCS41__project .zpCS18__projectImage img { border-radius: 16px !important; }
+  html body .zpCS41 .zpCS41__projectBrand { gap: 12px; padding-bottom: 18px; margin-bottom: 22px; }
+  html body .zpCS41 .zpCS41__projectBrand > span { font-size: 10px; }
+  html body .zpCS41 .zpCS41__project .zpCS18__projectCopy h3 { font-size: clamp(28px, 7.8vw, 38px); line-height: 1.12; }
+  html body .zpCS41 .zpCS41__project .zpCS18__projectCopy > p { font-size: 15px; line-height: 1.75; }
+  html body .zpCS41 .zpCS66__projectBenefit { padding: 17px; }
+  html body .zpCS41 .zpCS66__projectActions { align-items: stretch; flex-direction: column; gap: 7px; }
+  html body .zpCS41 .zpCS66__projectActions .zpCS18__button { width: 100%; font-size: 14px; padding-inline: 17px; }
+  html body .zpCS41 .zpCS66__chapterNav { padding-block: 22px; }
+  html body .zpCS41 .zpCS66__chapterNav ol { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+  html body .zpCS41 .zpCS66__chapterNav a { align-items: flex-start; min-height: 62px; padding: 13px 12px; gap: 8px; }
+  html body .zpCS41 .zpCS66__chapterNav a > b { font-size: 12px; }
+  html body .zpCS41 .zpCS66__chapterNav a > span { padding-top: 2px; font-size: 9px; }
+  html body .zpCS41 .zpCS66__chapterNav a > svg { display: none; }
+  html body .zpCS41 .zpCS18__outcomeGrid > div { padding: 24px; }
+  html body .zpCS41 .zpCS66__invitationCard { padding: 26px 22px; border-radius: 24px; }
+  html body .zpCS41 .zpCS66__invitationCard h2,
+  html body .zpCS41 .zpCS66__relatedHead h2 { font-size: clamp(30px, 8.2vw, 42px); line-height: 1.12; }
+  html body .zpCS41 .zpCS66__invitationCard > div > p:not(.zpCS18__eyebrow) { font-size: 15px; }
+  html body .zpCS41 .zpCS66__relatedCard > h3 { font-size: 25px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html body .zpCS41 .zpCS66__relatedCard { transition: none; }
+}

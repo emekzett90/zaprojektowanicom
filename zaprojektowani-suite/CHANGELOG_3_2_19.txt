@@ -1,0 +1,8 @@
+Zaprojektowani Suite 3.2.19 — 2026-10-15
+
+Dostarczenie mobilnego odstępu O nas przez niezależny zewnętrzny arkusz Suite. Dodatkowa ochrona przed starszą wtyczką SEO, która zastępuje główny CSS szablonu O nas. Zakres wyłącznie #zpAboutX .zpAboutX__hero do 980px.
+Zawiera wszystkie poprawki Realizacje, Wiedza i Sklepy z 3.2.18.
+
+Wiedza: dokładny gradient i typografia Logo, dodatkowy zapas dolnych wydłużeń liter, mniej wolnej przestrzeni pod mobilnym zdjęciem.
+FAQ: mobilne przyciąganie karuzeli uwzględnia14px bocznego marginesu.
+Wspólne H1 hero usług: typografia i gradient zgodne z Logo, bez przycinania wydłużeń liter; kontrola wszystkich42 widoków usług PL/EN.

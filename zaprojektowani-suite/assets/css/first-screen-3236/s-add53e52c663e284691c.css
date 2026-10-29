@@ -1,0 +1,84 @@
+
+    html body #zpShowcaseServices .zpSSCard--ads .zpSSCard__mock--ads{
+      inset:-4% -7% -7% -3%!important;
+      border-radius:0!important;
+      background:transparent!important;
+      border:0!important;
+      box-shadow:none!important;
+      overflow:visible!important;
+      transform:translate3d(0,calc(var(--move,0px) * .72),0) rotate(.35deg)!important;
+      animation:zpSSMetaAdsFloat573 6.8s ease-in-out infinite!important;
+    }
+    html body #zpShowcaseServices .zpSSCard--ads .zpSSCard__mock--ads:before,
+    html body #zpShowcaseServices .zpSSCard--ads .zpSSCard__mock--ads:after{
+      display:none!important;
+      content:none!important;
+    }
+    html body #zpShowcaseServices .zpSSCard--ads .zpSSCard__mock--ads img{
+      width:100%!important;
+      height:100%!important;
+      object-fit:contain!important;
+      object-position:center!important;
+      border-radius:0!important;
+      background:transparent!important;
+      transform:translateZ(22px) scale(1.04)!important;
+      filter:drop-shadow(0 34px 40px rgba(2,8,20,.26)) drop-shadow(0 12px 18px rgba(2,8,20,.16))!important;
+      -webkit-filter:drop-shadow(0 34px 40px rgba(2,8,20,.26)) drop-shadow(0 12px 18px rgba(2,8,20,.16))!important;
+      image-rendering:auto!important;
+    }
+    html body #zpShowcaseServices .zpSSCard--ads:hover .zpSSCard__mock--ads{
+      transform:translate3d(0,calc((var(--move,0px) * .72) - 8px),0) rotate(.05deg) scale(1.01)!important;
+    }
+    html body #zpShowcaseServices .zpSSCard--ads:hover .zpSSCard__mock--ads img{
+      transform:translateZ(30px) scale(1.065)!important;
+    }
+
+    html body #zpShowcaseServices .zpSSCard--contact .zpSSCard__content{
+      grid-template-columns:minmax(430px,.56fr) minmax(340px,.44fr)!important;
+      gap:clamp(18px,2.4vw,46px)!important;
+    }
+    html body #zpShowcaseServices .zpSSCard--contact .zpSSCard__copy{
+      max-width:660px!important;
+      width:100%!important;
+    }
+    html body #zpShowcaseServices .zpSSCard--contact .zpSSCard__desc{
+      max-width:620px!important;
+    }
+    html body #zpShowcaseServices .zpSSCard--contact .zpSSCard__h3{
+      max-width:680px!important;
+    }
+    html body #zpShowcaseServices .zpSSCard--contact .zpSSCard__visual{
+      justify-content:flex-end!important;
+      min-width:0!important;
+    }
+    html body #zpShowcaseServices .zpSSCard--contact .zpSSCard__mock--contact{
+      left:-8%!important;
+      right:-7%!important;
+    }
+
+    @keyframes zpSSMetaAdsFloat573{
+      0%,100%{transform:translate3d(0,calc(var(--move,0px) * .72),0) rotate(.35deg)}
+      50%{transform:translate3d(0,calc((var(--move,0px) * .72) - 14px),0) rotate(-.15deg)}
+    }
+    @media(max-width:1100px){
+      html body #zpShowcaseServices .zpSSCard--contact .zpSSCard__content{
+        grid-template-columns:minmax(0,1fr)!important;
+      }
+      html body #zpShowcaseServices .zpSSCard--contact .zpSSCard__copy,
+      html body #zpShowcaseServices .zpSSCard--contact .zpSSCard__desc,
+      html body #zpShowcaseServices .zpSSCard--contact .zpSSCard__h3{
+        max-width:100%!important;
+      }
+    }
+    @media(max-width:880px){
+      html body #zpShowcaseServices .zpSSCard--ads .zpSSCard__mock--ads{
+        inset:0 -8% -4% -8%!important;
+        transform:translate3d(0,calc(var(--move,0px) * .5),0) rotate(.2deg)!important;
+      }
+      html body #zpShowcaseServices .zpSSCard--ads .zpSSCard__mock--ads img{
+        transform:translateZ(0) scale(1.02)!important;
+        filter:drop-shadow(0 22px 28px rgba(2,8,20,.22))!important;
+        -webkit-filter:drop-shadow(0 22px 28px rgba(2,8,20,.22))!important;
+      }
+    }
+  

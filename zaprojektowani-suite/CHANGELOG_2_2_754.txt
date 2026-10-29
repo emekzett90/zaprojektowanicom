@@ -1,0 +1,6 @@
+Zaprojektowani Suite 2.2.754
+- O nas: duże zdjęcie wiedza_ekipa.webp przeniesione nad heading w sekcji Studio Awards i wtopione od dołu.
+- O nas: dodano editorialowy blok zdjęciowy z team_hero_homepage.webp oraz team_kontakt.webp.
+- O nas: rozbudowano timeline historii o scroll progress line i reveal kolejnych etapów.
+- O nas: poprawiono responsywność sekcji Awards i galerii na tablet/mobile.
+- Zachowano wszystkie poprawki SEO/Seobility z 2.2.753.

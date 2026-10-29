@@ -1,0 +1,6 @@
+Zaprojektowani Suite 2.2.738
+
+- /strony-internetowe-katowice/: poprawione pozycjonowanie zespołu w nagłówku portfolio — pełne głowy, więcej oddechu od pakietów.
+- Portfolio zachowuje duże zdjęcie, ale bez wchodzenia pod poprzednią sekcję.
+- Pakiet „Projekt indywidualny”: nowy visual „Projekt 1:1” z modułami UX/UI, SEO i DEV zamiast wcześniejszego browser mockupu.
+- RWD dla nowych korekt.

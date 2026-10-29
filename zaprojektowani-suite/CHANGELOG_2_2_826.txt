@@ -1,0 +1,6 @@
+Zaprojektowani Suite 2.2.826
+
+- Studio Wyceny: zwiększono pionowy odstęp między przyciskiem/nawigacją a sylwetką Marty na mobile.
+- Tablet/mobile do 900 px: większy margines nad Martą.
+- Mobile do 760 px: Marta zaczyna się wyraźnie niżej, dzięki czemu nie wygląda jak przyklejona do przycisku Dalej.
+- Pozostałe proporcje, powiększenie o ~10% i schowanie sylwetki za kartą pozostają bez zmian.

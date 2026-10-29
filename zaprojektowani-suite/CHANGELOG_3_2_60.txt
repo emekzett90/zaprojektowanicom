@@ -1,0 +1,33 @@
+Zaprojektowani Suite 3.2.60 — 22.10.2026
+
+Podstawa: 3.2.59 (gałąź suite-3.2.59 @ c730b74) i gałąź cache-podmiana-3.2.50 @ 2572e9b (PR #60) z wątku „Wolne
+ładowanie strony na telefonie”, scalona bez zmian przez commit scalający. Problem znalazł wątek „Błędy z audytu
+Ahrefs”: 22.10 Ahrefs raz dostał 404 na angielskim wpisie, który przed i po działał.
+Aktualizacja nie kasuje żadnych danych i nie cofa żadnej zmiany Codexa. Wygląd stron się nie zmienia.
+
+Ochrona stron na czas wgrywania wtyczki (PR #60)
+- Przy wgrywaniu paczki (Wtyczki → Dodaj nową → Wyślij → Zastąp bieżącą) WordPress usuwa stare pliki Suite jeden po
+  drugim i wstawia nowy folder, bez trybu konserwacji. Strona budowana w tych sekundach nie miała Suite: angielskie
+  adresy dawały 404, a polskie strony wychodziły bez elementów Suite.
+- Teraz wtyczka tuż przed usunięciem starych plików zapisuje znacznik wp-content/cache/zp-suite-html/swap.php
+  i usuwa go, gdy instalacja się skończy (udana lub nie). Znacznik starszy niż 180 s jest pomijany, więc przerwana
+  instalacja nie zostawi strony na 503.
+- Póki znacznik jest świeży, gotowe kopie z cache działają jak dotąd, a każda inna strona (GET/HEAD) odpowiada kodem
+  503 z Retry-After: 30 i no-store: krótka informacja po polsku (na /en/ po angielsku), która sama odświeża się po
+  15 s. Google i Ahrefs traktują 503 jako chwilową przerwę, nie brak strony.
+- Panel, logowanie, REST, cron, xmlrpc, pliki z wp-content i wp-includes oraz wysyłki formularzy (POST) idą do
+  WordPressa jak dotąd. Poza instalacją nic się nie zmienia: kopia z cache nie kosztuje nic więcej, strona budowana
+  od zera jedno sprawdzenie pliku.
+
+Po aktualizacji
+- Nowy drop-in advanced-cache.php (sha256 8576d87f…) wchodzi na koniec tej instalacji, a krok aktualizacji to
+  potwierdza (jednorazowe odświeżenie własnego cache, nigdy LiteSpeed ani CDN). Zastępowany jest tylko własny drop-in
+  modułu. Sama ta instalacja jeszcze nie jest chroniona (wykonuje ją stary kod), ochrona działa od następnego wgrania.
+
+Zmienione pliki względem 3.2.59:
+- PR #60: includes/cache-20261009.php (znacznik przy instalacji), includes/cache-dropin-20261009.php (503 podczas
+  podmiany)
+- wydanie: zaprojektowani-suite.php (numer wersji), includes/suite3/upgrade.php (krok drop-inu),
+  includes/suite3/admin-ui.php (karta „Nowe w wersji”), ten plik
+
+Wersje: Suite 3.2.60, Języki PL/EN 1.1.3, Tłumacz EN 2.0.3.

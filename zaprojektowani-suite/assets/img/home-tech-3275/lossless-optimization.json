@@ -1,0 +1,72 @@
+[
+  {
+    "file": "google-ads-strip.webp",
+    "sourceBytes": 5523,
+    "bytes": 1842,
+    "dimensions": [
+      169,
+      64
+    ],
+    "losslessComposite": true
+  },
+  {
+    "file": "elementor-pro-strip.webp",
+    "sourceBytes": 3712,
+    "bytes": 1642,
+    "dimensions": [
+      232,
+      45
+    ],
+    "losslessComposite": true
+  },
+  {
+    "file": "meta-strip.webp",
+    "sourceBytes": 5940,
+    "bytes": 1952,
+    "dimensions": [
+      208,
+      43
+    ],
+    "losslessComposite": true
+  },
+  {
+    "file": "search-console-strip.webp",
+    "sourceBytes": 12226,
+    "bytes": 3230,
+    "dimensions": [
+      162,
+      69
+    ],
+    "losslessComposite": true
+  },
+  {
+    "file": "analytics-strip.webp",
+    "sourceBytes": 4663,
+    "bytes": 1712,
+    "dimensions": [
+      178,
+      62
+    ],
+    "losslessComposite": true
+  },
+  {
+    "file": "wordpress-wordmark.webp",
+    "sourceBytes": 11880,
+    "bytes": 7194,
+    "dimensions": [
+      360,
+      74
+    ],
+    "losslessComposite": true
+  },
+  {
+    "file": "google-tag-manager-wordmark.webp",
+    "sourceBytes": 17859,
+    "bytes": 11292,
+    "dimensions": [
+      300,
+      67
+    ],
+    "losslessComposite": true
+  }
+]

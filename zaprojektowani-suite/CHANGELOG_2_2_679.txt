@@ -1,0 +1,7 @@
+Zaprojektowani Suite 2.2.679
+
+- Naprawiono autoplay slidera wyróżnionych realizacji.
+- Koniec animacji paska postępu bezpośrednio uruchamia następny slajd.
+- Dodano niezależny timer awaryjny na wypadek zablokowania zdarzenia animationend.
+- Usunięto możliwość rozjechania timera JavaScript i animacji CSS.
+- Zachowano pauzę po najechaniu, sterowanie ręczne i obsługę filtrów.

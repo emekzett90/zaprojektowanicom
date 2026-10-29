@@ -1,0 +1,8 @@
+
+    :root{
+      --zp-header-sticky-white-a:0.850;
+      --zp-header-sticky-white-top:0.875;
+      --zp-header-sticky-white-bottom:0.815;
+      --zp-contact-dark-card:linear-gradient(135deg,#020407 0%,#05070b 35%,#071426 72%,#102a4f 100%);
+    }
+  

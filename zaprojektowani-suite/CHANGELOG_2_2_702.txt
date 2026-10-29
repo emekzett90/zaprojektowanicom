@@ -1,0 +1,8 @@
+ZAPROJEKTOWANI SUITE 2.2.702
+
+1. Dodano płynną animację przechodzenia gradientu przez wyróżnione frazy na stronie głównej.
+2. Animacja obejmuje główne hasło hero, rotator usług oraz akcentowane frazy w sekcjach logotypów, portfolio, prezentacji strony i usług.
+3. Na ciemnym hero zastosowano jasny biało-błękitny gradient, a na jasnych sekcjach ciemniejszą bazę granatową z przechodzącym błękitnym światłem.
+4. Mobile otrzymał jaśniejszy wariant gradientu i nieco wolniejsze tempo animacji.
+5. Zachowano obsługę prefers-reduced-motion — wtedy gradient pozostaje statyczny.
+6. Wersję wtyczki podbito do 2.2.702.

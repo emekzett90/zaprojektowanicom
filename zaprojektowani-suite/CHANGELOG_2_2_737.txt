@@ -1,0 +1,7 @@
+Zaprojektowani Suite 2.2.737
+
+- /strony-internetowe-katowice/: przeniesiono sekcję pakietów bezpośrednio pod sekcję oferty, przed portfolio.
+- Dodano sylwetki nad trzema pakietami: Marta / Landing Page, Stanisław / Starter, Mateusz / Premium.
+- Projekt indywidualny otrzymał autorski custom-builder zamiast powielania osoby.
+- Dodano miękkie wtopienie sylwetek, reveal/lift oraz RWD dla 4/2/1 kolumny.
+- Zmniejszono pionowy dystans sekcji pakietów, aby oferta była dostępna znacznie wcześniej w ścieżce strony.

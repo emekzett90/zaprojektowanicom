@@ -1,0 +1,9 @@
+Zaprojektowani Suite 2.2.772
+
+- Naprawiono zajawki na /wiedza/ i w kategoriach bloga.
+- Zajawka jest wybierana wyłącznie z konkretnego post_id karty.
+- Kandydaty z treści są oceniane względem tytułu i kategorii, więc tekst z przypadkowo skopiowanego / obcego artykułu nie trafia do karty.
+- Jeśli pierwszy akapit jest techniczny lub niezwiązany z tytułem, wybierany jest najbardziej trafny akapit z dalszej części wpisu.
+- Ręczna Zajawka i meta description są używane tylko jako fallback po kontroli zgodności z tytułem.
+- Gdy treść wpisu jest faktycznie treścią innego artykułu, karta pokazuje bezpieczny teaser oparty na tytule zamiast obcego tekstu.
+- Nowa wersja zmienia klucz cache siatki Wiedza, więc stary HTML kart nie jest ponownie używany.

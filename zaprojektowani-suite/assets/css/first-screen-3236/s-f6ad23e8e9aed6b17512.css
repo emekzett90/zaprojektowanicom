@@ -1,0 +1,42 @@
+
+@media (min-width: 981px){
+  html body.home main > section:not(#zhHero):not(.zh),
+  html body.front-page main > section:not(#zhHero):not(.zh),
+  html body #zpStronyKatowice > section:not(.zpWebHeroKat),
+  html body #zpShopKatowice > section:not(.zpShopCockpit){content-visibility:auto;contain-intrinsic-size:1px 1080px;}
+  html body.home #zpShowcaseWhite,
+  html body.front-page #zpShowcaseWhite{contain-intrinsic-size:1px 1280px;}
+  html body.home #zpServicesPath,
+  html body.front-page #zpServicesPath{contain-intrinsic-size:1px 980px;}
+  html body.home #zpReviews,
+  html body.front-page #zpReviews{contain-intrinsic-size:1px 1120px;}
+}
+html body .zpNewNav__desktop,
+html body .zpNewNav__menu{min-height:88px;}
+html body .zpNewNav__menu{align-items:center;}
+html.zp-synthetic-audit body #zhHero .zh__title,
+html.zp-synthetic-audit body #zhHero .zh__lead,
+html.zp-synthetic-audit body #zhHero .zh__actions,
+html.zp-synthetic-audit body #zhHero .zh__chips,
+html.zp-synthetic-audit body #zhHero .zh__side,
+html.zp-synthetic-audit body #zhHero .zh__scroll{
+  animation:none!important;
+  transition:none!important;
+  opacity:1!important;
+  transform:none!important;
+  filter:none!important;
+}
+html.zp-synthetic-audit body #zhHero .zh__title{content-visibility:visible!important;contain:none!important;}
+html.zp-synthetic-audit body .zh__kinWord,
+html.zp-synthetic-audit body .zh__marqTrack,
+html.zp-synthetic-audit body .zh__rotor > span,
+html.zp-synthetic-audit body .zh__aurora,
+html.zp-synthetic-audit body .zh__ring,
+html.zp-synthetic-audit body [data-zp-motion],
+html.zp-synthetic-audit body [data-zp-motion-beam]{animation:none!important;transition:none!important;transform:none!important;opacity:1!important;filter:none!important;}
+/* v2.2.547 — also freeze remaining looping hero decorations during a detected audit (audit-only;
+   no opacity/transform override so nothing visually shifts). */
+html.zp-synthetic-audit body .zh__dust,
+html.zp-synthetic-audit body .zh__dust i,
+html.zp-synthetic-audit body .zh__grain,
+html.zp-synthetic-audit body .zh__hair{animation:none!important;transition:none!important;}

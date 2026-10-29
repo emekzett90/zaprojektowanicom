@@ -1,0 +1,12 @@
+ZP Suite 3.2.65 — Wiedza i polecane poradniki
+Baza: dokładna paczka produkcyjna 3.2.64.
+
+- Pełny kadr obrazu wyróżnionego wpisu oraz bardziej wyrównane proporcje kolumn.
+- Jasny panel „Zanim zaczniesz projekt” z większymi poziomymi zdjęciami i tytułami.
+- Ręcznie wybrane poradniki o stronie firmowej, kosztach sklepu i logo oraz zakresie brandingu. Linki HTML; wybór uwzględnia Search Console i tematykę usług.
+- Bezpieczne uzupełnienie zestawu najnowszymi opublikowanymi wpisami, gdy wybrany wpis zniknie lub stanie się prywatny.
+- Konkretna wskazówka o przygotowaniu do wyceny w karcie hero.
+- Większa, czytelniejsza typografia i pełne poziome zdjęcia w panelu bocznym wpisów.
+- Dostosowanie układu do telefonu i tabletu, tłumaczenia nowego tekstu na EN.
+- Zachowane poprawki wydajności 3.2.64, bez nowych skryptów i fontów.
+- Bez zmian w treści, metadanych i zdjęciach wpisów, kanale treści, reklamach ani pomiarze konwersji.

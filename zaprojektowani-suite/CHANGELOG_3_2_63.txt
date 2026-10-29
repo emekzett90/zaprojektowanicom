@@ -1,0 +1,21 @@
+ZP Suite 3.2.63 — 22.10.2026
+
+Baza: pełna wersja 3.2.62 pobrana z działającej strony, z zachowaniem zmian 3.2.51–3.2.62.
+
+1. Poradniki na podstronach usług mają natywne akordeony: krótszy widok na telefonie,
+   pełna treść pozostaje w HTML. Działa bez dodatkowego JavaScriptu.
+2. Zakres realizacji na Stronach WordPress uzupełnia istniejące zdjęcie zespołu.
+   Dotychczasowy opis pozostaje przy nagłówku, a zdjęcie zachowuje proporcje.
+3. Realizacje zaczynają się od kickera „Portfolio / case studies”, bez widocznych okruszków.
+   Dane strukturalne BreadcrumbList pozostają bez zmian.
+4. Widoki interfejsu w sekcjach „Wewnątrz projektu” wypełniają lewą kolumnę i są
+   wyrównane z kartami poniżej. Mniejszy odstęp do opisu; oryginalne pliki i proporcje zdjęć.
+5. Korekta audytowanych podstron kampanii, realizacji i wiedzy: właściwe typy WebPage /
+   CollectionPage, uzupełnienie powiązanych WebSite / Organization oraz Open Graph website.
+   Bez sztucznego dodawania Article na podstronach usługowych lub indeksach.
+6. Jednorazowe odświeżenie wyłącznie własnego cache HTML Suite po zmianie generowanego HTML.
+7. Naprawiono paginację starego adresu archiwum sklepów: strona 2 prowadzi do kolejnych
+   5 poradników zamiast wracać na początek. Zachowano natywne archiwum kategorii i noindex.
+
+Bez zmian: reguły czyszczenia cache z 3.2.62 i plik cache-dropin-20261009.php, kanał treści,
+zdjęcia w 38 wpisach, Google Ads i pomiar konwersji. Wydanie nie zapisuje treści postów.

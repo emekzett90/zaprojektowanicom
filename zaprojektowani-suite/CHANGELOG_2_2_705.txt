@@ -1,0 +1,16 @@
+ZAPROJEKTOWANI SUITE 2.2.705
+
+1. Mobile /strony-internetowe-katowice/: obniżono chip PageSpeed i skrócono
+   nadmierną strefę wokół wskaźnika „Przewiń”.
+2. Mobile /kampanie-reklamowe/: skrócono hero oraz wyrównano odstępy pomiędzy
+   kokpitem, wskaźnikiem „Przewiń” i dolnym paskiem.
+3. Mobile /wiedza/: przywrócono właściwy odstęp pomiędzy headerem i kickerem.
+4. Desktop /strony-internetowe-katowice/: kompozycję hero obniżono o 100 px,
+   zachowując bezpieczny odstęp od wskaźnika i paska logotypów.
+5. Ultrawide 2500 px+ /wiedza/: całą prawą kompozycję przesunięto w lewo,
+   dzięki czemu nie odrywa się od kolumny tekstowej.
+6. /wiedza/: wszystkie wpisy nadal są renderowane w początkowym HTML, ale ich
+   gotowa siatka jest cache'owana na godzinę i unieważniana po zmianach treści.
+   Dodano lekkie excerpt-y, zoptymalizowane zapytania, responsywne miniatury
+   z srcset oraz reveal kart przez IntersectionObserver.
+7. Wersję wtyczki podbito do 2.2.705.

@@ -1,0 +1,6 @@
+Zaprojektowani Suite v2.2.664
+
+Studio Wyceny:
+- naprawiono obcinanie dolnej części nagłówka „Twój projekt?” na wszystkich rozdzielczościach,
+- zwiększono bezpieczny line-height i dolny zapas tekstu,
+- usunięto clip-path/maski mogące przycinać litery podczas animacji.

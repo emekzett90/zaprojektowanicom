@@ -1,0 +1,6 @@
+Zaprojektowani Suite 2.2.762
+
+Studio Wyceny:
+- removed the page-wide pale blue gradient from the isolated chooser iframe; the local circular glow behind the team remains
+- moved the handwritten “To zajmie około 2 minuty” note further left and fully inside the desktop clipping area so no letters are cut off
+- preserved the 150px white offset, iframe isolation, Plus Jakarta Sans lock, pointer animation and mobile layout

@@ -1,0 +1,57 @@
+/* Zaprojektowani Languages — PL/EN switch */
+.zpl-switch{--zpl-ink:#0a1220;--zpl-muted:#667085;--zpl-line:rgba(10,18,32,.12);--zpl-bg:#fff;--zpl-thumb:linear-gradient(100deg,#020407 0%,#071426 34%,#102a4f 70%,#1c477a 100%);--zpl-on:#fff;display:inline-flex;align-items:center;gap:10px;flex:none;font-family:inherit;line-height:1;-webkit-tap-highlight-color:transparent}
+.zpl-switch__track{position:relative;display:inline-grid;grid-template-columns:1fr 1fr;align-items:stretch;height:40px;padding:3px;border-radius:999px;border:1px solid var(--zpl-line);background:var(--zpl-bg);box-shadow:0 1px 2px rgba(10,18,32,.05),inset 0 1px 0 rgba(255,255,255,.6);isolation:isolate}
+.zpl-switch__thumb{position:absolute;z-index:0;top:3px;bottom:3px;left:3px;width:calc(50% - 3px);border-radius:999px;background:var(--zpl-thumb);box-shadow:0 8px 18px -8px rgba(7,20,38,.6),0 1px 0 rgba(255,255,255,.08) inset;transition:transform .42s cubic-bezier(.22,1,.36,1),background .3s ease}
+.zpl-switch.is-en .zpl-switch__thumb{transform:translateX(100%)}
+.zpl-switch__opt{position:relative;z-index:1;display:inline-flex;align-items:center;justify-content:center;gap:7px;min-width:42px;padding:0 11px;border-radius:999px;color:var(--zpl-muted)!important;font-size:12.5px;font-weight:800;letter-spacing:.07em;text-decoration:none!important;background:none!important;border:0!important;box-shadow:none!important;outline:0;transition:color .32s ease;cursor:pointer;user-select:none}
+.zpl-switch__opt:hover{color:var(--zpl-ink)!important}
+.zpl-switch.is-pl .zpl-switch__opt[data-zpl-lang="pl"],.zpl-switch.is-en .zpl-switch__opt[data-zpl-lang="en"]{color:var(--zpl-on)!important;cursor:default}
+.zpl-switch__opt:focus-visible{box-shadow:0 0 0 2px var(--zpl-bg),0 0 0 4px #3b82f6!important}
+.zpl-switch__code{display:inline-block;min-width:1.6em;text-align:center}
+.zpl-switch__name{font-weight:650;letter-spacing:-.005em;text-transform:none;font-size:14px}
+/* Round flags (mobile drawer) */
+.zpl-switch__flag{position:relative;flex:none;display:inline-block;width:22px;height:22px;border-radius:50%;overflow:hidden;box-shadow:0 0 0 1px rgba(10,18,32,.14),0 1px 2px rgba(10,18,32,.12);transition:box-shadow .32s ease,transform .32s ease}
+.zpl-switch__flag svg{display:block;width:100%;height:100%;transition:opacity .15s ease}
+.zpl-switch.is-pl .zpl-switch__opt[data-zpl-lang="pl"] .zpl-switch__flag,.zpl-switch.is-en .zpl-switch__opt[data-zpl-lang="en"] .zpl-switch__flag{box-shadow:0 0 0 1.5px rgba(255,255,255,.92),0 2px 6px rgba(0,0,0,.28)}
+.zpl-switch__opt:not([aria-current="true"]):hover .zpl-switch__flag{transform:scale(1.06)}
+/* Switching: the target language code turns into a small spinner (no layout shift; fades in only if it takes a moment) */
+.zpl-switch__code{position:relative}
+.zpl-switch__code::after,.zpl-switch__flag::after{content:"";position:absolute;top:50%;left:50%;width:13px;height:13px;margin:-7.5px 0 0 -7.5px;border-radius:50%;border:2px solid currentColor;border-right-color:transparent;border-bottom-color:transparent;opacity:0;pointer-events:none;visibility:hidden}
+.zpl-switch.is-busy[data-zpl-to="pl"] .zpl-switch__opt[data-zpl-lang="pl"] .zpl-switch__code,.zpl-switch.is-busy[data-zpl-to="en"] .zpl-switch__opt[data-zpl-lang="en"] .zpl-switch__code{color:transparent;transition:color .15s ease .12s}
+.zpl-switch.is-busy[data-zpl-to="pl"] .zpl-switch__opt[data-zpl-lang="pl"] .zpl-switch__flag svg,.zpl-switch.is-busy[data-zpl-to="en"] .zpl-switch__opt[data-zpl-lang="en"] .zpl-switch__flag svg{opacity:0;transition-delay:.12s}
+.zpl-switch.is-busy[data-zpl-to="pl"] .zpl-switch__opt[data-zpl-lang="pl"] .zpl-switch__code::after,.zpl-switch.is-busy[data-zpl-to="en"] .zpl-switch__opt[data-zpl-lang="en"] .zpl-switch__code::after,.zpl-switch.is-busy[data-zpl-to="pl"] .zpl-switch__opt[data-zpl-lang="pl"] .zpl-switch__flag::after,.zpl-switch.is-busy[data-zpl-to="en"] .zpl-switch__opt[data-zpl-lang="en"] .zpl-switch__flag::after{visibility:visible;color:var(--zpl-muted);animation:zpl-spin .7s linear infinite,zpl-in .2s ease .12s forwards}
+.zpl-switch.is-busy{cursor:progress}
+@keyframes zpl-spin{to{transform:rotate(360deg)}}
+@keyframes zpl-in{to{opacity:.9}}
+
+/* Header with light text (transparent over a dark hero): decided in JS from the header's real text colour.
+   Before JS runs, the Suite's overlay class is used as a first-paint hint. The drawer is always light. */
+.zpl-switch.zpl-switch--ondark:not(.zpl-switch--drawer),
+html:not(.zpl-theme) .zpNewNav.zpNewNav--heroOverlay:not(.is-scrolled):not(.is-mega-open) .zpl-switch:not(.zpl-switch--drawer){--zpl-line:rgba(255,255,255,.3);--zpl-bg:rgba(255,255,255,.08);--zpl-thumb:#fff;--zpl-on:#0a1220;--zpl-muted:rgba(255,255,255,.8);--zpl-ink:#fff}
+.zpl-switch.zpl-switch--ondark:not(.zpl-switch--drawer) .zpl-switch__track,
+html:not(.zpl-theme) .zpNewNav.zpNewNav--heroOverlay:not(.is-scrolled):not(.is-mega-open) .zpl-switch:not(.zpl-switch--drawer) .zpl-switch__track{-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);box-shadow:none}
+/* Light theme is the default; restate it for the drawer so no header rule can leak white text into it */
+.zpl-switch.zpl-switch--drawer{--zpl-ink:#0a1220;--zpl-muted:#667085;--zpl-line:rgba(10,18,32,.12);--zpl-bg:#fff;--zpl-thumb:linear-gradient(100deg,#020407 0%,#071426 34%,#102a4f 70%,#1c477a 100%);--zpl-on:#fff}
+
+/* Desktop header: keep a little air before the divider/CTA */
+.zpl-switch--nav{margin:0 2px 0 6px}
+
+/* Mobile drawer: full-width segmented control */
+.zpl-switch--drawer{display:flex;justify-content:space-between;gap:12px;width:100%;box-sizing:border-box;margin:2px 0 16px;padding:10px 10px 10px 14px;border:1px solid rgba(10,18,32,.08);border-radius:18px;background:#f7f8fb}
+.zpl-switch--drawer .zpl-switch__caption{flex:none;font-size:11px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:#667085}
+.zpl-switch--drawer .zpl-switch__track{flex:0 1 224px;min-width:0;height:44px}
+.zpl-switch--drawer .zpl-switch__opt{min-width:0;padding:0 10px;gap:6px}
+@media (max-width:360px){.zpl-switch--drawer .zpl-switch__caption{display:none}.zpl-switch--drawer .zpl-switch__track{flex:1 1 auto}}
+
+/* Mobile bar chip (next to the burger) */
+.zpl-switch--chip{display:none;margin-right:8px}
+.zpl-switch--chip .zpl-switch__track{height:34px;padding:2px}
+.zpl-switch--chip .zpl-switch__thumb{top:2px;bottom:2px;left:2px;width:calc(50% - 2px)}
+.zpl-switch--chip .zpl-switch__opt{min-width:32px;padding:0 7px;font-size:11px}
+@media (max-width:1200px){.zpl-switch--nav{display:none}.zpl-switch--chip{display:inline-flex}}
+@media (max-width:380px){.zpl-switch--chip .zpl-switch__opt{min-width:28px;padding:0 5px}}
+@media (min-width:1201px){.zpl-switch--drawer{display:none}}
+@media (prefers-reduced-motion:reduce){.zpl-switch__thumb,.zpl-switch__opt{transition:none}.zpl-switch.is-busy .zpl-switch__code::after,.zpl-switch.is-busy .zpl-switch__flag::after{animation:zpl-in .2s ease .12s forwards;border-bottom-color:currentColor}.zpl-switch__flag{transition:none}}
+
+/* Debug (?zpl_debug=1 as administrator) */
+.zpl-debug-miss{outline:2px dashed #e5484d!important;outline-offset:2px}

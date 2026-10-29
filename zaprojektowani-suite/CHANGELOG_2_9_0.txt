@@ -1,0 +1,44 @@
+ZAPROJEKTOWANI SUITE 2.9.0
+
+Zawiera całą 2.8.1 (i 2.8.0 z Twoją 2.7.20). Wystarczy wgrać tylko tę wersję.
+
+Nowy moduł: ZP Suite → Publikacja wpisów (Twoje pytanie, czy możemy sami dodawać artykuły falami):
+- wtyczka co 6 godzin sprawdza kanał z gotowymi artykułami (gałąź tresci-wpisy w repozytorium)
+  i planuje je na ich daty, najwyżej jeden artykuł dziennie, o 8:00 w dni robocze,
+- artykuł przychodzi razem ze zdjęciami (okładka 1600×1000 i zdjęcia w treści trafiają
+  do biblioteki mediów), tytułem i opisem SEO, frazą w Rank Math, FAQ i kategorią,
+  w tym samym układzie co dotychczasowe artykuły,
+- pierwsza fala to paczka 5: papier firmowy (15.10), kreatory stron (19.10), mockup (21.10),
+  SEO sklepu (23.10) i logo firmy budowlanej (27.10),
+- po wgraniu dostaniesz e-mail z listą zaplanowanych artykułów, a w dniu publikacji
+  e-mail z linkiem i gotowym postem do wizytówki Google (do skopiowania),
+- zaplanowane artykuły widzisz też w Wpisy → Zaplanowane; każdy możesz poprawić, przenieść
+  do szkiców albo usunąć, a wtyczka tego nie cofnie (artykułu, który poprawisz, nie nadpisze),
+- w panelu są przyciski: „Sprawdź teraz”, „Przenieś zaplanowane do szkiców” (wstrzymuje
+  publikację) i „Cofnij wszystko”; można też włączyć tryb „tylko szkice do akceptacji”,
+- jeśli data minie, zanim artykuł wejdzie (np. wtyczka wgrana po 15.10), artykuł dostaje
+  najbliższy wolny dzień roboczy, żeby nie wpadło kilka naraz,
+- po publikacji nowego artykułu starsze wpisy dostają do niego link w treści
+  (np. wpis o wizytówce linkuje papier firmowy i mockup).
+
+Nowa strona: /agencja-reklamowa-katowice/ (paczka 5):
+- fraza „agencja reklamowa katowice” i pokrewne (agencja marketingowa Katowice, Śląsk),
+- zbudowana z szablonu strony Strony internetowe Katowice, bez nowych elementów wyglądu,
+- strony katowickie (strony, sklepy, logo) linkują do niej w FAQ; bez pozycji w menu,
+- po angielsku przekierowuje na angielską stronę Strony internetowe Katowice.
+
+Cena strony obejmuje domenę i hosting (Twoja odpowiedź z 7.10):
+- FAQ i opis ceny w Studiu Wyceny, wpis „ile kosztuje strona” (sekcja „W liczbach”),
+  strona WordPress i artykuł „jak stworzyć stronę internetową” mówią teraz,
+  że domena i hosting są w cenie strony; wersje angielskie też.
+
+Linki do nowych artykułów (pojawią się w dniu ich publikacji):
+- Tworzenie sklepów → SEO sklepu, Projektowanie logo → mockup,
+  Identyfikacja wizualna → papier firmowy.
+
+Wygląd stron się nie zmienia.
+
+Po wgraniu:
+1. Wejdź raz na dowolną stronę.
+2. Rank Math → Mapa witryny → Zapisz zmiany.
+3. Napisz w wątku „wgrane”.

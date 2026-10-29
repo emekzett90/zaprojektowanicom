@@ -1,0 +1,6 @@
+Zaprojektowani Suite 2.2.670
+
+- Usunięto wszystkie efekty box-shadow i text-shadow z formularza kontaktowego nad stopką.
+- Poprawka działa globalnie na wszystkich podstronach.
+- Uwzględniono oba warianty formularza: zpContactSystemLight oraz zpContactFormLight.
+- Reguła jest ładowana jako ostatnia, dzięki czemu wcześniejsze style nie przywracają cieni.

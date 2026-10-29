@@ -1,0 +1,14 @@
+#zpbsUltimate .zpStudioCompany{grid-column:1/-1;min-width:0;padding:18px;border:1px solid #dbe2ec;border-radius:18px;background:#f7f9fc;color:#071426}
+#zpbsUltimate .zpStudioCompany[hidden],#zpbsUltimate .zpStudioCompany [hidden]{display:none!important}
+#zpbsUltimate .zpStudioCompany__row{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:end;gap:12px}
+#zpbsUltimate .zpStudioCompany .zpbsField{min-width:0;margin:0}
+#zpbsUltimate .zpStudioCompany__help,#zpbsUltimate .zpStudioCompany__status{margin:10px 0 0;font-size:12px;line-height:1.6;color:#526174}
+#zpbsUltimate .zpStudioCompany__status[data-error="true"]{color:#9c2430}
+#zpbsUltimate button.zpStudioCompany__button{display:inline-flex!important;align-items:center!important;justify-content:center!important;min-height:48px!important;padding:12px 18px!important;border:1px solid #071426!important;border-radius:999px!important;background:linear-gradient(105deg,#071426 0%,#102a4f 48%,#1c477a 100%)!important;color:#fff!important;font-size:14px!important;line-height:1.4!important;font-weight:700!important}
+#zpbsUltimate button.zpStudioCompany__button:disabled{opacity:.6;cursor:wait!important}
+#zpbsUltimate .zpStudioCompany input:focus-visible,#zpbsUltimate button.zpStudioCompany__button:focus-visible{outline:3px solid #76b5eb!important;outline-offset:3px}
+#zpbsUltimate .zpStudioCompany__preview{margin-top:14px;padding:14px;border:1px solid #ccd9e8;border-radius:14px;background:#fff}
+#zpbsUltimate .zpStudioCompany__preview strong{display:block;overflow-wrap:anywhere;font-size:14px;line-height:1.6}
+#zpbsUltimate .zpStudioCompany__preview p{margin:6px 0 12px;font-size:12px;line-height:1.6;overflow-wrap:anywhere}
+#zpbsUltimate .zpStudioCompany__fields{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1fr);gap:12px;margin-top:14px}
+@media(max-width:600px){#zpbsUltimate .zpStudioCompany{padding:14px}#zpbsUltimate .zpStudioCompany__row,#zpbsUltimate .zpStudioCompany__fields{grid-template-columns:1fr}#zpbsUltimate button.zpStudioCompany__button{width:100%!important}}

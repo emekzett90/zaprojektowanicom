@@ -1,0 +1,12 @@
+ZAPROJEKTOWANI SUITE v2.2.112 — DEEP SEO PASS
+
+Co zostało poprawione względem v2.2.111:
+- Podstrona /sklepy-internetowe-katowice/ ma odświeżane wszystkie sekcje z plików: hero, why, trust, portfolio, process, industries, packages, faq.
+- Poprawione H2/H3 i leady w sekcjach sklepów: why, trust, portfolio, process, industries, packages, faq.
+- Dopisane mocniejsze frazy naturalne: sklepy internetowe Katowice, WooCommerce, SEO e-commerce, płatności, dostawy, checkout, remarketing, Google Ads, Meta Ads.
+- Uzupełnione alty obrazków w sekcjach sklepowych.
+- Podstrona /logo-branding-katowice/ dostała głębsze SEO w sekcjach: hero, logotypy klientów, trust, portfolio, pakiety, proces, faq.
+- Dopisane mocniejsze frazy naturalne: projektowanie logo Katowice, logo dla firmy, agencja brandingowa, identyfikacja wizualna, brandbook, system marki.
+- Uzupełnione alty obrazków w sekcjach logo/branding.
+- Dodany fallback meta Rank Math dla /sklepy-internetowe-katowice/ i /logo-branding-katowice/.
+- Rozszerzone schema Service dla sklepów i logo/brandingu.

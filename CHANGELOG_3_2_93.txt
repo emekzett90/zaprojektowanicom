@@ -1,0 +1,38 @@
+ZP Suite 3.2.93 — poprawki wyglądu podstron i Wiedzy (29.10.2026)
+Baza: zaprojektowani-suite-3.2.92.zip wgrany przez Mata 28.10.2026. Zmiany tylko w wyglądzie i w kilku szablonach; żadnych zmian w Rank Math, cache, bazie, cenach ani w treściach SEO.
+
+NOWE PLIKI (wszystko ładuje includes/wyglad-3293/loader.php)
+  includes/wyglad-3293/nawigacja.php, onas.php, watermarki.php, wiedza.php, casestudies.php
+  assets/css/wyglad-3293/onas.css, watermarki.css, wiedza.css, casestudies.css
+  assets/js/wyglad-3293/wiedza.js
+
+1. BREADCRUMBS — podstrony zaczynają się od kickera
+   Gdzie patrzeć: /najczesciej-zadawane-pytania/ (od „Centrum odpowiedzi”), /o-nas/ (sam kicker „Studio kreatywne z Katowic”, przed H1 nic więcej), kategorie Wiedzy /category/…, regulamin/polityka/RODO/cookies, strony podziękowań, dół /wiedza/. EN tak samo.
+   Pliki: templates/faq-page.php, assets/css/blocks/faq-page(.min).css, assets/css/front-fixes-303(.min).css, assets/css-min.json, templates/wiedza-category.php, templates/thank-you/*.html, includes/wyglad-3293/nawigacja.php.
+   BreadcrumbList w JSON-LD (dane strukturalne) bez zmian — usunięty jest tylko widoczny pasek.
+
+2. MEGA MENU NA REALIZACJACH — nagłówki kolumn bez capsa
+   Gdzie patrzeć: /realizacje/ → najechać na „Usługi”: Start marki / Strony & sklepy / Sprzedaż / Najczęściej wybierane / Strony dla branż są małymi etykietami jak na O nas.
+   Plik: includes/front-fixes-223.php (usunięte tylko dwie reguły .zpNewNav__megaHead).
+
+3. WATERMARKI OD DOŁU + RÓWNY ODSTĘP HEADER→KICKER
+   O nas: „zaprojektowani” leży na dole jasnoniebieskiego hero, wtopione maską, lewa krawędź w osi kickera.
+   FAQ: „faq” na dolnej linii hero (pod przyciskami). Realizacje: „realizacje”/„projects” na dolnej krawędzi hero, stary napis za zdjęciem ukryty.
+   Wiedza i Kontakt: „wiedza”/„insights”, „kontakt”/„contact” na dole ciemnego hero, na linii listwy statystyk (na Kontakcie zamiast obracającego się rotora słów — statyczne słowo).
+   Strony branżowe (8, PL i EN): słowo branży (lekarze, kancelarie, deweloperzy, beauty, trenerzy, fotografowie, restauracje, hotele) pod zdjęciem w hero, od dołu wtopione, przyklejone do dolnej linii.
+   Odstęp header→kicker: 72 px na desktopie, 48 px na telefonie na każdej podstronie (O nas, FAQ, Realizacje, Wiedza, Case studies, Kontakt, 8 branżowych, 13 usługowych; PL i EN); wcześniej 34–131 px.
+   Pliki: includes/wyglad-3293/watermarki.php, assets/css/wyglad-3293/watermarki.css, includes/seo-plan/industries.php (3 linie: span słowa).
+
+4. WIEDZA — jasna część przebudowana
+   Gdzie patrzeć: /wiedza/ pod hero: nagłówek indeksu, szukajka, przełącznik układu (karty / lista / kompakt), wiersz „Sortuj”: Najnowsze · Najpopularniejsze (po realnych odczytach) · Najstarsze · Najdłuższe · Najkrótsze · A–Z, wiersz „Wybierz obszar” z licznikami, licznik wyników, „Wyczyść filtry”, karty ze zdjęciem 16:10 (kategoria, tytuł, 2 linie zajawki, data · min · czytań), „Pokaż więcej” co 18. Sortowanie i filtry działają od razu (JS), stan w adresie (/wiedza/?sort=popular) renderowany też po stronie serwera; pod spodem jasny pas „Przewodnik po tematach” + „Jak korzystać”. EN: /en/knowledge/.
+   SEO: canonical bez parametrów, linki sortowania rel=nofollow, bez zmian w Rank Math.
+   Pliki: templates/wiedza-blog.php, includes/blog-knowledge.php, includes/wyglad-3293/wiedza.php, assets/css/wyglad-3293/wiedza.css, assets/js/wyglad-3293/wiedza.js.
+
+5. POLISH WIZUALNY — /case-studies/ i /o-nas/ (bez nowych efektów, gradientów i cieni)
+   /case-studies/: pasek faktów pod logotypami (04 opisane realizacje · 03 wersje językowe · 02 autorskie systemy · 13 technologii — liczby z treści huba), sekcja „Znajdź swoje wyzwanie” wyrównana, karty realizacji prowadzone zdjęciem (ramka 3:2, wiersz Klient · Zakres · Efekt, bez cienia), logotypy technologii zawijane zamiast ukrytego przewijania, jasny panel linku do portfolio, równy rytm sekcji. EN: /en/case-studies/.
+   Pliki: includes/wyglad-3293/casestudies.php, assets/css/wyglad-3293/casestudies.css, includes/case-studies-render-20261018.php (12 linii: punkty zaczepienia).
+   /o-nas/: zwięźlejszy hero (H1 72 px zamiast 88), pasek „Fakty o studio” 01–04, karty zespołu z jednakowym panelem zdjęcia, spokojniejsze Studio Awards (numery jako mikro-etykiety, słowo „awards” od dołu), sekcja Opinie klientów przeniesiona za Wybrane realizacje (naprzemiennie jasne/ciemne sekcje), proces jako numerowana lista, historia płasko, karty usług z linkami „Zobacz usługę”, para CTA. Wszystkie teksty, nagłówki, opinie i linki zachowane (policzone: identyczna liczba h1/h2/h3/p/strong/a/img).
+   Pliki: templates/pages/about-page-premium.html, includes/wyglad-3293/onas.php, assets/css/wyglad-3293/onas.css, zaprojektowani-languages/data/{php,json}/{en,pl}/…/78e9efd1eb08.* (4 nowe pary tłumaczeń).
+
+SPRAWDZONE NA LOKALNEJ KOPII (WP 7.1.3, PHP 8.3)
+   18 podstron PL/EN w 1440 i 390 px: 0 błędów konsoli, debug.log bez nowych wpisów, brak 404 w zasobach; JSON-LD BreadcrumbList bez zmian; pozycje treści na FAQ co do piksela jak przed usunięciem breadcrumbs.

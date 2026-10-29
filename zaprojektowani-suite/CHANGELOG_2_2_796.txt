@@ -1,0 +1,7 @@
+Zaprojektowani Suite 2.2.796
+
+- Mobile: sticky CTA is rendered at wp_body_open instead of waiting until the footer; wp_footer remains a fallback.
+- Mobile: removed backdrop-filter from the almost-opaque sticky dock and added containment to reduce the final paint/compositing hitch.
+- Home hero mobile: robot moved another 50 px up (90 px total vs old baseline); signet/glow follows it.
+- Home hero desktop: left copy section moved 30 px down relative to 2.2.795.
+- Home hero desktop: robot moved 50 px up; signet/glow follows it.

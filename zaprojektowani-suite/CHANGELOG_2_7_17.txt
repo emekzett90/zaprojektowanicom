@@ -1,0 +1,7 @@
+Changelog 2.7.17
+
+- Ujednolicono liczby opinii w kartach ocen i social proof.
+- Trustindex: 120 opinii.
+- Facebook: 60 opinii.
+- Zaktualizowano home hero, O nas, Realizacje oraz sekcje z kartami Trustindex/Facebook na stronach usługowych.
+- Dodano migrację zapisanych ustawień, aby stare wartości nie nadpisywały nowych liczników.

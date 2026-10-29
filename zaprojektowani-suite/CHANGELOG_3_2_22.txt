@@ -1,0 +1,5 @@
+Zaprojektowani Suite 3.2.22 — 2026-10-16
+
+Studio Wyceny: polski NIP, REGON i pobieranie danych firmy dostępne tylko w wersji polskiej. Wersja angielska zachowuje zwykłe pole nazwy firmy. Przełączenie języka usuwa polskie pola i metadane, a serwer ignoruje polskie dane identyfikacyjne przesłane ze starszej wersji formularza EN. Preferowana domena pozostaje dostępna dla stron i sklepów w obu językach.
+
+Zawiera wszystkie zmiany 3.2.20–3.2.21: dokumenty prawne, checkbox regulaminu, preferowana domena oraz lookup MF bez klucza.

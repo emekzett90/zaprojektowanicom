@@ -1,0 +1,7 @@
+Zaprojektowani Suite v2.2.655
+
+Studio Wyceny:
+- mobile i mniejsze tablety: zdjęcia podniesione o ok. 50 px,
+- mobile i mniejsze tablety: karty wyższe,
+- ikona pozostaje po prawej stronie,
+- poprawione bezpieczeństwo układu, aby opis nie nachodził na obraz.

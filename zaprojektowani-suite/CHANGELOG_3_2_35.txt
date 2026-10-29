@@ -1,0 +1,77 @@
+Zaprojektowani Suite 3.2.35 — header przed hero w początkowym HTML
+2026-10-17
+
+Baza: pełna paczka 3.2.34. Treści SEO, artykuły, podstrony branżowe,
+kontakt, zdjęcia oraz wcześniejsze moduły zostają zachowane.
+
+ZMIANA
+Poprawka 3.2.34 stabilizowała CSS i oznaczała rodziców headera w dokumencie
+Elementora, ale nie zmieniała kolejności HTML ani nie wyprowadzała nawigacji
+poza nadrzędne kontenery. Ich późniejsza widoczność lub wysokość nadal mogły
+wpływać na efekt wejścia. To jest odtworzone w lokalnym teście, nie diagnoza
+potwierdzona śladem wydajności z publicznego serwera użytkownika.
+
+3.2.35 przekształca odpowiedź na serwerze, przed wysłaniem jej do przeglądarki:
+- dokładnie ten sam istniejący header #zpNewNav znajduje się po otwarciu body,
+  przed hero i poza kontenerami Elementora;
+- pasek mobilny poprzedza rozbudowaną część desktopową wewnątrz headera;
+- nie ma klonowania menu, przenoszenia go JavaScriptem ani ukrywania hero;
+- stare, wyłącznie puste kontenery headera są zwijane CSS-em tylko do 1100 px;
+- kontenery zawierające inną treść, formularze, obrazy lub noscript nie są zwijane;
+- docelowy CSS headera pozostaje w head; duplikat poprzedniego końcowego
+  arkusza 3.2.34 jest zastępowany, a nie dokładany po raz kolejny;
+- skrypt menu, obrazy, zgody i analityka nie są modyfikowane;
+- moduł działa także przy wyłączonej opcjonalnej optymalizacji CSS Suite;
+- nie wprowadza nowej odmiany HTML zależnej od User-Agent;
+- brak jednoznacznego headera/hero lub niepoprawny HTML powoduje bezpieczne
+  zachowanie oryginalnej odpowiedzi. Nie usuwa w ciemno zdublowanych nawigacji.
+
+ZAKRES
+Strona główna / i /en/. Edytor, podgląd, zaplecze, AJAX, cron, REST oraz
+odpowiedzi inne niż HTML są wykluczone. CSS korygujący kontenery ograniczony
+jest do szerokości 1100 px; desktop zachowuje istniejące style i kontroler menu.
+
+KONTROLA WŁASNEGO ŚRODOWISKA
+- 55/55 testów PHP transformacji: kolejność elementów, dokładnie jeden header,
+  ponowne wywołanie, brakujące/zdublowane elementy, zachowanie linków, SVG,
+  skryptów, JSON-LD, rodzeństwa kontenerów, PL/EN, bufor porcjowany, tryb off.
+- 38 lokalnych scenariuszy Chromium: 12 prób kontrolnych starego rozwiązania
+  celowo odtwarza brak headera/przeskok; wszystkie 26 oczekiwanych prób nowego
+  rozwiązania i porównań desktopu przechodzi.
+- Parser HTML dostaje dwa fragmenty dokumentu z pauzą po H1: w starej próbie
+  z headerem na końcu dokumentu hero jest już widoczne bez headera; w nowej
+  header jest obecny od tej fazy. To kontrolowany test parsera, nie pomiar
+  realnego transferu sieciowego.
+- Na 11 szerokościach 360–1100 px początkowe ukrycie/przesunięcie starego
+  kontenera, późniejsze nadanie mu wysokości 82 px i uruchomienie kontrolera
+  menu nie zmieniają położenia headera, zdjęcia ani H1 po nowej transformacji.
+- Otwieranie/zamykanie menu na tych 11 szerokościach.
+- Porównanie geometrii desktopu 1280/1440/1920 px w tym samym lokalnym widoku.
+- 7 dodatkowych kontroli: bez JS, bez optymalizacji, późny pełny CSS headera,
+  zmiana orientacji i powrót, późniejsze podmienienie źródła zdjęcia zespołu.
+- Składnia wszystkich 695 plików PHP poprawna.
+
+OGRANICZENIA WERYFIKACJI
+Nie uzyskano połączenia z przeglądarką użytkownika ani nowego publicznego
+śladu ładowania strony. Nie przeprowadzono testu na fizycznym iPhonie/WebKit
+ani nowego pomiaru Lighthouse na produkcji. Testy używają oryginalnych
+szablonów, frontowych poprawek Suite, lokalnych zasobów i kontrolowanych
+kontenerów testowych; nie obejmują całej konfiguracji hostingu i zewnętrznych
+wtyczek. Nie podajemy gwarantowanego wyniku Lighthouse.
+
+INSTALACJA I SPRAWDZENIE
+1. Wgraj cały ZIP jako aktualizację obecnej Zaprojektowani Suite i zastąp
+   zainstalowaną wersję. Nie instaluj równolegle drugiej kopii tej wtyczki.
+2. Otwórz ponownie panel WordPress; numer wtyczki powinien wynosić 3.2.35.
+   Aktualizacja ponawia istniejące odświeżanie własnego cache HTML Suite.
+3. Dodatkowy cache hostingu/CDN, jeśli działa, należy odświeżyć osobno.
+4. Nowy dokument głównej zawiera znacznik:
+   <meta name="zp-header-layout" content="3.2.35; server-first">
+   oraz atrybut data-zp-header-ssr="3235" na rzeczywistym headerze.
+   Brak znacznika oznacza, że ta transformacja nie jest w otrzymanym HTML;
+   sam numer wersji w panelu nie potwierdza jeszcze treści z publicznego cache.
+
+AWARYJNY POWRÓT
+Tymczasowe wyłączenie adaptera: filtr zp_header_ssr_enabled_3235 zwracający
+false albo parametr ?zp_header_ssr=0 w niebuforowanym żądaniu. Można też
+przywrócić poprzedni ZIP 3.2.34. Poprawka nie przebudowuje treści w bazie danych.

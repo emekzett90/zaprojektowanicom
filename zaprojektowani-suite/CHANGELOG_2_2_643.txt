@@ -1,0 +1,8 @@
+Zaprojektowani Suite v2.2.643
+
+Studio Wyceny — poprawki kart usług:
+- większe odstępy między kartami na mobile,
+- ikonka strzałki przesunięta wyraźniej do prawego górnego rogu,
+- dużo większe mockupy na tablecie i desktopie,
+- mockup "Logo i branding" dodatkowo powiększony,
+- zachowany efekt overflow ponad kartę i floatowania.

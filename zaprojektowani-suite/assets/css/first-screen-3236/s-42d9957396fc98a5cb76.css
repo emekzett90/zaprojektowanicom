@@ -1,0 +1,1 @@
+@media(min-width:1101px){html body.home #zhHero .zh__poster,html body.front-page #zhHero .zh__poster{transition:opacity .16s cubic-bezier(.2,.7,.2,1)!important}html body.home #zhHero.is-spline-loaded .zh__poster,html body.front-page #zhHero.is-spline-loaded .zh__poster{opacity:0!important}}

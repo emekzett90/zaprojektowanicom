@@ -1,0 +1,8 @@
+Zaprojektowani Suite 2.2.631
+
+- Usunięto flash starego, ciemnego widoku Studio Wyceny podczas pierwszego renderu.
+- Komponent jest ujawniany dopiero po sparsowaniu końcowych stylów i gotowości DOM.
+- Animacje wejścia startują dopiero po poprawnym ujawnieniu finalnego layoutu.
+- Usunięto z template'u drugi, blokujący tag lucide.min.js; wykorzystywany jest jeden globalny enqueue WordPress.
+- Dodano stałe wymiary placeholderów ikon przed hydratacją Lucide, aby wyeliminować duże ikony i skoki układu.
+- Usunięto 350 archiwalnych plików changelog z paczki dystrybucyjnej (bez wpływu na działanie).

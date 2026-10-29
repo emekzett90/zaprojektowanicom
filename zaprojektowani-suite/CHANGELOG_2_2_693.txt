@@ -1,0 +1,12 @@
+ZAPROJEKTOWANI SUITE 2.2.693
+
+Strony Internetowe Katowice:
+- hover „Zobacz szczegóły” otrzymał navy gradient, jasny stroke i płynne wejście,
+- modal szczegółów projektu na mobile zajmuje pełny viewport i przewija się pionowo,
+- przycisk X modalu na desktopie ma stabilną pozycję i idealnie okrągły kształt,
+- dodano trzy pływające chipy korzyści wokół mockupu w hero,
+- usunięto przygaszanie oraz dimmed glow pozostałych kart pakietów,
+- mapa Polski została ujednolicona 1:1 ze stroną Logo & Branding:
+  typografia, układ, animacja obrysu, markery, status oraz wersja mobile,
+- wyłączono content-visibility/contain dla mapy, aby uniknąć rozmycia i rasteryzacji,
+- podbito wersję assetów i cache do 2.2.693.

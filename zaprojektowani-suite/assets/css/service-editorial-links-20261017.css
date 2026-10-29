@@ -1,0 +1,13 @@
+/* A quiet planning note within the existing service layout. No new fonts or motion. */
+.zpServiceReading { margin: 0; padding: clamp(32px, 3.5vw, 52px) 0; color: #121424; background: #f5f6f9; border-block: 1px solid #e1e5ed; font-family: "Plus Jakarta Sans Local", "Plus Jakarta Sans", system-ui, sans-serif; }
+.zpServiceReading__inner { width: min(1750px, calc(100% - clamp(32px, 6vw, 96px))); margin: 0 auto; }
+html body #zpServiceReading h2 { margin: 0 0 26px; color: #4d5788; font: 650 14px/1.5 "Plus Jakarta Sans Local", "Plus Jakarta Sans", system-ui, sans-serif; letter-spacing: .015em; text-transform: none; }
+.zpServiceReading__grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px clamp(32px, 5vw, 80px); }
+.zpServiceReading__grid[data-zp-reading-count="1"] { grid-template-columns: 1fr; }
+html body #zpServiceReading .zpServiceReading__entry h3 { margin: 0 0 12px; color: #121424; font-family: inherit; font-size: clamp(22px, 1.9vw, 29px); line-height: 1.24; font-weight: 700; letter-spacing: -.035em; }
+html body #zpServiceReading .zpServiceReading__entry p { max-width: 90ch; margin: 0; color: #556177; font-size: 16px; line-height: 1.8; }
+html body #zpServiceReading a.zpSeoLink { color: #354570; font-weight: 650; text-decoration: underline; text-decoration-color: #aeb9d1; text-underline-offset: 4px; }
+html body #zpServiceReading a.zpSeoLink:hover { color: #121424; text-decoration-color: currentColor; }
+html body #zpServiceReading a.zpSeoLink:focus-visible { outline: 3px solid #4d5788; outline-offset: 4px; border-radius: 3px; }
+@media (max-width: 800px) { .zpServiceReading__grid { grid-template-columns: 1fr; gap: 28px; } }
+@media (max-width: 480px) { .zpServiceReading__inner { width: calc(100% - 32px); } html body #zpServiceReading h2 { margin-bottom: 22px; } }

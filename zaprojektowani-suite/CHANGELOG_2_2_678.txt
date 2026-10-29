@@ -1,0 +1,4 @@
+Zaprojektowani Suite 2.2.678
+
+- /realizacje: desktopowy blok tekstowy hero (kicker, H1 i opis) przesunięty o 60 px wyżej.
+- Zdjęcie Stanisława, statystyki i kafle opinii pozostają bez zmian.

@@ -1,0 +1,9 @@
+ZAPROJEKTOWANI SUITE 2.2.770 — OUTTECH CASE STUDY
+
+- Dodano OUTTECH jako najnowszą realizację WEB w portfolio na stronie głównej.
+- Dodano OUTTECH do /realizacje/ jako pełny case study z obrazem, opisem, zakresem, wyzwaniem, rozwiązaniem, efektem i rezultatami.
+- Projekt korzysta z obrazu: outtech_realizacja_compressed-scaled.webp.
+- Dodano link live do https://www.outtech.pl/.
+- Dodano migrację do CMS portfolio home i Realizacje, aby projekt był widoczny także w panelu administracyjnym.
+- OUTTECH jest oznaczony jako wyróżniona realizacja na /realizacje/.
+- Zachowano wszystkie poprawki z wersji 2.2.769.

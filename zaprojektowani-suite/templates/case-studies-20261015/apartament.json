@@ -1,0 +1,161 @@
+{
+  "brand": "Apartament Piękna",
+  "slug": "strona-internetowa-apartament-piekna",
+  "en_path": "/en/websites/apartament-piekna-branding-booking-seo/",
+  "legacy_titles": [],
+  "cover": "assets/strony-internetowe/project-detail-apartament.webp",
+  "second": "assets/campaigns/apartament-mockup.webp",
+  "live": "https://apartamentpiekna.pl/",
+  "pl": {
+    "title": "Apartament Piękna — branding, strona, własne rezerwacje i SEO",
+    "seo_title": "Apartament Piękna: branding, rezerwacje i SEO | Case study",
+    "description": "Dla Apartamentu Piękna wykonaliśmy pełny branding, stronę i autorski system rezerwacji niezależny od Booksy oraz zewnętrznych platform. Prowadzimy także SEO.",
+    "keyword": "Apartament Piękna",
+    "tag": "Pełny branding + własne rezerwacje + SEO",
+    "lead": "Dla Apartamentu Piękna w Tarnowie przygotowaliśmy cały branding, stronę internetową oraz autorski system rezerwacji wizyt. Rozwiązanie działa we własnym serwisie, niezależnie od Booksy i innych zewnętrznych platform. Współpracę rozwijamy również w obszarze pozycjonowania i SEO.",
+    "intro": "Projekt łączy wizerunek marki beauty z konkretną ścieżką działania: od poznania oferty i zespołu, przez wybór zabiegu, do przesłania prośby o dogodny termin wizyty.",
+    "cover_alt": "Apartament Piękna — projekt strony salonu oraz autorskiej ścieżki rezerwacji wizyty",
+    "cover_caption": "Apartament Piękna — widoki strony i systemu rezerwacji. Wizualizacja projektu Zaprojektowani.",
+    "second_alt": "Apartament Piękna — wizualizacja marki, strony na laptopie i rezerwacji na telefonie",
+    "second_caption": "Prezentacja spójnego języka marki oraz widoków desktop i mobile. Materiał jest wizualizacją projektu.",
+    "card_title": "Własna marka i własna ścieżka rezerwacji",
+    "card_copy": "Klient: Apartament Piękna, Tarnów. Zakres: pełny branding, projekt i wdrożenie strony, autorski system rezerwacji wizyt oraz prowadzenie SEO.",
+    "scope": [
+      "Pełny branding i identyfikacja wizualna marki beauty",
+      "Projekt oraz wdrożenie strony internetowej",
+      "Uporządkowanie oferty zabiegowej i prezentacji zespołu",
+      "Autorski system rezerwacji wizyt we własnym serwisie",
+      "Niezależność systemu od Booksy i zewnętrznych platform rezerwacyjnych",
+      "Responsywne widoki i ścieżka kontaktu na telefonie",
+      "Prowadzenie pozycjonowania i rozwój treści pod SEO"
+    ],
+    "sections": [
+      [
+        "kontekst",
+        "Jedna realizacja od marki do umówienia wizyty",
+        "<p>W Apartamencie Piękna strona jest częścią doświadczenia marki jeszcze przed wizytą w salonie. Odbiorca chce poznać ofertę, zobaczyć zespół i znaleźć sposób kontaktu. Sam efekt wizualny nie wystarczy, jeśli wybór usługi lub przejście do rezerwacji są nieczytelne.</p><p>Dlatego objęliśmy projektem całość: branding, stronę internetową oraz autorski system rezerwacji. Każdy element korzysta z tego samego języka wizualnego i prowadzi do wspólnego celu. Współpraca obejmuje też prowadzenie SEO, dzięki czemu rozwój treści i widoczności jest częścią dalszej pracy nad serwisem.</p>"
+      ],
+      [
+        "branding",
+        "Pełny branding Apartamentu Piękna",
+        "<p>Przygotowaliśmy cały branding marki, a nie wyłącznie zmianę wyglądu strony. Logo, typografia, paleta kolorów i sposób prezentowania materiałów tworzą spójny system. Jasne tła, burgundowe akcenty i rozbudowana warstwa fotograficzna zostały połączone z czytelną hierarchią treści.</p><p>W serwisie identyfikacja pracuje w nagłówkach, przyciskach i układach oferty. Zamiast dopasowywać stronę do przypadkowego szablonu, przełożyliśmy charakter marki na konkretne elementy interfejsu. Taką współpracę opisujemy szerzej w usługach <a href=\"/projektowanie-logo/\">projektowania logo</a> oraz <a href=\"/identyfikacja-wizualna/\">identyfikacji wizualnej</a>.</p>"
+      ],
+      [
+        "strona",
+        "Strona beauty: oferta, zespół i następny krok",
+        "<p>Rozbudowaną ofertę zabiegową uporządkowaliśmy tak, żeby użytkownik mógł zacząć od interesującej go usługi. Strona łączy opisy zabiegów, prezentację specjalistek, informacje o salonie i widoczne przejścia do kontaktu. Nie trzeba znać całej oferty, aby odnaleźć punkt startu.</p><p>Duże znaczenie ma spójność treści i działania. Osoba oglądająca usługę powinna wiedzieć, gdzie przeczyta szczegóły i jak przejdzie dalej. Zaprojektowaliśmy te ścieżki dla komputerów i telefonów. Podobny zakres omawiamy na stronie <a href=\"/strony-internetowe-dla-salonow-beauty/\">strony internetowe dla salonów beauty</a>.</p>"
+      ],
+      [
+        "wlasne-rezerwacje",
+        "Autorski system rezerwacji, niezależny od zewnętrznych platform",
+        "<p>Kluczową częścią realizacji jest własny system rezerwacji wizyt, zaprojektowany i wdrożony dla Apartamentu Piękna. Nie jest to osadzony widżet Booksy ani przekierowanie do obcej platformy. Ścieżka pozostaje częścią strony salonu i korzysta z jej identyfikacji.</p><p>Użytkownik wybiera usługę, wskazuje termin i podaje dane potrzebne do kontaktu. Następnie przesyła prośbę o wizytę. Komunikacja w serwisie wyjaśnia, że salon potwierdzi wizytę lub zaproponuje dostępny termin. Dzięki temu etap zgłoszenia nie jest mylony z ostatecznym potwierdzeniem.</p><p>Własny system można projektować wokół sposobu pracy konkretnej firmy. Ważne są zarówno kroki widoczne dla klientki, jak i to, jak zespół odbiera oraz obsługuje zgłoszenie. Przed podobnym wdrożeniem trzeba ustalić reguły dostępności, potwierdzania i kontaktu, zamiast zakładać, że każda branża potrzebuje tego samego formularza.</p>"
+      ],
+      [
+        "seo",
+        "Pozycjonowanie i rozwój treści po wdrożeniu",
+        "<p>Współpraca obejmuje również prowadzenie pozycjonowania i SEO. Dla lokalnej marki beauty znaczenie mają czytelne podstrony usług, zgodne informacje o lokalizacji i treści odpowiadające na pytania odbiorców. Publiczna strona rozwija ofertę oraz poradnik związany z działalnością salonu w Tarnowie.</p><p>SEO łączymy z użytecznością. Artykuł powinien prowadzić do właściwej usługi, a podstrona zabiegu do zrozumiałego następnego kroku. Tak budowany serwis daje przestrzeń do dalszego rozwoju bez mieszania poradnika, oferty i rezerwacji. Ofertę, poradnik i sposób umawiania wizyt warto rozwijać wspólnie, zachowując jasny kontekst każdej z tych części.</p>"
+      ],
+      [
+        "rezultat",
+        "Rezultat: spójna marka i własny kanał rezerwacji",
+        "<p>Apartament Piękna otrzymał pełny branding, kompletną stronę i autorski system rezerwacji, który działa we własnym serwisie. Prowadzenie SEO stanowi dalszą część współpracy. Wspólnym mianownikiem jest połączenie wyglądu marki z wygodą korzystania z oferty.</p><p>Przy podobnym projekcie warto od początku planować stronę i proces zapisu razem. W <a href=\"/studio-wyceny/\">Studiu Wyceny</a> opisz ofertę, sposób potwierdzania wizyt i oczekiwany zakres administracji. Jeśli chcesz porównać dostępne rozwiązania, przeczytaj również poradnik o <a href=\"/strony-internetowe/system-rezerwacji-online/\">systemie rezerwacji online na stronie internetowej</a>.</p>"
+      ]
+    ],
+    "faq": [
+      [
+        "Czy Apartament Piękna otrzymał pełny branding?",
+        "Tak. Zakres obejmował cały branding marki oraz projekt i wdrożenie strony internetowej. Identyfikacja i interfejs zostały zaplanowane jako spójna całość."
+      ],
+      [
+        "Czy rezerwacje korzystają z Booksy?",
+        "Nie. Dla Apartamentu Piękna stworzyliśmy autorski system rezerwacji wizyt we własnym serwisie, niezależny od Booksy i innych zewnętrznych platform."
+      ],
+      [
+        "Czy wysłanie formularza oznacza potwierdzoną wizytę?",
+        "Strona pozwala przesłać prośbę o wizytę. Salon potwierdza zgłoszenie lub proponuje dostępny termin, zgodnie z komunikacją w systemie."
+      ],
+      [
+        "Czy współpraca obejmuje SEO?",
+        "Tak. Oprócz brandingu, strony i własnego systemu rezerwacji prowadzimy dla Apartamentu Piękna pozycjonowanie i SEO."
+      ]
+    ],
+    "cta": "Zaplanuj markę beauty z własnymi rezerwacjami",
+    "cta_text": "Połącz branding, stronę i sposób obsługi wizyt w jednym projekcie. Opisz ofertę salonu i potrzeby zespołu, a ustalimy zakres wdrożenia oraz dalszego rozwoju."
+  },
+  "en": {
+    "title": "Apartament Piękna — branding, website, custom booking and SEO",
+    "seo_title": "Apartament Piękna: branding, booking and SEO | Case study",
+    "description": "Complete branding, a website and a custom appointment system for Apartament Piękna, independent of Booksy and third-party booking platforms, with ongoing SEO.",
+    "keyword": "Apartament Piękna",
+    "tag": "Complete branding + custom booking + SEO",
+    "lead": "For Apartament Piękna in Tarnów, we created the complete branding, website and a custom appointment booking system. The system operates within the salon’s own site, independently of Booksy and other third-party platforms. Our ongoing work also includes search engine optimisation and SEO.",
+    "intro": "The project connects the beauty brand’s identity with a practical journey: exploring the services and team, choosing a treatment and sending a request for a suitable appointment.",
+    "cover_alt": "Apartament Piękna website design and custom appointment request journey",
+    "cover_caption": "Apartament Piękna website and booking views. A project visualisation by Zaprojektowani.",
+    "second_alt": "Apartament Piękna brand visualisation with the website on a laptop and booking on a phone",
+    "second_caption": "A presentation of the brand’s visual language and desktop and mobile views. This is a project visualisation.",
+    "card_title": "An independent brand and booking journey",
+    "card_copy": "Client: Apartament Piękna, Tarnów. Scope: complete branding, website design and development, a custom appointment system and ongoing SEO.",
+    "scope": [
+      "Complete branding and visual identity for the beauty brand",
+      "Website design and development",
+      "Structured treatment offer and team presentation",
+      "Custom appointment booking within the salon’s own website",
+      "A system independent of Booksy and third-party booking platforms",
+      "Responsive layouts and a mobile contact journey",
+      "Ongoing search engine optimisation and SEO content development"
+    ],
+    "sections": [
+      [
+        "kontekst",
+        "One project, from brand identity to an appointment request",
+        "<p>The Apartament Piękna website is part of the brand experience before a visitor reaches the salon. People want to explore the services, meet the team and find a way to get in touch. Visual appeal alone is insufficient if choosing a service or moving to booking is confusing.</p><p>We addressed the whole scope: branding, website and a custom booking system. Each part uses the same visual language and supports a shared journey. The collaboration also includes ongoing SEO, making content and search visibility part of the website’s continued development.</p>"
+      ],
+      [
+        "branding",
+        "Complete branding for Apartament Piękna",
+        "<p>We created the complete brand identity rather than changing only the website’s appearance. The logo, typography, colour palette and presentation of materials form one consistent system. Light backgrounds, burgundy accents and photography work alongside a clear content hierarchy.</p><p>On the website, the identity appears in headings, buttons and service layouts. We translated the brand’s character into specific interface elements rather than adapting the site to an unrelated template. Our <a href=\"/projektowanie-logo/\">logo design</a> and <a href=\"/identyfikacja-wizualna/\">visual identity</a> services explain the wider scope.</p>"
+      ],
+      [
+        "strona",
+        "A beauty website with services, people and a clear next step",
+        "<p>We structured the treatment offer so visitors can start with the service that interests them. The website combines treatment information, specialist profiles, salon details and visible contact routes. Visitors do not need to understand the entire offer before finding a useful starting point.</p><p>Content and actions need to agree. Someone reading about a service should know where to find the details and how to continue. We designed these journeys for desktop and mobile. A similar scope is described on our <a href=\"/strony-internetowe-dla-salonow-beauty/\">beauty salon website service</a> page.</p>"
+      ],
+      [
+        "wlasne-rezerwacje",
+        "A custom booking system independent of external platforms",
+        "<p>A central deliverable is the appointment system designed and developed for Apartament Piękna. It is not an embedded Booksy widget or a redirect to an external booking platform. The journey stays within the salon’s website and follows its visual identity.</p><p>Visitors select a service, indicate a date and provide the contact details needed for their request. They then submit an appointment request. The website explains that the salon confirms the appointment or suggests an available date. This keeps submitting a request distinct from receiving final confirmation.</p><p>A custom system can follow the way a particular team works. Both the customer-facing steps and the team’s handling of a request matter. Before a similar implementation, define availability, confirmation and contact rules rather than assuming every business needs the same form.</p>"
+      ],
+      [
+        "seo",
+        "Ongoing SEO and content development",
+        "<p>Our work also includes ongoing search engine optimisation and SEO. For a local beauty brand, clear service pages, consistent location information and content answering visitors’ questions all matter. The public website develops the treatment offer and a knowledge section connected with the salon’s work in Tarnów.</p><p>We connect SEO with usability. An article should lead to the relevant service, and a treatment page should explain the next step. This leaves room for development while distinguishing the knowledge section, services and booking. Services, editorial content and the appointment journey benefit from being developed together while keeping each area’s purpose clear.</p>"
+      ],
+      [
+        "rezultat",
+        "The outcome: a consistent brand and an independent booking channel",
+        "<p>Apartament Piękna received complete branding, a website and a custom appointment system operating within its own site. Ongoing SEO is a further part of our collaboration. The project connects the brand’s appearance with a practical way to explore services and request a visit.</p><p>For a similar project, plan the website and appointment process together from the start. Describe your services, confirmation workflow and administrative needs in our <a href=\"/studio-wyceny/\">Quote Studio</a>. Our guide to <a href=\"/strony-internetowe/system-rezerwacji-online/\">online booking systems on websites</a> can also help compare the options.</p>"
+      ]
+    ],
+    "faq": [
+      [
+        "Did Apartament Piękna receive complete branding?",
+        "Yes. The scope included complete branding, website design and development. The identity and interface were planned as one consistent project."
+      ],
+      [
+        "Does the booking system use Booksy?",
+        "No. We created a custom appointment system within the salon’s own website, independently of Booksy and other third-party booking platforms."
+      ],
+      [
+        "Does sending the form confirm an appointment?",
+        "The website accepts an appointment request. The salon confirms it or proposes an available date, as explained in the system."
+      ],
+      [
+        "Does the collaboration include SEO?",
+        "Yes. Alongside the branding, website and custom appointment system, we provide ongoing search engine optimisation and SEO for Apartament Piękna."
+      ]
+    ],
+    "cta": "Plan a beauty brand with its own booking system",
+    "cta_text": "Connect branding, website and appointment handling within one project. Describe the salon’s services and your team’s needs so we can define the implementation and ongoing development scope."
+  }
+}
