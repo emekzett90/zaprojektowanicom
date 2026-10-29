@@ -268,12 +268,14 @@ function zp_seo_industry_page(string $html, string $key): string {
     $s = (string) preg_replace('~(<section\b[^>]*)(>)~i', '$1 data-zp-industry="' . esc_attr($key) . '" style="--zp-hero-ar:' . $ratio . '"$2', $s, 1);
     // The laptop's description no longer fits; the photo carries its own alt text.
     $s = (string) preg_replace('~(<div class="hero-build")\s+aria-label="[^"]*"~', '$1', $s, 1);
-    return (string) preg_replace_callback('~<img\b[^>]*\bclass=(["\'])[^"\']*\bhero-shot\b[^>]*>~i', static function ($m) use ($key, $industry) {
+    $s = (string) preg_replace_callback('~<img\b[^>]*\bclass=(["\'])[^"\']*\bhero-shot\b[^>]*>~i', static function ($m) use ($key, $industry) {
       $src = zp_seo_industry_hero_sources($key);
       $tag = (string) preg_replace('~\s(?:src|srcset|sizes|data-src|data-srcset|data-lazy-src|data-lazy-srcset|width|height|alt|loading|fetchpriority|decoding)\s*=\s*(["\']).*?\1~is', '', $m[0]);
       $tag = (string) preg_replace('~\bclass=(["\'])~', 'class=$1zpIndHero ', $tag, 1);
       return rtrim(substr($tag, 0, -1), '/ ') . ' src="' . esc_url($src['src']) . '" srcset="' . esc_attr($src['srcset']) . '" sizes="' . esc_attr($src['sizes']) . '" width="' . (int) $src['width'] . '" height="' . (int) $src['height'] . '" alt="' . esc_attr($industry['hero_alt']) . '" loading="eager" fetchpriority="high" decoding="async">';
     }, $s, 1);
+    // 3.2.93 (Mat 28.10, watermarki): the industry word under the hero photo, blended into the bottom line (includes/wyglad-3293/watermarki.php).
+    return function_exists('zp_w93_watermarki_industry_word') ? zp_w93_watermarki_industry_word($s, $key) : $s;
   });
 
   // People over the band under the packages ("Nie wiesz, który zakres będzie właściwy?").

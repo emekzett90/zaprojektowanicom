@@ -1,0 +1,410 @@
+/* 3.2.93 — /case-studies/ hub polish (index only). Loaded after case-studies-20261018/3241/3242/3266.
+   No new gradients, shadows or motion: hierarchy, whitespace, hairlines and an image-led card. */
+html body .zpCS41.zpCS18--index {
+  --w93-ink: #071426;
+  --w93-muted: #5e6b7c;
+  --w93-line: rgba(7, 20, 38, .10);
+  --w93-soft: #f5f7fa;
+  --w93-space: clamp(64px, 6.6vw, 96px);
+  --w93-radius: 28px;
+}
+
+/* 1. Fact strip under the hero: four numbered facts, hairline separated. */
+html body .zpCS41.zpCS18--index .zpCS93__facts {
+  background: #fff;
+  border-bottom: 1px solid var(--w93-line);
+}
+html body .zpCS41.zpCS18--index .zpCS93__factList {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+html body .zpCS41.zpCS18--index .zpCS93__factList > li {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: baseline;
+  column-gap: 14px;
+  row-gap: 10px;
+  min-width: 0;
+  margin: 0;
+  padding: 34px 32px 34px 0;
+  list-style: none;
+  background: none;
+}
+html body .zpCS41.zpCS18--index .zpCS93__factList > li::before,
+html body .zpCS41.zpCS18--index .zpCS93__factList > li::after { display: none; }
+html body .zpCS41.zpCS18--index .zpCS93__factList > li + li {
+  padding-left: 32px;
+  border-left: 1px solid var(--w93-line);
+}
+html body .zpCS41.zpCS18--index .zpCS93__factList b {
+  font-size: clamp(40px, 3.4vw, 52px);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -.05em;
+  color: var(--w93-ink);
+  font-variant-numeric: tabular-nums;
+}
+html body .zpCS41.zpCS18--index .zpCS93__factList span {
+  font-size: 11px;
+  font-weight: 800;
+  line-height: 1.4;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--w93-muted);
+}
+html body .zpCS41.zpCS18--index .zpCS93__factList small {
+  grid-column: 1 / -1;
+  max-width: 34ch;
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--w93-muted);
+}
+
+/* 2. Overview: kicker → two-tone H2 → lead on one baseline, then the four choices. */
+html body .zpCS41.zpCS18--index .zpCS41__overview {
+  padding: var(--w93-space) 0 56px;
+}
+html body .zpCS41.zpCS18--index .zpCS41__overview .zpCS18__editorial {
+  align-items: end;
+}
+html body .zpCS41.zpCS18--index .zpCS41__choices {
+  margin-top: 44px;
+  gap: 18px;
+}
+html body .zpCS41.zpCS18--index .zpCS41__choices > a {
+  padding: 24px;
+  border-color: var(--w93-line);
+  border-radius: 22px;
+}
+html body .zpCS41.zpCS18--index .zpCS41__choices strong {
+  font-size: 17px;
+  letter-spacing: -.02em;
+}
+html body .zpCS41.zpCS18--index .zpCS41__choices small {
+  font-size: 12.5px;
+}
+
+/* 3. Projects: one image-led card per row, thumbnail column first with its meta row. */
+html body .zpCS41.zpCS18--index .zpCS18__projects {
+  padding: 0 0 var(--w93-space);
+}
+html body .zpCS41.zpCS18--index .zpCS18__projects > .zpCS18__inner {
+  gap: 28px;
+}
+html body .zpCS41.zpCS18--index .zpCS41__project {
+  grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(28px, 3.4vw, 60px);
+  padding: clamp(22px, 2.2vw, 32px);
+  border: 1px solid var(--w93-line);
+  border-radius: var(--w93-radius);
+  background: #fff;
+  box-shadow: none;
+}
+html body .zpCS41.zpCS18--index .zpCS93__media {
+  min-width: 0;
+}
+html body .zpCS41.zpCS18--index .zpCS41__project .zpCS18__projectImage {
+  display: block;
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  max-width: none;
+  aspect-ratio: 3 / 2;
+  border: 1px solid var(--w93-line);
+  border-radius: 22px;
+  background: var(--w93-soft);
+}
+html body .zpCS41.zpCS18--index .zpCS41__project .zpCS18__projectImage img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  max-height: none;
+  object-fit: cover;
+  border-radius: inherit !important;
+}
+/* Keyboard focus on the thumbnail link: a real ring (the global [class^=zp] a:focus-visible rule removes outlines with !important). */
+html body .zpCS41.zpCS18--index .zpCS41__project .zpCS18__projectImage:focus-visible {
+  outline: 3px solid #1c477a !important;
+  outline-offset: 3px !important;
+  box-shadow: none !important;
+}
+html body .zpCS41.zpCS18--index .zpCS93__meta {
+  display: grid;
+  grid-template-columns: minmax(0, .85fr) minmax(0, 1.45fr) minmax(0, 1.1fr);
+  gap: 16px 24px;
+  margin: 22px 0 0;
+  padding: 20px 0 0;
+  border-top: 1px solid var(--w93-line);
+}
+html body .zpCS41.zpCS18--index .zpCS93__meta > div {
+  min-width: 0;
+  margin: 0;
+}
+html body .zpCS41.zpCS18--index .zpCS93__meta dt {
+  margin: 0 0 6px;
+  font-size: 10px;
+  font-weight: 800;
+  line-height: 1.4;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--w93-muted);
+}
+html body .zpCS41.zpCS18--index .zpCS93__meta dd {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.5;
+  letter-spacing: -.01em;
+  color: var(--w93-ink);
+}
+html body .zpCS41.zpCS18--index .zpCS18__projectCopy {
+  min-width: 0;
+}
+html body .zpCS41.zpCS18--index .zpCS41__projectBrand {
+  margin-bottom: 24px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--w93-line);
+}
+html body .zpCS41.zpCS18--index .zpCS41__projectBrand > span {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--w93-muted);
+}
+html body .zpCS41.zpCS18--index .zpCS41__project .zpCS18__projectCopy h3 {
+  font-size: clamp(28px, 2.6vw, 40px);
+  line-height: 1.1;
+  letter-spacing: -.045em;
+}
+html body .zpCS41.zpCS18--index .zpCS41__project .zpCS18__projectCopy > p {
+  max-width: 62ch;
+  margin: 20px 0 22px;
+  font-size: 16px;
+  line-height: 1.75;
+  color: var(--w93-muted);
+}
+html body .zpCS41.zpCS18--index .zpCS66__projectBenefit {
+  margin: 0 0 22px;
+  padding: 18px 22px;
+  border-left: 2px solid #1c477a;
+  border-radius: 0 18px 18px 0;
+  background: var(--w93-soft);
+}
+html body .zpCS41.zpCS18--index .zpCS41__deliverables {
+  margin: 0 0 22px;
+  gap: 10px;
+}
+html body .zpCS41.zpCS18--index .zpCS50__projectTech {
+  margin-bottom: 24px;
+  padding-top: 20px;
+  border-top: 1px solid var(--w93-line);
+}
+/* The narrower copy column must still show every technology logo: wrap instead of a hidden scroller
+   (phones ≤760px keep the swipe rail and its hint). */
+@media (min-width: 761px) {
+  html body .zpCS41.zpCS18--index .zpCS50__projectTech .zpCS18__techMarks {
+    flex-wrap: wrap;
+    gap: 12px 18px;
+    overflow: visible;
+    padding-bottom: 4px;
+  }
+}
+html body .zpCS41.zpCS18--index .zpCS66__projectActions {
+  gap: 12px 26px;
+}
+
+/* 4. Portfolio bridge: one clear panel, text left, action right. */
+html body .zpCS41.zpCS18--index .zpCS18__portfolioLink {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 20px 40px;
+  margin-top: 28px;
+  padding: 28px 32px;
+  border: 1px solid var(--w93-line);
+  border-radius: 24px;
+  background: var(--w93-soft);
+}
+html body .zpCS41.zpCS18--index .zpCS18__portfolioLink p {
+  max-width: none;
+  font-size: 16px;
+  line-height: 1.7;
+  color: var(--w93-ink);
+}
+html body .zpCS41.zpCS18--index .zpCS18__portfolioLink .zpCS18__button {
+  width: auto;
+  border-color: var(--w93-ink);
+}
+
+/* 5. Equal rhythm for the remaining light sections. */
+html body .zpCS41.zpCS18--index .zpCS41__callback .zpCS18__callbackIntro {
+  padding-top: 44px;
+  padding-bottom: 36px;
+}
+html body .zpCS41.zpCS18--index .zpCS18__technology {
+  padding: var(--w93-space) 0;
+}
+html body .zpCS41.zpCS18--index .zpCS18__technologyGrid {
+  margin-top: 44px;
+}
+html body .zpCS41.zpCS18--index .zpCS18__technologyItem {
+  border-color: var(--w93-line);
+}
+html body .zpCS41.zpCS18--index .zpCS41__principles {
+  margin-top: 48px;
+}
+html body .zpCS41.zpCS18--index .zpCS41__tone {
+  --cs42-section-space: var(--w93-space);
+  padding: var(--w93-space) 0;
+}
+html body .zpCS41.zpCS18--index .zpCS18__faq {
+  padding: var(--w93-space) 0;
+}
+
+/* Tablet: the card still has two columns (thumbnail ≈ 440–520px), so the meta row becomes a short spec list. */
+@media (max-width: 1100px) {
+  html body .zpCS41.zpCS18--index .zpCS93__factList > li {
+    padding-block: 26px;
+  }
+  html body .zpCS41.zpCS18--index .zpCS93__factList b {
+    font-size: 40px;
+  }
+  html body .zpCS41.zpCS18--index .zpCS41__project {
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+  }
+  html body .zpCS41.zpCS18--index .zpCS93__meta {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
+  }
+  html body .zpCS41.zpCS18--index .zpCS93__meta > div {
+    display: grid;
+    grid-template-columns: 64px minmax(0, 1fr);
+    align-items: baseline;
+    gap: 12px;
+  }
+  html body .zpCS41.zpCS18--index .zpCS93__meta dt {
+    margin: 0;
+  }
+}
+
+/* One-column card with a wide thumbnail (601–860px): the three meta columns fit again. */
+@media (max-width: 860px) and (min-width: 601px) {
+  html body .zpCS41.zpCS18--index .zpCS93__meta {
+    grid-template-columns: minmax(0, .9fr) minmax(0, 1.4fr) minmax(0, 1fr);
+    gap: 16px 24px;
+  }
+  html body .zpCS41.zpCS18--index .zpCS93__meta > div {
+    display: block;
+  }
+  html body .zpCS41.zpCS18--index .zpCS93__meta dt {
+    margin: 0 0 6px;
+  }
+}
+
+@media (max-width: 860px) {
+  html body .zpCS41.zpCS18--index .zpCS41__project {
+    padding: 22px;
+    gap: 26px !important;
+  }
+  html body .zpCS41.zpCS18--index .zpCS41__project .zpCS18__projectImage {
+    border-radius: 18px;
+  }
+}
+
+/* Phone: cards stack, the fact strip becomes 2 × 2, actions and the bridge button go full width. */
+@media (max-width: 760px) {
+  html body .zpCS41.zpCS18--index {
+    --w93-space: 64px;
+  }
+  html body .zpCS41.zpCS18--index .zpCS93__factList {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  html body .zpCS41.zpCS18--index .zpCS93__factList > li {
+    grid-template-columns: minmax(0, 1fr);
+    align-content: start;
+    row-gap: 6px;
+    padding: 24px 16px 24px 0;
+  }
+  html body .zpCS41.zpCS18--index .zpCS93__factList span {
+    display: block;
+    margin-top: 4px;
+  }
+  html body .zpCS41.zpCS18--index .zpCS93__factList small {
+    margin-top: 4px;
+  }
+  html body .zpCS41.zpCS18--index .zpCS93__factList > li + li {
+    padding-left: 16px;
+  }
+  html body .zpCS41.zpCS18--index .zpCS93__factList > li:nth-child(odd) {
+    padding-left: 0;
+    border-left: 0;
+  }
+  html body .zpCS41.zpCS18--index .zpCS93__factList > li:nth-child(n + 3) {
+    border-top: 1px solid var(--w93-line);
+  }
+  html body .zpCS41.zpCS18--index .zpCS93__factList b {
+    font-size: 34px;
+  }
+  html body .zpCS41.zpCS18--index .zpCS93__factList small {
+    font-size: 13px;
+    line-height: 1.6;
+  }
+  html body .zpCS41.zpCS18--index .zpCS41__overview {
+    padding-bottom: 28px;
+  }
+  html body .zpCS41.zpCS18--index .zpCS18__projects > .zpCS18__inner {
+    gap: 22px;
+  }
+  html body .zpCS41.zpCS18--index .zpCS18__portfolioLink {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 18px;
+    padding: 24px 22px;
+  }
+  html body .zpCS41.zpCS18--index .zpCS18__portfolioLink p {
+    font-size: 15px;
+  }
+  html body .zpCS41.zpCS18--index .zpCS18__portfolioLink .zpCS18__button {
+    width: 100%;
+  }
+  html body .zpCS41.zpCS18--index .zpCS66__projectActions {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 8px;
+  }
+  html body .zpCS41.zpCS18--index .zpCS66__projectActions .zpCS18__button,
+  html body .zpCS41.zpCS18--index .zpCS66__projectActions .zpCS66__quietLink {
+    width: 100%;
+  }
+}
+
+@media (max-width: 560px) {
+  html body .zpCS41.zpCS18--index .zpCS41__project {
+    padding: 18px;
+    border-radius: 24px;
+  }
+  html body .zpCS41.zpCS18--index .zpCS41__project .zpCS18__projectImage {
+    border-radius: 16px;
+  }
+  html body .zpCS41.zpCS18--index .zpCS93__meta {
+    margin-top: 18px;
+    padding-top: 18px;
+  }
+  html body .zpCS41.zpCS18--index .zpCS93__meta dd {
+    font-size: 13.5px;
+  }
+  html body .zpCS41.zpCS18--index .zpCS41__projectBrand {
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+  }
+  html body .zpCS41.zpCS18--index .zpCS41__projectBrand > span {
+    font-size: 10px;
+    letter-spacing: .08em;
+    text-align: right;
+  }
+}

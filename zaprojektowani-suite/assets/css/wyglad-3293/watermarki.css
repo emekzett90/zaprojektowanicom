@@ -1,0 +1,259 @@
+/* ZP Suite 3.2.93 — watermarki (Mat 28.10.2026, pkt 3; includes/wyglad-3293/watermarki.php).
+   1. Duże słowa-watermarki „od dołu wtopione i przyklejone do dolnej linii” hero: O nas, FAQ, Realizacje, Wiedza, Kontakt.
+   2. Ten sam odstęp header→kicker na każdej podstronie: 72 px na desktopie i tablecie (header 88 px), 48 px na telefonie (header 82 px).
+   3. Słowo-watermark pod zdjęciem w hero ośmiu stron branżowych (.zpIndWord z includes/seo-plan/industries.php).
+   Receptura słowa: Plus Jakarta Sans 800, lowercase, -.08em; line-height .82 + height .82em stawia linię bazową
+   dokładnie na dolnej krawędzi pudełka (metryki fontu: ascender 1.04em, descender .22em), overflow:hidden ucina
+   wydłużenia dolne, maska wtapia glify w dolną linię. Rozmiar: clamp(120px,11vw,200px) / 26vw, ale nie szerzej niż
+   kolumna treści (--zp-w93-em = szerokość słowa w em, policzona z metryk fontu). Słowa rysowane przez ::after mają pusty
+   tekst alternatywny (content: "…" / "" — Chrome 77+, Safari 17.4+, Firefox 128+; starszy silnik pomija tę deklarację
+   i zostaje przy zwykłej, podanej wyżej), słowa w znacznikach mają aria-hidden. Plik ładowany tylko na tych stronach. */
+
+/* ============================== 1. Słowa-watermarki ============================== */
+
+/* O nas: „zaprojektowani” spod zdjęć na dół jasnoniebieskiego bloku hero, w osi kickera (.zpAboutX__inner). */
+html body #zpAboutX .zpAboutX__hero { isolation: isolate; }
+html body #zpAboutX .zpAboutX__hero .zpAboutX__heroVisual::after,
+html body #zpAboutX .zpAboutX__hero .zpAboutX__heroVisual:after { content: none !important; }
+html body #zpAboutX .zpAboutX__hero::after {
+  content: "zaprojektowani";
+  content: "zaprojektowani" / "";
+  position: absolute; z-index: -1;
+  left: max(calc((100% - 1750px) / 2), clamp(14px, 3vw, 54px)); right: 0; bottom: 0;
+  display: block; box-sizing: border-box; height: .82em; overflow: hidden; margin: 0; padding: 0; border: 0;
+  font-family: "Plus Jakarta Sans Local", "Plus Jakarta Sans", system-ui, Arial, sans-serif;
+  font-size: min(clamp(120px, 11vw, 200px), calc(min(1750px, 100vw - clamp(28px, 6vw, 108px)) / var(--zp-w93-em, 6.518)));
+  font-weight: 800; font-style: normal; line-height: .82; letter-spacing: -.08em;
+  text-transform: lowercase; text-align: left; white-space: nowrap; text-indent: 0; text-shadow: none;
+  color: rgba(7, 20, 38, .055);
+  -webkit-mask-image: linear-gradient(to top, transparent 0, #000 70%);
+          mask-image: linear-gradient(to top, transparent 0, #000 70%);
+  pointer-events: none; -webkit-user-select: none; user-select: none;
+}
+/* Desktop: +24 px pod treścią (dopuszczalny wzrost hero), żeby wydłużenia górne liter j, k, t nie wchodziły pod chipsy
+   ostatniego wiersza kolumny tekstu. */
+@media (min-width: 1101px) {
+  html body #zpAboutX section.zpAboutX__hero { padding-bottom: calc(clamp(80px, 7vw, 118px) + 24px) !important; }
+}
+@media (max-width: 760px) {
+  html body #zpAboutX .zpAboutX__hero::after {
+    left: 12px;
+    font-size: min(26vw, calc((100vw - 24px) / var(--zp-w93-em, 6.518)));
+  }
+}
+
+/* FAQ: „faq” z prawego górnego rogu na dolną linię hero (border-bottom .zpFaqHero), w osi kickera. */
+html body .zpFaqPage[data-zp-faq-page] .zpFaqPage__heroBgWord { display: none !important; }
+html body .zpFaqPage[data-zp-faq-page] .zpFaqHero { position: relative; }
+html body .zpFaqPage[data-zp-faq-page] .zpFaqHero::after {
+  content: "faq";
+  content: "faq" / "";
+  position: absolute; z-index: -1;
+  left: 0; right: 0; bottom: 0;
+  display: block; box-sizing: border-box; height: .82em; overflow: hidden; margin: 0; padding: 0; border: 0;
+  font-family: "Plus Jakarta Sans Local", "Plus Jakarta Sans", system-ui, Arial, sans-serif;
+  font-size: min(clamp(120px, 11vw, 200px), calc(min(1750px, 100vw - clamp(32px, 4vw, 72px)) / var(--zp-w93-em, 1.426)));
+  font-weight: 800; font-style: normal; line-height: .82; letter-spacing: -.08em;
+  text-transform: lowercase; text-align: left; white-space: nowrap; text-indent: 0; text-shadow: none;
+  color: rgba(7, 20, 38, .055);
+  -webkit-mask-image: linear-gradient(to top, transparent 0, #000 70%);
+          mask-image: linear-gradient(to top, transparent 0, #000 70%);
+  pointer-events: none; -webkit-user-select: none; user-select: none;
+}
+/* Trzy litery przy wspólnej skali to tylko ~225 px i chowały się za przyciskami hero. Desktop: słowo rośnie do
+   clamp(160px,15vw,260px) (świadome odstępstwo od wspólnej receptury, tylko tu); tablet i desktop: hero dostaje +24 px
+   pod treścią (74 → 98 px, dopuszczalny wzrost), żeby korpusy liter wyszły spod przycisków / panelu. */
+@media (min-width: 1101px) {
+  html body .zpFaqPage[data-zp-faq-page] .zpFaqHero::after {
+    font-size: min(clamp(160px, 15vw, 260px), calc(min(1750px, 100vw - clamp(32px, 4vw, 72px)) / var(--zp-w93-em, 1.426)));
+  }
+}
+@media (min-width: 721px) {
+  html body .zpFaqPage[data-zp-faq-page] .zpFaqHero { padding-bottom: 98px !important; }
+}
+@media (max-width: 720px) {
+  html body .zpFaqPage[data-zp-faq-page] .zpFaqHero::after {
+    font-size: min(26vw, calc((100vw - 28px) / var(--zp-w93-em, 1.426)));
+  }
+}
+
+/* Realizacje: „realizacje” / „projects” spod zdjęcia zespołu na dolną krawędź hero, w osi kickera (.wrap).
+   realizacje-page.css wyłącza swoje stare .hero::after (content:none!important; display:none!important), stąd !important
+   na każdej deklaracji i nadpisanie right/bottom/opacity/maski starej reguły. isolation:isolate na .hero + z-index:-1 =
+   słowo nad tłem hero, pod całą treścią (zdjęcie .heroTeam, z 5, kończy się 48 px nad dołem hero; nic nie wychodzi poza hero).
+   Po angielsku watermarki.php dokleja za tym arkuszem content:"projects" w tych samych dwóch formach. */
+html body #zpRealizacjePage .hero.zpRealizacjePage__hero { isolation: isolate; }
+html body #zpRealizacjePage .hero.zpRealizacjePage__hero .heroTeam__word { display: none !important; }
+html body #zpRealizacjePage .hero.zpRealizacjePage__hero::after {
+  content: "realizacje" !important;
+  content: "realizacje" / "" !important;
+  position: absolute !important; z-index: -1 !important;
+  top: auto !important; left: max(calc((100% - 1750px) / 2), clamp(14px, 3vw, 56px)) !important; right: 0 !important; bottom: 0 !important;
+  display: block !important; width: auto !important; box-sizing: border-box !important; height: .82em !important; overflow: hidden !important;
+  margin: 0 !important; padding: 0 !important; border: 0 !important;
+  font-family: "Plus Jakarta Sans Local", "Plus Jakarta Sans", system-ui, Arial, sans-serif !important;
+  font-size: min(clamp(120px, 11vw, 200px), calc(min(1750px, 100vw - clamp(28px, 6vw, 112px)) / var(--zp-w93-em, 3.857))) !important;
+  font-weight: 800 !important; font-style: normal !important; line-height: .82 !important; letter-spacing: -.08em !important;
+  text-transform: lowercase !important; text-align: left !important; white-space: nowrap !important; text-indent: 0 !important; text-shadow: none !important;
+  color: rgba(7, 20, 38, .055) !important; -webkit-text-fill-color: rgba(7, 20, 38, .055) !important; opacity: 1 !important;
+  background: none !important; filter: none !important; mix-blend-mode: normal !important; transform: none !important;
+  -webkit-mask-image: linear-gradient(to top, transparent 0, #000 70%) !important;
+          mask-image: linear-gradient(to top, transparent 0, #000 70%) !important;
+  -webkit-mask-composite: source-over !important; mask-composite: add !important;
+  pointer-events: none !important; -webkit-user-select: none !important; user-select: none !important;
+  animation: none !important; transition: none !important; visibility: visible !important;
+}
+@media (max-width: 700px) {
+  html body #zpRealizacjePage .hero.zpRealizacjePage__hero::after {
+    font-size: min(26vw, calc((100vw - 28px) / var(--zp-w93-em, 3.857))) !important;
+  }
+}
+
+/* Wiedza: „wiedza” / „insights” (.zh__kinWord) z prawego górnego rogu za zdjęciem na dół ciemnego hero,
+   w osi kickera (.zh__inner), biały atrament 6 %, bez gradientu i animacji. z-index 6 = nad .zh__fade (4) i winietą (5),
+   pod .zh__inner i listwą .zh__strip (też 6, ale później w DOM); dolna linia = górna krawędź listwy (96 px) na desktopie,
+   na ≤1100 px listwa znika, więc dół hero. Reszta hero bez zmian.
+   Kontakt: ta sama receptura dla rotora KONTAKT / WYCENA / BRIEF… (.zh__kin, 360 px, 28 %, za zdjęciami): rotor staje,
+   zostaje pierwsze słowo („kontakt” / „contact” — tłumaczy je moduł językowy) małymi literami na dole hero. */
+html body section#zhHero.zh:is(.zh--knowledge, .zh--contact) .zh__kin {
+  position: absolute !important; z-index: 6 !important;
+  left: max(48px, calc((100% - 1700px) / 2)) !important; right: 0 !important; top: auto !important; bottom: 96px !important;
+  width: auto !important; height: auto !important; min-height: 0 !important; margin: 0 !important; padding: 0 !important;
+  transform: none !important; text-align: left !important; opacity: 1 !important; overflow: visible !important;
+  -webkit-mask-image: none !important; mask-image: none !important; pointer-events: none !important;
+}
+html body section#zhHero.zh:is(.zh--knowledge, .zh--contact) .zh__kin::after { content: none !important; }
+html body section#zhHero.zh:is(.zh--knowledge, .zh--contact) .zh__kin .zh__kinWord {
+  display: block !important; box-sizing: border-box !important; height: .82em !important; overflow: hidden !important;
+  margin: 0 !important; padding: 0 !important; border: 0 !important;
+  font-family: "Plus Jakarta Sans Local", "Plus Jakarta Sans", system-ui, Arial, sans-serif !important;
+  font-size: min(clamp(120px, 11vw, 200px), calc(min(1700px, 100vw - 96px) / var(--zp-w93-em, 3.051))) !important;
+  font-weight: 800 !important; font-style: normal !important; line-height: .82 !important; letter-spacing: -.08em !important;
+  text-transform: lowercase !important; text-align: left !important; white-space: nowrap !important; text-indent: 0 !important;
+  color: rgba(255, 255, 255, .06) !important; -webkit-text-fill-color: rgba(255, 255, 255, .06) !important;
+  background: none !important; -webkit-background-clip: border-box !important; background-clip: border-box !important;
+  text-shadow: none !important; filter: none !important; opacity: 1 !important; transform: none !important; animation: none !important;
+  -webkit-mask-image: linear-gradient(to top, transparent 0, #000 70%) !important;
+          mask-image: linear-gradient(to top, transparent 0, #000 70%) !important;
+}
+html body section#zhHero.zh.zh--contact .zh__kin .zh__kinWord { --zp-w93-em: 3.277; }
+html body section#zhHero.zh.zh--contact .zh__kin .zh__rotor { display: block !important; height: auto !important; overflow: visible !important; vertical-align: baseline !important; }
+html body section#zhHero.zh.zh--contact .zh__kin .zh__rotor > span { display: block !important; transform: none !important; animation: none !important; transition: none !important; }
+html body section#zhHero.zh.zh--contact .zh__kin .zh__rotor i { display: none !important; }
+html body section#zhHero.zh.zh--contact .zh__kin .zh__rotor i:first-child { display: block !important; height: auto !important; font-style: normal !important; line-height: inherit !important; }
+@media (max-width: 1100px) {
+  html body section#zhHero.zh:is(.zh--knowledge, .zh--contact) .zh__kin { left: 18px !important; bottom: 0 !important; }
+  html body section#zhHero.zh:is(.zh--knowledge, .zh--contact) .zh__kin .zh__kinWord {
+    font-size: min(clamp(120px, 11vw, 200px), calc((100vw - 36px) / var(--zp-w93-em, 3.051))) !important;
+  }
+}
+/* Telefon: słowo dostaje własny pas pod treścią (wiersz statystyk / przewiń), zamiast leżeć za nim. */
+@media (max-width: 700px) {
+  html body section#zhHero.zh:is(.zh--knowledge, .zh--contact) .zh__inner { padding-bottom: 72px !important; }
+  html body section#zhHero.zh:is(.zh--knowledge, .zh--contact) .zh__kin .zh__kinWord {
+    font-size: min(26vw, calc((100vw - 36px) / var(--zp-w93-em, 3.051))) !important;
+  }
+}
+
+/* ============================== 3. Strony branżowe: słowo pod zdjęciem ============================== */
+/* Desktop: pod kolumną zdjęcia (prawa strona, ta sama prawa krawędź co .hero-build), glif stoi na górnej linii listwy
+   .hero-rail (96 px); z-index 9 = nad dolnym gradientem hero (::after, z 8) i zdjęciem (z 5), pod treścią (.hero-inner z 10)
+   i listwą (z 20). Długie słowa maleją, żeby zmieścić się w prawej połowie (nie wchodzą pod „Przewiń”). */
+html body #zp-strony-internetowe-katowice #start.hero[data-zp-industry] .zpIndWord {
+  position: absolute; z-index: 9;
+  left: auto; right: clamp(8px, 2.2vw, 44px); bottom: 96px;
+  width: var(--zp-hero-box-w, 50%); max-width: calc(100% - 2 * clamp(8px, 2.2vw, 44px));
+  display: block; box-sizing: border-box; height: .82em; overflow: hidden; margin: 0; padding: 0; border: 0;
+  font-family: "Plus Jakarta Sans Local", "Plus Jakarta Sans", system-ui, Arial, sans-serif;
+  font-size: min(clamp(120px, 11vw, 200px), calc(min(var(--zp-hero-box-w, 50vw), 50vw - 80px) / var(--zp-w93-em, 3)));
+  font-weight: 800; font-style: normal; line-height: .82; letter-spacing: -.08em;
+  text-transform: lowercase; text-align: right; white-space: nowrap; text-indent: 0; text-shadow: none;
+  color: rgba(255, 255, 255, .06);
+  -webkit-mask-image: linear-gradient(to top, transparent 0, #000 70%);
+          mask-image: linear-gradient(to top, transparent 0, #000 70%);
+  pointer-events: none; -webkit-user-select: none; user-select: none;
+  animation: none; transition: none; transform: none; opacity: 1;
+}
+/* Tablet i telefon: zdjęcie stoi nad listwą (bottom: --zp-hero-photo-bottom), słowo w pasie pod nim,
+   w osi kolumny treści (--wrap), mniejsze, nigdy nie zachodzi na tekst. */
+@media (max-width: 1100px) {
+  html body #zp-strony-internetowe-katowice #start.hero[data-zp-industry] .zpIndWord {
+    left: calc((100% - var(--wrap, calc(100% - 28px))) / 2); right: calc((100% - var(--wrap, calc(100% - 28px))) / 2);
+    width: auto; max-width: none; text-align: left;
+    font-size: min(clamp(96px, 11vw, 200px), calc((100vw - 96px) / var(--zp-w93-em, 3)));
+  }
+}
+/* Telefon: dolne 50–80 px zdjęcia leżą w pasie słowa, więc słowo schodzi pod zdjęcie (z 4 < .hero-build 5) — widać je
+   tylko przez dolne wtopienie zdjęcia i pod jego krawędzią; nigdy nie rysuje się na zdjęciu. */
+@media (max-width: 680px) {
+  html body #zp-strony-internetowe-katowice #start.hero[data-zp-industry] .zpIndWord {
+    z-index: 4;
+    bottom: 82px;
+    font-size: min(26vw, calc((100vw - 28px) / var(--zp-w93-em, 3)));
+  }
+}
+
+/* ============================== 2. Odstęp header→kicker ============================== */
+/* Nagłówek #zpNewNav: 88 px od 981 px wzwyż, 82 px do 980 px (szuflada mobilna) → kicker na 160 / 154 / 130 px od góry strony.
+   Zmieniany jest tylko górny padding własnego wrappera hero wtyczki; tam, gdzie hero centruje treść w pionie
+   (grid/flex align center/end), kolumna treści dostaje align-self:start, bo inaczej pozycja kickera zależy od
+   wysokości zdjęcia i języka. Wartości skalibrowane pomiarem (agents-out/watermarki/tools/measure.js):
+   O nas: kicker inline-flex w linii 24 px → +13; Realizacje: +10; FAQ: eyebrow +13; hero .zh (Wiedza, Kontakt): .zh__copy
+   translate:0 13px (tylko desktop) → +13;
+   sklepy: .zh__copy translateY(-50px) (zh-service-v498) i kicker inline-flex +11 → 186.
+   Tablet 981–1100 px: te same wrappery, ale .zh__copy bez translate (Wiedza/Kontakt 160, sklepy 160 − 11,5 = 148,5),
+   case studies 78 (siatka hero zaczyna się tam 6 px wyżej), reszta jak na desktopie (zmierzone na 1024 px: przed 2,5 / 78,5 /
+   65,6 / 82 / 50 / 61,5 / 38 / 40 px); 701–980 px: nagłówek 82 px, więc wszystko o 6 px mniej (case studies 72).
+   Specyficzność: O nas bije service-hero-image-fit-20261015 (ta sama waga, ładowany później) przez „section.”,
+   FAQ bije front-fixes-303 (ta sama waga, ładowany później) przez „section.”, Realizacje bije
+   front-fixes-226 (body:has(#zpRealizacjePage) = 2,1,2) przez :is(…, :has(#zpRealizacjePage)) = 2,2,2. */
+@media (min-width: 1101px) {
+  html body #zpAboutX section.zpAboutX__hero { padding-top: 147px !important; }
+  html body #zpAboutX .zpAboutX__hero .zpAboutX__heroGrid > [data-reveal]:first-child { align-self: start; }
+  html body section.zpFaqPage[data-zp-faq-page] { padding-top: 147px !important; }
+  html body section.zpFaqPage[data-zp-faq-page] .zpFaqHero { padding-top: 0 !important; }
+  html body section.zpFaqPage[data-zp-faq-page] .zpFaqHero .zpFaqHero__copy { align-self: start; }
+  html body:is(.zp-realizacje-page, .zp-realizacje-shortcode, :has(#zpRealizacjePage)) #zpRealizacjePage .hero.zpRealizacjePage__hero { padding-top: 150px !important; }
+  html body section#zhHero.zh.zpUnifiedServiceHero[data-zp-unified-service-hero] .zh__inner { align-items: flex-start !important; padding-top: 147px !important; }
+  html body section#zhHero.zh.zpShopHeroUnified .zh__inner { align-items: flex-start !important; padding-top: 186px !important; }
+  html body .zpCS18.zpCS18--index .zpCS18__hero .zpCS18__heroGrid { padding-top: 72px !important; }
+  html body .zpCS18.zpCS18--index .zpCS18__hero .zpCS18__heroCopy { align-self: start !important; }
+  html body main #start.hero > .hero-inner { align-items: start !important; padding-top: 160px !important; }
+}
+@media (min-width: 981px) and (max-width: 1100px) {
+  html body #zpAboutX section.zpAboutX__hero { padding-top: 147px !important; }
+  html body #zpAboutX .zpAboutX__hero .zpAboutX__heroGrid > [data-reveal]:first-child { align-self: start; }
+  html body section.zpFaqPage[data-zp-faq-page] { padding-top: 147px !important; }
+  html body section.zpFaqPage[data-zp-faq-page] .zpFaqHero { padding-top: 0 !important; }
+  html body section.zpFaqPage[data-zp-faq-page] .zpFaqHero .zpFaqHero__copy { align-self: start; }
+  html body:is(.zp-realizacje-page, .zp-realizacje-shortcode, :has(#zpRealizacjePage)) #zpRealizacjePage .hero.zpRealizacjePage__hero { padding-top: 150px !important; }
+  html body section#zhHero.zh.zpUnifiedServiceHero[data-zp-unified-service-hero] .zh__inner { align-items: flex-start !important; padding-top: 160px !important; }
+  html body section#zhHero.zh.zpShopHeroUnified .zh__inner { align-items: flex-start !important; padding-top: 148.5px !important; }
+  html body .zpCS18.zpCS18--index .zpCS18__hero .zpCS18__heroGrid { padding-top: 78px !important; }
+  html body .zpCS18.zpCS18--index .zpCS18__hero .zpCS18__heroCopy { align-self: start !important; }
+  html body main #start.hero > .hero-inner { align-items: start !important; padding-top: 160px !important; }
+}
+/* 701–980 px: nagłówek ma już 82 px (szuflada mobilna), więc kicker na 154 px — każda wartość o 6 px mniejsza. */
+@media (min-width: 701px) and (max-width: 980px) {
+  html body #zpAboutX section.zpAboutX__hero { padding-top: 141px !important; }
+  html body #zpAboutX .zpAboutX__hero .zpAboutX__heroGrid > [data-reveal]:first-child { align-self: start; }
+  html body section.zpFaqPage[data-zp-faq-page] { padding-top: 141px !important; }
+  html body section.zpFaqPage[data-zp-faq-page] .zpFaqHero { padding-top: 0 !important; }
+  html body section.zpFaqPage[data-zp-faq-page] .zpFaqHero .zpFaqHero__copy { align-self: start; }
+  html body:is(.zp-realizacje-page, .zp-realizacje-shortcode, :has(#zpRealizacjePage)) #zpRealizacjePage .hero.zpRealizacjePage__hero { padding-top: 144px !important; }
+  html body section#zhHero.zh.zpUnifiedServiceHero[data-zp-unified-service-hero] .zh__inner { align-items: flex-start !important; padding-top: 154px !important; }
+  html body section#zhHero.zh.zpShopHeroUnified .zh__inner { align-items: flex-start !important; padding-top: 142.5px !important; }
+  html body .zpCS18.zpCS18--index .zpCS18__hero .zpCS18__heroGrid { padding-top: 72px !important; }
+  html body .zpCS18.zpCS18--index .zpCS18__hero .zpCS18__heroCopy { align-self: start !important; }
+  html body main #start.hero > .hero-inner { align-items: start !important; padding-top: 154px !important; }
+}
+@media (max-width: 700px) {
+  html body #zpAboutX section.zpAboutX__hero { padding-top: 117px !important; }
+  html body section.zpFaqPage[data-zp-faq-page] { padding-top: 117px !important; }
+  html body section.zpFaqPage[data-zp-faq-page] .zpFaqHero { padding-top: 0 !important; }
+  html body:is(.zp-realizacje-page, .zp-realizacje-shortcode, :has(#zpRealizacjePage)) #zpRealizacjePage .hero.zpRealizacjePage__hero { padding-top: 120px !important; }
+  html body section#zhHero.zh.zpUnifiedServiceHero[data-zp-unified-service-hero] .zh__inner { padding-top: 130px !important; }
+  html body section#zhHero.zh.zpShopHeroUnified .zh__inner { padding-top: 118px !important; }
+  html body .zpCS18.zpCS18--index .zpCS18__hero .zpCS18__heroGrid { padding-top: 48px !important; }
+  html body main #start.hero > .hero-inner { padding-top: 130px !important; }
+}

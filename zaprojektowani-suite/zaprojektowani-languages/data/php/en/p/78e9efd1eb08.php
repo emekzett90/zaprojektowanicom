@@ -378,5 +378,9 @@ return [
 '<1>✓</1> konkretny zakres'=>'<1>✓</1> clear scope',
 '<1>✓</1> bez zobowiązań'=>'<1>✓</1> no commitment',
 'Ty zostawiasz numer.'=>'You leave your number.',
-'My wracamy z konkretem.'=>'We come back with specifics.'
+'My wracamy z konkretem.'=>'We come back with specifics.',
+'Studio kreatywne z Katowic'=>'A creative studio from Katowice',
+'Fakty o studio'=>'Studio facts',
+'Zobacz usługę'=>'See the service',
+'Projektujemy marki online, które <1>wyglądają premium i pracują na wynik.</1>'=>'We design online brands that <1>look premium and deliver results.</1>'
 ];

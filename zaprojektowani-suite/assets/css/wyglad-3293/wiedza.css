@@ -1,0 +1,224 @@
+/* ZP Suite 3.2.93 — Wiedza: indeks poradników pod hero (/wiedza/, /en/knowledge/).
+   Jasny motyw jak dotąd (biel / #f5f7fa), tokeny strony, bez nowych gradientów i cieni. Hero bez zmian. */
+#zpKnowledgePro .zpKX,#zpKnowledgePro .zpKX__guide,#zpKnowledgePro .zpKX__end{--kx-ink:#07111f;--kx-navy:#071426;--kx-blue:#1c477a;--kx-mut:#5d6879;--kx-mut2:#7b8494;--kx-soft:#f5f7fa;--kx-line:rgba(7,20,38,.10);--kx-r:22px}
+html body #zpKnowledgePro .zpKX{position:relative;padding:8px 0 96px;background:#fff}
+html body #zpKnowledgePro .zpKX__inner{width:min(1700px,calc(100% - 96px));margin:0 auto}
+#zpKnowledgePro .zpKX__sr{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+
+/* Nagłówek indeksu: kicker → H2 → lead */
+#zpKnowledgePro .zpKX__head{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:20px 64px;align-items:end;margin:0 0 28px;padding:0 0 30px;border-bottom:1px solid var(--kx-line)}
+#zpKnowledgePro .zpKX__head h2{margin:0;font-size:clamp(36px,3.6vw,54px);line-height:1.02;letter-spacing:-.045em;font-weight:600;color:var(--kx-ink);text-wrap:balance}
+#zpKnowledgePro .zpKX__head h2 strong{font-weight:700;color:var(--kx-blue)}
+#zpKnowledgePro .zpKX__lead{margin:0 0 .3em;max-width:520px;justify-self:end;font-size:16px;line-height:1.7;color:var(--kx-mut)}
+
+/* Pasek: szukajka + układ */
+#zpKnowledgePro .zpKX__bar{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;align-items:center;margin:0 0 16px}
+#zpKnowledgePro .zpKX__search{position:relative;display:flex;align-items:center;min-height:50px;border:1px solid var(--kx-line);border-radius:999px;background:#fff;transition:border-color .2s}
+#zpKnowledgePro .zpKX__search:focus-within{border-color:var(--kx-blue)}
+#zpKnowledgePro .zpKX__search>svg{position:absolute;left:18px;top:50%;transform:translateY(-50%);width:18px;height:18px;color:var(--kx-mut2);pointer-events:none}
+#zpKnowledgePro .zpKX__search input{width:100%;min-height:48px;margin:0;padding:0 50px;border:0;border-radius:999px;background:transparent;font-size:15px;font-weight:600;line-height:1.2;color:var(--kx-ink);outline:none;box-shadow:none;-webkit-appearance:none;appearance:none}
+#zpKnowledgePro .zpKX__search input::placeholder{color:var(--kx-mut2);font-weight:500;opacity:1}
+#zpKnowledgePro .zpKX__search input::-webkit-search-cancel-button,#zpKnowledgePro .zpKX__search input::-webkit-search-decoration{display:none;-webkit-appearance:none}
+#zpKnowledgePro .zpKX__clear{position:absolute;right:8px;top:50%;transform:translateY(-50%);display:grid;place-items:center;width:34px;height:34px;margin:0;padding:0;border:0;border-radius:50%;background:transparent;color:var(--kx-mut2);cursor:pointer}
+#zpKnowledgePro .zpKX__clear:hover{background:var(--kx-soft);color:var(--kx-ink)}
+#zpKnowledgePro .zpKX__clear[hidden]{display:none}
+#zpKnowledgePro .zpKX__view{display:inline-flex;gap:4px;padding:4px;border:1px solid var(--kx-line);border-radius:999px;background:#fff}
+#zpKnowledgePro .zpKX__view button{display:grid;place-items:center;width:40px;height:40px;margin:0;padding:0;border:0;border-radius:50%;background:transparent;color:var(--kx-mut2);cursor:pointer;transition:background .2s,color .2s}
+#zpKnowledgePro .zpKX__view button:hover{background:var(--kx-soft);color:var(--kx-ink)}
+#zpKnowledgePro .zpKX__view button.is-active{background:var(--kx-navy);color:#fff}
+#zpKnowledgePro .zpKX__view svg{width:18px;height:18px}
+
+/* Sortowanie i kategorie: dwa rzędy chipów */
+#zpKnowledgePro .zpKX__filters{display:grid;gap:10px;margin:0 0 22px}
+#zpKnowledgePro .zpKX__row{position:relative;display:grid;grid-template-columns:104px minmax(0,1fr);align-items:start;gap:12px}
+#zpKnowledgePro .zpKX__rowLabel{font-size:10px;line-height:13px;padding-top:14px;font-weight:850;letter-spacing:.15em;text-transform:uppercase;color:#738096}
+#zpKnowledgePro .zpKX__tags{display:flex;flex-wrap:wrap;gap:8px;margin:0;padding:0}
+#zpKnowledgePro .zpKX__tag{display:inline-flex;align-items:center;gap:8px;min-height:40px;padding:0 13px;border:1px solid var(--kx-line);border-radius:999px;background:#fff;font-size:13px;font-weight:650;line-height:1;color:var(--kx-ink);text-decoration:none;white-space:nowrap;transition:background .2s,border-color .2s,color .2s}
+#zpKnowledgePro .zpKX__tag span{display:inline-flex;align-items:center;justify-content:center;min-width:22px;height:22px;padding:0 6px;border-radius:999px;background:var(--kx-soft);font-size:11px;font-weight:800;color:var(--kx-mut)}
+#zpKnowledgePro .zpKX__tag:hover{border-color:rgba(7,20,38,.32)}
+#zpKnowledgePro .zpKX__tag.is-active{background:var(--kx-navy);border-color:var(--kx-navy);color:#fff}
+#zpKnowledgePro .zpKX__tag.is-active span{background:rgba(255,255,255,.14);color:rgba(255,255,255,.86)}
+#zpKnowledgePro .zpKX__hint{display:none}
+
+/* Licznik, reset, pusty stan, „Pokaż więcej” */
+#zpKnowledgePro .zpKX__status{display:flex;align-items:center;justify-content:space-between;gap:16px;margin:0 0 18px;font-size:13px;font-weight:600;color:var(--kx-mut2)}
+#zpKnowledgePro .zpKX__count{margin:0}
+#zpKnowledgePro .zpKX__count b{font-weight:800;color:var(--kx-ink)}
+#zpKnowledgePro .zpKX__reset{display:inline-flex;align-items:center;gap:6px;margin:0;padding:6px 0;border:0;background:transparent;font-size:13px;font-weight:700;line-height:1;color:var(--kx-blue);cursor:pointer}
+#zpKnowledgePro .zpKX__reset span{text-decoration:underline;text-underline-offset:3px}
+#zpKnowledgePro .zpKX__reset[hidden]{display:none}
+#zpKnowledgePro .zpKX__empty{padding:28px;border:1px dashed rgba(7,20,38,.2);border-radius:var(--kx-r);text-align:center;font-size:15px;color:var(--kx-mut)}
+#zpKnowledgePro .zpKX__empty[hidden]{display:none}
+#zpKnowledgePro .zpKX__pager{display:flex;align-items:center;justify-content:center;gap:18px;margin:36px 0 0}
+#zpKnowledgePro .zpKX__pager[hidden]{display:none}
+#zpKnowledgePro .zpKX__more{display:inline-flex;align-items:center;justify-content:center;min-height:52px;margin:0;padding:0 28px;border:1px solid var(--kx-navy);border-radius:999px;background:var(--kx-navy);font-size:14px;font-weight:700;line-height:1;color:#fff;cursor:pointer;transition:background .2s,color .2s}
+#zpKnowledgePro .zpKX__more:hover{background:#fff;color:var(--kx-navy)}
+#zpKnowledgePro .zpKX__pagerInfo{font-size:13px;font-weight:600;color:var(--kx-mut2)}
+#zpKnowledgePro .zpKX__pagerInfo b{color:var(--kx-ink)}
+
+/* Karty: zdjęcie 16:10 → kategoria → H3 → zajawka → meta; cała karta klikalna przez link tytułu */
+#zpKnowledgePro .zpKX__grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:28px}
+#zpKnowledgePro .zpKX__item{position:relative;display:flex;flex-direction:column;min-width:0;border:1px solid var(--kx-line);border-radius:var(--kx-r);background:#fff;overflow:hidden;transition:border-color .2s,transform .2s}
+#zpKnowledgePro .zpKX__item:hover{border-color:rgba(7,20,38,.26);transform:translateY(-2px)}
+#zpKnowledgePro .zpKX__item[hidden]{display:none!important}
+#zpKnowledgePro .zpKX__grid.is-paged>.zpKX__item:nth-child(n+19){display:none}
+#zpKnowledgePro .zpKX__media{display:block;aspect-ratio:16/10;background:#eef2f6;overflow:hidden}
+#zpKnowledgePro .zpKX__media img{display:block;width:100%;height:100%;object-fit:cover}
+#zpKnowledgePro .zpKX__body{display:flex;flex:1 1 auto;flex-direction:column;padding:20px 22px 22px}
+#zpKnowledgePro .zpKX__cat{margin:0 0 10px;font-size:10.5px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:#496b93}
+#zpKnowledgePro .zpKX__title{margin:0 0 10px;font-size:19px;line-height:1.28;letter-spacing:-.02em;font-weight:650;color:var(--kx-ink);text-wrap:pretty}
+#zpKnowledgePro .zpKX__title a{color:inherit;text-decoration:none}
+#zpKnowledgePro .zpKX__title a::after{content:"";position:absolute;inset:0;z-index:1}
+#zpKnowledgePro .zpKX__item:hover .zpKX__title{color:var(--kx-blue)}
+#zpKnowledgePro .zpKX__excerpt{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;margin:0 0 16px;font-size:14.5px;line-height:1.6;color:var(--kx-mut)}
+#zpKnowledgePro .zpKX__meta{display:flex;flex-wrap:wrap;align-items:center;gap:6px 0;margin-top:auto;padding-top:14px;border-top:1px solid var(--kx-line);font-size:12.5px;font-weight:600;line-height:1.3;color:var(--kx-mut2)}
+#zpKnowledgePro .zpKX__meta>*+*::before{content:"·";margin:0 9px;color:rgba(7,20,38,.3)}
+#zpKnowledgePro .zpKX__views{display:inline-flex;align-items:center;gap:5px}
+#zpKnowledgePro .zpKX__views i,#zpKnowledgePro .zpKX__views svg{width:14px;height:14px;flex:0 0 auto}
+
+/* Widok listy */
+#zpKnowledgePro .zpKX__grid.is-list{grid-template-columns:1fr;gap:14px}
+#zpKnowledgePro .zpKX__grid.is-list .zpKX__item{display:grid;grid-template-columns:300px minmax(0,1fr);align-items:stretch}
+#zpKnowledgePro .zpKX__grid.is-list .zpKX__media{aspect-ratio:auto;min-height:190px;height:100%}
+#zpKnowledgePro .zpKX__grid.is-list .zpKX__body{padding:22px 28px}
+#zpKnowledgePro .zpKX__grid.is-list .zpKX__title{font-size:21px}
+#zpKnowledgePro .zpKX__grid.is-list .zpKX__excerpt{-webkit-line-clamp:3}
+/* Widok kompaktowy: wiersze tytułów */
+#zpKnowledgePro .zpKX__grid.is-compact{display:block;border-top:1px solid var(--kx-line)}
+#zpKnowledgePro .zpKX__grid.is-compact .zpKX__item{display:grid;grid-template-columns:180px minmax(0,1fr) auto;align-items:center;gap:6px 24px;padding:16px 10px;border:0;border-bottom:1px solid var(--kx-line);border-radius:0;transform:none}
+#zpKnowledgePro .zpKX__grid.is-compact .zpKX__item:hover{background:var(--kx-soft)}
+#zpKnowledgePro .zpKX__grid.is-compact .zpKX__media,#zpKnowledgePro .zpKX__grid.is-compact .zpKX__excerpt{display:none}
+#zpKnowledgePro .zpKX__grid.is-compact .zpKX__body{display:contents}
+#zpKnowledgePro .zpKX__grid.is-compact .zpKX__cat,#zpKnowledgePro .zpKX__grid.is-compact .zpKX__title{margin:0}
+#zpKnowledgePro .zpKX__grid.is-compact .zpKX__title{font-size:16px}
+#zpKnowledgePro .zpKX__grid.is-compact .zpKX__meta{margin:0;padding:0;border:0;flex-wrap:nowrap;white-space:nowrap}
+
+/* Przewodnik po tematach + Jak korzystać z bazy wiedzy (sekcja #f5f7fa; !important, bo skrypt startowy strony maluje .zpKBSeoHub na biało z !important) */
+html body #zpKnowledgePro .zpKX__guide{position:relative;padding:88px 0 96px;background:var(--kx-soft)!important;overflow:visible}
+html body #zpKnowledgePro .zpKX__guide::before{content:none}
+#zpKnowledgePro .zpKX__guide .zpKBHelp{margin:0 0 72px;border:0;border-radius:0;background:none;overflow:visible}
+#zpKnowledgePro .zpKX__guide .zpKBHelp:last-child{margin-bottom:0}
+#zpKnowledgePro .zpKX__guide .zpKBHelp>summary{display:flex;align-items:center;gap:14px;min-height:0;margin:0 0 36px;padding:0 0 16px;border-bottom:1px solid var(--kx-line);list-style:none;cursor:pointer;font-size:12px;line-height:1.4;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--kx-ink)}
+#zpKnowledgePro .zpKX__guide .zpKBHelp>summary::-webkit-details-marker{display:none}
+#zpKnowledgePro .zpKX__guide .zpKBHelp>summary::before{content:attr(data-num);font-weight:800;letter-spacing:.08em;color:var(--kx-blue)}
+#zpKnowledgePro .zpKX__guide .zpKBHelp>summary::after{content:"";width:9px;height:9px;margin-left:auto;border:solid var(--kx-mut2);border-width:0 2px 2px 0;transform:translateY(-3px) rotate(45deg);transition:transform .2s}
+#zpKnowledgePro .zpKX__guide .zpKBHelp:not([open])>summary{margin-bottom:0}
+#zpKnowledgePro .zpKX__guide .zpKBHelp:not([open])>summary::after{transform:translateY(1px) rotate(-45deg)}
+#zpKnowledgePro .zpKX__guide .zpKBHelp__content{padding:0}
+#zpKnowledgePro .zpKBSeoHub__eyebrow{display:inline-flex;align-items:center;gap:10px;margin:0 0 14px;font-size:10px;line-height:1.4;font-weight:850;letter-spacing:.15em;text-transform:uppercase;color:#738096}
+#zpKnowledgePro .zpKBSeoHub__eyebrow::before{content:"";width:30px;height:1px;background:currentColor;opacity:.55}
+#zpKnowledgePro .zpKBTopicIntro{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:20px 64px;align-items:end;margin:0 0 32px}
+#zpKnowledgePro .zpKBTopicIntro h2,#zpKnowledgePro .zpKBSeoHub__head h2{margin:0;font-size:clamp(28px,2.7vw,40px);line-height:1.08;letter-spacing:-.04em;font-weight:600;color:var(--kx-ink);text-wrap:balance}
+#zpKnowledgePro .zpKBTopicIntro p{margin:0 0 .3em;max-width:520px;justify-self:end;font-size:15.5px;line-height:1.7;color:var(--kx-mut)}
+#zpKnowledgePro .zpKBTopicGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px;margin:0}
+#zpKnowledgePro .zpKBTopicCard{position:relative;isolation:auto;display:flex;flex-direction:column;gap:18px;min-height:0;padding:24px;border:1px solid var(--kx-line);border-radius:var(--kx-r);background:#fff;color:var(--kx-ink);text-decoration:none;overflow:visible;transition:border-color .2s,transform .2s}
+#zpKnowledgePro .zpKBTopicCard::before,#zpKnowledgePro .zpKBTopicCard::after{content:none}
+#zpKnowledgePro .zpKBTopicCard:hover{border-color:rgba(7,20,38,.26);background:#fff;transform:translateY(-2px)}
+#zpKnowledgePro .zpKBTopicCard__top{display:flex;align-items:center;justify-content:space-between;gap:12px}
+#zpKnowledgePro .zpKBTopicIcon{display:grid;place-items:center;width:44px;height:44px;border-radius:14px;background:var(--kx-soft);color:var(--kx-blue)}
+#zpKnowledgePro .zpKBTopicIcon svg{width:20px;height:20px}
+#zpKnowledgePro .zpKBTopicCount{display:inline-flex;align-items:baseline;gap:5px;height:26px;padding:0 10px;border-radius:999px;background:var(--kx-soft);font-size:11px;line-height:26px;font-weight:700;color:var(--kx-mut);white-space:nowrap}
+#zpKnowledgePro .zpKBTopicCount strong{font-size:13px;color:var(--kx-ink)}
+#zpKnowledgePro .zpKBTopicCard__body h3{margin:0 0 8px;font-size:19px;line-height:1.25;letter-spacing:-.025em;font-weight:650;color:var(--kx-ink)}
+#zpKnowledgePro .zpKBTopicCard__body p{margin:0;font-size:14px;line-height:1.6;color:var(--kx-mut)}
+#zpKnowledgePro .zpKBTopicCard__link{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:auto;padding-top:16px;border-top:1px solid var(--kx-line);font-size:13px;font-weight:750;color:var(--kx-blue)}
+#zpKnowledgePro .zpKBTopicCard__link i{display:grid;place-items:center;width:30px;height:30px;border-radius:50%;background:var(--kx-navy);color:#fff;font-size:13px;font-style:normal}
+#zpKnowledgePro .zpKBSeoHub__head{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(300px,.85fr);gap:32px 56px;align-items:start;margin:0;padding:36px 40px;border:1px solid var(--kx-line);border-radius:28px;background:#fff}
+#zpKnowledgePro .zpKBSeoHub__copy{max-width:none}
+#zpKnowledgePro .zpKBSeoHub__copy h2{margin-bottom:20px}
+#zpKnowledgePro .zpKBSeoHub__copy p{margin:0 0 14px;max-width:none;font-size:15.5px;line-height:1.75;color:var(--kx-mut)}
+#zpKnowledgePro .zpKBSeoHub__copy a{color:var(--kx-ink);font-weight:700;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:4px}
+#zpKnowledgePro .zpKBSeoHub__copy a:hover{color:var(--kx-blue)}
+#zpKnowledgePro .zpKBSeoHub__note{margin:22px 0 0;padding:20px 22px;border:1px solid var(--kx-line);border-radius:18px;background:var(--kx-soft)}
+#zpKnowledgePro .zpKBSeoHub__note strong{display:block;margin:0 0 6px;font-size:14px;color:var(--kx-ink)}
+#zpKnowledgePro .zpKBSeoHub__note p{margin:0;font-size:13.5px;line-height:1.65;color:var(--kx-mut)}
+#zpKnowledgePro .zpKX__side{display:flex;flex-direction:column;padding:26px 28px;border:1px solid var(--kx-line);border-radius:var(--kx-r);background:var(--kx-soft)}
+#zpKnowledgePro .zpKX__side h3{margin:0 0 10px;font-size:22px;line-height:1.2;letter-spacing:-.03em;font-weight:600;color:var(--kx-ink)}
+#zpKnowledgePro .zpKX__side>p{margin:0 0 18px;font-size:13.5px;line-height:1.6;color:var(--kx-mut)}
+#zpKnowledgePro .zpKX__sideHint{display:none}
+#zpKnowledgePro .zpKX__paths{display:grid;gap:8px}
+#zpKnowledgePro .zpKX__path{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:3px 12px;min-height:56px;padding:10px 14px;border:1px solid var(--kx-line);border-radius:14px;background:#fff;color:var(--kx-ink);text-decoration:none;transition:border-color .2s}
+#zpKnowledgePro .zpKX__path:hover{border-color:rgba(7,20,38,.32)}
+#zpKnowledgePro .zpKX__path span{grid-column:1;font-size:14px;line-height:1.2;font-weight:650}
+#zpKnowledgePro .zpKX__path strong{grid-column:1;font-size:10.5px;font-weight:750;letter-spacing:.08em;text-transform:uppercase;color:var(--kx-mut2)}
+#zpKnowledgePro .zpKX__path i,#zpKnowledgePro .zpKX__path svg{grid-column:2;grid-row:1/3;width:16px;height:16px;color:var(--kx-blue)}
+#zpKnowledgePro .zpKBQuickStart{display:flex;align-items:center;justify-content:space-between;gap:26px;margin:20px 0 0;padding:22px 26px;border-radius:var(--kx-r);background:var(--kx-navy);color:#fff}
+#zpKnowledgePro .zpKBQuickStart__copy{display:flex;align-items:center;gap:14px;min-width:0}
+#zpKnowledgePro .zpKBQuickStart__icon{display:grid;place-items:center;flex:0 0 auto;width:42px;height:42px;border-radius:13px;background:rgba(255,255,255,.08);color:#8ec8f7}
+#zpKnowledgePro .zpKBQuickStart__icon svg{width:18px;height:18px}
+#zpKnowledgePro .zpKBQuickStart strong{display:block;font-size:15px;line-height:1.35;color:#fff}
+#zpKnowledgePro .zpKBQuickStart span{display:block;margin-top:3px;font-size:13px;line-height:1.5;color:rgba(255,255,255,.66)}
+#zpKnowledgePro .zpKBQuickStart__actions{display:flex;flex-wrap:wrap;gap:8px;justify-content:flex-end}
+#zpKnowledgePro .zpKBQuickStart__actions a{display:inline-flex;align-items:center;justify-content:center;min-height:42px;padding:0 18px;border:1px solid rgba(255,255,255,.22);border-radius:999px;color:#fff;font-size:13px;font-weight:750;white-space:nowrap;text-decoration:none;transition:background .2s,color .2s,border-color .2s}
+#zpKnowledgePro .zpKBQuickStart__actions a:hover{background:#fff;border-color:#fff;color:var(--kx-navy)}
+#zpKnowledgePro .zpKBQuickStart__actions a:first-child{background:#fff;border-color:#fff;color:var(--kx-navy)}
+#zpKnowledgePro .zpKBQuickStart__actions a:first-child:hover{background:#8ec8f7;border-color:#8ec8f7}
+#zpKnowledgePro .zpKBSeoHub__crumbs{display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin:22px 0 0;font-size:12px;font-weight:600;color:var(--kx-mut2)}
+#zpKnowledgePro .zpKBSeoHub__crumbs a{color:var(--kx-mut);text-decoration:none}
+#zpKnowledgePro .zpKBSeoHub__crumbs a:hover{color:var(--kx-blue)}
+
+/* Ciemne CTA (bez zmian) w kolumnie treści, bezpośrednio pod jasnym pasem */
+#zpKnowledgePro .zpKX__end{padding:0}
+html body #zpKnowledgePro .zpKX__end .zpKBFooterCTA{margin-top:0!important}
+
+/* Fokus z klawiatury: globalne `html body :focus-visible{outline:none!important}` wymaga id + !important */
+html body #zpKnowledgePro .zpKX__tag:focus-visible,html body #zpKnowledgePro .zpKX__title a:focus-visible,html body #zpKnowledgePro .zpKX__more:focus-visible,html body #zpKnowledgePro .zpKX__view button:focus-visible,html body #zpKnowledgePro .zpKX__clear:focus-visible,html body #zpKnowledgePro .zpKX__reset:focus-visible,html body #zpKnowledgePro .zpKX__path:focus-visible,html body #zpKnowledgePro .zpKBTopicCard:focus-visible,html body #zpKnowledgePro .zpKBQuickStart__actions a:focus-visible,html body #zpKnowledgePro .zpKX__guide .zpKBHelp>summary:focus-visible{outline:2px solid #1c477a!important;outline-offset:2px!important}
+
+@media(min-width:1600px){
+  #zpKnowledgePro .zpKX__grid{grid-template-columns:repeat(4,minmax(0,1fr))}
+}
+@media(max-width:1080px){
+  #zpKnowledgePro .zpKX__head,#zpKnowledgePro .zpKBTopicIntro,#zpKnowledgePro .zpKBSeoHub__head{grid-template-columns:1fr}
+  #zpKnowledgePro .zpKX__lead,#zpKnowledgePro .zpKBTopicIntro p{justify-self:start;max-width:620px}
+  #zpKnowledgePro .zpKX__grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}
+  #zpKnowledgePro .zpKX__grid.is-list .zpKX__item{grid-template-columns:240px minmax(0,1fr)}
+  #zpKnowledgePro .zpKBTopicGrid{grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+  #zpKnowledgePro .zpKBSeoHub__head{padding:28px}
+  #zpKnowledgePro .zpKBQuickStart{flex-direction:column;align-items:flex-start}
+  #zpKnowledgePro .zpKBQuickStart__actions{justify-content:flex-start}
+}
+@media(max-width:760px){
+  html body #zpKnowledgePro .zpKX__inner{width:calc(100% - 32px)}
+  html body #zpKnowledgePro .zpKX{padding:0 0 64px}
+  #zpKnowledgePro .zpKX__head{margin-bottom:20px;padding-bottom:22px}
+  #zpKnowledgePro .zpKX__head h2{font-size:clamp(30px,8.6vw,38px)}
+  #zpKnowledgePro .zpKX__lead{font-size:15px}
+  #zpKnowledgePro .zpKX__bar{grid-template-columns:1fr;gap:10px}
+  #zpKnowledgePro .zpKX__view{justify-self:start}
+  #zpKnowledgePro .zpKX__row{grid-template-columns:1fr;gap:8px}
+  #zpKnowledgePro .zpKX__rowLabel{line-height:1.4;padding-top:0}
+  #zpKnowledgePro .zpKX__tags{flex-wrap:nowrap;overflow-x:auto;overflow-y:hidden;margin-right:-16px;padding:2px 16px 6px 0;scroll-snap-type:x proximity;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+  #zpKnowledgePro .zpKX__tags::-webkit-scrollbar{display:none}
+  #zpKnowledgePro .zpKX__tag{flex:0 0 auto;scroll-snap-align:start}
+  #zpKnowledgePro [data-zp-kx-sorts]{flex-wrap:wrap;overflow:visible;margin-right:0;padding:0}
+  #zpKnowledgePro .zpKX__hint{display:flex;align-items:center;justify-content:flex-end;gap:6px;margin:-2px 0 0;font-size:10px;font-weight:850;letter-spacing:.12em;text-transform:uppercase;color:var(--kx-mut2)}
+  #zpKnowledgePro .zpKX__hint[hidden]{display:none}
+  #zpKnowledgePro .zpKX__status{flex-wrap:wrap;gap:8px 16px}
+  #zpKnowledgePro .zpKX__grid{grid-template-columns:1fr;gap:16px}
+  #zpKnowledgePro .zpKX__body{padding:18px 18px 20px}
+  #zpKnowledgePro .zpKX__title{font-size:18px}
+  #zpKnowledgePro .zpKX__grid.is-list .zpKX__item{grid-template-columns:1fr}
+  #zpKnowledgePro .zpKX__grid.is-list .zpKX__media{aspect-ratio:16/10;min-height:0;height:auto}
+  #zpKnowledgePro .zpKX__grid.is-list .zpKX__body{padding:18px}
+  #zpKnowledgePro .zpKX__grid.is-list .zpKX__title{font-size:18px}
+  #zpKnowledgePro .zpKX__grid.is-compact .zpKX__item{grid-template-columns:1fr;gap:4px;padding:14px 4px}
+  #zpKnowledgePro .zpKX__grid.is-compact .zpKX__meta{white-space:normal;flex-wrap:wrap}
+  #zpKnowledgePro .zpKX__pager{flex-direction:column;gap:12px;margin-top:28px}
+  #zpKnowledgePro .zpKX__more{width:100%}
+  html body #zpKnowledgePro .zpKX__guide{padding:56px 0 64px}
+  #zpKnowledgePro .zpKX__guide .zpKBHelp{margin-bottom:48px}
+  #zpKnowledgePro .zpKX__guide .zpKBHelp>summary{margin-bottom:26px}
+  #zpKnowledgePro .zpKBTopicIntro{margin-bottom:22px}
+  #zpKnowledgePro .zpKBTopicGrid{grid-template-columns:1fr;gap:12px}
+  #zpKnowledgePro .zpKBTopicCard{padding:20px}
+  #zpKnowledgePro .zpKBSeoHub__head{gap:22px;padding:22px 18px;border-radius:22px}
+  #zpKnowledgePro .zpKX__side{padding:20px 18px}
+  #zpKnowledgePro .zpKX__side h3{font-size:20px}
+  #zpKnowledgePro .zpKBQuickStart{padding:20px 18px}
+  #zpKnowledgePro .zpKBQuickStart__actions{display:grid;grid-template-columns:1fr;width:100%}
+  #zpKnowledgePro .zpKBQuickStart__actions a{white-space:normal;text-align:center}
+}
+@media(prefers-reduced-motion:reduce){
+  #zpKnowledgePro .zpKX__item,#zpKnowledgePro .zpKBTopicCard,#zpKnowledgePro .zpKX__tag,#zpKnowledgePro .zpKX__guide .zpKBHelp>summary::after{transition:none}
+  #zpKnowledgePro .zpKX__item:hover,#zpKnowledgePro .zpKBTopicCard:hover{transform:none}
+}

@@ -783,7 +783,8 @@ function zp_suite_wiedza_card_markup($post_id, $i = 0, $read_slot = false){
 }
 
 function zp_suite_wiedza_index_cache_key(){
-  return 'zp_suite_wiedza_index_v2_' . str_replace('.', '_', (string) ZP_SUITE_VERSION);
+  // 3.2.93: v3 — the kept index also holds every card on its own with its sort/filter data (includes/wyglad-3293/wiedza.php).
+  return 'zp_suite_wiedza_index_v3_' . str_replace('.', '_', (string) ZP_SUITE_VERSION);
 }
 
 /** 3.1.1: where a kept card shows its read count. Escaped text never contains "<!--", so no title or excerpt can match it. */
@@ -910,11 +911,18 @@ function zp_suite_wiedza_index_kept(){
 
   $html = '';
   $ids = [];
+  $cards = [];
+  $meta = [];
   $minutes = 0;
   $modified = 0;
+  // 3.2.93: the index cards come from the wyglad-3293 module (image-led card with data-reads/date/minutes/cat/title).
+  $card_markup = function_exists('zp_w93_wiedza_card_markup') ? 'zp_w93_wiedza_card_markup' : 'zp_suite_wiedza_card_markup';
   foreach ($query->posts as $i => $post) {
-    $html .= zp_suite_wiedza_card_markup($post->ID, $i, true);
+    $card = $card_markup($post->ID, $i, true);
+    $html .= $card;
     $ids[] = (int) $post->ID;
+    $cards[(int) $post->ID] = $card;
+    if (function_exists('zp_w93_wiedza_card_meta')) { $meta[(int) $post->ID] = zp_w93_wiedza_card_meta((int) $post->ID); }
     $minutes += zp_suite_wiedza_stats_minutes($post);
     $post_modified = strtotime((string) $post->post_modified_gmt . ' GMT');
     if ($post_modified > $modified) { $modified = $post_modified; }
@@ -924,6 +932,8 @@ function zp_suite_wiedza_index_kept(){
     'html'     => $html,
     'count'    => (int) $query->post_count,
     'ids'      => $ids,
+    'cards'    => $cards,
+    'meta'     => $meta,
     'minutes'  => $minutes,
     'modified' => $modified,
   ];
@@ -938,10 +948,26 @@ function zp_suite_wiedza_index_payload(){
   $kept = zp_suite_wiedza_index_kept();
   $reads = zp_suite_wiedza_read_counts($kept['ids']);
   $slots = [];
-  foreach ($reads as $post_id => $count) { $slots[zp_suite_wiedza_read_slot($post_id)] = esc_html(zp_suite_wiedza_read_label($count)); }
+  foreach ($reads as $post_id => $count) {
+    // 3.2.93: the label may be English (filter in includes/wyglad-3293/wiedza.php); data-reads gets the plain number.
+    $slots[zp_suite_wiedza_read_slot($post_id)] = esc_html((string) apply_filters('zp_suite_wiedza_read_label', zp_suite_wiedza_read_label($count), $count));
+    $slots['<!--zp-kb-reads-n:' . (int) $post_id . '-->'] = (string) (int) $count;
+  }
+  $html = strtr((string) $kept['html'], $slots);
+  $matches = (int) $kept['count'];
+  $state = ['sort' => 'newest', 'kat' => 'all', 'q' => ''];
+  // 3.2.93: ?sort= / ?kat= / ?q= of the request are honoured in the HTML (order, hidden cards), the JS only takes over.
+  if (function_exists('zp_w93_wiedza_index_html') && !empty($kept['cards']) && is_array($kept['cards'])) {
+    $ordered = zp_w93_wiedza_index_html(array_map(static function ($card) use ($slots) { return strtr((string) $card, $slots); }, $kept['cards']), (array) ($kept['meta'] ?? []), $reads);
+    $html = (string) $ordered['html'];
+    $matches = (int) $ordered['matches'];
+    $state = ['sort' => (string) $ordered['sort'], 'kat' => (string) $ordered['kat'], 'q' => (string) $ordered['q']];
+  }
   return [
-    'html'     => strtr((string) $kept['html'], $slots),
+    'html'     => $html,
     'count'    => (int) $kept['count'],
+    'matches'  => $matches,
+    'state'    => $state,
     'reads'    => (int) array_sum($reads),
     'minutes'  => (int) $kept['minutes'],
     'modified' => (int) $kept['modified'],

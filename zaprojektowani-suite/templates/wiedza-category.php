@@ -48,14 +48,6 @@ foreach ((array)$archive_query->posts as $index => $post_obj) {
 <main id="zpKnowledgeCategory" class="zpKBCatPage">
   <section class="zpKBCatHero">
     <div class="zpKBCatInner">
-      <nav class="zpKBCatCrumbs" aria-label="Okruszki">
-        <a href="<?php echo esc_url(home_url('/')); ?>">Strona główna</a>
-        <span aria-hidden="true">/</span>
-        <a href="<?php echo esc_url(home_url('/wiedza/')); ?>">Wiedza</a>
-        <span aria-hidden="true">/</span>
-        <span><?php echo esc_html($label); ?></span>
-      </nav>
-
       <div class="zpKBCatHero__grid">
         <div class="zpKBCatHero__copy">
           <span class="zpKBCatEyebrow">Baza wiedzy · <?php echo esc_html($label); ?></span>
@@ -193,7 +185,7 @@ foreach ((array)$archive_query->posts as $index => $post_obj) {
 html body.category #zpNewNav.zpNewNav--knowledgeArchive:not(.is-mega-open),html body.category #zpNewNav.zpNewNav--knowledgeArchive:not(.is-mega-open) .zpNewNav__shell{background:#fff!important;background-color:#fff!important;background-image:none!important;box-shadow:none!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
 .zpKBCatHero{position:relative;overflow:hidden;padding:clamp(108px,8vw,142px) 0 clamp(48px,5.5vw,78px);background:linear-gradient(180deg,#f7faff 0%,#fff 82%);border-bottom:1px solid var(--line)}
 .zpKBCatHero:before{content:"";position:absolute;width:760px;height:760px;right:-330px;top:-430px;border-radius:50%;background:radial-gradient(circle,rgba(49,93,145,.13),transparent 67%);pointer-events:none}.zpKBCatHero:after{content:"";position:absolute;left:-220px;bottom:-380px;width:620px;height:620px;border-radius:50%;background:radial-gradient(circle,rgba(142,200,247,.09),transparent 68%);pointer-events:none}
-.zpKBCatHero .zpKBCatInner{position:relative;z-index:1}.zpKBCatCrumbs{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-bottom:34px;font-size:12px;color:#8791a1}.zpKBCatCrumbs a{text-decoration:none;font-weight:650;color:#536176}.zpKBCatCrumbs a:hover{color:var(--blue)}
+.zpKBCatHero .zpKBCatInner{position:relative;z-index:1}
 .zpKBCatHero__grid{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:clamp(38px,6vw,96px);align-items:end}.zpKBCatEyebrow{display:block;margin-bottom:14px;font-size:11px;line-height:1.4;letter-spacing:.105em;text-transform:uppercase;color:#496b93;font-weight:800}.zpKBCatHero h1{max-width:1080px;margin:0 0 22px;font-size:clamp(50px,5.7vw,88px);line-height:1;letter-spacing:-.062em;font-weight:650;color:var(--ink);text-wrap:balance}.zpKBCatHero__copy>p{max-width:920px;margin:0;color:var(--muted);font-size:18px;line-height:1.8}
 .zpKBCatHero__actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:30px}.zpKBCatBtn{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:50px;padding:0 20px;border:1px solid #dce3eb;border-radius:999px;text-decoration:none;font-size:12.5px;font-weight:800;background:#fff;transition:border-color .2s ease,transform .2s ease}.zpKBCatBtn--primary{background:var(--navy);border-color:var(--navy);color:#fff!important}.zpKBCatBtn:hover{border-color:#9fb2c8;transform:translateY(-1px)}
 .zpKBCatHero__stat{position:relative;overflow:hidden;padding:30px;border-radius:28px;background:#0b1729;color:#fff}.zpKBCatHero__stat:after{content:"";position:absolute;width:180px;height:180px;right:-90px;top:-105px;border-radius:50%;border:1px solid #ffffff20}.zpKBCatHero__statLabel{display:block;color:#9fb3ca;font-size:10px;font-weight:800;letter-spacing:.1em;text-transform:uppercase}.zpKBCatHero__stat>strong{position:relative;z-index:1;display:block;margin-top:18px;color:#fff;font-size:64px;line-height:.92;letter-spacing:-.06em}.zpKBCatHero__statTitle{display:block;margin-top:8px;color:#fff;font-size:13px;font-weight:750}.zpKBCatHero__statMeta{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:24px;padding-top:20px;border-top:1px solid #ffffff1f}.zpKBCatHero__statMeta span{min-width:0}.zpKBCatHero__statMeta b{display:block;color:#fff;font-size:14px}.zpKBCatHero__statMeta em{display:block;margin-top:3px;color:#9fb0c4;font-size:10px;font-style:normal;line-height:1.4}

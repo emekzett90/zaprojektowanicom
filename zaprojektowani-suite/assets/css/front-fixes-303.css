@@ -73,30 +73,6 @@ html body .zpFaqPage[data-zp-faq-page]{
       font-size:clamp(15px,1.12vw,18px)!important;
       line-height:1.68!important;
     }
-    html body .zpFaqPage[data-zp-faq-page] .zpFaqPage__crumbLine{
-      width:100%!important;
-      max-width:620px!important;
-      height:1px!important;
-      margin:28px 0 14px!important;
-      background:#e6e9ee!important;
-    }
-    html body .zpFaqPage[data-zp-faq-page] .zpFaqPage__breadcrumbs{
-      display:flex!important;
-      align-items:center!important;
-      gap:9px!important;
-      color:#667085!important;
-      font-size:12px!important;
-      line-height:1.4!important;
-    }
-    html body .zpFaqPage[data-zp-faq-page] .zpFaqPage__breadcrumbs a{
-      color:#344054!important;
-      text-decoration:none!important;
-    }
-    html body .zpFaqPage[data-zp-faq-page] .zpFaqPage__breadcrumbs a:hover{
-      color:#071426!important;
-      text-decoration:underline!important;
-      text-underline-offset:3px!important;
-    }
 
     /* Solid, restrained contact card — no blue glow or shadow. */
     html body .zpFaqPage[data-zp-faq-page] .zpFaqPage__heroCard,

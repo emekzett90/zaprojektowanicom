@@ -83,12 +83,6 @@ if (!function_exists('zp_faq_template_cluster_links')) {
   <div class="zpFaqPage__heroBgWord" aria-hidden="true">faq</div>
 
   <div class="zpFaqPage__wrap">
-    <nav class="zpFaqPage__breadcrumbs" aria-label="Ścieżka strony">
-      <a href="<?php echo esc_url(home_url('/')); ?>">Strona główna</a>
-      <span>/</span>
-      <span>FAQ</span>
-    </nav>
-
     <header class="zpFaqHero">
       <div class="zpFaqHero__copy">
         <div class="zpFaqPage__eyebrow">Centrum odpowiedzi</div>
