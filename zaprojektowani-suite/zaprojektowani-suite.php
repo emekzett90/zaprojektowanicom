@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Zaprojektowani Suite
  * Description: Zaprojektowani Suite z wersją angielską strony (PL/EN, adresy /en/, przełącznik języka), automatycznymi naprawami SEO, nagłówków, zasobów i paginacji na podstawie audytu z 13.09.2026.
- * Version: 3.2.95
+ * Version: 3.2.96
  * Requires at least: 6.5
  * Requires PHP: 8.0
  * Author: Zaprojektowani.com
@@ -16,7 +16,7 @@ if (defined('ZP_SUITE_VERSION')) {
   return;
 }
 
-define('ZP_SUITE_VERSION', '3.2.95');
+define('ZP_SUITE_VERSION', '3.2.96');
 define('ZP_SUITE_PATH', plugin_dir_path(__FILE__));
 define('ZP_SUITE_URL', plugin_dir_url(__FILE__));
 
@@ -45,6 +45,8 @@ require_once ZP_SUITE_PATH . 'includes/wyglad-3294/loader.php';
 
 // 3.2.95: szybkość strony głównej — wspólny bufor (zewnętrzny wobec 3235/speed-293) + moduły includes/szybkosc-3295/.
 require_once ZP_SUITE_PATH . 'includes/szybkosc-3295/loader.php';
+// 3.2.96: telefon — wcześniejsze pobranie 4 arkuszy zostawionych przez 3.2.95 (stabilne LCP w Lighthouse) — includes/szybkosc-3296/.
+require_once ZP_SUITE_PATH . 'includes/szybkosc-3296/preload.php';
 
 // 3.2.35: one server-first header; outer response adapter must load before speed/translation.
 require_once ZP_SUITE_PATH . 'includes/mobile-header-ssr-3235.php';

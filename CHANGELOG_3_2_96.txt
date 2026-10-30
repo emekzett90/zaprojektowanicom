@@ -1,0 +1,35 @@
+ZP Suite 3.2.96 — stabilny wynik strony głównej na telefonie (30.10.2026)
+Baza: 3.2.95 (paczka z 30.10.2026). Zmienia się tylko kolejność pobierania 4 małych arkuszy CSS na stronie głównej (/ i /en/) w kopii strony dla telefonów. Wygląd, teksty, ceny, Rank Math, cache, baza danych i pliki Codexa bez zmian. Starsze pliki wtyczki nie były edytowane, poza numerem wersji i jednym require w pliku głównym. 3.2.96 zawiera całą 3.2.95, więc wystarczy wgrać tylko tę paczkę.
+
+NOWY PLIK
+  includes/szybkosc-3296/preload.php (dopina się do wspólnego bufora 3.2.95, działa po module CSS 3.2.95)
+
+DLACZEGO
+  Po 3.2.95 wynik telefonu w Lighthouse dalej skakał: przy tym samym HTML LCP wychodził raz 3,6 s, raz 5,0 s.
+  Przyczyna: 4 arkusze, które 3.2.95 świadomie zostawia (menu, dolny pasek szybkiej nawigacji, pasek logo klientów, ścieżka usług), mają na telefonie atrybut media, który nie pasuje, więc Chrome pobiera je z najniższym priorytetem. Model Lighthouse (ten sam co w PageSpeed) ustawia takie pobrania w kolejce za każdym leniwym logo klienta, które zdążyło się pobrać przed LCP, a koniec tych arkuszy wyznacza LCP. Im więcej logo w danym pomiarze, tym gorszy wynik.
+
+CO ROBI
+  Na telefonie (kopia strony dla telefonów, ekran do 1100 px) w <head>, zaraz za wskazówką obrazu robota, są 4 wskazówki <link rel="preload" as="style" fetchpriority="low"> dla tych samych plików. Arkusze pobierają się od razu po plakacie robota (priorytet High zamiast VeryLow), a nie na końcu kolejki.
+  Bez zmian: same linki arkuszy (miejsce w kaskadzie, media, onload), więc strona wygląda i układa się tak samo; każdy plik pobiera się raz. Tablet z Androidem poziomo (od 1101 px), komputer i wszystkie inne strony bez zmian.
+
+POMIARY (lokalna kopia, Lighthouse 13, ustawienia jak PageSpeed, na zmianę 3.2.95 i 3.2.96)
+  Telefon (7 par, mediana i zakres): LCP 3,86 s (3,56–4,98) → 3,46 s (3,45–3,60); FCP 2,28 → 2,25 s; CLS 0 → 0; wynik lokalnie 62 (55–65) → 65 (64–67).
+  Komputer (5 par): HTML identyczny; LCP 0,82–1,07 s w obu. Lokalnie wynik komputera obniża wolniejszy procesor (TBT 130–410 ms, na żywo 50–190 ms) i skok tekstu hero (niżej).
+  Lokalne wyniki są niższe niż na żywo (wolniejszy procesor: na telefonie TBT ok. 1,1 s zamiast ok. 0,05 s), dlatego liczy się różnica.
+  Prognoza na żywo (wartości z 29.10, LCP zmienione jak lokalnie): telefon 84–86 przy niskim TBT i 80–81, gdy TBT skoczy do ok. 250 ms jak w 2 z 5 pomiarów 29.10 (dla samej 3.2.95: 83, w gorszym pomiarze 78–80); komputer bez zmian względem 3.2.95 (91–97).
+  Wygląd: pierwszy ekran i otwarte menu na telefonie (Moto 412 px i iPhone 390 px, PL i EN) piksel w piksel takie jak w 3.2.95; sekcja ścieżki usług identyczna; pasek logo różni się tylko położeniem przesuwających się logo (tak samo jak dwa zrzuty samej 3.2.95); pasek szybkiej nawigacji i wysokość strony bez zmian.
+  Konsola: 0 komunikatów (PL i EN, telefon i tablet), 0 brakujących plików, każdy z 4 arkuszy pobrany dokładnie raz. php -l bez błędów.
+
+WYŁĄCZNIKI (bez wgrywania czegokolwiek)
+  Opcja zp_s96_off = 1 albo jednorazowo adres /?zp_s96=0. Wyłączenie 3.2.95 (zp_s95_off, zp_s95_css_off) wyłącza też 3.2.96.
+
+JAK SPRAWDZIĆ PO WGRANIU
+  Źródło strony głównej otwartej na telefonie (albo z nagłówkiem telefonu) zawiera 4 linie <link rel="preload" as="style" … data-zp-s96="3296">. Na komputerze ich nie ma i tak ma być.
+
+ZBADANE, BEZ ZMIAN W TEJ PACZCE
+  – Skok tekstu hero na komputerze (CLS ok. 0,1, lokalnie 3 z 10 pomiarów, w 3.2.95 tak samo; na żywo 29.10 nie wystąpił): przeglądarka maluje hero w połowie wczytywania i tekst podjeżdża, gdy dojdzie reszta. Blokada pierwszego malowania do końca hero usuwa skok, ale opóźnia pierwszy obraz, więc jej nie dodałem.
+  – Odłożenie tych 4 arkuszy na później pogarszało pierwszy obraz albo LCP, dlatego zostają pobierane od razu.
+  – Pozostałe wahania na żywo to głównie TBT: długie zadania przy wczytywaniu bardzo dużego HTML strony głównej (1,56 MB) i Cookiebot. To kolejny krok.
+
+PO WGRANIU
+  Niczego nie czyścić. Kopia strony głównej odświeża się sama: od razu po aktualizacji przez wp-admin, a najpóźniej po 30 minutach (np. po wgraniu przez FTP).
