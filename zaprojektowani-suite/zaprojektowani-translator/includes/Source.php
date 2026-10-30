@@ -6,8 +6,54 @@ if (!defined('ABSPATH')) { exit; }
 /**
  * The Polish page as visitors get it, cut into fragments by the language module itself (ZPL\Page::extract),
  * so the keys saved here are exactly the ones the English page will look up.
+ * 2.1.0: German and Spanish also get what is not a page of the site (virtual()): the texts page scripts write after
+ * load and the iframe documents of the Suite (the Quote Studio chooser).
  */
 final class Source {
+    /** 2.1.0: the page of texts page scripts write after load (German and Spanish only; English ships them). */
+    const DYN = '/__dyn/';
+
+    /** 2.1.0: iframe documents of the Suite served by the language module (\ZPL\Frame): source path => file. */
+    public static function frames(): array {
+        $out = [];
+        if (!defined('ZP_SUITE_PATH') || !class_exists('ZPL\\Frame')) { return $out; }
+        foreach ((array) glob(ZP_SUITE_PATH . 'assets/*/*.html') as $f) {
+            $rel = substr((string) $f, strlen(ZP_SUITE_PATH . 'assets/'));
+            if (preg_match(\ZPL\Frame::RX_REL, $rel)) { $out['/__frame/' . $rel] = (string) $f; }
+        }
+        return $out;
+    }
+
+    /**
+     * 2.1.0: fragments of a page made from a file. '/__dyn/': the texts page scripts write after load, by the Polish keys
+     * of the language module's list of them (data/json/en/dyn.json, the English version of the same texts);
+     * '/__frame/<file>': an iframe document, read from disk as the language module serves it.
+     * @return array{ok:bool,units:array,title:string,error:string}
+     */
+    public static function virtual(string $kind, string $path): array {
+        $out = ['ok' => false, 'units' => [], 'title' => '', 'error' => ''];
+        if ($kind === 'dyn') {
+            $file = defined('ZPL_DIR') ? ZPL_DIR . 'data/json/en/dyn.json' : '';
+            $raw = $file !== '' && is_file($file) ? file_get_contents($file) : false;
+            $map = is_string($raw) ? json_decode($raw, true) : null;
+            if (!is_array($map)) { $out['error'] = 'Brak listy tekstów skryptów (data/json/en/dyn.json)'; return $out; }
+            foreach (array_keys($map) as $k) {
+                $k = (string) $k;
+                if ($k !== '' && strlen($k) <= Translator::MAX_KEY) { $out['units'][$k] = 'text'; }
+            }
+            $out['title'] = 'Teksty, które skrypty strony pokazują po jej załadowaniu: Studio wyceny, formularze, okna realizacji';
+        } else {
+            $file = self::frames()[$path] ?? '';
+            $html = $file !== '' ? file_get_contents($file) : false;
+            if (!is_string($html) || $html === '') { $out['error'] = 'Brak pliku ' . $path; return $out; }
+            $out['units'] = self::units($html);
+            $out['title'] = self::title($html) ?: 'Studio wyceny';
+        }
+        $out['ok'] = (bool) $out['units'];
+        if (!$out['ok'] && $out['error'] === '') { $out['error'] = 'Brak tekstów w ' . $path; }
+        return $out;
+    }
+
     /**
      * Fetch the rendered Polish page from this server (loopback request).
      * @return array{ok:bool,html:string,code:int,error:string,gone:bool,redirect:string,via:string}

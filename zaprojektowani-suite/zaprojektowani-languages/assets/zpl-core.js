@@ -194,6 +194,9 @@
     if (lang === 'en') {
       if (/^\d{1,3}(?:[ \u00A0\u202F]\d{3})+$/.test(v)) return v.replace(/[ \u00A0\u202F]/g, ',');
       if (/^\d+,\d{1,2}$/.test(v)) return v.replace(',', '.');
+    } else if (lang === 'de' || lang === 'es') {
+      // 1.2.0 German and Spanish: "1 500" -> "1.500"; decimals keep the comma ("4,9").
+      if (/^\d{1,3}(?:[   ]\d{3})+$/.test(v)) return v.replace(/[   ]/g, '.');
     } else {
       if (/^\d{1,3}(?:,\d{3})+$/.test(v)) return v.replace(/,/g, '\u00A0');
       if (/^\d+\.\d{1,2}$/.test(v)) return v.replace('.', ',');

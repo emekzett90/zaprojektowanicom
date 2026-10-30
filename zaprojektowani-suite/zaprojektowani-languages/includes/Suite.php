@@ -101,9 +101,11 @@ final class Suite {
         if ($ref === '') { return; }
         $rp = (string) wp_parse_url($ref, PHP_URL_PATH);
         $rel = Router::rel($rp);
-        if ($rel !== '/en' && strpos($rel, '/en/') !== 0) { return; }
+        // 1.2.0: German and Spanish pages too.
+        $lang = Lang::of_path(Router::norm_path($rel));
+        if ($lang === 'pl') { return; }
         $r = Router::resolve($rel);
-        Router::$lang = 'en';
+        Router::$lang = $lang;
         Router::$source = $r[1] ?: '/';
         ob_start(static function ($out, $phase = 0) {
             if (!is_string($out) || $out === '' || ($out[0] !== '{' && $out[0] !== '[')) { return $out; }
@@ -119,12 +121,12 @@ final class Suite {
         if (is_array($v)) { foreach ($v as $k => $x) { $v[$k] = self::ajax_value($x, (string) $k); } return $v; }
         if (!is_string($v) || $v === '') { return $v; }
         if (preg_match('~^(?:https?://|/)[^\s<>"]*$~i', $v) && (stripos($key, 'redirect') !== false || stripos($key, 'url') !== false || stripos($key, 'link') !== false || $key === 'href')) {
-            return Router::url($v, 'en');
+            return Router::url($v, Router::$lang);
         }
         if (strpos($v, '<') !== false && preg_match('~<[a-z][^>]*>~i', $v)) { return Fragment::translate($v); }
         $n = Html::norm($v);
         if (!Html::human($n)) { return $v; }
-        $t = Dict::get($n, 'en', Router::$source);
+        $t = Dict::get($n, Router::$lang, Router::$source);
         return $t ?? $v;
     }
 }

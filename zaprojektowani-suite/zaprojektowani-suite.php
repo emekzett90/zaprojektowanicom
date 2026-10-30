@@ -1,8 +1,8 @@
 <?php
 /**
  * Plugin Name: Zaprojektowani Suite
- * Description: Zaprojektowani Suite z wersją angielską strony (PL/EN, adresy /en/, przełącznik języka), automatycznymi naprawami SEO, nagłówków, zasobów i paginacji na podstawie audytu z 13.09.2026.
- * Version: 3.2.96
+ * Description: Zaprojektowani Suite z wersjami angielską, niemiecką i hiszpańską strony (PL/EN/DE/ES, adresy /en/, /de/, /es/, przełącznik języka), automatycznymi naprawami SEO, nagłówków, zasobów i paginacji na podstawie audytu z 13.09.2026.
+ * Version: 3.2.97
  * Requires at least: 6.5
  * Requires PHP: 8.0
  * Author: Zaprojektowani.com
@@ -16,7 +16,7 @@ if (defined('ZP_SUITE_VERSION')) {
   return;
 }
 
-define('ZP_SUITE_VERSION', '3.2.96');
+define('ZP_SUITE_VERSION', '3.2.97');
 define('ZP_SUITE_PATH', plugin_dir_path(__FILE__));
 define('ZP_SUITE_URL', plugin_dir_url(__FILE__));
 
@@ -47,6 +47,8 @@ require_once ZP_SUITE_PATH . 'includes/wyglad-3294/loader.php';
 require_once ZP_SUITE_PATH . 'includes/szybkosc-3295/loader.php';
 // 3.2.96: telefon — wcześniejsze pobranie 4 arkuszy zostawionych przez 3.2.95 (stabilne LCP w Lighthouse) — includes/szybkosc-3296/.
 require_once ZP_SUITE_PATH . 'includes/szybkosc-3296/preload.php';
+// 3.2.97: wersje niemiecka (/de/) i hiszpańska (/es/) z Tłumacza AI (GPT-6.1 Sol), ceny w euro, przełącznik języka bez
+// przeładowania — zaprojektowani-languages 1.2.0, zaprojektowani-translator 2.1.0, includes/eur-public-currency-20261030.php.
 
 // 3.2.35: one server-first header; outer response adapter must load before speed/translation.
 require_once ZP_SUITE_PATH . 'includes/mobile-header-ssr-3235.php';
@@ -1681,6 +1683,10 @@ require_once ZP_SUITE_PATH . 'includes/en-public-currency-20261011.php';
 ZP_EN_Public_Currency_20261011::register();
 require_once ZP_SUITE_PATH . 'includes/en-studio-budget-20261011.php';
 ZP_EN_Studio_Budget_20261011::register();
+// 3.2.97: prices in euro on the German and Spanish pages (NBP rate, rounded), the same presentation layer.
+require_once ZP_SUITE_PATH . 'includes/eur-public-currency-20261030.php';
+ZP_EUR_Public_Currency_20261030::register();
+require_once ZP_SUITE_PATH . 'includes/jezyki-de-es-3297.php';
 if (zp_suite_backend_request()) {
 // Senuto-backed topics, OpenAI drafts and reviewed native publication dates.
 require_once ZP_SUITE_PATH . 'includes/admin-content-preparation-20261010.php';

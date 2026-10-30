@@ -3,14 +3,33 @@ namespace ZPTE;
 
 if (!defined('ABSPATH')) { exit; }
 
-/** ZP Suite → Tłumacz EN: status and progress, pages, translations, settings and log. */
+/**
+ * ZP Suite → Tłumacz EN: status and progress, pages, translations, settings and log.
+ * 2.1.0: one panel for every language: the language tabs (EN, DE, ES) on top switch all of it (parameter zpte_lang).
+ */
 final class Admin {
     const SLUG = 'zp-tlumacz-en';
     const PER_PAGE = 50;
     const TABS = ['overview' => 'Przegląd', 'pages' => 'Strony', 'texts' => 'Teksty', 'settings' => 'Ustawienia', 'log' => 'Dziennik'];
     /** Models offered in the settings (any other name can be typed in). */
     const MODELS = ['gpt-6-luna' => 'gpt-6-luna (zalecany: szybki i tani)'];
+    /** 2.1.0: models offered for German and Spanish (copy written for people there, not a quick translation). */
+    const AI_MODELS = [
+        'gpt-6.1-sol' => 'gpt-6.1-sol (zalecany: najlepszy model GPT-6.1)',
+        'gpt-6-astra' => 'gpt-6-astra (najmocniejszy GPT-6, ok. 5× droższy)',
+        'gpt-6.1-terra' => 'gpt-6.1-terra (tańszy, słabszy)',
+    ];
     const MODELS_OPTION = 'zpte2_models';
+
+    /** 2.1.0: the language the panel shows (zpte_lang in the address, the form or the AJAX request). */
+    private static function lang(): string {
+        $v = $_REQUEST['zpte_lang'] ?? 'en';
+        $v = is_string($v) ? sanitize_key(wp_unslash($v)) : 'en';
+        return Lang::valid($v) ? $v : 'en';
+    }
+
+    /** 2.1.0: "EN", "DE", "ES" of the current language. */
+    private static function code(): string { return Lang::CODE[Lang::code()]; }
 
     public static function boot(): void {
         // After the Suite trims its submenu (priority 9999), so this entry stays visible.
@@ -29,7 +48,9 @@ final class Admin {
     }
 
     public static function url(array $args = []): string {
-        return add_query_arg(array_merge(['page' => self::SLUG], $args), admin_url('admin.php'));
+        $base = ['page' => self::SLUG];
+        if (!Lang::is_en()) { $base['zpte_lang'] = Lang::code(); }
+        return add_query_arg(array_merge($base, $args), admin_url('admin.php'));
     }
 
     private static function tab(): string {
@@ -43,7 +64,7 @@ final class Admin {
         wp_enqueue_style('zpte2-admin', plugins_url('assets/admin.css', ZPTE_DIR . 'translator.php'), [], ZPTE_VERSION);
         if (self::tab() !== 'overview') { return; }
         wp_enqueue_script('zpte2-admin', plugins_url('assets/admin.js', ZPTE_DIR . 'translator.php'), [], ZPTE_VERSION, true);
-        wp_localize_script('zpte2-admin', 'zpte2Admin', ['url' => admin_url('admin-ajax.php'), 'nonce' => wp_create_nonce('zpte2_progress')]);
+        wp_localize_script('zpte2-admin', 'zpte2Admin', ['url' => admin_url('admin-ajax.php'), 'nonce' => wp_create_nonce('zpte2_progress'), 'lang' => self::lang()]);
     }
 
     // ------------------------------------------------------------------ AJAX
@@ -58,16 +79,16 @@ final class Admin {
 
     public static function ajax_status(): void {
         self::ajax_ok();
-        wp_send_json_success(['progress' => Worker::progress(), 'nonce' => wp_create_nonce('zpte2_progress')]);
+        wp_send_json_success(['progress' => Lang::with(self::lang(), [Worker::class, 'progress']), 'nonce' => wp_create_nonce('zpte2_progress')]);
     }
 
     /** The open panel moves the work on when the background steps do not run (hosting without loopback or cron). */
     public static function ajax_step(): void {
         self::ajax_ok();
         if (function_exists('session_write_close')) { @session_write_close(); }
-        $p = Worker::progress();
-        if ($p['stalled']) { Worker::work('panel'); }
-        wp_send_json_success(['progress' => Worker::progress(), 'nonce' => wp_create_nonce('zpte2_progress')]);
+        $p = Lang::with(self::lang(), [Worker::class, 'progress']);
+        if ($p['stalled']) { Worker::work('panel'); } // a step works on every language
+        wp_send_json_success(['progress' => Lang::with(self::lang(), [Worker::class, 'progress']), 'nonce' => wp_create_nonce('zpte2_progress')]);
     }
 
     // --------------------------------------------------------------- helpers
@@ -113,6 +134,7 @@ final class Admin {
         $h = '<form method="post" action="' . esc_url(admin_url('admin-post.php')) . '" class="' . esc_attr($class) . '"'
             . ($confirm !== '' ? ' onsubmit="return confirm(' . esc_attr((string) wp_json_encode($confirm)) . ')"' : '') . '>'
             . '<input type="hidden" name="action" value="zpte2"><input type="hidden" name="do" value="' . esc_attr($do) . '">'
+            . (Lang::is_en() ? '' : '<input type="hidden" name="zpte_lang" value="' . esc_attr(Lang::code()) . '">')
             . wp_nonce_field('zpte2', '_wpnonce', true, false);
         foreach ($hidden as $k => $v) { $h .= '<input type="hidden" name="' . esc_attr((string) $k) . '" value="' . esc_attr((string) $v) . '">'; }
         return $h;
@@ -130,11 +152,12 @@ final class Admin {
      * @return array<int,array{post_id:int,path:string,title:string,type:string,date:string}>
      */
     public static function missing_pages(): array {
-        static $cache = null;
-        if ($cache !== null) { return $cache; }
+        static $memo = []; // 2.1.0: per language
+        $l = Lang::code();
+        if (isset($memo[$l])) { return $memo[$l]; }
         $key = Index::count() . ':' . Routes::version() . ':' . implode(',', Settings::types());
-        $cached = get_transient('zpte2_missing');
-        if (is_array($cached) && ($cached['k'] ?? '') === $key && is_array($cached['v'] ?? null)) { return $cache = $cached['v']; }
+        $cached = get_transient(Lang::opt('zpte2_missing'));
+        if (is_array($cached) && ($cached['k'] ?? '') === $key && is_array($cached['v'] ?? null)) { return $memo[$l] = $cached['v']; }
         $cache = [];
         $types = Bridge::ready() ? Settings::types() : [];
         if ($types) {
@@ -145,15 +168,15 @@ final class Admin {
                 $pid = (int) $pid;
                 $path = Sync::path_of_post($pid);
                 if ($path === '' || Sync::ineligible($path) !== '') { continue; }
-                if (\ZPL\Router::has_route($path) && \ZPL\Dict::has_page($path)) { continue; }
+                if (\ZPL\Router::has_route($path, Lang::code()) && \ZPL\Dict::has_page($path, Lang::code())) { continue; }
                 $robots = get_post_meta($pid, 'rank_math_robots', true);
                 if (is_array($robots) && in_array('noindex', $robots, true)) { continue; }
                 $cache[] = ['post_id' => $pid, 'path' => $path, 'title' => html_entity_decode(get_the_title($pid), ENT_QUOTES, 'UTF-8'),
                     'type' => (string) get_post_type($pid), 'date' => (string) get_the_date('j.m.Y', $pid)];
             }
         }
-        set_transient('zpte2_missing', ['k' => $key, 'v' => $cache], 10 * MINUTE_IN_SECONDS);
-        return $cache;
+        set_transient(Lang::opt('zpte2_missing'), ['k' => $key, 'v' => $cache], 10 * MINUTE_IN_SECONDS);
+        return $memo[$l] = $cache;
     }
 
     /**
@@ -165,10 +188,13 @@ final class Admin {
         if (!Bridge::hooks_ready()) {
             return ['bad', 'Moduł Języki PL/EN w tej wersji nie współpracuje z tłumaczem. Wgraj aktualną wersję ZP Suite.', ''];
         }
+        if (!Lang::is_en() && (int) Settings::get('on') !== 1) {
+            return ['warn', 'Wersja ' . self::code() . ' jest wyłączona: strona nie ma jej adresów i nie jest tłumaczona.', '<a class="button" href="' . esc_url($settings) . '">Włącz w ustawieniach</a>'];
+        }
         if (Settings::api_key() === '') {
             $text = Settings::key_unreadable()
                 ? 'Zapisanego klucza OpenAI nie da się odczytać (zmieniły się klucze bezpieczeństwa WordPressa). Wklej klucz ponownie.'
-                : 'Brak klucza OpenAI: obecne strony EN działają, ale nowe i zmienione teksty czekają na tłumaczenie.';
+                : 'Brak klucza OpenAI: obecne strony ' . self::code() . ' działają, ale nowe i zmienione teksty czekają na tłumaczenie.';
             return ['bad', $text, '<a class="button button-primary" href="' . esc_url($settings . '#zpte2-key') . '">Wklej klucz</a>'];
         }
         if ($a = Log::current_alert()) {
@@ -179,7 +205,7 @@ final class Admin {
             return ['warn', $p['paused'], self::button('resume', 'Wznów teraz')];
         }
         if (!Settings::get('enabled')) {
-            return ['warn', 'Codzienne sprawdzenie jest wyłączone: nowe wpisy dostaną wersję EN tylko po publikacji lub ręcznym sprawdzeniu.', '<a class="button" href="' . esc_url($settings) . '">Włącz w ustawieniach</a>'];
+            return ['warn', 'Codzienne sprawdzenie jest wyłączone: nowe wpisy dostaną wersję ' . self::code() . ' tylko po publikacji lub ręcznym sprawdzeniu.', '<a class="button" href="' . esc_url($settings) . '">Włącz w ustawieniach</a>'];
         }
         if (!Import::done()) {
             return ['ok', 'Przenoszę obecne tłumaczenia i adresy EN do nowego tłumacza (bez kosztów OpenAI). Strony EN działają w tym czasie jak dotąd.', ''];
@@ -189,28 +215,64 @@ final class Admin {
         }
         $s = Worker::state();
         $next = (int) (wp_next_scheduled(Worker::DAILY) ?: Worker::next_daily());
-        $text = 'Działa. Wersji EN: ' . Index::count() . '. ' . ((int) $s['daily_at'] ? 'Ostatnie sprawdzenie: ' . self::day_time((int) $s['daily_at']) . '. ' : '') . 'Następne: ' . self::day_time($next) . '.';
+        $text = 'Działa. Wersji ' . self::code() . ': ' . Index::count() . '. ' . ((int) $s['daily_at'] ? 'Ostatnie sprawdzenie: ' . self::day_time((int) $s['daily_at']) . '. ' : '') . 'Następne: ' . self::day_time($next) . '.';
         return ['ok', $text, self::button('run', 'Sprawdź wszystko teraz')];
     }
 
     public static function notices(): void {
         if (!current_user_can('manage_options') || (($_GET['page'] ?? '') === self::SLUG)) { return; }
-        $a = Log::current_alert();
-        if (!$a) { return; }
-        echo '<div class="notice notice-error"><p><strong>Tłumacz EN wstrzymany:</strong> ' . esc_html((string) $a['m'])
-            . ' <a href="' . esc_url(self::url()) . '">Otwórz Tłumacza EN</a></p></div>';
+        // 2.1.0: an alert of any language (a German or Spanish one opens its own tab).
+        foreach (Lang::ALL as $l) {
+            Lang::with($l, static function () {
+                if (!Lang::is_en() && (int) Settings::get('on') !== 1) { return; }
+                $a = Log::current_alert();
+                if (!$a) { return; }
+                echo '<div class="notice notice-error"><p><strong>Tłumacz ' . esc_html(self::code()) . ' wstrzymany:</strong> ' . esc_html((string) $a['m'])
+                    . ' <a href="' . esc_url(self::url()) . '">Otwórz Tłumacza ' . esc_html(self::code()) . '</a></p></div>';
+            });
+        }
     }
 
     // ------------------------------------------------------------------- page
 
     public static function page(): void {
         if (!current_user_can('manage_options')) { return; }
+        Lang::with(self::lang(), [self::class, 'page_lang']);
+    }
+
+    /** 2.1.0: the language tabs, each with where its version stands. */
+    private static function langs_nav(): void {
+        echo '<nav class="zpte2-tabs zpte2-langs" aria-label="Język tłumaczenia">';
+        foreach (Lang::ALL as $l) {
+            [$label, $note] = Lang::with($l, static function () {
+                $name = ['en' => 'Angielski', 'de' => 'Niemiecki', 'es' => 'Hiszpański'][Lang::code()];
+                if (!Bridge::ready() || !Store::ready()) { return [$name, '']; }
+                if (!Lang::is_en() && (int) Settings::get('on') !== 1) { return [$name, 'wyłączony']; }
+                $p = Worker::progress();
+                if ($p['work']) { return [$name, $p['percent'] . '%']; }
+                return [$name, (string) Index::count()];
+            });
+            $url = add_query_arg(array_merge(['page' => self::SLUG, 'tab' => self::tab()], $l === 'en' ? [] : ['zpte_lang' => $l]), admin_url('admin.php'));
+            echo '<a href="' . esc_url($url) . '"' . ($l === Lang::code() ? ' class="is-active" aria-current="page"' : '') . '>' . esc_html(Lang::CODE[$l] . ' · ' . $label) . ($note !== '' ? ' <small>' . esc_html($note) . '</small>' : '') . '</a>';
+        }
+        echo '</nav>';
+    }
+
+    /** The panel in the current language. */
+    public static function page_lang(): void {
         if (Bridge::ready()) { Store::install(); }
         $tab = self::tab();
-        echo '<div class="wrap zpte2"><h1>Tłumacz EN</h1>';
-        echo '<p class="zpte2-lead">Jeden tłumacz całej strony: nowe i zmienione teksty po angielsku, angielskie adresy z przekierowaniami, mapy witryny EN i hreflang. Sprawdza wszystko codziennie o 03:00 i od razu po publikacji wpisu.</p>';
+        $code = self::code();
+        echo '<div class="wrap zpte2"><h1>' . esc_html(Lang::is_en() ? 'Tłumacz EN' : 'Tłumacz ' . $code) . '</h1>';
+        self::langs_nav();
+        if (Lang::is_en()) {
+            echo '<p class="zpte2-lead">Jeden tłumacz całej strony: nowe i zmienione teksty po angielsku, angielskie adresy z przekierowaniami, mapy witryny EN i hreflang. Sprawdza wszystko codziennie o 03:00 i od razu po publikacji wpisu.</p>';
+        } else {
+            $who = Lang::code() === 'de' ? 'niemiecki copywriter dla klientów z Niemiec' : 'hiszpański copywriter dla klientów z Hiszpanii';
+            echo '<p class="zpte2-lead">' . esc_html('Wersja ' . $code . ' całej strony i wszystkich wpisów, pisana tak, jak napisałby ją ' . $who . ': naturalny język i frazy, których tam szukają w Google, ceny w euro. Własne adresy /' . Lang::code() . '/… z przekierowaniami, mapy witryny ' . $code . ' i hreflang. Sprawdza wszystko codziennie o 03:00 i od razu po publikacji wpisu.') . '</p>';
+        }
         self::flash();
-        echo '<nav class="zpte2-tabs" aria-label="Tłumacz EN">';
+        echo '<nav class="zpte2-tabs" aria-label="Tłumacz ' . esc_attr($code) . '">';
         foreach (self::TABS as $k => $label) {
             echo '<a href="' . esc_url(self::url(['tab' => $k])) . '"' . ($k === $tab ? ' class="is-active" aria-current="page"' : '') . '>' . esc_html($label) . '</a>';
         }
@@ -248,7 +310,7 @@ final class Admin {
             . '<ul class="zpte2-counts">'
             . '<li><strong data-zpte2="done">' . (int) $p['done'] . '</strong> z <strong data-zpte2="total">' . (int) $p['total'] . '</strong> stron sprawdzonych</li>'
             . '<li><strong data-zpte2="queued">' . (int) $p['queued'] . '</strong> w kolejce</li>'
-            . '<li><strong data-zpte2="en">' . (int) $p['en'] . '</strong> wersji EN</li>'
+            . '<li><strong data-zpte2="en">' . (int) $p['en'] . '</strong> wersji ' . esc_html(self::code()) . '</li>'
             . '<li><strong data-zpte2="attention">' . (int) $p['attention'] . '</strong> do poprawy</li></ul>'
             . '<p class="zpte2-current" data-zpte2="current">' . ($p['current'] !== '' && $p['work'] ? esc_html('Teraz: ' . $p['current']) : '') . '</p>'
             . '<p class="description">Postęp odświeża się sam. Tłumaczenie działa w tle także przy zamkniętym panelu; gdy serwer wstrzyma zadania w tle, otwarty panel prowadzi je dalej.</p>'
@@ -265,7 +327,8 @@ final class Admin {
         echo '<section class="zpte2-card"><h2>Koszt OpenAI</h2><dl class="zpte2-dl">'
             . '<dt>Dziś</dt><dd>' . esc_html(self::usd((float) $today['usd']) . ' · ' . number_format_i18n((int) $today['chars']) . ' ' . self::word((int) $today['chars'], 'znak', 'znaki', 'znaków') . ($daily > 0 ? ' z ' . number_format_i18n($daily) : '') . ' · ' . self::n((int) $today['requests'], 'zapytanie', 'zapytania', 'zapytań')) . '</dd>'
             . '<dt>Ten miesiąc</dt><dd>' . esc_html(self::usd((float) $month['usd']) . ($cap > 0 ? ' z limitu ' . self::usd($cap) : '')) . '</dd>'
-            . '<dt>Model</dt><dd>' . esc_html(Settings::model() . ' · rozumowanie ' . (Settings::EFFORTS[Settings::effort()] ?? Settings::effort())) . '</dd></dl></section>';
+            . '<dt>Model</dt><dd>' . esc_html(Settings::model() . ' · rozumowanie ' . (Settings::EFFORTS[Settings::effort()] ?? Settings::effort())) . '</dd>'
+            . (Lang::is_en() ? '' : '<dt>Na stronie</dt><dd>' . esc_html(self::public_state()) . '</dd>') . '</dl></section>';
         echo '<section class="zpte2-card"><h2>Harmonogram</h2><dl class="zpte2-dl">'
             . '<dt>Codziennie</dt><dd>' . esc_html(Settings::get('enabled') ? '03:00 (czas strony) — nowe, zmienione i wszystkie pozostałe strony' : 'wyłączone') . '</dd>'
             . '<dt>Ostatnie</dt><dd>' . esc_html(self::day_time((int) $s['daily_at'])) . '</dd>'
@@ -274,9 +337,9 @@ final class Admin {
         echo '</div>';
 
         $missing = self::missing_pages();
-        echo '<section class="zpte2-card"><h2>Wpisy i strony bez wersji EN</h2>';
+        echo '<section class="zpte2-card"><h2>' . esc_html('Wpisy i strony bez wersji ' . self::code()) . '</h2>';
         if (!$missing) {
-            echo '<p>Każdy opublikowany wpis i strona ma wersję angielską.</p></section>';
+            echo '<p>' . esc_html(Lang::is_en() ? 'Każdy opublikowany wpis i strona ma wersję angielską.' : 'Każdy opublikowany wpis i strona ma wersję ' . self::code() . '.') . '</p></section>';
             return;
         }
         echo '<p>' . esc_html(count($missing) . ' ' . self::pages_word(count($missing)) . ' — goście z zagranicy widzą je po polsku. Tłumacz zajmie się nimi sam przy najbliższym przebiegu; możesz też uruchomić to od razu.') . '</p><ul class="zpte2-list">';
@@ -287,12 +350,21 @@ final class Admin {
         echo '</ul></section>';
     }
 
+    /** 2.1.0: is the German (Spanish) version offered to visitors, and why not yet. */
+    private static function public_state(): string {
+        $mode = (string) Settings::get('public');
+        if ($mode === 'off') { return 'ukryta (wyłączona w ustawieniach)'; }
+        if (\ZPL\Lang::is_public(Lang::code())) { return 'widoczna: przełącznik języka, hreflang, mapy witryny'; }
+        if (!Index::has('/')) { return 'jeszcze niewidoczna: czeka na przetłumaczenie strony głównej'; }
+        return 'jeszcze niewidoczna: pokaże się po pierwszym pełnym tłumaczeniu całej strony';
+    }
+
     // ---------------------------------------------------------------- pages
 
     private static function filters(): array {
         return [
             'all' => ['Wszystkie', ['status' => ['new', 'done', 'partial', 'error']]],
-            'en' => ['Z wersją EN', ['status' => ['done', 'partial']]],
+            'en' => ['Z wersją ' . self::code(), ['status' => ['done', 'partial']]],
             'queue' => ['W kolejce', ['queued' => 1, 'status' => ['new', 'done', 'partial', 'error']]],
             'attention' => ['Do poprawy', ['attention' => true, 'status' => ['new', 'done', 'partial', 'error']]],
             'off' => ['Wyłączone', ['status' => ['off']]],
@@ -314,34 +386,42 @@ final class Admin {
             echo '<li><a href="' . esc_url(self::url(['tab' => 'pages', 'f' => $k])) . '"' . ($k === $f ? ' class="is-active"' : '') . '>' . esc_html($label) . ' <span>' . (int) Store::count_pages($w) . '</span></a></li>';
         }
         echo '</ul><form method="get" class="zpte2-search"><input type="hidden" name="page" value="' . esc_attr(self::SLUG) . '"><input type="hidden" name="tab" value="pages"><input type="hidden" name="f" value="' . esc_attr($f) . '">'
-            . '<label class="screen-reader-text" for="zpte2-q">Szukaj adresu</label><input type="search" id="zpte2-q" name="q" value="' . esc_attr($q) . '" placeholder="Szukaj adresu PL lub EN"><button class="button">Szukaj</button></form></div>';
+            . (Lang::is_en() ? '' : '<input type="hidden" name="zpte_lang" value="' . esc_attr(Lang::code()) . '">')
+            . '<label class="screen-reader-text" for="zpte2-q">Szukaj adresu</label><input type="search" id="zpte2-q" name="q" value="' . esc_attr($q) . '" placeholder="' . esc_attr('Szukaj adresu PL lub ' . self::code()) . '"><button class="button">Szukaj</button></form></div>';
 
         $total = Store::count_pages($where);
         $rows = Store::pages($where, self::PER_PAGE, ($paged - 1) * self::PER_PAGE, 'queued DESC, priority ASC, id DESC');
         if (!$rows) { echo '<div class="zpte2-card"><p>Brak stron w tym widoku.</p></div>'; return; }
-        $routes = \ZPL\Router::routes();
+        $routes = \ZPL\Router::routes(Lang::code());
+        $code = self::code();
         $status = ['new' => 'Nowa', 'done' => 'Gotowa', 'partial' => 'Częściowo', 'error' => 'Błąd', 'off' => 'Wyłączona'];
-        $stage = ['translating' => 'tłumaczy', 'route' => 'nadaje adres EN'];
-        echo '<div class="zpte2-card zpte2-table-wrap"><table class="zpte2-table"><thead><tr><th scope="col">Strona</th><th scope="col">Adres EN</th><th scope="col">Stan</th><th scope="col">Teksty</th><th scope="col">Sprawdzono</th><th scope="col"><span class="screen-reader-text">Akcje</span></th></tr></thead><tbody>';
+        $stage = ['translating' => 'tłumaczy', 'route' => 'nadaje adres ' . $code];
+        // 2.1.0: the two kinds of German and Spanish pages made from files.
+        $virtual = ['dyn' => 'teksty skryptów strony (Studio wyceny, formularze, okna realizacji)', 'frame' => 'Studio wyceny w ramce (iframe)'];
+        echo '<div class="zpte2-card zpte2-table-wrap"><table class="zpte2-table"><thead><tr><th scope="col">Strona</th><th scope="col">Adres ' . esc_html($code) . '</th><th scope="col">Stan</th><th scope="col">Teksty</th><th scope="col">Sprawdzono</th><th scope="col"><span class="screen-reader-text">Akcje</span></th></tr></thead><tbody>';
         foreach ($rows as $r) {
             $path = (string) $r->path;
             $en = (string) ($routes[$path] ?? '');
-            $live = $en !== '' && strpos($en, '/en/') === 0 && Index::has($path);
+            $live = $en !== '' && strpos($en, Lang::prefix()) === 0 && Index::has($path);
             $state = $status[$r->status] ?? $r->status;
             if ($r->stage !== '' && isset($stage[$r->stage])) { $state .= ', ' . $stage[$r->stage]; }
             elseif ((int) $r->queued) { $state .= ', w kolejce'; }
             $cls = $r->status === 'error' || (int) $r->keys_failed > 0 ? 'bad' : ($r->status === 'done' ? 'ok' : ($r->status === 'off' ? 'off' : 'warn'));
-            echo '<tr><td class="zpte2-break"><a href="' . esc_url(home_url($path)) . '" target="_blank" rel="noopener">' . esc_html($path) . '</a></td>';
-            echo '<td class="zpte2-break">' . ($en !== '' ? '<a href="' . esc_url(home_url($en)) . '" target="_blank" rel="noopener">' . esc_html($en) . '</a>' . ($live ? '' : ' <small>(jeszcze niewidoczna)</small>') . (Routes::polish($en) ? ' <small class="zpte2-warn">polskie słowa</small>' : '') : '—') . '</td>';
+            if (isset($virtual[(string) $r->kind])) {
+                echo '<tr><td class="zpte2-break">' . esc_html($path) . '</td><td>' . esc_html($virtual[(string) $r->kind]) . '</td>';
+            } else {
+                echo '<tr><td class="zpte2-break"><a href="' . esc_url(home_url($path)) . '" target="_blank" rel="noopener">' . esc_html($path) . '</a></td>';
+                echo '<td class="zpte2-break">' . ($en !== '' ? '<a href="' . esc_url(home_url($en)) . '" target="_blank" rel="noopener">' . esc_html($en) . '</a>' . ($live ? '' : ' <small>(jeszcze niewidoczna)</small>') . (Routes::polish($en) ? ' <small class="zpte2-warn">polskie słowa</small>' : '') : '—') . '</td>';
+            }
             echo '<td><span class="zpte2-pill is-' . esc_attr($cls) . '">' . esc_html($state) . '</span>' . ((string) $r->message !== '' ? '<small>' . esc_html((string) $r->message) . '</small>' : '') . '</td>';
             echo '<td>' . (int) $r->keys_done . ' / ' . (int) $r->keys_total . ((int) $r->keys_failed ? '<small class="zpte2-warn">' . (int) $r->keys_failed . ' bez tłumaczenia</small>' : '') . '</td>';
             echo '<td class="zpte2-when">' . esc_html(self::when($r->checked_at)) . '</td><td class="zpte2-row-actions">';
             if ($r->status !== 'off') {
                 echo self::button('page_check', 'Sprawdź teraz', ['id' => (int) $r->id]);
                 echo self::button('page_force', 'Przetłumacz od nowa', ['id' => (int) $r->id], 'button-link', 'Przetłumaczyć całą stronę od nowa? Ręczne poprawki zostaną.');
-                if ($r->kind !== 'home' && !Routes::external($path)) {
-                    echo '<details><summary>Zmień adres EN</summary>' . self::form('page_route', ['id' => (int) $r->id], '', 'zpte2-route')
-                        . '<label class="screen-reader-text" for="zpte2-en-' . (int) $r->id . '">Nowy adres EN</label><input type="text" id="zpte2-en-' . (int) $r->id . '" name="en" value="' . esc_attr($en) . '" pattern="/en/.*" required>'
+                if ($r->kind !== 'home' && !isset($virtual[(string) $r->kind]) && !Routes::external($path)) {
+                    echo '<details><summary>Zmień adres ' . esc_html($code) . '</summary>' . self::form('page_route', ['id' => (int) $r->id], '', 'zpte2-route')
+                        . '<label class="screen-reader-text" for="zpte2-en-' . (int) $r->id . '">Nowy adres ' . esc_html($code) . '</label><input type="text" id="zpte2-en-' . (int) $r->id . '" name="en" value="' . esc_attr($en) . '" pattern="' . esc_attr(Lang::prefix()) . '.*" required>'
                         . '<button class="button">Zapisz</button><small>Stary adres przekieruje na nowy (301).</small></form></details>';
                 }
             }
@@ -352,7 +432,7 @@ final class Admin {
         if ($pages > 1) {
             echo '<p class="zpte2-pager">';
             for ($i = 1; $i <= $pages; $i++) {
-                $args = ['tab' => 'pages', 'f' => $f, 'paged' => $i];
+                $args = ['tab' => 'pages', 'f' => $f, 'paged' => $i]; // url() adds the language
                 if ($q !== '') { $args['q'] = $q; }
                 echo $i === $paged ? '<strong>' . $i . '</strong> ' : '<a href="' . esc_url(self::url($args)) . '">' . $i . '</a> ';
             }
@@ -364,9 +444,11 @@ final class Admin {
 
     private static function tab_texts(): void {
         $q = isset($_GET['q']) && is_string($_GET['q']) ? trim(sanitize_text_field(wp_unslash($_GET['q']))) : '';
-        echo '<div class="zpte2-card"><p>Pamięć tłumaczeń: każdy polski tekst ma jedno angielskie tłumaczenie, używane na wszystkich stronach, na których występuje. Poprawka zapisana tutaj zostaje na stałe (tłumacz jej nie nadpisze) i od razu trafia na strony EN.</p>'
+        $in = ['en' => ['angielskie', 'angielsku'], 'de' => ['niemieckie', 'niemiecku'], 'es' => ['hiszpańskie', 'hiszpańsku']][Lang::code()];
+        echo '<div class="zpte2-card"><p>' . esc_html('Pamięć tłumaczeń: każdy polski tekst ma jedno ' . $in[0] . ' tłumaczenie, używane na wszystkich stronach, na których występuje. Poprawka zapisana tutaj zostaje na stałe (tłumacz jej nie nadpisze) i od razu trafia na strony ' . self::code() . '.') . '</p>'
             . '<form method="get" class="zpte2-search"><input type="hidden" name="page" value="' . esc_attr(self::SLUG) . '"><input type="hidden" name="tab" value="texts">'
-            . '<label class="screen-reader-text" for="zpte2-tq">Szukaj tekstu</label><input type="search" id="zpte2-tq" name="q" value="' . esc_attr($q) . '" placeholder="Szukaj po polsku lub angielsku"><button class="button">Szukaj</button></form></div>';
+            . (Lang::is_en() ? '' : '<input type="hidden" name="zpte_lang" value="' . esc_attr(Lang::code()) . '">')
+            . '<label class="screen-reader-text" for="zpte2-tq">Szukaj tekstu</label><input type="search" id="zpte2-tq" name="q" value="' . esc_attr($q) . '" placeholder="' . esc_attr('Szukaj po polsku lub po ' . $in[1]) . '"><button class="button">Szukaj</button></form></div>';
         $rows = Store::find_strings($q, 50);
         echo '<h2 class="zpte2-h">' . esc_html($q === '' ? 'Ostatnio przetłumaczone' : 'Wyniki: ' . count($rows) . (count($rows) === 50 ? '+' : '')) . '</h2>';
         if (!$rows) { echo '<div class="zpte2-card"><p>Nic nie znaleziono.</p></div>'; return; }
@@ -378,7 +460,7 @@ final class Admin {
             $scope = (int) $r->scope === 0 ? ((int) $r->shared ? 'cała strona (menu, stopka, tytuły)' : 'wszystkie strony z tym tekstem') : 'tylko strona ' . (string) (Store::page((int) $r->scope)->path ?? '#' . (int) $r->scope);
             echo '<div class="zpte2-text">' . self::form('string_save', ['id' => (int) $r->id, 'q' => $q], '', 'zpte2-text-form')
                 . '<p class="zpte2-pl" lang="pl">' . esc_html((string) $r->pl) . '</p>'
-                . '<label class="screen-reader-text" for="zpte2-s' . (int) $r->id . '">Tłumaczenie</label><textarea id="zpte2-s' . (int) $r->id . '" name="en" rows="' . (strlen((string) $r->en) > 180 ? 4 : 2) . '" lang="en">' . esc_textarea((string) $r->en) . '</textarea>'
+                . '<label class="screen-reader-text" for="zpte2-s' . (int) $r->id . '">Tłumaczenie</label><textarea id="zpte2-s' . (int) $r->id . '" name="en" rows="' . (strlen((string) $r->en) > 180 ? 4 : 2) . '" lang="' . esc_attr(Lang::code()) . '">' . esc_textarea((string) $r->en) . '</textarea>'
                 . '<p class="zpte2-meta"><span class="zpte2-pill">' . esc_html($label) . '</span> ' . esc_html($scope . ' · ' . self::when((string) $r->updated_at)) . ' <button class="button button-small">Zapisz poprawkę</button></p></form></div>';
         }
         echo '</div>';
@@ -390,6 +472,16 @@ final class Admin {
         $all = Settings::all();
         $src = Settings::key_source();
         echo self::form('save_settings', [], '', 'zpte2-settings');
+        if (!Lang::is_en()) {
+            $mode = (string) ($all['public'] ?? 'auto');
+            echo '<section class="zpte2-card"><h2>' . esc_html('Wersja ' . self::code() . ' na stronie') . '</h2>'
+                . '<p><label><input type="checkbox" name="on" value="1"' . checked((int) $all['on'] === 1, true, false) . '> ' . esc_html('Twórz i aktualizuj wersję ' . self::code() . ' całej strony (adresy /' . Lang::code() . '/…)') . '</label></p>'
+                . '<p><label for="zpte2-public">Pokazuj gościom (przełącznik języka, hreflang, mapy witryny, przekierowanie gości z ' . (Lang::code() === 'de' ? 'Niemiec' : 'Hiszpanii') . ')</label><br><select id="zpte2-public" name="public">';
+            foreach (['auto' => 'automatycznie, po pierwszym pełnym tłumaczeniu całej strony (zalecane)', 'on' => 'od razu (strony jeszcze nieprzetłumaczone zostają po polsku)', 'off' => 'nie pokazuj (strony ' . self::code() . ' tylko z noindex, do podglądu)'] as $k => $label) {
+                echo '<option value="' . esc_attr($k) . '"' . selected($mode, $k, false) . '>' . esc_html($label) . '</option>';
+            }
+            echo '</select></p><p class="description">' . esc_html('Teraz: ' . self::public_state() . '.') . '</p></section>';
+        }
         echo '<section class="zpte2-card" id="zpte2-key"><h2>Klucz API OpenAI</h2>';
         if ($src === 'constant') {
             echo '<p>Klucz pochodzi z pliku wp-config.php (stała ZPTE_OPENAI_API_KEY): ' . esc_html(Settings::key_hint()) . '.</p>';
@@ -403,7 +495,7 @@ final class Admin {
         }
         echo '</section>';
 
-        $models = self::MODELS;
+        $models = Lang::is_en() ? self::MODELS : self::AI_MODELS;
         foreach ((array) get_option(self::MODELS_OPTION, []) as $m) {
             if (is_string($m) && !isset($models[$m]) && preg_match('~^(gpt|o\d)~', $m)) { $models[$m] = $m; }
         }
@@ -415,13 +507,15 @@ final class Admin {
         echo '<p><label for="zpte2-effort">Rozumowanie</label><br><select id="zpte2-effort" name="effort">';
         foreach (Settings::EFFORTS as $e => $label) { echo '<option value="' . esc_attr($e) . '"' . selected(Settings::effort(), $e, false) . '>' . esc_html($label) . '</option>'; }
         echo '</select></p><p><label for="zpte2-instr">Dodatkowe wskazówki dla tłumacza</label><br><textarea id="zpte2-instr" name="instructions" rows="3" class="large-text" maxlength="2000">' . esc_textarea((string) $all['instructions']) . '</textarea></p>'
-            . '<p class="description">Np. nazwy, których nie tłumaczyć. Tłumacz zawsze pisze naturalnym amerykańskim angielskim, oddaje sens, a nie słowa, i zostawia ceny w złotych.</p></section>';
+            . '<p class="description">' . esc_html(Lang::is_en()
+                ? 'Np. nazwy, których nie tłumaczyć. Tłumacz zawsze pisze naturalnym amerykańskim angielskim, oddaje sens, a nie słowa, i zostawia ceny w złotych.'
+                : 'Np. nazwy, których nie tłumaczyć. Tłumacz pisze jak ' . (Lang::code() === 'de' ? 'niemiecki copywriter agencji (forma „Sie”, frazy wpisywane w Google w Niemczech)' : 'hiszpański copywriter agencji (forma „tú”, hiszpański z Hiszpanii, frazy wpisywane w Google w Hiszpanii)') . ', z tymi samymi faktami co polska strona. Kwoty zostawia w złotych, a strona pokazuje je gościom w euro.') . '</p></section>';
 
         echo '<section class="zpte2-card"><h2>Kiedy tłumaczyć</h2>'
             . '<p><label><input type="checkbox" name="enabled" value="1"' . checked(!empty($all['enabled']), true, false) . '> Codziennie o 03:00 sprawdzaj wszystkie strony i tłumacz nowe oraz zmienione teksty</label></p>'
             . '<p><label><input type="checkbox" name="auto" value="1"' . checked(!empty($all['auto']), true, false) . '> Tłumacz wpis od razu po publikacji lub aktualizacji</label></p>'
-            . '<p><label><input type="checkbox" name="terms" value="1"' . checked(!empty($all['terms']), true, false) . '> Strony kategorii też mają wersje EN</label></p>'
-            . '<p><label><input type="checkbox" name="recheck" value="1"' . checked(!empty($all['recheck']), true, false) . '> Codziennie czytaj ponownie wszystkie strony EN (menu, stopka, listy wpisów)</label></p><fieldset><legend>Rodzaje treści</legend>';
+            . '<p><label><input type="checkbox" name="terms" value="1"' . checked(!empty($all['terms']), true, false) . '> ' . esc_html('Strony kategorii też mają wersje ' . self::code()) . '</label></p>'
+            . '<p><label><input type="checkbox" name="recheck" value="1"' . checked(!empty($all['recheck']), true, false) . '> ' . esc_html('Codziennie czytaj ponownie wszystkie strony ' . self::code() . ' (menu, stopka, listy wpisów)') . '</label></p><fieldset><legend>Rodzaje treści</legend>';
         foreach (Settings::public_types() as $type => $label) {
             echo '<label class="zpte2-check"><input type="checkbox" name="types[]" value="' . esc_attr($type) . '"' . checked(in_array($type, Settings::types(), true), true, false) . '> ' . esc_html($label) . '</label>';
         }
@@ -430,7 +524,7 @@ final class Admin {
         echo '<section class="zpte2-card"><h2>Limity</h2>'
             . '<p><label for="zpte2-daily">Polskich znaków dziennie (0 = bez limitu)</label><br><input type="number" id="zpte2-daily" name="daily_chars" min="0" step="10000" value="' . (int) $all['daily_chars'] . '"></p>'
             . '<p><label for="zpte2-monthly">Koszt miesięcznie, USD (0 = bez limitu)</label><br><input type="number" id="zpte2-monthly" name="monthly_usd" min="0" step="1" value="' . esc_attr((string) (float) $all['monthly_usd']) . '"></p>'
-            . '<p class="description">Po przekroczeniu limitu tłumacz czeka (do północy albo do nowego miesiąca) i sam wznawia pracę. Obecne strony EN działają dalej.</p></section>';
+            . '<p class="description">' . esc_html('Po przekroczeniu limitu tłumacz czeka (do północy albo do nowego miesiąca) i sam wznawia pracę. Obecne strony ' . self::code() . ' działają dalej.' . (Lang::is_en() ? '' : ' Każdy język ma własne limity; pierwsze tłumaczenie całej strony kosztuje około 20–30 USD.')) . '</p></section>';
         echo '<p><button type="submit" class="button button-primary">Zapisz ustawienia</button></p></form>';
 
         echo '<section class="zpte2-card"><h2>Połączenie z OpenAI</h2><p>Sprawdza klucz i pobiera listę dostępnych modeli.</p>' . self::button('test', 'Sprawdź połączenie') . '</section>';
@@ -442,7 +536,8 @@ final class Admin {
             echo '<a class="button" href="' . esc_url(add_query_arg(['page' => 'zpl-languages', 'tab' => $t], admin_url('admin.php'))) . '">' . esc_html($label) . '</a> ';
         }
         echo '</p></section>';
-        do_action('zpte2_settings_cards');
+        // 2.1.0: the dollar card belongs to English; German and Spanish show their own cards (prices in euro).
+        if (Lang::is_en()) { do_action('zpte2_settings_cards'); } else { do_action('zpte2_lang_settings_cards', Lang::code()); }
     }
 
     // --------------------------------------------------------------------- log
@@ -471,6 +566,11 @@ final class Admin {
     public static function handle(): void {
         if (!current_user_can('manage_options')) { wp_die('Brak uprawnień.', '', ['response' => 403]); }
         check_admin_referer('zpte2');
+        Lang::with(self::lang(), [self::class, 'handle_lang']);
+    }
+
+    /** 2.1.0: the action of a form, in the language of the tab it came from. */
+    public static function handle_lang(): void {
         $do = isset($_POST['do']) && is_string($_POST['do']) ? sanitize_key(wp_unslash($_POST['do'])) : '';
         if (!Bridge::ready()) { self::back('overview', 'Brak modułu Języki PL/EN.', true); }
         Store::install();
@@ -488,7 +588,7 @@ final class Admin {
                 $pid = (int) ($_POST['post_id'] ?? 0);
                 if ($pid > 0 && Sync::plan_post($pid)) {
                     Worker::kick(1);
-                    delete_transient('zpte2_missing');
+                    delete_transient(Lang::opt('zpte2_missing'));
                     self::back('overview', 'Tłumaczę: ' . Sync::path_of_post($pid));
                 }
                 self::back('overview', 'Tej strony nie da się przetłumaczyć (adres techniczny, wyłączony lub niepubliczny).', true);
@@ -528,16 +628,19 @@ final class Admin {
         if (!$row) { self::back('pages', 'Nie znaleziono strony.', true); }
         $en = strtolower(trim(sanitize_text_field(wp_unslash((string) ($_POST['en'] ?? '')))));
         $en = '/' . trim((string) preg_replace('~^https?://[^/]+~', '', $en), '/') . '/';
-        if (strpos($en, '/en/') !== 0) { $en = '/en' . $en; }
-        if (!Routes::valid_en($en) || $en === '/en/') { self::back('pages', 'Adres EN może mieć tylko małe litery bez polskich znaków, cyfry i myślniki, np. /en/websites/my-page/.', true, ['q' => $row->path]); }
+        $pre = Lang::prefix();
+        $code = self::code();
+        if (strpos($en, $pre) !== 0) { $en = rtrim($pre, '/') . $en; }
+        $example = ['en' => '/en/websites/my-page/', 'de' => '/de/webdesign/meine-seite/', 'es' => '/es/diseno-web/mi-pagina/'][Lang::code()];
+        if (!Routes::valid_en($en) || $en === $pre) { self::back('pages', 'Adres ' . $code . ' może mieć tylko małe litery bez polskich znaków, cyfry i myślniki, np. ' . $example . '.', true, ['q' => $row->path]); }
         if (Routes::external((string) $row->path)) { self::back('pages', 'Adres tej strony ustawia moduł Języki PL/EN (Adresy URL) — zmień go tam.', true, ['q' => $row->path]); }
-        $owner = \ZPL\Router::reverse()[$en] ?? '';
+        $owner = \ZPL\Router::reverse(Lang::code())[$en] ?? '';
         if ($owner !== '' && $owner !== (string) $row->path) { self::back('pages', 'Ten adres ma już strona ' . $owner . '.', true, ['q' => $row->path]); }
-        $old = (string) (\ZPL\Router::routes()[(string) $row->path] ?? '');
+        $old = (string) (\ZPL\Router::routes(Lang::code())[(string) $row->path] ?? '');
         if (!Routes::assign($id, $en)) { self::back('pages', 'Nie udało się zapisać adresu.', true, ['q' => $row->path]); }
         Index::rebuild();
-        Log::add('Ręczna zmiana adresu EN: ' . $row->path . ' → ' . $en . ($old !== '' && $old !== $en ? ' (stary ' . $old . ' przekierowuje 301)' : '') . '.');
-        self::back('pages', 'Zapisano adres EN ' . $en . '.', false, ['q' => $row->path]);
+        Log::add('Ręczna zmiana adresu ' . $code . ': ' . $row->path . ' → ' . $en . ($old !== '' && $old !== $en ? ' (stary ' . $old . ' przekierowuje 301)' : '') . '.');
+        self::back('pages', 'Zapisano adres ' . $code . ' ' . $en . '.', false, ['q' => $row->path]);
     }
 
     private static function save_string(): void {
@@ -562,6 +665,11 @@ final class Admin {
         $p = wp_unslash($_POST);
         $vals = [];
         foreach (['enabled', 'auto', 'terms', 'recheck'] as $k) { $vals[$k] = !empty($p[$k]) ? 1 : 0; }
+        if (!Lang::is_en()) {
+            $vals['on'] = !empty($p['on']) ? 1 : 0;
+            $mode = (string) ($p['public'] ?? 'auto');
+            $vals['public'] = in_array($mode, ['auto', 'on', 'off'], true) ? $mode : 'auto';
+        }
         $model = trim((string) ($p['model_other'] ?? '')) !== '' ? trim((string) $p['model_other']) : (string) ($p['model'] ?? '');
         if (preg_match('~^[A-Za-z0-9._:-]{2,80}$~', $model)) { $vals['model'] = $model; }
         $effort = (string) ($p['effort'] ?? '');
@@ -588,6 +696,15 @@ final class Admin {
         if ((int) $before['enabled'] !== (int) $vals['enabled']) { wp_clear_scheduled_hook(Worker::DAILY); }
         if ($vals['enabled']) { Worker::maintain(); }
         if (Settings::api_key() !== '' && ($before['model'] !== Settings::model() || strpos($msg, 'Klucz zapisany') !== false || Log::current_alert())) { Worker::resume(); }
+        if (!Lang::is_en()) {
+            // 2.1.0: the language's addresses, switch and sitemaps follow the switches at once.
+            if ((int) ($before['on'] ?? 1) !== (int) $vals['on'] || (string) ($before['public'] ?? 'auto') !== $vals['public']) {
+                Routes::flush();
+                \ZPL\Lang::reset();
+                do_action('zp_html_cache_refresh');
+            }
+            if ((int) $vals['on'] === 1 && (int) ($before['on'] ?? 1) !== 1) { Worker::plan('manual'); }
+        }
         Log::add('Zmieniono ustawienia tłumacza.');
         self::back('settings', $msg);
     }

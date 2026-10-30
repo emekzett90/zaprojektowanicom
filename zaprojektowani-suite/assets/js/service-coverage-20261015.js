@@ -1,7 +1,7 @@
 (() => {
   'use strict';
   const motion = window.matchMedia('(prefers-reduced-motion: reduce)');
-  document.querySelectorAll('[data-zp-coverage]').forEach(root => {
+  const init = () => document.querySelectorAll('[data-zp-coverage]').forEach(root => {
     if (root.dataset.coverageReady) return;
     root.dataset.coverageReady = '1';
     const buttons = [...root.querySelectorAll('[data-cov-city]')];
@@ -28,4 +28,8 @@
       if (event.matches) delete root.dataset.coverageMotion;
     });
   });
+  init();
+  // 3.2.97: a language change without reloading (zaprojektowani-languages) brings the section back when coming
+  // back to Polish: it is prepared the same way.
+  document.addEventListener('zpl:change', init);
 })();

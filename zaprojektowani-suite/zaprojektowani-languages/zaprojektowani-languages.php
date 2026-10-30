@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Zaprojektowani Languages (PL/EN)
  * Description: Angielska wersja frontendu zaprojektowani.com — adresy /en/, tłumaczenia dostarczone w pliku (bez AI), przełącznik PL/EN bez przeładowania strony, hreflang i mapa witryny EN. Zastępuje wcześniejsze wtyczki tłumaczące.
- * Version: 1.1.3
+ * Version: 1.2.0
  * Requires at least: 6.3
  * Requires PHP: 7.4
  * Author: Zaprojektowani
@@ -24,7 +24,9 @@ if (defined('ZPL_EMBEDDED')) {
 }
 if (defined('ZPL_VERSION')) { return; }
 
-define('ZPL_VERSION', '1.1.3');
+define('ZPL_VERSION', '1.2.0');
+// 1.2.0 (Suite 3.2.97): German (/de/) and Spanish (/es/) from Tłumacz AI, prices in euro there, a four-language switch
+// in the header and a language change without reloading the page (assets/zpl-soft.js, with a cross-fade).
 // 1.1.3 (Suite 3.2.3): remove the temporary native transition opt-in after a language switch finishes.
 // 1.1.1 (Suite 3.1.1): /en/knowledge/ (was /en/insights/, 301), /en without the slash redirects, English pages are kept in ZP Suite's HTML cache.
 // 1.1.0 (Tłumacz EN 2): one translator serves above the shipped dictionaries (zpl_priority_dictionary), old English addresses redirect (zpl_legacy_routes).
@@ -41,7 +43,7 @@ define('ZPL_HOST', defined('ZPL_EMBEDDED') ? (string) ZPL_EMBEDDED : __FILE__); 
 define('ZPL_DIR', plugin_dir_path(__FILE__));
 define('ZPL_URL', plugin_dir_url(__FILE__));
 
-foreach (['Html', 'Page', 'Router', 'Dict', 'Suite', 'Switcher', 'Missing', 'Sitemap', 'Cleanup', 'Frame', 'Scan', 'Geo', 'Runtime', 'Rest', 'Admin'] as $zpl_class) {
+foreach (['Lang', 'Html', 'Page', 'Router', 'Dict', 'Suite', 'Switcher', 'Missing', 'Sitemap', 'Cleanup', 'Frame', 'Scan', 'Geo', 'Runtime', 'Rest', 'Admin'] as $zpl_class) {
     require_once ZPL_DIR . 'includes/' . $zpl_class . '.php';
 }
 unset($zpl_class);

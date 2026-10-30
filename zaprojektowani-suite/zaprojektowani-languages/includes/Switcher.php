@@ -3,9 +3,15 @@ namespace ZPL;
 
 if (!defined('ABSPATH')) { exit; }
 
-/** Server-rendered PL/EN switch (so it is visible at first paint and crawlable). */
+/**
+ * Server-rendered language switch (so it is visible at first paint and crawlable).
+ * 1.2.0: with German and Spanish offered it becomes a menu in the header bar (the current language and a chevron,
+ * the languages below it) and a segmented control with flags in the mobile drawer; with Polish and English only it is
+ * the PL/EN switch it always was.
+ */
 final class Switcher {
     public static function markup(string $lang, string $source, string $variant): string {
+        if (count(Lang::public()) > 2) { return self::multi($lang, $source, $variant); }
         $pl = esc_url(home_url($source));
         // A page without an English version yet: English opens the English home page, never a Polish /en/ copy.
         $hasEn = $lang === 'en' || (Router::has_route($source) && Dict::has_page($source));
@@ -27,14 +33,55 @@ final class Switcher {
         return $out;
     }
 
+    /**
+     * 1.2.0: three or four languages. Header bar and mobile bar: a button with the current language opens the list of
+     * languages (links, so crawlers and visitors without JavaScript still reach every version). Drawer: one segmented
+     * row with a flag and the code of each language, the dark thumb under the current one.
+     */
+    private static function multi(string $lang, string $source, string $variant): string {
+        $langs = Lang::public();
+        if (!in_array($lang, $langs, true)) { $langs[] = $lang; }
+        $paths = Runtime::paths($source);
+        $paths[$lang] = $lang === 'pl' ? $source : Router::path_for($source, $lang);
+        $index = (int) array_search($lang, $langs, true);
+        $label = Lang::LABEL[$lang] ?? 'Język';
+        $drawer = $variant === 'drawer';
+        $cls = 'zpl-switch zpl-switch--' . $variant . ' zpl-switch--multi ' . ($drawer ? 'zpl-switch--row' : 'zpl-switch--menu') . ' is-' . $lang;
+        $style = '--zpl-n:' . count($langs) . ';--zpl-i:' . $index;
+        $out = '<div class="' . $cls . '" role="group" aria-label="' . esc_attr($label) . '" data-zpl-switch data-zpl-current="' . $lang . '" style="' . $style . '" translate="no">';
+        $opts = '';
+        foreach ($langs as $l) {
+            $href = esc_url(home_url($paths[$l] ?? Lang::prefix($l)));
+            $cur = $l === $lang ? 'true' : 'false';
+            $mark = $drawer ? self::flag($l, '-' . $variant) . '<span class="zpl-switch__code">' . Lang::CODE[$l] . '</span>'
+                : self::flag($l, '-' . $variant) . '<span class="zpl-switch__name">' . esc_html(Lang::NAME[$l]) . '</span><span class="zpl-switch__code">' . Lang::CODE[$l] . '</span>';
+            $opts .= '<a class="zpl-switch__opt" href="' . $href . '" hreflang="' . $l . '" lang="' . $l . '" data-zpl-lang="' . $l . '" aria-current="' . $cur . '"' . ($drawer ? ' aria-label="' . esc_attr(Lang::NAME[$l]) . '"' : '') . '>' . $mark . '</a>';
+        }
+        if ($drawer) {
+            $out .= '<span class="zpl-switch__caption" aria-hidden="true">' . esc_html($label) . '</span>'
+                . '<span class="zpl-switch__track"><span class="zpl-switch__thumb" aria-hidden="true"></span>' . $opts . '</span></div>';
+            return $out;
+        }
+        $id = 'zpl-langs-' . $variant;
+        $out .= '<button type="button" class="zpl-switch__btn" aria-haspopup="true" aria-expanded="false" aria-controls="' . $id . '" aria-label="' . esc_attr($label . ': ' . Lang::NAME[$lang]) . '">'
+            . '<span class="zpl-switch__now"><span class="zpl-switch__code">' . Lang::CODE[$lang] . '</span></span>'
+            . '<svg class="zpl-switch__chev" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M2.5 4.5 6 8l3.5-3.5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+            . '</button><div class="zpl-switch__menu" id="' . $id . '">' . $opts . '</div></div>';
+        return $out;
+    }
+
     /** Round flag (inline SVG, cropped to a circle by CSS). */
-    private static function flag(string $lang): string {
+    private static function flag(string $lang, string $id = ''): string {
         if ($lang === 'pl') {
             $svg = '<svg viewBox="0 0 16 10" preserveAspectRatio="xMidYMid slice" focusable="false"><rect width="16" height="5" fill="#fff"/><rect y="5" width="16" height="5" fill="#dc143c"/></svg>';
+        } elseif ($lang === 'de') {
+            $svg = '<svg viewBox="0 0 15 9" preserveAspectRatio="xMidYMid slice" focusable="false"><rect width="15" height="3" fill="#000"/><rect y="3" width="15" height="3" fill="#dd0000"/><rect y="6" width="15" height="3" fill="#ffce00"/></svg>';
+        } elseif ($lang === 'es') {
+            $svg = '<svg viewBox="0 0 15 10" preserveAspectRatio="xMidYMid slice" focusable="false"><rect width="15" height="10" fill="#aa151b"/><rect y="2.5" width="15" height="5" fill="#f1bf00"/></svg>';
         } else {
-            $svg = '<svg viewBox="0 0 60 30" preserveAspectRatio="xMidYMid slice" focusable="false"><clipPath id="zpl-flag-uk-t"><path d="M30,15h30v15zv15h-30zh-30v-15zv-15h30z"/></clipPath>'
+            $svg = '<svg viewBox="0 0 60 30" preserveAspectRatio="xMidYMid slice" focusable="false"><clipPath id="zpl-flag-uk-t' . $id . '"><path d="M30,15h30v15zv15h-30zh-30v-15zv-15h30z"/></clipPath>'
                 . '<rect width="60" height="30" fill="#012169"/><path d="M0,0L60,30M60,0L0,30" stroke="#fff" stroke-width="6"/>'
-                . '<path d="M0,0L60,30M60,0L0,30" clip-path="url(#zpl-flag-uk-t)" stroke="#c8102e" stroke-width="4"/>'
+                . '<path d="M0,0L60,30M60,0L0,30" clip-path="url(#zpl-flag-uk-t' . $id . ')" stroke="#c8102e" stroke-width="4"/>'
                 . '<path d="M30,0v30M0,15h60" stroke="#fff" stroke-width="10"/><path d="M30,0v30M0,15h60" stroke="#c8102e" stroke-width="6"/></svg>';
         }
         return '<span class="zpl-switch__flag zpl-switch__flag--' . $lang . '" aria-hidden="true">' . $svg . '</span>';
@@ -46,7 +93,7 @@ final class Switcher {
      * back at the same place of the page. Nothing happens on any other page view.
      */
     public static function early(string $lang): string {
-        $l = $lang === 'en' ? 'en' : 'pl';
+        $l = Lang::valid($lang) ? $lang : 'pl';
         // pagereveal can fire before deferred assets. Handle only this native transition's promises here.
         $guard = <<<'JS'
 (function(w){

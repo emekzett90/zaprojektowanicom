@@ -1,0 +1,53 @@
+ZP Suite 3.2.97 — wersje niemiecka i hiszpańska, ceny w euro, zmiana języka bez przeładowania (30.10.2026)
+Baza: 3.2.96 (PR #68, paczka z 30.10.2026, jeszcze niewgrana). 3.2.97 zawiera całą 3.2.96 i 3.2.95, więc wystarczy wgrać tylko tę paczkę. Moduł języków 1.1.3 → 1.2.0, Tłumacz 2.0.3 → 2.1.0. Strony polskie i angielskie: teksty, ceny, wygląd, Rank Math, cache stron i pliki Codexa bez zmian; zmienia się tylko przełącznik języka, i to dopiero gdy DE i ES są gotowe.
+
+CO DOSTAJE STRONA
+  1. /de/ i /es/: cała strona i wszystkie wpisy po niemiecku i po hiszpańsku, z własnymi adresami (np. /de/angebotsrechner/, /es/calculadora-de-presupuesto/), tytułami i opisami dla Google, hreflang (pl, en, de, es, x-default), mapami strony (german-page-sitemap.xml, german-post-sitemap.xml, spanish-page-sitemap.xml, spanish-post-sitemap.xml), <html lang="de-DE"> / "es-ES" i Cookiebotem w języku strony.
+  2. Tłumacz AI: GPT-6.1 Sol (najmocniejszy model GPT-6.1), rozumowanie „wysokie”. Nie tłumaczy zdanie po zdaniu: pisze tak, jak niemiecka albo hiszpańska agencja pisze własną stronę (po niemiecku „Sie”, po hiszpańsku „tú” i słownictwo z Hiszpanii), z frazami, które tam ludzie wpisują w Google („Webdesign-Agentur”, „Website erstellen lassen”, „agencia de diseño web”, „diseño web profesional”). Frazy z polskimi miastami („strony internetowe Katowice”) zamienia na frazy szukane w danym kraju, a zdania o tym, dla kogo pracuje studio („dla firm z całej Polski”), pisze dla firm z Niemiec albo z Hiszpanii. Adresy stron też tłumaczy AI.
+  3. Fakty zostają prawdziwe: adres studia w Katowicach, telefon +48, dane firmy i zespół. AI ma zakaz wymyślania biura, adresu czy telefonu w Niemczech lub Hiszpanii (to wprowadzałoby klientów w błąd, a niemieckie prawo wymaga prawdziwego adresu w Impressum). Opinie klientów są tłumaczone wiernie, bez poprawiania, a po najechaniu pokazują „Opinia przetłumaczona z języka polskiego” (jak „Translated from Polish” w EN).
+  4. Ceny w euro na /de/ i /es/: pakiety, kalkulatory, Studio wyceny, ramka wyboru usługi i dane strukturalne. Kurs średni NBP pobierany codziennie, zaokrąglenie do 1, 5, 10 albo 50 € zależnie od kwoty, zapis jak w tych krajach („ab 940 €”, „desde 1.550 €/mes”). Wartości w formularzach i budżet wysyłany w briefie zostają w złotych, więc zgłoszenia przychodzą tak jak dziś.
+  5. Przełącznik języka w nagłówku: przy czterech językach przycisk z bieżącym językiem i strzałką rozwija listę z flagami (Polski, English, Deutsch, Español); w menu na telefonie jest rząd z flagami i kodami PL / EN / DE / ES. Lista ma ten sam cień co pływający nagłówek, bez nowego stylu. Dopóki DE i ES nie są gotowe, przełącznik zostaje taki jak dziś (PL/EN).
+  6. Zmiana języka bez przeładowania: nowa wersja podmienia na miejscu teksty, linki, ceny, opisy obrazków, okienko konsultacji i dane dla Google, z płynnym przenikaniem. Przewinięcie strony zostaje, przycisk Wstecz w przeglądarce wraca do poprzedniego języka. Sekcje, które ma tylko jedna wersja (np. „Cała Polska · studio w Katowicach” z wyborem miasta, tylko po polsku), znikają albo wracają na swoje miejsce razem z działającym wyborem miasta. Skrypt zmiany (26 KB, 9 KB po kompresji) wczytuje się dopiero, gdy gość najedzie na przełącznik albo go dotknie, więc pierwsze wczytanie strony się nie zmienia. Gdy dwie wersje strony różnią się za bardzo (inny układ albo skrypt, którego jedna wersja nie ma), po prostu otwiera się adres w nowym języku, jak dotąd.
+  7. Goście spoza Polski: przekierowanie jak dotąd (tylko na strony, które mają wersję obcojęzyczną), ale do języka przeglądarki (niemiecki → /de/, hiszpański → /es/), a gdy przeglądarka nie podaje żadnego z nich, według kraju (Niemcy, Austria, Szwajcaria → DE; Hiszpania i Ameryka Łacińska → ES). W każdym innym przypadku EN. Roboty Google i Lighthouse nigdy nie są przekierowywane.
+  8. Strona główna /de/ i /es/ dostaje te same przyspieszenia co / i /en/ (3.2.95, 3.2.96, nagłówek na telefonie z serwera).
+
+KOSZTY OPENAI (ten sam klucz co dla EN)
+  Strona ma ok. 21 700 różnych tekstów (ok. 2,1 mln znaków po polsku). Pierwsze pełne tłumaczenie jednego języka modelem GPT-6.1 Sol kosztuje szacunkowo 20–30 USD (oba języki 40–60 USD), potem tłumaczą się tylko nowe i zmienione teksty. Limity w ustawieniach: 60 USD miesięcznie na język i 2,5 mln znaków dziennie (cała strona w około dobę).
+  W ustawieniach można wybrać GPT-6 Astra (najmocniejszy GPT-6, ok. 5 razy droższy: ok. 100–150 USD za język) albo tańszy GPT-6.1 Terra, oraz rozumowanie „bardzo wysokie” lub „maksymalne” (droższe).
+
+PO WGRANIU
+  Niczego nie trzeba włączać ani czyścić. Tłumaczenie DE i ES rusza samo (ten sam CRON co 5 minut co dla EN). Przez pierwszą dobę /de/ i /es/ nie są widoczne dla gości ani Google; pokazują się same po pierwszym pełnym tłumaczeniu danego języka, razem z przełącznikiem czterech języków, hreflang i mapami strony.
+  Panel: ZP Suite → Tłumacz EN, na górze zakładki EN · DE · ES (postęp w procentach, strony, tłumaczenia, ustawienia, dziennik). W „Stan strony” są linie „Wersja DE” i „Wersja ES”.
+
+WYŁĄCZNIKI (bez wgrywania czegokolwiek)
+  Tłumacz EN → zakładka DE albo ES → Ustawienia: „Twórz i aktualizuj wersję DE całej strony” (odznaczenie wyłącza język całkiem: bez adresów i bez tłumaczenia) oraz widoczność: automatycznie po pierwszym pełnym tłumaczeniu (zalecane), od razu, albo „nie pokazuj” (tylko podgląd z noindex).
+
+JAK SPRAWDZIĆ PO WGRANIU
+  1. ZP Suite → Tłumacz EN: zakładki DE i ES pokazują rosnący procent.
+  2. Po pierwszym pełnym tłumaczeniu: w nagłówku jest przycisk języka z listą PL / EN / DE / ES, a /de/ i /es/ mają ceny w euro.
+  3. Kliknięcie innego języka: adres się zmienia, strona nie miga na biało i zostaje w tym samym miejscu.
+
+TESTY (lokalna kopia strony; Tłumacz AI podłączony do atrapy OpenAI, bez prawdziwego klucza i bez kosztów)
+  Zmiana języka bez przeładowania: 15 par stron (strona główna, O nas, Kontakt, Studio wyceny, Strona wizytówka, Wiedza, wpis; także powrót na polski na stronie usługi z DE, EN i ES), na telefonie (390 px) i na komputerze (1440 px). Po zmianie strona ma te same teksty, linki, opisy obrazków, tytuł, canonical i lang co świeżo otwarta strona w tym języku; różnią się tylko liczby i kolejność, które strona losuje przy każdym wczytaniu. Zmiana trwa lokalnie 0,4–3 s. Portfolio na stronie głównej po zmianie (PL → EN, PL → DE, EN → PL) ma te same karty co świeżo otwarta strona, a wybór miasta w sekcji „Cała Polska” działa po powrocie na polski.
+  Konsola: 0 błędów i 0 ostrzeżeń przy przełączaniu PL → DE → ES → EN → PL na komputerze oraz PL → DE → ES na telefonie (przyciskiem w nagłówku i w menu), poza 404 czcionek, których nie ma w lokalnej kopii.
+  Szybkość PL i EN (strona główna, 3.2.96 kontra 3.2.97, mediany z 3 pomiarów na zmianę, z przełącznikiem czterech języków): telefon (412 px, procesor 4× wolniejszy) PL LCP 1,57 → 1,61 s, TBT 1,67 → 1,41 s; EN LCP 1,80 → 1,53 s, TBT 1,46 → 1,78 s. Komputer (1440 px) PL LCP 2,32 → 2,47 s, EN LCP 2,33 → 2,24 s. Różnice idą w obie strony i mieszczą się w rozrzucie pojedynczych pomiarów (LCP na telefonie PL 1,46–1,63 s przed i 1,46–1,70 s po; na komputerze PL 1,87–2,84 s przed i 2,05–2,98 s po). Tyle samo zapytań (PL 64, EN 73), CLS 0, 0 błędów. HTML strony głównej +10 KB przed kompresją, +1,2 KB po gzip, +0,9 KB po brotli (przełącznik z flagami w trzech miejscach: nagłówek, nagłówek na telefonie, menu); JS +3–5 KB, CSS +5,5 KB (+0,8 KB po kompresji).
+  php -l bez błędów, skrypty bez błędów składni.
+
+UWAGI
+  – Lokalnie teksty DE/ES pochodziły z atrapy, więc nie da się ich jeszcze ocenić; prawdziwe powstaną dopiero na żywo. Po pierwszym tłumaczeniu warto przejrzeć kilka stron z kimś, kto zna niemiecki lub hiszpański.
+  – Strony /de/ i /es/ nie trafiają jeszcze do kopii HTML ZP Suite (cache stron, jak PL i EN), więc ich pierwsze wczytanie trwa dłużej. To następny krok, po pierwszym tłumaczeniu.
+  – Kilka napisów rysowanych przez CSS (data/de.css, data/es.css) jest stałych, napisanych ręcznie, nie przez AI.
+  – Sekcja „Cała Polska · studio w Katowicach” (wybór miasta) jest tylko po polsku, tak jak dziś w EN. Przy zmianie z PL na inny język znika, przy powrocie na polski wraca na swoje miejsce, w obu przypadkach bez przeładowania.
+  – Lokalnie brakuje czcionek z /wp-content/web-font/ (są tylko na serwerze), więc konsola pokazuje tam 404 dla czcionek na każdej stronie, także w 3.2.96; to nie dotyczy strony na żywo.
+  – Lokalna kopia /realizacje/ nie ma nagłówka (inny szablon), więc tam zmiany języka bez przeładowania nie dało się sprawdzić; na żywo nagłówek jest.
+
+NOWE PLIKI
+  includes/eur-public-currency-20261030.php, assets/eur-public-currency-20261030.js (ceny w euro na /de/ i /es/)
+  includes/jezyki-de-es-3297.php (DE i ES powstają z tej samej poprawionej polskiej strony, którą czyta Tłumacz; opinie)
+  zaprojektowani-languages/includes/Lang.php, zaprojektowani-languages/assets/zpl-soft.js (+ .min.js), zaprojektowani-languages/data/de.css, data/es.css
+  zaprojektowani-translator/includes/Lang.php
+
+ZMIENIONE PLIKI
+  zaprojektowani-suite.php (wersja, opis, require), templates/legacy/legacy-reviews.php (opinie do tłumaczenia na DE/ES), assets/js/home-reviews-20261016.js (+ .min.js; karuzela opinii działa dalej po zmianie języka), assets/js/service-coverage-20261015.js (wybór miasta działa po powrocie na polski bez przeładowania), includes/home-jquery-defer-3282.php (zna nową wersję modułu języków), includes/mobile-header-ssr-3235.php i includes/szybkosc-3295/loader.php (strona główna /de/ i /es/).
+  Moduł języków: zaprojektowani-languages.php (wersja 1.2.0), Router, Page, Dict, Runtime, Switcher, Sitemap, Geo, Frame, Rest, Suite, zpl.js, zpl-core.js, zpl-switch.js, zpl.css (+ wersje .min).
+  Tłumacz: translator.php (wersja 2.1.0), Settings, Store, Log, Translator, Routes, Index, Serve, Source, Sync, Import, Worker, Health, Admin, admin.js.

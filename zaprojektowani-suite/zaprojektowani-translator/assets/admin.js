@@ -1,4 +1,5 @@
-/* Tłumacz EN: live progress. While work is queued and the background steps have stopped, this open panel runs them. */
+/* Tłumacz EN: live progress. While work is queued and the background steps have stopped, this open panel runs them.
+   2.1.0: the panel shows one language (EN, DE or ES tab) and asks about that one. */
 (function () {
     'use strict';
     var cfg = window.zpte2Admin;
@@ -46,6 +47,7 @@
         var body = new URLSearchParams();
         body.append('action', action);
         body.append('nonce', cfg.nonce);
+        body.append('zpte_lang', cfg.lang || 'en');
         fetch(cfg.url, { method: 'POST', credentials: 'same-origin', body: body })
             .then(function (r) { return r.ok ? r.json() : null; })
             .then(function (res) {

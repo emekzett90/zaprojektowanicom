@@ -6,11 +6,13 @@ function zp_reviews_section_shortcode() {
  // Audit 21.10.2026 (Mat: "tłumacz"): English pages show the reviews in English (assets/data/reviews-english-20261021.json,
  // keyed by review id; a review without an entry stays Polish) and the language runtime skips this section, which renders
  // its own English. The runtime counted the section's ~180 English labels as missing translations, so /en/ was noindex.
+ // 3.2.97: only English keeps a review it has no translation of out of translation (translate="no"); the Polish page
+ // leaves its quotes open, so Tłumacz AI translates them for the German and Spanish pages (includes/jezyki-de-es-3297.php).
  static $english = null;
  if ($en && $english === null) { $decoded = json_decode((string) @file_get_contents(ZP_SUITE_PATH . 'assets/data/reviews-english-20261021.json'), true); $english = is_array($decoded) ? $decoded : []; }
  $quote = static function(array $r, string $polish) use($en, $english): array {
   $tr = $en ? trim((string)($english[(string)($r['id'] ?? '')] ?? '')) : '';
-  return $tr !== '' ? [$tr, ' lang="en" title="Translated from Polish"'] : [$polish, ' lang="pl" translate="no"'];
+  return $tr !== '' ? [$tr, ' lang="en" title="Translated from Polish"'] : [$polish, $en ? ' lang="pl" translate="no"' : ' lang="pl"'];
  };
  $google = array_values(array_filter($snapshot['reviews'] ?? [],static function($r){ return ($r['source'] ?? '') === 'Google' && !empty($r['text']); }));
  $facebook = array_values(array_filter($snapshot['reviews'] ?? [],static function($r){ return ($r['source'] ?? '') === 'Facebook' && !empty($r['text']); }));

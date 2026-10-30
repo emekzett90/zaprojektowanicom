@@ -11,6 +11,9 @@ if (!defined('ABSPATH')) { exit; }
  * Steps chain themselves through a request to this site's own REST address, with WP-Cron as a fallback, so
  * the work continues at night without visitors. Open panel = another fallback. Every 03:00 (site time) the
  * daily check queues new, edited and all other pages; publishing or updating a post queues it at once.
+ *
+ * 2.1.0: English, German and Spanish share the schedule, the lock and the steps: each language has its own state
+ * (zpte2_state, zpte2_de_state…) and queue, and the languages with work take turns at the start of the steps.
  */
 final class Worker {
     const DAILY = 'zpte2_daily';
@@ -19,6 +22,8 @@ final class Worker {
     const STATE = 'zpte2_state';
     const TICK = 'zpte2_tick_key';
     const BUILD = 'zpte2_build';
+    /** 2.1.0: the language that began the last step (the next step begins with the one after it). */
+    const TURN = 'zpte2_turn';
     const STEP = 22;
     const LOCK_TTL = 90;
     const IN_FLIGHT = 6;
@@ -43,10 +48,11 @@ final class Worker {
     // ------------------------------------------------------------------ state
 
     public static function state(): array {
-        $s = get_option(self::STATE, []);
+        $s = get_option(Lang::opt(self::STATE), []);
         $s = is_array($s) ? $s : [];
         $run = array_merge(['started' => 0, 'total' => 0, 'done' => 0, 'errors' => 0, 'who' => '', 'finished' => 0], is_array($s['run'] ?? null) ? $s['run'] : []);
-        $s = array_merge(['work' => 0, 'phase' => 'idle', 'message' => '', 'step_at' => 0, 'daily_at' => 0, 'retry_at' => 0, 'wait_until' => 0, 'current' => ''], $s);
+        // 2.1.0: 'first' = when the first full run of a German or Spanish version ended (it is offered to visitors from then on).
+        $s = array_merge(['work' => 0, 'phase' => 'idle', 'message' => '', 'step_at' => 0, 'daily_at' => 0, 'retry_at' => 0, 'wait_until' => 0, 'current' => '', 'first' => 0], $s);
         $s['run'] = $run;
         // Names the older status screen reads.
         $s['state'] = $s['phase'];
@@ -59,10 +65,31 @@ final class Worker {
     }
 
     private static function update(array $data): void {
-        $s = get_option(self::STATE, []);
+        $s = get_option(Lang::opt(self::STATE), []);
         $s = is_array($s) ? $s : [];
         if (isset($data['run']) && is_array($data['run'])) { $data['run'] = array_merge(is_array($s['run'] ?? null) ? $s['run'] : [], $data['run']); }
-        update_option(self::STATE, array_merge($s, $data), true);
+        update_option(Lang::opt(self::STATE), array_merge($s, $data), true);
+    }
+
+    /** 2.1.0: $fn once in every language the worker runs (English always; German and Spanish when switched on). */
+    public static function each(callable $fn): void {
+        foreach (Lang::active() as $l) { Lang::with($l, $fn); }
+    }
+
+    /** 2.1.0: some language has a run going (or English its first copy of the earlier translations). */
+    private static function has_work(): bool {
+        foreach (Lang::active() as $l) {
+            if (Lang::with($l, static function () { $s = self::state(); return !empty($s['work']) || !Import::done(); })) { return true; }
+        }
+        return false;
+    }
+
+    /** 2.1.0: the daily check runs for English or for a German or Spanish version switched on. */
+    private static function any_enabled(): bool {
+        foreach (Lang::active() as $l) {
+            if (Lang::with($l, static function () { return (bool) Settings::get('enabled'); })) { return true; }
+        }
+        return false;
     }
 
     /** One page of the current run finished (translated, unchanged, skipped). */
@@ -96,9 +123,17 @@ final class Worker {
             self::schedule_daily(false);
             Migrate::run();
             self::after_update();
+            // 2.1.0: German and Spanish get their tables and their first full run (Worker::after_update) here too.
+            foreach (Lang::active() as $l) {
+                if ($l === 'en') { continue; }
+                Lang::with($l, static function () {
+                    Store::install();
+                    if (!is_array(get_option(Lang::opt(self::STATE), null))) { self::update([]); } // autoloaded: the checks below need no query
+                    self::after_update();
+                });
+            }
         }
-        $s = self::state();
-        if (!empty($s['work']) && !self::running() && !wp_next_scheduled(self::WORK)) {
+        if (self::has_work() && !self::running() && !wp_next_scheduled(self::WORK)) {
             wp_schedule_single_event(time() + 5, self::WORK);
         }
         if ($admin && !Import::done() && !wp_next_scheduled(self::WORK) && !self::running()) {
@@ -113,9 +148,16 @@ final class Worker {
      */
     private static function after_update(): void {
         $build = (defined('ZP_SUITE_VERSION') ? ZP_SUITE_VERSION : '') . '|' . ZPTE_VERSION . '|' . (defined('ZPL_VERSION') ? ZPL_VERSION : '');
-        $was = (string) get_option(self::BUILD, '');
+        $was = (string) get_option(Lang::opt(self::BUILD), '');
         if ($was === $build) { return; }
-        update_option(self::BUILD, $build, false);
+        update_option(Lang::opt(self::BUILD), $build, false);
+        // 2.1.0: the German or Spanish version starts with a full run: every page, the texts of scripts, the Quote Studio.
+        if ($was === '' && !Lang::is_en()) {
+            if (!Settings::get('enabled') && !Settings::get('auto')) { return; }
+            Log::add('Start wersji ' . Lang::CODE[Lang::code()] . ': tłumaczę całą stronę i wszystkie wpisy (' . Settings::model() . ', rozumowanie: ' . Settings::effort() . ').');
+            self::plan('start');
+            return;
+        }
         // The first start copies the earlier translations and checks everything afterwards anyway.
         if ($was === '' || !Import::done() || !Settings::get('enabled')) { return; }
         // 3.1.1: pages with untranslated fragments or an error go first (a new version usually fixes their cause; in
@@ -135,7 +177,7 @@ final class Worker {
 
     private static function schedule_daily(bool $reset): void {
         $next = wp_next_scheduled(self::DAILY);
-        if (!Settings::get('enabled')) {
+        if (!self::any_enabled()) {
             if ($next) { wp_clear_scheduled_hook(self::DAILY); }
             return;
         }
@@ -156,8 +198,9 @@ final class Worker {
 
     public static function daily(): void {
         self::schedule_daily(true);
-        if (!Settings::get('enabled')) { return; }
-        self::plan('cron');
+        self::each(static function () {
+            if (Settings::get('enabled')) { self::plan('cron'); }
+        });
     }
 
     /** Queue everything that needs a look; returns the counts for the log and the panel. */
@@ -178,7 +221,7 @@ final class Worker {
             'run' => $fresh ? ['started' => time(), 'total' => $q, 'done' => 0, 'errors' => 0, 'who' => $who, 'finished' => 0] : ['total' => max((int) $s['run']['total'], (int) $s['run']['done'] + $q)],
             'message' => 'Sprawdzam strony i tłumaczę nowe teksty.',
         ]);
-        $label = ['cron' => 'codzienne', 'tick' => 'codzienne', 'import' => 'pierwsze po przeniesieniu', 'manual' => 'ręczne', 'update' => 'po aktualizacji wtyczki'][$who] ?? $who;
+        $label = ['cron' => 'codzienne', 'tick' => 'codzienne', 'import' => 'pierwsze po przeniesieniu', 'manual' => 'ręczne', 'update' => 'po aktualizacji wtyczki', 'start' => 'pierwsze, cała strona'][$who] ?? $who;
         Log::add(sprintf('Sprawdzenie (%s): nowe %d, zmienione %d, pozostałe %d — w kolejce %d.', $label, $c['new'] ?? 0, $c['changed'] ?? 0, $c['recheck'] ?? 0, $q));
         self::chain(1);
         return $c;
@@ -238,9 +281,8 @@ final class Worker {
         }
         do_action('litespeed_control_set_nocache', 'zpte tick');
         ignore_user_abort(true);
-        if (self::daily_due()) { self::plan('tick'); }
-        $s = self::state();
-        $out = ['ok' => true, 'busy' => false, 'work' => !empty($s['work']) || !Import::done()];
+        self::each(static function () { if (self::daily_due()) { self::plan('tick'); } });
+        $out = ['ok' => true, 'busy' => false, 'work' => self::has_work()];
         if ($out['work']) { $out = array_merge($out, self::work('tick')); }
         $res = new \WP_REST_Response($out);
         $res->header('Cache-Control', 'no-store, max-age=0');
@@ -250,13 +292,17 @@ final class Worker {
     }
 
     public static function cron(): void {
-        if (self::daily_due()) { self::plan('tick'); }
+        self::each(static function () { if (self::daily_due()) { self::plan('tick'); } });
         self::work('cron');
     }
 
     // ------------------------------------------------------------------- step
 
-    /** One bounded step. @return array{busy:bool,left:int} */
+    /**
+     * One bounded step. 2.1.0: the languages with work share it, each in its turn first (turns()); a language that
+     * only waits for OpenAI answers leaves its time to the next one, the last one waits for its answers.
+     * @return array{busy:bool,left:int}
+     */
     public static function work(string $who = 'cron'): array {
         if (!Bridge::ready()) { return ['busy' => false, 'left' => 0]; }
         if (!self::lock()) { return ['busy' => true, 'left' => -1]; }
@@ -264,14 +310,52 @@ final class Worker {
         $next = null; // the next step is asked for after the lock is free, so that it is not turned away as busy
         try {
             if (function_exists('set_time_limit')) { @set_time_limit(self::STEP + 20); }
-            Store::install();
             Retire::maybe();
             $deadline = time() + self::STEP;
+            $langs = self::turns();
+            $count = count($langs);
+            foreach ($langs as $i => $l) {
+                if ($i > 0 && time() >= $deadline - 8) { $left++; $next = 1; break; } // the rest begin the next step
+                $last = $i === $count - 1;
+                $r = Lang::with($l, static function () use ($deadline, $last) { return self::round($deadline, $last); });
+                $left += (int) $r['left'];
+                if ($r['next'] !== null) { $next = $next === null ? (int) $r['next'] : min($next, (int) $r['next']); }
+            }
+        } finally {
+            self::unlock();
+            if ($next !== null) { self::chain($next); }
+        }
+        return ['busy' => false, 'left' => $left];
+    }
+
+    /** 2.1.0: languages with work, beginning after the one that began the previous step. */
+    private static function turns(): array {
+        $busy = [];
+        foreach (Lang::active() as $l) {
+            if (Lang::with($l, static function () { $s = self::state(); return !empty($s['work']) || !Import::done(); })) { $busy[] = $l; }
+        }
+        if (count($busy) < 2) { return $busy; }
+        $at = array_search((string) get_option(self::TURN, ''), $busy, true);
+        $start = $at === false ? 0 : ($at + 1) % count($busy);
+        $order = array_merge(array_slice($busy, $start), array_slice($busy, 0, $start));
+        update_option(self::TURN, $order[0], false);
+        return $order;
+    }
+
+    /**
+     * One language's share of a step (the whole step until 2.0.3). @param bool $wait it may wait for OpenAI answers
+     * @return array{left:int,next:int|null}
+     */
+    private static function round(int $deadline, bool $wait): array {
+        $left = 0;
+        $next = null;
+        try {
+            Store::install();
 
             // 1. The earlier translations first: no API, a few seconds.
             if (!Import::done()) {
                 self::update(['work' => 1, 'phase' => 'import', 'message' => 'Przenoszę obecne tłumaczenia EN i adresy.']);
-                if (Import::step($deadline - 3)) { $next = 1; return ['busy' => false, 'left' => 1]; }
+                if (Import::step($deadline - 3)) { return ['left' => 1, 'next' => 1]; }
                 self::plan('import');
             }
 
@@ -287,7 +371,7 @@ final class Worker {
                 $did += self::advance_pages();
                 if (Store::count_jobs(['new']) < self::IN_FLIGHT * 3) { $did += self::read_next($deadline); }
                 if ($did > 0) { continue; }
-                if (Store::count_jobs(['sent']) > 0 && time() < $deadline - 5) { sleep(2); continue; }
+                if ($wait && Store::count_jobs(['sent']) > 0 && time() < $deadline - 5) { sleep(2); continue; }
                 break;
             }
             $left = self::left();
@@ -301,11 +385,11 @@ final class Worker {
                 $next = $retry;
             } else {
                 // Only pages or requests that wait for their next try: no step until then (no requests in a loop).
-                $wait = self::next_due();
-                self::update(['wait_until' => $wait > 3 ? time() + $wait : 0, 'message' => $wait > 3
-                    ? 'Czekam na ponowną próbę (' . $left . ' w toku) — następna o ' . wp_date('H:i', time() + $wait) . '.'
+                $due = self::next_due();
+                self::update(['wait_until' => $due > 3 ? time() + $due : 0, 'message' => $due > 3
+                    ? 'Czekam na ponowną próbę (' . $left . ' w toku) — następna o ' . wp_date('H:i', time() + $due) . '.'
                     : 'Tłumaczę: ' . $left . ' w toku.']);
-                $next = $wait;
+                $next = $due;
             }
         } catch (\Throwable $e) {
             $m = 'Błąd modułu: ' . $e->getMessage() . ' (' . basename($e->getFile()) . ':' . $e->getLine() . '). Ponowię za 5 minut.';
@@ -315,10 +399,8 @@ final class Worker {
             $left = 1;
         } finally {
             self::update(['step_at' => time()]);
-            self::unlock();
-            if ($next !== null) { self::chain($next); }
         }
-        return ['busy' => false, 'left' => $left];
+        return ['left' => $left, 'next' => $next];
     }
 
     /**
@@ -357,7 +439,16 @@ final class Worker {
             'message' => 'Wszystko sprawdzone. Następne sprawdzenie: ' . wp_date('j.m H:i', (int) (wp_next_scheduled(self::DAILY) ?: self::next_daily())) . '.']);
         if ($wasRunning) {
             $errors = (int) $run['errors'];
-            Log::add('Koniec przebiegu: sprawdzono ' . Admin::n((int) $run['done'], 'stronę', 'strony', 'stron') . ($errors ? ', ' . $errors . ' z problemem (zakładka Strony)' : '') . '. Wersji EN: ' . Index::count() . '.', $errors ? 'warning' : 'info');
+            Log::add('Koniec przebiegu: sprawdzono ' . Admin::n((int) $run['done'], 'stronę', 'strony', 'stron') . ($errors ? ', ' . $errors . ' z problemem (zakładka Strony)' : '') . '. Wersji ' . Lang::CODE[Lang::code()] . ': ' . Index::count() . '.', $errors ? 'warning' : 'info');
+        }
+        // 2.1.0: the first full run of a German or Spanish version: from now on visitors are offered it (Serve::lang_public).
+        if (!Lang::is_en() && !(int) $s['first'] && Index::has('/')) {
+            self::update(['first' => time()]);
+            Log::add('Pierwsze pełne tłumaczenie gotowe: wersja ' . Lang::CODE[Lang::code()] . ' jest teraz w przełączniku języka, w hreflang i w mapach strony.');
+            if (class_exists('ZPL\\Lang')) { \ZPL\Lang::reset(); }
+            if (class_exists('ZPL\\Sitemap') && method_exists('ZPL\\Sitemap', 'forget')) { \ZPL\Sitemap::forget(); }
+            // Polish and English pages kept in ZP Suite's HTML cache get the new switch and hreflang (listed again).
+            do_action('zp_html_cache_refresh');
         }
         Store::prune_jobs();
     }
@@ -632,8 +723,16 @@ final class Worker {
 
     // ------------------------------------------------------- content changes
 
-    /** Published or updated: translate at once (only what changed), and refresh the lists that show it. */
+    /**
+     * Published or updated: translate at once (only what changed), and refresh the lists that show it.
+     * 2.1.0: in every language the worker runs (each with its own "auto" setting).
+     */
     public static function saved($post_id, $post = null, $update = false, $before = null): void {
+        if (!Lang::is_en()) { return; }
+        self::each(static function () use ($post_id, $post) { self::saved_one($post_id, $post); });
+    }
+
+    private static function saved_one($post_id, $post): void {
         if (!Settings::get('auto') || !Store::ready() || !Bridge::ready()) { return; }
         if (!$post instanceof \WP_Post || wp_is_post_revision((int) $post_id) || wp_is_post_autosave((int) $post_id)) { return; }
         if ($post->post_status !== 'publish' || $post->post_password !== '' || !in_array($post->post_type, Settings::types(), true)) { return; }
@@ -642,22 +741,31 @@ final class Worker {
 
     /** A post that stops being public loses its English version at once (no 404s in the English sitemap). */
     public static function status_changed($new, $old, $post): void {
-        if ($old !== 'publish' || $new === 'publish' || !$post instanceof \WP_Post || !Store::ready() || !Bridge::ready()) { return; }
-        $row = Store::page_by_post((int) $post->ID);
-        if ($row && $row->status !== 'off') { Sync::retire($row, 'Wpis nie jest już publiczny — wersję angielską wyłączono.'); }
+        if ($old !== 'publish' || $new === 'publish' || !$post instanceof \WP_Post || !Bridge::ready()) { return; }
+        self::each(static function () use ($post) {
+            if (!Store::ready()) { return; }
+            $row = Store::page_by_post((int) $post->ID);
+            if ($row && $row->status !== 'off') { Sync::retire($row, Lang::is_en() ? 'Wpis nie jest już publiczny — wersję angielską wyłączono.' : 'Wpis nie jest już publiczny — wersję ' . Lang::CODE[Lang::code()] . ' wyłączono.'); }
+        });
     }
 
     public static function deleted($post_id): void {
-        if (!Store::ready() || !Bridge::ready()) { return; }
-        $row = Store::page_by_post((int) $post_id);
-        if ($row && $row->status !== 'off') { Sync::retire($row, 'Wpis usunięty.'); }
+        if (!Bridge::ready()) { return; }
+        self::each(static function () use ($post_id) {
+            if (!Store::ready()) { return; }
+            $row = Store::page_by_post((int) $post_id);
+            if ($row && $row->status !== 'off') { Sync::retire($row, 'Wpis usunięty.'); }
+        });
     }
 
     public static function term_changed($term_id): void {
-        if (!Settings::get('auto') || !Settings::get('terms') || !Store::ready() || !Bridge::ready()) { return; }
-        $path = Sync::path_of_term((int) $term_id);
-        if ($path === '' || Sync::ineligible($path) !== '' || Sync::alias_of($path) !== '') { return; }
-        $id = Sync::ensure($path, 'term', 0, (int) $term_id);
-        if ($id) { Store::queue($id, 30); self::update(['work' => 1, 'wait_until' => 0]); self::chain(5); }
+        if (!Bridge::ready()) { return; }
+        self::each(static function () use ($term_id) {
+            if (!Settings::get('auto') || !Settings::get('terms') || !Store::ready()) { return; }
+            $path = Sync::path_of_term((int) $term_id);
+            if ($path === '' || Sync::ineligible($path) !== '' || Sync::alias_of($path) !== '') { return; }
+            $id = Sync::ensure($path, 'term', 0, (int) $term_id);
+            if ($id) { Store::queue($id, 30); self::update(['work' => 1, 'wait_until' => 0]); self::chain(5); }
+        });
     }
 }

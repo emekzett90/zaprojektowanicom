@@ -14,6 +14,9 @@ if (!defined('ABSPATH')) { exit; }
  *  zpen_maps    — what the English page is served from: the compiled map of one page and the key list of
  *                 its Polish version (page_id 0 = shared map: titles, excerpts, menu and footer texts);
  *  zpen_jobs    — OpenAI requests (one batch of fragments or one English address), resumable.
+ *
+ * 2.1.0: German and Spanish have the same four tables of their own ({wp}zpde_*, {wp}zpes_*; see Lang). Their columns
+ * keep the English names (en, en_path): there they hold the German or Spanish text and address.
  */
 final class Store {
     const DB_VERSION = '2.0.0';
@@ -23,12 +26,12 @@ final class Store {
 
     public static function table(string $name): string {
         global $wpdb;
-        return $wpdb->prefix . 'zpen_' . $name;
+        return $wpdb->prefix . Lang::table_prefix() . $name;
     }
 
     public static function now(): string { return current_time('mysql', true); }
 
-    public static function ready(): bool { return get_option(self::DB_OPTION) === self::DB_VERSION; }
+    public static function ready(): bool { return get_option(Lang::opt(self::DB_OPTION)) === self::DB_VERSION; }
 
     public static function install(): void {
         if (self::ready()) { return; }
@@ -116,7 +119,7 @@ final class Store {
   KEY page_id (page_id),
   KEY state (state)
 ) {$c};");
-        update_option(self::DB_OPTION, self::DB_VERSION, true);
+        update_option(Lang::opt(self::DB_OPTION), self::DB_VERSION, true);
     }
 
     public static function hash(string $s): string { return md5($s); }
@@ -537,6 +540,6 @@ final class Store {
     public static function drop_all(): void {
         global $wpdb;
         foreach (['jobs', 'maps', 'strings', 'pages'] as $t) { $wpdb->query('DROP TABLE IF EXISTS ' . self::table($t)); }
-        delete_option(self::DB_OPTION);
+        delete_option(Lang::opt(self::DB_OPTION));
     }
 }

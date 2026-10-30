@@ -11,6 +11,8 @@ if (!defined('ABSPATH')) { exit; }
  *             none (or only one made of Polish words), and publish it.
  * Translations are kept per Polish text, not per page version: editing a page never throws its English away;
  * only new or changed sentences are translated again.
+ * 2.1.0: the same for German and Spanish (Lang), plus two kinds of pages made from files: 'dyn' (texts page scripts
+ * write after load) and 'frame' (the Quote Studio chooser in its iframe), see Source::virtual().
  */
 final class Sync {
     const MAX_TRIES = 3;
@@ -23,6 +25,11 @@ final class Sync {
     /** Parts of every page (menu, footer): their texts are shared by all English pages. */
     const SHARED_IDS = ['zpNewNav'];
     const SHARED_CLASSES = ['zpMegaFooter'];
+    /** 2.1.0: kinds of pages made from files (German and Spanish): no address, no sitemap, no post behind them. */
+    const VIRTUAL = ['dyn', 'frame'];
+
+    /** @param object $row */
+    public static function virtual($row): bool { return in_array((string) $row->kind, self::VIRTUAL, true); }
 
     // ------------------------------------------------------------------ paths
 
@@ -59,6 +66,7 @@ final class Sync {
     /** Why a Polish path gets no English version of its own ('' = it can have one). */
     public static function ineligible(string $path): string {
         if ($path === '' || $path === '/en/' || strpos($path, '/en/') === 0) { return 'adres angielski'; }
+        if (preg_match('~^/(?:de|es)(?:/|$)~', $path)) { return 'adres niemiecki lub hiszpański'; }
         if (\ZPL\Router::never($path)) { return 'adres techniczny'; }
         if (\ZPL\Router::is_excluded($path)) { return 'ścieżka wyłączona w Języki PL/EN'; }
         if (strpos($path, '/dziekujemy') === 0 || strpos($path, '/page/') !== false) { return 'strona pomocnicza'; }
@@ -118,6 +126,7 @@ final class Sync {
             }
         }
         // Pages the language module already serves in English (home, services, archives): their new texts too.
+        // 2.1.0: German and Spanish get the same pages.
         foreach (array_keys(\ZPL\Router::routes()) as $path) {
             $path = (string) $path;
             if (isset($seen[$path]) || self::ineligible($path) !== '') { continue; }
@@ -125,6 +134,18 @@ final class Sync {
             $kind = $path === '/' ? 'home' : (strpos($path, '/category/') === 0 ? 'term' : 'post');
             $id = self::ensure($path, $kind, $kind === 'post' || $kind === 'home' ? self::post_id_for($path) : 0, $kind === 'term' ? self::term_id_for($path) : 0);
             $out[self::plan_one($id, '')]++;
+        }
+        // 2.1.0: German and Spanish also need the texts page scripts write and the Quote Studio chooser (English ships them).
+        if (!Lang::is_en()) {
+            $virtual = [Source::DYN => 'dyn'];
+            foreach (array_keys(Source::frames()) as $f) { $virtual[$f] = 'frame'; }
+            foreach ($virtual as $path => $kind) {
+                $seen[$path] = true;
+                $out[self::plan_one(self::ensure($path, $kind), '')]++;
+            }
+            foreach (Store::pages(['kind' => self::VIRTUAL]) as $row) {
+                if (!isset($seen[(string) $row->path]) && $row->status !== 'off') { self::retire($row, 'Plik nie jest już używany.'); }
+            }
         }
         // Rows of posts that are no longer public: their English version goes.
         foreach (Store::pages(['kind' => ['post', 'term', 'home']]) as $row) {
@@ -216,6 +237,16 @@ final class Sync {
         $path = (string) $row->path;
         $now = Store::now();
 
+        // 2.1.0: a page made from a file (German and Spanish): its texts straight from the file.
+        if (self::virtual($row)) {
+            $v = Source::virtual((string) $row->kind, $path);
+            if (!$v['ok']) {
+                self::retire($row, $v['error'] . '.');
+                return 'skip';
+            }
+            return self::read_units($row, $path, $v['units'], [], ['title' => $v['title'], 'path' => $path], $force, $now);
+        }
+
         // 1. The post or category still exists and is public; a post's Polish address may have changed.
         if ($row->kind !== 'term' && (int) $row->post_id > 0) {
             $post = get_post((int) $row->post_id);
@@ -270,7 +301,10 @@ final class Sync {
         }
         if ($src['via'] === 'post') { Log::add($path . ': ' . $src['error'], 'warning'); }
         $html = (string) $src['html'];
-        if ($row->kind === 'post' && Source::noindex($html) && !\ZPL\Router::has_route($path)) {
+        // 2.1.0: German and Spanish read the page the way the language module translates it (ZP Suite's filter
+        // zpl_ai_source_html does the same on the page itself): e.g. the review quotes, marked as translated.
+        if (!Lang::is_en()) { $html = (string) apply_filters('zpte_ai_source_html', $html, Lang::code(), $path); }
+        if ($row->kind === 'post' && Source::noindex($html) && !\ZPL\Router::has_route($path, Lang::code())) {
             self::retire($row, 'Polska strona ma noindex — nie tłumaczę stron wyłączonych z Google.');
             return 'skip';
         }
@@ -282,6 +316,16 @@ final class Sync {
             if (!isset($units[$k])) { $units[$k] = $kind; }
             $shared[$k] = true;
         }
+        return self::read_units($row, $path, $units, $shared, ['title' => Source::title($html) ?: Source::h1($html), 'path' => $path], $force, $now);
+    }
+
+    /**
+     * Steps 5 and 6 of read(): what the page's fragments need, and the OpenAI jobs for it.
+     * @param object $row  @param array<string,string> $units key => kind  @param array<string,bool> $shared  @param array $ctx title, path
+     */
+    private static function read_units($row, string $path, array $units, array $shared, array $ctx, bool $force, string $now): string {
+        $id = (int) $row->id;
+        $lang = Lang::code();
         $hash = md5(implode("\n", array_keys($units)));
         if (!$force && $hash === (string) $row->source_hash && (int) $row->keys_failed === 0 && $row->status === 'done' && !self::needs_route($row)) {
             Store::page_update($id, ['queued' => 0, 'tries' => 0, 'checked_at' => $now, 'message' => '']);
@@ -296,7 +340,8 @@ final class Sync {
         $own = Store::strings(array_keys($hashes), $id);
         $mem = Store::strings(array_keys($hashes), Store::SHARED);
         $sharedMap = Serve::shared_map();
-        $overrides = \ZPL\Dict::overrides('en');
+        $overrides = \ZPL\Dict::overrides($lang);
+        $terms = Serve::site_terms();
         $again = self::again();
         $todo = [];
         $known = 0;
@@ -309,14 +354,14 @@ final class Sync {
                 // 3.1.1: a text listed for translating again (Migrate::knowledge) goes to OpenAI although its translation
                 // passes the checks, unless the page shows another one for it: the owner's overrides, the site terms, or the
                 // shipped dictionaries above a copy in the memory. The old text is served until the new one arrives.
-                $redo = isset($again[$h]) && !(int) $r->manual && !isset($overrides[$k]) && !isset(Serve::SITE_TERMS[$k])
-                    && ($r === ($own[$h] ?? null) || (int) $r->shared || \ZPL\Dict::lower($k, 'en', $path) === null);
+                $redo = isset($again[$h]) && !(int) $r->manual && !isset($overrides[$k]) && !isset($terms[$k])
+                    && ($r === ($own[$h] ?? null) || (int) $r->shared || \ZPL\Dict::lower($k, $lang, $path) === null);
                 // A manual correction stays as the owner wrote it, also when the page is translated again on request.
                 if ((int) $r->manual || (!$force && !$redo && Translator::broken($k, (string) $r->en) === '')) {
                     $known++;
                     // Shared texts outrank the plugin's own dictionaries on every page: a text those already
                     // translate (shipped, or curated by another module) keeps that wording unless corrected by hand.
-                    if (isset($shared[$k]) && ((int) $r->manual || \ZPL\Dict::lower($k, 'en', $path) === null)) {
+                    if (isset($shared[$k]) && ((int) $r->manual || \ZPL\Dict::lower($k, $lang, $path) === null)) {
                         if (!isset($mem[$h])) { $markShared[$k] = (string) $r->en; }
                         elseif (!(int) $mem[$h]->shared) { $markShared[$k] = (string) $mem[$h]->en; }
                     }
@@ -327,14 +372,14 @@ final class Sync {
                 // compile_shared() leave the broken copy out). The earlier translators kept "<szybka_strona />" unchanged, and
                 // OpenAI kept it too, three times a day (14.10). The shared map counts only with a good translation of its own:
                 // a broken shared text is itself in it until compiled again, and was then never translated again.
-                if (!(int) $r->manual && (isset($overrides[$k]) || self::good_shared($sharedMap, $k) || \ZPL\Dict::lower($k, 'en', $path) !== null)
+                if (!(int) $r->manual && (isset($overrides[$k]) || self::good_shared($sharedMap, $k) || \ZPL\Dict::lower($k, $lang, $path) !== null)
                     && Translator::broken($k, (string) $r->en) !== '') { $known++; continue; }
                 $todo[$k] = (string) $kind; // translated again; the old text is served until the new one arrives
                 continue;
             }
             // Texts the plugin already translates (manual overrides, shared texts, shipped dictionaries and other
             // modules' curated texts such as the contact forms) never go to OpenAI.
-            if (isset($overrides[$k]) || self::good_shared($sharedMap, $k) || \ZPL\Dict::lower($k, 'en', $path) !== null) { $known++; continue; }
+            if (isset($overrides[$k]) || self::good_shared($sharedMap, $k) || \ZPL\Dict::lower($k, $lang, $path) !== null) { $known++; continue; }
             if (strlen($k) > Translator::MAX_KEY) { continue; }
             $todo[$k] = (string) $kind;
         }
@@ -348,7 +393,6 @@ final class Sync {
 
         // 6. OpenAI jobs, in document order, a few fragments each. A text already on its way to OpenAI for another
         //    page (a title or lead shown in several lists) is not sent again: this page waits for that answer.
-        $ctx = ['title' => Source::title($html) ?: Source::h1($html), 'path' => $path];
         $await = [];
         if ($todo) {
             $pending = self::pending();
@@ -359,7 +403,7 @@ final class Sync {
         $jobs = 0;
         foreach (Translator::batches($todo) as $batch) {
             $chars = 0;
-            foreach (array_keys($batch) as $k) { $chars += Translator::len((string) $k); self::$pending[Store::hash((string) $k)] = $id; }
+            foreach (array_keys($batch) as $k) { $chars += Translator::len((string) $k); self::$pending[Lang::code()][Store::hash((string) $k)] = $id; }
             $sh = array_values(array_intersect(array_keys($batch), array_keys($shared)));
             Store::job_add($id, 'units', ['items' => $batch, 'shared' => $sh, 'ctx' => $ctx], $chars);
             $jobs++;
@@ -515,8 +559,13 @@ final class Sync {
         if ($slug === '') { return false; }
         $en = Routes::build((string) $row->path, $slug);
         if ($en === '') {
-            self::park($row, 'Brak angielskiej nazwy dla części adresu ' . Routes::parent_of((string) $row->path) . ' — dodaj ją w Adresach EN.');
-            Log::add($row->path . ': brak angielskiej nazwy części adresu, strona czeka.', 'warning');
+            if (Lang::is_en()) {
+                self::park($row, 'Brak angielskiej nazwy dla części adresu ' . Routes::parent_of((string) $row->path) . ' — dodaj ją w Adresach EN.');
+                Log::add($row->path . ': brak angielskiej nazwy części adresu, strona czeka.', 'warning');
+            } else {
+                self::park($row, 'Brak nazwy ' . Lang::CODE[Lang::code()] . ' dla części adresu ' . Routes::parent_of((string) $row->path) . ' — strona poczeka na kolejne sprawdzenie.');
+                Log::add($row->path . ': brak nazwy części adresu, strona czeka.', 'warning');
+            }
             return true;
         }
         Routes::assign((int) $row->id, $en);
@@ -529,9 +578,9 @@ final class Sync {
     /** The page's English address is missing or made of Polish words (and this module may set it). */
     public static function needs_route($row): bool {
         $path = (string) $row->path;
-        if ($row->kind === 'home' || self::alias_of($path) !== '') { return false; }
+        if ($row->kind === 'home' || self::virtual($row) || self::alias_of($path) !== '') { return false; }
         if (Routes::external($path)) { return false; }
-        $route = (string) (\ZPL\Router::routes()[$path] ?? '');
+        $route = (string) (\ZPL\Router::routes(Lang::code())[$path] ?? '');
         return $route === '' || Routes::polish($route);
     }
 
@@ -548,7 +597,7 @@ final class Sync {
         if (self::needs_route($row)) {
             if ($failed > max(2, (int) floor($total * 0.05))) {
                 // Too much is missing to open a new English page: next daily check tries again.
-                self::park($row, 'Za dużo nieprzetłumaczonych fragmentów (' . $failed . ') — strona EN poczeka na kolejne sprawdzenie.');
+                self::park($row, 'Za dużo nieprzetłumaczonych fragmentów (' . $failed . ') — strona ' . Lang::CODE[Lang::code()] . ' poczeka na kolejne sprawdzenie.');
                 return;
             }
             $direct = self::direct_route($row);
@@ -568,11 +617,11 @@ final class Sync {
                     self::finish(Store::page($id));
                     return;
                 }
-                self::park($row, 'Nie udało się utworzyć angielskiego adresu — spróbuję przy następnym sprawdzeniu.');
+                self::park($row, 'Nie udało się utworzyć adresu ' . Lang::CODE[Lang::code()] . ' — spróbuję przy następnym sprawdzeniu.');
                 return;
             }
             Store::job_add($id, 'slug', self::slug_payload($row), 0);
-            Store::page_update($id, ['stage' => 'route', 'message' => 'Tworzę angielski adres strony.']);
+            Store::page_update($id, ['stage' => 'route', 'message' => Lang::is_en() ? 'Tworzę angielski adres strony.' : 'Tworzę adres strony ' . Lang::CODE[Lang::code()] . '.']);
             return;
         }
         self::finish($row);
@@ -590,7 +639,7 @@ final class Sync {
         $path = (string) $row->path;
         if ($row->kind !== 'term') { return ''; }
         $seg = Routes::last($path);
-        $en = Routes::SEGMENTS[$seg] ?? (string) (Routes::learned_segments()[$seg] ?? '');
+        $en = Routes::segments()[$seg] ?? (string) (Routes::learned_segments()[$seg] ?? '');
         if ($en === '') { return ''; }
         $parent = Routes::parent(Routes::parent_of($path));
         return $parent === '' ? '' : Routes::free($parent . $en . '/', $path);
@@ -607,7 +656,7 @@ final class Sync {
             $title = (string) get_the_title((int) $row->post_id);
         }
         $title = \ZPL\Html::norm(\ZPL\Html::decode(wp_strip_all_tags($title)));
-        $titleEn = $title !== '' ? (string) (\ZPL\Dict::get($title, 'en', $path) ?? '') : '';
+        $titleEn = $title !== '' ? (string) (\ZPL\Dict::get($title, Lang::code(), $path) ?? '') : '';
         if ($titleEn === '' && $title !== '') {
             $r = Store::strings([Store::hash($title)], Store::SHARED)[Store::hash($title)] ?? null;
             $titleEn = $r ? (string) $r->en : '';
@@ -623,7 +672,7 @@ final class Sync {
     public static function finish($row): void {
         if (!$row) { return; }
         $failed = (int) $row->keys_failed;
-        $route = (string) (\ZPL\Router::routes()[(string) $row->path] ?? '');
+        $route = self::virtual($row) ? '' : (string) (\ZPL\Router::routes(Lang::code())[(string) $row->path] ?? '');
         $was = (string) $row->status;
         Store::page_update((int) $row->id, [
             'stage' => '', 'queued' => 0, 'tries' => 0,
@@ -633,7 +682,7 @@ final class Sync {
         ]);
         Index::rebuild();
         if ($was !== 'done' && $route !== '') {
-            Log::add('Wersja EN gotowa: ' . $row->path . ' → ' . $route . ($failed ? ' (bez ' . Admin::n($failed, 'fragmentu', 'fragmentów', 'fragmentów') . ')' : '') . '.');
+            Log::add('Wersja ' . Lang::CODE[Lang::code()] . ' gotowa: ' . $row->path . ' → ' . $route . ($failed ? ' (bez ' . Admin::n($failed, 'fragmentu', 'fragmentów', 'fragmentów') . ')' : '') . '.');
         }
         Worker::page_finished();
     }
@@ -651,12 +700,13 @@ final class Sync {
 
     // ------------------------------------------------------------- shared waits
 
-    /** Texts in requests not answered yet (this request's own new jobs included): hash => page id. */
-    private static $pending = null;
+    /** Texts in requests not answered yet (this request's own new jobs included): hash => page id. 2.1.0: per language. */
+    private static $pending = [];
 
     private static function pending(): array {
-        if (self::$pending === null) { self::$pending = Store::pending_texts(); }
-        return self::$pending;
+        $l = Lang::code();
+        if (!isset(self::$pending[$l])) { self::$pending[$l] = Store::pending_texts(); }
+        return self::$pending[$l];
     }
 
     /**
@@ -667,7 +717,7 @@ final class Sync {
         $waits = Store::jobs(['wait'], 50);
         if (!$waits) { return 0; }
         $pending = Store::pending_texts();
-        self::$pending = $pending;
+        self::$pending[Lang::code()] = $pending;
         $again = self::again();
         $n = 0;
         foreach ($waits as $job) {
@@ -708,7 +758,7 @@ final class Sync {
                 Store::job_update((int) $job->id, ['state' => 'done']);
             }
         }
-        self::$pending = $pending;
+        self::$pending[Lang::code()] = $pending;
         return $n;
     }
 
@@ -735,7 +785,7 @@ final class Sync {
                 // they translate the text (it was served above them: "<szybka_strona />" on the English law firm page).
                 if (!(int) $r->manual && self::dictionary_knows($pl, $path) && Translator::broken($pl, (string) $r->en) !== '') { continue; }
                 $en = self::fix_terms((string) $r->en, $pl);
-            } elseif (!(int) $r->shared && ((int) $r->manual || \ZPL\Dict::lower($pl, 'en', $path) === null)) {
+            } elseif (!(int) $r->shared && ((int) $r->manual || \ZPL\Dict::lower($pl, Lang::code(), $path) === null)) {
                 // Shared texts come from the shared map. The plugin's own dictionaries (shipped, and other modules' curated
                 // texts) keep their wording unless the memory has a manual correction.
                 $en = self::fix_terms((string) $r->en, $pl);
@@ -759,7 +809,7 @@ final class Sync {
      */
     private static function short_version(string $pl, string $kind, $r, ?string $en, $mem): string {
         $max = Translator::limit($kind);
-        if (!$max || isset(\ZPL\Dict::overrides('en')[$pl]) || isset(Serve::SITE_TERMS[$pl])) { return ''; }
+        if (!$max || isset(\ZPL\Dict::overrides(Lang::code())[$pl]) || isset(Serve::site_terms()[$pl])) { return ''; }
         if (isset(Serve::shared_map()[$pl])) {
             // The shared map serves the text (above this page's map): a machine translation unless corrected by hand.
             if (!$mem || !(int) $mem->shared || (int) $mem->manual || (string) $mem->en === '') { return ''; }
@@ -774,7 +824,7 @@ final class Sync {
 
     /** The site terms, the shared texts, the owner's corrections or the shipped dictionary translate this text. */
     private static function dictionary_knows(string $pl, string $path): bool {
-        return isset(Serve::shared_map()[$pl]) || isset(\ZPL\Dict::overrides('en')[$pl]) || \ZPL\Dict::lower($pl, 'en', $path) !== null;
+        return isset(Serve::shared_map()[$pl]) || isset(\ZPL\Dict::overrides(Lang::code())[$pl]) || \ZPL\Dict::lower($pl, Lang::code(), $path) !== null;
     }
 
     /** The shared map translates this text, and its translation passes the checks. */
@@ -799,10 +849,11 @@ final class Sync {
     /** The shared map (titles, leads, menu and footer texts) from the translation memory. */
     public static function compile_shared(): void {
         $map = [];
+        $terms = Serve::site_terms();
         foreach (Store::shared_strings(true) as $pl => [$en, $manual]) {
             // 3.1.1: the site terms (Serve::SITE_TERMS: Wiedza = Knowledge…) outrank machine translations of the same
             // text, which used to override them in this map; corrections made by hand stay.
-            if (!$manual && isset(Serve::SITE_TERMS[(string) $pl])) { continue; }
+            if (!$manual && isset($terms[(string) $pl])) { continue; }
             // 3.1.1: a broken machine translation (Polish left in English, lost link markers) is left out: the site terms or
             // the shipped dictionaries serve the text until read() gets a new translation (it counted as translated before).
             if (!$manual && Translator::broken((string) $pl, (string) $en) !== '') { continue; }
@@ -823,9 +874,11 @@ final class Sync {
 
     /** Fixed names, and phone numbers written as in Polish ("501 054 253", never "501,054,253" as old translations had it). */
     public static function fix_terms(string $en, string $pl = ''): string {
-        $en = strtr($en, self::TERM_FIXES);
-        if ($pl === '' || strpos($en, ',') === false || !preg_match_all('~(?<![\d,.])\d{2,3}(?:[ \x{00A0}\x{202F}]\d{3}){2,}(?!\d)~u', $pl, $m)) { return $en; }
-        foreach ($m[0] as $tel) { $en = str_replace((string) preg_replace('~[ \x{00A0}\x{202F}]~u', ',', $tel), $tel, $en); }
+        // 2.1.0: German and Spanish write thousands with a dot ("501.054.253" would be a phone number gone wrong).
+        $sep = Lang::is_en() ? ',' : '.';
+        if (Lang::is_en()) { $en = strtr($en, self::TERM_FIXES); }
+        if ($pl === '' || strpos($en, $sep) === false || !preg_match_all('~(?<![\d,.])\d{2,3}(?:[ \x{00A0}\x{202F}]\d{3}){2,}(?!\d)~u', $pl, $m)) { return $en; }
+        foreach ($m[0] as $tel) { $en = str_replace((string) preg_replace('~[ \x{00A0}\x{202F}]~u', $sep, $tel), $tel, $en); }
         return $en;
     }
 }

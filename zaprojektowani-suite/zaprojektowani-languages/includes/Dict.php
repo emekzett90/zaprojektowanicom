@@ -8,6 +8,9 @@ if (!defined('ABSPATH') && !defined('ZPL_CLI')) { exit; }
  *   common.php, p/{pageId}.php, index.php (key hash => shard). Manual overrides live in the
  *   zpl_overrides option and always win.
  * Direction "en" maps Polish keys to English; direction "pl" maps English keys back to Polish.
+ * 1.2.0: directions "de" and "es" map Polish keys to German and Spanish. They have no shipped shards and never ask the
+ * English filters (zpl_priority_dictionary, zpl_dictionary, zpl_has_page): only their manual overrides (option
+ * zpl_overrides_de / zpl_overrides_es) and Tłumacz AI (filters zpl_lang_dictionary, zpl_lang_has_page).
  */
 final class Dict {
     private static $shards = [];
@@ -33,6 +36,7 @@ final class Dict {
     public static function dir(string $lang): string { return ZPL_DIR . 'data/php/' . ($lang === 'pl' ? 'pl' : 'en') . '/'; }
 
     private static function shard(string $lang, string $name): array {
+        if (Lang::ai($lang)) { return []; }
         $k = $lang . '/' . $name;
         if (!array_key_exists($k, self::$shards)) {
             $f = self::dir($lang) . $name . '.php';
@@ -55,6 +59,13 @@ final class Dict {
     }
 
     public static function overrides(string $lang = 'en'): array {
+        if (Lang::ai($lang)) {
+            if (!isset(self::$lover[$lang])) {
+                $o = function_exists('get_option') ? get_option('zpl_overrides_' . $lang, []) : [];
+                self::$lover[$lang] = is_array($o) ? $o : [];
+            }
+            return self::$lover[$lang];
+        }
         if (self::$overrides === null) {
             $o = get_option('zpl_overrides', []);
             self::$overrides = is_array($o) ? $o : [];
@@ -66,7 +77,10 @@ final class Dict {
         return $rev;
     }
 
-    public static function flush(): void { self::$overrides = null; self::$shards = []; self::$page = []; self::$external = []; self::$priority = []; }
+    /** @var array<string,array<string,string>> 1.2.0: German/Spanish manual overrides */
+    private static $lover = [];
+
+    public static function flush(): void { self::$overrides = null; self::$lover = []; self::$shards = []; self::$page = []; self::$external = []; self::$priority = []; }
 
     /**
      * Translations that outrank the shipped dictionaries (filter zpl_priority_dictionary, Tłumacz EN):
@@ -75,7 +89,8 @@ final class Dict {
     private static function priority(string $lang, string $source): array {
         $k = $lang . $source;
         if (!isset(self::$priority[$k])) {
-            $v = function_exists('apply_filters') ? apply_filters('zpl_priority_dictionary', [], $lang, $source) : [];
+            $filter = Lang::ai($lang) ? 'zpl_lang_dictionary' : 'zpl_priority_dictionary';
+            $v = function_exists('apply_filters') ? apply_filters($filter, [], $lang, $source) : [];
             $layers = [self::overrides($lang)];
             foreach (is_array($v) ? $v : [] as $layer) { if (is_array($layer) && $layer) { $layers[] = $layer; } }
             self::$priority[$k] = $layers;
@@ -84,7 +99,9 @@ final class Dict {
     }
 
     /** Shipped page dictionary, or a page translated by another module (filter zpl_has_page, e.g. Tłumacz EN). */
-    public static function has_page(string $source): bool {
+    public static function has_page(string $source, string $lang = 'en'): bool {
+        if ($lang === 'pl') { return true; }
+        if (Lang::ai($lang)) { return function_exists('apply_filters') && (bool) apply_filters('zpl_lang_has_page', false, $source, $lang); }
         if (is_file(self::dir('en') . 'p/' . self::page_id($source) . '.php')) { return true; }
         return function_exists('apply_filters') && (bool) apply_filters('zpl_has_page', false, $source);
     }
@@ -94,6 +111,7 @@ final class Dict {
      * Shipped dictionaries and manual overrides always win; loaded once per page and direction.
      */
     private static function external(string $lang, string $source): array {
+        if (Lang::ai($lang)) { return []; }
         $k = $lang . $source;
         if (!isset(self::$external[$k])) {
             $v = function_exists('apply_filters') ? apply_filters('zpl_dictionary', [], $lang, $source) : [];
@@ -206,6 +224,9 @@ final class Dict {
         if ($lang === 'en') {
             if (preg_match('/^\d{1,3}(?:[ \x{00A0}\x{202F}]\d{3})+$/u', $v)) { return preg_replace('/[ \x{00A0}\x{202F}]/u', ',', $v) ?? $v; }
             if (preg_match('/^\d+,\d{1,2}$/', $v)) { return str_replace(',', '.', $v); }
+        } elseif (Lang::ai($lang)) {
+            // German and Spanish: "1 500" => "1.500"; decimals keep the comma ("4,9").
+            if (preg_match('/^\d{1,3}(?:[ \x{00A0}\x{202F}]\d{3})+$/u', $v)) { return preg_replace('/[ \x{00A0}\x{202F}]/u', '.', $v) ?? $v; }
         } else {
             if (preg_match('/^\d{1,3}(?:,\d{3})+$/', $v)) { return str_replace(',', "\u{00A0}", $v); }
             if (preg_match('/^\d+\.\d{1,2}$/', $v)) { return str_replace('.', ',', $v); }

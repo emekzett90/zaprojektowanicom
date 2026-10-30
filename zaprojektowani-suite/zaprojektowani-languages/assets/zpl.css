@@ -55,3 +55,45 @@ html:not(.zpl-theme) .zpNewNav.zpNewNav--heroOverlay:not(.is-scrolled):not(.is-m
 
 /* Debug (?zpl_debug=1 as administrator) */
 .zpl-debug-miss{outline:2px dashed #e5484d!important;outline-offset:2px}
+
+/* 1.2.0 Three or four languages: a menu in the header bar (button with the current code, list with flags) */
+.zpl-switch--menu{position:relative}
+.zpl-switch__btn{display:inline-flex;align-items:center;gap:6px;height:40px;margin:0;padding:3px 10px 3px 3px;border-radius:999px;border:1px solid var(--zpl-line);background:var(--zpl-bg);color:var(--zpl-ink);box-shadow:0 1px 2px rgba(10,18,32,.05),inset 0 1px 0 rgba(255,255,255,.6);font:inherit;line-height:1;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:border-color .2s ease}
+.zpl-switch__btn:hover{border-color:rgba(10,18,32,.24)}
+.zpl-switch__btn:focus-visible{outline:0;box-shadow:0 0 0 2px var(--zpl-bg),0 0 0 4px #3b82f6}
+.zpl-switch__now{position:relative;display:inline-flex;align-items:center;justify-content:center;height:100%;min-width:42px;padding:0 11px;box-sizing:border-box;border-radius:999px;background:var(--zpl-thumb);color:var(--zpl-on);font-size:12.5px;font-weight:800;letter-spacing:.07em}
+.zpl-switch__chev{width:12px;height:12px;flex:none;color:var(--zpl-muted);transition:transform .25s cubic-bezier(.22,1,.36,1)}
+.zpl-switch--menu.is-open .zpl-switch__chev{transform:rotate(180deg)}
+.zpl-switch__menu{--zpl-ink:#0a1220;--zpl-muted:#667085;--zpl-on:#0a1220;position:absolute;z-index:100;top:calc(100% + 10px);right:0;display:grid;gap:2px;min-width:200px;padding:6px;box-sizing:border-box;border-radius:16px;border:1px solid rgba(10,18,32,.08);background:#fff;box-shadow:0 16px 42px rgba(5,10,18,.11);opacity:0;visibility:hidden;transform:translateY(-6px);transition:opacity .18s ease,transform .22s cubic-bezier(.22,1,.36,1),visibility 0s linear .22s}
+.zpl-switch--menu.is-open .zpl-switch__menu{opacity:1;visibility:visible;transform:none;transition:opacity .18s ease,transform .22s cubic-bezier(.22,1,.36,1),visibility 0s}
+.zpl-switch--menu .zpl-switch__menu .zpl-switch__opt{justify-content:flex-start;gap:10px;width:100%;height:42px;min-width:0;padding:0 10px;box-sizing:border-box;border-radius:11px!important;color:var(--zpl-ink)!important;letter-spacing:normal;transition:background-color .15s ease}
+.zpl-switch--menu .zpl-switch__menu .zpl-switch__opt:hover,.zpl-switch--menu .zpl-switch__menu .zpl-switch__opt:focus-visible,.zpl-switch--menu .zpl-switch__menu .zpl-switch__opt[aria-current="true"]{background:#f4f6fa!important}
+.zpl-switch--menu .zpl-switch__menu .zpl-switch__opt[aria-current="true"]{cursor:default}
+.zpl-switch--menu .zpl-switch__menu .zpl-switch__opt:focus-visible{box-shadow:inset 0 0 0 2px #3b82f6!important}
+.zpl-switch--menu .zpl-switch__menu .zpl-switch__code{margin-left:auto;color:var(--zpl-muted);font-size:11px;letter-spacing:.08em}
+.zpl-switch--menu .zpl-switch__menu .zpl-switch__flag{width:20px;height:20px}
+.zpl-switch--multi.is-busy .zpl-switch__now .zpl-switch__code{color:transparent;transition:color .15s ease .12s}
+.zpl-switch--multi.is-busy .zpl-switch__now .zpl-switch__code::after{visibility:visible;color:var(--zpl-on);animation:zpl-spin .7s linear infinite,zpl-in .2s ease .12s forwards}
+.zpl-switch--chip.zpl-switch--menu .zpl-switch__btn{height:34px;padding:2px 8px 2px 2px;gap:4px}
+.zpl-switch--chip.zpl-switch--menu .zpl-switch__now{min-width:34px;padding:0 8px;font-size:11px}
+.zpl-switch--chip.zpl-switch--menu .zpl-switch__menu{top:calc(100% + 8px);min-width:184px}
+/* Mobile drawer with three or four languages: the segmented control gets a column for each */
+.zpl-switch--multi.zpl-switch--row .zpl-switch__track{grid-template-columns:repeat(var(--zpl-n,4),1fr);flex:1 1 auto;max-width:300px}
+.zpl-switch.zpl-switch--multi.zpl-switch--row .zpl-switch__thumb{width:calc((100% - 6px) / var(--zpl-n,4));transform:translateX(calc(100% * var(--zpl-i,0)))}
+.zpl-switch--multi.zpl-switch--row .zpl-switch__opt{padding:0 4px;gap:5px}
+.zpl-switch--multi.zpl-switch--row.is-pl .zpl-switch__opt[data-zpl-lang="pl"],.zpl-switch--multi.zpl-switch--row.is-en .zpl-switch__opt[data-zpl-lang="en"],.zpl-switch--multi.zpl-switch--row.is-de .zpl-switch__opt[data-zpl-lang="de"],.zpl-switch--multi.zpl-switch--row.is-es .zpl-switch__opt[data-zpl-lang="es"]{color:var(--zpl-on)!important;cursor:default}
+.zpl-switch--multi.zpl-switch--row.is-de .zpl-switch__opt[data-zpl-lang="de"] .zpl-switch__flag,.zpl-switch--multi.zpl-switch--row.is-es .zpl-switch__opt[data-zpl-lang="es"] .zpl-switch__flag{box-shadow:0 0 0 1.5px rgba(255,255,255,.92),0 2px 6px rgba(0,0,0,.28)}
+.zpl-switch--multi.zpl-switch--row.is-busy .zpl-switch__opt[aria-current="true"] .zpl-switch__flag svg{opacity:0;transition-delay:.12s}
+.zpl-switch--multi.zpl-switch--row.is-busy .zpl-switch__opt[aria-current="true"] .zpl-switch__code{color:transparent;transition:color .15s ease .12s}
+.zpl-switch--multi.zpl-switch--row.is-busy .zpl-switch__opt[aria-current="true"] .zpl-switch__flag::after,.zpl-switch--multi.zpl-switch--row.is-busy .zpl-switch__opt[aria-current="true"] .zpl-switch__code::after{visibility:visible;color:var(--zpl-muted);animation:zpl-spin .7s linear infinite,zpl-in .2s ease .12s forwards}
+@media (max-width:380px){.zpl-switch--multi.zpl-switch--row .zpl-switch__code{font-size:11px}}
+
+/* 1.2.0 The language changes in place: the old texts fade out, the new ones fade in (View Transitions; otherwise a short fade) */
+html.zpl-vt-soft::view-transition-old(root){animation:zpl-vt-out .2s cubic-bezier(.4,0,1,1) both}
+html.zpl-vt-soft::view-transition-new(root){animation:zpl-vt-in .38s cubic-bezier(.22,1,.36,1) .05s both}
+@keyframes zpl-vt-out{to{opacity:0;filter:blur(2px)}}
+@keyframes zpl-vt-in{from{opacity:0;filter:blur(2px);transform:translateY(6px)}}
+html.zpl-soft-out body{opacity:.2;transition:opacity .14s ease}
+html.zpl-soft-in body{animation:zpl-soft-in .28s ease both}
+@keyframes zpl-soft-in{from{opacity:.2}}
+@media (prefers-reduced-motion:reduce){.zpl-switch__menu,.zpl-switch__chev,.zpl-switch__btn{transition:none!important}html.zpl-vt-soft::view-transition-old(root),html.zpl-vt-soft::view-transition-new(root){animation:none}html.zpl-soft-out body,html.zpl-soft-in body{transition:none;animation:none;opacity:1}}

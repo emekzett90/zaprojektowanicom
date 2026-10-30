@@ -33,13 +33,13 @@ final class Runtime {
         [$lang, $source, $mapped, $redirect] = Router::resolve($rel, $query, $public);
         if ($redirect !== null) { self::redirect(Router::base() . $redirect . ($query !== '' ? '?' . $query : ''), 301); }
         if (Router::is_excluded($source)) {
-            if ($lang === 'en') { self::redirect(Router::base() . $source . ($query !== '' ? '?' . $query : ''), 302); }
+            if (Lang::foreign($lang)) { self::redirect(Router::base() . $source . ($query !== '' ? '?' . $query : ''), 302); }
             Router::$excluded = true;
             return;
         }
         // 3.1.1: an English address without the closing slash ("/en", "/en/contact") gets a 301 to the one with it, as
         // WordPress gives Polish ones ("/kontakt" → "/kontakt/"). /en answered 200 as a second copy of /en/ (SearchFit, 14.10).
-        if ($public && $lang === 'en' && substr($rel, -1) !== '/' && !preg_match('~\.html?$~i', $rel)) {
+        if ($public && Lang::foreign($lang) && substr($rel, -1) !== '/' && !preg_match('~\.html?$~i', $rel)) {
             self::redirect(Router::base() . $rel . '/' . ($query !== '' ? '?' . $query : ''), 301);
         }
 
@@ -77,7 +77,7 @@ final class Runtime {
         Router::$source = $source;
         Router::$mapped = $mapped;
 
-        if ($lang === 'en') {
+        if (Lang::foreign($lang)) {
             $internal = Router::base() . $source . ($query !== '' ? '?' . $query : '');
             $_SERVER['REQUEST_URI'] = $internal;
             foreach (['PATH_INFO', 'ORIG_PATH_INFO', 'REDIRECT_URL'] as $k) {
@@ -85,8 +85,9 @@ final class Runtime {
             }
             add_filter('redirect_canonical', '__return_false', PHP_INT_MAX);
             add_filter('wp_redirect', [self::class, 'localize_redirect'], PHP_INT_MAX);
-            add_filter('language_attributes', static function ($a) { return preg_replace('~\blang="[^"]*"~', 'lang="en"', (string) $a); }, PHP_INT_MAX);
-            add_filter('rank_math/frontend/canonical', static function ($c) { return Router::url((string) $c, 'en'); }, PHP_INT_MAX);
+            $htmlLang = Lang::HTML[$lang];
+            add_filter('language_attributes', static function ($a) use ($htmlLang) { return preg_replace('~\blang="[^"]*"~', 'lang="' . $htmlLang . '"', (string) $a); }, PHP_INT_MAX);
+            add_filter('rank_math/frontend/canonical', static function ($c) use ($lang) { return Router::url((string) $c, $lang); }, PHP_INT_MAX);
         }
         add_filter('script_loader_src', [Suite::class, 'script_url'], PHP_INT_MAX);
         add_action('wp_enqueue_scripts', [self::class, 'assets'], 5);
@@ -101,14 +102,14 @@ final class Runtime {
     }
 
     /** Labels inside SVG graphics (<text>/<tspan>), e.g. chart captions — the page walker skips SVG. */
-    private static function svg_labels(string $html, string $source): string {
+    private static function svg_labels(string $html, string $source, string $lang = 'en'): string {
         if (stripos($html, '<svg') === false) { return $html; }
-        return preg_replace_callback('~<svg\b.*?</svg>~is', static function ($m) use ($source) {
+        return preg_replace_callback('~<svg\b.*?</svg>~is', static function ($m) use ($source, $lang) {
             if (!preg_match('~<(?:text|tspan)\b~i', $m[0])) { return $m[0]; }
-            return preg_replace_callback('~(<(text|tspan)\b[^>]*>)([^<]+)(</\2>)~i', static function ($x) use ($source) {
+            return preg_replace_callback('~(<(text|tspan)\b[^>]*>)([^<]+)(</\2>)~i', static function ($x) use ($source, $lang) {
                 $k = Html::norm(Html::decode($x[3]));
                 if (!Html::human($k)) { return $x[0]; }
-                $t = Dict::get($k, 'en', $source);
+                $t = Dict::get($k, $lang, $source);
                 if ($t === null || $t === $k || strpos($t, '<') !== false) { return $x[0]; }
                 return $x[1] . Html::esc($t) . $x[4];
             }, $m[0]) ?? $m[0];
@@ -146,7 +147,7 @@ final class Runtime {
 
     public static function localize_redirect($url) {
         if (!is_string($url) || $url === '') { return $url; }
-        $dest = Router::url($url, 'en');
+        $dest = Router::url($url, Router::$lang);
         $destPath = (string) wp_parse_url($dest, PHP_URL_PATH);
         $extPath = (string) wp_parse_url(Router::$external, PHP_URL_PATH);
         if (Router::norm_path(Router::rel($destPath)) === Router::norm_path(Router::rel($extPath)) && (string) wp_parse_url($dest, PHP_URL_QUERY) === (string) wp_parse_url(Router::$external, PHP_URL_QUERY)) {
@@ -174,10 +175,14 @@ final class Runtime {
         if (Router::$lang === 'en' && is_file(ZPL_DIR . 'data/en.css')) {
             wp_enqueue_style('zpl-en', ZPL_URL . 'data/en.css', [], Dict::meta()['version'] ?? ZPL_VERSION);
         }
+        // 1.2.0: the same texts drawn by CSS in German and Spanish (data/de.css, data/es.css).
+        if (Lang::ai(Router::$lang) && is_file(ZPL_DIR . 'data/' . Router::$lang . '.css')) {
+            wp_enqueue_style('zpl-' . Router::$lang, ZPL_URL . 'data/' . Router::$lang . '.css', [], ZPL_VERSION);
+        }
         // The switch (both languages): the other language opens at its own address, fetched ahead, with a cross-fade.
         wp_enqueue_script('zpl-switch', self::asset('zpl-switch.js'), [], self::switch_version(), ['in_footer' => true, 'strategy' => 'defer']);
-        // English pages only: texts that page scripts add later are translated in the browser. Polish pages need none of it.
-        if (Router::$lang === 'en') {
+        // Pages in another language only: texts that page scripts add later are translated in the browser. Polish pages need none of it.
+        if (Lang::foreign(Router::$lang)) {
             wp_enqueue_script('zpl-core', self::asset('zpl-core.js'), [], ZPL_VERSION, ['in_footer' => true, 'strategy' => 'defer']);
             wp_enqueue_script('zpl', self::asset('zpl.js'), ['zpl-switch', 'zpl-core'], ZPL_VERSION, ['in_footer' => true, 'strategy' => 'defer']);
         }
@@ -209,13 +214,18 @@ final class Runtime {
         $lang = Router::$lang;
         $source = Router::$source;
         $stats = ['found' => 0, 'hit' => 0, 'miss' => 0];
-        if ($lang === 'en') {
-            $html = Page::translate($html, static function ($k, $kind) use ($source) { return Dict::get($k, 'en', $source); }, static function ($u) { return Router::url($u, 'en'); }, ['lang' => 'en', 'locale' => 'en_US']);
+        if (Lang::foreign($lang)) {
+            // 1.2.0: German and Spanish are translated from the page Polish visitors get, with the same last corrections
+            // (zp_en_public_price_html for 'pl': the verified review count, the shortened descriptions), which is
+            // the page Tłumacz AI read. English keeps its own path (shipped dictionaries and overrides).
+            if (Lang::ai($lang)) { $html = (string) apply_filters('zpl_ai_source_html', $html, $lang, $source); }
+            $html = Page::translate($html, static function ($k, $kind) use ($source, $lang) { return Dict::get($k, $lang, $source); }, static function ($u) use ($lang) { return Router::url($u, $lang); }, ['lang' => $lang, 'locale' => Lang::LOCALE[$lang], 'html' => Lang::HTML[$lang]]);
             $stats = Page::$stats;
             $html = Suite::patch_inline($html);
             $html = Suite::nav_active($html, $source);
-            $html = self::svg_labels($html, $source);
-            $xcss = self::extra_css();
+            $html = self::svg_labels($html, $source, $lang);
+            // Skaner EN's ::before/::after labels are English (html[lang^="en"] rules).
+            $xcss = $lang === 'en' ? self::extra_css() : '';
             if ($xcss !== '') { $html = preg_replace('~</head>~i', $xcss . '</head>', $html, 1) ?? $html; }
             // RSS/Atom feeds carry the Polish posts: don't advertise them on English pages.
             $html = preg_replace('~<link\b(?=[^>]*\brel=["\']alternate["\'])(?=[^>]*\btype=["\']application/(?:rss|atom)\+xml["\'])[^>]*>\s*~i', '', $html) ?? $html;
@@ -247,30 +257,52 @@ final class Runtime {
         return (string) apply_filters('zp_en_public_price_html', $html, $lang, $source);
     }
 
+    /**
+     * 1.2.0: hreflang for every language with its own address and translations of this page: Polish, English (as
+     * before) and German/Spanish once Tłumacz AI has made them public. A page that is not itself such a version
+     * (no own address, not translated, noindex) lists none, as English always did.
+     */
+    public static function alternates(string $lang, string $source): array {
+        $mapped = Router::$mapped;
+        $self = $lang === 'pl' || $lang === 'en' ? true : ($mapped && Lang::is_public($lang) && Dict::has_page($source, $lang));
+        if (!$self) { return []; }
+        $out = ['pl' => home_url($source)];
+        // English: the test it always had (this request's own route for /en/, the Polish page's route for Polish).
+        $enOwn = $lang === 'pl' || $lang === 'en' ? $mapped : Router::has_route($source, 'en');
+        if ($enOwn && Dict::has_page($source)) { $out['en'] = home_url(Router::en_path($source)); }
+        foreach (Lang::AI as $l) {
+            if (!Lang::is_public($l) || !Router::has_route($source, $l) || !Dict::has_page($source, $l)) { continue; }
+            $p = Router::path_for($source, $l);
+            if (Router::resolve($p)[1] === $source) { $out[$l] = home_url($p); }
+        }
+        // Polish alone is not an alternate (and an English page without its Polish pair lists none).
+        if (count($out) < 2 || ($lang !== 'pl' && !isset($out[$lang]))) { return []; }
+        return $out;
+    }
+
     private static function seo(string $html, string $lang, string $source, array $stats): string {
         $plUrl = home_url($source);
-        $enUrl = home_url(Router::en_path($source));
+        $selfUrl = home_url(Router::path_for($source, $lang));
         $mapped = Router::$mapped;
         $head = '';
         // Remove alternates added by earlier translators or SEO plugins; ours are authoritative.
         $html = preg_replace('~<link\b[^>]*\bhreflang\s*=[^>]*>\s*~i', '', $html) ?? $html;
-        if ($mapped && Dict::has_page($source)) {
-            $head .= '<link rel="alternate" hreflang="pl" href="' . esc_url($plUrl) . '">'
-                . '<link rel="alternate" hreflang="en" href="' . esc_url($enUrl) . '">'
-                . '<link rel="alternate" hreflang="x-default" href="' . esc_url($plUrl) . '">';
-        }
-        if ($lang === 'en') {
+        $alts = self::alternates($lang, $source);
+        foreach ($alts as $l => $u) { $head .= '<link rel="alternate" hreflang="' . $l . '" href="' . esc_url($u) . '">'; }
+        if ($alts) { $head .= '<link rel="alternate" hreflang="x-default" href="' . esc_url($plUrl) . '">'; }
+        if (Lang::foreign($lang)) {
             $html = preg_replace('~<link\b[^>]*\brel\s*=\s*["\']?canonical["\']?[^>]*>\s*~i', '', $html) ?? $html;
-            $q = (string) wp_parse_url(Router::$external, PHP_URL_QUERY);
-            $head .= '<link rel="canonical" href="' . esc_url($enUrl) . '">';
+            $head .= '<link rel="canonical" href="' . esc_url($selfUrl) . '">';
             $coverage = $stats['found'] > 0 ? $stats['hit'] / $stats['found'] : 1;
-            if (!$mapped || !Dict::has_page($source) || $coverage < 0.9 || is_404()) {
+            if (!$mapped || !Dict::has_page($source, $lang) || $coverage < 0.9 || is_404() || !Lang::is_public($lang)) {
                 $html = preg_replace('~<meta\b[^>]*\bname\s*=\s*["\']robots["\'][^>]*>\s*~i', '', $html) ?? $html;
                 $head .= '<meta name="robots" content="noindex, follow">';
             }
             $head .= '<meta property="og:locale:alternate" content="pl_PL">';
-        } elseif ($mapped) {
-            $head .= '<meta property="og:locale:alternate" content="en_US">';
+            foreach (array_keys($alts) as $l) { if ($l !== 'pl' && $l !== $lang) { $head .= '<meta property="og:locale:alternate" content="' . Lang::LOCALE[$l] . '">'; } }
+        } else {
+            if ($mapped) { $head .= '<meta property="og:locale:alternate" content="en_US">'; }
+            foreach (array_keys($alts) as $l) { if (Lang::ai($l)) { $head .= '<meta property="og:locale:alternate" content="' . Lang::LOCALE[$l] . '">'; } }
         }
         return preg_replace('~</head>~i', $head . '</head>', $html, 1) ?? $html;
     }
@@ -280,11 +312,12 @@ final class Runtime {
         if (strpos($html, 'zaprojektowani-languages/assets/zpl-switch') !== false) { return $html; }
         $v = rawurlencode(ZPL_VERSION);
         $tags = '<script defer src="' . esc_url(self::asset('zpl-switch.js') . '?ver=' . rawurlencode(self::switch_version())) . '"></script>';
-        if ($lang === 'en') {
+        if (Lang::foreign($lang)) {
             $tags .= '<script defer src="' . esc_url(self::asset('zpl-core.js') . '?ver=' . $v) . '"></script><script defer src="' . esc_url(self::asset('zpl.js') . '?ver=' . $v) . '"></script>';
         }
         $css = '<link rel="stylesheet" href="' . esc_url(self::asset('zpl.css') . '?ver=' . $v) . '">';
         if ($lang === 'en' && is_file(ZPL_DIR . 'data/en.css')) { $css .= '<link rel="stylesheet" href="' . esc_url(ZPL_URL . 'data/en.css?ver=' . rawurlencode((string) (Dict::meta()['version'] ?? $v))) . '">'; }
+        if (Lang::ai($lang) && is_file(ZPL_DIR . 'data/' . $lang . '.css')) { $css .= '<link rel="stylesheet" href="' . esc_url(ZPL_URL . 'data/' . $lang . '.css?ver=' . $v) . '">'; }
         if (!preg_match('~zaprojektowani-languages/assets/zpl(?:\.min)?\.css~', $html)) { $html = preg_replace('~</head>~i', $css . '</head>', $html, 1) ?? $html; }
         $pos = strripos($html, '</body>');
         return $pos === false ? $html . $tags : substr($html, 0, $pos) . $tags . substr($html, $pos);
@@ -300,15 +333,22 @@ final class Runtime {
             'rest' => esc_url_raw(rest_url('zpl/v1/')),
             'data' => ZPL_URL . 'data/json/',
             'v' => (string) ($meta['version'] ?? ZPL_VERSION),
-            'page' => Dict::client_page_id($source),
+            'page' => Lang::ai($lang) ? '' : Dict::client_page_id($source),
             'ov' => (string) get_option('zpl_overrides_version', ''),
             'ex' => Router::excludes(),
             'en' => Router::en_path($source),
+            // 1.2.0: the languages offered and this page's address in each (switch, visitor redirect, no-reload switch).
+            'langs' => Lang::public(),
+            'paths' => self::paths($source),
             // Revision of this page's translations: the browser keeps that exact answer (zpl.js readApproved).
-            'rev' => $lang === 'en' ? (string) apply_filters('zpl_approved_revision', '', $source) : '',
+            'rev' => $lang === 'en' ? (string) apply_filters('zpl_approved_revision', '', $source) : (Lang::ai($lang) ? (string) apply_filters('zpl_lang_revision', '', $source, $lang) : ''),
+            // 1.2.0: German and Spanish texts that page scripts show after loading (Studio wyceny, forms), one cached answer.
+            'dyn' => Lang::ai($lang) ? (string) apply_filters('zpl_lang_dyn', '', $lang) : '',
             'frame' => home_url('/'),
             'blobs' => preg_match_all('~<script\b[^>]*>\s*window\.(zp\w+)\s*=\s*[\[{]~', $html, $bm) ? array_values(array_unique($bm[1])) : [],
-            'routes' => $lang === 'en' ? Router::routes() : null,
+            'routes' => Lang::foreign($lang) ? Router::routes($lang) : null,
+            // 1.2.0: the engine of the language change in place, loaded only when the visitor reaches for the switch.
+            'soft' => ['core' => self::asset('zpl-core.js') . '?ver=' . ZPL_VERSION, 'js' => self::asset('zpl-soft.js') . '?ver=' . ZPL_VERSION],
             'debug' => current_user_can('manage_options') && isset($_GET['zpl_debug']),
             'scan' => Scan::active(),
             'attrs' => Html::$extra,
@@ -316,5 +356,19 @@ final class Runtime {
         $tag = '<script type="application/json" id="zpl-config">' . wp_json_encode($cfg, $flags) . '</script>';
         $pos = strripos($html, '</body>');
         return $pos === false ? $html . $tag : substr($html, 0, $pos) . $tag . substr($html, $pos);
+    }
+
+    /**
+     * 1.2.0: this page's address in every offered language; a language without a version of this page points to its
+     * home page (the switch never opens a Polish page under /de/), marked in 'home'.
+     */
+    public static function paths(string $source): array {
+        $out = [];
+        foreach (Lang::public() as $l) {
+            if ($l === 'pl') { $out['pl'] = $source; continue; }
+            $own = $l === 'en' ? Router::has_route($source) && Dict::has_page($source) : Router::has_route($source, $l) && Dict::has_page($source, $l);
+            $out[$l] = $own ? Router::path_for($source, $l) : '/' . $l . '/';
+        }
+        return $out;
     }
 }

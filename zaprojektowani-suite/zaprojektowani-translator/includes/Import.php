@@ -21,6 +21,8 @@ final class Import {
     }
 
     public static function done(): bool {
+        // 2.1.0: German and Spanish have nothing to copy (no earlier translator made them).
+        if (!Lang::is_en()) { return true; }
         if (self::$done === null) {
             $s = get_option(self::OPTION, []);
             self::$done = is_array($s) && !empty($s['done']);
