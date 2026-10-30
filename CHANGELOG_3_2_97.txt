@@ -1,5 +1,5 @@
 ZP Suite 3.2.97 — wersje niemiecka i hiszpańska, ceny w euro, zmiana języka bez przeładowania (30.10.2026)
-Baza: 3.2.96 (PR #68, paczka z 30.10.2026, jeszcze niewgrana). 3.2.97 zawiera całą 3.2.96 i 3.2.95, więc wystarczy wgrać tylko tę paczkę. Moduł języków 1.1.3 → 1.2.0, Tłumacz 2.0.3 → 2.1.0. Strony polskie i angielskie: teksty, ceny, wygląd, Rank Math, cache stron i pliki Codexa bez zmian; zmienia się tylko przełącznik języka, i to dopiero gdy DE i ES są gotowe.
+Baza: 3.2.96 (PR #68, paczka z 30.10.2026, jeszcze niewgrana). 3.2.97 zawiera wszystkie zmiany 3.2.93–3.2.96 (wygląd podstron i Wiedzy, szybkość strony głównej), więc wystarczy wgrać tylko tę paczkę, nawet jeśli żadna z nich nie jest jeszcze wgrana. Moduł języków 1.1.3 → 1.2.0, Tłumacz 2.0.3 → 2.1.0. Strony polskie i angielskie: teksty, ceny, wygląd, Rank Math, cache stron i pliki Codexa bez zmian; zmienia się tylko przełącznik języka, i to dopiero gdy DE i ES są gotowe.
 
 CO DOSTAJE STRONA
   1. /de/ i /es/: cała strona i wszystkie wpisy po niemiecku i po hiszpańsku, z własnymi adresami (np. /de/angebotsrechner/, /es/calculadora-de-presupuesto/), tytułami i opisami dla Google, hreflang (pl, en, de, es, x-default), mapami strony (german-page-sitemap.xml, german-post-sitemap.xml, spanish-page-sitemap.xml, spanish-post-sitemap.xml), <html lang="de-DE"> / "es-ES" i Cookiebotem w języku strony.
