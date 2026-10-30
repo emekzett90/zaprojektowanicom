@@ -1,0 +1,55 @@
+ZP Suite 3.2.94 — Wiedza, hero „Tworzenie stron internetowych”, paski logo klientów (30.10.2026)
+Baza: 3.2.93 (paczka z 29.10.2026). Tylko wygląd: żadnych zmian w Rank Math, cache, bazie, cenach, treściach SEO ani w plikach Codexa. Starsze pliki wtyczki nie były edytowane, poza numerem wersji i jednym require w pliku głównym.
+
+NOWE PLIKI (wszystko ładuje includes/wyglad-3294/loader.php)
+  includes/wyglad-3294/wiedza.php, elementor-guard.php, tworzenie-hero.php, logos.php
+  assets/css/wyglad-3294/wiedza.css, elementor-guard.css, tworzenie-hero.css, logos.css
+
+1. WIEDZA — sekcja „W centrum uwagi” dużo niższa
+   Gdzie patrzeć: /wiedza/ i /en/knowledge/, sekcja tuż pod ciemnym hero („W centrum uwagi” + „Zanim zaczniesz projekt.”).
+   Laptop 1440 px: ok. 620 px wysokości (wcześniej ponad dwa razy więcej; z pionowym zdjęciem jak na żywo ok. 1550 px). Duży monitor 1747 px: ok. 655 px. Telefon: ok. 1265 px zamiast ok. 1900–2000 px.
+   Zdjęcie polecanego wpisu ma stałą, niską ramkę i jest przycinane (twarze zostają w kadrze), na telefonie najwyżej 220 px. Obie kolumny kończą się na tej samej wysokości, lista po prawej jest zwarta (mniejsze miniatury).
+   Nic nie zostało usunięte: nagłówki, teksty, pogrubienia, linki i przyciski są na miejscu. Zajawka polecanego wpisu pokazuje 3 linijki (telefon 4), pełny tekst zostaje w HTML.
+   Pliki: includes/wyglad-3294/wiedza.php, assets/css/wyglad-3294/wiedza.css.
+
+2. WIEDZA — ikonki kategorii
+   Gdzie patrzeć: przyciski kategorii w hero /wiedza/ oraz wiersz „Wybierz obszar” nad listą wpisów (PL i EN).
+   Strony internetowe: szablon strony · Sklepy: torba zakupowa · Logo i branding: iskierki · SEO: lupa · Kampanie: megafon · Case study: teczka · „Wszystkie”: warstwy.
+   Ikonki mają kolor napisu (także po najechaniu i po wybraniu). W hero ikonka zastąpiła małą strzałkę na końcu przycisku, żeby przyciski nie zrobiły się szersze.
+   „Wybierz obszar”: od ok. 1410 px wszystkie 7 przycisków w jednym rzędzie (na 1101–1599 px trochę ciaśniejsze odstępy w tym jednym rzędzie); poniżej 1410 px i na telefonie jak wcześniej.
+   Ikonki są wstawiane jako SVG po stronie serwera, bez nowych skryptów i bez nowych plików graficznych.
+
+3. WIEDZA NA TELEFONIE — początek strony nie wchodzi już pod nagłówek
+   Przyczyna: w Elementorze strona Wiedza (post 1431) ma w kontenerze 26476e42 ujemny margines -50 px na telefonie (-4 px na komputerze), który podciągał sekcję pod menu.
+   Teraz: 48 px odstępu pod nagłówkiem na telefonie, 72 px na komputerze (tak jak na pozostałych podstronach od 3.2.93).
+   Zabezpieczenie: żadna górna sekcja z hero wtyczki (Wiedza, O nas, FAQ, Realizacje, Case studies, strony usług) nie może zostać podciągnięta pod nagłówek ujemnym marginesem z Elementora; dodatnie marginesy bez zmian. Ustawień w Elementorze nie zmieniałem.
+   Pliki: includes/wyglad-3294/elementor-guard.php, assets/css/wyglad-3294/elementor-guard.css (mały CSS w head).
+
+4. /TWORZENIE-STRON-INTERNETOWYCH/ — laptop wyżej, niższe hero (tylko komputer)
+   Gdzie patrzeć: /tworzenie-stron-internetowych/ i /en/website-development/ na komputerze.
+   Laptop z kamieniem stoi ok. 24 px pod menu i nigdzie na nie nie wchodzi (sprawdzone 1280×800, 1440×900, 1747×1013, 1920×1080). Rozmiar laptopa bez zmian.
+   Hero niższe: 1440×900 z 1300 na ok. 1100 px, 1747×1013 z 1333 na 1135 px, 1920×1080 z 1400 na 1160 px. Pasek logotypów pod spodem cały widoczny.
+   Na części szerokości (np. 1440) laptop stoi do 66 px bardziej w prawo, żeby nie dotykał pierwszej linii nagłówka; na 1747 px dokładnie tam, gdzie wcześniej.
+   Tekst, przyciski i odstęp menu→nadtytuł bez zmian. Tablet i telefon bez zmian. Inne strony z tym samym szablonem (Katowice, WordPress, landing page, lekarze, wizytówka, opieka) bez zmian.
+   Pliki: includes/wyglad-3294/tworzenie-hero.php, assets/css/wyglad-3294/tworzenie-hero.css.
+
+5. PASKI LOGO KLIENTÓW — wszystkie logotypy czytelne i podobnej „wagi”
+   Każde logo dostaje podobną powierzchnię z poprawką na „gęstość” znaku: cienkie, ażurowe logo (Vista, Polerstone, Piotr Mazur) dostają więcej miejsca, masywne (Raxo, Gravia) mniej. Odstępy między logo są równe.
+   Przykład, pasek pod hero na stronach usług, 1440 px: Vista 44×42 → 59×56 px, Sfera 29×42 → 39×56 px, ProScarves 37×42 → 46×53 px, Raxo 115×36 → 75×24 px, Gravia 70×42 → 65×39 px.
+   Gdzie patrzeć:
+   – pasek logotypów pod hero i siatka „Zaufali nam” niżej na stronach usług i branżowych (np. /tworzenie-stron-internetowych/, /strony-internetowe-katowice/, /strony-internetowe-dla-lekarzy/, PL i EN),
+   – pasek na /projektowanie-logo/, /identyfikacja-wizualna/, /logo-branding-katowice/ (PL i EN),
+   – przewijane rzędy „Zaufali nam” na stronie głównej na telefonie, tablecie i laptopie do 1500 px (przy okazji zniknęło szarpnięcie rzędu o 14–28 px przy każdym zapętleniu).
+   Strona główna od 1501 px (siatka, a nie przewijany pasek) bez zmian. Kolory, przezroczystość, efekt po najechaniu i tempo animacji bez zmian; wysokości sekcji i stron identyczne.
+   Pliki: includes/wyglad-3294/logos.php (tabela rozmiarów logotypów), assets/css/wyglad-3294/logos.css.
+
+SPRAWDZONE NA LOKALNEJ KOPII (WP 7.1.3, PHP 8.3)
+   – 22 adresy PL i EN (strona główna, Wiedza z filtrem kategorii, strony usług i branżowe, logo i identyfikacja, O nas, FAQ, Realizacje, Case studies, Kontakt, Studio wyceny, kategoria bloga) na 4 szerokościach (390, 1024, 1440 i 1747 px): 0 błędów w konsoli, 0 nowych błędów 404, nigdzie poziomego przewijania. debug.log bez nowych wpisów, php -l bez błędów.
+   – Porównanie piksel po pikselu z 3.2.93: laptop 1440 px (16 stron) i telefon 390 px (7 stron). Zmieniły się tylko miejsca z punktów 1–5. O nas, Realizacje, FAQ, Case studies, Kontakt, Sklepy internetowe, wpis na blogu, kategoria i EN About us są identyczne. Na Wiedzy (PL i EN) i na „Tworzeniu stron” wszystko poniżej zmienionej sekcji jest identyczne (porównane po przesunięciu o różnicę wysokości).
+   – Elementy, które ruszają się same (opinie Google, zdjęcie zespołu, przewijane portfolio), różnią się też między dwoma zrzutami tej samej wersji, więc ich nie liczyłem jako zmian.
+
+UWAGA (bez zmian w tej paczce)
+   Na tablecie (ok. 1024 px) na stronach usług z tym szablonem (np. /tworzenie-stron-internetowych/, Katowice, EN) rząd przycisków w hero nachodzi na wieko laptopa. Tak było już w 3.2.93; mogę to poprawić w kolejnej paczce.
+
+PO WGRANIU
+   Niczego nie czyścić. Kopia stron wtyczki odświeża się sama: od razu po aktualizacji przez wp-admin, a najpóźniej po 30 minutach (np. po wgraniu przez FTP).

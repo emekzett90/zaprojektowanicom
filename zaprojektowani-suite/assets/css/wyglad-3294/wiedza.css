@@ -1,0 +1,112 @@
+/* ZP Suite 3.2.94 — Wiedza (/wiedza/, /en/knowledge/).
+   1) Sekcja nad indeksem (.zpKBFeatured): „W centrum uwagi” + „Zanim zaczniesz projekt.” — dużo niższa i wyważona.
+      Zdjęcie wyróżnionego wpisu ma stałą wysokość i object-fit:cover (pionowe zdjęcie nie rozciąga już karty),
+      lista poradników jest zwarta, obie kolumny kończą się na tej samej linii. Teksty, linki, kolory, fonty i promienie
+      bez zmian; bez nowych gradientów i cieni.
+   2) Ikonki kategorii (inline SVG z includes/wyglad-3294/wiedza.php) w chipach hero i indeksu — kolor chipa w każdym stanie.
+   Selektory z #zpKnowledgePro.zpKnowledgePro / #zhHero, bo starsze reguły strony są inline (później w dokumencie) i z !important. */
+
+/* ---------- 1) Sekcja „W centrum uwagi” — wszystkie szerokości ---------- */
+/* Zastępcza wysokość sekcji poza ekranem (content-visibility:auto) dopasowana do nowej, niższej sekcji. */
+html body #zpKnowledgePro.zpKnowledgePro .zpKBFeatured{contain-intrinsic-size:auto 1px auto 540px!important}
+html body #zpKnowledgePro.zpKnowledgePro .zpKBFeatured .zpKBMonth{height:auto!important;min-height:0!important;overflow:hidden!important}
+html body #zpKnowledgePro.zpKnowledgePro .zpKBFeatured .zpKBMonth__media{position:relative!important;display:block!important;width:100%!important;min-height:0!important;overflow:hidden!important;background:#eef2f6!important}
+html body #zpKnowledgePro.zpKnowledgePro .zpKBFeatured .zpKBMonth__media img{position:absolute!important;inset:0!important;display:block!important;width:100%!important;height:100%!important;min-height:0!important;max-height:none!important;object-fit:cover!important;object-position:50% 25%!important}
+/* Etykieta „W centrum uwagi” i data/czas czytania w jednym wierszu, pod nimi tytuł, zajawka i przycisk. */
+html body #zpKnowledgePro.zpKnowledgePro .zpKBFeatured .zpKBMonth__body{display:grid!important;grid-template-columns:auto minmax(0,1fr)!important;grid-template-rows:auto auto auto 1fr!important;align-items:center!important;column-gap:16px!important;padding:22px 28px 24px!important}
+html body #zpKnowledgePro.zpKnowledgePro .zpKBFeatured .zpKBMonth .zpKBLabel{grid-column:1!important;margin:0!important}
+html body #zpKnowledgePro.zpKnowledgePro .zpKBFeatured .zpKBMonth__meta{grid-column:2!important;flex-wrap:wrap!important;gap:6px!important;margin:0!important}
+html body #zpKnowledgePro.zpKnowledgePro .zpKBFeatured .zpKBMonth__meta span{padding:6px 10px!important}
+html body #zpKnowledgePro.zpKnowledgePro .zpKBFeatured .zpKBMonth h2{grid-column:1/-1!important;margin:14px 0 0!important;font-size:clamp(24px,1.85vw,34px)!important;line-height:1.12!important}
+html body #zpKnowledgePro.zpKnowledgePro .zpKBFeatured .zpKBMonth p{grid-column:1/-1!important;margin:10px 0 18px!important;font-size:15px!important;line-height:1.6!important;display:-webkit-box!important;-webkit-box-orient:vertical!important;-webkit-line-clamp:3!important;overflow:hidden!important}
+html body #zpKnowledgePro.zpKnowledgePro .zpKBFeatured .zpKBMonth__link{grid-column:1/-1!important;justify-self:start!important;align-self:end!important;min-height:44px!important;padding:0 20px!important;font-size:14px!important}
+
+/* „Zanim zaczniesz projekt.”: zwarty nagłówek i wiersze (miniatura | kategoria, tytuł, zajawka | przycisk). */
+html body #zpKnowledgePro.zpKnowledgePro .zpKBFeatured .zpKBTopPicks{padding:20px 26px 6px!important}
+html body #zpKnowledgePro.zpKnowledgePro .zpKBFeatured .zpKBTopPicks__head{padding:0 0 14px!important}
+html body #zpKnowledgePro.zpKnowledgePro .zpKBFeatured .zpKBTopPicks__head .zpKBLabel{margin:0 0 10px!important}
+html body #zpKnowledgePro.zpKnowledgePro .zpKBFeatured .zpKBTopPicks__head h2{font-size:clamp(24px,1.85vw,34px)!important;line-height:1.1!important}
+html body #zpKnowledgePro.zpKnowledgePro .zpKBFeatured .zpKBTopPicks__head p{max-width:none!important;font-size:14px!important;line-height:1.5!important;margin:6px 0 0!important}
+html body #zpKnowledgePro.zpKnowledgePro .zpKBFeatured .zpKBTopPick{grid-template-columns:96px minmax(0,1fr)!important;gap:16px!important;padding:10px 0!important;align-items:center!important}
+html body #zpKnowledgePro.zpKnowledgePro .zpKBFeatured .zpKBTopPick__media{position:relative!important;display:block!important;width:96px!important;height:auto!important;min-height:0!important;aspect-ratio:3/2!important;border-radius:12px!important;background:#eef2f6!important}
+html body #zpKnowledgePro.zpKnowledgePro .zpKBFeatured .zpKBTopPick__media img{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;object-fit:cover!important;object-position:center!important}
+html body #zpKnowledgePro.zpKnowledgePro .zpKBFeatured .zpKBTopPick__body{display:grid!important;grid-template-columns:minmax(0,1fr) auto!important;column-gap:14px!important;align-items:center!important}
+html body #zpKnowledgePro.zpKnowledgePro .zpKBFeatured .zpKBTopPick small{grid-column:1!important;margin:0 0 3px!important}
+html body #zpKnowledgePro.zpKnowledgePro .zpKBFeatured .zpKBTopPick h3{grid-column:1!important;margin:0!important}
+html body #zpKnowledgePro.zpKnowledgePro .zpKBFeatured .zpKBTopPick h3,
+html body #zpKnowledgePro.zpKnowledgePro .zpKBFeatured .zpKBTopPick h3 a{font-size:16px!important;line-height:1.25!important;margin:0!important}
+html body #zpKnowledgePro.zpKnowledgePro .zpKBFeatured .zpKBTopPick p{grid-column:1!important;margin:3px 0 0!important;font-size:13px!important;line-height:1.45!important;display:-webkit-box!important;-webkit-box-orient:vertical!important;-webkit-line-clamp:2!important;overflow:hidden!important}
+html body #zpKnowledgePro.zpKnowledgePro .zpKBFeatured .zpKBTopPick__btn{grid-column:2!important;grid-row:1/span 3!important;align-self:center!important;min-height:34px!important;padding:0 13px!important;font-size:12px!important;white-space:nowrap!important}
+
+/* Komputer: dwie równe kolumny tej samej wysokości; zdjęcie wypełnia resztę karty między limitami (nie zależy od pliku). */
+@media(min-width:1081px){
+  html body #zpKnowledgePro.zpKnowledgePro .zpKBFeatured{padding-top:clamp(34px,3.4vw,56px)!important}
+  html body #zpKnowledgePro.zpKnowledgePro .zpKBFeatured .zpKBFeatured__grid{grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;gap:28px!important;align-items:stretch!important}
+  html body #zpKnowledgePro.zpKnowledgePro .zpKBFeatured .zpKBMonth{display:flex!important;flex-direction:column!important;align-self:stretch!important}
+  html body #zpKnowledgePro.zpKnowledgePro .zpKBFeatured .zpKBMonth__media{flex:1 1 auto!important;height:auto!important;min-height:clamp(210px,14.2vw,250px)!important;max-height:340px!important;aspect-ratio:auto!important}
+  html body #zpKnowledgePro.zpKnowledgePro .zpKBFeatured .zpKBMonth__body{flex:0 0 auto!important}
+  html body #zpKnowledgePro.zpKnowledgePro .zpKBFeatured .zpKBTopPicks{display:flex!important;flex-direction:column!important;align-self:stretch!important}
+  html body #zpKnowledgePro.zpKnowledgePro .zpKBFeatured .zpKBTopPicks__head{flex:0 0 auto!important}
+  html body #zpKnowledgePro.zpKnowledgePro .zpKBFeatured .zpKBTopPick{flex:1 1 auto!important;grid-template-columns:clamp(96px,7.2vw,128px) minmax(0,1fr)!important}
+  html body #zpKnowledgePro.zpKnowledgePro .zpKBFeatured .zpKBTopPick__media{width:clamp(96px,7.2vw,128px)!important}
+}
+/* Wąski komputer: więcej miejsca dla listy poradników (tytuły nie łamią się na trzy linie). */
+@media(min-width:1081px) and (max-width:1279px){
+  html body #zpKnowledgePro.zpKnowledgePro .zpKBFeatured .zpKBFeatured__grid{grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr)!important}
+}
+
+/* Tablet: wyróżniony wpis poziomo (zdjęcie | treść), poradniki w dwóch kolumnach pod nim. */
+@media(min-width:761px) and (max-width:1080px){
+  html body #zpKnowledgePro.zpKnowledgePro .zpKBFeatured{contain-intrinsic-size:auto 1px auto 750px!important}
+  html body #zpKnowledgePro.zpKnowledgePro .zpKBFeatured .zpKBFeatured__grid{gap:20px!important}
+  html body #zpKnowledgePro.zpKnowledgePro .zpKBFeatured .zpKBMonth{display:grid!important;grid-template-columns:minmax(0,.9fr) minmax(0,1fr)!important;grid-template-rows:auto!important}
+  html body #zpKnowledgePro.zpKnowledgePro .zpKBFeatured .zpKBMonth__media{grid-column:1!important;height:100%!important;min-height:280px!important;max-height:none!important;aspect-ratio:auto!important}
+  html body #zpKnowledgePro.zpKnowledgePro .zpKBFeatured .zpKBMonth__body{grid-column:2!important;padding:24px 26px 26px!important}
+  html body #zpKnowledgePro.zpKnowledgePro .zpKBFeatured .zpKBMonth h2{font-size:clamp(23px,2.6vw,27px)!important}
+  html body #zpKnowledgePro.zpKnowledgePro .zpKBFeatured .zpKBTopPicks{padding:20px 24px 6px!important;column-gap:28px!important}
+  html body #zpKnowledgePro.zpKnowledgePro .zpKBFeatured .zpKBTopPick{align-items:start!important;padding:14px 0!important}
+  html body #zpKnowledgePro.zpKnowledgePro .zpKBFeatured .zpKBTopPick__body{grid-template-columns:minmax(0,1fr)!important}
+  html body #zpKnowledgePro.zpKnowledgePro .zpKBFeatured .zpKBTopPick__btn{grid-column:1!important;grid-row:auto!important;justify-self:start!important;margin-top:9px!important;min-height:30px!important}
+}
+
+/* Telefon: zdjęcie najwyżej 220 px, zwarta treść i lista (zajawki poradników schowane jak dotąd). */
+@media(max-width:760px){
+  html body #zpKnowledgePro.zpKnowledgePro .zpKBFeatured{contain-intrinsic-size:auto 1px auto 1200px!important}
+  html body #zpKnowledgePro.zpKnowledgePro .zpKBFeatured .zpKBFeatured__grid{gap:16px!important}
+  html body #zpKnowledgePro.zpKnowledgePro .zpKBFeatured .zpKBMonth{display:flex!important;flex-direction:column!important}
+  html body #zpKnowledgePro.zpKnowledgePro .zpKBFeatured .zpKBMonth__media{flex:0 0 auto!important;height:auto!important;aspect-ratio:16/10!important;max-height:220px!important}
+  html body #zpKnowledgePro.zpKnowledgePro .zpKBFeatured .zpKBMonth__body{grid-template-columns:minmax(0,1fr)!important;padding:18px 18px 20px!important}
+  html body #zpKnowledgePro.zpKnowledgePro .zpKBFeatured .zpKBMonth__meta{grid-column:1!important;margin-top:10px!important}
+  html body #zpKnowledgePro.zpKnowledgePro .zpKBFeatured .zpKBMonth h2{margin-top:12px!important;font-size:clamp(23px,6.2vw,28px)!important;line-height:1.14!important}
+  html body #zpKnowledgePro.zpKnowledgePro .zpKBFeatured .zpKBMonth p{margin:8px 0 16px!important;font-size:14.5px!important;line-height:1.58!important;-webkit-line-clamp:4!important}
+  html body #zpKnowledgePro.zpKnowledgePro .zpKBFeatured .zpKBTopPicks{padding:18px 16px 4px!important}
+  html body #zpKnowledgePro.zpKnowledgePro .zpKBFeatured .zpKBTopPicks__head{padding-bottom:12px!important}
+  html body #zpKnowledgePro.zpKnowledgePro .zpKBFeatured .zpKBTopPicks__head h2{font-size:clamp(23px,6.2vw,28px)!important}
+  html body #zpKnowledgePro.zpKnowledgePro .zpKBFeatured .zpKBTopPick{grid-template-columns:84px minmax(0,1fr)!important;gap:12px!important;padding:12px 0!important;align-items:start!important}
+  html body #zpKnowledgePro.zpKnowledgePro .zpKBFeatured .zpKBTopPick__media{width:84px!important;border-radius:10px!important}
+  html body #zpKnowledgePro.zpKnowledgePro .zpKBFeatured .zpKBTopPick__body{grid-template-columns:minmax(0,1fr)!important}
+  html body #zpKnowledgePro.zpKnowledgePro .zpKBFeatured .zpKBTopPick h3,
+  html body #zpKnowledgePro.zpKnowledgePro .zpKBFeatured .zpKBTopPick h3 a{font-size:15.5px!important}
+  html body #zpKnowledgePro.zpKnowledgePro .zpKBFeatured .zpKBTopPick p{display:none!important}
+  html body #zpKnowledgePro.zpKnowledgePro .zpKBFeatured .zpKBTopPick__btn{grid-column:1!important;grid-row:auto!important;justify-self:start!important;margin-top:8px!important;min-height:32px!important;padding:0 12px!important}
+}
+
+/* ---------- 2) Ikonki kategorii ---------- */
+/* Hero, „Szybkie ścieżki”: ikonka przed nazwą zamiast strzałki na końcu — chip ma tę samą szerokość co w 3.2.93. */
+html body #zhHero.zh--knowledge .zh__quickTopicsList a svg.zpW94Ico{flex:0 0 auto;width:14px;height:14px;color:inherit;stroke:currentColor;margin:0 -1px 0 -2px}
+html body #zhHero.zh--knowledge .zh__quickTopicsList a.zpW94Chip>i,
+html body #zhHero.zh--knowledge .zh__quickTopicsList a.zpW94Chip>svg:not(.zpW94Ico){display:none!important}
+/* Indeks, „Wybierz obszar”: ikonka przed nazwą, kolor chipa (granat / biały na aktywnym). Nazwa i licznik są w span.zpW94Lab
+   (dla słownika EN) — ten span nie dostaje stylu licznika z `.zpKX__tag span`, odstępy jak dotąd (8 px). */
+html body #zpKnowledgePro .zpKX__tag svg.zpW94Ico{flex:0 0 auto;width:15px;height:15px;color:inherit;stroke:currentColor;margin:0 -1px 0 -1px}
+html body #zpKnowledgePro .zpKX__tag span.zpW94Lab,
+html body #zpKnowledgePro .zpKX__tag.is-active span.zpW94Lab{display:inline-flex;align-items:center;gap:8px;min-width:0;height:auto;padding:0;border-radius:0;background:none;font-size:inherit;font-weight:inherit;line-height:inherit;color:inherit}
+/* 1101–1599 px: z ikonkami 7 przycisków „Wybierz obszar” mieści się w jednym rzędzie jak w 3.2.93 (na 1440 brakowało ok. 106 px; teraz zapas ok. 30 px, jeden rząd od ok. 1410 px).
+   Tylko ciaśniejsze odstępy i paddingi tego rzędu; od 1600 px i na telefonie bez zmian. */
+@media (min-width:1101px) and (max-width:1599px){
+html body #zpKnowledgePro .zpKX__row .zpKX__tags:has(> .zpKX__tag[data-zp-cat]){gap:6px}
+html body #zpKnowledgePro .zpKX__tag[data-zp-cat]{padding:0 9px;gap:5px}
+html body #zpKnowledgePro .zpKX__tag[data-zp-cat] svg.zpW94Ico{width:13px;height:13px}
+html body #zpKnowledgePro .zpKX__tag[data-zp-cat] span.zpW94Lab{gap:5px}
+html body #zpKnowledgePro .zpKX__tag[data-zp-cat] span.zpW94Lab>span{padding:0 5px}
+}
