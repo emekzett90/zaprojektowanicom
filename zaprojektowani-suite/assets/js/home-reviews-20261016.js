@@ -11,7 +11,7 @@
   var reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var position=root.querySelector('[data-zp-review-position]');
   var autoplay=root.querySelector('[data-zp-review-autoplay]');
-  var frame=0,timer=null,inView=false,userPaused=false,hovered=false,focused=false;
+  var frame=0,timer=null,inView=false,userPaused=false,hovered=false,focused=false,dead=false;
   function shuffle(list){for(var i=list.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var item=list[i];list[i]=list[j];list[j]=item;}return list;}
   // Shuffle each real source independently and mix them, keeping both sources visible.
   function reorder(){
@@ -29,7 +29,7 @@
   reorder();
   function step(){return cards[0].getBoundingClientRect().width+(parseFloat(getComputedStyle(rail).gap)||20);}
   function update(){
-   frame=0;var max=Math.max(0,rail.scrollWidth-rail.clientWidth);
+   frame=0;if(dead)return;var max=Math.max(0,rail.scrollWidth-rail.clientWidth);
    prev.disabled=rail.scrollLeft<=2;next.disabled=rail.scrollLeft>=max-2;
    var first=Math.max(0,Math.round(rail.scrollLeft/step()));
    var visible=Math.max(1,Math.round(rail.clientWidth/step()));
@@ -39,11 +39,12 @@
   function schedule(){if(!frame)frame=window.requestAnimationFrame(update);}
   function stop(){if(timer!==null){window.clearInterval(timer);timer=null;}}
   function advance(){
+   if(dead){stop();return;}
    if(rail.scrollLeft>=rail.scrollWidth-rail.clientWidth-2){reorder();update();}
    else rail.scrollBy({left:step(),behavior:reduced?'auto':'smooth'});
   }
   function syncAutoplay(){
-   stop();
+   stop();if(dead)return;
    if(autoplay){
     autoplay.hidden=reduced;
     autoplay.setAttribute('aria-label',userPaused?autoplay.dataset.playLabel:autoplay.dataset.pauseLabel);
@@ -78,6 +79,7 @@
   else{inView=true;}
   update();syncAutoplay();
   window.addEventListener('pagehide',stop);window.addEventListener('pageshow',syncAutoplay);
+  root.__zpReviewRail=rail;root.__zpReviewStop=function(){dead=true;stop();};
  }
  // The rendered cards remain usable without JS. Prepare the interactive rail
  // shortly before it enters view, instead of measuring/reordering it at page start.
@@ -100,5 +102,13 @@
    },{rootMargin:'400px 0px'});
    observer.observe(root);
   }else activate();
+ });
+ // 3.2.97: a language change without reloading (zaprojektowani-languages, zpl-soft.js) can bring the other language's
+ // rail in place of this one: the old rail stops and the new one is prepared the same way.
+ document.addEventListener('zpl:change',function(){
+  document.querySelectorAll('.zpReviews24').forEach(function(root){
+   if(root.dataset.zpReviewReady!=='1'||!root.__zpReviewRail||root.__zpReviewRail.isConnected)return;
+   root.__zpReviewStop();root.dataset.zpReviewReady='';initialize(root);
+  });
  });
 })();

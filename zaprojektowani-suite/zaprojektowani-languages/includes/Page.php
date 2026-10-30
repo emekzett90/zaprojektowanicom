@@ -40,6 +40,14 @@ final class Page {
 
     /** @var array<string,int> */
     public static $stats = ['found' => 0, 'hit' => 0, 'miss' => 0];
+    /** 1.2.0: inLanguage written into JSON-LD for German/Spanish pages (null: English, as before). */
+    private static $schemaLang = null;
+    /** 1.2.0: Rank Math's reading time on link previews: [one minute, minutes, less than a minute]. */
+    const MINUTES = [
+        'en' => ['minute', 'minutes', 'Less than a minute'],
+        'de' => ['Minute', 'Minuten', 'Weniger als eine Minute'],
+        'es' => ['minuto', 'minutos', 'Menos de un minuto'],
+    ];
     /** @var array<string,string> missing keys => kind */
     public static $missing = [];
 
@@ -154,10 +162,14 @@ final class Page {
         $tags = [];       // tagStart => [tagEnd, newTag]
         $lang = $opts['lang'] ?? 'en';
         $locale = $opts['locale'] ?? 'en_US';
+        // 1.2.0: $lang is the language code (en, de, es); the value written to lang="" attributes can differ (de-DE).
+        $htmlLang = (string) ($opts['html'] ?? $lang);
+        $foreign = class_exists(__NAMESPACE__ . '\\Lang', false) ? Lang::foreign($lang) : $lang === 'en';
+        self::$schemaLang = $lang === 'en' ? null : $htmlLang;
 
         // 3.1.1: the owner's own English for a text (overrides in Języki PL/EN) always wins, also over a short version made
         // for Google before the override was set; overrides change without Tłumacz EN compiling anything, so this is asked here.
-        $owner = $lang === 'en' && function_exists('get_option') ? Dict::overrides('en') : [];
+        $owner = $foreign && function_exists('get_option') ? Dict::overrides($lang) : [];
         $lookup = static function (string $k, string $kind) use ($t, $owner) {
             // Script data holds names/codes too: never count it towards coverage or the missing list.
             if ($kind === 'data') { return $t($k, $kind); }
@@ -169,7 +181,7 @@ final class Page {
             return $tr;
         };
 
-        $onAttr = static function (array $el, ?array $a) use (&$tags, &$edits, $html, $lookup, $t, $url, $lang, $locale) {
+        $onAttr = static function (array $el, ?array $a) use (&$tags, &$edits, $html, $lookup, $t, $url, $lang, $locale, $htmlLang, $foreign) {
             $tag = substr($html, $el['s'], $el['te'] - $el['s']);
             if ($a === null) { $a = Html::attrs($tag); }
             $name = $el['n'];
@@ -181,7 +193,7 @@ final class Page {
                         $new = self::schema_translate($json, $lookup, $url, '');
                         if ($new !== $json) { $edits[$s] = [$e, wp_json_encode_safe($new)]; }
                     }
-                } elseif ($lang === 'en' && !empty($el['c']) && self::is_js_type($a['type'] ?? '')) {
+                } elseif ($foreign && !empty($el['c']) && self::is_js_type($a['type'] ?? '')) {
                     // Suite CMS data consumed by page scripts (e.g. window.zpRealizacjeProjects = [...]).
                     $s = $el['c'][0]['s']; $e = $el['c'][0]['e'];
                     $code = substr($html, $s, $e - $s);
@@ -204,19 +216,19 @@ final class Page {
             }
             if (($name === 'a' || $name === 'area') && isset($a['href'])) {
                 $h = $url($a['href']);
-                if ($h === $a['href'] && $lang === 'en') { $h = self::share_href($a['href'], $url, $t); }
+                if ($h === $a['href'] && $foreign) { $h = self::share_href($a['href'], $url, $t); }
                 if ($h !== $a['href']) { $set['href'] = $h; }
             } elseif ($name === 'form' && isset($a['action']) && strtolower($a['method'] ?? 'get') === 'get') {
                 $h = $url($a['action']);
                 if ($h !== $a['action']) { $set['action'] = $h; }
-            } elseif ($name === 'iframe' && $lang === 'en' && isset($a['src']) && class_exists(__NAMESPACE__ . '\\Frame', false) && function_exists('home_url')) {
-                $f = Frame::src($a['src']);
+            } elseif ($name === 'iframe' && $foreign && isset($a['src']) && class_exists(__NAMESPACE__ . '\\Frame', false) && function_exists('home_url')) {
+                $f = Frame::src($a['src'], $lang);
                 if ($f !== $a['src']) { $set['src'] = $f; $set['data-zpl-src-pl'] = $a['src']; }
             } elseif ($name === 'meta') {
                 $prop = strtolower($a['property'] ?? '');
                 if ($prop === 'og:locale' && isset($a['content'])) { $set['content'] = $locale; }
                 elseif ($prop === 'og:url' && isset($a['content'])) { $set['content'] = $url($a['content']); }
-                elseif ($lang === 'en' && isset($a['content'])) {
+                elseif ($foreign && isset($a['content'])) {
                     // Link previews (2.9.5): Rank Math's site name and reading-time labels stay Polish on /en/.
                     // Looked up without $lookup, so the bare brand name never lands on the missing list.
                     $key = $prop !== '' ? $prop : strtolower($a['name'] ?? '');
@@ -227,15 +239,16 @@ final class Page {
                     } elseif ($key === 'twitter:data1' || $key === 'twitter:data2') {
                         // data2 on posts (data1 is the author there); data1 on pages, which have no author line (2.9.8).
                         // A name never matches the patterns below.
+                        $words = self::MINUTES[$lang] ?? self::MINUTES['en'];
                         if (preg_match('~^(\d+)\s*minut(?:/y|y|a)?$~u', $v, $m)) {
-                            $set['content'] = $m[1] . ((int) $m[1] === 1 ? ' minute' : ' minutes');
+                            $set['content'] = $m[1] . ' ' . ((int) $m[1] === 1 ? $words[0] : $words[1]);
                         } elseif (preg_match('~^mniej niż minut[aę]$~iu', $v)) {
-                            $set['content'] = 'Less than a minute';
+                            $set['content'] = $words[2];
                         }
                     }
                 }
             }
-            if (isset($a['lang']) && preg_match('~^pl\b~i', $a['lang'])) { $set['lang'] = $lang; }
+            if (isset($a['lang']) && preg_match('~^pl\b~i', $a['lang'])) { $set['lang'] = $htmlLang; }
             if ($set) { $tags[$el['s']] = [$el['te'], Html::set_attrs($tag, $set)]; }
         };
 
@@ -329,7 +342,7 @@ final class Page {
             return $v;
         }
         if (!is_string($v)) { return $v; }
-        if ($key === 'inLanguage') { return preg_match('~^pl~i', $v) ? $GLOBALS['zpl_schema_lang'] ?? 'en' : $v; }
+        if ($key === 'inLanguage') { return preg_match('~^pl~i', $v) ? (self::$schemaLang ?? $GLOBALS['zpl_schema_lang'] ?? 'en') : $v; }
         if (in_array($key, ['url', 'item', 'mainEntityOfPage', '@id'], true)) { return $url($v); }
         if (self::schema_key($key)) {
             $n = Html::norm(wp_strip_all_tags_safe($v));
@@ -357,7 +370,9 @@ final class Fragment {
     public static function translate(string $html): string {
         $wrapped = '<html><head></head><body>' . $html . '</body></html>';
         $source = Router::$source;
-        $out = Page::translate($wrapped, static function ($k, $kind) use ($source) { return Dict::get($k, 'en', $source); }, static function ($u) { return Router::url($u, 'en'); });
+        // 1.2.0: German and Spanish pages get their own language (English before, and for every other request).
+        $lang = Lang::ai(Router::$lang) ? Router::$lang : 'en';
+        $out = Page::translate($wrapped, static function ($k, $kind) use ($source, $lang) { return Dict::get($k, $lang, $source); }, static function ($u) use ($lang) { return Router::url($u, $lang); }, ['lang' => $lang, 'locale' => Lang::LOCALE[$lang], 'html' => Lang::HTML[$lang]]);
         $a = strpos($out, '<body>');
         $b = strrpos($out, '</body>');
         return ($a !== false && $b !== false) ? substr($out, $a + 6, $b - $a - 6) : $html;

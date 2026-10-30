@@ -15,10 +15,10 @@
 if (!defined('ABSPATH')) { exit; }
 if (defined('ZPTE_VERSION')) { return; }
 
-define('ZPTE_VERSION', '2.0.3'); // 2.0.3 (Suite 3.2.2): shared translations for the industry menu.
+define('ZPTE_VERSION', '2.1.0'); // 2.1.0 (Suite 3.2.97): German and Spanish versions (GPT-6.1 Sol), each with its own queue, tables and settings.
 define('ZPTE_DIR', __DIR__ . '/');
 
-foreach (['Settings', 'Store', 'Log', 'OpenAI', 'Translator', 'Legacy', 'Routes', 'Index', 'Serve', 'Source', 'Sync', 'Import', 'Retire', 'Migrate', 'Worker', 'Health', 'Bridge', 'Admin'] as $zpte_class) {
+foreach (['Lang', 'Settings', 'Store', 'Log', 'OpenAI', 'Translator', 'Legacy', 'Routes', 'Index', 'Serve', 'Source', 'Sync', 'Import', 'Retire', 'Migrate', 'Worker', 'Health', 'Bridge', 'Admin'] as $zpte_class) {
     require_once ZPTE_DIR . 'includes/' . $zpte_class . '.php';
 }
 unset($zpte_class);

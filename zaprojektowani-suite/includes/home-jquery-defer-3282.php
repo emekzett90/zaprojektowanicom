@@ -39,9 +39,10 @@ function zp_home_jquery_defer_3282_html(string $html): string {
             'Cookiebot'=>'~^https://consent\\.cookiebot\\.com/uc\\.js$~',
             'jquery-core-js'=>'~^'.preg_quote($site.'/wp-includes/js/jquery/jquery.min.js?ver=3.7.1','~').'$~',
             'jquery-ui-core-js'=>'~^'.preg_quote($site.'/wp-includes/js/jquery/ui/core.min.js?ver=1.14.2','~').'$~',
-            'zpl-switch-js'=>'~^'.preg_quote($plugin.'/zaprojektowani-languages/assets/zpl-switch.min.js?ver=1.1.3-suite-','~').'3\\.2\\.\\d+$~',
-            'zpl-core-js'=>'~^'.preg_quote($plugin.'/zaprojektowani-languages/assets/zpl-core.min.js?ver=1.1.3','~').'$~',
-            'zpl-js'=>'~^'.preg_quote($plugin.'/zaprojektowani-languages/assets/zpl.min.js?ver=1.1.3','~').'$~',
+            // 3.2.97: the language module's own version (1.2.0 with German and Spanish); the files stay deferred as audited.
+            'zpl-switch-js'=>'~^'.preg_quote($plugin.'/zaprojektowani-languages/assets/zpl-switch.min.js?ver=','~').'1\\.[1-9]\\.\\d+-suite-3\\.2\\.\\d+$~',
+            'zpl-core-js'=>'~^'.preg_quote($plugin.'/zaprojektowani-languages/assets/zpl-core.min.js?ver=','~').'1\\.[1-9]\\.\\d+$~',
+            'zpl-js'=>'~^'.preg_quote($plugin.'/zaprojektowani-languages/assets/zpl.min.js?ver=','~').'1\\.[1-9]\\.\\d+$~',
             'hello-theme-frontend-js'=>'~^'.preg_quote($site.'/wp-content/themes/hello-elementor/assets/js/hello-frontend.js?ver=3.4.7','~').'$~',
             'zp-suite-global-js'=>'~^'.preg_quote($site.'/wp-content/uploads/zpl-cache/js/assets-js-zp-global-js-','~').'[0-9a-f]{10}\\.js\\?ver=\\d+$~',
             'zp-suite-header-js'=>'~^'.preg_quote($site.'/wp-content/uploads/zpl-cache/js/assets-js-blocks-header-js-','~').'[0-9a-f]{10}\\.js\\?ver=\\d+$~',

@@ -1,4 +1,4 @@
-/*! Zaprojektowani Languages — English pages: translates text that page scripts add after load. */
+/*! Zaprojektowani Languages — English, German and Spanish pages: translates text that page scripts add after load. */
 (function () {
   'use strict';
   var C = window.ZPLCore;
@@ -9,14 +9,22 @@
 
   if (cfg.attrs && C.addAttrs) C.addAttrs(cfg.attrs); // attributes added by Skaner EN fixes
   var doc = document, html = doc.documentElement;
-  var state = { lang: cfg.lang === 'en' ? 'en' : 'pl', busy: false };
-  var dicts = { en: null, pl: null };
-  var priorityDicts = { en: [], pl: [] };
-  var pending = { en: null, pl: null };
+  // 1.2.0: German and Spanish come only from Tłumacz AI (the page's approved map and the server lookup).
+  var FOREIGN = { en: 1, de: 1, es: 1 }, AI = { de: 1, es: 1 };
+  var HTML_LANG = { pl: 'pl-PL', en: 'en', de: 'de-DE', es: 'es-ES' };
+  var LABEL = { pl: 'Język', en: 'Language', de: 'Sprache', es: 'Idioma' };
+  var RX_FOREIGN_PATH = /^\/(?:en|de|es)(?:\/|$)/;
+  var state = { lang: FOREIGN[cfg.lang] ? cfg.lang : 'pl', busy: false };
+  var dicts = { en: null, pl: null, de: null, es: null };
+  var priorityDicts = { en: [], pl: [], de: [], es: [] };
+  var pending = { en: null, pl: null, de: null, es: null };
   var routes = cfg.routes || null, reverse = null;
   var mem = new WeakMap(), attrMem = new WeakMap(), hrefMem = new WeakMap(), langMem = new WeakMap();
-  var known = { en: new Set(), pl: new Set() };
-  var negative = { en: new Set(), pl: new Set() };
+  // 1.2.0: what this script translated, so that a language change without reloading (zpl-soft.js) can start again from
+  // the Polish text a page script wrote.
+  var touched = [];
+  var known = { en: new Set(), pl: new Set(), de: new Set(), es: new Set() };
+  var negative = { en: new Set(), pl: new Set(), de: new Set(), es: new Set() };
   var reported = new Set();
   var reportNext = 0;
   var reportStorageKey = "zpl_missing_next:" + cfg.rest;
@@ -31,7 +39,7 @@
   var USD = /\$\d[\d,.]*\s+USD\b/;
 
   function setLangPreference(lang) {
-    lang = lang === 'en' ? 'en' : 'pl';
+    lang = FOREIGN[lang] ? lang : 'pl';
     var secure = location.protocol === 'https:' ? ';Secure' : '';
     try {
       document.cookie = 'zpl_lang_pref=' + lang + ';path=/;max-age=31536000;SameSite=Lax' + secure;
@@ -49,7 +57,7 @@
     return fetch(url, { credentials: 'omit' }).then(function (r) { return r.ok ? r.json() : {}; }).catch(function () { return {}; });
   }
   // Approved rewrites are read-only. A failed lookup keeps the last known dictionary.
-  var approvedRevision = { en: null, pl: null };
+  var approvedRevision = { en: null, pl: null, de: null, es: null };
   function readApproved(lang) {
     var url = cfg.rest + 'approved-page?lang=' + encodeURIComponent(lang) + '&src=' + encodeURIComponent(cfg.src);
     // The page names the revision it was rendered with: that answer never changes, so the browser keeps it.
@@ -72,11 +80,12 @@
     pending[lang] = readApproved(lang).then(function (approved) {
       var revision = approved ? approved.revision : null;
       if (dicts[lang] && (approved === null || approvedRevision[lang] === revision)) return dicts[lang];
-      var jobs = [];
-      jobs.push(cfg.page ? getJSON(cfg.data + lang + '/' + cfg.page + '.json?v=' + encodeURIComponent(cfg.v)) : Promise.resolve({}));
-      jobs.push(cfg.ov ? getJSON(cfg.rest + 'overrides?lang=' + lang + '&v=' + encodeURIComponent(cfg.ov) + (revision ? '&approved=' + revision : '')) : Promise.resolve({}));
-      jobs.push(routes ? Promise.resolve(null) : getJSON(cfg.data + 'routes.json?v=' + encodeURIComponent(cfg.v)));
-      jobs.push(getJSON(cfg.data + lang + '/dyn.json?v=' + encodeURIComponent(cfg.v)));
+      var jobs = [], ai = !!AI[lang];
+      // German and Spanish have no shipped files (no requests that could only answer 404).
+      jobs.push(cfg.page && !ai ? getJSON(cfg.data + lang + '/' + cfg.page + '.json?v=' + encodeURIComponent(cfg.v)) : Promise.resolve({}));
+      jobs.push(cfg.ov && !ai ? getJSON(cfg.rest + 'overrides?lang=' + lang + '&v=' + encodeURIComponent(cfg.ov) + (revision ? '&approved=' + revision : '')) : Promise.resolve({}));
+      jobs.push(routes || ai ? Promise.resolve(null) : getJSON(cfg.data + 'routes.json?v=' + encodeURIComponent(cfg.v)));
+      jobs.push(ai ? (cfg.dyn && cfg.lang === lang ? getJSON(cfg.dyn) : Promise.resolve({})) : getJSON(cfg.data + lang + '/dyn.json?v=' + encodeURIComponent(cfg.v)));
       return Promise.all(jobs).then(function (res) {
         var m = new Map(), page = res[0] || {}, ov = (res[1] && res[1].map) || {}, dyn = res[3] || {};
         Object.keys(dyn).forEach(function (k) { m.set(k, dyn[k]); });
@@ -90,7 +99,7 @@
         priorityDicts[lang] = [new Map(Object.keys(ov).map(function (k) { return [k, ov[k]]; })),
           new Map(approved ? Object.keys(approved.map).map(function (k) { return [k, approved.map[k]]; }) : [])];
         // Rebuild only cached English data from its retained Polish source after an approved revision changes.
-        if (lang === 'en' && dicts[lang] && approvedRevision[lang] !== revision) {
+        if (FOREIGN[lang] && dicts[lang] && approvedRevision[lang] !== revision) {
           Object.keys(blobs).forEach(function (name) { if (blobs[name].pl) delete blobs[name].en; });
         }
         dicts[lang] = m; approvedRevision[lang] = revision;
@@ -193,18 +202,20 @@
     if (!reverse && routes) { reverse = {}; Object.keys(routes).forEach(function (k) { reverse[routes[k]] = k; }); }
     return reverse || {};
   }
-  function enPath(p) {
+  /** The address in the page's language (routes of that language, else its prefix + the Polish path). */
+  function enPath(p, lang) {
+    lang = FOREIGN[lang] ? lang : (FOREIGN[state.lang] ? state.lang : 'en');
     if (routes && routes[p]) return routes[p];
     var m = /^(.*\/)page\/(\d+)\/$/.exec(p);
     if (m && routes && routes[m[1]]) return routes[m[1]] + 'page/' + m[2] + '/';
-    return '/en' + p;
+    return '/' + lang + p;
   }
   function plPath(p) {
     var r = rev();
     if (r[p]) return r[p];
     var m = /^(.*\/)page\/(\d+)\/$/.exec(p);
     if (m && r[m[1]]) return r[m[1]] + 'page/' + m[2] + '/';
-    return p === '/en/' ? '/' : p.slice(3);
+    return /^\/(?:en|de|es)\/$/.test(p) ? '/' : p.slice(3);
   }
   function localize(href, lang) {
     if (!href) return href;
@@ -218,12 +229,12 @@
     if (base && p.indexOf(base) === 0) p = p.slice(base.length) || '/';
     if (NEVER.test(p) || (/\.[a-z0-9]{2,5}$/i.test(p) && !/\.html?$/i.test(p))) return href;
     p = normPath(p);
-    var isEn = p === '/en/' || p.indexOf('/en/') === 0, np;
-    if (lang === 'en') {
+    var isEn = RX_FOREIGN_PATH.test(p), np;
+    if (FOREIGN[lang]) {
       if (isEn || excluded(p)) return href;
-      // Pages served in English carry the full route list: a page with no English version keeps its Polish address.
+      // Pages served in another language carry its full route list: a page with no version keeps its Polish address.
       if (cfg.routes && !routes[p] && !(/^(.*\/)page\/(\d+)\/$/.exec(p) && routes[/^(.*\/)page\/(\d+)\/$/.exec(p)[1]])) return href;
-      np = enPath(p);
+      np = enPath(p, lang);
     }
     else { if (!isEn) return href; np = plPath(p); }
     var out = base + np + u.search + u.hash;
@@ -302,7 +313,35 @@
       node.nodeValue = lead + t + trail;
       mem.set(node, { a: { lang: state.lang, k: seg.k, raw: raw }, b: { lang: to, k: C.norm(t), raw: node.nodeValue } });
     }
+    remember(node);
     return true;
+  }
+  function remember(x) {
+    touched.push(x);
+    if (touched.length > 4000) touched = touched.filter(function (y) { return (y.nodeType ? y : y[0]).isConnected; }).slice(-3000);
+  }
+  /** Texts, attributes and links this script translated and nothing has changed since go back to the Polish they came from. */
+  function restore() {
+    var list = touched.splice(0);
+    withoutObserver(function () {
+      list.forEach(function (x) {
+        if (!x.nodeType) {
+          if (x[2]) {
+            var h = hrefMem.get(x[0]);
+            if (h && x[0].isConnected && x[0].getAttribute(x[1]) === h.b.k) x[0].setAttribute(x[1], h.a.k);
+            return;
+          }
+          var m = (attrMem.get(x[0]) || {})[x[1]];
+          if (m && x[0].isConnected && x[0].getAttribute(x[1]) === m.b.raw) x[0].setAttribute(x[1], m.a.raw);
+          return;
+        }
+        var e = mem.get(x);
+        if (!e || !x.isConnected) return;
+        if (x.nodeType === 3) { if (x.nodeValue === e.b.raw) x.nodeValue = e.a.raw; return; }
+        var now = segAfter(x), toks = C.tokens(e.a.k);
+        if (now && now.k === e.b.k && toks) rebuild(x, toks, e.a.els);
+      });
+    });
   }
   function applyAttr(el, name, value, to) {
     var bag = attrMem.get(el) || {};
@@ -314,6 +353,7 @@
     el.setAttribute(name, t);
     bag[name] = { a: { lang: state.lang, k: value, raw: raw }, b: { lang: to, k: C.norm(t), raw: t } };
     attrMem.set(el, bag);
+    remember([el, name]);
     return true;
   }
   function inSwitch(el) { return el.closest && el.closest('[data-zpl-switch]'); }
@@ -329,7 +369,7 @@
       var back = pick(hrefMem.get(el), cur, to);
       if (back) { el.setAttribute(attr, back.k); return; }
       var n = localize(cur, to);
-      if (n !== cur) { el.setAttribute(attr, n); hrefMem.set(el, { a: { lang: state.lang, k: cur }, b: { lang: to, k: n } }); }
+      if (n !== cur) { el.setAttribute(attr, n); hrefMem.set(el, { a: { lang: state.lang, k: cur }, b: { lang: to, k: n } }); remember([el, attr, 1]); }
     });
   }
   /** Suite HTML documents in iframes (Quote Studio chooser): English copy is served via ?zpl_frame=. */
@@ -364,11 +404,11 @@
       else if (typeof src[k] !== 'object' && t[k] !== src[k]) t[k] = src[k];
     });
   }
-  function dataString(s) {
+  function dataString(s, lang) {
     if (!s || /^(?:https?:|\/|#|data:|mailto:|tel:)/i.test(s)) return s;
     var k = C.norm(s);
     if (!k || !C.human(k)) return s;
-    var t = translation(k, 'en');
+    var t = translation(k, lang || 'en');
     return t === undefined ? s : t;
   }
   function applyData(to) {
@@ -378,7 +418,7 @@
       var b = blobs[name] || (blobs[name] = {});
       if (!b[state.lang]) b[state.lang] = snap(live);
       if (!b.pl && window.zplData && window.zplData[name]) b.pl = window.zplData[name];
-      if (to === 'en' && !b.en && b.pl) b.en = mapStrings(b.pl, dataString);
+      if (FOREIGN[to] && !b[to] && b.pl) b[to] = mapStrings(b.pl, function (s) { return dataString(s, to); });
       if (b[to]) assignDeep(live, b[to]);
     });
   }
@@ -398,8 +438,8 @@
     Array.prototype.forEach.call(list, function (el) {
       if (inSwitch(el)) return;
       var v = el.getAttribute('lang') || '';
-      if (to === 'en' && /^pl\b/i.test(v)) { langMem.set(el, v); el.setAttribute('lang', 'en'); }
-      else if (to === 'pl' && /^en\b/i.test(v)) { el.setAttribute('lang', langMem.get(el) || 'pl'); }
+      if (FOREIGN[to] && /^pl\b/i.test(v)) { langMem.set(el, v); el.setAttribute('lang', HTML_LANG[to]); }
+      else if (to === 'pl' && /^(?:en|de|es)\b/i.test(v)) { el.setAttribute('lang', langMem.get(el) || 'pl'); }
     });
   }
 
@@ -447,7 +487,7 @@
   }
   function debugMark(missing, to) {
     Array.prototype.forEach.call(doc.querySelectorAll('.zpl-debug-miss'), function (el) { el.classList.remove('zpl-debug-miss'); });
-    if (to !== 'en') return;
+    if (!FOREIGN[to]) return;
     missing.forEach(function (s) {
       var el = s.type === 'multi' ? s.root : s.node.parentNode;
       if (el && el.classList) el.classList.add('zpl-debug-miss');
@@ -460,7 +500,7 @@
   }
 
   function targetUrl(to) {
-    var path = to === 'en' ? (cfg.en || enPath(cfg.src)) : cfg.src;
+    var path = FOREIGN[to] ? ((cfg.paths && cfg.paths[to]) || (to === 'en' && cfg.en) || enPath(cfg.src, to)) : cfg.src;
     return (cfg.base || '') + path + location.search + location.hash;
   }
 
@@ -546,9 +586,9 @@
   }
   // Pages served in English keep English data in page scripts (e.g. project modals): after switching to Polish,
   // new renders from that data are translated back, so the observer runs in both directions there.
-  var servedEn = cfg.lang === 'en';
+  var servedEn = !!FOREIGN[cfg.lang];
   function onMutations(records) {
-    if (applying || (state.lang !== 'en' && !servedEn)) return;
+    if (applying || (!FOREIGN[state.lang] && !servedEn)) return;
     for (var i = 0; i < records.length; i++) {
       var r = records[i];
       if (r.type === 'childList') { for (var j = 0; j < r.addedNodes.length; j++) queue.push(r.addedNodes[j]); }
@@ -598,7 +638,7 @@
       };
       // Known strings go in right away; strings that need the server follow when it answers.
       // Back to Polish only uses the local reverse dictionary (no server round-trips for Polish text).
-      if (L !== 'en') miss = [];
+      if (!FOREIGN[L]) miss = [];
       run(!miss.length);
       if (miss.length) lookup(L, miss).then(function () { run(true, true); });
     });
@@ -635,6 +675,8 @@
   }
   function updateSwitches() {
     Array.prototype.forEach.call(switches(), function (s) {
+      // 1.2.0: the menu with three or four languages belongs to zpl-switch.js.
+      if (s.classList.contains('zpl-switch--multi')) return;
       s.classList.toggle('is-en', state.lang === 'en');
       s.classList.toggle('is-pl', state.lang !== 'en');
       s.setAttribute('aria-label', state.lang === 'en' ? 'Language' : 'Język');
@@ -734,21 +776,48 @@
     // zpl-switch.js (on every page) runs the switch: the other language opens at its own address.
     if (!window.ZPLSwitch) { bindSwitches(); try { watchTheme(); } catch (e) {} }
     updateSwitches();
-    if (state.lang === 'en') {
+    if (FOREIGN[state.lang]) {
       startObserver();
       suiteNav();
       // Page scripts that ran before this one may have re-rendered parts of the page from Polish data.
-      loadDict('en').then(function () {
-        if (state.lang !== 'en') return;
+      var L0 = state.lang;
+      loadDict(L0).then(function () {
+        if (state.lang !== L0) return;
+        // 1.2.0: loaded by a language change without reloading: the whole page is read like new text (with the server
+        // asked about what the dictionary lacks), since page scripts wrote parts of it in Polish before the change.
+        if (window.ZPLSoft && window.ZPLSoft.changed) { queue.push(doc.body); flushQueue(); return; }
         var col = collect(doc.body);
-        withoutObserver(function () { applyCollected(col, 'en'); applyLinks(doc.body, 'en'); applyFrames(doc.body, 'en'); applyLangAttrs(doc.body, 'en'); applySvg(doc.body, 'en'); });
+        withoutObserver(function () { applyCollected(col, L0); applyLinks(doc.body, L0); applyFrames(doc.body, L0); applyLangAttrs(doc.body, L0); applySvg(doc.body, L0); });
       });
     }
+    // 1.2.0: the language changed without a reload (zpl-soft.js): this script follows the new language. During the change
+    // it watches nothing, so the new text is never read as text of the old language.
+    doc.addEventListener('zpl:before-change', function () { stopObserver(); });
+    doc.addEventListener('zpl:change', function (e) {
+      var d = (e && e.detail) || {};
+      if (!d.soft) return;
+      var el = doc.getElementById('zpl-config'), n = null;
+      try { n = el ? JSON.parse(el.textContent) : null; } catch (x) { n = null; }
+      if (!n) return;
+      // What this script wrote in the old language goes back to Polish first, then follows the new one.
+      restore();
+      cfg = n;
+      if (cfg.attrs && C.addAttrs) C.addAttrs(cfg.attrs);
+      routes = cfg.routes || null; reverse = null;
+      mem = new WeakMap(); attrMem = new WeakMap(); hrefMem = new WeakMap(); langMem = new WeakMap(); titleMem = null; blobs = {};
+      state.lang = FOREIGN[cfg.lang] ? cfg.lang : 'pl';
+      servedEn = !!FOREIGN[state.lang];
+      if (servedEn) {
+        startObserver();
+        var L1 = state.lang;
+        loadDict(L1).then(function () { if (state.lang === L1) { queue.push(doc.body); flushQueue(); } });
+      } else stopObserver();
+    });
     window.ZPL = {
       lang: function () { return state.lang; },
       switchTo: switchTo,
       localize: localize,
-      refresh: function () { if (state.lang === 'en') { queue.push(doc.body); flushQueue(); } },
+      refresh: function () { if (FOREIGN[state.lang]) { queue.push(doc.body); flushQueue(); } },
       /** Current translation of a text (diagnostics, Skaner EN). */
       t: function (k, lang) { lang = lang || state.lang; return dicts[lang] ? translation(C.norm(k), lang) : undefined; },
       known: function (k, lang) { return known[lang || state.lang].has(C.norm(k)); },
@@ -763,7 +832,7 @@
         });
       }
     };
-    if (cfg.debug && state.lang === 'en') loadDict('en').then(function () { applyCollected(collect(doc.body), 'en'); });
+    if (cfg.debug && FOREIGN[state.lang]) loadDict(state.lang).then(function () { applyCollected(collect(doc.body), state.lang); });
   }
   if (doc.readyState === 'loading') doc.addEventListener('DOMContentLoaded', boot); else boot();
 }());

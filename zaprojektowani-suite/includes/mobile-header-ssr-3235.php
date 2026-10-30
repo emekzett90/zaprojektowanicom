@@ -187,7 +187,7 @@ $zp_header_ssr_path_3235 = parse_url((string) ($_SERVER['REQUEST_URI'] ?? '/'), 
 if (!is_admin() && !wp_doing_ajax() && !wp_doing_cron()
     && !(defined('WP_CLI') && WP_CLI) && !(defined('XMLRPC_REQUEST') && XMLRPC_REQUEST)
     && in_array(strtoupper((string) ($_SERVER['REQUEST_METHOD'] ?? 'GET')), ['GET','HEAD'], true)
-    && in_array($zp_header_ssr_path_3235, ['/','/en','/en/'], true)) {
+    && in_array($zp_header_ssr_path_3235, ['/','/en','/en/','/de','/de/','/es','/es/'], true)) {
     ob_start('zp_header_ssr_buffer_3235');
 }
 unset($zp_header_ssr_path_3235);

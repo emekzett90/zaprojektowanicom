@@ -41,7 +41,7 @@ $zp_s95_path = parse_url((string) ($_SERVER['REQUEST_URI'] ?? '/'), PHP_URL_PATH
 if (zp_s95_enabled() && !is_admin() && !wp_doing_ajax() && !wp_doing_cron()
     && !(defined('WP_CLI') && WP_CLI) && !(defined('XMLRPC_REQUEST') && XMLRPC_REQUEST)
     && in_array(strtoupper((string) ($_SERVER['REQUEST_METHOD'] ?? 'GET')), ['GET', 'HEAD'], true)
-    && in_array($zp_s95_path, ['/', '/en', '/en/'], true)) {
+    && in_array($zp_s95_path, ['/', '/en', '/en/', '/de', '/de/', '/es', '/es/'], true)) {
   ob_start('zp_s95_buffer');
 }
 unset($zp_s95_path);

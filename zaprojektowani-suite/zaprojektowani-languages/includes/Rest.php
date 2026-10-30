@@ -33,8 +33,14 @@ final class Rest {
         ]);
     }
 
+    /** 1.2.0: direction of a lookup: pl, en (default), de or es. */
+    private static function lang($v): string {
+        $v = is_string($v) ? $v : '';
+        return Lang::valid($v) ? $v : 'en';
+    }
+
     private static function input(\WP_REST_Request $r): array {
-        $lang = $r->get_param('lang') === 'pl' ? 'pl' : 'en';
+        $lang = self::lang($r->get_param('lang'));
         $src = Router::norm_path((string) $r->get_param('src'));
         $keys = $r->get_param('keys');
         $keys = is_array($keys) ? array_slice(array_values(array_filter($keys, 'is_string')), 0, 400) : [];
@@ -89,7 +95,7 @@ final class Rest {
     }
 
     public static function overrides(\WP_REST_Request $r) {
-        $lang = $r->get_param('lang') === 'pl' ? 'pl' : 'en';
+        $lang = self::lang($r->get_param('lang'));
         $res = new \WP_REST_Response(['map' => (object) Dict::overrides($lang)]);
         $res->header('Cache-Control', 'public, max-age=300');
         return $res;
@@ -104,7 +110,7 @@ final class Rest {
         $origin = (string) ($_SERVER['HTTP_ORIGIN'] ?? '');
         $same = $origin === '' || strtolower((string) wp_parse_url($origin, PHP_URL_HOST)) === strtolower((string) wp_parse_url(home_url('/'), PHP_URL_HOST));
         $lang = (string) $r->get_param('lang');
-        $ok = $same && in_array($lang, ['pl', 'en'], true);
+        $ok = $same && Lang::valid($lang);
         if ($ok) { Geo::set_preference_cookie($lang); }
         $res = new \WP_REST_Response(['ok' => $ok], $ok ? 200 : 400);
         $res->header('Cache-Control', 'private, no-store, max-age=0');

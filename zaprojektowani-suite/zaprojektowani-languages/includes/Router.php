@@ -3,7 +3,7 @@ namespace ZPL;
 
 if (!defined('ABSPATH') && !defined('ZPL_CLI')) { exit; }
 
-/** /en/ routing: translated slugs <-> Polish source paths. */
+/** /en/, /de/ and /es/ routing: translated slugs <-> Polish source paths. */
 final class Router {
     public static $lang = 'pl';
     public static $source = '/';
@@ -14,6 +14,10 @@ final class Router {
     private static $reverse = null;
     private static $legacy = null;
     private static $home = null;
+    /** 1.2.0: German and Spanish routes, reverse routes and old addresses (from Tłumacz AI), per language. */
+    private static $lroutes = [];
+    private static $lreverse = [];
+    private static $llegacy = [];
 
     const DEFAULT_EXCLUDE = ['/oferty/', '/briefy/'];
     /**
@@ -72,8 +76,9 @@ final class Router {
         return $d;
     }
 
-    /** Polish source path => English path (with /en prefix). */
-    public static function routes(): array {
+    /** Polish source path => English path (with /en prefix); with $lang, that language's path (/de/…, /es/…). */
+    public static function routes(string $lang = 'en'): array {
+        if ($lang !== 'en') { return self::lang_routes($lang); }
         if (self::$routes === null) {
             $r = (array) (self::data()['routes'] ?? []);
             $custom = get_option('zpl_routes', []);
@@ -83,13 +88,48 @@ final class Router {
         return self::$routes;
     }
 
-    public static function reverse(): array {
+    /**
+     * 1.2.0: German or Spanish routes (filter zpl_lang_routes, Tłumacz AI): Polish path => /de/… or /es/…. Only paths
+     * under the language's own prefix count; the home page is always /de/ (/es/). English filters are never asked.
+     */
+    private static function lang_routes(string $lang): array {
+        if (!Lang::ai($lang)) { return []; }
+        if (!isset(self::$lroutes[$lang])) {
+            $pre = '/' . $lang . '/';
+            $r = ['/' => $pre];
+            $extra = function_exists('apply_filters') ? apply_filters('zpl_lang_routes', [], $lang) : [];
+            foreach (is_array($extra) ? $extra : [] as $pl => $tr) {
+                if (is_string($pl) && is_string($tr) && $pl !== '' && $pl[0] === '/' && $pl !== '/' && strpos($tr, $pre) === 0 && $tr !== $pre) { $r[$pl] = $tr; }
+            }
+            self::$lroutes[$lang] = $r;
+        }
+        return self::$lroutes[$lang];
+    }
+
+    public static function reverse(string $lang = 'en'): array {
+        if ($lang !== 'en') {
+            if (!isset(self::$lreverse[$lang])) { self::$lreverse[$lang] = array_flip(self::lang_routes($lang)); }
+            return self::$lreverse[$lang];
+        }
         if (self::$reverse === null) { self::$reverse = array_flip(self::routes()); }
         return self::$reverse;
     }
 
     /** Old English URLs (previous translator, or an English address Tłumacz EN changed) => current English URL. */
-    public static function legacy(): array {
+    public static function legacy(string $lang = 'en'): array {
+        if ($lang !== 'en') {
+            if (!Lang::ai($lang)) { return []; }
+            if (!isset(self::$llegacy[$lang])) {
+                $pre = '/' . $lang . '/';
+                $l = [];
+                $extra = function_exists('apply_filters') ? apply_filters('zpl_lang_legacy', [], $lang) : [];
+                foreach (is_array($extra) ? $extra : [] as $old => $new) {
+                    if (is_string($old) && is_string($new) && $old !== $new && strpos($old, $pre) === 0 && strpos($new, $pre) === 0) { $l[$old] = $new; }
+                }
+                self::$llegacy[$lang] = $l;
+            }
+            return self::$llegacy[$lang];
+        }
         if (self::$legacy === null) {
             $l = (array) (self::data()['legacy'] ?? []);
             $extra = function_exists('apply_filters') ? apply_filters('zpl_legacy_routes', []) : [];
@@ -101,7 +141,11 @@ final class Router {
         return self::$legacy;
     }
 
-    public static function reset(): void { self::$routes = self::$reverse = self::$legacy = null; }
+    public static function reset(): void {
+        self::$routes = self::$reverse = self::$legacy = null;
+        self::$lroutes = self::$lreverse = self::$llegacy = [];
+        Lang::reset();
+    }
 
     /** Site sub-directory ("" for root installs). */
     public static function base(): string {
@@ -152,9 +196,11 @@ final class Router {
             }
         }
         $path = self::norm_path($path);
-        if ($path !== '/en/' && strpos($path, '/en/') !== 0) {
+        $l = Lang::of_path($path);
+        if ($l === 'pl') {
             return ['pl', $path, isset(self::routes()[$path]) || self::paged_en($path) !== null, null];
         }
+        if ($l !== 'en') { return self::resolve_ai($l, $path); }
         $rev = self::reverse();
         if (isset($rev[$path])) { return ['en', $rev[$path], true, null]; }
         if (preg_match('~^(.*/)page/(\d+)/$~', $path, $m) && isset($rev[$m[1]])) {
@@ -171,6 +217,39 @@ final class Router {
         $paged = self::paged_en($pl);
         if ($paged !== null && $paged !== $path) { return ['en', '', false, $paged]; }
         return ['en', $pl, false, null];
+    }
+
+    /**
+     * 1.2.0: a German or Spanish address. Its own route (mapped), an old address of it (301), the Polish address with
+     * the prefix for a page that has a translated address (301 to it), else the Polish page under the prefix (not
+     * mapped: noindex, no hreflang, until Tłumacz AI gives it its own address).
+     */
+    private static function resolve_ai(string $l, string $path): array {
+        $rev = self::reverse($l);
+        if (isset($rev[$path])) { return [$l, $rev[$path], true, null]; }
+        if (preg_match('~^(.*/)page/(\d+)/$~', $path, $m) && isset($rev[$m[1]])) {
+            return [$l, $rev[$m[1]] . 'page/' . $m[2] . '/', true, null];
+        }
+        $legacy = self::legacy($l);
+        if (isset($legacy[$path])) { return [$l, '', false, $legacy[$path]]; }
+        if (preg_match('~^(.*/)page/(\d+)/$~', $path, $m) && isset($legacy[$m[1]])) {
+            return [$l, '', false, $legacy[$m[1]] . 'page/' . $m[2] . '/'];
+        }
+        $pl = substr($path, 3);
+        $routes = self::routes($l);
+        if (isset($routes[$pl]) && $routes[$pl] !== $path) { return [$l, '', false, $routes[$pl]]; }
+        if (isset(self::ALIASES[$pl]) && !isset($routes[$pl]) && isset($routes[self::ALIASES[$pl]])) { return [$l, '', false, $routes[self::ALIASES[$pl]]]; }
+        $paged = self::paged($pl, $l);
+        if ($paged !== null && $paged !== $path) { return [$l, '', false, $paged]; }
+        return [$l, $pl, false, null];
+    }
+
+    /** 1.2.0: "/x/page/2/" of a page with an address in $lang => that address + page/2/. */
+    private static function paged(string $pl, string $lang): ?string {
+        if ($lang === 'en') { return self::paged_en($pl); }
+        $r = self::routes($lang);
+        if (preg_match('~^(.*/)page/(\d+)/$~', $pl, $m) && isset($r[$m[1]])) { return $r[$m[1]] . 'page/' . $m[2] . '/'; }
+        return null;
     }
 
     /**
@@ -199,11 +278,12 @@ final class Router {
         return null;
     }
 
-    /** The Polish path has an English address of its own (route, alias or paged route). */
-    public static function has_route(string $pl): bool {
+    /** The Polish path has an English (or $lang) address of its own (route, alias or paged route). */
+    public static function has_route(string $pl, string $lang = 'en'): bool {
         $pl = self::norm_path($pl);
-        $r = self::routes();
-        return isset($r[$pl]) || (isset(self::ALIASES[$pl]) && isset($r[self::ALIASES[$pl]])) || self::paged_en($pl) !== null;
+        if ($lang === 'pl') { return true; }
+        $r = self::routes($lang);
+        return isset($r[$pl]) || (isset(self::ALIASES[$pl]) && isset($r[self::ALIASES[$pl]])) || self::paged($pl, $lang) !== null;
     }
 
     /**
@@ -244,6 +324,17 @@ final class Router {
         return $paged ?? ('/en' . $pl);
     }
 
+    /** 1.2.0: the address of a Polish source path in $lang (fallback: the prefix + the Polish path). */
+    public static function path_for(string $pl, string $lang): string {
+        $pl = self::norm_path($pl);
+        if ($lang === 'pl' || !Lang::foreign($lang)) { return $pl; }
+        if ($lang === 'en') { return self::en_path($pl); }
+        $r = self::routes($lang);
+        if (isset($r[$pl])) { return $r[$pl]; }
+        if (isset(self::ALIASES[$pl]) && isset($r[self::ALIASES[$pl]])) { return $r[self::ALIASES[$pl]]; }
+        return self::paged($pl, $lang) ?? ('/' . $lang . $pl);
+    }
+
     /** Localize a URL/href for $lang. Leaves foreign, asset, admin and excluded URLs alone. */
     public static function url(string $url, string $lang = 'en'): string {
         $raw = trim($url);
@@ -266,14 +357,15 @@ final class Router {
         $rel = self::rel($path);
         if (self::never($rel) || preg_match('~\.[a-z0-9]{2,5}$~i', $rel) && !preg_match('~\.html?$~i', $rel)) { return $url; }
         $rel = self::norm_path($rel);
-        if ($lang === 'en') {
-            if ($rel === '/en/' || strpos($rel, '/en/') === 0) { return $url; }
+        if (Lang::foreign($lang)) {
+            // Already an address of some language (the content links to /en/ on purpose, or the menu was localized).
+            if (Lang::of_path($rel) !== 'pl') { return $url; }
             if (self::is_excluded($rel)) { return $url; }
-            // No English version yet: the link keeps the Polish address instead of an /en/ page in Polish.
-            if (!self::has_route($rel)) { return $url; }
-            $new = self::en_path($rel);
+            // No version in this language yet: the link keeps the Polish address instead of a Polish page under /en/.
+            if (!self::has_route($rel, $lang)) { return $url; }
+            $new = self::path_for($rel, $lang);
         } else {
-            if ($rel !== '/en/' && strpos($rel, '/en/') !== 0) { return $url; }
+            if (Lang::of_path($rel) === 'pl') { return $url; }
             $r = self::resolve($rel);
             $new = $r[3] !== null ? self::resolve($r[3])[1] : $r[1];
             if ($new === '') { return $url; }

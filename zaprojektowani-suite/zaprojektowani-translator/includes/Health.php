@@ -6,6 +6,7 @@ if (!defined('ABSPATH')) { exit; }
 /**
  * What the ZP Suite panel shows about Tłumacz EN: the page to open, a short summary and the checks on
  * the "Stan strony" screen. Everything here reads small options and counts; nothing calls OpenAI.
+ * 2.1.0: one more line for each of the German and Spanish versions.
  */
 final class Health {
     public static function boot(): void {
@@ -101,6 +102,32 @@ final class Health {
         $missing = count(Admin::missing_pages());
         if ($missing) {
             $add('zpte-missing', 'Wpisy bez wersji EN', Import::done() ? 'warn' : 'info', $missing . ' ' . Admin::pages_word($missing) . ' bez wersji angielskiej: goście z zagranicy widzą je po polsku. Tłumacz zajmie się nimi przy najbliższym przebiegu.');
+        }
+        foreach (Lang::AI as $l) {
+            Lang::with($l, static function () use ($add) {
+                $id = 'zpte-' . Lang::code();
+                $title = 'Wersja ' . Lang::CODE[Lang::code()];
+                if ((int) Settings::get('on') !== 1) {
+                    $add($id, $title, 'info', 'Wyłączona w ustawieniach tłumacza.', Admin::url(['tab' => 'settings']));
+                    return;
+                }
+                if (!Store::ready()) {
+                    $add($id, $title, 'info', 'Tłumaczenie ruszy przy najbliższym przebiegu.', Admin::url());
+                    return;
+                }
+                if ($a = Log::current_alert()) {
+                    $add($id, $title, 'bad', 'Wstrzymana: ' . (string) $a['m'], Admin::url(['tab' => 'settings']));
+                    return;
+                }
+                $done = Index::count();
+                $queued = Store::queued_count();
+                $problems = Store::count_pages(['attention' => true, 'status' => ['new', 'done', 'partial', 'error']]);
+                $public = \ZPL\Lang::is_public(Lang::code());
+                $text = 'Gotowych stron: ' . $done . '.' . ($queued ? ' W kolejce: ' . $queued . ' ' . Admin::pages_word($queued) . '.' : '')
+                    . ($problems ? ' Do poprawy: ' . $problems . '.' : '')
+                    . ($public ? ' Widoczna dla gości i Google.' : ' Jeszcze niewidoczna: pokaże się po pierwszym pełnym tłumaczeniu.');
+                $add($id, $title, $problems ? 'warn' : ($public ? 'ok' : 'info'), $text, Admin::url($problems ? ['tab' => 'pages', 'f' => 'attention'] : []));
+            });
         }
         return $checks;
     }
