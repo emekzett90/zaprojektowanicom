@@ -1,0 +1,168 @@
+/*
+ * ZP Suite 3.2.94 — logotypy klientów w paskach (includes/wyglad-3294/logos.php: model, tabela logo, ładowanie).
+ *
+ * Wymiary logo liczy model w PHP (równe pole z poprawką na gęstość tuszu) i podaje je jako liczby w „px modelu”
+ * (--zp-l94-lw / --zp-l94-lh) na <img> w paskach; dla znanych logo dochodzi --zp-l94-w / --zp-l94-h = liczba × --zp-lu
+ * i --zp-l94-max: none. Tu każdy pasek ustawia swoją jednostkę --zp-lu (px strony na px modelu) i układ:
+ *  - pudełko logo ma dokładnie wymiary logo (box znany przed załadowaniem pliku, bez przesunięć),
+ *  - grupa / tor ma długość z 3.2.93 (liczba logo × (dawne pudełko + dawny odstęp)), a logo stoją w równych odstępach
+ *    (space-around: pół odstępu na brzegach, więc styk dwóch grup to też jeden odstęp) — prędkość i szew pętli zostają;
+ *  - w siatce „Zaufali nam” (1b) komórki zostają, zmienia się tylko pudełko logo w komórce;
+ *  - logo spoza tabeli modelu (var() bez wartości) dostaje dawne pudełko z 3.2.93.
+ * Kolory, filtry, krycie, hover i animacje zostają z arkuszy szablonów.
+ */
+
+/* 1. Hero szablonu „Strony internetowe” (11 logo w grupie, dwie identyczne grupy, 34 s / 28 s na pętlę). */
+html body #zp-strony-internetowe-katowice .hero-client-logos {
+  --zp-lu: 1px;
+  --zp-l94-n: 11;
+  --zp-l94-slot: clamp(86px, 8vw, 142px);
+  --zp-l94-gap: clamp(28px, 3.2vw, 58px);
+  --zp-l94-boxh: 42px;
+  /* wiersz: najwyższe logo modelu (56) z powiększeniem na hover (× 1.1) — pasek ma overflow: hidden; środek bez zmian */
+  --zp-l94-rowh: 64px;
+}
+html body #zp-strony-internetowe-katowice .hero-client-logos .hero-client-logos__group {
+  width: calc(var(--zp-l94-n) * (var(--zp-l94-slot) + var(--zp-l94-gap))) !important;
+  gap: 0 !important;
+  padding-right: 0 !important;
+  justify-content: space-around !important;
+}
+html body #zp-strony-internetowe-katowice .hero-client-logos .hero-client-logos__group > span,
+html body #zp-strony-internetowe-katowice .hero-client-logos .hero-client-logos__group > span:nth-child(n) {
+  flex: 0 0 auto !important;
+  width: auto !important;
+  height: var(--zp-l94-rowh) !important;
+}
+html body #zp-strony-internetowe-katowice .hero-client-logos .hero-client-logos__group img {
+  width: var(--zp-l94-w, auto) !important;
+  height: var(--zp-l94-h, auto) !important;
+  max-width: var(--zp-l94-max, var(--zp-l94-slot)) !important;
+  max-height: var(--zp-l94-max, var(--zp-l94-boxh)) !important;
+}
+@media (max-width: 1100px) {
+  html body #zp-strony-internetowe-katowice .hero-client-logos { --zp-lu: .9px; }
+}
+@media (max-width: 680px) {
+  html body #zp-strony-internetowe-katowice .hero-client-logos {
+    --zp-lu: .68px;
+    --zp-l94-slot: 90px;
+    --zp-l94-gap: 24px;
+    --zp-l94-boxh: 27px;
+    /* najwyższe logo: 56 × .68 = 38 px — wiersz musi je zmieścić, inaczej wysokie logo zjeżdża o 2 px w dół */
+    --zp-l94-rowh: 40px;
+  }
+}
+
+/* 1b. Ten sam szablon niżej: siatka „Zaufali nam” (.client-trust__logos; 6 kolumn, od 1100 px 4, od 820 px dwa rzędy
+ *     przewijane palcem). Komórki mają stałą wysokość (112 / 92 px), więc nic się nie przesuwa. Ręczne poprawki z szablonu
+ *     (--wide / --compact, scale .9 / .85) zastępuje model — tylko dla znanych logo; logo spoza tabeli dostaje dawne
+ *     pudełko (fallbacki niżej). Jednostka: najwyższe logo modelu (56) = dawna wysokość pudełka (66 px / 52 px). */
+html body #zp-strony-internetowe-katowice .client-trust__logos {
+  --zp-lu: 1.18px;
+}
+html body #zp-strony-internetowe-katowice .client-trust__logos .client-logo img {
+  width: var(--zp-l94-w, var(--zp-l94-ctw, min(150px, 88%)));
+  height: var(--zp-l94-h, var(--zp-l94-cth, 66px));
+  max-width: 100%;
+  scale: var(--zp-l94-max, var(--zp-l94-cts, none));
+}
+html body #zp-strony-internetowe-katowice .client-trust__logos .client-logo--wide img { --zp-l94-ctw: min(190px, 94%); }
+html body #zp-strony-internetowe-katowice .client-trust__logos .client-logo--compact img { --zp-l94-ctw: min(118px, 74%); }
+html body #zp-strony-internetowe-katowice .client-trust__logos .client-logo--siemianowski img { --zp-l94-cts: .9; }
+html body #zp-strony-internetowe-katowice .client-trust__logos .client-logo--raxo img,
+html body #zp-strony-internetowe-katowice .client-trust__logos .client-logo--gravia img { --zp-l94-cts: .85; }
+@media (max-width: 820px) {
+  html body #zp-strony-internetowe-katowice .client-trust__logos { --zp-lu: .92px; }
+  html body #zp-strony-internetowe-katowice .client-trust__logos .client-logo img { --zp-l94-cth: 52px; }
+}
+
+/* 2. Hero szablonu „Logo i branding” (8 logo w grupie, 26 s na pętlę). */
+html body #zp-logo-branding-katowice .logo-marquee {
+  --zp-lu: 1px;
+  --zp-l94-n: 8;
+  --zp-l94-slot: 130px;
+  --zp-l94-gap: 58px;
+  --zp-l94-boxh: 36px;
+  /* najwyższe logo (56) × hover 1.04 mieści się w wierszu; .logo-marquee ma overflow: hidden */
+  --zp-l94-rowh: 60px;
+}
+html body #zp-logo-branding-katowice .logo-marquee .logo-group {
+  width: calc(var(--zp-l94-n) * (var(--zp-l94-slot) + var(--zp-l94-gap))) !important;
+  gap: 0 !important;
+  padding-right: 0 !important;
+  justify-content: space-around !important;
+}
+html body #zp-logo-branding-katowice .logo-marquee .logo-group .logo-item {
+  flex: 0 0 auto !important;
+  width: auto !important;
+  height: var(--zp-l94-rowh) !important;
+}
+html body #zp-logo-branding-katowice .logo-marquee .logo-group .logo-item img {
+  width: var(--zp-l94-w, var(--zp-l94-slot)) !important;
+  height: var(--zp-l94-h, var(--zp-l94-boxh)) !important;
+}
+@media (max-width: 1100px) {
+  html body #zp-logo-branding-katowice .logo-marquee { --zp-lu: .9px; }
+}
+@media (max-width: 680px) {
+  html body #zp-logo-branding-katowice .logo-marquee {
+    --zp-lu: .68px;
+    --zp-l94-slot: 105px;
+    --zp-l94-boxh: 28px;
+    --zp-l94-rowh: 42px;
+  }
+}
+
+/* 3. Strona główna, „Zaufali nam”: dwa przewijane rzędy do 1500 px (powyżej jest układ przypięty, bez zmian).
+ *    Rząd = 4 powtórzenia logotypów z CMS; liczby rzędu (--zp-l94-n, --zp-l94-npol, --zp-l94-s390, --zp-l94-s760)
+ *    podaje PHP. Bez nich tor zostaje po staremu (fallbacki var()). */
+@media (max-width: 1500px) {
+  html body #zpTrustPinned .zpTrustMobileCodepen .logos__track {
+    /* jednostka idzie za dawnym max-height (clamp(44px, 3.8vw, 58px)) / 48: najwyższe logo jest o ~1/6 wyższe niż dawne pudełko */
+    --zp-lu: clamp(.92px, .079vw, 1.2px);
+    --zp-l94-period: calc(var(--zp-l94-n) * (clamp(150px, 11.5vw, 188px) + clamp(42px, 3.8vw, 60px)) + var(--zp-l94-npol) * (clamp(184px, 14vw, 230px) - clamp(150px, 11.5vw, 188px)));
+    --zp-l94-trackw: calc(4 * var(--zp-l94-period));
+    --zp-l94-g0: calc(var(--zp-l94-n) * 0px);
+    width: var(--zp-l94-trackw, max-content) !important;
+    min-width: 0 !important;
+    gap: var(--zp-l94-g0, clamp(42px, 3.8vw, 60px)) !important;
+    justify-content: space-around !important;
+  }
+  html body #zpTrustPinned .zpTrustMobileCodepen .logos__item,
+  html body #zpTrustPinned .zpTrustMobileCodepen .logos__item[data-logo-name] {
+    width: auto !important;
+  }
+  html body #zpTrustPinned .zpTrustMobileCodepen .logos__item img,
+  html body #zpTrustPinned .zpTrustMobileCodepen .logos__item[data-logo-name] img {
+    width: var(--zp-l94-w, auto) !important;
+    height: var(--zp-l94-h, auto) !important;
+    max-width: var(--zp-l94-max, clamp(150px, 11.5vw, 188px)) !important;
+    max-height: var(--zp-l94-max, clamp(44px, 3.8vw, 58px)) !important;
+    transform: none !important;
+  }
+}
+@media (max-width: 760px) {
+  html body #zpTrustPinned .zpTrustMobileCodepen .logos__track {
+    --zp-lu: .95px;
+    --zp-l94-period: calc(var(--zp-l94-s760) + var(--zp-l94-n) * 34px);
+    gap: var(--zp-l94-g0, 34px) !important;
+  }
+  html body #zpTrustPinned .zpTrustMobileCodepen .logos__item img,
+  html body #zpTrustPinned .zpTrustMobileCodepen .logos__item[data-logo-name] img {
+    max-width: var(--zp-l94-max, 126px) !important;
+    max-height: var(--zp-l94-max, 38px) !important;
+  }
+}
+@media (max-width: 390px) {
+  html body #zpTrustPinned .zpTrustMobileCodepen .logos__track {
+    --zp-lu: .87px;
+    --zp-l94-period: calc(var(--zp-l94-s390) + var(--zp-l94-n) * 28px);
+    gap: var(--zp-l94-g0, 28px) !important;
+  }
+  html body #zpTrustPinned .zpTrustMobileCodepen .logos__item img,
+  html body #zpTrustPinned .zpTrustMobileCodepen .logos__item[data-logo-name] img {
+    max-width: var(--zp-l94-max, 116px) !important;
+    max-height: var(--zp-l94-max, 34px) !important;
+  }
+}

@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Zaprojektowani Suite
  * Description: Zaprojektowani Suite z wersją angielską strony (PL/EN, adresy /en/, przełącznik języka), automatycznymi naprawami SEO, nagłówków, zasobów i paginacji na podstawie audytu z 13.09.2026.
- * Version: 3.2.93
+ * Version: 3.2.94
  * Requires at least: 6.5
  * Requires PHP: 8.0
  * Author: Zaprojektowani.com
@@ -16,7 +16,7 @@ if (defined('ZP_SUITE_VERSION')) {
   return;
 }
 
-define('ZP_SUITE_VERSION', '3.2.93');
+define('ZP_SUITE_VERSION', '3.2.94');
 define('ZP_SUITE_PATH', plugin_dir_path(__FILE__));
 define('ZP_SUITE_URL', plugin_dir_url(__FILE__));
 
@@ -40,6 +40,8 @@ require_once ZP_SUITE_PATH . 'includes/seo-audit-20261013.php';
 require_once ZP_SUITE_PATH . 'includes/ahrefs-20261022.php';
 // 3.2.93: wygląd podstron (breadcrumbs, watermarki, megamenu, Wiedza, case studies, O nas) — includes/wyglad-3293/.
 require_once ZP_SUITE_PATH . 'includes/wyglad-3293/loader.php';
+// 3.2.94: poprawki po 3.2.93 (Wiedza „W centrum uwagi”, ikonki kategorii, odstęp na telefonie, hero Tworzenie stron, logotypy) — includes/wyglad-3294/.
+require_once ZP_SUITE_PATH . 'includes/wyglad-3294/loader.php';
 
 // 3.2.35: one server-first header; outer response adapter must load before speed/translation.
 require_once ZP_SUITE_PATH . 'includes/mobile-header-ssr-3235.php';

@@ -1,0 +1,159 @@
+/*
+ * ZP Suite 3.2.94 — hero „Tworzenie stron internetowych”: /tworzenie-stron-internetowych/ i /en/website-development/
+ * (to ta sama strona 5372; PL i EN różni tylko lang na <html>). Ładowane tylko tam (includes/wyglad-3294/tworzenie-hero.php).
+ *
+ * Mat 29.10.2026: „obraz wyżej do góry, bo rozciągnął strasznie hero … daj wyżej obraz pod header, ale żeby nie
+ * wchodził na header, i skróć troszkę hero jak reszta stron”.
+ *
+ * Stan 3.2.93 (desktop ≥ 1101 px): kompozycja z laptopem (.hero-build = zdjęcie + plakietki) jest zakotwiczona do DOŁU
+ * hero (service-hero-global: bottom calc(3% + 322px), height calc(98% - 314px)), przesunięta transformacjami
+ * (translate3d(200px|0, 150px), industries.css: scale .86 / .84, front-fixes-290: translate X), a hero ma
+ * max(1300px, 100svh + 320px) — laptop zaczyna się 190–250 px pod headerem i rozpycha hero w dół.
+ *
+ * Tu, tylko desktop (≥ 1101 px; tablet i telefon bez zmian):
+ *  1. Pudełko .hero-build ma dokładnie te same wymiary i to samo położenie wyjściowe co w 3.2.93 (top i height z tej
+ *     samej formuły, liczonej od dawnej wysokości hero --zp94-h0), więc plakietki — pozycjonowane w procentach pudełka —
+ *     siedzą na laptopie tak jak wcześniej, a skala, punkt odniesienia skali i przesunięcia z 3.2.93 zostają.
+ *  2. Całość jedzie w górę o --zp94-lift: najwyższy widoczny piksel (róg ekranu laptopa, a gdy wychodzi poza okno —
+ *     miejsce, gdzie górna krawędź ekranu przecina prawą krawędź okna; przy 1101–1360 px i bardzo wysokich oknach
+ *     plakietka PageSpeed) staje 24 px pod dolną krawędzią headera (88 px). Plakietka: 28 px w spoczynku, ~16 px w
+ *     szczycie animacji dashboard-float (−11 px, obrót .6°), czyli nigdy na headerze.
+ *  3. Hero skraca się o ten sam --zp94-lift (1440×900: 1300 → ok. 1100 px): kamień pod laptopem ma do paska logotypów
+ *     (.hero-rail) ten sam odstęp co w 3.2.93, a pasek i „Przewiń” jadą w górę razem z dolną krawędzią hero.
+ *  4. Tylko PL: pierwsza linia H1 („Tworzenie i projektowanie”; H1 ma 11.5em z industries.css, tekst linii ≈ 10.86em)
+ *     po podniesieniu wjechałaby na ramkę ekranu laptopa (1366–1600 px i 1761–1850 px). Wtedy kompozycja przesuwa się
+ *     w prawo tylko o tyle, żeby między ostatnią literą a laptopem zostało 28 px; tam, gdzie miejsca jest dość
+ *     (np. 1747 px), przesunięcie jest 0. EN ma krótszą pierwszą linię — bez przesunięcia, poza 1101–1240 px, gdzie
+ *     klawiatura laptopa zeszłaby na dłuższe przyciski EN (to samo przesunięcie, liczone od przycisków).
+ *     Przesunięcie idzie przez `right` pudełka (procenty liczą się tam od szerokości hero, czyli bez paska przewijania —
+ *     dokładnie także przy klasycznym pasku w Windows); kopia w px (--zp94-nudge, ze 100vw) służy tylko do pionu.
+ *
+ * Współczynniki niżej to geometria 3.2.93 rozpisana dla każdego zakresu reguł (zmierzona w przeglądarce i sprawdzona
+ * co do ~0,5 px na 33 rozdzielczościach 1101–2560 px):
+ *   rp  = 1 + right z 3.2.93 (−15% → 1.15, −13% → 1.13, −11% → 1.11),
+ *   xr  = reszta lewej krawędzi zdjęcia (translate X z 3.2.93, translate3d X, skala, szerokość pudełka),
+ *         czyli lewa krawędź zdjęcia x0 = rp × szerokość hero + xr,
+ *   y0  = górna krawędź zdjęcia (wiersz 0 pliku = róg ekranu laptopa),
+ *   b0  = górna krawędź plakietki PageSpeed w spoczynku,
+ *   k360 / k133 = 360 / 133.658 px pliku (lewa krawędź ekranu / wysokość skosu górnej krawędzi) w px strony,
+ *   .11431 = nachylenie górnej krawędzi ekranu w pliku (px w dół na px w lewo).
+ * Domyślne wartości (pierwsza reguła) to zakres 1361–1440, więc żadna zmienna nie zostaje pusta; zakresy niżej są
+ * ciągłe (ułamkowe szerokości przy powiększeniu przeglądarki też trafiają w regułę), a dwie szczeliny, w których
+ * 3.2.93 zachowuje się inaczej (1440–1441: right −13%; 1760–1761: bez translate3d), mają własne wartości.
+ */
+
+@media (min-width: 1101px) {
+  html:root body.page-id-5372 #zp-strony-internetowe-katowice #start.hero[data-zp-service-visual="websites"] {
+    --zp94-vh: 100vh;
+    /* wysokość hero z 3.2.93 (service-hero-global: min-height 1300px, height max(100svh + 320px, 1220px)) */
+    --zp94-h0: max(1300px, calc(var(--zp94-vh) + 320px));
+    --zp94-wb: min(1248px, 79vw);
+    --zp94-tx: clamp(24px, 3vw, 64px);
+    --zp94-fit: var(--zp-hero-image-fit-y, 24px);
+    /* 1361–1440: scale .86 / origin 130% 110%, translate3d(200px,150px), right −15%, plakietka top 15%,
+       wrap 100% − 96px, H1 clamp(58px, 5.55vw, 92px) */
+    --zp94-rp: 1.15;
+    --zp94-xr: calc(var(--zp94-tx) + 172px - 1.12846 * var(--zp94-wb));
+    --zp94-y0: calc(.975292 * var(--zp94-h0) - 194.6956px + .86 * var(--zp94-fit) - .701294 * var(--zp94-wb));
+    --zp94-b0: calc(.26734 * var(--zp94-h0) + 26.258px);
+    --zp94-k360: calc(.255274 * var(--zp94-wb));
+    --zp94-k133: calc(.094776 * var(--zp94-wb));
+    --zp94-h1: calc(10.86 * clamp(58px, 5.55vw, 92px));
+    --zp94-cl: max(48px, calc((100vw - 1700px) / 2));
+    --zp94-clp: max(48px, calc((100% - 1700px) / 2));
+    /* pochodne */
+    --zp94-x0: calc(var(--zp94-rp) * 100vw + var(--zp94-xr));
+    --zp94-nudge: 0px;
+    --zp94-nudge-r: 0px;
+    --zp94-off: max(0px, calc(var(--zp94-k133) - .11431 * (100vw - var(--zp94-x0) - var(--zp94-nudge))));
+    --zp94-lift: max(0px, min(calc(var(--zp94-y0) + var(--zp94-off) - 112px), calc(var(--zp94-b0) - 116px)));
+    min-height: calc(var(--zp94-h0) - var(--zp94-lift)) !important;
+    height: calc(var(--zp94-h0) - var(--zp94-lift)) !important;
+  }
+  /* PL: przesunięcie w prawo tylko, gdy pierwsza linia H1 + 28 px sięga lewej krawędzi ekranu laptopa
+     (--zp94-nudge-r trafia do `right`, gdzie 100% = szerokość hero) */
+  html:root:lang(pl) body.page-id-5372 #zp-strony-internetowe-katowice #start.hero[data-zp-service-visual="websites"] {
+    --zp94-nudge: max(0px, calc(var(--zp94-cl) + var(--zp94-h1) + 28px - var(--zp94-x0) - var(--zp94-k360)));
+    --zp94-nudge-r: max(0px, calc(var(--zp94-clp) + var(--zp94-h1) + 28px - var(--zp94-rp) * 100% - var(--zp94-xr) - var(--zp94-k360)));
+  }
+  html:root body.page-id-5372 #zp-strony-internetowe-katowice #start.hero[data-zp-service-visual="websites"] > .hero-inner {
+    /* ta sama wysokość treści co w 3.2.93 (padding-bottom 428px zmniejszony o to samo, o co hero) */
+    padding-bottom: max(0px, calc(428px - var(--zp94-lift))) !important;
+  }
+  html:root body.page-id-5372 #zp-strony-internetowe-katowice #start.hero[data-zp-service-visual="websites"] .hero-build {
+    top: calc(-.01 * var(--zp94-h0) - 8px - var(--zp94-lift)) !important;
+    bottom: auto !important;
+    right: calc(100% - var(--zp94-rp) * 100% - var(--zp94-nudge-r)) !important;
+    height: calc(.98 * var(--zp94-h0) - 314px) !important;
+  }
+}
+@supports (height: 100svh) {
+  @media (min-width: 1101px) {
+    html:root body.page-id-5372 #zp-strony-internetowe-katowice #start.hero[data-zp-service-visual="websites"] { --zp94-vh: 100svh; }
+  }
+}
+
+/* 1101–1360: jak domyślnie, ale szerokość min(1120px, 79vw), plakietka top 12%, wrap 100% − 56px, H1 clamp(54px, 5.5vw, 78px) */
+@media (min-width: 1101px) and (max-width: 1360px) {
+  html:root body.page-id-5372 #zp-strony-internetowe-katowice #start.hero[data-zp-service-visual="websites"] {
+    --zp94-wb: min(1120px, 79vw);
+    --zp94-b0: calc(.242056 * var(--zp94-h0) + 34.3592px);
+    --zp94-h1: calc(10.86 * clamp(54px, 5.5vw, 78px));
+    --zp94-cl: 28px;
+    --zp94-clp: 28px;
+  }
+  /* EN: tu kompozycję wyznacza plakietka PageSpeed (laptop jest niżej), więc lewy koniec klawiatury wypada na wysokości
+     przycisków; dłuższe przyciski EN („Choose your website scope”, „See the portfolio”) kończą się ok. 496 px od lewej
+     krawędzi okna (PL ok. 453 px — tam odstęp i tak jest ≥ 40 px). Klawiatura zaczyna się co najmniej 20 px za nimi. */
+  html:root:lang(en) body.page-id-5372 #zp-strony-internetowe-katowice #start.hero[data-zp-service-visual="websites"] {
+    --zp94-nudge: max(0px, calc(517px - var(--zp94-x0)));
+    --zp94-nudge-r: max(0px, calc(517px - var(--zp94-rp) * 100% - var(--zp94-xr)));
+  }
+}
+/* szczelina 1440–1441 (powiększenie przeglądarki): 3.2.93 ma tu right −13% (żadna z reguł −15% / −11% nie działa) */
+@media (min-width: 1440.02px) and (max-width: 1440.999px) {
+  html:root body.page-id-5372 #zp-strony-internetowe-katowice #start.hero[data-zp-service-visual="websites"] {
+    --zp94-rp: 1.13;
+  }
+}
+/* 1441–1760: scale .84 / origin 140% 130%, translate3d(200px,150px), right −11% */
+@media (min-width: 1441px) and (max-width: 1760px) {
+  html:root body.page-id-5372 #zp-strony-internetowe-katowice #start.hero[data-zp-service-visual="websites"] {
+    --zp94-rp: 1.11;
+    --zp94-xr: calc(var(--zp94-tx) + 168px - 1.07924 * var(--zp94-wb));
+    --zp94-y0: calc(1.008808 * var(--zp94-h0) - 208.4344px + .84 * var(--zp94-fit) - .684985 * var(--zp94-wb));
+    --zp94-b0: calc(.31732 * var(--zp94-h0) + 6.384px);
+    --zp94-k360: calc(.249337 * var(--zp94-wb));
+    --zp94-k133: calc(.092572 * var(--zp94-wb));
+  }
+}
+/* szczelina 1760–1761: scale .84 jak wyżej, ale 3.2.93 nie ma tu żadnego translate3d (ani 200px/150px, ani 0/150px) */
+@media (min-width: 1760.02px) and (max-width: 1760.999px) {
+  html:root body.page-id-5372 #zp-strony-internetowe-katowice #start.hero[data-zp-service-visual="websites"] {
+    --zp94-rp: 1.11;
+    --zp94-xr: calc(var(--zp94-tx) - 1.07924 * var(--zp94-wb));
+    --zp94-y0: calc(1.008808 * var(--zp94-h0) - 334.4344px + .84 * var(--zp94-fit) - .684985 * var(--zp94-wb));
+    --zp94-b0: calc(.31732 * var(--zp94-h0) - 119.616px);
+    --zp94-k360: calc(.249337 * var(--zp94-wb));
+    --zp94-k133: calc(.092572 * var(--zp94-wb));
+  }
+}
+/* 1761–1919: scale .84 / origin 140% 130%, translate3d(0,150px), right −11% */
+@media (min-width: 1761px) and (max-width: 1919px) {
+  html:root body.page-id-5372 #zp-strony-internetowe-katowice #start.hero[data-zp-service-visual="websites"] {
+    --zp94-rp: 1.11;
+    --zp94-xr: calc(var(--zp94-tx) - 1.07924 * var(--zp94-wb));
+    --zp94-y0: calc(1.008808 * var(--zp94-h0) - 208.4344px + .84 * var(--zp94-fit) - .684985 * var(--zp94-wb));
+    --zp94-b0: calc(.31732 * var(--zp94-h0) + 6.384px);
+    --zp94-k360: calc(.249337 * var(--zp94-wb));
+    --zp94-k133: calc(.092572 * var(--zp94-wb));
+  }
+}
+/* ≥ 1920 (i szczelina 1919–1920): scale .86 / origin 130% 110%, translate3d(0,150px), right −11%; zdjęcie niżej
+   o --zp-hero-image-fit-y (service-hero-image-fit, od 1920 px; w szczelinie nieustawione → 24px) */
+@media (min-width: 1919.02px) {
+  html:root body.page-id-5372 #zp-strony-internetowe-katowice #start.hero[data-zp-service-visual="websites"] {
+    --zp94-rp: 1.11;
+    --zp94-xr: calc(var(--zp94-tx) - 1.12846 * var(--zp94-wb));
+  }
+}

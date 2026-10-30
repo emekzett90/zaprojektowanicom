@@ -1,0 +1,7 @@
+/* ZP Suite 3.2.94 — Elementor nie wciąga hero wtyczki pod stały nagłówek (wklejane inline w <head> każdej strony).
+   /wiedza/ (Elementor, strona 1431): kontener 26476e42 ma w Elementorze margin-top -4px (komputer) i -50px (telefon),
+   przez co na telefonie napis „BAZA WIEDZY ZAPROJEKTOWANI” wchodził pod nagłówek (Mat, 29.10.2026). Tu: 0.
+   Ogólnie: kontener Elementora (.e-con), w którym jest hero wtyczki, nie może mieć ujemnego marginesu górnego —
+   tylko ujemne wartości są zerowane (max), dodatnie zostają; widżety (np. Studio wyceny) nie są ruszane. */
+.elementor-1431 .elementor-element.elementor-element-26476e42{--margin-top:0px!important;margin-top:0!important;margin-block-start:0!important}
+.e-con:has(#zhHero,#zpAboutX,section.zpFaqPage,#zpRealizacjePage,.zpCS18,#start.hero){margin-block-start:max(0px,var(--margin-block-start,var(--margin-top,0px)))!important}
